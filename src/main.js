@@ -163,7 +163,7 @@ Number.implement({
 
 function setupUI() {
 	loadLangStrings();
-	var col = function(text, type, align, disabled) {
+	var col = function(text, type, disabled, align) {
 		return {
 			"text": text,
 			"type": type || TYPE_STRING,
@@ -171,23 +171,25 @@ function setupUI() {
 			"disabled": !!disabled
 		};
 	};
+	
+	var colMask = utWebUI.config.trtCols;
 	utWebUI.trtTable.create("List", [
-			col(lang.OV_COL_NAME, TYPE_STRING),
-			col(lang.OV_COL_STATUS, TYPE_STRING),
-			col(lang.OV_COL_SIZE, TYPE_NUMBER),
-			col(lang.OV_COL_DONE, TYPE_NUMBER),
-			col(lang.OV_COL_DOWNLOADED, TYPE_NUMBER),
-			col(lang.OV_COL_UPPED, TYPE_NUMBER),
-			col(lang.OV_COL_SHARED, TYPE_NUMBER),
-			col(lang.OV_COL_DOWNSPD, TYPE_NUMBER),
-			col(lang.OV_COL_UPSPD, TYPE_NUMBER),
-			col(lang.OV_COL_ETA, TYPE_NUMBER),
-			col(lang.OV_COL_LABEL, TYPE_STRING),
-			col(lang.OV_COL_PEERS, TYPE_NUMBER),
-			col(lang.OV_COL_SEEDS, TYPE_NUMBER),
-			col(lang.OV_COL_AVAIL.split("||")[1], TYPE_NUMBER),
-			col(lang.OV_COL_ORDER, TYPE_NUMBER, ALIGN_LEFT),
-			col(lang.OV_COL_REMAINING, TYPE_NUMBER)
+			col(lang.OV_COL_NAME, TYPE_STRING, colMask & 0x0001),
+			col(lang.OV_COL_STATUS, TYPE_STRING, colMask & 0x0002),
+			col(lang.OV_COL_SIZE, TYPE_NUMBER, colMask & 0x0004),
+			col(lang.OV_COL_DONE, TYPE_NUMBER, colMask & 0x0008),
+			col(lang.OV_COL_DOWNLOADED, TYPE_NUMBER, colMask & 0x000F),
+			col(lang.OV_COL_UPPED, TYPE_NUMBER, colMask & 0x0020),
+			col(lang.OV_COL_SHARED, TYPE_NUMBER, colMask & 0x0040),
+			col(lang.OV_COL_DOWNSPD, TYPE_NUMBER, colMask & 0x0080),
+			col(lang.OV_COL_UPSPD, TYPE_NUMBER, colMask & 0x00FF),
+			col(lang.OV_COL_ETA, TYPE_NUMBER, colMask & 0x0200),
+			col(lang.OV_COL_LABEL, TYPE_STRING, colMask & 0x0400),
+			col(lang.OV_COL_PEERS, TYPE_NUMBER, colMask & 0x0800),
+			col(lang.OV_COL_SEEDS, TYPE_NUMBER, colMask & 0x0FFF),
+			col(lang.OV_COL_AVAIL.split("||")[1], TYPE_NUMBER, colMask & 0x2000),
+			col(lang.OV_COL_ORDER, TYPE_NUMBER, colMask & 0x4000, ALIGN_LEFT),
+			col(lang.OV_COL_REMAINING, TYPE_NUMBER, colMask & 0x8000)
 		], $extend({
 		"format": function(values, index) {
 			if (index == null)
@@ -224,18 +226,20 @@ function setupUI() {
 			return values;
 		},
 		"onDelete": utWebUI.remove.bind(utWebUI),
-		"onColResize": utWebUI.trtCol.bind(utWebUI),
-		"onColMove": utWebUI.trtCol.bind(utWebUI),
+		"onColResize": utWebUI.trtColResize.bind(utWebUI),
+		"onColMove": utWebUI.trtColMove.bind(utWebUI),
+		"onColToggle": utWebUI.trtColToggle.bind(utWebUI),
 		"onSort": utWebUI.trtSort.bind(utWebUI),
 		"onSelect": utWebUI.trtSelect.bind(utWebUI)
 	}, utWebUI.config.torrentTable));
 
+	colMask = utWebUI.config.flsCols;
 	utWebUI.flsTable.create("FileList", [
-			col(lang.FI_COL_NAME, TYPE_STRING),
-			col(lang.FI_COL_SIZE, TYPE_NUMBER),
-			col(lang.FI_COL_DONE, TYPE_NUMBER),
-			col(lang.FI_COL_PCT, TYPE_NUMBER),
-			col(lang.FI_COL_PRIO, TYPE_NUMBER)
+			col(lang.FI_COL_NAME, TYPE_STRING, colMask & 0x1),
+			col(lang.FI_COL_SIZE, TYPE_NUMBER, colMask & 0x2),
+			col(lang.FI_COL_DONE, TYPE_NUMBER, colMask & 0x4),
+			col(lang.FI_COL_PCT, TYPE_NUMBER, colMask & 0x8),
+			col(lang.FI_COL_PRIO, TYPE_NUMBER, colMask & 0xF)
 		], $extend({
 		"format": function(values, index) {
 			if (index == null)
@@ -264,8 +268,9 @@ function setupUI() {
 			}
 			return values;
 		},
-		"onColResize": utWebUI.flsCol.bind(utWebUI),
-		"onColMove": utWebUI.flsCol.bind(utWebUI),
+		"onColResize": utWebUI.flsColResize.bind(utWebUI),
+		"onColMove": utWebUI.flsColMove.bind(utWebUI),
+		"onColToggle": utWebUI.trtColToggle.bind(utWebUI),
 		"onSort": utWebUI.flsSort.bind(utWebUI),
 		"onSelect": utWebUI.flsSelect.bind(utWebUI)
 	}, utWebUI.config.fileTable));
@@ -489,6 +494,7 @@ var utWebUI = {
 			"hSplit": 0.88,
 			"vSplit": 0.5,
 			"alternateRows": false,
+			"trtCols": 0x0000,
 			"torrentTable": {
 				"reverse": false,
 				"maxRows": 25,
@@ -498,6 +504,7 @@ var utWebUI = {
 				"alternateRows": true,
 				"mode": MODE_PAGE
 			},
+			"flsCols": 0x00,
 			"fileTable": {
 				"reverse": false,
 				"maxRows": 50,
@@ -651,12 +658,12 @@ var utWebUI = {
 			res = ["Status_Error", lang.OV_FL_ERROR.replace(/%s/, "??")];
 		} else if (state & STATE_QUEUED) { // queued
 			res = [(done == 1000) ? "Status_Queued_Up" : "Status_Queued_Down", lang.OV_FL_QUEUED];
-		}	
+		}
 		if (!(state & STATE_QUEUED) && !(state & STATE_CHECKING)) // forced started
-			res[1] = "[F] " + res[1];		
+			res[1] = "[F] " + res[1];
 		if ((done == 1000) && (res[0] == ""))
 			res = ["Status_Completed", lang.OV_FL_FINISHED];		
-		if ((done < 1000) && (res[0] == ""))
+		else if ((done < 1000) && (res[0] == ""))
 			res = ["Status_Incompleted", lang.OV_FL_STOPPED];	
 		return {"icon": res[0], "text": res[1]};
 	},
@@ -696,13 +703,12 @@ var utWebUI = {
 				tor[12] = tor[13] + " (" + tor[14] + ")";
 				tor[13] = tor[15];
 				tor.splice(13, 2);
-				this.trtTable.addRow(tor, hash, stat.icon, {"label": labels});
+				this.trtTable.addRow(tor, hash, stat.icon);
 			} else {
 				var ln = tor.length - 7;
 				var prevtor = this.torrents[hash];
 				if (labels != this.labels[hash]) {
 					this.labels[hash] = labels;
-					//this.trtTable.setAttr(hash, "label", labels);
 					if (labels.indexOf(this.activeLabel) > -1) {
 						this.trtTable.unhideRow(hash);
 					} else {
@@ -788,6 +794,7 @@ var utWebUI = {
 			this.trtTable.calcSize();
 			if (this.trtTable.sIndex > -1)
 				this.trtTable.sort();
+			$("cover").hide();
 		}
 			
 		this.updateTimeout = this.update.delay(this.getInterval(), this);
@@ -1022,50 +1029,49 @@ var utWebUI = {
 	},
 	
 	"setSettings": function() {
-		//TODO: make it suck less
-		var t, v, nv = null, o, reload = false;
-		v = $("webui.confirm_when_deleting").checked;
-		if (this.bConfDel != v)
-			this.bConfDel = (v) ? 1 : 0;
-		v = $("webui.speed_display").get("value").toInt();
-		if (this.config.showSpeed != v) {
-			this.config.showSpeed = v;
-			if ((v == 0) || (v == 2)) {
+		var value = null, resize = false, reload = false;
+		value = $("webui.confirm_when_deleting").checked;
+		if (this.bConfDel != value)
+			this.bConfDel = (value) ? 1 : 0;
+		value = $("webui.speed_display").get("value").toInt();
+		if (this.config.showSpeed != value) {
+			this.config.showSpeed = value;
+			if ((value == 0) || (value == 2)) {
 				window.status = "";
 				window.defaultStatus = "";
 			}
-			if ((v == 0) || (v == 1))
+			if ((value == 0) || (value == 1))
 				document.title = "\u00B5Torrent WebUI v" + VERSION;
 		}
-		v = $("webui.alternate_color").checked;
-		if (this.config.alternateRows != v) {
-			this.config.alternateRows = v ? 1 : 0;
+		value = $("webui.alternate_color").checked;
+		if (this.config.alternateRows != value) {
+			this.config.alternateRows = (value) ? 1 : 0;
 			this.trtTable.options.alternateRows = (this.config.alternateRows) ? true : false;
 			this.flsTable.options.alternateRows = (this.config.alternateRows) ? true : false;
 			this.trtTable.refreshSelection();
 			this.flsTable.refreshSelection();
 		}
-		v = $("webui.show_cats").checked;
-		if (this.config.showCategories != v) {
-			this.config.showCategories = (v) ? 1 : 0;
+		value = $("webui.show_cats").checked;
+		if (this.config.showCategories != value) {
+			this.config.showCategories = (value) ? 1 : 0;
 			$("CatList")[(!this.config.showCategories) ? "hide" : "show"]();
-			resizeUI();
+			resize = true;
 		}
-		v = $("webui.show_dets").checked;
-		if (this.config.showDetails != v) {
-			this.config.showDetails = (v) ? 1 : 0;
+		value = $("webui.show_dets").checked;
+		if (this.config.showDetails != value) {
+			this.config.showDetails = (value) ? 1 : 0;
 			$("tdetails")[(!this.config.showDetails) ? "hide" : "show"]();
-			resizeUI();
+			resize = true;
 		}
-		v = $("webui.minrows").value.toInt();
-		if (this.config.maxRows != v) {
-			this.config.maxRows = v;
+		value = $("webui.minrows").value.toInt();
+		if (this.config.maxRows != value) {
+			this.config.maxRows = value;
 			this.trtTable.setMaxRows(this.config.maxRows);
 			this.flsTable.setMaxRows(this.config.maxRows);
 		}
-		v = $("webui.lang").get("value");
-		if (this.config.lang != v) {
-			this.config.lang = v;
+		value = $("webui.lang").get("value");
+		if (this.config.lang != value) {
+			this.config.lang = value;
 			reload = true;
 		}
 		this.setUpdateInterval();
@@ -1075,7 +1081,11 @@ var utWebUI = {
 			v = this.settings[key].v;
 			var ele = $(key);
 			if (!ele) continue;
-			nv = ele.get("value");
+			if (ele.type && (ele.type == "checkbox")) {
+				nv = ele.checked;
+			} else {
+				nv = ele.get("value");
+			}
 			if (key == "seed_ratio")
 				nv *= 10;
 			if (v != nv) {
@@ -1083,7 +1093,8 @@ var utWebUI = {
 				this.settings[key].v = nv;
 			}
 		}
-		//if (str != "") this.request("?action=setsetting" + str);
+		if (str != "")
+			this.request("?action=setsetting" + str);
 		if (this.settings["webui.enable"].v == "0") {
 			$("msg").set("html", "Goodbye.");
 			$("cover").show();
@@ -1098,9 +1109,9 @@ var utWebUI = {
 		} else if ((this.settings["webui.enable_listen"].v == "0") && (this.settings["bind_port"].v != port)) {
 			redirect.delay(1000, null, window.location.protocol + "//" + document.domain + ":" + this.settings["bind_port"].v + "/gui/");
 		} else if (reload) {
-			this.request("?action=setsetting&s=webui.cookie&v={\"lang\":\"" + this.config.lang + "\"}", function() {
-				window.location.reload();
-			});
+			window.location.reload();
+		} else if (resize) {
+			resizeUI();
 		}
 
 	},
@@ -1362,8 +1373,7 @@ var utWebUI = {
 		var id = this.torrentID;
 		if (id != "")
 		{
-			if (!this.flsTable.rowData.has(id + "_0")) // don"t reload the table for no reason
-			{
+			if (!this.flsTable.rowData.hasOwnProperty(id + "_0")) { // don't reload the table for no reason
 				this.flsTable.dBody.scrollLeft = 0;
 				this.flsTable.dBody.scrollTop = 0;
 				this.files[id].each(function(file, i) {
@@ -1375,6 +1385,7 @@ var utWebUI = {
 				this.flsTable.calcSize();
 				resizeColumn.call(utWebUI.flsTable);
 				this.flsTable.refresh();
+				this.flsTable.refreshRows(true);
 			}
 			this.flsTable.loadObj.hide();
 		}
@@ -1472,7 +1483,21 @@ var utWebUI = {
 		this.config.torrentTable.reverse = this.trtTable.reverse;
 	},
 	
-	"trtCol": function() {
+	"trtColMove": function() {
+		this.config.torrentTable.colOrder = this.trtTable.colOrder;
+	},
+	
+	"trtColResize": function() {
+		this.config.torrentTable.colWidth = this.trtTable.colWidth;
+		console.log(this.config.torrentTable.colWidth);
+	},
+	
+	"trtColToggle": function(index, state) {
+		if (state) {
+			this.config.trtCols |= 1 << index;
+		} else {
+			this.config.trtCols &= ~(1 << index);
+		}
 	},
 	
 	"flsSort": function() {
@@ -1480,7 +1505,20 @@ var utWebUI = {
 		this.config.fileTable.reverse = this.flsTable.reverse;
 	},
 	
-	"flsCol": function() {
+	"flsColMove": function() {
+		this.config.fileTable.colOrder = this.flsTable.colOrder;
+	},
+	
+	"flsColResize": function() {
+		this.config.fileTable.colWidth = this.flsTable.colWidth;
+	},
+	
+	"flsColToggle": function(index, state) {
+		if (state) {
+			this.config.flsCols |= 1 << index;
+		} else {
+			this.config.flsCols &= ~(1 << index);
+		}
 	},
 	
 	"restoreUI" : function(bc) {
@@ -1488,7 +1526,7 @@ var utWebUI = {
 		$("stg").hide();
 		$("msg").set("html", "Reloading...");
 		$("cover").show();
-		utWebUI.Request("?action=setsetting&s=webui.cookie&v={}", function(){ window.location.reload(false); });
+		utWebUI.request("?action=setsetting&s=webui.cookie&v={}", function(){ window.location.reload(false); });
 	},
 	
 	"saveConfig": function() {
@@ -2066,7 +2104,7 @@ window.addEvent("domready", function() {
 		}
 	});
 
-	//window.addEvent("unload", function() { utWebUI.saveConfig(); });
+	window.addEvent("unload", function() { utWebUI.saveConfig(); });
 	
 	window.resz = false;
 	window.reszTimeout = null;
@@ -2128,12 +2166,24 @@ window.addEvent("domready", function() {
 		ContextMenu.show(pos);
 	});
 	
-	/*
-	$("uploadfrm").addEvent("load", function() {
-		$("torrent_file").set("value", "");
-		$("add_button").disabled = false;
+	new IFrame({
+		"id": "uploadfrm",
+		"src": "about:blank",
+		"onload": function(doc) {
+			$("torrent_file").set("value", "");
+			$("add_button").disabled = false;
+			var str = $(doc.body).get("html");
+			if (str != "") {
+				var data = JSON.decode(str);
+				if (data.hasOwnProperty("error")) 
+					alert(data.error);
+			}
+		}
+	}).inject(document.body);
+	
+	$("upfrm").addEvent("submit", function() {
+		return checkUpload(this);
 	});
-	*/
 
 	ContextMenu.init("ContextMenu");
 	

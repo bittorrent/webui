@@ -22,12 +22,13 @@ div#preload {
 	background-image: url(./images/tbar.png);
 	background-image: url(./images/toolbar.png);
 	background-image: url(./images/tstatus.png);
-	background-image: url(./images/asc.png);
-	background-image: url(./images/desc.png);
+	background-image: url(./images/arrow.gif);
+	background-image: url(./images/snake.gif);
 	background-image: url(./images/close.png);
 	background-image: url(./images/menusel.png);
 	background-image: url(./images/menucheck.png);
 	background-image: url(./images/menuexp.png);
+	background-image: url(./images/nextprev.png);
 }
 
 div#cover {
@@ -36,12 +37,11 @@ div#cover {
 	position: absolute;
 	z-index: 500;
 	background: #FFFFFF;
-	display: none;
 }
 
 div#msg {
 	width: 100%; height: 100px;
-	position: relative;
+	position: absolute;
 	top: 50%;
 	margin-top: -50px;
 	line-height: 100px;
@@ -402,11 +402,7 @@ div#HDivider { width: 3px; height: 0px; padding: 0; margin: 0; border: 1px solid
 div#VDivider { width: 0px; height: 3px; padding: 0; margin: 0; border: 1px solid #D0D0D0; cursor: n-resize; background: #D0D0D0; }
 .gg { background: #00FF00; }
 
-/*******************************************
- *                                         *
- *                  LIST                   *
- *                                         *
- *******************************************/
+/* List */
 
 div#List {
 	height: 150px;
@@ -428,50 +424,6 @@ div#FileList {
 	-moz-user-focus: normal;
 	-moz-user-input: enabled;
 }
-
-/*
-
-.Status_Down {
-	background: transparent url(./images/tstatus.png) no-repeat left center;
-}
-
-.Status_Up {
-	background: transparent url(./images/tstatus.png) no-repeat -16px center;
-}
-
-.Status_Checking, .Status_Incompleted {
-	background: transparent url(./images/tstatus.png) no-repeat -32px center;
-}
-
-.Status_Paused {
-	background: transparent url(./images/tstatus.png) no-repeat -48px center;
-}
-
-.Status_Error_Down {
-	background: transparent url(./images/tstatus.png) no-repeat -64px center;
-}
-
-.Status_Error_Up {
-	background: transparent url(./images/tstatus.png) no-repeat -80px center;
-}
-
-.Status_Error {
-	background: transparent url(./images/tstatus.png) no-repeat -96px center;
-}
-
-.Status_Completed {
-	background: transparent url(./images/tstatus.png) no-repeat -112px center;
-}
-
-.Status_Queued_Down {
-	background: transparent url(./images/tstatus.png) no-repeat -128px center;
-}
-
-.Status_Queued_Up {
-	background: transparent url(./images/tstatus.png) no-repeat -144px center;
-}
-
-*/
 
 .Status_Down {
 	background: transparent url(./images/tstatus.png) no-repeat 5px top;
@@ -513,11 +465,7 @@ div#FileList {
 	background: transparent url(./images/tstatus.png) no-repeat 5px -144px;
 }
 
-/*******************************************
- *                                         *
- *                DETAILS                  *
- *                                         *
- *******************************************/
+/* Details */
 
 #dlgSettings {
 	width: 600px; height: 400px;

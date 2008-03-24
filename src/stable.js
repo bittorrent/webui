@@ -155,7 +155,6 @@ var dxSTable = new Class({
 			this.colOrder[i] = this.colOrder[i] || i;
 			this.cols++;
 			this.colData[i] = this.colHeader[this.colOrder[i]];
-		
 			ROW.grab(
 				$(TD.cloneNode(false))
 					.addClasses(this.id + "-col-" + this.colOrder[i], this.colData[i].disabled ? "stable-hidden-column" : "")
@@ -392,7 +391,7 @@ var dxSTable = new Class({
 		if (this.options.reverse)
 			d.reverse();
 
-		var count = 0, j = 0;
+		var refresh = false, j = 0;
 		this.activeId.length = 0;
 		for (var i = 0; i < this.rows; i++) {
 			var key = d[i].key;
@@ -403,13 +402,13 @@ var dxSTable = new Class({
 			this.rowData[key].index = i;
 			if (this.rowId[i] === key) continue;
 			this.rowId[i] = key;
-			count++;
+			refresh = true;
 		}
 
 		this.clearCache(d);
 		this.isSorting = false;
 		
-		if (count > 0)
+		if (refresh)
 			this.refreshRows(true);
 			
 		this.fireEvent("onSort");
@@ -479,11 +478,11 @@ var dxSTable = new Class({
 					var cell = row.childNodes[k];
 					if (cell.hasChildNodes()) {
 						if ((v == 0) && (icon != ""))
-							cell.addClasses("stable-icon", icon);
+							cell.addClasses("stable-icon", icon, true);
 						cell.firstChild.nodeValue = data[v];
 					} else {
 						if ((v == 0) && (icon != ""))
-							cell.addClasses("stable-icon", icon);
+							cell.addClasses("stable-icon", icon, true);
 						cell.appendText(data[v]);
 					}
 				}
@@ -511,7 +510,6 @@ var dxSTable = new Class({
 			this.updatePageMenu();
 		if (this.options.mode == MODE_VIRTUAL)
 			this.resizePads();
-		//this.refreshRows();
 	},
 	
 	"selectRow": function(ev, row) {
@@ -561,12 +559,10 @@ var dxSTable = new Class({
 	},
 
 	"addRow": function(data, id, icon, attr, hidden) {
-		if ((data.length != this.cols) || ((id != null) && Hash.has(this.rowData, id))) return;
-			
+		if ((data.length != this.cols) || ((id != null) && this.rowData.hasOwnProperty(id))) return;
 		id = id || (this.id + "-row-" + (1000 + this.rows));
 		this.rowSel[id] = false;
 		var rowIndex = -1;
-
 		if (!hidden) {
 			if (this.viewRows < this.options.maxRows) {
 				var index = this.viewRows;
@@ -817,6 +813,7 @@ var dxSTable = new Class({
 		$each(this.tb.body.rows, function(row) {
 			row.cells[index][hide ? "addClass" : "removeClass"]("stable-hidden-column");
 		});
+		this.fireEvent("onColToggle", [index, hide]);
 		this.calcSize();
 		return true;
 	},
@@ -985,6 +982,7 @@ var ColumnHandler = {
 function resizeColumn(index)
 {
 	var cols = this.tBody.getElement("colgroup").getElements("col");
+	this.colWidth[index] = this.tHeadCols[index].getWidth();
 	var from = $pick(index, 0);
 	var to = $pick(index, cols.length - 1);
  	for (var i = from; i <= to; i++)
@@ -1055,7 +1053,7 @@ function moveColumn(iCol, iNew) {
 	
 	this.tHeadCols = aHC.slice(0);
 	this.tBodyCols = aBC.slice(0);
-	this.colsdata = aC.slice(0);
+	this.colData = aC.slice(0);
 	this.colOrder = aO.slice(0);
 	
 	aHC = aBC = aC = aO = null;
