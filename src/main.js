@@ -10,39 +10,6 @@ var VERSION = "0.340a";
 var BUILD_REQUIRED = -1; // the ut build the webui requires
 var lang = lang || null;
 
-function define(name, value) {
-	window[name] = value;
-}
-
-define("TORRENT_HASH", 0);
-define("TORRENT_STATUS", 1);
-define("TORRENT_NAME", 2);
-define("TORRENT_SIZE", 3);
-define("TORRENT_PROGRESS", 4);
-define("TORRENT_DOWNLOADED", 5);
-define("TORRENT_UPLOADED", 6);
-define("TORRENT_RATIO", 7);
-define("TORRENT_UPSPEED", 8);
-define("TORRENT_DOWNSPEED", 9);
-define("TORRENT_ETA", 10);
-define("TORRENT_LABEL", 11);
-define("TORRENT_PEERS_CONNECTED", 12);
-define("TORRENT_PEERS_SWARM", 13);
-define("TORRENT_SEEDS_CONNECTED", 14);
-define("TORRENT_SEEDS_SWARM", 15);
-define("TORRENT_AVAILABILITY", 16);
-define("TORRENT_QUEUE_POSITION", 17);
-define("TORRENT_REMAINING", 18);
-define("FILEPRIORITY_SKIP", 0);
-define("FILEPRIORITY_LOW", 1);
-define("FILEPRIORITY_NORMAL", 2);
-define("FILEPRIORITY_HIGH", 3);
-define("STATE_STARTED", 1);
-define("STATE_CHECKING", 2);
-define("STATE_ERROR", 16);
-define("STATE_PAUSED", 32);
-define("STATE_QUEUED", 64);
-
 Array.implement({
 
 	"binarySearch": function(value, comparator) {
@@ -466,7 +433,6 @@ var utWebUI = {
 		"_iac_": 0, // inactive
 		"_nlb_": 0  // no-label
 	},
-	"activeLabel": "_all_",
 	"customLabels": {},
 	"cacheID": "",
 	"torrentID": "", // selected torrent
@@ -514,7 +480,8 @@ var utWebUI = {
 				"alternateRows": true
 			},
 			"updateInterval": 3000,
-			"lang": "en"
+			"lang": "en",
+			"activeLabel": "_all_"
 		};
 
 		this.getSettings();
@@ -678,6 +645,13 @@ var utWebUI = {
 			torrents = dobj.torrents;
 			delete dobj.torrents;
 		}
+		this.loadLabels($A(dobj.label));
+		if (!this.labels.hasOwnProperty(this.config.activeLabel) && !this.customLabels.hasOwnProperty(this.config.activeLabel)) {
+			this.config.activeLabel = "_all_";
+		} else {
+			$("_all_").removeClass("sel");
+			$(this.config.activeLabel).addClass("sel");
+		}
 		
 		var scroll = this.trtTable.dBody.getScroll();
 		if (Browser.Engine.gecko || Browser.Engine.trident) // doing offline updating slows Presto & WebKit down
@@ -703,13 +677,13 @@ var utWebUI = {
 				tor[12] = tor[13] + " (" + tor[14] + ")";
 				tor[13] = tor[15];
 				tor.splice(13, 2);
-				this.trtTable.addRow(tor, hash, stat.icon);
+				this.trtTable.addRow(tor, hash, stat.icon, (labels.indexOf(this.config.activeLabel) == -1));
 			} else {
 				var ln = tor.length - 7;
 				var prevtor = this.torrents[hash];
 				if (labels != this.labels[hash]) {
 					this.labels[hash] = labels;
-					if (labels.indexOf(this.activeLabel) > -1) {
+					if (labels.indexOf(this.config.activeLabel) > -1) {
 						this.trtTable.unhideRow(hash);
 					} else {
 						this.trtTable.hideRow(hash);
@@ -778,11 +752,10 @@ var utWebUI = {
 			delete dobj.torrentm;
 		}
 		this.trtTable.refresh();
-		//this.trtTable.dBody.scrollTo(scroll.x, scroll.y);
+		this.trtTable.dBody.scrollTo(scroll.x, scroll.y);
 		this.trtTable.loadObj.hide();
 		
 		this.cacheID = dobj.torrentc;
-		this.loadLabels($A(dobj.label));
 		dobj = null;
 		this.updateLabels();
 		this.loadTorrents();
@@ -805,7 +778,6 @@ var utWebUI = {
 	},
 	
 	"updateSpeed": function () {
-		//MAIN_TITLEBAR_SPEED
 		var str = "Download: " + this.totalDL.toFileSize() + "/s | " +
 				  "Upload: " + this.totalUL.toFileSize() + "/s";
 		if (this.config.showSpeed == 1) {
@@ -857,20 +829,20 @@ var utWebUI = {
 			} else {
 				li.getFirst().set("text", count);
 			}
-			if ($defined(this.customLabels[label]))
+			if (this.customLabels.hasOwnProperty(label))
 				delete this.customLabels[label];
 			temp[label] = count;
 		}
 		var resetLabel = false;
 		for (var k in this.customLabels) if (this.customLabels.hasOwnProperty(k)) {
 			$("label_" + k).remove();
-			if (this.activeLabel == k)
+			if (this.config.activeLabel == k)
 				resetLabel = true;
 		}
 		this.customLabels = temp;
 		
 		if (resetLabel) {
-			this.activeLabel = "";
+			this.config.activeLabel = "";
 			this.switchLabel($("_all_"));
 		}
 	},
@@ -921,17 +893,24 @@ var utWebUI = {
 	},
 	
 	"setLabel": function(lbl) {
-		var str = "?action=setprops&s=label&v=" + lbl;
-		for (var k in this.trtTable.rowSel) if (this.trtTable.rowSel.hasOwnProperty(k)) {
-			if (this.trtTable.rowSel[k] && (this.torrents[k][11] != lbl))
-				str += "&hash=" + k;
+		var str = "";
+		for (var i = 0, j = this.trtTable.selectedRows.length; i < j; i++) {
+			var key = this.trtTable.selectedRows[i];
+			if (this.torrents[key][11] != lbl)
+				str += "&hash=" + key;
 		}
-		this.request(str);
+		if (str != "")
+			this.request("?action=setprops&s=label" + str + "&v=" + lbl);
+		return true;
 	},
 	
 	"newLabel": function() {
-		$("txtLabel").set("value", (this.trtTable.selCount == 1) ? this.torrents[this.trtTable.rowSel.keyOf(true)][11] : lang.OV_NEW_LABEL);
-		$("dlgLabel").show();
+		var tmpl = "";
+		if (this.trtTable.selectedRows.length == 1)
+			tmpl = this.torrents[this.trtTable.selectedRows[0]][11];
+		$("txtLabel").set("value", (tmpl == "") ? lang.OV_NEW_LABEL : tmpl);
+		$("dlgLabel").centre().show();
+		return true;
 	},
 	
 	"createLabel": function() {
@@ -948,22 +927,19 @@ var utWebUI = {
 	},
 	
 	"switchLabel": function(obj) {
-		if (obj.id == this.activeLabel) return;
-		if (this.activeLabel != "")
-			$(this.activeLabel).removeClass("sel");
+		if (obj.id == this.config.activeLabel) return;
+		if (this.config.activeLabel != "")
+			$(this.config.activeLabel).removeClass("sel");
 		obj.addClass("sel");
-		this.activeLabel = obj.id;
+		this.config.activeLabel = obj.id;
 		
-		var $self = this;
 		for (var k in this.torrents) if (this.torrents.hasOwnProperty(k)) {
-			if (this.labels[k].indexOf(this.activeLabel) > -1) {
+			if (this.labels[k].indexOf(this.config.activeLabel) > -1) {
 				this.trtTable.unhideRow(k);
 			} else {
 				this.trtTable.hideRow(k);
 			}
 		}
-		
-		//this.trtTable.clearSelection(false);
 		
 		if (this.torrentID != "") {
 			this.torrentID = "";
@@ -1790,39 +1766,6 @@ function loadJS(source, properties){
 	
 	return script.inject(doc.head);
 }
-
-var console = console || {};
-
-(function() {
-
-	console.log = console.log || function(str) {
-		if (window.opera) {
-			opera.postError(str);
-		} else {
-			alert(str);
-		}
-	};
-
-	var timers = {};
-	console.time = console.time || function(name) {
-		if (name == "") return;
-		timers[name] = $time();
-	};
-	
-	console.timeEnd = console.timeEnd || function(name) {
-		if (name == "" || !timers[name]) return;
-		console.log(name + ": " + ($time() - timers[name]) + "ms");
-		delete timers[name];
-	};
-	
-	console.assert = console.assert || function() {
-		var args = $A(arguments), expr = args.shift();
-		if (!expr) {
-			throw new Error(false);
-		}
-	};
-	
-})();
 
 function loadLangStrings() {
 	var tstr = lang.OV_TABS.split("||");

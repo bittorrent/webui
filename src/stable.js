@@ -213,7 +213,7 @@ var dxSTable = new Class({
 				$me.selectRow(ev, ev.target.parentNode);
 		});
 		for (var i = 0; i < this.options.maxRows; i++)
-			this.tb.body.grab(ROW.cloneNode(true));
+			this.tb.body.grab(ROW.cloneNode(true).hide());
 		ROW = null;
 		
 		this.tBody.grab(this.tb.body);
@@ -460,7 +460,11 @@ var dxSTable = new Class({
 		} else {
 			mni = max * this.curPage;
 		}
-		if (Browser.Engine.gecko || Browser.Engine.trident)
+		
+		// doing offline updating in IE helps speedwise,
+		// but IE doesn't render all cells (ie. text) after the
+		// table is re-inserted
+		if (Browser.Engine.gecko)
 			this.detachBody();
 		var mxi = mni + max - 1;
 		var i = 0, j = 0, obj = null, vr = -1;
@@ -499,7 +503,7 @@ var dxSTable = new Class({
 		}
 		for (i = j; i < max; i++)
 			this.tb.body.childNodes[i].setProperty("id", "").hide();
-		if (Browser.Engine.gecko || Browser.Engine.trident)
+		if (Browser.Engine.gecko)
 			this.attachBody();
 		this.refresh();
 	},
@@ -518,38 +522,43 @@ var dxSTable = new Class({
 			if (ev.shift) {
 				if (this.stSel === null) {
 					this.stSel = id;
-					this.rowSel[id] = true;
-					this.selCount = 1;
+					this.rowSel[id] = 0;
+					this.selectedRows.push(id);
 				} else {
 					var la = this.activePos[this.stSel];
 					var lb = this.activePos[id];
 					var lo = la.min(lb);
 					var hi = la.max(lb);
-					for (var i = 0, j = this.rowId.length; i < j; i++) {
-						var key = this.rowId[i];
-						if (this.activePos.hasOwnProperty(key)) {
-							var index = this.activePos[key];
-							this.rowSel[key] = ((lo <= index) && (index <= hi));
-						} else {
-							this.rowSel[key] = false;
-						}
+					this.selectedRows.length = 0;
+					delete this.rowSel;
+					this.rowSel = {};
+					for (var i = lo; i <= hi; i++) {
+						var key = this.activeId[i];
+						this.rowSel[key] = this.selectedRows.length;
+						this.selectedRows.push(key);
 					}
-					this.selCount = hi - lo + 1;
 				}
 			} else if (ev.control) {
 				this.stSel = id;
-				this.rowSel[id] = !this.rowSel[id];
-				this.selCount += this.rowSel[id] ? 1 : -1;
-			} else {
-				for (var key in this.rowSel) if (this.rowSel.hasOwnProperty(key)) {
-					this.rowSel[key] = false;
+				if (this.rowSel.hasOwnProperty(id)) {
+					this.selectedRows.splice(this.rowSel[id], 1);
+					for (var i = this.rowSel[id], j = this.selectedRows.length; i < j; i++)
+						this.rowSel[this.selectedRows[i]]--;
+					delete this.rowSel[id];
+				} else {
+					this.rowSel[id] = this.selectedRows.length;
+					this.selectedRows.push(id);
 				}
+			} else {
 				this.stSel = id;
-				this.rowSel[id] = true;
-				this.selCount = 1;
+				this.selectedRows.length = 0;
+				delete this.rowSel;
+				this.rowSel = {};
+				this.rowSel[id] = 0;
+				this.selectedRows.push(id);
 			}
 			
-			if (this.selCount == 0)
+			if (this.selectedRows.length == 0)
 				this.stSel = null;
 				
 			this.refreshSelection();
@@ -558,7 +567,7 @@ var dxSTable = new Class({
 		this.fireEvent("onSelect", [ev, id]);
 	},
 
-	"addRow": function(data, id, icon, attr, hidden) {
+	"addRow": function(data, id, icon, hidden) {
 		if ((data.length != this.cols) || ((id != null) && this.rowData.hasOwnProperty(id))) return;
 		id = id || (this.id + "-row-" + (1000 + this.rows));
 		this.rowSel[id] = false;
@@ -581,7 +590,6 @@ var dxSTable = new Class({
 		this.rowData[id] = {
 			"data": data,
 			"icon": icon || '',
-			"attr": attr,
 			"hidden": hidden || false,
 			"index": this.rowId.length, 
 			"rowIndex": rowIndex
@@ -631,8 +639,8 @@ var dxSTable = new Class({
 
 	"clearRows": function() {
 		if (this.rows > 0) {
-			$each(this.tb.body.rows, function(row) {
-				$each(row.cells, function(cell) {
+			Array.each(this.tb.body.childNodes, function(row) {
+				Array.each(row.childNodes, function(cell) {
 					cell.empty();
 				});
 			});
@@ -696,32 +704,21 @@ var dxSTable = new Class({
 		var i = this.tb.body.childNodes.length;
 		while (i--) {
 			var row = this.tb.body.childNodes[i];
-			row[this.rowSel[row.id] ? "addClass" : "removeClass"]("selected");
+			row[this.rowSel.hasOwnProperty(row.id) ? "addClass" : "removeClass"]("selected");
 		}
 	},
 
 	"clearSelection": function(noRefresh) {
-		for (var key in this.rowSel) if (this.rowSel.hasOwnProperty(key)) {
-			this.rowSel[key] = false;
-		}
-		this.selCount = 0;
+		this.selectedRows.length = 0;
+		delete this.rowSel;
+		this.rowSel = {};
 		if (!noRefresh) this.refreshSelection();
 	},
 
 	"fillSelection": function(noRefresh) {
-		this.selCount = 0;
-		var $me = this;
-		this.rowSel.map(function(_, k) {
-			var ret = !$me.rowData.get(k).hidden;
-			if (ret) $me.selCount++;
-			return ret;
-		});
-		for (var key in this.rowSel) if (this.rowSel.hasOwnProperty(key)) {
-			var sable = !this.rowData.get(key).hidden;
-			if (sable)
-				this.selCount++;
-			this.rowSel[key] = sable;
-		}
+		this.selectedRows = $A(this.activeId);
+		for (var i = 0, j = this.selectedRows.length; i < j; i++)
+			this.rowSel[this.selectedRows[i]] = i;
 		if (!noRefresh) this.refreshSelection();
 	},
 
