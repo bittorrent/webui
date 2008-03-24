@@ -1,0 +1,751 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "XHTML1-s.dtd">
+<html xmlns="http://www.w3.org/TR/1999/REC-html-in-xml" xml:lang="en" lang="en">
+<!--
+
+/*
+ *
+ *     Copyright 2007 BitTorrent, Inc. All rights reserved.
+ *
+ *     Authors: Carsten Niebuhr (Directrix)
+ *
+*/
+
+-->
+	<head>
+		<title></title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<link href="./favicon.ico" rel="SHORTCUT ICON" type="image/x-icon" />
+		<link href="./stable.css" rel="stylesheet" type="text/css" />
+		<style type="text/css">@import "./main.css";</style>
+		<style type="text/css" id="colrules"></style>
+		<!--[if IE]>
+		<style type="text/css">
+		
+			.stable td {
+				display: inline !important;
+				zoom: 1 !important;
+				height: 16px !important;
+				line-height: 16px !important;
+				vertical-align: top;
+				float: none;
+				white-space: nowrap !important
+			}
+			
+			.stable-body td {
+				width: 100% !important;
+			}
+			
+			.stable-move-header {
+				filter:alpha(opacity=70);
+			}
+			
+		</style>
+		<![endif]-->
+	</head>
+	<body>
+		<div id="preload"></div>
+		<div id="cover"><div id="msg">Loading...</div></div>
+		<div id="modalbg"></div>
+		<div id="dragmask"></div>
+		
+		<!-- /* Torrent Add Dialog -->
+		<div id="dlgAdd" class="dlg-window">
+			<a href="#" class="dlg-close"></a>
+			<div id="dlgAdd-header" class="dlg-header">Add Torrent</div>
+			<div class="cont fxcaret">
+				<form action="./?action=add-file" method="post" enctype="multipart/form-data" target="uploadfrm" onsubmit="return CheckUpload(this);">
+					<p><label>Torrent file:</label>
+					<input type="file" name="torrent_file" id="torrent_file" class="tbox" /><br />
+					<label>&nbsp;</label><input type="submit" value="Add File" id="add_button" class="btn" />
+					</p>
+				</form>
+				<hr /><br />
+				<label>Torrent URL:</label>
+				<input type="text" id="url" class="tbox" /><br />
+				<label>Cookies:</label>
+				<input type="text" id="cookies" class="tbox" /><br />
+				<label>&nbsp;</label><input type="button" value="Add URL" class="btn" onclick="javascript:utWebUI.addURL();" />
+			</div>
+		</div>
+		<!-- Torrent Add Dialog */  -->
+		
+		<!-- /* Settings Dialog -->
+		<div id="dlgSettings" class="dlg-window">
+			<a href="#" class="dlg-close"></a>
+			<div id="dlgSettings-header" class="dlg-header"></div>
+			<div id="dlgSettings-cont">
+			<div class="lm">
+				<ul id="stgmenu"></ul>
+			</div>
+			
+			<div id="st_gl" class="stg_con">
+				<div><input type="checkbox" id="webui.enable" /><label for="webui.enable" id="DLG_SETT_WEBUI_01"></label></div>
+				<fieldset>
+					<legend id="DLG_SETT_WEBUI_02"></legend>
+					<table>
+					<tr>
+					<td><span id="DLG_SETT_WEBUI_03"></span></td>
+					<td><input type="text" id="webui.username" class="tbox str" /></td>
+					<td><span id="DLG_SETT_WEBUI_05"></span></td>
+					<td><input type="password" id="webui.password" class="tbox str" /></td>
+					</tr>
+					<tr>
+					<td colspan="3"><input type="checkbox" id="webui.enable_guest" /><label for="webui.enable_guest" id="DLG_SETT_WEBUI_07"></label></td>
+					<td><input type="text" id="webui.guest" class="tbox str" disabled="true" /></td>
+					</tr>
+					</table>
+				</fieldset>
+				<fieldset>
+					<legend id="DLG_SETT_WEBUI_09"></legend>
+					<table>
+					<tr>
+					<td><input type="checkbox" id="webui.enable_listen" /><label for="webui.enable_listen" id="DLG_SETT_WEBUI_10"></label></td>
+					<td><input type="text" id="webui.port" class="tbox num" disabled="true" /></td>
+					</tr>
+					</table>
+					<div id="DLG_SETT_WEBUI_12"></div>
+					<div><input type="text" id="webui.restrict" class="tbox" /></div>
+					</fieldset>
+					<fieldset>
+					<legend>User Interface</legend>
+					<div class="op50l"><input type="checkbox" id="webui.confirm_when_deleting" checked="true" /><label for="webui.confirm_when_deleting" id="DLG_SETT_1_06"></label></div>
+					<div class="op50l algnright">Update GUI every:&nbsp;<input type="text" id="webui.update_interval" class="tbox" value="3000" />ms</div>
+					<div class="op50l"><input type="checkbox" id="webui.alternate_color" /><label for="webui.alternate_color" id="DLG_SETT_1_16"></label></div>
+					<div class="op50l algnright">Show speed:&nbsp;<select id="webui.speed_display"><option value="0" selected="selected">Don't</option><option value="1">In status bar</option><option value="2">In title bar</option></select></div>
+					<div class="op50l"><input type="checkbox" id="webui.show_cats" checked="true" /><label for="webui.show_cats">Show categories on startup</label></div>
+					<div class="op50l algnright">Virtual Row Threshold:&nbsp;<input type="text" id="webui.minrows" class="tbox" value="50" /></div>
+					<div class="op50l"><input type="checkbox" id="webui.show_dets" checked="true" /><label for="webui.show_dets">Show details on startup</label></div>
+					<div class="op50l algnright">
+						<!--<input type="button" value="Restore to default" class="btn" onclick="javascript:utWebUI.RestoreUI();" />-->
+						<label for="webui.alternate_color" id="DLG_SETT_1_02"></label>
+						<select id="webui.lang">
+							<option value="auto">-- Auto-Detect --</option>
+							<option value="af">Afrikaans</option>
+							<option value="ar">Arabic</option>
+							<option value="az">Azerbaijani</option>
+							<option value="be">Belarusian</option>
+							<option value="bg">Bulgarian</option>
+							<option value="bs">Bosnian</option>
+							<option value="ca">Catalan</option>
+							<option value="cs">Czech</option>
+							<option value="de">German</option>
+							<option value="dk">Danish</option>
+							<option value="el">Greek</option>
+							<option value="en">English</option>
+							<option value="eo">Esperanto</option>
+							<option value="es">Spanish</option>
+							<option value="et">Estonian</option>
+							<option value="eu">Basque</option>
+							<option value="fa">Persian</option>
+							<option value="fi">Finnish</option>
+							<option value="fr">French</option>
+							<option value="fyNL">Frisian</option>
+							<option value="gl">Galician</option>
+							<option value="he">Hebrew</option>
+							<option value="hr">Croatian</option>
+							<option value="hu">Hungarian</option>
+							<option value="is">Icelandic</option>
+							<option value="it">Italian</option>
+							<option value="jp">Japanese</option>
+							<option value="ko">Korean</option>
+							<option value="lt">Lithuanian</option>
+							<option value="lv">Latvian</option>
+							<option value="mk">Macedonian</option>
+							<option value="my">Malay</option>
+							<option value="nl">Dutch</option>
+							<option value="nnNO">Norwegian Nynorsk</option>
+							<option value="no">Norwegian</option>
+							<option value="pl">Polish</option>
+							<option value="pt">Portuguese (Portugal)</option>
+							<option value="ptBR">Portuguese (Brazil)</option>
+							<option value="ro">Romanian</option>
+							<option value="ru">Russian</option>
+							<option value="sk">Slovak</option>
+							<option value="sl">Slovenian</option>
+							<option value="sq">Albanian</option>
+							<option value="srSR">Serbian (Cyrillic)</option>
+							<option value="srYU">Serbian (Latin)</option>
+							<option value="sv">Swedish</option>
+							<option value="th">Thai</option>
+							<option value="tu">Turkish</option>
+							<option value="tw">Taiwan</option>
+							<option value="ua">Ukrainian</option>
+							<option value="va">Valencian</option>
+							<option value="vi">Vietnamese</option>
+							<option value="zhCN">Chinese (Simplified)</option>
+							<option value="zhTW">Chinese (Traditional)</option>
+						</select>
+					</div>
+				</fieldset>
+			</div>
+
+
+			<div id="st_dl" class="stg_con">
+				<fieldset>
+					<legend>When adding torrents</legend>
+					<div>
+						<input type="checkbox" id="torrents_start_stopped" />
+						<label for="torrents_start_stopped">Don't start the download automatically</label>
+					</div>
+				</fieldset>
+				<fieldset>
+					<legend>Other Settings</legend>
+					<table>
+						<tr>
+							<td><input type="checkbox" id="append_incomplete" /><label for="append_incomplete">Append .!ut to incomplete files</label></td>
+							<td><input type="checkbox" id="prealloc_space" /><label for="prealloc_space">Pre-allocate all files</label></td>
+						</tr>
+					</table>
+					<div>
+						<input type="checkbox" id="sys.prevent_standby" />
+						<label for="sys.prevent_standby">Prevent stand-by if there are active torrents</label>
+					</div>
+				</fieldset>
+			</div>
+
+
+			<div id="st_con" class="stg_con">
+				<fieldset>
+					<legend id="DLG_SETT_3_01"></legend>
+					<table>
+						<tr>
+							<td id="DLG_SETT_3_02"></td>
+							<td class="alr"><input type="text" id="bind_port" class="tbox num" maxlength="6" /><input type="button" value="Random Port" id="DLG_SETT_3_04" /></td>
+						</tr>
+						<tr>
+							<td><input id="rand_port_on_start" type="checkbox" /><label for="rand_port_on_start" id="DLG_SETT_3_05"></label></td>
+							<td><input id="upnp" type="checkbox" /><label for="upnp" id="DLG_SETT_3_06"></label></td>
+						</tr>
+						<tr>
+							<td colspan="2"><input id="natpmp" type="checkbox" /><label for="natpmp" id="DLG_SETT_3_22"></label></td>
+						</tr>
+						<!--
+						<tr>
+							<td colspan="2"><input id="disable_fw" type="checkbox" /><label for="disable_fw" id="DLG_SETT_3_07"></label></td>
+						</tr>
+						-->
+					</table>
+				</fieldset>
+				<fieldset>
+					<legend id="DLG_SETT_3_08"></legend>
+					<div>
+						<span id="DLG_SETT_3_09"></span>
+						<select id="proxy.type"></select>
+						<label for="proxy.proxy" class="disabled" id="DLG_SETT_3_11"></label>
+						<input id="proxy.proxy" type="text" class="tbox str" disabled="true" />
+						<label for="proxy.port" class="disabled" id="DLG_SETT_3_13"></label>
+						<input id="proxy.port" type="text" class="tbox num" disabled="true" />
+					</div>
+					<div>
+						<input id="proxy.auth" type="checkbox" disabled="true" /><label for="proxy.auth" class="disabled" id="DLG_SETT_3_15"></label>
+						<label for="proxy.username" class="disabled" id="DLG_SETT_3_16"></label>
+						<input id="proxy.username" type="text" class="tbox str" disabled="true" />
+						<label for="proxy.password" class="disabled" id="DLG_SETT_3_18"></label>
+						<input id="proxy.password" type="text" class="tbox str" disabled="true" />
+					</div>
+					<div>
+						<input id="proxy.p2p" type="checkbox" disabled="true" />
+						<label for="proxy.p2p" class="disabled" id="DLG_SETT_3_20"></label>
+					</div>
+				</fieldset>
+			</div>
+			<div id="st_bt" class="stg_con">
+				<fieldset>
+				<legend id="DLG_SETT_4_09"></legend>
+				<table cellpadding="0" cellspacing="0">
+				<tr>
+				<td><input id="dht" type="checkbox" /><label for="dht" id="DLG_SETT_4_10"></label></td>
+				<td><input id="enable_scrape" type="checkbox" /><label for="enable_scrape" id="DLG_SETT_4_11"></label></td>
+				</tr>
+				<tr>
+				<td><input id="dht_per_torrent" type="checkbox" /><label for="dht_per_torrent" id="DLG_SETT_4_12"></label></td>
+				<td><input id="pex" type="checkbox" /><label for="pex" id="DLG_SETT_4_13"></label></td>
+				</tr>
+				<tr>
+				<td><input id="---" type="checkbox" /><label for="---" id="DLG_SETT_4_14"></label></td>
+				<td><input id="rate_limit_local_peers" type="checkbox" /><label for="rate_limit_local_peers" id="DLG_SETT_4_15"></label></td>
+				</tr>
+				<tr>
+				<td id="DLG_SETT_4_16"></td>
+				<td><input type="text" id="tracker_ip" class="tbox str" maxlength="50" /></td>
+				</tr>
+				</table>
+				</fieldset>
+				<fieldset>
+				<legend id="DLG_SETT_4_18"></legend>
+				<div>
+				<table>
+				<tr>
+				<td id="DLG_SETT_4_19"></td>
+				<td><select id="encryption_mode"></select></td>
+				<td><input id="encryption_allow_legacy" type="checkbox" /><label for="encryption_allow_legacy" id="DLG_SETT_4_21"></label></td>
+				</tr>
+				</table>
+				</div>
+				</fieldset>
+				</div>
+				<div id="st_que" class="stg_con">
+				<fieldset>
+				<legend id="DLG_SETT_5_01"></legend>
+				<table cellpadding="0" cellspacing="0">
+				<tr>
+				<td id="DLG_SETT_5_02"></td>
+				<td class="alr"><input type="text" id="max_active_torrent" class="tbox num" maxlength="6" /></td>
+				</tr>
+				<tr>
+				<td id="DLG_SETT_5_04"></td><td class="alr"><input type="text" id="max_active_downloads" class="tbox num" maxlength="6" /></td>
+				</tr>
+				</table>
+				</fieldset>
+				<fieldset>
+				<legend id="DLG_SETT_5_06"></legend>
+				<div><span id="DLG_SETT_5_07"></span><input type="text" id="seed_ratio" class="tbox num" /><span id="DLG_SETT_5_09"></span>&nbsp;<select id="seed_time"></select></div>
+				<div><input id="seeds_prioritized" type="checkbox" /><label for="seeds_prioritized" id="DLG_SETT_5_11"></label></div>
+				</fieldset>
+				<fieldset>
+				<legend id="DLG_SETT_5_12"></legend>
+				<table cellpadding="0" cellspacing="0">
+				<tr>
+				<td><input id="seed_prio_limitul_flag" type="checkbox" /><label for="seed_prio_limitul_flag" id="DLG_SETT_5_13"></label></td>
+				<td class="disabled" id="lbl_seed_prio_limitul"><input type="text" id="seed_prio_limitul" class="tbox num" maxlength="6" disabled="true" />&nbsp;<span id="DLG_SETT_5_15"></span></td>
+				</tr>
+				</table>
+				</fieldset>
+			</div>
+			<div id="st_sch" class="stg_con">
+				<input id="sched_enable" type="checkbox" /><label for="sched_enable" id="DLG_SETT_6_01"></label>
+				<fieldset>
+					<legend id="DLG_SETT_6_02"></legend>
+					<table id="sched_table" cellpadding="0" cellspacing="0"></table>
+				</fieldset>
+				<fieldset>
+					<legend id="DLG_SETT_6_04"></legend>
+					<table cellpadding="0" cellspacing="0">
+					<tr>
+					<td id="lbl_sched_ul_rate" class="disabled"></td>
+					<td class="alr"><input type="text" id="sched_ul_rate" class="tbox num" maxlength="6" disabled="true" /></td>
+					</tr>
+					<tr>
+					<td id="lbl_sched_dl_rate" class="disabled"></td>
+					<td class="alr"><input type="text" id="sched_dl_rate" class="tbox num" maxlength="6" disabled="true" /></td>
+					</tr>
+					<tr>
+					<td colspan="2"><input id="sched_dis_dht" type="checkbox" disabled="true" /><label id="lbl_sched_dis_dht" for="sched_dis_dht" class="disabled"></label></td>
+					</tr>
+					</table>
+				</fieldset>
+			</div>
+			<div id="st_dc" class="stg_con">
+				<fieldset>
+					<legend id="DLG_SETT_CACHE_01"></legend>
+					<div id="DLG_SETT_CACHE_02"></div>
+					<table cellpadding="0" cellspacing="0">
+					<tr>
+					<td><input id="cache.override" type="checkbox" /><label for="cache.override" id="DLG_SETT_CACHE_03"></label></td>
+					<td class="alr"><input type="text" id="cache.override_size" class="tbox num" maxlength="6" />&nbsp;<span id="lbl_cache.override_size"></span></td>
+					</tr>
+					<tr>
+					<td colspan="2"><input id="cache.reduce" type="checkbox" /><label for="cache.reduce" id="DLG_SETT_CACHE_06"></label></td>
+					</tr>
+					</table>
+				</fieldset>
+				<fieldset>
+					<legend id="DLG_SETT_CACHE_07"></legend>
+					<div><input id="cache.write" type="checkbox" /><label for="cache.write" id="DLG_SETT_CACHE_08"></label></div>
+					<div class="indent"><input id="cache.writeout" type="checkbox" /><label for="cache.writeout" id="lbl_cache.writeout" class="disabled"></label></div>
+					<div class="indent"><input id="cache.writeimm" type="checkbox" /><label for="cache.writeimm" id="lbl_cache.writeimm" class="disabled"></label></div>
+					<div><input id="cache.read" type="checkbox" /><label for="cache.read" id="DLG_SETT_CACHE_11"></label></div>
+					<div class="indent"><input id="cache.read_turnoff" type="checkbox" /><label for="cache.read_turnoff" id="lbl_cache.read_turnoff" class="disabled"></label></div>
+					<div class="indent"><input id="cache.read_prune" type="checkbox" /><label for="cache.read_prune" id="lbl_cache.read_prune" class="disabled"></label></div>
+					<div class="indent"><input id="cache.read_trash" type="checkbox" /><label for="cache.read_trash" id="lbl_cache.read_trash" class="disabled"></label></div>
+					<div><input id="cache.disable_win_write" type="checkbox" /><label for="cache.disable_win_write">Disable Windows caching of disk writes</label></div>
+					<div><input id="cache.disable_win_read" type="checkbox" /><label for="cache.disable_win_read">Disable Windows caching of disk reads</label></div>
+				</fieldset>
+			</div>
+			<div id="st_bw" class="stg_con">
+				<fieldset>
+					<legend id="DLG_SETT_3_21"></legend>
+					<fieldset>
+						<legend id="DLG_SETT_3_24"></legend>
+						<div>
+							<input type="text" id="max_ul_rate" class="tbox num" style="float: right" maxlength="6" disabled="true" />
+							<span id="DLG_SETT_3_25"></span>
+							<input type="checkbox" id="ul_auto_throttle" /><label for="ul_auto_throttle" id="DLG_SETT_3_26"></label>
+						</div>
+						<div>
+							<input type="text" id="max_ul_rate_seed" class="tbox num" style="float: right" maxlength="6" disabled="true" />
+							<span>&nbsp;&nbsp;&nbsp;&nbsp;</span><input id="max_ul_rate_seed_flag" type="checkbox" disabled="true" /><label for="max_ul_rate_seed_flag" id="DLG_SETT_3_28"></label>
+						</div>
+					</fieldset>
+					<fieldset>
+						<legend id="DLG_SETT_3_23"></legend>
+						<span id="DLG_SETT_3_30"></span><input type="text" id="max_dl_rate" class="tbox num" maxlength="6" />
+					</fieldset>
+				</fieldset>
+				<fieldset>
+					<legend id="DLG_SETT_4_01"></legend>
+					<table>
+					<tr>
+					<td id="DLG_SETT_4_02"></td>
+					<td class="alr"><input type="text" id="conns_globally" class="tbox num" maxlength="6" /></td>
+					</tr>
+					<tr>
+					<td id="DLG_SETT_4_04"></td>
+					<td class="alr"><input type="text" id="conns_per_torrent" class="tbox num" maxlength="6" /></td>
+					</tr>
+					<tr>
+					<td id="DLG_SETT_4_06"></td>
+					<td class="alr"><input type="text" id="ul_slots_per_torrent" class="tbox num" maxlength="6" /></td>
+					</tr>
+					<tr>
+					<td colspan="2">&nbsp;&nbsp;&nbsp;<input id="extra_ulslots" type="checkbox" /><label for="extra_ulslots" id="DLG_SETT_4_08"></label></td>
+					</tr>
+					</table>
+				</fieldset>
+			</div>
+			<div id="st_ao" class="stg_con">
+				<fieldset>
+				<legend id="DLG_SETT_8_01"></legend>
+				<div id="ST_COL_NAME"></div>
+				<div id="ST_COL_VALUE"></div>
+				<div id="st_ao_h">
+					<table cellpadding="0" cellspacing="0">
+						<tbody>
+							<tr>
+								<td><label for="bt.allow_same_ip">bt.allow_same_ip</label></td>
+								<td><input type="checkbox" id="bt.allow_same_ip" /></td>
+							</tr>
+							<tr>
+								<td><label for="bt.auto_ul_factor">bt.auto_ul_factor</label></td>
+								<td><input type="text" id="bt.auto_ul_factor" maxlength="5" /></td>
+							</tr>
+							<tr>
+								<td><label for="bt.auto_ul_interval">bt.auto_ul_<interval/label></td>
+								<td><input type="text" id="bt.auto_ul_interval" maxlength="5" /></td>
+							</tr>
+							<tr>
+								<td><label for="bt.auto_ul_min">bt.auto_ul_min</label></td>
+								<td><input type="text" id="bt.auto_ul_min" maxlength="5" /></td>
+							</tr>
+							<tr>
+								<td><label for="bt.auto_ul_sample_average">bt.auto_ul_sample_average</label></td>
+								<td><input type="text" id="bt.auto_ul_sample_average" maxlength="5" /></td>
+							</tr>
+							<tr>
+								<td><label for="bt.auto_ul_sample_window">bt.auto_ul_sample_window</label></td>
+								<td><input type="text" id="bt.auto_ul_sample_window" maxlength="5" /></td>
+							</tr>
+							<tr>
+								<td><label for="bt.ban_ratio">bt.ban_ratio</label></td>
+								<td><input type="text" id="bt.ban_ratio" maxlength="5" /></td>
+							</tr>
+							<tr>
+								<td><label for="bt.ban_threshold">bt.ban_threshold</label></td>
+								<td><input type="text" id="bt.ban_threshold" maxlength="5" /></td>
+							</tr>
+							<tr>
+								<td><label for="bt.compact_allocation">bt.compact_allocation</label></td>
+								<td><input type="checkbox" id="bt.compact_allocation" /></td>
+							</tr>							
+							<tr>
+								<td><label for="bt.connect_speed">bt.connect_speed</label></td>
+								<td><input type="text" id="bt.connect_speed" maxlength="5" /></td>
+							</tr>
+							<tr>
+								<td><label for="bt.enable_tracker">bt.enable_tracker</label></td>
+								<td><input type="checkbox" id="bt.enable_tracker" /></td>
+							</tr>
+							<tr>
+								<td><label for="bt.graceful_shutdown">bt.graceful_shutdown</label></td>
+								<td><input type="checkbox" id="bt.graceful_shutdown" /></td>
+							</tr>
+							<tr>
+								<td><label for="bt.multiscrape">bt.multiscrape</label></td>
+								<td><input type="checkbox" id="bt.multiscrape" /></td>
+							</tr>
+							<tr>
+								<td><label for="bt.no_connect_to_services">bt.no_connect_to_services</label></td>
+								<td><input type="checkbox" id="bt.no_connect_to_services" /></td>
+							</tr>
+							<tr>
+								<td><label for="bt.no_connect_to_services_list">bt.no_connect_to_services_list</label></td>
+								<td><input type="text" id="bt.no_connect_to_services_list" /></td>
+							</tr>
+							<tr>
+								<td><label for="bt.prio_first_last_piece">bt.prio_first_last_piece</label></td>
+								<td><input type="checkbox" id="bt.prio_first_last_piece" /></td>
+							</tr>
+							<tr>
+								<td><label for="bt.scrape_stopped">bt.scrape_stopped</label></td>
+								<td><input type="checkbox" id="bt.scrape_stopped" /></td>
+							</tr>
+							<tr>
+								<td><label for="bt.send_have_to_seed">bt.send_have_to_seed</label></td>
+								<td><input type="checkbox" id="bt.send_have_to_seed" /></td>
+							</tr>
+							<tr>
+								<td><label for="bt.set_sockbuf">bt.set_sockbuf</label></td>
+								<td><input type="checkbox" id="bt.set_sockbuf" /></td>
+							</tr>
+							<tr>
+								<td><label for="bt.transp_disposition">bt.transp_disposition</label></td>
+								<td><input type="text" id="bt.transp_disposition" maxlength="5" /></td>
+							</tr>
+							<tr>
+								<td><label for="bt.use_ban_ratio">bt.use_ban_ratio</label></td>
+								<td><input type="checkbox" id="bt.use_ban_ratio" /></td>
+							</tr>
+							<tr>
+								<td><label for="bt.use_rangeblock">bt.use_rangeblock</label></td>
+								<td><input type="checkbox" id="bt.use_rangeblock" /></td>
+							</tr>
+							<tr>
+								<td><label for="dht.rate">dht.rate</label></td>
+								<td><input type="text" id="dht.rate" maxlength="4" /></td>
+							</tr>
+							<tr>
+								<td><label for="diskio.coalesce_writes">diskio.coalesce_writes</label></td>
+								<td><input type="checkbox" id="diskio.coalesce_writes" /></td>
+							</tr>
+							<tr>
+								<td><label for="diskio.flush_files">diskio.flush_files</label></td>
+								<td><input type="checkbox" id="diskio.flush_files" /></td>
+							</tr>
+							<tr>
+								<td><label for="diskio.smart_hash">diskio.smart_hash</label></td>
+								<td><input type="checkbox" id="diskio.smart_hash" /></td>
+							</tr>
+							<tr>
+								<td><label for="diskio.sparse_files">diskio.sparse_files</label></td>
+								<td><input type="checkbox" id="diskio.sparse_files" /></td>
+							</tr>
+							<tr>
+								<td><label for="diskio.use_partfile">diskio.use_partfile</label></td>
+								<td><input type="checkbox" id="diskio.use_partfile" /></td>
+							</tr>
+							<tr>
+								<td><label for="gui.default_del_action">gui.default_del_action</label></td>
+								<td><input type="text" id="gui.default_del_action" maxlength="1" /></td>
+							</tr>
+							<tr>
+								<td><label for="gui.delete_to_trash">gui.delete_to_trash</label></td>
+								<td><input type="checkbox" id="gui.delete_to_trash" /></td>
+							</tr>
+							<tr>
+								<td><label for="ipfilter.enable">ipfilter.enable</label></td>
+								<td><input type="checkbox" id="ipfilter.enable" /></td>
+							</tr>
+							<tr>
+								<td><label for="net.bind_ip">net.bind_ip</label></td>
+								<td><input type="text" id="net.bind_ip" maxlength="20" /></td>
+							</tr>
+							<tr>
+								<td><label for="net.low_cpu">net.low_cpu</label></td>
+								<td><input type="checkbox" id="net.low_cpu" /></td>
+							</tr>
+							<tr>
+								<td><label for="net.max_halfopen">net.max_halfopen</label></td>
+								<td><input type="text" id="net.max_halfopen" maxlength="2" /></td>
+							</tr>
+							<tr>
+								<td><label for="net.outgoing_ip">net.outgoing_ip</label></td>
+								<td><input type="text" id="net.outgoing_ip" maxlength="20" /></td>
+							</tr>
+							<tr>
+								<td><label for="net.outgoing_max_port">net.outgoing_max_port</label></td>
+								<td><input type="text" id="net.outgoing_max_port" maxlength="20" /></td>
+							</tr>
+							<tr>
+								<td><label for="net.outgoing_port">net.outgoing_port</label></td>
+								<td><input type="text" id="net.outgoing_port" maxlength="20" /></td>
+							</tr>
+							<tr>
+								<td><label for="net.wsaevents">net.wsaevents</label></td>
+								<td><input type="text" id="net.wsaevents" maxlength="2" /></td>
+							</tr>
+							<tr>
+								<td><label for="peer.disconnect_inactive">peer.disconnect_inactive</label></td>
+								<td><input type="checkbox" id="peer.disconnect_inactive" /></td>
+							</tr>
+							<tr>
+								<td><label for="peer.disconnect_inactive_interval">peer.disconnect_inactive_interval</label></td>
+								<td><input type="text" id="peer.disconnect_inactive_interval" class="tbox num" maxlength="20" /></td>
+							</tr>
+							<tr>
+								<td><label for="peer.lazy_bitfield">peer.lazy_bitfield</label></td>
+								<td><input type="checkbox" id="peer.lazy_bitfield" /></td>
+							</tr>
+							<tr>
+								<td><label for="queue.dont_count_slow_dl">queue.dont_count_slow_dl</label></td>
+								<td><input type="checkbox" id="queue.dont_count_slow_dl" /></td>
+							</tr>
+							<tr>
+								<td><label for="queue.dont_count_slow_ul">queue.dont_count_slow_ul</label></td>
+								<td><input type="checkbox" id="queue.dont_count_slow_ul" /></td>
+							</tr>
+							<tr>
+								<td><label for="queue.prio_no_seeds">queue.prio_no_seeds</label></td>
+								<td><input type="checkbox" id="queue.prio_no_seeds" /></td>
+							</tr>
+							<tr>
+								<td><label for="queue.slow_dl_threshold">queue.slow_dl_threshold</label></td>
+								<td><input type="text" id="queue.slow_dl_threshold" /></td>
+							</tr>
+							<tr>
+								<td><label for="queue.slow_ul_threshold">queue.slow_ul_threshold</label></td>
+								<td><input type="text" id="queue.slow_ul_threshold" /></td>
+							</tr>
+							<tr>
+								<td><label for="queue.use_seed_peer_ratio">queue.use_seed_peer_ratio</label></td>
+								<td><input type="checkbox" id="queue.use_seed_peer_ratio" /></td>
+							</tr>
+							<tr>
+								<td><label for="rss.update_interval">rss.update_interval</label></td>
+								<td><input type="text" id="rss.update_interval" maxlength="4" /></td>
+							</tr>
+							<tr>
+								<td><label for="sys.enable_wine_hacks">sys.enable_wine_hacks</label></td>
+								<td><input type="checkbox" id="sys.enable_wine_hacks" /></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				</fieldset>
+			</div>
+			<div id="st_btns">
+				<input type="button" id="DLG_SETTINGS_02" class="btn" />
+				<input type="button" id="DLG_SETTINGS_03" class="btn" />
+			</div>
+			</div>
+		</div>
+		<!-- Settings Dialog */ -->
+		
+		<!-- /* RSS Dialog
+		<div id="dlgRss" class="dlg-window">
+			<a href="javascript:Hide('dlgRss');" class="dlg-close"></a>
+			<div id="dlgRss-header" class="dlg-header">RSS Downloader</div>
+			<div id="dlgRss-content"></div>
+		</div>
+		RSS Dialog */ -->
+		
+		<!-- /* Torrent Properties Dialog -->
+		<div id="dlgProps" class="dlg-window">
+			<a href="#" class="dlg-close"></a>
+			<div id="dlgProps-header" class="dlg-header"></div>
+			<div class="content fxcaret">
+				<fieldset>
+					<legend id="DLG_TORRENTPROP_GEN_01"></legend>
+					<textarea id="prop-trackers"></textarea>
+				</fieldset>
+				<fieldset>
+					<legend id="DLG_TORRENTPROP_GEN_03"></legend>
+					<div><input type="text" id="prop-ulrate" /><span id="DLG_TORRENTPROP_GEN_04"></span></div>
+					<div><input type="text" id="prop-dlrate" /><span id="DLG_TORRENTPROP_GEN_06"></span></div>
+					<div><input type="text" id="prop-ulslots" /><span id="DLG_TORRENTPROP_GEN_08"></span></div>
+				</fieldset>
+				<fieldset>
+					<legend id="DLG_TORRENTPROP_GEN_10"></legend>
+					<div><input type="checkbox" id="prop-seed_override" /><label id="DLG_TORRENTPROP_GEN_11" for="prop-seed_override"></label></div>
+					<div id="lbl_prop-seed_ratio" class="disabled">
+						<span id="DLG_TORRENTPROP_GEN_12"></span> <input type="text" id="prop-seed_ratio" class="tbox" /><span id="DLG_TORRENTPROP_GEN_14"></span>
+						<select id="prop-seed_time"></select>
+					</div>
+				</fieldset>
+				<fieldset>
+					<legend id="DLG_TORRENTPROP_GEN_16"></legend>
+					<div class="props-spacer"><input type="checkbox" id="prop-superseed" /><label id="DLG_TORRENTPROP_GEN_17" for="prop-superseed"></label></div>
+					<div class="props-spacer"><input type="checkbox" id="prop-dht" /><label for="prop-dht" id="lbl_prop-dht"></label></div>
+					<div class="props-spacer"><input type="checkbox" id="prop-pex" /><label for="prop-pex" id="lbl_prop-pex"></label></div>
+				</fieldset>
+				<div class="aright"><input type="button" value="" class="btn" id="DLG_TORRENTPROP_01" /><input type="button" value="" class="btn" id="DLG_TORRENTPROP_02" /></div>
+			</div>
+		</div>
+		<!-- Torrent Properties Dialog */ -->
+		
+		<!-- /* About Dialog -->
+		<div id="dlgAbout" class="dlg-window">
+			<a href="#" class="dlg-close"></a>
+			<div id="dlgAbout-header" class="dlg-header">About</div>
+			<div class="content">
+				<img style="float: right" src="./images/ut.png" />
+				<b>Developer</b>:<br />&nbsp;&nbsp;&nbsp;Carsten Niebuhr (Directrix)<br /><br />
+				<b>Contributors</b>: <br />Firon,&nbsp;icleolion,&nbsp;<a href="http://www.ignorantcow.net/">Ignorantcow</a>,&nbsp;shawnz,&nbsp;Ultima<br /><br />
+				<b>Bug Tracker</b>:<br />&nbsp;&nbsp;&nbsp;<a href="http://utbugs.leetwebhosting.com" target="_blank">http://utbugs.leetwebhosting.com</a><br />&nbsp;&nbsp;&nbsp;- Provided and hosted by Asskick
+				<p>
+				<br />
+				<a id="mootools" href="http://www.mootools.net/"><img src="./images/mootools.png" /></a>
+				</p>
+			</div>
+		</div>
+		<!-- About Dialog */ -->
+		
+		<!-- /* New Label Dialog -->
+ 		<div id="dlgLabel" class="dlg-window">
+			<a href="#" class="dlg-close"></a>
+			<div id="dlgLabel-header" class="dlg-header"></div>
+			<div class="content fxcaret">
+				<span id="OV_NEWLABEL_TEXT"></span><br />
+				<input type="text" id="txtLabel" class="tbox" /><br />
+				<input type="button" class="btn" value="   OK   " onclick="javascript:utWebUI.createLabel();Hide('dlgLabel');Hide('modalbg');" />&nbsp;&nbsp;
+				<input type="button" class="btn" value=" Cancel " onclick="javascript:Hide('dlgLabel');Hide('modalbg');" />
+			</div>
+		</div>
+		<!-- New Label Dialog */ -->
+		
+		<!-- /* Delete Confirmation Dialog -->
+ 		<div id="dlgDelTor" class="dlg-window">
+			<a href="#" class="dlg-close"></a>
+			<div id="dlgDelTor-header" class="dlg-header">Remove Torrent(s)</div>
+			<div class="content">
+				<span id="OV_CONFIRM_DELETE"></span><br />
+			  <input type="button" class="btn" value="   OK   " onclick="javascript:utWebUI.doRemove();Hide('dlgDelTor');Hide('modalbg');" />&nbsp;&nbsp;
+			  <input type="button" class="btn" value="   No   " onclick="javascript:Hide('dlgDelTor');Hide('modalbg');" />
+			</div>
+		</div>
+		<!-- Delete Confirmation Dialog */ -->
+		
+		<!-- /* Toolbar -->
+		<div id="toolbar">
+			<a id="add" href="#" title="Add Torrent..."><div></div></a>
+			<div class="TB_Separator"></div>
+			<a id="remove" href="#" title="Remove"><div></div></a>
+			<div class="TB_Separator"></div>
+			<a id="start" href="#" title="Start"><div></div></a>
+			<a id="pause" href="#" title="Pause"><div></div></a>
+			<a id="stop" href="#" title="Stop"><div></div></a>
+			<div class="TB_Separator"></div>
+			<a id="setting" href="#" title="Settings"><div></div></a>
+			<div id="sb">
+				<a href="#" id="search"></a><input type="text" class="tbox" id="query" />
+			</div>
+		</div>
+		<!-- Toolbar */ -->
+		
+		<div id="CatList">
+			<ul>
+				<li id="_all_" class="sel"><span id="OV_CAT_ALL"></span> (<span id="_all_c">0</span>)</li>
+				<li id="_dls_"><span id="OV_CAT_DL"></span> (<span id="_dls_c">0</span>)</li>
+				<li id="_com_"><span id="OV_CAT_COMPL"></span> (<span id="_com_c">0</span>)</li>
+				<li id="_act_"><span id="OV_CAT_ACTIVE"></span> (<span id="_act_c">0</span>)</li>
+				<li id="_iac_"><span id="OV_CAT_INACTIVE"></span> (<span id="_iac_c">0</span>)</li>
+				<li><hr /></li>
+				<li id="_nlb_"><span id="OV_CAT_NOLABEL"></span> (<span id="_nlb_c">0</span>)</li>
+			</ul>
+			<ul id="lbll"></ul>
+		</div><div id="List"></div><div id="tdetails">
+			<ul id="tabs"></ul>
+			<div id="tdcont">
+				<div id="gcont"><table cellpadding="5" cellspacing="2" style="width: 100%"><tr><td colspan="3" class="Header">Transfer</td></tr><tr><td style="width: 33%">Time Elapsed: <span id="et"></span></td><td style="width: 34%">Remaining: <span id="rm"></span></td><td style="width: 33%">Share Ratio: <span id="ra"></span></td></tr><tr><td>Downloaded: <span id="dl"></span></td><td>Download Speed: <span id="ds"></span></td><td>Down Limit: <span id="dll"></span></td></tr><tr><td>Uploaded: <span id="ul"></span></td><td>Upload Speed: <span id="us"></span></td><td>Up Limit: <span id="ull"></span></td></tr><tr><td>Seeds: <span id="se"></span></td><td>Peers: <span id="pe"></span></td><td>Wasted: <span id="wa"></span></td></tr><tr><td colspan="3" class="Header">Tracker</td></tr><tr><td colspan="3">Tracker URL:</td></tr><tr><td colspan="3">Tracker Status:</td></tr><tr><td colspan="3">Update In:</td></tr><tr><td colspan="3">DHT Status:</td></tr><tr><td colspan="3" class="Header">General</td></tr><tr><td colspan="3">Save As:</td></tr><tr><td colspan="3">Total Size:</td></tr><tr><td colspan="3">Created On:</td></tr><tr><td colspan="3">Comment:</td></tr></table></div>
+				<div id="FileList"></div>
+				<div id="lcont"></div>
+			</div>
+		</div>
+		<div id="VDivider"></div>
+		<div id="HDivider"></div>
+		<!--<iframe name="uploadfrm" id="uploadfrm" src="" scrolling="no" frameborder="0"></iframe>-->
+		<script type="text/javascript" src="./mootools.js"></script>
+		<script type="text/javascript" src="./stable.js"></script>
+		<script type="text/javascript" src="./lang/en.js"></script>
+		<script type="text/javascript" src="./main.js"></script>
+	</body>
+</html>
