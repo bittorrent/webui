@@ -2134,7 +2134,6 @@ window.addEvent("domready", function() {
 		$("add_button").disabled = false;
 	});
 	*/
-	hgfdhgfdhgfdh
 
 	ContextMenu.init("ContextMenu");
 	
