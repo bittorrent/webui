@@ -1489,7 +1489,6 @@ var utWebUI = {
 	
 	"trtColResize": function() {
 		this.config.torrentTable.colWidth = this.trtTable.colWidth;
-		console.log(this.config.torrentTable.colWidth);
 	},
 	
 	"trtColToggle": function(index, state) {
@@ -1530,7 +1529,13 @@ var utWebUI = {
 	},
 	
 	"saveConfig": function() {
-		this.request("?action=setsetting&s=webui.cookie&v=" + JSON.encode(this.config));
+		// this gets called on window unload, WebKit cancels asynchronous requests
+		// so, we force it to perform a synchronous request
+		new Request({
+			"url": this.url + "?action=setsetting&s=webui.cookie&v=" + JSON.encode(this.config),
+			"method": "get",
+			"async": false
+		}).send();
 	},
 	
 	"toggleCatPanel": function() {
