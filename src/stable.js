@@ -94,12 +94,14 @@ var dxSTable = new Class({
 	},
 	
 	"create": function(id, columns, options) {
-		this.setOptions(options);
 		this.colHeader = columns;
 		this.colWidth = options.colWidth || (new Array(columns.length));
-		this.colWidth.map(function(v) {
-			return v || 150;
-		});
+		this.colOrder = options.colOrder || (new Array(columns.length));
+		this.sIndex = (typeof options.sIndex == "number") ? options.sIndex.toInt().limit(-1, columns.length - 1) : -1;
+		delete options.colOrder;
+		delete options.colWidth;
+		delete options.sIndex;
+		this.setOptions(options);
 	
 		var tr, td, div, $me = this;
 
@@ -142,20 +144,26 @@ var dxSTable = new Class({
 				nDrag.attach().start(ev);
 			}
 		});
+		
+		var simpleClone = function(ele, content) {
+			ele = $(ele.cloneNode(!!content));
+			ele.uid = null;
+			$uid(ele);
+			return ele;
+		};
 
-		var len = this.colHeader.length, ROW = $(TR.cloneNode(false));
+		var len = this.colHeader.length, ROW = simpleClone(TR, false);
 		for (var i = 0, j = 0; i < len; i++) {
-			this.colOrder[i] = this.colOrder[i] || i;
+			this.colOrder[i] = (typeof this.colOrder[i] == "number") ? this.colOrder[i].limit(0, len - 1) : i;
 			this.cols++;
 			this.colData[i] = this.colHeader[this.colOrder[i]];
 			ROW.grab(
-				$(TD.cloneNode(false))
-					.addClasses(this.id + "-col-" + this.colOrder[i], this.colData[i].disabled ? "stable-hidden-column" : "")
+				simpleClone(TD, false).addClasses(this.id + "-col-" + this.colOrder[i], this.colData[i].disabled ? "stable-hidden-column" : "")
 			);
 				
-			td = $(TD.cloneNode(false))
+			td = simpleClone(TD, false)
 				.set("text", this.colData[i].text)
-				.setStyle("width", this.colWidth[i])
+				.setStyle("width", this.colWidth[this.colOrder[i]])
 				.store("index", i)
 				.inject(tr);
 			if (this.colData[i].disabled)
@@ -174,16 +182,16 @@ var dxSTable = new Class({
 		}).inject(this.dBody);
 		
 		if (this.options.mode == MODE_VIRTUAL)
-			this.bottomPad = $(DIV.cloneNode(false)).addClass("stable-pad").inject(this.dBody);
+			this.bottomPad = simpleClone(DIV, false).addClass("stable-pad").inject(this.dBody);
 		
 		var cg = new Element("colgroup").inject(this.tBody);
 		for (var i = 0; i < len; i++) {
 			this.tBodyCols[i] = new Element("col", {
 				"styles": {
-					"width": this.colWidth[i],
+					"width": this.colWidth[this.colOrder[i]],
 					"display": this.colData[i].disabled ? "none" : ''
 				},
-				"width": this.colWidth[i],
+				"width": this.colWidth[this.colOrder[i]],
 				"span": 1
 			}).inject(cg);
 		}
@@ -195,11 +203,11 @@ var dxSTable = new Class({
 		}
 		
 		this.colDragEle = null;
-		this.colDragObj = $(DIV.cloneNode(false)).addClass("stable-move-header").inject(this.dHead);		
-		this.colSep = $(DIV.cloneNode(false)).addClass("stable-separator-header").inject(this.dHead);
-		this.colReszObj = $(DIV.cloneNode(false)).addClass("stable-resize-header").inject(this.dBody);
+		this.colDragObj = simpleClone(DIV, false).addClass("stable-move-header").inject(this.dHead);		
+		this.colSep = simpleClone(DIV, false).addClass("stable-separator-header").inject(this.dHead);
+		this.colReszObj = simpleClone(DIV, false).addClass("stable-resize-header").inject(this.dBody);
 		
-		this.loadObj = $(DIV.cloneNode(false)).addClass("stable-loading").grab($(DIV.cloneNode(false)).addClass("stable-loading-text").set("html", "Loading...")).inject(this.dCont);
+		this.loadObj = simpleClone(DIV, false).addClass("stable-loading").grab(simpleClone(DIV, false).addClass("stable-loading-text").set("html", "Loading...")).inject(this.dCont);
 		
 		this.dBody.addEvent("mousedown", function(ev) {
 			if (ev.target && (ev.target.tagName.toLowerCase() == "td")) {
@@ -213,13 +221,13 @@ var dxSTable = new Class({
 			}
 		});
 		for (var i = 0; i < this.options.maxRows; i++)
-			this.tb.body.grab(ROW.cloneNode(true).hide());
+			this.tb.body.grab(simpleClone(ROW, true).hide());
 		ROW = null;
 		
 		this.tBody.grab(this.tb.body);
 		if (this.options.mode == MODE_PAGE) {
-			this.pageMenu = $(DIV.cloneNode(false)).addClass("stable-pagemenu").inject(this.dCont);
-			this.pageNext = $(DIV.cloneNode(false))
+			this.pageMenu = simpleClone(DIV, false).addClass("stable-pagemenu").inject(this.dCont);
+			this.pageNext = simpleClone(DIV, false)
 							.addClass("nextlink-disabled")
 							.addEvent("click", this.nextPage.bind(this))
 							.addEvent("mouseenter", function() {
@@ -229,7 +237,7 @@ var dxSTable = new Class({
 								if (this.hasClass("nextlink")) this.removeClass("nextlink-hover");
 							})
 							.inject(this.pageMenu);
-			this.pagePrev = $(DIV.cloneNode(false))
+			this.pagePrev = simpleClone(DIV, false)
 							.addClass("prevlink-disabled")
 							.addEvent("click", this.prevPage.bind(this))
 							.addEvent("mouseenter", function() {
@@ -334,10 +342,10 @@ var dxSTable = new Class({
 		this.isSorting = true;
 		var rev = true;
 
-		if (col === null) {
-			if (this.options.sIndex == -1) return;
+		if (col == null) {
+			if (this.sIndex == -1) return;
 			rev = false;
-			col = this.tb.head.childNodes[0].childNodes[this.options.sIndex];
+			col = this.tb.head.childNodes[0].childNodes[this.sIndex];
 		}
 		
 		if (col.get("tag") != "td")
@@ -345,7 +353,7 @@ var dxSTable = new Class({
 
 		var ind = col.retrieve("index");
 		if (window.shiftKey) { //secondary sorting
-			if (ind == this.options.sIndex) {
+			if (ind == this.sIndex) {
 				this.secIndex = 0;
 				return;
 			}
@@ -355,20 +363,20 @@ var dxSTable = new Class({
 				this.secRev = 0;
 			}
 			this.secIndex = ind;
-			ind = this.options.sIndex;
+			ind = this.sIndex;
 			rev = false;
-			col = this.tb.head.childNodes[0].childNodes[this.options.sIndex];
+			col = this.tb.head.childNodes[0].childNodes[this.sIndex];
 		}
 
 		if (rev)
-			this.options.reverse = (this.options.sIndex == ind) ? (1 - this.options.reverse) : 0;
+			this.options.reverse = (this.sIndex == ind) ? (1 - this.options.reverse) : 0;
 		
-		if (this.options.sIndex >= 0)
-			this.tb.head.childNodes[0].childNodes[this.options.sIndex].setStyle("backgroundPosition", "right -32px");
+		if (this.sIndex >= 0)
+			this.tb.head.childNodes[0].childNodes[this.sIndex].setStyle("backgroundPosition", "right -32px");
 
 		col.setStyle("backgroundPosition", "right " + ((this.options.reverse) ? "-16px" : "0px"));
 
-		this.options.sIndex = ind;
+		this.sIndex = ind;
 		var d = this.getCache(ind);
 		var $me = this;
 		switch (this.colData[ind].type)
@@ -818,7 +826,7 @@ var dxSTable = new Class({
 		var hide = !this.colData[index].disabled;
 		this.colData[index].disabled = hide;
 		this.tBodyCols[index].setStyles({
-			"width": hide ? 0 : (this.colWidth[index] || "auto"),
+			"width": hide ? 0 : (this.colWidth[this.colOrder[index]] || "auto"),
 			"display": hide ? "none" : ''
 		});
 		this.tHeadCols[index][hide ? "addClass" : "removeClass"]("stable-hidden-column");
@@ -975,7 +983,7 @@ var ColumnHandler = {
 
 	"check": function(ev, cell) {
 		if (this.isResizing) return;
-		var x = ev.page.x - cell.getPosition().x + this.dBody.scrollLeft;
+		var x = ev.page.x - cell.getPosition().x;
 		var i = cell.retrieve("index");
 		if ((x <= 8) && (i > 0)) {
 			this.hotCell = i - 1;
@@ -992,8 +1000,8 @@ var ColumnHandler = {
 };
 
 function resizeColumn(index) {
-	var cols = this.tBody.getElement("colgroup").getElements("col");
-	this.colWidth[index] = this.tHeadCols[index].getWidth();
+	var cols = this.tBody.find("colgroup").search("col");
+	this.colWidth[this.colOrder[index]] = this.tHeadCols[index].getWidth();
 	var from = $pick(index, 0);
 	var to = $pick(index, cols.length - 1);
  	for (var i = from; i <= to; i++)
@@ -1066,23 +1074,24 @@ function moveColumn(iCol, iNew) {
 	this.tBodyCols = aBC.slice(0);
 	this.colData = aC.slice(0);
 	this.colOrder = aO.slice(0);
+	console.log(this.colOrder);
 	
 	aHC = aBC = aC = aO = null;
 	
 	for (i = 0; i < this.cols; i++)
 		this.tHeadCols[i].store("index", i);
 
-	if ((iNew == this.options.sIndex) && (iCol > iNew)) {
+	if ((iNew == this.sIndex) && (iCol > iNew)) {
 		// we moved a column that was to the right of the sorted column to the left of it
-		this.options.sIndex = iNew + 1;
-	} else if ((iCol < iNew) && (this.options.sIndex < iNew) && (this.options.sIndex > iCol)) {
+		this.sIndex = iNew + 1;
+	} else if ((iCol < iNew) && (this.sIndex < iNew) && (this.sIndex > iCol)) {
 		// we moved a column that was to the left of the sorted column to the right of it
-		this.options.sIndex--;
-	} else if (iCol == this.options.sIndex) {
+		this.sIndex--;
+	} else if (iCol == this.sIndex) {
 		// we moved the sorted column
-		this.options.sIndex = iNew;
+		this.sIndex = iNew;
 		if (iNew > iCol) // we moved it to the right
-			this.options.sIndex--;
+			this.sIndex--;
 	}
 
 	this.cancelSort = false;

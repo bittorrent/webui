@@ -144,15 +144,15 @@ function setupUI() {
 			col(lang.OV_COL_STATUS, TYPE_STRING, colMask & 0x0002),
 			col(lang.OV_COL_SIZE, TYPE_NUMBER, colMask & 0x0004),
 			col(lang.OV_COL_DONE, TYPE_NUMBER, colMask & 0x0008),
-			col(lang.OV_COL_DOWNLOADED, TYPE_NUMBER, colMask & 0x000F),
+			col(lang.OV_COL_DOWNLOADED, TYPE_NUMBER, colMask & 0x0010),
 			col(lang.OV_COL_UPPED, TYPE_NUMBER, colMask & 0x0020),
 			col(lang.OV_COL_SHARED, TYPE_NUMBER, colMask & 0x0040),
 			col(lang.OV_COL_DOWNSPD, TYPE_NUMBER, colMask & 0x0080),
-			col(lang.OV_COL_UPSPD, TYPE_NUMBER, colMask & 0x00FF),
+			col(lang.OV_COL_UPSPD, TYPE_NUMBER, colMask & 0x0100),
 			col(lang.OV_COL_ETA, TYPE_NUMBER, colMask & 0x0200),
 			col(lang.OV_COL_LABEL, TYPE_STRING, colMask & 0x0400),
 			col(lang.OV_COL_PEERS, TYPE_NUMBER, colMask & 0x0800),
-			col(lang.OV_COL_SEEDS, TYPE_NUMBER, colMask & 0x0FFF),
+			col(lang.OV_COL_SEEDS, TYPE_NUMBER, colMask & 0x1000),
 			col(lang.OV_COL_AVAIL.split("||")[1], TYPE_NUMBER, colMask & 0x2000),
 			col(lang.OV_COL_ORDER, TYPE_NUMBER, colMask & 0x4000, ALIGN_LEFT),
 			col(lang.OV_COL_REMAINING, TYPE_NUMBER, colMask & 0x8000)
@@ -201,11 +201,11 @@ function setupUI() {
 
 	colMask = utWebUI.config.flsCols;
 	utWebUI.flsTable.create("FileList", [
-			col(lang.FI_COL_NAME, TYPE_STRING, colMask & 0x1),
-			col(lang.FI_COL_SIZE, TYPE_NUMBER, colMask & 0x2),
-			col(lang.FI_COL_DONE, TYPE_NUMBER, colMask & 0x4),
-			col(lang.FI_COL_PCT, TYPE_NUMBER, colMask & 0x8),
-			col(lang.FI_COL_PRIO, TYPE_NUMBER, colMask & 0xF)
+			col(lang.FI_COL_NAME, TYPE_STRING, colMask & 0x01),
+			col(lang.FI_COL_SIZE, TYPE_NUMBER, colMask & 0x02),
+			col(lang.FI_COL_DONE, TYPE_NUMBER, colMask & 0x04),
+			col(lang.FI_COL_PCT, TYPE_NUMBER, colMask & 0x08),
+			col(lang.FI_COL_PRIO, TYPE_NUMBER, colMask & 0x10)
 		], $extend({
 		"format": function(values, index) {
 			if (index == null)
@@ -1487,6 +1487,7 @@ var utWebUI = {
 		} else {
 			this.config.trtCols &= ~(1 << index);
 		}
+		console.log(this.config.trtCols);
 	},
 	
 	"flsSort": function() {
