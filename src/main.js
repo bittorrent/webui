@@ -241,6 +241,7 @@ function setupUI() {
 		"onSort": utWebUI.flsSort.bind(utWebUI),
 		"onSelect": utWebUI.flsSelect.bind(utWebUI)
 	}, utWebUI.config.fileTable));
+	utWebUI.flsTable.loadObj.hide();
 	
 	resizeUI();
 	
@@ -377,13 +378,12 @@ function resizeUI(w, h) {
 	
 	if (showdet) {
 		$("tdetails").setStyle("width", ww - (Browser.Engine.trident4 ? 14 : 12));
-		if ($chk(h))
-		{
-			$("tdetails").setStyle("height", wh - h);
-			$("tdcont").setStyle("height", wh - h - 80);
-			$("gcont").setStyle("height", wh - h - 88);
+		if ($chk(h)) {
+			$("tdetails").setStyle("height", wh - h - 10);
+			$("tdcont").setStyle("height", wh - h - 86);
+			$("gcont").setStyle("height", wh - h - 96);
 		}
-		utWebUI.flsTable.resizeTo(ww - 21, !$chk(h) ? (wh - 70) : h);
+		utWebUI.flsTable.resizeTo(ww - 22, $chk(h) ? (h + 18) : wh);
 	}
 
 	utWebUI.trtTable.resizeTo(w, h);
@@ -637,8 +637,7 @@ var utWebUI = {
 
 	"addTorrents": function(json) {
 		var dobj = JSON.decode(json), torrents = [];
-		if (!$defined(dobj.torrents)) {
-			if (!$defined(dobj.torrentp)) return;
+		if (!dobj.hasOwnProperty("torrents")) {
 			torrents = dobj.torrentp;
 			delete dobj.torrentp;
 		} else {
@@ -648,6 +647,8 @@ var utWebUI = {
 		this.loadLabels($A(dobj.label));
 		if (!this.labels.hasOwnProperty(this.config.activeLabel) && !this.customLabels.hasOwnProperty(this.config.activeLabel)) {
 			this.config.activeLabel = "_all_";
+			$("_all_").addClass("sel");
+			$(this.config.activeLabel).removeClass("sel");
 		} else {
 			$("_all_").removeClass("sel");
 			$(this.config.activeLabel).addClass("sel");
@@ -725,7 +726,7 @@ var utWebUI = {
 		if (Browser.Engine.gecko || Browser.Engine.trident)
 			this.trtTable.attachBody();
 		
-		if ($defined(dobj.torrentm)) {
+		if (dobj.hasOwnProperty("torrentm")) {
 			for (var i = 0, j = dobj.torrentm.length; i < j; i++) {
 				var k = dobj.torrentm[i];
 				delete this.torrents[k];
@@ -964,7 +965,7 @@ var utWebUI = {
 			}
 		}
 		for (var i = 0, j = settings.length; i < j; i++) {
-			if (settings[i][0] == "webui.cookie") {
+			if ((settings[i][0] == "webui.cookie") && !this.loaded) { // only load webui.cookie on startup
 				$extend(this.config, JSON.decode(settings[i][2])); // if the user corrupts the "cookie," good for him/her 
 				continue;
 			}
@@ -1002,6 +1003,17 @@ var utWebUI = {
 			}
 			ele.fireEvent("change");
 		}
+		["lang"].each(function(key) {
+			var ele;
+			if (!(ele = $("webui." + key))) return;
+			var v = utWebUI.config[key];
+			if (ele.type == "checkbox") {
+				ele.checked = ((v == "1") || (v == "true"));
+			} else {
+				ele.set("value", v);
+			}
+			ele.fireEvent("change");
+		});
 	},
 	
 	"setSettings": function() {
@@ -1093,22 +1105,22 @@ var utWebUI = {
 	},
 	
 	"showSettings": function() {
-		this.getSettings();
+		//this.getSettings();
 		$("dlgSettings").centre();
 	},
 	
 	"trtSelect": function(e, id) {
 		if (e.rightClick) {
-			if (this.config.showDetails && (this.trtTable.selCount == 1))
+			if (this.config.showDetails && (this.trtTable.selectedRows.length == 1))
 				this.showDetails(id);
 			this.showMenu(e, id);
 		} else {
 			if (this.config.showDetails) {
-				if (this.trtTable.selCount == 0) {
+				if (this.trtTable.selectedRows.length == 0) {
 					this.torrentID = "";
 					this.flsTable.clearRows();
 					this.clearDetails();
-				} else if (this.trtTable.selCount == 1) {
+				} else if (this.trtTable.selectedRows.length == 1) {
 					this.showDetails(id);
 				}
 			}
@@ -1339,7 +1351,7 @@ var utWebUI = {
 	},
 	
 	"updateFiles": function(hash) {
-		if ((this.torrentID == hash) && $defined(this.files[hash])) {
+		if ((this.torrentID == hash) && this.files.hasOwnProperty(hash)) {
 			this.getFiles(hash, true);
 			this.updateDetails();
 		}
@@ -1347,8 +1359,7 @@ var utWebUI = {
 	
 	"loadFiles": function() {
 		var id = this.torrentID;
-		if (id != "")
-		{
+		if (id != "") {
 			if (!this.flsTable.rowData.hasOwnProperty(id + "_0")) { // don't reload the table for no reason
 				this.flsTable.dBody.scrollLeft = 0;
 				this.flsTable.dBody.scrollTop = 0;
@@ -1359,7 +1370,6 @@ var utWebUI = {
 					this.flsTable.addRow(data, id + "_" + i);
 				}, this);
 				this.flsTable.calcSize();
-				resizeColumn.call(utWebUI.flsTable);
 				this.flsTable.refresh();
 				this.flsTable.refreshRows(true);
 			}
@@ -1368,17 +1378,20 @@ var utWebUI = {
 	},
 	
 	"getFiles": function(id, update) {
-		if (!Hash.has(this.files, id) || update)
-		{
+		if (!this.files.hasOwnProperty(id) || update) {
 			this.files[id] = [];
 			this.request("?action=getfiles&hash=" + id, this.addFiles);
+		} else {
+			if (this.tabs.active == "FileList")
+				this.loadFiles();
 		}
 	},
 	
 	"addFiles": function(fd) {
 		var files = JSON.decode(fd).files;
 		this.files[files[0]] = files[1];
-		if (this.tabs.active == "FileList") this.loadFiles();
+		if (this.tabs.active == "FileList")
+			this.loadFiles();
 	},
 	
 	"flsSelect": function(e, id) {
@@ -1537,8 +1550,12 @@ var utWebUI = {
 	
 	"tabChange": function(id) {
 		if ((id == "FileList") && (this.config.showDetails) && (this.torrentID != "")) {
+			if (this.flsTable.rowData.hasOwnProperty(this.torrentID + "_0")) return;
 			this.flsTable.loadObj.show();
 			this.loadFiles.delay(20, this);
+		} else if (id == "FileList")
+		{
+			this.flsTable.calcSize();
 		}
 	}
 	

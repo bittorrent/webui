@@ -643,12 +643,16 @@ var dxSTable = new Class({
 				Array.each(row.childNodes, function(cell) {
 					cell.empty();
 				});
+				row.setProperty("id", "").hide();
 			});
 			this.rows = 0;
-			this.activeId.empty();
+			delete this.activePos;
+			this.activePos = {};
+			this.activeId.length = 0;
 			this.viewRows = 0;
 			delete this.rowSel;
 			this.rowSel = {};
+			this.selectedRows.length = 0;
 			delete this.rowData;
 			this.rowData = {};
 			this.rowId.empty();
@@ -976,8 +980,7 @@ var ColumnHandler = {
 	
 };
 
-function resizeColumn(index)
-{
+function resizeColumn(index) {
 	var cols = this.tBody.getElement("colgroup").getElements("col");
 	this.colWidth[index] = this.tHeadCols[index].getWidth();
 	var from = $pick(index, 0);
