@@ -1,8 +1,7 @@
 /*
  *
  *     Copyright 2007 BitTorrent, Inc. All rights reserved.
- *
- *     Authors: Carsten Niebuhr (Directrix)
+ *     Copyright 2008 Carsten Niebuhr
  *
 */
 
@@ -14,6 +13,54 @@ html, body {
 	overflow: hidden;
 	background-color: #D0D0D0;
 	height: 100%;
+}
+
+/* dialog */
+
+div.dlg-window {
+	background-color: #FFFFFF;
+	font-size: 11px;
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	color: #000000;
+	border: 2px solid #909090;
+	display: none;
+	overflow: hidden;
+	z-index: 500;
+	position: absolute;
+	left: 0px; top: 0px;
+}
+
+div.dlg-header {
+	padding: 2px 24px;
+	line-height: 20px;
+	background: #F5F5F5 url(./images/blank.gif) no-repeat scroll 4px center;
+	font-size: 11px;
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-weight: bold;
+	border-bottom: 1px solid #909090;
+	color: #000000;
+}
+
+a.dlg-close:link, a.dlg-close:visited {
+	width: 14px; height: 14px;
+	margin: 5px;
+	background: transparent url(./images/close.png) no-repeat scroll left center;
+	float: right;
+	border: 0;
+}
+
+a.dlg-close:hover {
+	width: 14px; height: 14px;
+	background: transparent url(./images/close.png) no-repeat scroll -14px center;
+	float: right;
+	border: 0;
+}
+
+a.dlg-close:active {
+	width: 14px; height: 14px;
+	background: transparent url(./images/close.png) no-repeat scroll -28px center;
+	float: right;
+	border: 0;
 }
 
 div#preload {
@@ -223,10 +270,6 @@ div#toolbar a {
 	padding: 3px;
 }
 
-div#toolbar a:hover {
-	/*background: transparent url(./images/tb_bg.png) no-repeat scroll center center;*/
-}
-
 div#toolbar a:active {
 	padding: 4px 2px 2px 4px;
 }
@@ -240,43 +283,44 @@ div#toolbar div.TB_Separator {
 	float: left;
 }
 
-div#toolbar a#add div {
+div#toolbar a#add span {
 	background: transparent url(./images/toolbar.png) no-repeat left center;
 }
 
-div#toolbar a#remove div {
+div#toolbar a#remove span {
 	background: transparent url(./images/toolbar.png) no-repeat -24px center;
 }
 
-div#toolbar a#start div {
+div#toolbar a#start span {
 	background: transparent url(./images/toolbar.png) no-repeat -48px center;
 }
 
-div#toolbar a#pause div {
+div#toolbar a#pause span {
 	background: transparent url(./images/toolbar.png) no-repeat -72px center;
 }
 
-div#toolbar a#stop div {
+div#toolbar a#stop span {
 	background: transparent url(./images/toolbar.png) no-repeat -96px center;
 }
 
-div#toolbar a#rss div {
+div#toolbar a#rss span {
 	background: transparent url(./images/toolbar.png) no-repeat -144px center;
 	-moz-opacity: 0.5;
 }
 
-div#toolbar a#setting div {
+div#toolbar a#setting span {
 	background: transparent url(./images/toolbar.png) no-repeat -168px center;
 }
 
-div#toolbar a:hover div {
+div#toolbar a:hover span {
 	opacity: 1.00;
 	/*filter: alpha(opacity=100);*/
 	-moz-opacity: 1.0;
 }
 
-div#toolbar a div {
+div#toolbar a span {
 	width: 24px; height: 24px;
+	display: block;
 	float: left;
 	cursor: pointer;
 	opacity: 0.70;
@@ -313,20 +357,27 @@ div#toolbar div#sb input {
  *                                         *
  *******************************************/
  
+div.hcont {
+	width: 460px; height: 20px;
+	line-height: 20px;
+	overflow: hidden;
+}
+ 
 input.tbox, input.btn, select {
-	border: 1px solid #B0B0B0;
+	height: 16px;
+	line-height: 16px;
 	font-size: 11px;
 	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
-	padding: 2px;
+	padding: 0;
+	margin: 0;
+	color: #000000;
+	background-color: #FFFFFF;
 }
 
 input.btn {
-	padding: 1px 10px;
-	background: #F5F5F5 url(./images/button.png) repeat-x center bottom;
-}
-
-select {
-	margin-top: 5px;
+	width: 80px;
+	border: 1px solid #D0D0D0;
+	background: #F5F5F5;
 }
 
 a.hide:link, a.hide:visited {
@@ -467,6 +518,7 @@ div#FileList {
 
 /* Details */
 
+
 #dlgSettings {
 	width: 600px; height: 400px;
 }
@@ -513,16 +565,6 @@ div.algnright { text-align: right; }
 	width: 489px; height: 335px;
 	padding: 5px;
 	background-color: #FAFAFA;
-	overflow: auto;
-}
-
-.stg_con .tit {
-	background-color: #808080;
-	color: #FFFFFF;
-	padding: 5px;
-	margin-bottom: 10px;
-	font-size: 12px;
-	font-weight: bold;
 }
 
 fieldset {
@@ -531,6 +573,7 @@ fieldset {
 	border: 1px solid #D0D0D0;
 	-webkit-border-radius: 6px;
 	-moz-border-radius: 6px;
+	overflow: auto;
 }
 
 .stg_con table {
@@ -542,15 +585,14 @@ fieldset {
 	height: 19px;
 }
 
+.stg_con td span {
+	display: block;
+	overflow: auto;
+}
+
 
 .stg_con td.alr {
 	text-align: right;
-}
-
-.stg_con td input {
-	margin: 0 4px;
-	font-size: 11px;
-	padding: 1px 4px;
 }
 
 #DLG_SETT_3_15 {
@@ -559,6 +601,10 @@ fieldset {
 
 #DLG_SETT_3_16, #DLG_SETT_3_18 {
 	padding: 0 5px;
+}
+
+.flright {
+	float: right;
 }
 
 input.num {
@@ -572,7 +618,12 @@ input.str {
 }
 
 td label, div label { cursor: pointer; }
-input.disabled { background-color: #FAFAFA; color: #C0C0C0; border: 1px solid #C0C0C0; }
+
+input.disabled {
+	color: #808080;
+	background-color: #FAFAFA;
+}
+
 td.disabled, label.disabled, span.disabled, div.disabled { color: #C0C0C0; cursor: default; }
 fieldset div { padding: 3px; }
 input[id="proxy.proxy"] { width: 70px; margin: 0 4px; font-size: 11px; padding: 1px 4px; }
@@ -581,7 +632,8 @@ input[id="proxy.password"] { width: 70px; margin: 0 4px; font-size: 11px; paddin
 input[id="webui.restrict"] { width: 405px; }
 input#tracker_ip { width: 200px; }
 
-div input {	margin: 0 4px; font-size: 11px; padding: 1px 4px; }
+
+div input {	margin: 0 4px; }
 legend {
 	color: #000000;
 	font-weight: bold;
@@ -592,7 +644,6 @@ div.indent { padding-left: 16px; }
 #st_gl { display: block; }
 
 #st_dl, #st_con, #st_bt, #st_que, #st_sch, #st_ao, #st_dc { display: none; }
-
 
 #st_btns {
 	width: 489px;
@@ -868,58 +919,6 @@ div.aright {
 	text-align: right;
 }
 
-/* dialog */
-
-div.dlg-window {
-	position: absolute;
-	left: 0px; top: 0px;
-	background-color: #FFFFFF;
-	font-size: 11px;
-	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
-	color: #000000;
-	border: 2px solid #909090;
-	display: none;
-	overflow: hidden;
-	z-index: 500;
-}
-
-div.fxcaret {
-	overflow: auto;
-}
-
-div.dlg-header {
-	padding: 2px 24px;
-	line-height: 20px;
-	background: #F5F5F5 url(./images/blank.gif) no-repeat scroll 4px center;
-	font-size: 11px;
-	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
-	font-weight: bold;
-	border-bottom: 1px solid #909090;
-	color: #000000;
-}
-
-a.dlg-close:link, a.dlg-close:visited {
-	width: 14px; height: 14px;
-	margin: 5px;
-	background: transparent url(./images/close.png) no-repeat scroll left center;
-	float: right;
-	border: 0;
-}
-
-a.dlg-close:hover {
-	width: 14px; height: 14px;
-	background: transparent url(./images/close.png) no-repeat scroll -14px center;
-	float: right;
-	border: 0;
-}
-
-a.dlg-close:active {
-	width: 14px; height: 14px;
-	background: transparent url(./images/close.png) no-repeat scroll -28px center;
-	float: right;
-	border: 0;
-}
-
 a { outline: none; }
 
 #uploadfrm {
@@ -930,6 +929,8 @@ a { outline: none; }
 
 #sched_table {
 	border-collapse: collapse;
+	-webkit-user-select: ignore !important;
+	-moz-user-select: none;
 }
 
 #sched_table td.block {

@@ -1,6 +1,10 @@
 /*
 
-Copyright 2007 Carsten Niebuhr (directrix)
+	Copyright Emil A Eklund - Column List Widget 1.03
+			 (http://webfx.eae.net/dhtml/collist/columnlist.html)
+	Copyright Erik Arvidsson - Sortable Table 1.12
+			 (http://webfx.eae.net/dhtml/sortabletable/sortabletable.html)
+	Copyright 2007, 2008 Carsten Niebuhr
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -13,17 +17,6 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
-
------------------------------
-
-This is a modified Sortable Table/ColumnList script, which can be found
-at http://webfx.eae.net/.
-
-Original authors:
-	Emil A Eklund  - Column List Widget 1.03
-			 (http://webfx.eae.net/dhtml/collist/columnlist.html)
-	Erik Arvidsson - Sortable Table 1.12
-			 (http://webfx.eae.net/dhtml/sortabletable/sortabletable.html)
 
 */
 
@@ -208,9 +201,16 @@ var dxSTable = new Class({
 		
 		this.loadObj = $(DIV.cloneNode(false)).addClass("stable-loading").grab($(DIV.cloneNode(false)).addClass("stable-loading-text").set("html", "Loading...")).inject(this.dCont);
 		
-		this.tb.body.addEvent("mousedown", function(ev) {
-			if (ev.target && (ev.target.tagName.toLowerCase() == "td"))
+		this.dBody.addEvent("mousedown", function(ev) {
+			if (ev.target && (ev.target.tagName.toLowerCase() == "td")) {
 				$me.selectRow(ev, ev.target.parentNode);
+			} else {
+				var pos = this.getPosition();
+				if ((this.clientWidth > ev.page.x - pos.x - this.scrollLeft + 2) && (this.clientHeight > ev.page.y - pos.y - this.scrollTop + 2)) {
+					$me.clearSelection();
+					$me.fireEvent("onSelect", [ev, ""]);
+				}
+			}
 		});
 		for (var i = 0; i < this.options.maxRows; i++)
 			this.tb.body.grab(ROW.cloneNode(true).hide());
@@ -258,7 +258,9 @@ var dxSTable = new Class({
 		this.scrollTimeout = null;
 		this.scrollDiff = 0;
 		this.scrollTimer = null;
+		this.scrollT = false;
 		this.dBody.addEvent("scroll", (function() {
+			this.scrollT = true;
 			this.dHead.scrollLeft = this.dBody.scrollLeft;
 			if (this.options.mode == MODE_PAGE) return;
 			if (this.scrollDiff === 0) {
@@ -476,7 +478,9 @@ var dxSTable = new Class({
 			if (!r.hidden && (vr >= mni) && (vr <= mxi)) {
 				var row = obj || this.tb.body.childNodes[j], data = this.options.format($A(r.data)), icon = r.icon;
 				row.setProperties({"title": data[0], "id": id});
-				row.addClasses((this.options.alternateRows) ? ((j & 1) ? "odd" : "even") : "", (this.rowSel[id]) ? "selected" : "", true);
+				var cls = (this.options.alternateRows) ? ((j & 1) ? "odd" : "even") : "";
+				cls = (this.rowSel.hasOwnProperty(id)) ? "selected" : cls;
+				row.className = cls;
 				for (var n = 0, m = this.colOrder.length; n < m; n++) {
 					var k = n, v = this.colOrder[n];
 					var cell = row.childNodes[k];
@@ -505,6 +509,7 @@ var dxSTable = new Class({
 			this.tb.body.childNodes[i].setProperty("id", "").hide();
 		if (Browser.Engine.gecko)
 			this.attachBody();
+		this.dHead.setStyle("width", this.dBody.clientWidth);
 		this.refresh();
 	},
 	
@@ -518,7 +523,7 @@ var dxSTable = new Class({
 	
 	"selectRow": function(ev, row) {
 		var id = row.get("id");
-		if (!(ev.rightClick && this.rowSel[id])) {
+		if (!(ev.rightClick && this.rowSel.hasOwnProperty(id))) {
 			if (ev.shift) {
 				if (this.stSel === null) {
 					this.stSel = id;
@@ -570,7 +575,6 @@ var dxSTable = new Class({
 	"addRow": function(data, id, icon, hidden) {
 		if ((data.length != this.cols) || ((id != null) && this.rowData.hasOwnProperty(id))) return;
 		id = id || (this.id + "-row-" + (1000 + this.rows));
-		this.rowSel[id] = false;
 		var rowIndex = -1;
 		if (!hidden) {
 			if (this.viewRows < this.options.maxRows) {
@@ -578,7 +582,7 @@ var dxSTable = new Class({
 				var row = this.tb.body.childNodes[index]; //this.tb.body.rows[index];
 				var fdata = this.options.format($A(data));
 				row.setProperties({"index": index, "title": fdata[0], "id": id});
-				row.addClasses((this.options.alternateRows) ? ((index & 1) ? "odd" : "even") : "", (this.rowSel[id]) ? "selected" : "", true);
+				row.addClasses((this.options.alternateRows) ? ((index & 1) ? "odd" : "even") : "", true);
 				this.fillRow(row, fdata, icon);
 				row.show(true);
 				rowIndex = this.viewRows++;
@@ -626,11 +630,18 @@ var dxSTable = new Class({
 	"removeRow": function(id) {
 		var rd = this.rowData[id];
 		if (rd == null) return;
-		if (!rd.hidden) {
+		if (this.activePos.hasOwnProperty(id)) {
 			this.activeId.splice(this.activePos[id], 1);
+			for (var i = this.activePos[id], j = this.activeId.length; i < j; i++)
+				this.activePos[this.activeId[i]]--;
 			delete this.activePos[id];
 		}
-		delete this.rowSel[id];
+		if (this.rowSel.hasOwnProperty(id)) {
+			this.selectedRows.splice(this.rowSel[id], 1);
+			for (var i = this.rowSel[id], j = this.selectedRows.length; i < j; i++)
+				this.rowSel[this.selectedRows[i]]--;
+			delete this.rowSel[id];
+		}
 		this.rowId.splice(rd.index, 1);
 		delete this.rowData[id];
 		this.rows--;
@@ -690,7 +701,6 @@ var dxSTable = new Class({
 			delete this.activePos[id];
 		}
 		this.rowData[id].hidden = true;
-		this.rowSel[id] = false;
 		this.pageCount = (this.options.mode == MODE_PAGE) ? Math.floor(this.activeId.length / this.options.maxRows) : 0;
 	},
 
@@ -713,6 +723,7 @@ var dxSTable = new Class({
 	},
 
 	"clearSelection": function(noRefresh) {
+		if (this.selectedRows.length == 0) return;
 		this.selectedRows.length = 0;
 		delete this.rowSel;
 		this.rowSel = {};

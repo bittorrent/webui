@@ -1,8 +1,7 @@
 /*
  *
  *     Copyright 2007 BitTorrent, Inc. All rights reserved.
- *
- *     Authors: Carsten Niebuhr (Directrix)
+ *     Copyright 2008 Carsten Niebuhr
  *
 */
 
@@ -269,9 +268,9 @@ function setupUI() {
 	});
 	
 	utWebUI.update();
-	//utWebUI.toggleDetPanel();
 }
 
+/*
 function selcheck(obj, val, actions)
 {
 	var v = obj.options[obj.selectedIndex].value;
@@ -289,6 +288,7 @@ function selcheck(obj, val, actions)
 		}
 	}
 }
+*/
 
 function checkProxySettings(){
 	var auth = $("proxy.auth").checked;
@@ -327,6 +327,7 @@ function linked(obj, defstate, list) {
 	for (var i = 0, j = list.length; i < j; i++) {
 		var ele = $(list[i]);
 		if (!ele) continue;
+		ele[state ? "addClass" : "removeClass"]("disabled");
 		ele.disabled = state;
 		if (ele.previousSibling && (ele.previousSibling.nodeType == 1) && (ele.previousSibling.tagName.toLowerCase() == "label")) {
 			ele = ele.previousSibling;
@@ -335,8 +336,6 @@ function linked(obj, defstate, list) {
 		} else {
 			continue;
 		}
-		ele[state ? "addClass" : "removeClass"]("disabled");
-		
 	}
 }
 
@@ -1113,7 +1112,8 @@ var utWebUI = {
 		if (e.rightClick) {
 			if (this.config.showDetails && (this.trtTable.selectedRows.length == 1))
 				this.showDetails(id);
-			this.showMenu(e, id);
+			if (this.trtTable.selectedRows.length > 0)
+				this.showMenu(e, id);
 		} else {
 			if (this.config.showDetails) {
 				if (this.trtTable.selectedRows.length == 0) {
@@ -1395,7 +1395,8 @@ var utWebUI = {
 	},
 	
 	"flsSelect": function(e, id) {
-		utWebUI.showFileMenu(e, id.substr(41).toInt());
+		if (this.flsTable.selectedRows.length > 0)
+			this.showFileMenu(e, id.substr(41).toInt());
 	},
 	
 	"showFileMenu": function(e, ind) {
@@ -1703,16 +1704,14 @@ var Tabs = new Class({
 	},
 	
 	"show": function(id) {
-		if (!Hash.has(this.tabs, id)) return;
+		if (!this.tabs.hasOwnProperty(id)) return;
 		$each(this.tabs, function(v, k) {
 			var tab = $("tab_" + k);
 			var ele = $(k);
-			if (k == id)
-			{
+			if (k == id) {
 				ele.show();
 				tab.addClass("selected");
-			} else
-			{
+			} else {
 				ele.hide();
 				tab.removeClass("selected");
 			}
@@ -2170,7 +2169,6 @@ window.addEvent("domready", function() {
 	$("modalbg").setStyle("opacity", 0.8);
 	["dlgAdd", "dlgSettings", "dlgProps", "dlgAbout", "dlgLabel", "dlgDelTor"].each(function(id) {
 		$(id).addEvent("mousedown", function(ev) {
-			ev.stop();
 			this.setStyle("zIndex", ++winZ);
 		}).getElement("a").addEvent("click", function(ev) {
 			ev.stop();

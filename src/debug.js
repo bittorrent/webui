@@ -1,3 +1,9 @@
+/*
+ *
+ *     Copyright 2008 Carsten Niebuhr
+ *
+*/
+
 var console = console || {};
 
 (function() {

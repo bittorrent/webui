@@ -51,16 +51,20 @@ var Native = function(options){
 		afterImplement.call(obj, name, method);
 		return obj;
 	};
-
+	
 	object.implement = function(a1, a2, a3){
 		if (typeof a1 == 'string') return add(this, a1, a2, a3);
 		for (var p in a1) add(this, p, a1[p], a2);
 		return this;
 	};
-
-	object.alias = function(existing, property, force){
-		existing = this.prototype[existing];
-		if (existing) add(this, property, existing, force);
+	
+	object.alias = function(a1, a2, a3){
+		if (typeof a1 == 'string'){
+			a1 = this.prototype[a1];
+			if (a1) add(this, a2, a1, a3);
+		} else {
+			for (var a in a1) this.alias(a, a1[a], a2);
+		}
 		return this;
 	};
 
@@ -82,6 +86,10 @@ Native.typize = function(object, family){
 	if (!object.type) object.type = function(item){
 		return ($type(item) === family);
 	};
+};
+
+Native.alias = function(objects, a1, a2, a3){
+	for (var i = 0, j = objects.length; i < j; i++) objects[i].alias(a1, a2, a3);
 };
 
 (function(objects){
@@ -139,6 +147,12 @@ function $unlink(object){
 		case 'object':
 			unlinked = {};
 			for (var p in object) unlinked[p] = $unlink(object[p]);
+		break;
+		case 'hash':
+			unlinked = {};
+			object.each(function(p, v){
+				unlinked[p] = $unlink(v);
+			});
 		break;
 		case 'array':
 			unlinked = [];
@@ -851,7 +865,7 @@ Hash.implement({
 
 });
 
-Hash.alias('keyOf', 'indexOf').alias('hasValue', 'contains');/*
+Hash.alias({keyOf: 'indexOf', hasValue: 'contains'});/*
 Script: Event.js
 	Contains the Event Native, to make the event object completely crossbrowser.
 
@@ -1128,8 +1142,7 @@ var Options = new Class({
 		return this;
 	}
 
-});
-/*
+});/*
 Script: Element.js
 	One of the most important items in MooTools. Contains the dollar function, the dollars function, and an handful of cross-browser,
 	time-saver methods to let you easily work with HTML Elements.
@@ -1214,9 +1227,8 @@ var IFrame = new Native({
 				return iframe.contentWindow.location.host;
 			});
 			if (host && host == window.location.host){
-				iframe.window = iframe.contentWindow;
-				var win = new Window(iframe.window);
-				var doc = new Document(iframe.window.document);
+				var win = new Window(iframe.contentWindow);
+				var doc = new Document(iframe.contentWindow.document);
 				$extend(win.Element.prototype, Element.Prototype);
 			}
 			onload.call(iframe.contentWindow, iframe.contentWindow.document);
@@ -1726,6 +1738,8 @@ Native.implement([Element, Window, Document], {
 
 });
 
+Native.alias([Element, Document], {getElement: 'find', getElements: 'search'});
+
 Element.Attributes = new Hash({
 	Props: {'html': 'innerHTML', 'class': 'className', 'for': 'htmlFor', 'text': (Browser.Engine.trident) ? 'innerText' : 'textContent'},
 	Bools: ['compact', 'nowrap', 'ismap', 'declare', 'noshade', 'checked', 'disabled', 'readonly', 'multiple', 'selected', 'noresize', 'defer'],
@@ -1751,7 +1765,7 @@ function memfree(item){
 		}
 		Element.dispose(item);
 	}
-	if (item.removeEvents) item.removeEvents();
+	if (item.uid && item.removeEvents) item.removeEvents();
 };
 
 window.addListener('unload', function(){
@@ -2465,7 +2479,7 @@ var Request = new Class({
 		options = $extend({data: old.data, url: old.url, method: old.method}, options);
 		var data = options.data, url = options.url, method = options.method;
 
-		switch($type(data)){
+		switch ($type(data)){
 			case 'element': data = $(data).toQueryString(); break;
 			case 'object': case 'hash': data = Hash.toQueryString(data);
 		}
@@ -2494,7 +2508,7 @@ var Request = new Class({
 			if (!$try(function(){
 				this.xhr.setRequestHeader(key, value);
 				return true;
-			}.bind(this))) this.fireEvent('onException', [e, key, value]);
+			}.bind(this))) this.fireEvent('onException', [key, value]);
 		}, this);
 
 		this.fireEvent('onRequest');
