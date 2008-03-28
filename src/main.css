@@ -303,11 +303,6 @@ div#toolbar a#stop span {
 	background: transparent url(./images/toolbar.png) no-repeat -96px center;
 }
 
-div#toolbar a#rss span {
-	background: transparent url(./images/toolbar.png) no-repeat -144px center;
-	-moz-opacity: 0.5;
-}
-
 div#toolbar a#setting span {
 	background: transparent url(./images/toolbar.png) no-repeat -168px center;
 }

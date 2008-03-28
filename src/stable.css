@@ -24,7 +24,6 @@ limitations under the License.
 	border: 1px solid #868686;
 	overflow: hidden;
 	display: block;
-	-webkit-user-select: ignore !important;
 	-moz-user-select: none;
 	-moz-user-focus: normal;
 	-moz-user-input: enabled;
@@ -37,14 +36,15 @@ limitations under the License.
 }
 
 .stable-head {
-	background: transparent url(./images/header.png) repeat-x scroll center top;
+	position: relative;
 	overflow: hidden;
-	-moz-user-select: none;
+	background: transparent url(./images/header.png) repeat-x scroll center top;
 	border: 1px solid;
 	border-color: #FFFFFF #D0D0D0 #D0D0D0 #FFFFFF;
 	border-bottom: 0;
 	z-index: 10;
-	position: relative;
+	-webkit-user-select: ignore !important;
+	-moz-user-select: none !important;
 }
 
 .stable-head table {
@@ -53,7 +53,7 @@ limitations under the License.
 }
 
 .stable-head tr {
-	
+	background: transparent url(./images/header.png) repeat-x scroll center top;
 }
 
 .stable-head td {

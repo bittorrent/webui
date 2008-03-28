@@ -158,8 +158,7 @@ function setupUI() {
 			col(lang.OV_COL_REMAINING, TYPE_NUMBER, colMask & 0x8000)
 		], $extend({
 		"format": function(values, index) {
-			if (index == null)
-			{
+			if (index == null) {
 				values[2]  = values[2].toFileSize(2); // size
 				values[3]  = (values[3] / 10).roundTo(1) + "%"; // done
 				values[4]  = values[4].toFileSize(); // downloaded
@@ -172,10 +171,8 @@ function setupUI() {
 				values[13] = (values[13] / 65535).roundTo(3); // availability
 				values[14] = (values[14] <= -1) ? "*" : values[14]; // ETA
 				values[15] = values[15].toFileSize(2); // remaining
-			} else
-			{
-				switch (index)
-				{
+			} else {
+				switch (index) {
 					case 2:  values = values.toFileSize(2); break;
 					case 3:  values = (values / 10).roundTo(1) + "%"; break;
 					case 4:  values = values.toFileSize(); break;
@@ -208,8 +205,7 @@ function setupUI() {
 			col(lang.FI_COL_PRIO, TYPE_NUMBER, colMask & 0x10)
 		], $extend({
 		"format": function(values, index) {
-			if (index == null)
-			{
+			if (index == null) {
 				values[1] = values[1].toFileSize(2); //size
 				values[2] = values[2].toFileSize(2); //done
 				values[3] = values[3] + "%"; //%
@@ -217,10 +213,8 @@ function setupUI() {
 							(values[4] == 1) ? "low" :
 							(values[4] == 2) ? "normal" :
 							(values[4] == 3) ? "high" : "";
-			} else
-			{
-				switch (index)
-				{
+			} else {
+				switch (index) {
 					case 1:  values = values.toFileSize(2); break;
 					case 2:  values = values.toFileSize(2); break;
 					case 3:  values = values + "%"; break;
@@ -644,17 +638,20 @@ var utWebUI = {
 			delete dobj.torrents;
 		}
 		this.loadLabels($A(dobj.label));
-		if (!this.labels.hasOwnProperty(this.config.activeLabel) && !this.customLabels.hasOwnProperty(this.config.activeLabel)) {
-			this.config.activeLabel = "_all_";
-			$("_all_").addClass("sel");
-			$(this.config.activeLabel).removeClass("sel");
-		} else {
-			$("_all_").removeClass("sel");
-			$(this.config.activeLabel).addClass("sel");
+		delete dobj.label;
+		if (!this.loaded) {
+			if (!this.labels.hasOwnProperty(this.config.activeLabel) && !this.customLabels.hasOwnProperty(this.config.activeLabel)) {
+				this.config.activeLabel = "_all_";
+				$("_all_").addClass("sel");
+				$(this.config.activeLabel).removeClass("sel");
+			} else {
+				$("_all_").removeClass("sel");
+				$(this.config.activeLabel).addClass("sel");
+			}
 		}
 		
 		var scroll = this.trtTable.dBody.getScroll();
-		if (Browser.Engine.gecko || Browser.Engine.trident) // doing offline updating slows Presto & WebKit down
+		if (Browser.Engine.gecko) // doing offline updating slows Presto & WebKit down
 			this.trtTable.detachBody();
 		for (var i = 0, len = torrents.length; i < len; i++) {
 			var tor = torrents[i];
@@ -666,10 +663,10 @@ var utWebUI = {
 			tor.swap(TORRENT_UPSPEED, TORRENT_DOWNSPEED);
 			tor.insertAt(stat.text, 3);
 			
-			if (!$defined(this.labels[hash]))
+			if (!this.labels.hasOwnProperty(hash))
 				this.labels[hash] = "";
 			var labels = this.getLabels(hash, tor[12], done, tor[9], tor[10]);
-			if (!$defined(this.torrents[hash])) {
+			if (!this.torrents.hasOwnProperty(hash)) {
 				this.torrents[hash] = tor.slice(1);
 				this.labels[hash] = labels;
 				tor.splice(0, 2); // remove the hash & status from the array
@@ -719,12 +716,11 @@ var utWebUI = {
 					}
 				}
 			}
-			tor = null;
+			delete tor;
 		}
-		torrents = null;
-		if (Browser.Engine.gecko || Browser.Engine.trident)
+		delete torrents;
+		if (Browser.Engine.gecko)
 			this.trtTable.attachBody();
-		
 		if (dobj.hasOwnProperty("torrentm")) {
 			for (var i = 0, j = dobj.torrentm.length; i < j; i++) {
 				var k = dobj.torrentm[i];
@@ -1050,7 +1046,7 @@ var utWebUI = {
 			$("tdetails")[(!this.config.showDetails) ? "hide" : "show"]();
 			resize = true;
 		}
-		value = $("webui.minrows").value.toInt();
+		value = $("webui.maxrows").value.toInt();
 		if (this.config.maxRows != value) {
 			this.config.maxRows = value;
 			this.trtTable.setMaxRows(this.config.maxRows);
@@ -1487,7 +1483,6 @@ var utWebUI = {
 		} else {
 			this.config.trtCols &= ~(1 << index);
 		}
-		console.log(this.config.trtCols);
 	},
 	
 	"flsSort": function() {

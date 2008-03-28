@@ -97,18 +97,23 @@ var dxSTable = new Class({
 		this.colHeader = columns;
 		this.colWidth = options.colWidth || (new Array(columns.length));
 		this.colOrder = options.colOrder || (new Array(columns.length));
-		this.sIndex = (typeof options.sIndex == "number") ? options.sIndex.toInt().limit(-1, columns.length - 1) : -1;
+		this.sIndex = isNaN(options.sIndex) ? -1 : options.sIndex.toInt().limit(-1, columns.length - 1);
 		delete options.colOrder;
 		delete options.colWidth;
 		delete options.sIndex;
 		this.setOptions(options);
 	
-		var tr, td, div, $me = this;
+		var tr, td, div, $me = this, simpleClone = function(ele, content) {
+			ele = $(ele.cloneNode(!!content));
+			ele.uid = null;
+			$uid(ele);
+			return ele;
+		};
 
 		this.id = "stable-" + id;
 		this.dCont = $(id).addClass("stable");
-		this.dHead = $(DIV.cloneNode(false)).addClass("stable-head").inject(this.dCont);
-		this.dBody = $(DIV.cloneNode(false)).addClass("stable-body").inject(this.dCont);
+		this.dHead = simpleClone(DIV, false).addClass("stable-head").inject(this.dCont);
+		this.dBody = simpleClone(DIV, false).addClass("stable-body").inject(this.dCont);
 
 		this.tHead = new Element("table", {
 			"cellpadding": 0,
@@ -121,7 +126,7 @@ var dxSTable = new Class({
 		});
 		
 		this.tb.head = new Element("tbody").inject(this.tHead);
-		tr = $(TR.cloneNode(false));
+		tr = simpleClone(TR, false);
 		var nDrag = new Drag(tr, {
 			"modifiers": {"x": "left", "y": false},
 			"snap": 2,
@@ -144,13 +149,6 @@ var dxSTable = new Class({
 				nDrag.attach().start(ev);
 			}
 		});
-		
-		var simpleClone = function(ele, content) {
-			ele = $(ele.cloneNode(!!content));
-			ele.uid = null;
-			$uid(ele);
-			return ele;
-		};
 
 		var len = this.colHeader.length, ROW = simpleClone(TR, false);
 		for (var i = 0, j = 0; i < len; i++) {
@@ -174,7 +172,7 @@ var dxSTable = new Class({
 		this.tb.head.grab(tr);
 		
 		if (this.options.mode == MODE_VIRTUAL)
-			this.topPad = $(DIV.cloneNode(false)).addClass("stable-pad").inject(this.dBody);
+			this.topPad = simpleClone(DIV, false).addClass("stable-pad").inject(this.dBody);
 		
 		this.tBody = new Element("table", {
 			"cellpadding": 0,
@@ -266,9 +264,7 @@ var dxSTable = new Class({
 		this.scrollTimeout = null;
 		this.scrollDiff = 0;
 		this.scrollTimer = null;
-		this.scrollT = false;
 		this.dBody.addEvent("scroll", (function() {
-			this.scrollT = true;
 			this.dHead.scrollLeft = this.dBody.scrollLeft;
 			if (this.options.mode == MODE_PAGE) return;
 			if (this.scrollDiff === 0) {
@@ -379,8 +375,7 @@ var dxSTable = new Class({
 		this.sIndex = ind;
 		var d = this.getCache(ind);
 		var $me = this;
-		switch (this.colData[ind].type)
-		{
+		switch (this.colData[ind].type) {
 			case TYPE_STRING:
 				d.sort(function(x, y) {
 					return $me.sortAlphaNumeric(x, y);
@@ -462,7 +457,7 @@ var dxSTable = new Class({
 
 	"refreshRows": function(fromSort) {
 		if (fromSort !== true) return;
-		var max = this.options.maxRows, mni = 0;
+		var max = this.options.maxRows, mni = 0, mxi = 0;
 		if (this.options.mode == MODE_VIRTUAL) {
 			var rt = (this.dBody.scrollHeight == 0) ? 0.0 : (this.dBody.scrollTop / this.dBody.scrollHeight);
 			if (rt > 1.0) rt = 1.0;
@@ -470,55 +465,34 @@ var dxSTable = new Class({
 		} else {
 			mni = max * this.curPage;
 		}
+		mxi = (mni + max - 1).min(this.activeId.length - 1);
 		
 		// doing offline updating in IE helps speedwise,
 		// but IE doesn't render all cells (ie. text) after the
 		// table is re-inserted
 		if (Browser.Engine.gecko)
 			this.detachBody();
-		var mxi = mni + max - 1;
-		var i = 0, j = 0, obj = null, vr = -1;
-	 	while (i < this.rows) {
-			var id = this.rowId[i];
+		var count = 0;
+		for (var i = mni; i <= mxi; i++) {
+			var id = this.activeId[i];
 			var r = this.rowData[id];
-			obj = $(id);
-			vr++;
-			if (!r.hidden && (vr >= mni) && (vr <= mxi)) {
-				var row = obj || this.tb.body.childNodes[j], data = this.options.format($A(r.data)), icon = r.icon;
-				row.setProperties({"title": data[0], "id": id});
-				var cls = (this.options.alternateRows) ? ((j & 1) ? "odd" : "even") : "";
-				cls = (this.rowSel.hasOwnProperty(id)) ? "selected" : cls;
-				row.className = cls;
-				for (var n = 0, m = this.colOrder.length; n < m; n++) {
-					var k = n, v = this.colOrder[n];
-					var cell = row.childNodes[k];
-					if (cell.hasChildNodes()) {
-						if ((v == 0) && (icon != ""))
-							cell.addClasses("stable-icon", icon, true);
-						cell.firstChild.nodeValue = data[v];
-					} else {
-						if ((v == 0) && (icon != ""))
-							cell.addClasses("stable-icon", icon, true);
-						cell.appendText(data[v]);
-					}
-				}
-				if (row != this.tb.body.childNodes[j]) row.inject(this.tb.body.childNodes[j], "before");
-				row.show(true);
-				r.rowIndex = j++;
-			} else
-			{
-				r.rowIndex = -1;
-				if (r.hidden) vr--;
-			}
-			if (j >= max) break;
-			i++;
+			var row = $(id) || this.tb.body.childNodes[count], data = this.options.format($A(r.data)), icon = r.icon;
+			row.setProperties({"title": data[0], "id": id});
+			var cls = (this.options.alternateRows) ? ((count & 1) ? "odd" : "even") : "";
+			cls = (this.rowSel.hasOwnProperty(id)) ? "selected" : cls;
+			row.className = cls;
+			this.fillRow(row, data, icon);
+			if (row != this.tb.body.childNodes[count])
+				row.inject(this.tb.body.childNodes[count], "before");
+			row.show(true);
+			r.rowIndex = count++;
 		}
-		for (i = j; i < max; i++)
+		for (var i = count; i < max; i++)
 			this.tb.body.childNodes[i].setProperty("id", "").hide();
 		if (Browser.Engine.gecko)
 			this.attachBody();
 		this.dHead.setStyle("width", this.dBody.clientWidth);
-		this.refresh();
+		//this.refresh();
 	},
 	
 	"refresh": function() {
@@ -597,8 +571,8 @@ var dxSTable = new Class({
 			}
 			this.activePos[id] = this.activeId.length;
 			this.activeId.push(id);
+			this.pageCount = (this.options.mode == MODE_PAGE) ? Math.ceil(this.activeId.length / this.options.maxRows) : 0;
 		}
-		
 		this.rowData[id] = {
 			"data": data,
 			"icon": icon || '',
@@ -608,20 +582,18 @@ var dxSTable = new Class({
 		};
 		this.rowId.push(id);
 		this.rows++;
-		this.pageCount = (this.options.mode == MODE_PAGE) ? Math.ceil(this.activeId.length / this.options.maxRows) : 0;
 	},
 	
 	"fillRow": function(row, data, icon) {
-		var cells = row.getChildren();
 		this.colOrder.each(function(v, k) {
-			var cell = cells[k]; //row.cells[k];
+			var cell = row.childNodes[k]; //row.cells[k];
 			if (cell.hasChildNodes()) {
 				if ((v == 0) && icon)
-					cell.addClasses("stable-icon", icon);
+					cell.addClasses("stable-icon", icon, true);
 				cell.firstChild.nodeValue = data[v];
 			} else {
 				if ((v == 0) && icon)
-					cell.addClasses("stable-icon", icon);
+					cell.addClasses("stable-icon", icon, true);
 				cell.appendText(data[v]);
 			}
 		});
@@ -684,14 +656,16 @@ var dxSTable = new Class({
 
 	"calcSize": function() {
 		this.dBody.setStyle("height", (this.dCont.clientHeight - this.dHead.offsetHeight - ((this.options.mode == MODE_PAGE) ? 26 : 0)).max(52));
-		this.dBody.setStyle("width", (this.dCont.getWidth() - 2).max(0));
-		this.dHead.setStyle("width", (this.dBody.clientWidth + (((this.dBody.offsetWidth - this.dBody.clientWidth) == 0) ? -4 : -1)).max(0));
+		this.dBody.setStyle("width", (this.dCont.offsetWidth - 2).max(0));
+		if (Browser.Engine.trident && (Browser.Engine.version == 6))
+			this.dHead.setStyle("overflow", "visible");
+		this.dHead.setStyle("width", (this.dCont.offsetWidth + (((this.dBody.offsetWidth - this.dBody.clientWidth) == 0) ? -4 : -1)).max(0));
 		if (!this.isResizing) {
 			for (var i = 0, j = this.cols; i < j; i++) {
 				if (this.colData[i].disabled) continue;
 				var w = 0;
 				// padding width + border width = 19
-				if (Browser.Engine.trident) {
+				if (Browser.Engine.trident && (Browser.Engine.version < 6)) {
 					w = this.tBodyCols[i].offsetWidth - 19;
 				} else {
 					w = this.tBodyCols[i].width - (Browser.Engine.webkit ? 0 : 19);
@@ -1074,7 +1048,6 @@ function moveColumn(iCol, iNew) {
 	this.tBodyCols = aBC.slice(0);
 	this.colData = aC.slice(0);
 	this.colOrder = aO.slice(0);
-	console.log(this.colOrder);
 	
 	aHC = aBC = aC = aO = null;
 	
