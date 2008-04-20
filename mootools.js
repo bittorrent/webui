@@ -149,10 +149,7 @@ function $unlink(object){
 			for (var p in object) unlinked[p] = $unlink(object[p]);
 		break;
 		case 'hash':
-			unlinked = {};
-			object.each(function(p, v){
-				unlinked[p] = $unlink(v);
-			});
+			unlinked = $unlink(object.getClean());
 		break;
 		case 'array':
 			unlinked = [];
@@ -304,7 +301,7 @@ var Browser = new Hash({
 });
 
 if (window.opera) Browser.Engine = {name: 'presto', version: (document.getElementsByClassName) ? 950 : 925};
-else if (window.ActiveXObject) Browser.Engine = {name: 'trident', version: (document.querySelector) ? 6 : (window.XMLHttpRequest) ? 5 : 4};
+else if (window.ActiveXObject) Browser.Engine = {name: 'trident', version: (window.XMLHttpRequest) ? 5 : 4};
 else if (!navigator.taintEnabled) Browser.Engine = {name: 'webkit', version: (Browser.Features.xpath) ? 420 : 419};
 else if (document.getBoxObjectFor != null) Browser.Engine = {name: 'gecko', version: (document.getElementsByClassName) ? 19 : 18};
 Browser.Engine[Browser.Engine.name] = Browser.Engine[Browser.Engine.name + Browser.Engine.version] = true;
@@ -497,7 +494,7 @@ Array.implement({
 		return this;
 	},
 
-	merge: function(array){
+	combine: function(array){
 		for (var i = 0, l = array.length; i < l; i++) this.include(array[i]);
 		return this;
 	},
@@ -761,7 +758,7 @@ Hash.implement({
 		return this;
 	},
 
-	merge: function(properties){
+	combine: function(properties){
 		Hash.each(properties, function(value, key){
 			Hash.include(this, key, value);
 		}, this);
@@ -1179,7 +1176,7 @@ Document.implement({
 
 	purge: function(){
 		var elements = this.getElementsByTagName('*');
-		for (var i = 0, l = elements.length; i < l; i++) memfree(elements[i]);
+		for (var i = 0, l = elements.length; i < l; i++) Element.freeMem(elements[i]);
 	}
 
 });
@@ -1287,10 +1284,10 @@ Elements.multi = function(property){
 
 Window.implement({
 
-	$: function(el, notrash){
+	$: function(el, nocash){
 		if (el && el.$family && el.uid) return el;
 		var type = $type(el);
-		return ($[type]) ? $[type](el, notrash, this.document) : null;
+		return ($[type]) ? $[type](el, nocash, this.document) : null;
 	},
 
 	$$: function(selector){
@@ -1319,22 +1316,22 @@ Window.implement({
 
 });
 
-$.string = function(id, notrash, doc){
+$.string = function(id, nocash, doc){
 	id = doc.getElementById(id);
-	return (id) ? $.element(id, notrash) : null;
+	return (id) ? $.element(id, nocash) : null;
 };
 
-$.element = function(el, notrash){
+$.element = function(el, nocash){
 	$uid(el);
-	if (!notrash && !el.$family && !(/^object|embed$/i).test(el.tagName)){
+	if (!nocash && !el.$family && !(/^object|embed$/i).test(el.tagName)){
 		var proto = Element.Prototype;
 		for (var p in proto) el[p] = proto[p];
 	};
 	return el;
 };
 
-$.object = function(obj, notrash, doc){
-	if (obj.toElement) return $.element(obj.toElement(doc), notrash);
+$.object = function(obj, nocash, doc){
+	if (obj.toElement) return $.element(obj.toElement(doc), nocash);
 	return null;
 };
 
@@ -1342,8 +1339,8 @@ $.textnode = $.whitespace = $.window = $.document = $arguments(0);
 
 Native.implement([Element, Document], {
 
-	getElement: function(selector, notrash){
-		return $(this.getElements(selector, true)[0] || null, notrash);
+	getElement: function(selector, nocash){
+		return $(this.getElements(selector, true)[0] || null, nocash);
 	},
 
 	getElements: function(tags, nocash){
@@ -1461,7 +1458,7 @@ Element.implement({
 
 	wraps: function(el, where){
 		el = $(el, true);
-		return this.replaces(el).grab(el);
+		return this.replaces(el).grab(el, where);
 	},
 
 	grab: function(el, where){
@@ -1541,14 +1538,13 @@ Element.implement({
 	empty: function(){
 		$A(this.childNodes).each(function(node){
 			Element.empty(node);
-			this.removeChild(node);
-			memfree(node);
+			Element.freeMem(node);
 		}, this);
 		return this;
 	},
 
 	destroy: function(){
-		memfree(this.empty().dispose());
+		Element.freeMem(this.empty());
 		return null;
 	},
 
@@ -1738,35 +1734,34 @@ Native.implement([Element, Window, Document], {
 
 });
 
-Native.alias([Element, Document], {getElement: 'find', getElements: 'search'});
-
 Element.Attributes = new Hash({
 	Props: {'html': 'innerHTML', 'class': 'className', 'for': 'htmlFor', 'text': (Browser.Engine.trident) ? 'innerText' : 'textContent'},
 	Bools: ['compact', 'nowrap', 'ismap', 'declare', 'noshade', 'checked', 'disabled', 'readonly', 'multiple', 'selected', 'noresize', 'defer'],
 	Camels: ['value', 'accessKey', 'cellPadding', 'cellSpacing', 'colSpan', 'frameBorder', 'maxLength', 'readOnly', 'rowSpan', 'tabIndex', 'useMap']
 });
 
+Element.freeMem = function(item){
+	if (item && item.tagName) {
+		if (Browser.Engine.trident && (/object/i).test(item.tagName)){
+			for (var p in item){
+				if (typeof item[p] == 'function') item[p] = $empty;
+			}
+		}
+		if (item.uid && item.removeEvents) item.removeEvents();
+	}
+	Element.dispose(item);
+};
+
 (function(EA){
 
 	var EAB = EA.Bools, EAC = EA.Camels;
 	EA.Bools = EAB = EAB.associate(EAB);
-	Hash.extend(Hash.merge(EA.Props, EAB), EAC.associate(EAC.map(function(v){
+	Hash.extend(Hash.combine(EA.Props, EAB), EAC.associate(EAC.map(function(v){
 		return v.toLowerCase();
 	})));
 	EA.erase('Camels');
 
 })(Element.Attributes);
-
-function memfree(item){
-	if (!item || !item.tagName) return;
-	if (Browser.Engine.trident && (/object/i).test(item.tagName)){
-		for (var p in item){
-			if (typeof item[p] == 'function') item[p] = $empty;
-		}
-		Element.dispose(item);
-	}
-	if (item.uid && item.removeEvents) item.removeEvents();
-};
 
 window.addListener('unload', function(){
 	document.purge();
@@ -1882,7 +1877,7 @@ Element.NativeEvents = {
 	mouseover: 2, mouseout: 2, mousemove: 2, selectstart: 2, selectend: 2, //mouse movement
 	keydown: 2, keypress: 2, keyup: 2, //keyboard
 	focus: 2, blur: 2, change: 2, reset: 2, select: 2, submit: 2, //form elements
-	load: 1, unload: 1, beforeunload: 1, resize: 1, move: 1, DOMContentLoaded: 1, readystatechange: 1, //window
+	load: 1, unload: 1, beforeunload: 2, resize: 1, move: 1, DOMContentLoaded: 1, readystatechange: 1, //window
 	error: 1, abort: 1, scroll: 1 //misc
 };
 
@@ -2597,6 +2592,7 @@ var Drag = new Class({
 		limit: false,
 		handle: false,
 		invert: false,
+		preventDefault: false,
 		modifiers: {x: 'left', y: 'top'}
 	},
 
@@ -2638,6 +2634,7 @@ var Drag = new Class({
 			this.fireEvent("onRightClick", event.page);
 			return;
 		}
+		if (this.options.preventDefault) event.preventDefault();
 		this.fireEvent('onBeforeStart', this.element);
 		this.mouse.start = event.page;
 		var limit = this.options.limit;
@@ -2660,6 +2657,7 @@ var Drag = new Class({
 	},
 
 	check: function(event){
+		if (this.options.preventDefault) event.preventDefault();
 		var distance = Math.round(Math.sqrt(Math.pow(event.page.x - this.mouse.start.x, 2) + Math.pow(event.page.y - this.mouse.start.y, 2)));
 		if (distance > this.options.snap){
 			this.cancel();
@@ -2672,6 +2670,7 @@ var Drag = new Class({
 	},
 
 	drag: function(event){
+		if (this.options.preventDefault) event.preventDefault();
 		this.mouse.now = event.page;
 		for (var z in this.options.modifiers){
 			if (!this.options.modifiers[z]) continue;

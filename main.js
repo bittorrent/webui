@@ -8,6 +8,9 @@
 var VERSION = "0.340a";
 var BUILD_REQUIRED = -1; // the ut build the webui requires
 var lang = lang || null;
+var has = function (obj, key) {
+	return Object.prototype.hasOwnProperty.apply(obj, [key]);
+};
 
 Array.implement({
 
@@ -160,14 +163,15 @@ function setupUI() {
 		"format": function(values, index) {
 			if (index == null) {
 				values[2]  = values[2].toFileSize(2); // size
-				values[3]  = (values[3] / 10).roundTo(1) + "%"; // done
-				values[4]  = values[4].toFileSize(); // downloaded
-				values[5]  = values[5].toFileSize(); // uploaded
-				values[6]  = (values[6] == -1) ? "\u221E" : (values[6] / 1000).roundTo(3); // ratio
-				values[7]  = (values[7] >= 103) ? (values[7].toFileSize() + "/s") : ""; // download speed
-				values[8]  = (values[8] >= 103) ? (values[8].toFileSize() + "/s") : ""; // upload speed
-				values[9]  = (values[9] == 0) ? "" :
-								(values[9] <= -1) ? "\u221E" : values[9].toTimeString(); // ETA
+				var d = values[3];
+				values[3] = (values[3] / 10).roundTo(1) + "%"; //new Element("div", {"class": "prbar"}).grab(new Element("span", {"html": (values[3] / 10).roundTo(1) + "%"})).grab(new Element("div", {"styles": {"width": (d / 10).toInt() + "%"}})); // done
+				values[4] = values[4].toFileSize(); // downloaded
+				values[5] = values[5].toFileSize(); // uploaded
+				values[6] = (values[6] == -1) ? "\u221E" : (values[6] / 1000).roundTo(3); // ratio
+				values[7] = (values[7] >= 103) ? (values[7].toFileSize() + "/s") : ""; // download speed
+				values[8] = (values[8] >= 103) ? (values[8].toFileSize() + "/s") : ""; // upload speed
+				values[9] = (values[9] == 0) ? "" :
+							(values[9] <= -1) ? "\u221E" : values[9].toTimeString(); // ETA
 				values[13] = (values[13] / 65535).roundTo(3); // availability
 				values[14] = (values[14] <= -1) ? "*" : values[14]; // ETA
 				values[15] = values[15].toFileSize(2); // remaining
@@ -375,8 +379,8 @@ function resizeUI(w, h) {
 			$("tdetails").setStyle("height", wh - h - 10);
 			$("tdcont").setStyle("height", wh - h - 86);
 			$("gcont").setStyle("height", wh - h - 96);
+			utWebUI.flsTable.resizeTo(ww - 22, wh - h - 88);
 		}
-		utWebUI.flsTable.resizeTo(ww - 22, $chk(h) ? (h + 18) : wh);
 	}
 
 	utWebUI.trtTable.resizeTo(w, h);
@@ -577,11 +581,9 @@ var utWebUI = {
 	},
 	
 	"removeAll": function() {
-		if (this.bConfDel)
-		{
+		if (this.bConfDel) {
 			this.delmode = "removedata";
-		} else
-		{
+		} else {
 			this.perform("removedata");
 		}
 	},
@@ -788,6 +790,13 @@ var utWebUI = {
 		this.totalDL = 0;
 		this.totalUL = 0;
 		this.getTorrents("list=1");
+		/*
+		new Request({
+			"url": this.url + "torrentlist.txt",
+			"method": "get",
+			"onSuccess": this.addTorrents.bind(this)
+		}).send();
+		*/
 	},
 	
 	"getInterval": function() {
@@ -1378,13 +1387,16 @@ var utWebUI = {
 			this.files[id] = [];
 			this.request("?action=getfiles&hash=" + id, this.addFiles);
 		} else {
-			if (this.tabs.active == "FileList")
-				this.loadFiles();
+			if (this.tabs.active == "FileList") {
+				this.flsTable.loadObj.show();
+				this.loadFiles.delay(20, this);
+			}
 		}
 	},
 	
 	"addFiles": function(fd) {
 		var files = JSON.decode(fd).files;
+		if (files == undefined) return;
 		this.files[files[0]] = files[1];
 		if (this.tabs.active == "FileList")
 			this.loadFiles();
@@ -1554,6 +1566,10 @@ var utWebUI = {
 		{
 			this.flsTable.calcSize();
 		}
+	},
+	
+	"showFolderBrowser": function() {
+		$("dlgFolders").centre().show();
 	}
 	
 }
@@ -1779,6 +1795,97 @@ function loadJS(source, properties){
 	return script.inject(doc.head);
 }
 
+var fldNodes = [];
+var LI = new Element('li');
+var TreeNode = new Class({
+
+	"Implements": [Options, Events],
+	"options": {
+		"text": "",
+		"div": null,
+		"expandable": false
+	},
+	"selected": null,
+	"element": null,
+	"children": [],
+	"parent": null,
+	"root": null,
+	"head": false,
+	"level": -1,
+	"open": false,
+
+	"initialize": function(options, parent) {
+		this.setOptions(options);
+		this.parent = parent;
+		if (!this.parent) {
+			this.element = new Element("div");
+			this.parent = $(this.options.div).adopt(this.element);
+			this.head = true;
+		} else {
+			this.level = this.parent.level + 1;
+			var $me = this;
+			this.element = new Element("a").set({
+				"events": {
+					"click": function(ev) {
+						ev.stop();
+						$me.setSelected();
+						$me.open = !$me.open;
+						var toggle = function(node) {
+							if (!node.children) return;
+							node.children.each(function(ch) {
+								ch.element[(ch.parent.open && $me.open) ? "show" : "hide"]();
+								toggle(ch);
+							});
+						};
+						toggle($me);
+						if ($me.options.expandable)
+							$me.element.setStyle("backgroundImage", "url(\"" + ($me.open ? "./icons/bullet_toggle_minus.png" : "./icons/bullet_toggle_plus.png") + "\")");
+						$me.fireEvent("onClick", $me);
+					}
+				},
+				"styles": {
+					"paddingLeft": this.level * 20 + 20,
+					"backgroundImage": "url(\"" + (this.options.expandable ? "./icons/bullet_toggle_plus.png" : "./images/folder.png") + "\")",
+					"backgroundPosition": (this.level * 20 + 2) + "px center"
+				},
+				"href": "#"
+			}).adopt(new Element("span").set("html", this.options.text)).inject(new Element("div", {"class": "item"}));
+			if (this.parent.children.length > 0) {
+				this.element.parentNode.inject(this.parent.children[this.parent.children.length - 1].element, "after");
+			} else {
+				this.element.parentNode.inject(this.parent.element, this.parent.head ? "bottom" : "after");
+			}
+		}
+	},
+	
+	"setSelected": function(node) {
+		if (this.head) {
+			if (this.selected)
+				this.selected.element.removeClass("selected");
+			this.selected = node;
+			this.selected.element.addClass("selected");
+		} else {
+			this.parent.setSelected($pick(node, this));
+		}
+	},
+	
+	"insert": function(options) {
+		this.children.push(new TreeNode(options, this));
+	},
+	
+	"clear": function() {
+		this.children.each(function(node) {
+			node.element.remove();
+		});
+		this.children = [];
+	},
+	
+	"getRoot": function() {
+		return this.head ? this.element : this.parent.getRoot();
+	}
+
+});
+
 function loadLangStrings() {
 	var tstr = lang.OV_TABS.split("||");
 	utWebUI.tabs = new Tabs($("tabs"), {
@@ -1807,6 +1914,11 @@ function loadLangStrings() {
 	[
 		"OV_CONFIRM_DELETE",
 		"OV_NEWLABEL_TEXT",
+		"DLG_PRE_ADD_03",
+		"DLG_PRE_ADD_04",
+		"DLG_PRE_ADD_05",
+		"DLG_PRE_ADD_06",
+		"DLG_PRE_ADD_08",
 		"DLG_TORRENTPROP_GEN_01",
 		"DLG_TORRENTPROP_GEN_03",
 		"DLG_TORRENTPROP_GEN_04",
@@ -1999,7 +2111,7 @@ function loadLangStrings() {
 			}
 			tbody.grab(tr);
 		}
-		$("sched_table").addClass("disabled").grab(tbody);
+		$("sched_table").grab(tbody);
 	})();
 }
 
@@ -2135,7 +2247,7 @@ window.addEvent("domready", function() {
 			var str = $(doc.body).get("html");
 			if (str != "") {
 				var data = JSON.decode(str);
-				if (data.hasOwnProperty("error")) 
+				if (has(data, "error")) 
 					alert(data.error);
 			}
 		}
@@ -2149,7 +2261,15 @@ window.addEvent("domready", function() {
 	
 	$("add").addEvent("click", function(ev) {
 		ev.stop();
+		var ele = $("addlab");
+		ele.options.length = 0;
+		var count = 0;
+		for (var key in utWebUI.customLabels)
+			ele.options[count++] = new Option(key, key, false, count == 0);
 		$("dlgAdd").show().centre();
+	});
+	$("DLG_PRE_ADD_03").addEvent("click", function() {
+		utWebUI.showFolderBrowser();
 	});
 	["remove", "start", "pause", "stop"].each(function(act) {
 		$(act).addEvent("click", function(ev) {
@@ -2163,7 +2283,7 @@ window.addEvent("domready", function() {
 	});
 	var winZ = 500;
 	$("modalbg").setStyle("opacity", 0.8);
-	["dlgAdd", "dlgSettings", "dlgProps", "dlgAbout", "dlgLabel", "dlgDelTor"].each(function(id) {
+	["dlgAdd", "dlgSettings", "dlgProps", "dlgAbout", "dlgLabel", "dlgDelTor", "dlgFolders"].each(function(id) {
 		$(id).addEvent("mousedown", function(ev) {
 			this.setStyle("zIndex", ++winZ);
 		}).getElement("a").addEvent("click", function(ev) {
@@ -2218,6 +2338,33 @@ window.addEvent("domready", function() {
 	$("max_ul_rate_seed_flag").addEvent("change", function() {
 		linked(this, 0, ["max_ul_rate_seed"]);
 	});
+	(function() {
+		var addTogg = false;
+		$("optadd").addEvent("click", function(ev) {
+			ev.stop();
+			this.setStyle("backgroundPosition", "2px " + (addTogg ? 0 : -16) + "px");
+			$("dlgAdd").setStyle("height", addTogg ? 185 : 260);
+			$("optadd-cont")[addTogg ? "hide" : "show"]();
+			addTogg = !addTogg;
+		});
+	})();
+	
+	fldNodes[0] = new TreeNode({
+		"div": "fl-cont",
+		"id": 0
+	});
+	var clkEv = function(node) {
+		var path = "";
+		while (node.level >= 0) {
+			path = node.options.text + "\\" + path;
+			node = node.parent;
+		}
+		$("brwpath").set("value", path);
+	};
+	var fdsg = new TreeNode({"text": "C:", "onClick": clkEv}, fldNodes[0]);
+	fdsg.insert({"text": "Windows", "onClick": clkEv});
+	fldNodes[0].insert({"text": "D:\\kfdsgfds", "onClick": clkEv});
+	fldNodes[0].insert({"text": "F:\\fds", "onClick": clkEv});
 
 	utWebUI.initialize();
 });

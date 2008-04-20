@@ -26,19 +26,25 @@
 		<div id="dlgAdd" class="dlg-window">
 			<a href="#" class="dlg-close"></a>
 			<div id="dlgAdd-header" class="dlg-header">Add Torrent</div>
-			<div class="cont fxcaret">
+			<div class="cont">
 				<form action="./?action=add-file" method="post" enctype="multipart/form-data" target="uploadfrm" id="upfrm">
-					<p><label>Torrent file:</label>
-					<input type="file" name="torrent_file" id="torrent_file" class="tbox" /><br />
-					<label>&nbsp;</label><input type="submit" value="Add File" id="add_button" class="btn" />
-					</p>
+					<div class="hcont"><label for="torrent_file">Torrent file:</label><input type="file" name="torrent_file" id="torrent_file" class="tbox" /></div>
+					<div class="hcont"><label>&nbsp;</label><input type="submit" value="Add File" id="add_button" class="btn" /></div>
 				</form>
-				<hr /><br />
-				<label>Torrent URL:</label>
-				<input type="text" id="url" class="tbox" /><br />
-				<label>Cookies:</label>
-				<input type="text" id="cookies" class="tbox" /><br />
-				<label>&nbsp;</label><input type="button" value="Add URL" class="btn" />
+				<hr />
+				<div class="hcont"><label for="url">Torrent URL:</label><input type="text" id="url" class="tbox" /></div>
+				<div class="hcont"><label for="cookies">Cookies:</label><input type="text" id="cookies" class="tbox" /></div>
+				<div class="hcont"><label>&nbsp;</label><input type="button" value="Add URL" class="btn" /></div>
+				<fieldset>
+					<legend><a href="#" id="optadd">Options</a></legend>
+					<div id="optadd-cont">
+							<div><input type="text" id="dlpath" class="tbox" /><input type="button" id="DLG_PRE_ADD_03" class="btn" /></div>
+							<div class="fifpcw"><input type="checkbox" /><label id="DLG_PRE_ADD_04"></label></div>
+							<div class="fifpcw"><select id="addlab"></select><label id="DLG_PRE_ADD_06"></label></div>
+							<div class="fifpcw"><input type="checkbox" /><label id="DLG_PRE_ADD_05"></label></div>
+							<div class="fifpcw"><input type="checkbox" /><label id="DLG_PRE_ADD_08"></label></div>
+					</div>
+				</fieldset>
 			</div>
 		</div>
 		<!-- Torrent Add Dialog */  -->
@@ -395,31 +401,31 @@
 							</tr>
 							<tr>
 								<td><label for="bt.auto_ul_factor">bt.auto_ul_factor</label></td>
-								<td><input type="text" id="bt.auto_ul_factor" maxlength="5" /></td>
+								<td><input type="text" id="bt.auto_ul_factor" class="tbox num" maxlength="5" /></td>
 							</tr>
 							<tr>
 								<td><label for="bt.auto_ul_interval">bt.auto_ul_interval</label></td>
-								<td><input type="text" id="bt.auto_ul_interval" maxlength="5" /></td>
+								<td><input type="text" id="bt.auto_ul_interval" class="tbox num" maxlength="5" /></td>
 							</tr>
 							<tr>
 								<td><label for="bt.auto_ul_min">bt.auto_ul_min</label></td>
-								<td><input type="text" id="bt.auto_ul_min" maxlength="5" /></td>
+								<td><input type="text" id="bt.auto_ul_min" class="tbox num" maxlength="5" /></td>
 							</tr>
 							<tr>
 								<td><label for="bt.auto_ul_sample_average">bt.auto_ul_sample_average</label></td>
-								<td><input type="text" id="bt.auto_ul_sample_average" maxlength="5" /></td>
+								<td><input type="text" id="bt.auto_ul_sample_average" class="tbox num" maxlength="5" /></td>
 							</tr>
 							<tr>
 								<td><label for="bt.auto_ul_sample_window">bt.auto_ul_sample_window</label></td>
-								<td><input type="text" id="bt.auto_ul_sample_window" maxlength="5" /></td>
+								<td><input type="text" id="bt.auto_ul_sample_window" class="tbox num" maxlength="5" /></td>
 							</tr>
 							<tr>
 								<td><label for="bt.ban_ratio">bt.ban_ratio</label></td>
-								<td><input type="text" id="bt.ban_ratio" maxlength="5" /></td>
+								<td><input type="text" id="bt.ban_ratio" class="tbox num" maxlength="5" /></td>
 							</tr>
 							<tr>
 								<td><label for="bt.ban_threshold">bt.ban_threshold</label></td>
-								<td><input type="text" id="bt.ban_threshold" maxlength="5" /></td>
+								<td><input type="text" id="bt.ban_threshold" class="tbox num" maxlength="5" /></td>
 							</tr>
 							<tr>
 								<td><label for="bt.compact_allocation">bt.compact_allocation</label></td>
@@ -427,7 +433,7 @@
 							</tr>							
 							<tr>
 								<td><label for="bt.connect_speed">bt.connect_speed</label></td>
-								<td><input type="text" id="bt.connect_speed" maxlength="5" /></td>
+								<td><input type="text" id="bt.connect_speed" class="tbox num" maxlength="5" /></td>
 							</tr>
 							<tr>
 								<td><label for="bt.enable_tracker">bt.enable_tracker</label></td>
@@ -447,7 +453,7 @@
 							</tr>
 							<tr>
 								<td><label for="bt.no_connect_to_services_list">bt.no_connect_to_services_list</label></td>
-								<td><input type="text" id="bt.no_connect_to_services_list" /></td>
+								<td><input type="text" id="bt.no_connect_to_services_list" class="tbox" /></td>
 							</tr>
 							<tr>
 								<td><label for="bt.prio_first_last_piece">bt.prio_first_last_piece</label></td>
@@ -467,7 +473,7 @@
 							</tr>
 							<tr>
 								<td><label for="bt.transp_disposition">bt.transp_disposition</label></td>
-								<td><input type="text" id="bt.transp_disposition" maxlength="5" /></td>
+								<td><input type="text" id="bt.transp_disposition" class="tbox num" maxlength="5" /></td>
 							</tr>
 							<tr>
 								<td><label for="bt.use_ban_ratio">bt.use_ban_ratio</label></td>
@@ -479,7 +485,7 @@
 							</tr>
 							<tr>
 								<td><label for="dht.rate">dht.rate</label></td>
-								<td><input type="text" id="dht.rate" maxlength="4" /></td>
+								<td><input type="text" id="dht.rate" class="tbox num" maxlength="10" /></td>
 							</tr>
 							<tr>
 								<td><label for="diskio.coalesce_writes">diskio.coalesce_writes</label></td>
@@ -503,7 +509,7 @@
 							</tr>
 							<tr>
 								<td><label for="gui.default_del_action">gui.default_del_action</label></td>
-								<td><input type="text" id="gui.default_del_action" maxlength="1" /></td>
+								<td><input type="text" id="gui.default_del_action" class="tbox num" maxlength="1" /></td>
 							</tr>
 							<tr>
 								<td><label for="gui.delete_to_trash">gui.delete_to_trash</label></td>
@@ -515,7 +521,7 @@
 							</tr>
 							<tr>
 								<td><label for="net.bind_ip">net.bind_ip</label></td>
-								<td><input type="text" id="net.bind_ip" maxlength="20" /></td>
+								<td><input type="text" id="net.bind_ip" class="tbox" maxlength="40" /></td>
 							</tr>
 							<tr>
 								<td><label for="net.low_cpu">net.low_cpu</label></td>
@@ -523,23 +529,23 @@
 							</tr>
 							<tr>
 								<td><label for="net.max_halfopen">net.max_halfopen</label></td>
-								<td><input type="text" id="net.max_halfopen" maxlength="2" /></td>
+								<td><input type="text" id="net.max_halfopen" class="tbox num" maxlength="6" /></td>
 							</tr>
 							<tr>
 								<td><label for="net.outgoing_ip">net.outgoing_ip</label></td>
-								<td><input type="text" id="net.outgoing_ip" maxlength="20" /></td>
+								<td><input type="text" id="net.outgoing_ip" class="tbox" maxlength="40" /></td>
 							</tr>
 							<tr>
 								<td><label for="net.outgoing_max_port">net.outgoing_max_port</label></td>
-								<td><input type="text" id="net.outgoing_max_port" maxlength="20" /></td>
+								<td><input type="text" id="net.outgoing_max_port" class="tbox num" maxlength="6" /></td>
 							</tr>
 							<tr>
 								<td><label for="net.outgoing_port">net.outgoing_port</label></td>
-								<td><input type="text" id="net.outgoing_port" maxlength="20" /></td>
+								<td><input type="text" id="net.outgoing_port" class="tbox num" maxlength="6" /></td>
 							</tr>
 							<tr>
 								<td><label for="net.wsaevents">net.wsaevents</label></td>
-								<td><input type="text" id="net.wsaevents" maxlength="2" /></td>
+								<td><input type="text" id="net.wsaevents" class="tbox num" maxlength="2" /></td>
 							</tr>
 							<tr>
 								<td><label for="peer.disconnect_inactive">peer.disconnect_inactive</label></td>
@@ -567,11 +573,11 @@
 							</tr>
 							<tr>
 								<td><label for="queue.slow_dl_threshold">queue.slow_dl_threshold</label></td>
-								<td><input type="text" id="queue.slow_dl_threshold" /></td>
+								<td><input type="text" id="queue.slow_dl_threshold" class="tbox num" /></td>
 							</tr>
 							<tr>
 								<td><label for="queue.slow_ul_threshold">queue.slow_ul_threshold</label></td>
-								<td><input type="text" id="queue.slow_ul_threshold" /></td>
+								<td><input type="text" id="queue.slow_ul_threshold" class="tbox num" /></td>
 							</tr>
 							<tr>
 								<td><label for="queue.use_seed_peer_ratio">queue.use_seed_peer_ratio</label></td>
@@ -579,7 +585,7 @@
 							</tr>
 							<tr>
 								<td><label for="rss.update_interval">rss.update_interval</label></td>
-								<td><input type="text" id="rss.update_interval" maxlength="4" /></td>
+								<td><input type="text" id="rss.update_interval" class="tbox num" maxlength="4" /></td>
 							</tr>
 							<tr>
 								<td><label for="sys.enable_wine_hacks">sys.enable_wine_hacks</label></td>
@@ -676,11 +682,27 @@
 			<div id="dlgDelTor-header" class="dlg-header">Remove Torrent(s)</div>
 			<div class="content">
 				<span id="OV_CONFIRM_DELETE"></span><br />
-			  <input type="button" class="btn" value="   OK   " />&nbsp;&nbsp;
-			  <input type="button" class="btn" value="   No   " />
+				<input type="button" class="btn" value="   OK   " />&nbsp;&nbsp;
+				<input type="button" class="btn" value="   No   " />
 			</div>
 		</div>
 		<!-- Delete Confirmation Dialog */ -->
+		
+		<!-- /* Folders Dialog -->
+ 		<div id="dlgFolders" class="dlg-window">
+			<a href="#" class="dlg-close"></a>
+			<div id="dlgFolders-header" class="dlg-header">Browse For Folder</div>
+			<div class="content">
+				<div id="fl-cont"></div>
+				<label for="brwpath">Folder: </label><input type="text" id="brwpath" />
+				<div>
+					<input type="button" class="btn" value="New Folder" />
+					<input type="button" class="btn" value="OK" />
+					<input type="button" class="btn" value="Cancel" />
+				</div>
+			</div>
+		</div>
+		<!-- Folders Dialog */ -->
 		
 		<!-- /* Toolbar -->
 		<div id="toolbar">

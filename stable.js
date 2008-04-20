@@ -225,6 +225,7 @@ var dxSTable = new Class({
 		this.tBody.grab(this.tb.body);
 		if (this.options.mode == MODE_PAGE) {
 			this.pageMenu = simpleClone(DIV, false).addClass("stable-pagemenu").inject(this.dCont);
+			this.pageInfo = new Element("span", {"class": "pageinfo", "text": "0 row(s) selected."}).inject(this.pageMenu);
 			this.pageNext = simpleClone(DIV, false)
 							.addClass("nextlink-disabled")
 							.addEvent("click", this.nextPage.bind(this))
@@ -271,7 +272,7 @@ var dxSTable = new Class({
 				this.scrollDiff = this.dBody.scrollTop;
 			} else {
 				var diff = Math.abs(this.scrollDiff - this.dBody.scrollTop);
-				if (diff > 19) {
+				if (diff > 0) {
 					this.isScrolling = true;
 					$clear(this.scrollTimer);
 					this.scrollTimer = (function() {
@@ -279,7 +280,9 @@ var dxSTable = new Class({
 						$clear(this.scrollTimer);
 						this.isScrolling = false;
 						this.resizePads();
-					}).delay(300);
+						this.loadObj.show();
+						this.refreshRows(true);
+					}).bind(this).delay(300);
 				} else {
 					$clear(this.scrollTimer);
 				}
@@ -303,7 +306,7 @@ var dxSTable = new Class({
 	"setAlignment": function() {
 		var sb = [], cols = this.tBody.getElement("colgroup").getElements("col");
 		for (var i = 0; i < this.cols; i++) {
-			var align = '';
+			var align = "";
 			switch (this.colData[i].align) {
 				case ALIGN_LEFT:
 					align = "left";
@@ -405,6 +408,7 @@ var dxSTable = new Class({
 				this.activeId.push(key);
 			}
 			this.rowData[key].index = i;
+			this.rowData[key].rowIndex = -1;
 			if (this.rowId[i] === key) continue;
 			this.rowId[i] = key;
 			refresh = true;
@@ -460,7 +464,8 @@ var dxSTable = new Class({
 		var max = this.options.maxRows, mni = 0, mxi = 0;
 		if (this.options.mode == MODE_VIRTUAL) {
 			var rt = (this.dBody.scrollHeight == 0) ? 0.0 : (this.dBody.scrollTop / this.dBody.scrollHeight);
-			if (rt > 1.0) rt = 1.0;
+			if (rt > 1.0)
+				rt = 1.0;
 			mni = Math.floor(rt * this.activeId.length);
 		} else {
 			mni = max * this.curPage;
@@ -474,12 +479,10 @@ var dxSTable = new Class({
 			this.detachBody();
 		var count = 0;
 		for (var i = mni; i <= mxi; i++) {
-			var id = this.activeId[i];
-			var r = this.rowData[id];
-			var row = $(id) || this.tb.body.childNodes[count], data = this.options.format($A(r.data)), icon = r.icon;
+			var id = this.activeId[i], r = this.rowData[id], row = $(id) || this.tb.body.childNodes[count], data = this.options.format($A(r.data)), icon = r.icon;
 			row.setProperties({"title": data[0], "id": id});
 			var cls = (this.options.alternateRows) ? ((count & 1) ? "odd" : "even") : "";
-			cls = (this.rowSel.hasOwnProperty(id)) ? "selected" : cls;
+			cls = has(this.rowSel, id) ? "selected" : cls;
 			row.className = cls;
 			this.fillRow(row, data, icon);
 			if (row != this.tb.body.childNodes[count])
@@ -492,6 +495,7 @@ var dxSTable = new Class({
 		if (Browser.Engine.gecko)
 			this.attachBody();
 		this.dHead.setStyle("width", this.dBody.clientWidth);
+		this.loadObj.hide();
 		//this.refresh();
 	},
 	
@@ -505,7 +509,7 @@ var dxSTable = new Class({
 	
 	"selectRow": function(ev, row) {
 		var id = row.get("id");
-		if (!(ev.rightClick && this.rowSel.hasOwnProperty(id))) {
+		if (!(ev.rightClick && has(this.rowSel, id))) {
 			if (ev.shift) {
 				if (this.stSel === null) {
 					this.stSel = id;
@@ -527,7 +531,7 @@ var dxSTable = new Class({
 				}
 			} else if (ev.control) {
 				this.stSel = id;
-				if (this.rowSel.hasOwnProperty(id)) {
+				if (has(this.rowSel, id)) {
 					this.selectedRows.splice(this.rowSel[id], 1);
 					for (var i = this.rowSel[id], j = this.selectedRows.length; i < j; i++)
 						this.rowSel[this.selectedRows[i]]--;
@@ -555,7 +559,7 @@ var dxSTable = new Class({
 	},
 
 	"addRow": function(data, id, icon, hidden) {
-		if ((data.length != this.cols) || ((id != null) && this.rowData.hasOwnProperty(id))) return;
+		if (data.length != this.cols) return;
 		id = id || (this.id + "-row-" + (1000 + this.rows));
 		var rowIndex = -1;
 		if (!hidden) {
@@ -594,7 +598,7 @@ var dxSTable = new Class({
 			} else {
 				if ((v == 0) && icon)
 					cell.addClasses("stable-icon", icon, true);
-				cell.appendText(data[v]);
+				cell["append" + (($type(data[v]) == "element") ? "Child" : "Text")](data[v]);
 			}
 		});
 	},
@@ -676,7 +680,7 @@ var dxSTable = new Class({
 	},
 
 	"hideRow": function(id) {
-		if (this.activePos.hasOwnProperty(id)) {
+		if (has(this.activePos, id)) {
 			this.activeId.splice(this.activePos[id], 1);
 			for (var i = this.activePos[id], j = this.activeId.length; i < j; i++)
 				this.activePos[this.activeId[i]]--;
@@ -687,10 +691,20 @@ var dxSTable = new Class({
 	},
 
 	"unhideRow": function(id) {
-		if (!this.activePos.hasOwnProperty(id)) {
-			//FIXME: this doesn't respect the sort order
-			this.activePos[id] = this.activeId.length;
-			this.activeId.push(id);
+		if (!has(this.activePos, id)) {
+			if (this.sIndex == -1) {
+				this.activePos[id] = this.activeId.length;
+				this.activeId.push(id);
+			} else {
+				var $me = this, index = this.activeId.binarySearch(this.rowData[id].index, function(val, id) {
+					return (val - $me.rowData[id].index);
+				});
+				index = -(index + 1);
+				this.activeId.splice(index, 0, id);
+				this.activePos[id] = index;
+				for (var i = index + 1, j = this.activeId.length; i < j; i++)
+					this.activePos[this.activeId[i]]++;
+			}
 		}
 		this.rowData[id].hidden = false;
 		this.pageCount = (this.options.mode == MODE_PAGE) ? Math.ceil(this.activeId.length / this.options.maxRows) : 0;
@@ -700,8 +714,9 @@ var dxSTable = new Class({
 		var i = this.tb.body.childNodes.length;
 		while (i--) {
 			var row = this.tb.body.childNodes[i];
-			row[this.rowSel.hasOwnProperty(row.id) ? "addClass" : "removeClass"]("selected");
+			row[has(this.rowSel, row.id) ? "addClass" : "removeClass"]("selected");
 		}
+		this.pageInfo.set("text", this.selectedRows.length + " row(s) selected.");
 	},
 
 	"clearSelection": function(noRefresh) {
@@ -709,20 +724,22 @@ var dxSTable = new Class({
 		this.selectedRows.length = 0;
 		delete this.rowSel;
 		this.rowSel = {};
-		if (!noRefresh) this.refreshSelection();
+		if (!noRefresh)
+			this.refreshSelection();
 	},
 
 	"fillSelection": function(noRefresh) {
 		this.selectedRows = $A(this.activeId);
 		for (var i = 0, j = this.selectedRows.length; i < j; i++)
 			this.rowSel[this.selectedRows[i]] = i;
-		if (!noRefresh) this.refreshSelection();
+		if (!noRefresh)
+			this.refreshSelection();
 	},
 
 	"getCache": function(index) {
 		var a = [];
 		index = this.colOrder[index];
-		for (var key in this.rowData) if (this.rowData.hasOwnProperty(key)) {
+		for (var key in this.rowData) if (has(this.rowData, key)) {
 			a.push({
 				"key": key,
 				"v": this.rowData[key].data[index],
@@ -751,7 +768,6 @@ var dxSTable = new Class({
 		if (row == null)	return;
 		row.data[col] = val;
 		if (row.rowIndex == -1) return;
-		console.assert((row.rowIndex >= 0) && (row.rowIndex < this.tb.body.childNodes.length), "rowIndex is ", row.rowIndex);
 		var r = this.tb.body.childNodes[row.rowIndex], index = this.colOrder.indexOf(col);
 		if (index == -1) return;
 		// lastChild should be a TextNode
@@ -821,7 +837,7 @@ var dxSTable = new Class({
 			var rt = (this.dBody.scrollHeight == 0) ? 0.0 : (this.dBody.scrollTop / this.dBody.scrollHeight);
 			if (rt > 1.0) rt = 1.0;
 			var mh = this.options.maxRows * 16;
-			var th = this.dBody.scrollTop - ((mh - this.dBody.offsetHeight) * rt).toInt();
+			var th = this.dBody.scrollTop - ((mh - this.dBody.offsetHeight) * rt).ceil();
 			if (vh < mh + th)
 				th = vh - mh;
 			this.topPad.setStyle("height", th);
@@ -974,7 +990,7 @@ var ColumnHandler = {
 };
 
 function resizeColumn(index) {
-	var cols = this.tBody.find("colgroup").search("col");
+	var cols = this.tBody.getElement("colgroup").getElements("col");
 	this.colWidth[this.colOrder[index]] = this.tHeadCols[index].getWidth();
 	var from = $pick(index, 0);
 	var to = $pick(index, cols.length - 1);

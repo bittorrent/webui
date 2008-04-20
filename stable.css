@@ -196,6 +196,13 @@ limitations under the License.
 	position: relative;
 }
 
+.stable-pagemenu .pageinfo {
+	padding: 0 6px;
+	float: left;
+	font-size: 11px;
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+}
+
 .stable-pagemenu .pagestat {
 	width: 100px; height: 20px;
 	margin: -2px 0 0 0;

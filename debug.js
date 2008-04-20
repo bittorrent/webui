@@ -4,7 +4,9 @@
  *
 */
 
-var console = console || {};
+if (!console) {
+	var console = {};
+}
 
 (function() {
 
