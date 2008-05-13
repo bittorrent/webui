@@ -134,10 +134,10 @@ var dxSTable = new Class({
 			"onDrag": function(){ ColumnHandler.drag($me, this); },
 			"onComplete": function(){ ColumnHandler.end($me, this); },
 			"onRightClick": this.colMenu.bind(this),
-			"onCancel": function() {
+			"onCancel": function(_, ev) {
 				this.detach();
 				$me.cancelSort = false;
-				$me.sort(this.element);
+				$me.sort(this.element, ev.shift);
 			}
 		}).detach();
 		tr.addEvent("mousemove", function(ev) {
@@ -304,7 +304,7 @@ var dxSTable = new Class({
 	},
 
 	"setAlignment": function() {
-		var sb = [], cols = this.tBody.getElement("colgroup").getElements("col");
+		var sb = "", cols = this.tBody.getElement("colgroup").getElements("col");
 		for (var i = 0; i < this.cols; i++) {
 			var align = "";
 			switch (this.colData[i].align) {
@@ -328,15 +328,14 @@ var dxSTable = new Class({
 			(Browser.Engine.trident) ?
 				cols[i].setProperty("align", align)
 			:
-				sb.push("." + this.id + "-col-" + this.colOrder[i] + " { text-align: " + align + " }");
+				sb += "." + this.id + "-col-" + this.colOrder[i] + " { text-align: " + align + " }";
 		}
 		if (!Browser.Engine.trident) {
-			$("colrules").appendText(sb.join(''));
-			sb.empty();
+			$("colrules").appendText(sb);
 		}
 	},
 	
-	"sort": function(col) {
+	"sort": function(col, shift) {
 		if (this.cancelSort) return;
 		this.isSorting = true;
 		var rev = true;
@@ -351,7 +350,7 @@ var dxSTable = new Class({
 			col = col.getParent("td");
 
 		var ind = col.retrieve("index");
-		if (window.shiftKey) { //secondary sorting
+		if (shift) { //secondary sorting
 			if (ind == this.sIndex) {
 				this.secIndex = 0;
 				return;
@@ -614,13 +613,13 @@ var dxSTable = new Class({
 	"removeRow": function(id) {
 		var rd = this.rowData[id];
 		if (rd == null) return;
-		if (this.activePos.hasOwnProperty(id)) {
+		if (has(this.activePos, id)) {
 			this.activeId.splice(this.activePos[id], 1);
 			for (var i = this.activePos[id], j = this.activeId.length; i < j; i++)
 				this.activePos[this.activeId[i]]--;
 			delete this.activePos[id];
 		}
-		if (this.rowSel.hasOwnProperty(id)) {
+		if (has(this.rowSel, id)) {
 			this.selectedRows.splice(this.rowSel[id], 1);
 			for (var i = this.rowSel[id], j = this.selectedRows.length; i < j; i++)
 				this.rowSel[this.selectedRows[i]]--;
@@ -655,6 +654,7 @@ var dxSTable = new Class({
 			this.dBody.scrollTop = 0;
 			this.curPage = 0;
 			this.pageCount = 0;
+			this.updatePageMenu();
 		}
 	},
 
@@ -687,7 +687,10 @@ var dxSTable = new Class({
 			delete this.activePos[id];
 		}
 		this.rowData[id].hidden = true;
+		var oc = this.pageCount;
 		this.pageCount = (this.options.mode == MODE_PAGE) ? Math.floor(this.activeId.length / this.options.maxRows) : 0;
+		if (oc != this.pageCount)
+			this.updatePageMenu();
 	},
 
 	"unhideRow": function(id) {
@@ -707,7 +710,10 @@ var dxSTable = new Class({
 			}
 		}
 		this.rowData[id].hidden = false;
-		this.pageCount = (this.options.mode == MODE_PAGE) ? Math.ceil(this.activeId.length / this.options.maxRows) : 0;
+		var oc = this.pageCount;
+		this.pageCount = (this.options.mode == MODE_PAGE) ? Math.floor(this.activeId.length / this.options.maxRows) : 0;
+		if (oc != this.pageCount)
+			this.updatePageMenu();
 	},
 
 	"refreshSelection": function() {
@@ -739,7 +745,7 @@ var dxSTable = new Class({
 	"getCache": function(index) {
 		var a = [];
 		index = this.colOrder[index];
-		for (var key in this.rowData) if (has(this.rowData, key)) {
+		for (var key in this.rowData) {
 			a.push({
 				"key": key,
 				"v": this.rowData[key].data[index],
@@ -909,7 +915,7 @@ var ColumnHandler = {
 		} else {
 			var col = st.tHeadCols[st.hotCell];
 			var w = col.getSize().x;
-			var l = col.getPosition().x - st.dCont.getPosition().x + w;
+			var l = col.getPosition().x - st.dCont.getPosition().x + w - (Browser.Engine.gecko19 ? 4 : 0);
 			st.resizeCol = {"width": col.getStyle("width").toInt(), "left": l};
 			drag.value.now.x = l;
 			drag.mouse.pos.x = drag.mouse.start.x - l;

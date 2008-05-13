@@ -5,8 +5,8 @@
  *
 */
 
-var VERSION = "0.340a";
-var BUILD_REQUIRED = -1; // the ut build the webui requires
+var VERSION = "0.340.001";
+var BUILD_REQUIRED = 10094; // the ut build the webui requires
 var lang = lang || null;
 var has = function (obj, key) {
 	return Object.prototype.hasOwnProperty.apply(obj, [key]);
@@ -393,7 +393,7 @@ function resizeUI(w, h) {
 		$("HDivider").setStyle("height", h + 2);
 		$("VDivider").setStyle("top", listPos.y + h + 2);
 		if (showdet && !winResize)
-			utWebUI.config.vSplit = (h / wh).round(3);
+			utWebUI.config.vSplit = (h / (wh - eh - 12)).round(3);
 	}
 	
 	if ($chk(w) && showcat && !winResize)
@@ -442,6 +442,7 @@ var utWebUI = {
 	"totalDL": 0,
 	"totalUL": 0,
 	"loaded": false,
+	"TOKEN": "",
 
 	"initialize": function() {
 		var port = (location.host.split(":"))[1];
@@ -480,7 +481,9 @@ var utWebUI = {
 			"lang": "en",
 			"activeLabel": "_all_"
 		};
-
+		
+		this.TOKEN = $("token").get("text");
+		
 		this.getSettings();
 	},
 	
@@ -496,7 +499,8 @@ var utWebUI = {
 		var hashes = [];
 		if (action == "pause") {
 			hashes = this.getHashes("unpause");
-			if (hashes.length) this.request("?action=unpause&hash=" + hashes.join("&hash="));
+			if (hashes.length)
+				this.request("?token=" + this.TOKEN + "&action=unpause&hash=" + hashes.join("&hash="));
 		}
 		var hs = this.getHashes(action);
 		hashes.each(function(v) {
@@ -603,7 +607,7 @@ var utWebUI = {
 		if (qs != "list=1")
 			qs = "action=" + qs;
 			
-		this.request("?" + qs + "&cid=" + this.cacheID, this.addTorrents);
+		this.request("?token=" + this.TOKEN + "&" + qs + "&cid=" + this.cacheID, this.addTorrents);
 	},
 	
 	"getStatusInfo": function(state, done) {
@@ -632,7 +636,7 @@ var utWebUI = {
 
 	"addTorrents": function(json) {
 		var dobj = JSON.decode(json), torrents = [];
-		if (!dobj.hasOwnProperty("torrents")) {
+		if (!has(dobj, "torrents")) {
 			torrents = dobj.torrentp;
 			delete dobj.torrentp;
 		} else {
@@ -642,7 +646,7 @@ var utWebUI = {
 		this.loadLabels($A(dobj.label));
 		delete dobj.label;
 		if (!this.loaded) {
-			if (!this.labels.hasOwnProperty(this.config.activeLabel) && !this.customLabels.hasOwnProperty(this.config.activeLabel)) {
+			if (!has(this.labels, this.config.activeLabel) && !has(this.customLabels, this.config.activeLabel)) {
 				this.config.activeLabel = "_all_";
 				$("_all_").addClass("sel");
 				$(this.config.activeLabel).removeClass("sel");
@@ -665,10 +669,10 @@ var utWebUI = {
 			tor.swap(TORRENT_UPSPEED, TORRENT_DOWNSPEED);
 			tor.insertAt(stat.text, 3);
 			
-			if (!this.labels.hasOwnProperty(hash))
+			if (!has(this.labels, hash))
 				this.labels[hash] = "";
 			var labels = this.getLabels(hash, tor[12], done, tor[9], tor[10]);
-			if (!this.torrents.hasOwnProperty(hash)) {
+			if (!has(this.torrents, hash)) {
 				this.torrents[hash] = tor.slice(1);
 				this.labels[hash] = labels;
 				tor.splice(0, 2); // remove the hash & status from the array
@@ -723,7 +727,7 @@ var utWebUI = {
 		delete torrents;
 		if (Browser.Engine.gecko)
 			this.trtTable.attachBody();
-		if (dobj.hasOwnProperty("torrentm")) {
+		if (has(dobj, "torrentm")) {
 			for (var i = 0, j = dobj.torrentm.length; i < j; i++) {
 				var k = dobj.torrentm[i];
 				delete this.torrents[k];
@@ -834,12 +838,12 @@ var utWebUI = {
 			} else {
 				li.getFirst().set("text", count);
 			}
-			if (this.customLabels.hasOwnProperty(label))
+			if (has(this.customLabels, label))
 				delete this.customLabels[label];
 			temp[label] = count;
 		}
 		var resetLabel = false;
-		for (var k in this.customLabels) if (this.customLabels.hasOwnProperty(k)) {
+		for (var k in this.customLabels) {
 			$("label_" + k).remove();
 			if (this.config.activeLabel == k)
 				resetLabel = true;
@@ -905,7 +909,7 @@ var utWebUI = {
 				str += "&hash=" + key;
 		}
 		if (str != "")
-			this.request("?action=setprops&s=label" + str + "&v=" + lbl);
+			this.request("?token=" + this.TOKEN + "&action=setprops&s=label" + str + "&v=" + lbl);
 		return true;
 	},
 	
@@ -938,7 +942,7 @@ var utWebUI = {
 		obj.addClass("sel");
 		this.config.activeLabel = obj.id;
 		
-		for (var k in this.torrents) if (this.torrents.hasOwnProperty(k)) {
+		for (var k in this.torrents) {
 			if (this.labels[k].indexOf(this.config.activeLabel) > -1) {
 				this.trtTable.unhideRow(k);
 			} else {
@@ -956,14 +960,14 @@ var utWebUI = {
 	},
 	
 	"getSettings": function() {
-		this.request("?action=getsettings", this.addSettings);
+		this.request("?token=" + this.TOKEN + "&action=getsettings", this.addSettings);
 	},
 	
 	"addSettings": function(settings) {
 		settings = JSON.decode(settings).settings;
 		if (BUILD_REQUIRED > -1)
 		{
-			if (!d.hasOwnProperty("build") || (d.build < BUILD_REQUIRED)) {
+			if (!has(settings, "build") || (settings.build < BUILD_REQUIRED)) {
 				alert("The WebUI requires atleast \u00B5Torrent (build " + BUILD_REQUIRED);
 				return;
 			}
@@ -995,7 +999,7 @@ var utWebUI = {
 	},
 	
 	"loadSettings": function() {
-		for (var key in this.settings) if (this.settings.hasOwnProperty(key)) {
+		for (var key in this.settings) {
 			var v = this.settings[key].v, ele;
 			if (!(ele = $(key))) continue;
 			if (ele.type == "checkbox") {
@@ -1068,7 +1072,7 @@ var utWebUI = {
 		}
 		this.setUpdateInterval();
 		var str = "";
-		for (var key in this.settings) if (this.settings.hasOwnProperty(key)) {
+		for (var key in this.settings) {
 			t = this.settings[key].t;
 			v = this.settings[key].v;
 			var ele = $(key);
@@ -1086,7 +1090,7 @@ var utWebUI = {
 			}
 		}
 		if (str != "")
-			this.request("?action=setsetting" + str);
+			this.request("?token=" + this.TOKEN + "&action=setsetting" + str);
 		if (this.settings["webui.enable"].v == "0") {
 			$("msg").set("html", "Goodbye.");
 			$("cover").show();
@@ -1237,7 +1241,7 @@ var utWebUI = {
 	
 	"showProperties": function(k) {
 		this.propID = k;
-		this.request("?action=getprops&hash=" + k, this.loadProperties);
+		this.request("?token=" + this.TOKEN + "&action=getprops&hash=" + k, this.loadProperties);
 		return true;
 	},
 	
@@ -1312,7 +1316,7 @@ var utWebUI = {
 			}
 		}, this);
 		if (str != "")
-			this.request("?action=setprops&hash=" + this.propID + str);
+			this.request("?token=" + this.TOKEN + "&action=setprops&hash=" + this.propID + str);
 	},
 	
 	"showDetails": function(id) {
@@ -1351,12 +1355,12 @@ var utWebUI = {
 			var cookie = $("cookies").get("value");
 			$("cookies").set("value", "");
 			if (cookie != "") url += ":COOKIE:" + cookie;
-			this.request("?action=add-url&s=" + url, $empty);
+			this.request("?token=" + this.TOKEN + "&action=add-url&s=" + url, $empty);
 		}
 	},
 	
 	"updateFiles": function(hash) {
-		if ((this.torrentID == hash) && this.files.hasOwnProperty(hash)) {
+		if ((this.torrentID == hash) && has(this.files, hash)) {
 			this.getFiles(hash, true);
 			this.updateDetails();
 		}
@@ -1365,7 +1369,7 @@ var utWebUI = {
 	"loadFiles": function() {
 		var id = this.torrentID;
 		if (id != "") {
-			if (!this.flsTable.rowData.hasOwnProperty(id + "_0")) { // don't reload the table for no reason
+			if (!has(this.flsTable.rowData, id + "_0")) { // don't reload the table for no reason
 				this.flsTable.dBody.scrollLeft = 0;
 				this.flsTable.dBody.scrollTop = 0;
 				this.files[id].each(function(file, i) {
@@ -1383,9 +1387,9 @@ var utWebUI = {
 	},
 	
 	"getFiles": function(id, update) {
-		if (!this.files.hasOwnProperty(id) || update) {
+		if (!has(this.files, id) || update) {
 			this.files[id] = [];
-			this.request("?action=getfiles&hash=" + id, this.addFiles);
+			this.request("?token=" + this.TOKEN + "&action=getfiles&hash=" + id, this.addFiles);
 		} else {
 			if (this.tabs.active == "FileList") {
 				this.flsTable.loadObj.show();
@@ -1473,7 +1477,7 @@ var utWebUI = {
 	},
 	
 	"setPriority": function(id, p) {
-		this.request("?action=setprio&hash=" + id + "&p=" + p + "&f=" + this.getFileIds(id, p).join("&f="));
+		this.request("?token=" + this.TOKEN + "&action=setprio&hash=" + id + "&p=" + p + "&f=" + this.getFileIds(id, p).join("&f="));
 	},
 	
 	"trtSort": function() {
@@ -1523,7 +1527,7 @@ var utWebUI = {
 		$("stg").hide();
 		$("msg").set("html", "Reloading...");
 		$("cover").show();
-		utWebUI.request("?action=setsetting&s=webui.cookie&v={}", function(){ window.location.reload(false); });
+		utWebUI.request("?token=" + this.TOKEN + "&action=setsetting&s=webui.cookie&v={}", function(){ window.location.reload(false); });
 	},
 	
 	"saveConfig": function() {
@@ -1559,7 +1563,7 @@ var utWebUI = {
 	
 	"tabChange": function(id) {
 		if ((id == "FileList") && (this.config.showDetails) && (this.torrentID != "")) {
-			if (this.flsTable.rowData.hasOwnProperty(this.torrentID + "_0")) return;
+			if (has(this.flsTable.rowData, this.torrentID + "_0")) return;
 			this.flsTable.loadObj.show();
 			this.loadFiles.delay(20, this);
 		} else if (id == "FileList")
@@ -1716,7 +1720,7 @@ var Tabs = new Class({
 	},
 	
 	"show": function(id) {
-		if (!this.tabs.hasOwnProperty(id)) return;
+		if (!has(this.tabs, id)) return;
 		$each(this.tabs, function(v, k) {
 			var tab = $("tab_" + k);
 			var ele = $(k);
@@ -2119,11 +2123,7 @@ window.addEvent("domready", function() {
 
 	document.title = "\u00B5Torrent WebUI " + VERSION;
 	
-	// this is used in dxStable.sort
-	window.shiftKey = false;
-	
 	document.addEvent("keydown", function(ev) {
-		window.shiftKey = ev.shift;
 		switch (ev.key) {
 			case 27: // Esc
 				ev.stop();
@@ -2199,17 +2199,19 @@ window.addEvent("domready", function() {
 	document.addEvent("click", function(ev) {
 		if (ev.rightClick) {
 			if (!({"input": 1, "textarea": 1})[ev.target.get("tag")])
-				ev.stop(); // prevent event
+				ev.stop();
 		} else {
 			ContextMenu.hide.delay(50, ContextMenu);
 		}
 	});
 
-	if (Browser.Engine.trident || Browser.Engine.presto) {
+	if (Browser.Engine.trident || Browser.Engine.presto || Browser.Engine.webkit) {
 		document.addEvent("contextmenu", function(ev) {
-			if (!({"input": 1, "textarea": 1})[ev.target.get("tag")])
+			if (!({"input": 1, "textarea": 1})[ev.target.get("tag")]) {
 				ev.stop();
-			return false;
+				return false;
+			}
+			return true;
 		});
 	}
 
@@ -2365,6 +2367,5 @@ window.addEvent("domready", function() {
 	fdsg.insert({"text": "Windows", "onClick": clkEv});
 	fldNodes[0].insert({"text": "D:\\kfdsgfds", "onClick": clkEv});
 	fldNodes[0].insert({"text": "F:\\fds", "onClick": clkEv});
-
 	utWebUI.initialize();
 });

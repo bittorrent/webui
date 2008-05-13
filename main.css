@@ -367,7 +367,13 @@ input.tbox, input.btn, select {
 	margin: 0;
 	color: #000000;
 	background-color: #FFFFFF;
-	border: 1px inset #D0D0D0;
+	border: 1px solid #D0D0D0;
+}
+
+input.tbox {
+	height: 16px !important;
+	background: #FFFFFF url(./images/tbox.png) repeat-x center top;
+	padding: 2px;
 }
 
 input.btn {
@@ -739,6 +745,10 @@ div#dlgAdd {
 	background-image: url(./images/world.png);
 }
 
+div#dlgAdd .cont {
+	overflow: hidden;
+}
+
 div#dlgAdd .hcont label, div#dlgAdd input.text { width: 150px; }
 div#dlgAdd .hcont label { text-align: right; width: 75px; padding-right: 20px; float: left; }
 
@@ -1098,4 +1108,8 @@ div#dlgFolders label {
 	border: 1px solid #808080;
 	background: #F5F5F5;
 	color: #686868;
+}
+
+#token {
+	display: none;
 }
