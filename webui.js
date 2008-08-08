@@ -101,6 +101,7 @@ var utWebUI = {
 			this.flsTable.clearRows();
 			this.clearDetails();
 		}
+		console.log(action + "-ing " + hashes.join("\n"));
 		this.getTorrents(action + "&hash=" + hashes.join("&hash=") + "&list=1");
 	},
 	
@@ -998,10 +999,10 @@ var utWebUI = {
 		var id = this.torrentID;
 		var p = this.files[id][ind][3];
 		
-		var high = ["High Priority", this.setPriority.bind(this, [id, ind])];
-		var normal = ["Normal Priority", this.setPriority.bind(this, [id, ind])];
-		var low = ["Low Priority", this.setPriority.bind(this, [id, ind])];
-		var skip = ["Don\"t Download", this.setPriority.bind(this, [id, ind])];
+		var high = ["High Priority", this.setPriority.bind(this, [id, 3])];
+		var normal = ["Normal Priority", this.setPriority.bind(this, [id, 2])];
+		var low = ["Low Priority", this.setPriority.bind(this, [id, 1])];
+		var skip = ["Don\"t Download", this.setPriority.bind(this, [id, 0])];
 
 		ContextMenu.clear();
 		if (this.flsTable.selCount > 1) {
@@ -1043,18 +1044,16 @@ var utWebUI = {
 	},
 	
 	"getFileIds": function(id, p) {
-		var str = [];
-		$each(this.flsTable.rowSel, function(sel, k) {
-			if (sel == true) {
-				var i = k.substr(41).toInt();
-				if (this.files[id][i][3] != p) {
-					str.push(i);
-					this.files[id][i][3] = p;
-					this.flsTable.setValue(id + "_" + i, 4, p);
-				}
+		var ids = [];
+		for (var i = 0, j = this.flsTable.selectedRows.length; i < j; i++) {
+			var fileId = this.flsTable.selectedRows[i].substr(41).toInt();
+			if (this.files[id][fileId][3] != p) {
+				ids.push(fileId);
+				this.files[id][fileId][3] = p;
+				this.flsTable.setValue(this.flsTable.selectedRows[i], 4, p);
 			}
-		}, this);
-		return str;
+		}
+		return ids;
 	},
 	
 	"setPriority": function(id, p) {

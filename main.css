@@ -765,9 +765,10 @@ div#dlgAdd .cont {
 
 div#dlgAdd .hr {
 	height: 1px;
-	margin: 2px 0;
+	margin: 5px auto;
 	font-size: 0;
 	background-color: #D0D0D0;
+	width: 90%;
 }
 
 div#dlgAdd .hcont label, div#dlgAdd input.text { width: 150px; }

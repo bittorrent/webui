@@ -885,8 +885,38 @@ window.addEvent("domready", function() {
 			ContextMenu.hide.delay(50, ContextMenu);
 		}
 	});
-
-	if (Browser.Engine.trident || Browser.Engine.presto || Browser.Engine.webkit) {
+	
+	if (Browser.Engine.presto) {
+		/*
+		 * 	http://my.opera.com/community/forums/findpost.pl?id=2112305
+		 * 	http://dev.fckeditor.net/changeset/683
+		 */
+		var overrideButton;
+		document.addEvent("mousedown", function(ev) {
+			if (!ev.rightClick) return;
+			var element = ev.target;
+			while (element) {
+				if (!overrideButton) {
+					var doc = ev.target.ownerDocument;
+					overrideButton = doc.createElement("input");
+					overrideButton.type = "button";
+					(doc.body || doc.documentElement).appendChild(overrideButton);
+					overrideButton.style.cssText = "z-index: 1000;position:absolute;top:" + (ev.client.y - 2) + "px;left:" + (ev.client.x - 2) + "px;width:5px;height:5px;opacity:0.01";
+				}
+				element = element.parentNode;
+			}
+		});
+		document.addEvent("mouseup", function(ev) {
+			if (overrideButton) {
+				overrideButton.parentNode.removeChild(overrideButton);
+				overrideButton = undefined;
+				if (ev.rightClick && !({"input": 1, "textarea": 1})[ev.target.get("tag")]) {
+					ev.stop();
+					return false;
+				}
+			}
+		});
+	} else if (Browser.Engine.trident || Browser.Engine.webkit) {
 		document.addEvent("contextmenu", function(ev) {
 			if (!({"input": 1, "textarea": 1})[ev.target.get("tag")]) {
 				ev.stop();

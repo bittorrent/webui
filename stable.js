@@ -692,12 +692,14 @@ var dxSTable = new Class({
 			delete this.activePos[id];
 		}
 		this.rowData[id].hidden = true;
+		/*
 		if (this.options.mode == MODE_PAGE) {
 			var oc = this.pageCount;
 			this.pageCount = Math.floor(this.activeId.length / this.options.maxRows);
 			if (oc != this.pageCount)
 				this.updatePageMenu();
 		}
+		*/
 	},
 
 	"unhideRow": function(id) {
@@ -718,12 +720,14 @@ var dxSTable = new Class({
 			}
 		}
 		this.rowData[id].hidden = false;
+		/*
 		if (this.options.mode == MODE_PAGE) {
 			var oc = this.pageCount;
 			this.pageCount = Math.floor(this.activeId.length / this.options.maxRows);
 			if (oc != this.pageCount)
 				this.updatePageMenu();
 		}
+		*/
 	},
 
 	"refreshSelection": function() {
