@@ -25,7 +25,7 @@ if (!console) {
 	};
 	
 	console.timeEnd = console.timeEnd || function(name) {
-		if (name == "" || !timers[name]) return;
+		if (name == "" || !timers.hasOwnProperty(name)) return;
 		console.log(name + ": " + ($time() - timers[name]) + "ms");
 		delete timers[name];
 	};

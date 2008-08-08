@@ -30,6 +30,18 @@ div.dlg-window {
 	left: 0px; top: 0px;
 }
 
+div.dlg-window-dragging * {
+	display: none;
+}
+
+div.dlg-window-dragging div.dlg-header {
+	display: block;
+}
+
+div.dlg-window-dragging a.dlg-close {
+	display: block;
+}
+
 div.dlg-header {
 	padding: 2px 24px;
 	line-height: 20px;
@@ -260,7 +272,7 @@ div#toolbar {
 	height: 36px;
 	line-height: 36px;
 	border: 1px solid #A6A6A6;
-	background: #F0F0F0 url(./images/tbar.png) repeat-x center center;
+	background: #D0D0D0 url(./images/tbar.png) repeat-x center center;
 	margin: 0 0 5px 0;
 }
 
@@ -288,23 +300,23 @@ div#toolbar a#add span {
 }
 
 div#toolbar a#remove span {
-	background: transparent url(./images/toolbar.png) no-repeat -24px center;
-}
-
-div#toolbar a#start span {
-	background: transparent url(./images/toolbar.png) no-repeat -48px center;
-}
-
-div#toolbar a#pause span {
 	background: transparent url(./images/toolbar.png) no-repeat -72px center;
 }
 
-div#toolbar a#stop span {
+div#toolbar a#start span {
 	background: transparent url(./images/toolbar.png) no-repeat -96px center;
 }
 
+div#toolbar a#pause span {
+	background: transparent url(./images/toolbar.png) no-repeat -120px center;
+}
+
+div#toolbar a#stop span {
+	background: transparent url(./images/toolbar.png) no-repeat -144px center;
+}
+
 div#toolbar a#setting span {
-	background: transparent url(./images/toolbar.png) no-repeat -168px center;
+	background: transparent url(./images/toolbar.png) no-repeat -264px center;
 }
 
 div#toolbar a:hover span {
@@ -373,7 +385,7 @@ input.tbox, input.btn, select {
 input.tbox {
 	height: 16px !important;
 	background: #FFFFFF url(./images/tbox.png) repeat-x center top;
-	padding: 2px;
+	padding: 0 2px;
 }
 
 input.btn {
@@ -452,9 +464,11 @@ div#CatList ul li.sel {
 }
 
 div#HDivider, div#VDivider { position: absolute; z-index: 200; font-size: 0; }
-div#HDivider { width: 3px; height: 0px; padding: 0; margin: 0; border: 1px solid #D0D0D0; top: 42px; cursor: e-resize; background: #D0D0D0; }
-div#VDivider { width: 0px; height: 3px; padding: 0; margin: 0; border: 1px solid #D0D0D0; cursor: n-resize; background: #D0D0D0; }
-.gg { background: #00FF00; }
+div#HDivider { width: 5px; height: 0px; padding: 0; margin: 0; top: 43px; cursor: e-resize; background: #D0D0D0; }
+div#VDivider { width: 0px; height: 5px; padding: 0; margin: 0; cursor: n-resize; background: #D0D0D0; }
+div#HDivider:hover, div#VDivider:hover {
+	background: #A0A0A0;
+}
 
 /* List */
 
@@ -749,6 +763,13 @@ div#dlgAdd .cont {
 	overflow: hidden;
 }
 
+div#dlgAdd .hr {
+	height: 1px;
+	margin: 2px 0;
+	font-size: 0;
+	background-color: #D0D0D0;
+}
+
 div#dlgAdd .hcont label, div#dlgAdd input.text { width: 150px; }
 div#dlgAdd .hcont label { text-align: right; width: 75px; padding-right: 20px; float: left; }
 
@@ -758,7 +779,7 @@ div#dlgAdd .hcont {
 }
 
 div.fifpcw {
-	width: 155px; height: 19px;
+	width: 150px; height: 19px;
 	line-height: 19px;
 	margin: 0 0 5px 0;
 	padding: 0;
@@ -786,7 +807,7 @@ div#dlgAdd legend a {
 }
 
 #dlpath {
-	width: 260px;
+	width: 250px;
 	margin: 0 10px 0 0;
 }
 
@@ -984,8 +1005,12 @@ a { outline: none; }
 
 #sched_table {
 	border-collapse: collapse;
-	-webkit-user-select: ignore !important;
 	-moz-user-select: none;
+	cursor: default;
+}
+
+#sched_table * {
+	-webkit-user-select: ignore !important;
 }
 
 #sched_table td.block {
@@ -1112,4 +1137,9 @@ div#dlgFolders label {
 
 #token {
 	display: none;
+}
+
+form {
+  margin: 0;
+  padding: 0;
 }

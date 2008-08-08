@@ -73,25 +73,19 @@ var dxSTable = new Class({
 		"alternateRows": false,
 		"mode": MODE_PAGE
 	},
-	
-	// constructor
-	"initialize": function() {
-		this.startSel = null;
-		
-		this.tHeadCols = [];
-		this.tBodyCols = [];
-		this.cancelSort = false;
-		this.cancelMove = false;
-
-		this.hotCell = -1;
-		this.isMoving = false;
-		this.isResizing = false;
-		this.isSorting = false;
-		this.isScrolling = false;
-		this.selCount = 0;
-		this.curPage = 0;
-		this.pageCount = 0;
-	},
+	"startSel": null,
+	"tHeadCols": [],
+	"tBodyCols": [],
+	"cancelSort": false,
+	"cancelMove": false,
+	"hotCell": -1,
+	"isMoving": false,
+	"isResizing": false,
+	"isSorting": false,
+	"isScrolling": false,
+	"selCount": 0,
+	"curPage": 0,
+	"pageCount": 0,
 	
 	"create": function(id, columns, options) {
 		this.colHeader = columns;
@@ -103,11 +97,11 @@ var dxSTable = new Class({
 		delete options.sIndex;
 		this.setOptions(options);
 	
-		var tr, td, div, $me = this, simpleClone = function(ele, content) {
-			ele = $(ele.cloneNode(!!content));
-			ele.uid = null;
-			$uid(ele);
-			return ele;
+		var tr, td, div, $me = this, simpleClone = function(element, content) {
+			element = $(element.cloneNode(!!content));
+			element.uid = null;
+			$uid(element);
+			return element;
 		};
 
 		this.id = "stable-" + id;
@@ -158,7 +152,6 @@ var dxSTable = new Class({
 			ROW.grab(
 				simpleClone(TD, false).addClasses(this.id + "-col-" + this.colOrder[i], this.colData[i].disabled ? "stable-hidden-column" : "")
 			);
-				
 			td = simpleClone(TD, false)
 				.set("text", this.colData[i].text)
 				.setStyle("width", this.colWidth[this.colOrder[i]])
@@ -208,9 +201,10 @@ var dxSTable = new Class({
 		this.loadObj = simpleClone(DIV, false).addClass("stable-loading").grab(simpleClone(DIV, false).addClass("stable-loading-text").set("html", "Loading...")).inject(this.dCont);
 		
 		this.dBody.addEvent("mousedown", function(ev) {
-			if (ev.target && (ev.target.tagName.toLowerCase() == "td")) {
+			if (ev.target && (ev.target.tagName.toLowerCase() == "td"))
 				$me.selectRow(ev, ev.target.parentNode);
-			} else {
+		}).addEvent("mouseup", function(ev) {
+			if (!ev.target || (ev.target.tagName.toLowerCase() != "td")) {
 				var pos = this.getPosition();
 				if ((this.clientWidth > ev.page.x - pos.x - this.scrollLeft + 2) && (this.clientHeight > ev.page.y - pos.y - this.scrollTop + 2)) {
 					$me.clearSelection();
@@ -219,7 +213,7 @@ var dxSTable = new Class({
 			}
 		});
 		for (var i = 0; i < this.options.maxRows; i++)
-			this.tb.body.grab(simpleClone(ROW, true).hide());
+			this.tb.body.appendChild(simpleClone(ROW, true).hide());
 		ROW = null;
 		
 		this.tBody.grab(this.tb.body);
@@ -227,25 +221,29 @@ var dxSTable = new Class({
 			this.pageMenu = simpleClone(DIV, false).addClass("stable-pagemenu").inject(this.dCont);
 			this.pageInfo = new Element("span", {"class": "pageinfo", "text": "0 row(s) selected."}).inject(this.pageMenu);
 			this.pageNext = simpleClone(DIV, false)
-							.addClass("nextlink-disabled")
-							.addEvent("click", this.nextPage.bind(this))
-							.addEvent("mouseenter", function() {
-								if (this.hasClass("nextlink")) this.addClass("nextlink-hover");
-							})
-							.addEvent("mouseleave", function() {
-								if (this.hasClass("nextlink")) this.removeClass("nextlink-hover");
-							})
-							.inject(this.pageMenu);
+				.addClass("nextlink-disabled")
+				.addEvent("click", this.nextPage.bind(this))
+				.addEvent("mouseenter", function() {
+					if (this.hasClass("nextlink"))
+						this.addClass("nextlink-hover");
+				})
+				.addEvent("mouseleave", function() {
+					if (this.hasClass("nextlink"))
+						this.removeClass("nextlink-hover");
+				})
+				.inject(this.pageMenu);
 			this.pagePrev = simpleClone(DIV, false)
-							.addClass("prevlink-disabled")
-							.addEvent("click", this.prevPage.bind(this))
-							.addEvent("mouseenter", function() {
-								if (this.hasClass("prevlink")) this.addClass("prevlink-hover");
-							})
-							.addEvent("mouseleave", function() {
-								if (this.hasClass("prevlink")) this.removeClass("prevlink-hover");
-							})
-							.inject(this.pageMenu);
+				.addClass("prevlink-disabled")
+				.addEvent("click", this.prevPage.bind(this))
+				.addEvent("mouseenter", function() {
+					if (this.hasClass("prevlink"))
+						this.addClass("prevlink-hover");
+				})
+				.addEvent("mouseleave", function() {
+					if (this.hasClass("prevlink"))
+						this.removeClass("prevlink-hover");
+				})
+				.inject(this.pageMenu);
 			this.pageStat = new Element("span").addClass("pagestat").inject(this.pageMenu);
 			
 			this.pageSelect = new Element("select", {
@@ -262,29 +260,27 @@ var dxSTable = new Class({
 	},
 	
 	"assignEvents": function() {
-		this.scrollTimeout = null;
-		this.scrollDiff = 0;
-		this.scrollTimer = null;
+		var scrollDiff = 0, scrollTimer = null;
 		this.dBody.addEvent("scroll", (function() {
 			this.dHead.scrollLeft = this.dBody.scrollLeft;
 			if (this.options.mode == MODE_PAGE) return;
-			if (this.scrollDiff === 0) {
-				this.scrollDiff = this.dBody.scrollTop;
+			if (scrollDiff === 0) {
+				scrollDiff = this.dBody.scrollTop;
 			} else {
-				var diff = Math.abs(this.scrollDiff - this.dBody.scrollTop);
+				var diff = Math.abs(scrollDiff - this.dBody.scrollTop);
 				if (diff > 0) {
 					this.isScrolling = true;
-					$clear(this.scrollTimer);
+					$clear(scrollTimer);
 					this.scrollTimer = (function() {
-						this.scrollDiff = 0;
-						$clear(this.scrollTimer);
+						scrollDiff = 0;
+						$clear(scrollTimer);
 						this.isScrolling = false;
 						this.resizePads();
 						this.loadObj.show();
 						this.refreshRows(true);
 					}).bind(this).delay(300);
 				} else {
-					$clear(this.scrollTimer);
+					$clear(scrollTimer);
 				}
 			}
 			return false;
@@ -423,12 +419,12 @@ var dxSTable = new Class({
 	},
 
 	"sortNumeric": function(x, y) {
-		var r = Compare.numeric(x.v, y.v);
+		var r = Comparator.compareNumeric(x.v, y.v);
 		return ((r == 0) ? this.sortSecondary(x, y) : r);
 	},
 
 	"sortAlphaNumeric": function(x, y) {
-		var r = Compare.alphaNumeric(x.v, y.v);
+		var r = Comparator.compareAlphaNumeric(x.v, y.v);
 		return ((r == 0) ? this.sortSecondary(x, y) : r);
 	},
 
@@ -439,15 +435,15 @@ var dxSTable = new Class({
 		var r = 0;
 		switch (type) {
 			case TYPE_STRING:
-				r = Compare.alphaNumeric(m, n);
+				r = Comparator.compareAlphaNumeric(m, n);
 			break;
 			
 			case TYPE_NUMBER:
-				r = Compare.numeric(m, n);
+				r = Comparator.compareNumeric(m, n);
 			break;
 
 			default:
-				r = Compare.compare(m, n);
+				r = Comparator.compare(m, n);
 		}
 		if (r == 0)
 			r = x.e.index - y.e.index;
@@ -478,36 +474,50 @@ var dxSTable = new Class({
 			this.detachBody();
 		var count = 0;
 		for (var i = mni; i <= mxi; i++) {
-			var id = this.activeId[i], r = this.rowData[id], row = $(id) || this.tb.body.childNodes[count], data = this.options.format($A(r.data)), icon = r.icon;
-			row.setProperties({"title": data[0], "id": id});
-			var cls = (this.options.alternateRows) ? ((count & 1) ? "odd" : "even") : "";
-			cls = has(this.rowSel, id) ? "selected" : cls;
-			row.className = cls;
+			var id = this.activeId[i], rowData = this.rowData[id], row = $(id) || this.tb.body.rows[count], data = this.options.format($A(rowData.data)), icon = rowData.icon;
+			var clsName = "", clsChanged = false;
+			if (has(this.rowSel, id)) {
+				clsName += "selected";
+				clsChanged = !row.hasClass("selected");
+			} else {
+				clsChanged = row.hasClass("selected");
+			}
+			if (this.options.alternateRows) {
+				if (count & 1) {
+					clsName += " odd";
+					clsChanged = clsChanged | !row.hasClass("odd");
+				} else {
+					clsName += " even";
+					clsChanged = clsChanged | !row.hasClass("even");
+				}
+			}
+			if (clsChanged)
+				row.className = clsName.clean();
 			this.fillRow(row, data, icon);
-			if (row != this.tb.body.childNodes[count])
-				row.inject(this.tb.body.childNodes[count], "before");
-			row.show(true);
-			r.rowIndex = count++;
+			if (row != this.tb.body.rows[count])
+				row.inject(this.tb.body.rows[count], "before");
+			row.setProperties({"title": data[0], "id": id}).show(true);
+			rowData.rowIndex = count++;
 		}
 		for (var i = count; i < max; i++)
-			this.tb.body.childNodes[i].setProperty("id", "").hide();
+			this.tb.body.rows[i].setProperty("id", "").hide();
 		if (Browser.Engine.gecko)
 			this.attachBody();
-		this.dHead.setStyle("width", this.dBody.clientWidth);
 		this.loadObj.hide();
-		//this.refresh();
+		this.refresh();
 	},
 	
 	"refresh": function() {
 		if (this.isScrolling) return;
 		if (this.options.mode == MODE_PAGE)
 			this.updatePageMenu();
-		if (this.options.mode == MODE_VIRTUAL)
-			this.resizePads();
+		this.dHead.setStyle("width", this.dBody.clientWidth);
+		//if (this.options.mode == MODE_VIRTUAL)
+		//	this.resizePads();
 	},
 	
 	"selectRow": function(ev, row) {
-		var id = row.get("id");
+		var id = row.id;
 		if (!(ev.rightClick && has(this.rowSel, id))) {
 			if (ev.shift) {
 				if (this.stSel === null) {
@@ -564,7 +574,7 @@ var dxSTable = new Class({
 		if (!hidden) {
 			if (this.viewRows < this.options.maxRows) {
 				var index = this.viewRows;
-				var row = this.tb.body.childNodes[index]; //this.tb.body.rows[index];
+				var row = this.tb.body.rows[index];
 				var fdata = this.options.format($A(data));
 				row.setProperties({"index": index, "title": fdata[0], "id": id});
 				row.addClasses((this.options.alternateRows) ? ((index & 1) ? "odd" : "even") : "", true);
@@ -574,7 +584,8 @@ var dxSTable = new Class({
 			}
 			this.activePos[id] = this.activeId.length;
 			this.activeId.push(id);
-			this.pageCount = (this.options.mode == MODE_PAGE) ? Math.ceil(this.activeId.length / this.options.maxRows) : 0;
+			if (this.options.mode == MODE_PAGE)
+				this.pageCount = Math.ceil(this.activeId.length / this.options.maxRows);
 		}
 		this.rowData[id] = {
 			"data": data,
@@ -589,7 +600,7 @@ var dxSTable = new Class({
 	
 	"fillRow": function(row, data, icon) {
 		this.colOrder.each(function(v, k) {
-			var cell = row.childNodes[k]; //row.cells[k];
+			var cell = row.cells[k];
 			if (cell.hasChildNodes()) {
 				if ((v == 0) && icon)
 					cell.addClasses("stable-icon", icon, true);
@@ -624,36 +635,29 @@ var dxSTable = new Class({
 			for (var i = this.rowSel[id], j = this.selectedRows.length; i < j; i++)
 				this.rowSel[this.selectedRows[i]]--;
 			delete this.rowSel[id];
+			this.refreshSelection();
 		}
 		this.rowId.splice(rd.index, 1);
 		delete this.rowData[id];
 		this.rows--;
-		this.refreshSelection();
 	},
 
 	"clearRows": function() {
 		if (this.rows > 0) {
-			Array.each(this.tb.body.childNodes, function(row) {
-				Array.each(row.childNodes, function(cell) {
+			Array.each(this.tb.body.rows, function(row) {
+				Array.each(row.cells, function(cell) {
 					cell.empty();
 				});
 				row.setProperty("id", "").hide();
 			});
-			this.rows = 0;
 			delete this.activePos;
 			this.activePos = {};
-			this.activeId.length = 0;
-			this.viewRows = 0;
 			delete this.rowSel;
 			this.rowSel = {};
-			this.selectedRows.length = 0;
 			delete this.rowData;
 			this.rowData = {};
 			this.rowId.empty();
-			this.dBody.scrollLeft = 0;
-			this.dBody.scrollTop = 0;
-			this.curPage = 0;
-			this.pageCount = 0;
+			this.rows = this.curPage = this.pageCount = this.activeId.length = this.selectedRows.length = this.viewRows = this.dBody.scrollLeft = this.dBody.scrollTop = 0;
 			this.updatePageMenu();
 		}
 	},
@@ -680,6 +684,7 @@ var dxSTable = new Class({
 	},
 
 	"hideRow": function(id) {
+		if (this.rowData[id].hidden) return;
 		if (has(this.activePos, id)) {
 			this.activeId.splice(this.activePos[id], 1);
 			for (var i = this.activePos[id], j = this.activeId.length; i < j; i++)
@@ -687,13 +692,16 @@ var dxSTable = new Class({
 			delete this.activePos[id];
 		}
 		this.rowData[id].hidden = true;
-		var oc = this.pageCount;
-		this.pageCount = (this.options.mode == MODE_PAGE) ? Math.floor(this.activeId.length / this.options.maxRows) : 0;
-		if (oc != this.pageCount)
-			this.updatePageMenu();
+		if (this.options.mode == MODE_PAGE) {
+			var oc = this.pageCount;
+			this.pageCount = Math.floor(this.activeId.length / this.options.maxRows);
+			if (oc != this.pageCount)
+				this.updatePageMenu();
+		}
 	},
 
 	"unhideRow": function(id) {
+		if (!this.rowData[id].hidden) return;
 		if (!has(this.activePos, id)) {
 			if (this.sIndex == -1) {
 				this.activePos[id] = this.activeId.length;
@@ -710,16 +718,18 @@ var dxSTable = new Class({
 			}
 		}
 		this.rowData[id].hidden = false;
-		var oc = this.pageCount;
-		this.pageCount = (this.options.mode == MODE_PAGE) ? Math.floor(this.activeId.length / this.options.maxRows) : 0;
-		if (oc != this.pageCount)
-			this.updatePageMenu();
+		if (this.options.mode == MODE_PAGE) {
+			var oc = this.pageCount;
+			this.pageCount = Math.floor(this.activeId.length / this.options.maxRows);
+			if (oc != this.pageCount)
+				this.updatePageMenu();
+		}
 	},
 
 	"refreshSelection": function() {
-		var i = this.tb.body.childNodes.length;
+		var i = this.tb.body.rows.length;
 		while (i--) {
-			var row = this.tb.body.childNodes[i];
+			var row = this.tb.body.rows[i];
 			row[has(this.rowSel, row.id) ? "addClass" : "removeClass"]("selected");
 		}
 		this.pageInfo.set("text", this.selectedRows.length + " row(s) selected.");
@@ -771,7 +781,7 @@ var dxSTable = new Class({
 
 	"setValue": function(id, col, val) {
 		var row = this.rowData[id];
-		if (row == null)	return;
+		if (row == null) return;
 		row.data[col] = val;
 		if (row.rowIndex == -1) return;
 		var r = this.tb.body.childNodes[row.rowIndex], index = this.colOrder.indexOf(col);
@@ -799,10 +809,10 @@ var dxSTable = new Class({
 		this.maxRows = max;
 	},
 
-	"resizeTo": function(w, h, c) {
-		if ($type(w) == "number")
+	"resizeTo": function(w, h) {
+		if (typeof w == "number")
 			this.dCont.setStyle("width", w);
-		if ($type(h) == "number")
+		if (typeof h == "number")
 			this.dCont.setStyle("height", h);
 		this.calcSize();
 	},
@@ -835,23 +845,27 @@ var dxSTable = new Class({
 	},
 	
 	"resizePads": function() {
-		if (this.activeId.length <= this.maxRows) {
+		if (this.options.mode != MODE_VIRTUAL) return;
+		var mr = this.options.maxRows;
+		if (this.activeId.length <= mr) {
 			this.topPad.setStyle("height", 0);
 			this.bottomPad.setStyle("height", 0);
 		} else {
-			var vh = this.activeId.length * 16;
-			var rt = (this.dBody.scrollHeight == 0) ? 0.0 : (this.dBody.scrollTop / this.dBody.scrollHeight);
-			if (rt > 1.0) rt = 1.0;
-			var mh = this.options.maxRows * 16;
-			var th = this.dBody.scrollTop - ((mh - this.dBody.offsetHeight) * rt).ceil();
-			if (vh < mh + th)
-				th = vh - mh;
+			var bh = this.dBody.clientHeight;
+			var vh = this.activeId.length * 17;
+			var st = this.dBody.scrollTop, sh = this.dBody.scrollHeight;
+			var rt = ((sh - bh) <= 0) ? 0.0 : (st / (sh - bh));
+			if (rt > 1.0)
+				rt = 1.0;
+			var mh = this.tBody.tBodies[0].offsetHeight;
+			var th = (st + bh >= vh - mh) ? (vh - mh) : (st - (mh - bh) * rt);
 			this.topPad.setStyle("height", th);
 			this.bottomPad.setStyle("height", vh - mh - th);
 		}
 	},
 
 	"updatePageMenu": function() {
+		if (this.options.mode != MODE_PAGE) return;
 		(this.curPage > 0) ?
 			this.pagePrev.addClass("prevlink")
 		:
@@ -873,6 +887,7 @@ var dxSTable = new Class({
 	},
 
 	"gotoPage": function(i) {
+		if (this.curPage == i) return;
 		this.curPage = i;
 		this.updatePageMenu();
 		if (Browser.Engine.gecko)
@@ -1093,7 +1108,7 @@ function moveColumn(iCol, iNew) {
 	this.fireEvent("onColMove");
 }
 
-var Compare = {
+var Comparator = {
 
 	"compare": function(x, y) {
 		var a = '' + x, b = '' + y;
@@ -1101,11 +1116,11 @@ var Compare = {
 			   (a > b) ? 1 : 0;
 	},
 	
-	"numeric": function(x, y) {
+	"compareNumeric": function(x, y) {
 		return (x.toFloat() - y.toFloat());
 	},
 	
-	"alphaNumeric": function(x, y) {
+	"compareAlphaNumeric": function(x, y) {
 		var a = ('' + x).toLowerCase(), b = ('' + y).toLowerCase();
 		return (a < b) ? -1 :
 			   (a > b) ? 1 : 0;
