@@ -797,8 +797,8 @@ var dxSTable = new Class({
 	"setIcon": function(id, icon) {
 		this.rowData[id].icon = icon;
 		var r = $(id), index = this.colOrder.indexOf(0);
-		if (!r || (index == -1)) return;
-		r.cells[index].firstChild.className = "stable-icon " + icon;
+		if (!r || (index == -1) || r.cells[index].hasClass(icon)) return;
+		r.cells[index].className = "stable-icon " + icon;
 	},
 
 	"setAttr": function(id, name, value) {

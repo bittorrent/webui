@@ -857,7 +857,8 @@ window.addEvent("domready", function() {
 			break;
 		}
 	});
-
+	
+	// TODO: find a way for Opera to fire this event.
 	window.addEvent("unload", function() {
 		utWebUI.saveConfig();
 	});
@@ -879,14 +880,14 @@ window.addEvent("domready", function() {
 	
 	document.addEvent("click", function(ev) {
 		if (ev.rightClick) {
-			if (!({"input": 1, "textarea": 1})[ev.target.get("tag")])
+			if (!(/^input|textarea$/i).test(ev.target.tagName))
 				ev.stop();
 		} else {
 			ContextMenu.hide.delay(50, ContextMenu);
 		}
 	});
 	
-	if (Browser.Engine.presto) {
+	if (Browser.Engine.presto && !("oncontextmenu" in document.createElement("foo"))) {
 		/*
 		 * 	http://my.opera.com/community/forums/findpost.pl?id=2112305
 		 * 	http://dev.fckeditor.net/changeset/683
@@ -910,7 +911,7 @@ window.addEvent("domready", function() {
 			if (overrideButton) {
 				overrideButton.parentNode.removeChild(overrideButton);
 				overrideButton = undefined;
-				if (ev.rightClick && !({"input": 1, "textarea": 1})[ev.target.get("tag")]) {
+				if (ev.rightClick && !(/^input|textarea$/i).test(ev.target.tagName)) {
 					ev.stop();
 					return false;
 				}

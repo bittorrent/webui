@@ -84,68 +84,64 @@ var utWebUI = {
 	},
 	
 	"perform": function(action) {
-		var hashes = [];
+		var hashes = this.getHashes(action);
 		if (action == "pause") {
-			hashes = this.getHashes("unpause");
-			if (hashes.length)
-				this.request("?token=" + this.TOKEN + "&action=unpause&hash=" + hashes.join("&hash="));
+			var temp = this.getHashes("unpause");
+			if (temp.length)
+				this.request("?token=" + this.TOKEN + "&action=unpause&hash=" + temp.join("&hash="));
 		}
-		var hs = this.getHashes(action);
-		hashes.each(function(v) {
-			hs.remove(v);
-		});
-		hashes = hs;
 		if (hashes.length == 0) return;
 		if ((action == "remove") && (hashes.indexOf(this.torrentID) > -1)) {
 			this.torrentID = "";
 			this.flsTable.clearRows();
 			this.clearDetails();
 		}
-		console.log(action + "-ing " + hashes.join("\n"));
 		this.getTorrents(action + "&hash=" + hashes.join("&hash=") + "&list=1");
 	},
 	
 	"getHashes": function(act) {
-		var hashes = [], $me = this;
-		this.trtTable.rowSel.each(function(selected, key) {
-			if (!selected) return;
-			var stat = $me.torrents[key][0];
+		var hashes = [];
+		var len = this.trtTable.selectedRows.length;
+		while (len--) {
+			var key = this.trtTable.selectedRows[len];
+			var stat = this.torrents[key][0];
 			switch (act) {
-				case "forcestart":
-					if ((stat & 1) && !(stat & 64) && !(stat & 32))
-						return;
+			
+			case "forcestart":
+				if ((stat & 1) && !(stat & 64) && !(stat & 32))
+					return;
 				break;
 
-				case "start":
-					if ((stat & 1) && !(stat & 32) && (stat & 64))
-						return;
+			case "start":
+				if ((stat & 1) && !(stat & 32) && (stat & 64))
+					return;
 				break;
 
-				case "pause":
-					if (stat & 32)
-						return;
+			case "pause":
+				if (stat & 32)
+					return;
 				break;
 
-				case "unpause":
-					if (!(stat & 32))
-						return;
+			case "unpause":
+				if (!(stat & 32))
+					return;
 				break;
 
-				case "stop":
-					if (!(stat & 1) && !(stat & 2) && !(stat & 16) && !(stat & 64))
-						return;
+			case "stop":
+				if (!(stat & 1) && !(stat & 2) && !(stat & 16) && !(stat & 64))
+					return;
 				break;
 
-				case "recheck":
-					if (stat & 2)
-						return;
+			case "recheck":
+				if (stat & 2)
+					return;
 				break;
 				
-				default:
-				   return;
+			default:
+			   return;
 			}
 			hashes.push(key);
-		});
+		}
 		return hashes;
 	},
 	
@@ -1002,7 +998,7 @@ var utWebUI = {
 		var high = ["High Priority", this.setPriority.bind(this, [id, 3])];
 		var normal = ["Normal Priority", this.setPriority.bind(this, [id, 2])];
 		var low = ["Low Priority", this.setPriority.bind(this, [id, 1])];
-		var skip = ["Don\"t Download", this.setPriority.bind(this, [id, 0])];
+		var skip = ["Don't Download", this.setPriority.bind(this, [id, 0])];
 
 		ContextMenu.clear();
 		if (this.flsTable.selCount > 1) {
@@ -1045,12 +1041,13 @@ var utWebUI = {
 	
 	"getFileIds": function(id, p) {
 		var ids = [];
-		for (var i = 0, j = this.flsTable.selectedRows.length; i < j; i++) {
-			var fileId = this.flsTable.selectedRows[i].substr(41).toInt();
+		var len = this.flsTable.selectedRows.length;
+		while (len--) {
+			var fileId = this.flsTable.selectedRows[len].substr(41).toInt();
 			if (this.files[id][fileId][3] != p) {
 				ids.push(fileId);
 				this.files[id][fileId][3] = p;
-				this.flsTable.setValue(this.flsTable.selectedRows[i], 4, p);
+				this.flsTable.setValue(this.flsTable.selectedRows[len], 4, p);
 			}
 		}
 		return ids;
@@ -1111,8 +1108,6 @@ var utWebUI = {
 	},
 	
 	"saveConfig": function() {
-		// this gets called on window unload, WebKit & Presto cancels asynchronous requests
-		// so, we force it to perform a synchronous request
 		new Request({
 			"url": this.url + "?action=setsetting&s=webui.cookie&v=" + JSON.encode(this.config),
 			"method": "get",
