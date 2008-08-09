@@ -202,7 +202,7 @@ limitations under the License.
 
 .stable-pagemenu .pagestat {
 	width: 100px; height: 20px;
-	margin: -2px 0 0 0;
+	margin: auto 0;
 	float: right;
 	display: none;
 }

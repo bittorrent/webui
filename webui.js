@@ -32,8 +32,9 @@ var utWebUI = {
 	"totalUL": 0,
 	"loaded": false,
 	"TOKEN": "",
+	"delActions": ["remove", "removedata"],
 
-	"initialize": function() {
+	"init": function() {
 		var port = (location.host.split(":"))[1];
 		if (!$defined(port))
 			port = (window.location.protocol == "http:") ? 80 : 443;
@@ -43,30 +44,29 @@ var utWebUI = {
 			"showDetails": true,
 			"showCategories": true,
 			"showToolbar": true,
-			"showSpeed": false,
+			"showSpeed": 0,
+			"updateInterval": 3000,
+			"alternateRows": false,
+			"confirmDelete": true,
+			"lang": "en",
 			"hSplit": 0.88,
 			"vSplit": 0.5,
-			"alternateRows": false,
 			"trtCols": 0x0000,
 			"torrentTable": {
 				"reverse": false,
 				"maxRows": 50,
 				"colOrder": [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15],
 				"colWidth": [220,100,80,80,100,80,60,80,80,60,80,60,60,60,30,90],
-				"sIndex": -1,
-				"alternateRows": true
+				"sIndex": -1
 			},
-			"flsCols": 0x00,
+			"flsCols": 0x0000,
 			"fileTable": {
 				"reverse": false,
 				"maxRows": 50,
 				"colOrder": [0,1,2,3,4],
 				"colWidth": [200,60,80,100,80],
-				"sIndex": -1,
-				"alternateRows": true
+				"sIndex": -1
 			},
-			"updateInterval": 3000,
-			"lang": "en",
 			"activeLabel": "_all_"
 		};
 		
@@ -91,7 +91,7 @@ var utWebUI = {
 				this.request("?token=" + this.TOKEN + "&action=unpause&hash=" + temp.join("&hash="));
 		}
 		if (hashes.length == 0) return;
-		if ((action == "remove") && (hashes.indexOf(this.torrentID) > -1)) {
+		if (action.test(/^remove/) && (hashes.indexOf(this.torrentID) > -1)) {
 			this.torrentID = "";
 			this.flsTable.clearRows();
 			this.clearDetails();
@@ -161,24 +161,9 @@ var utWebUI = {
 		this.perform("stop");
 	},
 	
-	"remove": function() {
-		if (this.bConfDel) {
-			this.delmode = "remove";
-		} else {
-			this.perform("remove");
-		}
-	},
-	
-	"removeAll": function() {
-		if (this.bConfDel) {
-			this.delmode = "removedata";
-		} else {
-			this.perform("removedata");
-		}
-	},
-	
-	"doRemove": function() {
-		this.perform(this.delmode);
+	"remove": function(mode) {
+		if (!this.config.confirmDelete || confirm(lang.OV_CONFIRM_DELETE))
+			this.perform(this.delActions[mode]);
 	},
 	
 	"recheck": function() {
@@ -188,10 +173,8 @@ var utWebUI = {
 	"getTorrents": function(qs) {
 		$clear(this.updateTimeout);
 		this.timer = $time();
-		
 		if (qs != "list=1")
 			qs = "action=" + qs;
-			
 		this.request("?token=" + this.TOKEN + "&" + qs + "&cid=" + this.cacheID, this.addTorrents);
 	},
 	
@@ -243,7 +226,7 @@ var utWebUI = {
 		}
 		
 		var scroll = this.trtTable.dBody.getScroll();
-		if (Browser.Engine.gecko) // doing offline updating slows Presto & WebKit down
+		if (Browser.Engine.gecko || Browser.Engine.trident) // doing offline updating slows Presto & WebKit down
 			this.trtTable.detachBody();
 		for (var i = 0, len = torrents.length; i < len; i++) {
 			var tor = torrents[i];
@@ -311,7 +294,7 @@ var utWebUI = {
 			delete tor;
 		}
 		delete torrents;
-		if (Browser.Engine.gecko)
+		if (Browser.Engine.gecko || Browser.Engine.trident)
 			this.trtTable.attachBody();
 		if (has(dobj, "torrentm")) {
 			for (var i = 0, j = dobj.torrentm.length; i < j; i++) {
@@ -339,7 +322,6 @@ var utWebUI = {
 			}
 			delete dobj.torrentm;
 		}
-		this.trtTable.refresh();
 		this.trtTable.dBody.scrollTo(scroll.x, scroll.y);
 		this.trtTable.loadObj.hide();
 		
@@ -352,11 +334,13 @@ var utWebUI = {
 	"loadTorrents": function() {
 		if (!this.loaded) {
 			this.loaded = true;
-			this.trtTable.calcSize();
 			if (this.trtTable.sIndex > -1)
 				this.trtTable.sort();
+			this.trtTable.refreshRows(true);
+			this.trtTable.calcSize();
 			$("cover").hide();
 		}
+		this.trtTable.refresh();
 			
 		this.updateTimeout = this.update.delay(this.getInterval(), this);
 		this.updateDetails();
@@ -386,12 +370,6 @@ var utWebUI = {
 		var t = $time() - this.timer;
 		this.interval = (this.interval == -1) ? (this.config.updateInterval + t * 4) : ((this.interval + this.config.updateInterval + t * 4) / 2).toInt();
 		return this.interval;
-	},
-	
-	"setUpdateInterval": function() {
-		var interval = $("webui.update_interval").get("value").toInt();
-		if (interval != this.config.updateInterval)
-			this.config.updateInterval = interval;
 	},
 	
 	"loadLabels": function(labels) {
@@ -528,6 +506,9 @@ var utWebUI = {
 				this.trtTable.hideRow(k);
 			}
 		}
+		this.trtTable.selectedRows.length = 0;
+		delete this.trtTable.rowSel;
+		this.trtTable.rowSel = {};
 		
 		if (this.torrentID != "") {
 			this.torrentID = "";
@@ -536,6 +517,7 @@ var utWebUI = {
 		}
 		this.trtTable.curPage = 0;
 		this.trtTable.refreshRows(true);
+		//this.trtTable.refresh();
 	},
 	
 	"getSettings": function() {
@@ -544,8 +526,7 @@ var utWebUI = {
 	
 	"addSettings": function(settings) {
 		settings = JSON.decode(settings).settings;
-		if (BUILD_REQUIRED > -1)
-		{
+		if (BUILD_REQUIRED > -1) {
 			if (!has(settings, "build") || (settings.build < BUILD_REQUIRED)) {
 				alert("The WebUI requires atleast \u00B5Torrent (build " + BUILD_REQUIRED + ")");
 				return;
@@ -553,7 +534,8 @@ var utWebUI = {
 		}
 		for (var i = 0, j = settings.length; i < j; i++) {
 			if ((settings[i][0] == "webui.cookie") && !this.loaded) { // only load webui.cookie on startup
-				$extend(this.config, JSON.decode(settings[i][2])); // if the user corrupts the "cookie," good for him/her 
+				$extend(this.config, JSON.decode(settings[i][2])); // if the user corrupts the "cookie," good for him/her
+				this.config.torrentTable.alternateRows = this.config.fileTable.alternateRows = this.config.alternateRows;
 				continue;
 			}
 			var val = settings[i][2];
@@ -564,9 +546,9 @@ var utWebUI = {
 			this.settings[settings[i][0]] = {"t": settings[i][1], "v": val};
 		}
 		var detectLang = (navigator.language) ? navigator.language : navigator.userLanguage;
-		detectLang = detectLang.split("-").join("");
-		if (({"enUS":1,"enGB":1,"esES":1})[detectLang])
-			detectLang = detectLang.substr(0, 2);
+		var matches;
+		if (matches = detectLang.match(/af|ar|az|be|ca|cs|de|en|eo|es|et|fr|it|jp|nl|pt|sv/i))
+			detectLang = matches[0];
 		if (!this.loaded) {
 			if ((lang !== null) && ((lang.code == this.config.lang) || ((this.config.lang == "auto") && (lang.code == detectLang)))) {
 				setupUI();
@@ -590,7 +572,16 @@ var utWebUI = {
 			}
 			ele.fireEvent("change");
 		}
-		["lang"].each(function(key) {
+		[
+			"showDetails",
+			"showCategories",
+			"showToolbar",
+			"showSpeed",
+			"updateInterval",
+			"alternateRows",
+			"confirmDelete",
+			"lang"
+		].each(function(key) {
 			var ele;
 			if (!(ele = $("webui." + key))) return;
 			var v = utWebUI.config[key];
@@ -604,11 +595,21 @@ var utWebUI = {
 	},
 	
 	"setSettings": function() {
-		var value = null, resize = false, reload = false;
-		value = $("webui.confirm_when_deleting").checked;
-		if (this.bConfDel != value)
-			this.bConfDel = (value) ? 1 : 0;
-		value = $("webui.speed_display").get("value").toInt();
+		var value = null, resize = false, reload = false, hasChanged = false;
+		
+		value = $("webui.confirmDelete").checked;
+		if (this.config.confirmDelete != value) {
+			this.config.confirmDelete = value & 1;
+			hasChanged = true;
+		}
+			
+		value = $("webui.updateInterval").get("value").toInt();
+		if (this.config.updateInterval != value) {
+			this.config.updateInterval = value;
+			hasChanged = true;
+		}
+			
+		value = $("webui.showSpeed").get("value").toInt();
 		if (this.config.showSpeed != value) {
 			this.config.showSpeed = value;
 			if ((value == 0) || (value == 2)) {
@@ -617,40 +618,56 @@ var utWebUI = {
 			}
 			if ((value == 0) || (value == 1))
 				document.title = "\u00B5Torrent WebUI v" + VERSION;
+			hasChanged = true;
 		}
-		value = $("webui.alternate_color").checked;
+		
+		value = $("webui.alternateRows").checked;
 		if (this.config.alternateRows != value) {
-			this.config.alternateRows = (value) ? 1 : 0;
-			this.trtTable.options.alternateRows = (this.config.alternateRows) ? true : false;
-			this.flsTable.options.alternateRows = (this.config.alternateRows) ? true : false;
+			this.config.alternateRows = value;
+			this.trtTable.options.alternateRows = this.flsTable.options.alternateRows = this.config.alternateRows;
 			this.trtTable.refreshSelection();
 			this.flsTable.refreshSelection();
+			hasChanged = true;
 		}
-		value = $("webui.show_cats").checked;
+		
+		value = $("webui.showCategories").checked;
 		if (this.config.showCategories != value) {
 			this.config.showCategories = (value) ? 1 : 0;
 			$("CatList")[(!this.config.showCategories) ? "hide" : "show"]();
 			resize = true;
+			hasChanged = true;
 		}
-		value = $("webui.show_dets").checked;
+		
+		value = $("webui.showDetails").checked;
 		if (this.config.showDetails != value) {
 			this.config.showDetails = (value) ? 1 : 0;
 			$("tdetails")[(!this.config.showDetails) ? "hide" : "show"]();
 			resize = true;
+			hasChanged = true;
 		}
-		value = $("webui.maxrows").value.toInt();
+		
+		value = $("webui.maxRows").value.toInt();
 		if (this.config.maxRows != value) {
 			this.config.maxRows = value;
 			this.trtTable.setMaxRows(this.config.maxRows);
 			this.flsTable.setMaxRows(this.config.maxRows);
+			hasChanged = true;
 		}
+		
 		value = $("webui.lang").get("value");
 		if (this.config.lang != value) {
 			this.config.lang = value;
 			reload = true;
+			hasChanged = true;
 		}
-		this.setUpdateInterval();
+		
 		var str = "";
+		
+		if (window.opera && hasChanged) {
+			str = "&s=webui.cookie&v=" + JSON.encode(this.config);
+			alert(str);
+		}
+		
 		for (var key in this.settings) {
 			t = this.settings[key].t;
 			v = this.settings[key].v;
@@ -692,7 +709,6 @@ var utWebUI = {
 	},
 	
 	"showSettings": function() {
-		//this.getSettings();
 		$("dlgSettings").centre();
 	},
 	
@@ -811,8 +827,8 @@ var utWebUI = {
 		lgroup.push([lang.OV_REMOVE_LABEL, this.setLabel.bind(this, "")]);
 		ContextMenu.add([CMENU_CHILD, lang.ML_LABEL, lgroup]);
 		ContextMenu.add([CMENU_SEP]);
-		ContextMenu.add([lang.ML_REMOVE, this.remove.bind()]);
-		ContextMenu.add([CMENU_CHILD, lang.ML_REMOVE_AND,[[lang.ML_DELETE_DATA, this.removeAll.bind(this)]]]);
+		ContextMenu.add([lang.ML_REMOVE, this.remove.bind(this, 0)]);
+		ContextMenu.add([CMENU_CHILD, lang.ML_REMOVE_AND, [[lang.ML_DELETE_DATA, this.remove.bind(this, 1)]]]);
 		ContextMenu.add([CMENU_SEP]);
 		ContextMenu.add([lang.ML_PROPERTIES, (this.trtTable.selCount > 1) ? null : this.showProperties.bind(this, id)]);
 		ContextMenu.show(e.page);
@@ -884,9 +900,7 @@ var utWebUI = {
 				var a = nv.split("\n"), len = a.length;
 				nv = "";
 				for (var i = 0; i < len; i++)
-				{
 					nv += a[i].replace(/\s+/, "") + "%0D%0A";
-				}
 			}
 			if (v != nv) {
 				str += "&s=" + k + "&v=" + nv;

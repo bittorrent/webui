@@ -36,6 +36,12 @@ var MODE_VIRTUAL = 1;
 var TD = new Element("td");
 var TR = new Element("tr");
 var DIV = new Element("div");
+function simpleClone(element, content) {
+	element = $(element.cloneNode(!!content));
+	element.uid = null;
+	$uid(element);
+	return element;
+}
 
 var dxSTable = new Class({
 
@@ -97,12 +103,7 @@ var dxSTable = new Class({
 		delete options.sIndex;
 		this.setOptions(options);
 	
-		var tr, td, div, $me = this, simpleClone = function(element, content) {
-			element = $(element.cloneNode(!!content));
-			element.uid = null;
-			$uid(element);
-			return element;
-		};
+		var tr, td, div, $me = this;
 
 		this.id = "stable-" + id;
 		this.dCont = $(id).addClass("stable");
@@ -304,21 +305,22 @@ var dxSTable = new Class({
 		for (var i = 0; i < this.cols; i++) {
 			var align = "";
 			switch (this.colData[i].align) {
-				case ALIGN_LEFT:
-					align = "left";
+			
+			case ALIGN_LEFT:
+				align = "left";
 				break;
 				
-				case ALIGN_CENTER:
-					align = "center";
+			case ALIGN_CENTER:
+				align = "center";
 				break;
 				
-				case ALIGN_RIGHT:
-					align = "right";
+			case ALIGN_RIGHT:
+				align = "right";
 				break;
 				
-				case ALIGN_AUTO:
-				default:
-					align = (this.colData[i].type == TYPE_NUMBER) ? "right" : "left";
+			case ALIGN_AUTO:
+			default:
+				align = (this.colData[i].type == TYPE_NUMBER) ? "right" : "left";
 			}
 			this.tHeadCols[i].setStyle("textAlign", align);
 			(Browser.Engine.trident) ?
@@ -374,22 +376,23 @@ var dxSTable = new Class({
 		var d = this.getCache(ind);
 		var $me = this;
 		switch (this.colData[ind].type) {
-			case TYPE_STRING:
-				d.sort(function(x, y) {
-					return $me.sortAlphaNumeric(x, y);
-				});
+		
+		case TYPE_STRING:
+			d.sort(function(x, y) {
+				return $me.sortAlphaNumeric(x, y);
+			});
 			break;
 			
-			case TYPE_NUMBER:
-				d.sort(function(x, y) {
-					return $me.sortNumeric(x, y);
-				});
+		case TYPE_NUMBER:
+			d.sort(function(x, y) {
+				return $me.sortNumeric(x, y);
+			});
 			break;
 
-			default:
-				d.sort(function(x, y) {
-					return Compare.compare(x.v, y.v);
-				});
+		default:
+			d.sort(function(x, y) {
+				return Compare.compare(x.v, y.v);
+			});
 		}
 		if (this.options.reverse)
 			d.reverse();
@@ -434,16 +437,17 @@ var dxSTable = new Class({
 		var type = this.colData[this.colOrder[this.secIndex]].type;
 		var r = 0;
 		switch (type) {
-			case TYPE_STRING:
-				r = Comparator.compareAlphaNumeric(m, n);
+		
+		case TYPE_STRING:
+			r = Comparator.compareAlphaNumeric(m, n);
 			break;
 			
-			case TYPE_NUMBER:
-				r = Comparator.compareNumeric(m, n);
+		case TYPE_NUMBER:
+			r = Comparator.compareNumeric(m, n);
 			break;
 
-			default:
-				r = Comparator.compare(m, n);
+		default:
+			r = Comparator.compare(m, n);
 		}
 		if (r == 0)
 			r = x.e.index - y.e.index;
@@ -468,19 +472,17 @@ var dxSTable = new Class({
 		mxi = (mni + max - 1).min(this.activeId.length - 1);
 		
 		// doing offline updating in IE helps speedwise,
-		// but IE doesn't render all cells (ie. text) after the
+		// but IE7 doesn't render all cells (ie. text) after the
 		// table is re-inserted
-		if (Browser.Engine.gecko)
+		if (Browser.Engine.gecko || Browser.Engine.trident)
 			this.detachBody();
 		var count = 0;
 		for (var i = mni; i <= mxi; i++) {
-			var id = this.activeId[i], rowData = this.rowData[id], row = $(id) || this.tb.body.rows[count], data = this.options.format($A(rowData.data)), icon = rowData.icon;
-			var clsName = "", clsChanged = false;
+			var id = this.activeId[i], rowData = this.rowData[id], row = $(id) || this.tb.body.childNodes[count], data = this.options.format($A(rowData.data)), icon = rowData.icon;
+			var clsName = "", clsChanged = row.hasClass("selected");
 			if (has(this.rowSel, id)) {
 				clsName += "selected";
-				clsChanged = !row.hasClass("selected");
-			} else {
-				clsChanged = row.hasClass("selected");
+				clsChanged = !clsChanged;
 			}
 			if (this.options.alternateRows) {
 				if (count & 1) {
@@ -494,14 +496,14 @@ var dxSTable = new Class({
 			if (clsChanged)
 				row.className = clsName.clean();
 			this.fillRow(row, data, icon);
-			if (row != this.tb.body.rows[count])
-				row.inject(this.tb.body.rows[count], "before");
+			if (row != this.tb.body.childNodes[count])
+				row.inject(this.tb.body.childNodes[count], "before");
 			row.setProperties({"title": data[0], "id": id}).show(true);
 			rowData.rowIndex = count++;
 		}
 		for (var i = count; i < max; i++)
-			this.tb.body.rows[i].setProperty("id", "").hide();
-		if (Browser.Engine.gecko)
+			this.tb.body.childNodes[i].setProperty("id", "").hide();
+		if (Browser.Engine.gecko || Browser.Engine.trident)
 			this.attachBody();
 		this.loadObj.hide();
 		this.refresh();
@@ -509,8 +511,7 @@ var dxSTable = new Class({
 	
 	"refresh": function() {
 		if (this.isScrolling) return;
-		if (this.options.mode == MODE_PAGE)
-			this.updatePageMenu();
+		this.updatePageMenu();
 		this.dHead.setStyle("width", this.dBody.clientWidth);
 		//if (this.options.mode == MODE_VIRTUAL)
 		//	this.resizePads();
@@ -572,16 +573,8 @@ var dxSTable = new Class({
 		id = id || (this.id + "-row-" + (1000 + this.rows));
 		var rowIndex = -1;
 		if (!hidden) {
-			if (this.viewRows < this.options.maxRows) {
-				var index = this.viewRows;
-				var row = this.tb.body.rows[index];
-				var fdata = this.options.format($A(data));
-				row.setProperties({"index": index, "title": fdata[0], "id": id});
-				row.addClasses((this.options.alternateRows) ? ((index & 1) ? "odd" : "even") : "", true);
-				this.fillRow(row, fdata, icon);
-				row.show(true);
+			if (this.viewRows < this.options.maxRows)
 				rowIndex = this.viewRows++;
-			}
 			this.activePos[id] = this.activeId.length;
 			this.activeId.push(id);
 			if (this.options.mode == MODE_PAGE)
@@ -600,7 +593,7 @@ var dxSTable = new Class({
 	
 	"fillRow": function(row, data, icon) {
 		this.colOrder.each(function(v, k) {
-			var cell = row.cells[k];
+			var cell = row.childNodes[k];
 			if (cell.hasChildNodes()) {
 				if ((v == 0) && icon)
 					cell.addClasses("stable-icon", icon, true);
@@ -690,16 +683,10 @@ var dxSTable = new Class({
 			for (var i = this.activePos[id], j = this.activeId.length; i < j; i++)
 				this.activePos[this.activeId[i]]--;
 			delete this.activePos[id];
+			if (this.options.mode == MODE_PAGE)
+				this.pageCount = Math.ceil(this.activeId.length / this.options.maxRows);
 		}
 		this.rowData[id].hidden = true;
-		/*
-		if (this.options.mode == MODE_PAGE) {
-			var oc = this.pageCount;
-			this.pageCount = Math.floor(this.activeId.length / this.options.maxRows);
-			if (oc != this.pageCount)
-				this.updatePageMenu();
-		}
-		*/
 	},
 
 	"unhideRow": function(id) {
@@ -718,23 +705,33 @@ var dxSTable = new Class({
 				for (var i = index + 1, j = this.activeId.length; i < j; i++)
 					this.activePos[this.activeId[i]]++;
 			}
+			if (this.options.mode == MODE_PAGE)
+				this.pageCount = Math.ceil(this.activeId.length / this.options.maxRows);
 		}
 		this.rowData[id].hidden = false;
-		/*
-		if (this.options.mode == MODE_PAGE) {
-			var oc = this.pageCount;
-			this.pageCount = Math.floor(this.activeId.length / this.options.maxRows);
-			if (oc != this.pageCount)
-				this.updatePageMenu();
-		}
-		*/
 	},
 
 	"refreshSelection": function() {
-		var i = this.tb.body.rows.length;
-		while (i--) {
-			var row = this.tb.body.rows[i];
-			row[has(this.rowSel, row.id) ? "addClass" : "removeClass"]("selected");
+		var len = this.tb.body.childNodes.length, i = 0;
+		while (i < len) {
+			var row = this.tb.body.childNodes[i];
+			var clsName = "", clsChanged = row.hasClass("selected");
+			if (has(this.rowSel, row.id)) {
+				clsName += "selected";
+				clsChanged = !clsChanged;
+			}
+			if (this.options.alternateRows) {
+				if (i & 1) {
+					clsName += " odd";
+					clsChanged = clsChanged | !row.hasClass("odd");
+				} else {
+					clsName += " even";
+					clsChanged = clsChanged | !row.hasClass("even");
+				}
+			}
+			if (clsChanged)
+				row.className = clsName.clean();
+			i++;
 		}
 		this.pageInfo.set("text", this.selectedRows.length + " row(s) selected.");
 	},
@@ -797,8 +794,8 @@ var dxSTable = new Class({
 	"setIcon": function(id, icon) {
 		this.rowData[id].icon = icon;
 		var r = $(id), index = this.colOrder.indexOf(0);
-		if (!r || (index == -1) || r.cells[index].hasClass(icon)) return;
-		r.cells[index].className = "stable-icon " + icon;
+		if (!r || (index == -1) || r.childNodes[index].hasClass(icon)) return;
+		r.childNodes[index].className = "stable-icon " + icon;
 	},
 
 	"setAttr": function(id, name, value) {
@@ -840,8 +837,8 @@ var dxSTable = new Class({
 			"display": hide ? "none" : ''
 		});
 		this.tHeadCols[index][hide ? "addClass" : "removeClass"]("stable-hidden-column");
-		$each(this.tb.body.rows, function(row) {
-			row.cells[index][hide ? "addClass" : "removeClass"]("stable-hidden-column");
+		$each(this.tb.body.childNodes, function(row) {
+			row.childNodes[index][hide ? "addClass" : "removeClass"]("stable-hidden-column");
 		});
 		this.fireEvent("onColToggle", [index, hide]);
 		this.calcSize();
@@ -1052,9 +1049,9 @@ function moveColumn(iCol, iNew) {
 	:
 		oCol.inject(oBefore, "before");
 	
-	$each(this.tb.body.rows, function(row) {
-		var bef = insertOuter ? null : row.cells[iNew];
-		var cell = row.cells[iCol].dispose();
+	$each(this.tb.body.childNodes, function(row) {
+		var bef = insertOuter ? null : row.childNodes[iNew];
+		var cell = row.childNodes[iCol].dispose();
 		insertOuter ?
 			row.grab(cell, insertAtEnd ? "bottom" : "top")
 		:

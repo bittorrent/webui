@@ -316,32 +316,6 @@ function checkProxySettings() {
 	
 }
 
-function linked(obj, defstate, list) {
-
-	var state = true, tag = obj.get("tag");
-	if (tag == "input") {
-		if (obj.type == "checkbox")
-			state = (obj.checked == defstate);
-	} else if (tag == "select") {
-		state = (obj.get("value") == defstate);
-	} else {
-		return;
-	}
-	for (var i = 0, j = list.length; i < j; i++) {
-		var ele = $(list[i]);
-		if (!ele) continue;
-		ele[state ? "addClass" : "removeClass"]("disabled");
-		ele.disabled = state;
-		if (ele.previousSibling && (ele.previousSibling.nodeType == 1) && (ele.previousSibling.tagName.toLowerCase() == "label")) {
-			ele = ele.previousSibling;
-		} else if (ele.nextSibling && (ele.nextSibling.nodeType == 1) && (ele.nextSibling.tagName.toLowerCase() == "label")) {
-			ele = ele.nextSibling;
-		} else {
-			continue;
-		}
-	}
-}
-
 function redirect(url) {
 	window.location.href = url;
 }
@@ -512,6 +486,7 @@ var TreeNode = new Class({
 });
 
 function loadLangStrings() {
+	
 	var tstr = lang.OV_TABS.split("||");
 	utWebUI.tabs = new Tabs($("tabs"), {
 		"tabs": {
@@ -702,15 +677,16 @@ function loadLangStrings() {
 		pxyList.grab(new Option(v, k, false, false));
 	});
 	
+	/*
 	(function() {
 		var days = lang.SETT_DAYNAMES.split("||");
 		var tbody = new Element("tbody");
 		var active = false;
 		var mode = 0;
 		for (var i = 0; i < 7; i++) {
-			var tr = new Element("tr");
+			var tr = simpleClone(TR, false);
 			for (var j = 0; j < 25; j++) {
-				var td = new Element("td");
+				var td = simpleClone(TD, false);
 				if (j == 0) {
 					td.set("text", days[i]);
 				} else {
@@ -736,6 +712,7 @@ function loadLangStrings() {
 		}
 		$("sched_table").grab(tbody);
 	})();
+	*/
 }
 
 var resizing = false, resizeTimeout = null;
@@ -752,7 +729,7 @@ function resizeUI(w, h) {
 	var ww = size.x, wh = size.y, winResize = false;
 	var showcat = utWebUI.config.showCategories, showdet = utWebUI.config.showDetails;
 	
-	if (!w && !h) { // window resize
+	if (!w && !h) {
 		w = Math.floor(ww * ((showcat) ? utWebUI.config.hSplit : 1.0));
 		h = Math.floor(wh * ((showdet) ? utWebUI.config.vSplit : 1.0));
 		winResize = true;
@@ -801,64 +778,89 @@ function resizeUI(w, h) {
 	resizing = false;
 }
 
+function linked(obj, defstate, list) {
+	var disabled = true, tag = obj.get("tag");
+	if (tag == "input") {
+		if (obj.type == "checkbox")
+			disabled = !obj.checked;
+	} else if (tag == "select") {
+		disabled = (obj.get("value") == defstate);
+	} else {
+		return;
+	}
+	var element;
+	for (var i = 0, j = list.length; i < j; i++) {
+		if (!(element = $(list[i]))) continue;
+		if (element.type != "checkbox")
+			element[(disabled ? "add" : "remove") + "Class"]("disabled");
+		element.disabled = disabled;
+		var label = element.getPrevious();
+		if (!label || (label.get("tag") != "label")) {
+			label = element.getNext();
+			if (!label || (label.get("tag") != "label")) continue;
+		}
+		label[(disabled ? "add" : "remove") + "Class"]("disabled");
+	}
+}
+
 window.addEvent("domready", function() {
 
 	document.title = "\u00B5Torrent WebUI " + VERSION;
 	
 	document.addEvent("keydown", function(ev) {
 		switch (ev.key) {
-			case 27: // Esc
+		
+		case "esc": // Esc
+			ev.stop();
+			utWebUI.restoreUI();
+			break;
+			
+		case "a": // Ctrl + A
+			if (ev.control)
 				ev.stop();
-				utWebUI.restoreUI();
 			break;
 			
-			case "a": // Ctrl + A
-				if (ev.control)
-					ev.stop();
-			break;
-			
-			case "e": // Ctrl + E
-				if (ev.control)
-					ev.stop();
+		case "e": // Ctrl + E
+			if (ev.control)
+				ev.stop();
 			break;
 		  
-			case "o": // Ctrl + O
-				if (ev.control) {
-					ev.stop();
-					$("dlgAdd").centre().show();
-				}
-			break;
-			
-			case "p": // Ctrl + P
-				if (ev.control) {
-					ev.stop();
-					utWebUI.showSettings();
-				}
-			break;
-			
-			case "f2": // F2
+		case "o": // Ctrl + O
+			if (ev.control) {
 				ev.stop();
-				$("dlgAbout").centre().show();
+				$("dlgAdd").centre().show();
+			}
 			break;
 			
-			case "f4": // F4
+		case "p": // Ctrl + P
+			if (ev.control) {
 				ev.stop();
-				utWebUI.toggleToolbar();
+				utWebUI.showSettings();
+			}
 			break;
 			
-			case "f6": // F6
-				ev.stop();
-				utWebUI.toggleDetPanel();
+		case "f2": // F2
+			ev.stop();
+			$("dlgAbout").centre().show();
 			break;
 			
-			case "f7": // F7
-				ev.stop();
-				utWebUI.toggleCatPanel();
+		case "f4": // F4
+			ev.stop();
+			utWebUI.toggleToolbar();
+			break;
+			
+		case "f6": // F6
+			ev.stop();
+			utWebUI.toggleDetPanel();
+			break;
+			
+		case "f7": // F7
+			ev.stop();
+			utWebUI.toggleCatPanel();
 			break;
 		}
 	});
 	
-	// TODO: find a way for Opera to fire this event.
 	window.addEvent("unload", function() {
 		utWebUI.saveConfig();
 	});
@@ -1057,31 +1059,15 @@ window.addEvent("domready", function() {
 		linked(this, 0, ["max_ul_rate_seed"]);
 	});
 	(function() {
-		var addTogg = false;
+		var toggle = false;
 		$("optadd").addEvent("click", function(ev) {
 			ev.stop();
-			this.setStyle("backgroundPosition", "2px " + (addTogg ? 0 : -16) + "px");
-			$("dlgAdd").setStyle("height", addTogg ? 185 : 260);
-			$("optadd-cont")[addTogg ? "hide" : "show"]();
-			addTogg = !addTogg;
+			this.setStyle("backgroundPosition", "2px " + (toggle ? 0 : -16) + "px");
+			$("dlgAdd").setStyle("height", toggle ? 185 : 260);
+			$("optadd-cont")[toggle ? "hide" : "show"]();
+			toggle = !toggle;
 		});
 	})();
 	
-	fldNodes[0] = new TreeNode({
-		"div": "fl-cont",
-		"id": 0
-	});
-	var clkEv = function(node) {
-		var path = "";
-		while (node.level >= 0) {
-			path = node.options.text + "\\" + path;
-			node = node.parent;
-		}
-		$("brwpath").set("value", path);
-	};
-	var fdsg = new TreeNode({"text": "C:", "onClick": clkEv}, fldNodes[0]);
-	fdsg.insert({"text": "Windows", "onClick": clkEv});
-	fldNodes[0].insert({"text": "D:\\kfdsgfds", "onClick": clkEv});
-	fldNodes[0].insert({"text": "F:\\fds", "onClick": clkEv});
-	utWebUI.initialize();
+	utWebUI.init();
 });

@@ -88,17 +88,17 @@
 				<fieldset>
 					<legend>User Interface</legend>
 					<div class="hcont">
-						<div style="float: right; padding: 0;">Update GUI every:&nbsp;<input type="text" id="webui.update_interval" class="tbox num" value="3000" />&nbsp;ms</div>
-						<span><input type="checkbox" id="webui.confirm_when_deleting" checked="checked" /><label for="webui.confirm_when_deleting" id="DLG_SETT_1_06"></label></span>
+						<div style="float: right; padding: 0;">Update GUI every:&nbsp;<input type="text" id="webui.updateInterval" class="tbox num" value="3000" />&nbsp;ms</div>
+						<span><input type="checkbox" id="webui.confirmDelete" checked="checked" /><label for="webui.confirmDelete" id="DLG_SETT_1_06"></label></span>
 					</div>
 					
 					<div class="hcont">
-						<div style="float: right; text-align: right;">Show speed:&nbsp;<select id="webui.speed_display"><option value="0" selected="selected">Don't</option><option value="1">In status bar</option><option value="2">In title bar</option></select></div>
-						<span><input type="checkbox" id="webui.alternate_color" /><label for="webui.alternate_color" id="DLG_SETT_1_16"></label></span>
+						<div style="float: right; text-align: right;">Show speed:&nbsp;<select id="webui.showSpeed"><option value="0" selected="selected">Don't</option><option value="1">In status bar</option><option value="2">In title bar</option></select></div>
+						<span><input type="checkbox" id="webui.alternateRows" /><label for="webui.alternateRows" id="DLG_SETT_1_16"></label></span>
 					</div>
 					<div class="hcont">
-						<div style="float: right">Virtual Row Threshold:&nbsp;<input type="text" id="webui.maxrows" class="tbox num" value="50" /></div>
-						<input type="checkbox" id="webui.show_cats" checked="checked" /><label for="webui.show_cats">Show categories on startup</label>
+						<div style="float: right">Virtual Row Threshold:&nbsp;<input type="text" id="webui.maxRows" class="tbox num" value="50" /></div>
+						<input type="checkbox" id="webui.showCategories" checked="checked" /><label for="webui.showCategories">Show categories on startup</label>
 					</div>
 					<div class="hcont">
 						<div style="float: right">
@@ -161,7 +161,7 @@
 								<option value="zhTW">Chinese (Traditional)</option>
 							</select>
 						</div>
-						<input type="checkbox" id="webui.show_dets" checked="checked" /><label for="webui.show_dets">Show details on startup</label>
+						<input type="checkbox" id="webui.showDetails" checked="checked" /><label for="webui.showDetails">Show details on startup</label>
 					</div>
 				</fieldset>
 			</div>
@@ -324,15 +324,9 @@
 				<fieldset>
 					<legend id="DLG_SETT_CACHE_01"></legend>
 					<div id="DLG_SETT_CACHE_02"></div>
-					<table cellpadding="0" cellspacing="0">
-					<tr>
-					<td><input id="cache.override" type="checkbox" /><label for="cache.override" id="DLG_SETT_CACHE_03"></label></td>
-					<td class="alr"><input type="text" id="cache.override_size" class="tbox num" maxlength="6" />&nbsp;<span id="lbl_cache.override_size"></span></td>
-					</tr>
-					<tr>
-					<td colspan="2"><input id="cache.reduce" type="checkbox" /><label for="cache.reduce" id="DLG_SETT_CACHE_06"></label></td>
-					</tr>
-					</table>
+					<div><input id="cache.override" type="checkbox" /><label for="cache.override" id="DLG_SETT_CACHE_03"></label></div>
+					<div><input type="text" id="cache.override_size" class="tbox num" maxlength="6" /><label  for="cache.override_size" id="lbl_cache.override_size"></label></div>
+					<div><input id="cache.reduce" type="checkbox" /><label for="cache.reduce" id="DLG_SETT_CACHE_06"></label></div>
 				</fieldset>
 				<fieldset>
 					<legend id="DLG_SETT_CACHE_07"></legend>
@@ -743,6 +737,7 @@
 		</div>
 		<div id="VDivider"></div>
 		<div id="HDivider"></div>
+		<!-- [js] -->
 		<script type="text/javascript" src="./mootools.js"></script>
 		<script type="text/javascript" src="./stable.js"></script>
 		<script type="text/javascript" src="./lang/en.js"></script>
@@ -751,5 +746,6 @@
 		<script type="text/javascript" src="./contextmenu.js"></script>
 		<script type="text/javascript" src="./tabs.js"></script>
 		<script type="text/javascript" src="./main.js"></script>
+		<!-- [/js] -->
 	</body>
 </html>

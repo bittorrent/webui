@@ -20,37 +20,29 @@ var Tabs = new Class({
 	"draw": function() {
 		this.element.empty();
 		var $me = this;
-		$each(this.tabs, function(v, k) {
-			
-			this.element.adopt(new Element("li", {
+		$each(this.tabs, function(v, k) {			
+			$me.element.adopt(new Element("li", {
 				"id": "tab_" + k
 			}).adopt(new Element("a", {
 				"href": "#",
 				"events": {
 					"click": function(ev) {
-						(new Event(ev)).stop();
+						ev.stop();
 						$me.show(k)
 					}
-				}
-			}).set("html", v)));
-			
-		}, this);
+				},
+				"html": v
+			})));
+		});
 		return this;
 	},
 	
 	"show": function(id) {
 		if (!has(this.tabs, id)) return;
-		$each(this.tabs, function(v, k) {
-			var tab = $("tab_" + k);
-			var ele = $(k);
-			if (k == id) {
-				ele.show();
-				tab.addClass("selected");
-			} else {
-				ele.hide();
-				tab.removeClass("selected");
-			}
-		}, this);
+		$each(this.tabs, function(_, k) {
+			$(k)[(k == id) ? "show" : "hide"]();
+			$("tab_" + k)[((k == id) ? "add" : "remove") + "Class"]("selected");
+		});
 		this.active = id;
 		this.onChange(id);
 		return this;
