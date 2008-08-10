@@ -663,13 +663,10 @@ var utWebUI = {
 		
 		var str = "";
 		
-		if (window.opera && hasChanged) {
+		if (window.opera && hasChanged)
 			str = "&s=webui.cookie&v=" + JSON.encode(this.config);
-			alert(str);
-		}
 		
 		for (var key in this.settings) {
-			t = this.settings[key].t;
 			v = this.settings[key].v;
 			var ele = $(key);
 			if (!ele) continue;
@@ -1159,10 +1156,10 @@ var utWebUI = {
 		{
 			this.flsTable.calcSize();
 		}
-	},
+	}/*,
 	
 	"showFolderBrowser": function() {
 		$("dlgFolders").centre().show();
-	}
+	}*/
 	
 }

@@ -5,7 +5,7 @@
  *
 */
 
-var VERSION = "0.340.001";
+var VERSION = "0.350";
 var BUILD_REQUIRED = -1; // the ut build the webui requires
 var lang = lang || null;
 var has = function (obj, key) {
@@ -166,7 +166,7 @@ function setupUI() {
 			if (index == null) {
 				values[2]  = values[2].toFileSize(2); // size
 				var d = values[3];
-				values[3] = (values[3] / 10).roundTo(1) + "%"; //new Element("div", {"class": "prbar"}).grab(new Element("span", {"html": (values[3] / 10).roundTo(1) + "%"})).grab(new Element("div", {"styles": {"width": (d / 10).toInt() + "%"}})); // done
+				values[3] = (values[3] / 10).roundTo(1) + "%"; // done
 				values[4] = values[4].toFileSize(); // downloaded
 				values[5] = values[5].toFileSize(); // uploaded
 				values[6] = (values[6] == -1) ? "\u221E" : (values[6] / 1000).roundTo(3); // ratio
@@ -365,7 +365,7 @@ function searchSet(index) {
 }
 
 // MooTools.Utilities.Assets.js
-function loadJS(source, properties){
+function loadJS(source, properties) {
 	properties = $extend({
 		onload: $empty,
 		document: document,
@@ -380,7 +380,7 @@ function loadJS(source, properties){
 	script.addEvents({
 		load: load,
 		readystatechange: function(){
-			if (['loaded', 'complete'].contains(this.readyState)) load();
+			if (Browser.Engine.trident && ['loaded', 'complete'].contains(this.readyState)) load(); 
 		}
 	}).setProperties(properties);
 	
@@ -394,6 +394,7 @@ function loadJS(source, properties){
 	return script.inject(doc.head);
 }
 
+/*
 var fldNodes = [];
 var LI = new Element('li');
 var TreeNode = new Class({
@@ -484,6 +485,7 @@ var TreeNode = new Class({
 	}
 
 });
+*/
 
 function loadLangStrings() {
 	
@@ -512,12 +514,11 @@ function loadLangStrings() {
 	}).draw().show("st_gl");
 
 	[
-		"OV_CONFIRM_DELETE",
 		"OV_NEWLABEL_TEXT",
-		"DLG_PRE_ADD_04",
-		"DLG_PRE_ADD_05",
-		"DLG_PRE_ADD_06",
-		"DLG_PRE_ADD_08",
+		//"DLG_PRE_ADD_04",
+		//"DLG_PRE_ADD_05",
+		//"DLG_PRE_ADD_06",
+		//"DLG_PRE_ADD_08",
 		"DLG_TORRENTPROP_GEN_01",
 		"DLG_TORRENTPROP_GEN_03",
 		"DLG_TORRENTPROP_GEN_04",
@@ -579,7 +580,7 @@ function loadLangStrings() {
 		"DLG_SETT_5_12",
 		"DLG_SETT_5_13",
 		"DLG_SETT_6_01",
-		"DLG_SETT_6_02",
+		//"DLG_SETT_6_02",
 		"DLG_SETT_6_04",
 		"DLG_SETT_8_01",
 		"DLG_SETT_CACHE_01",
@@ -608,11 +609,13 @@ function loadLangStrings() {
 	].each(function(k) {
 		$(k).set("text", lang[k]);
 	});
+	/*
 	[
 		"DLG_PRE_ADD_03"
 	].each(function(k) {
 		$(k).set("value", lang[k]);
 	});
+	*/
 	[
 		["dlgProps-header", "DLG_TORRENTPROP_00"],
 		["lbl_prop-dht", "DLG_TORRENTPROP_GEN_18"],
@@ -972,16 +975,20 @@ window.addEvent("domready", function() {
 	
 	$("add").addEvent("click", function(ev) {
 		ev.stop();
+		/*
 		var ele = $("addlab");
 		ele.options.length = 0;
 		var count = 0;
 		for (var key in utWebUI.customLabels)
 			ele.options[count++] = new Option(key, key, false, count == 0);
+		*/
 		$("dlgAdd").show().centre();
 	});
+	/*
 	$("DLG_PRE_ADD_03").addEvent("click", function() {
 		utWebUI.showFolderBrowser();
 	});
+	*/
 	["remove", "start", "pause", "stop"].each(function(act) {
 		$(act).addEvent("click", function(ev) {
 			ev.stop();
@@ -994,7 +1001,7 @@ window.addEvent("domready", function() {
 	});
 	var winZ = 500;
 	$("modalbg").setStyle("opacity", 0.8);
-	["dlgAdd", "dlgSettings", "dlgProps", "dlgAbout", "dlgLabel", "dlgDelTor", "dlgFolders"].each(function(id) {
+	["dlgAdd", "dlgSettings", "dlgProps", "dlgAbout", "dlgLabel"].each(function(id) {
 		$(id).addEvent("mousedown", function(ev) {
 			this.setStyle("zIndex", ++winZ);
 		}).getElement("a").addEvent("click", function(ev) {
@@ -1050,7 +1057,7 @@ window.addEvent("domready", function() {
 	});
 	$("sched_enable").addEvent("change", function() {
 		linked(this, 0, ["sched_ul_rate", "sched_dl_rate", "sched_dis_dht"]);
-		$("sched_table").toggleClass("disabled");
+		//$("sched_table").toggleClass("disabled");
 	});
 	$("ul_auto_throttle").addEvent("change", function() {
 		linked(this, 1, ["max_ul_rate", "max_ul_rate_seed_flag"]);
@@ -1058,6 +1065,7 @@ window.addEvent("domready", function() {
 	$("max_ul_rate_seed_flag").addEvent("change", function() {
 		linked(this, 0, ["max_ul_rate_seed"]);
 	});
+	/*
 	(function() {
 		var toggle = false;
 		$("optadd").addEvent("click", function(ev) {
@@ -1068,6 +1076,7 @@ window.addEvent("domready", function() {
 			toggle = !toggle;
 		});
 	})();
+	*/
 	
 	utWebUI.init();
 });

@@ -391,7 +391,7 @@ var dxSTable = new Class({
 
 		default:
 			d.sort(function(x, y) {
-				return Compare.compare(x.v, y.v);
+				return Comparator.compare(x.v, y.v);
 			});
 		}
 		if (this.options.reverse)

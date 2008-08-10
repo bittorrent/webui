@@ -36,6 +36,7 @@
 				<div class="hcont"><label for="url">Torrent URL:</label><input type="text" id="url" class="tbox" /></div>
 				<div class="hcont"><label for="cookies">Cookies:</label><input type="text" id="cookies" class="tbox" /></div>
 				<div class="hcont"><label>&nbsp;</label><input type="button" value="Add URL" class="btn" /></div>
+				<!--
 				<fieldset>
 					<legend><a href="#" id="optadd">Options</a></legend>
 					<div id="optadd-cont">
@@ -46,6 +47,7 @@
 							<div class="fifpcw"><input type="checkbox" /><label id="DLG_PRE_ADD_08"></label></div>
 					</div>
 				</fieldset>
+				-->
 			</div>
 		</div>
 		<!-- Torrent Add Dialog */  -->
@@ -299,10 +301,12 @@
 			</div>
 			<div id="st_sch" class="stg_con">
 				<input id="sched_enable" type="checkbox" /><label for="sched_enable" id="DLG_SETT_6_01"></label>
+				<!--
 				<fieldset>
 					<legend id="DLG_SETT_6_02"></legend>
 					<table id="sched_table" cellpadding="0" cellspacing="0"></table>
 				</fieldset>
+				-->
 				<fieldset>
 					<legend id="DLG_SETT_6_04"></legend>
 					<table cellpadding="0" cellspacing="0">
@@ -324,8 +328,10 @@
 				<fieldset>
 					<legend id="DLG_SETT_CACHE_01"></legend>
 					<div id="DLG_SETT_CACHE_02"></div>
-					<div><input id="cache.override" type="checkbox" /><label for="cache.override" id="DLG_SETT_CACHE_03"></label></div>
-					<div><input type="text" id="cache.override_size" class="tbox num" maxlength="6" /><label  for="cache.override_size" id="lbl_cache.override_size"></label></div>
+					<div>
+						<input id="cache.override" type="checkbox" /><label for="cache.override" id="DLG_SETT_CACHE_03"></label>
+						<input type="text" id="cache.override_size" class="tbox num" maxlength="6" /><label  for="cache.override_size" id="lbl_cache.override_size"></label>
+					</div>
 					<div><input id="cache.reduce" type="checkbox" /><label for="cache.reduce" id="DLG_SETT_CACHE_06"></label></div>
 				</fieldset>
 				<fieldset>
@@ -599,14 +605,6 @@
 		</div>
 		<!-- Settings Dialog */ -->
 		
-		<!-- /* RSS Dialog
-		<div id="dlgRss" class="dlg-window">
-			<a href="javascript:Hide('dlgRss');" class="dlg-close"></a>
-			<div id="dlgRss-header" class="dlg-header">RSS Downloader</div>
-			<div id="dlgRss-content"></div>
-		</div>
-		RSS Dialog */ -->
-		
 		<!-- /* Torrent Properties Dialog -->
 		<div id="dlgProps" class="dlg-window">
 			<a href="#" class="dlg-close"></a>
@@ -652,7 +650,7 @@
 				<b>Bug Tracker</b>:<br />&nbsp;&nbsp;&nbsp;<a href="http://utbugs.leetwebhosting.com" target="_blank">http://utbugs.leetwebhosting.com</a><br />&nbsp;&nbsp;&nbsp;- Provided and hosted by Asskick
 				<p>
 				<br />
-				<a id="mootools" href="http://www.mootools.net/"><img src="./images/mootools.png" alt="MooTools" /></a>
+				<a id="mootools" href="http://www.mootools.net/" target="_blank"><img src="./images/mootools.png" alt="MooTools" /></a>
 				</p>
 			</div>
 		</div>
@@ -671,7 +669,7 @@
 		</div>
 		<!-- New Label Dialog */ -->
 		
-		<!-- /* Delete Confirmation Dialog -->
+		<!-- /* Delete Confirmation Dialog
  		<div id="dlgDelTor" class="dlg-window">
 			<a href="#" class="dlg-close"></a>
 			<div id="dlgDelTor-header" class="dlg-header">Remove Torrent(s)</div>
@@ -681,9 +679,9 @@
 				<input type="button" class="btn" value="   No   " />
 			</div>
 		</div>
-		<!-- Delete Confirmation Dialog */ -->
+		Delete Confirmation Dialog */ -->
 		
-		<!-- /* Folders Dialog -->
+		<!-- /* Folders Dialog
  		<div id="dlgFolders" class="dlg-window">
 			<a href="#" class="dlg-close"></a>
 			<div id="dlgFolders-header" class="dlg-header">Browse For Folder</div>
@@ -697,7 +695,7 @@
 				</div>
 			</div>
 		</div>
-		<!-- Folders Dialog */ -->
+		Folders Dialog */ -->
 		
 		<!-- /* Toolbar -->
 		<div id="toolbar">
@@ -711,7 +709,7 @@
 			<div class="TB_Separator"></div>
 			<a id="setting" href="#" title="Settings"><span></span></a>
 			<div id="sb">
-				<a href="#" id="search"></a><input type="text" class="tbox" id="query" />
+				<a href="#" id="search"></a><input type="text" id="query" />
 			</div>
 		</div>
 		<!-- Toolbar */ -->

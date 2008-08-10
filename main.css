@@ -352,6 +352,9 @@ div#toolbar div#sb {
 
 div#toolbar div#sb input {
 	width: 124px; height: 16px;
+	line-height: 16px;
+	font-size: 11px;
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
 	margin: 8px 0 0 0;
 	padding: 3px 2px 1px 2px;
 	border: 1px solid #C0C0C0;
@@ -368,6 +371,8 @@ div.hcont {
 	width: 460px; height: 20px;
 	line-height: 20px;
 	overflow: hidden;
+	padding: 0;
+	line-height: 20px;
 }
  
 input.tbox, input.btn, select {
@@ -384,8 +389,14 @@ input.tbox, input.btn, select {
 
 input.tbox {
 	height: 16px !important;
-	background: #FFFFFF url(./images/tbox.png) repeat-x center top;
-	padding: 0 2px;
+	background-color: #FFFFFF;
+	padding: 0 !important;
+	margin: 1px 0 !important;
+	vertical-align: top;
+}
+
+input.tbox:focus {
+	border: 1px solid #0099FF;
 }
 
 input.btn {
@@ -393,30 +404,6 @@ input.btn {
 	line-height: 19px;
 	border: 1px solid #A0A0A0;
 	background: #F0F0F0 url(./images/header.png) repeat-x center bottom;
-}
-
-a.hide:link, a.hide:visited {
-	width: 14px; height: 14px;
-	margin: -20px 0 0 0;
-	background: transparent url(./images/hide.png);
-	float: right;
-	border: 0;
-}
-
-a.hide:hover {
-	width: 14px; height: 14px;
-	margin: -20px 0 0 0;
-	background: transparent url(./images/hide_over.png);
-	float: right;
-	border: 0;
-}
-
-a.hide:active {
-	width: 14px; height: 14px;
-	margin: -20px 0 0 0;
-	background: transparent url(./images/hide_on.png);
-	float: right;
-	border: 0;
 }
 
 a {
@@ -553,12 +540,7 @@ div#dlgSettings .lm {
 	overflow: auto;
 }
 
-div.op50l { width: 220px; float: left; }
-div.op50l select { padding: 0; }
 div.algnright { text-align: right; }
-
-.opera div.op50l { clear: left; }
-.opera div.algnright { clear: right; }
 
 .lm ul {
 	margin: 0; padding: 0;
@@ -728,6 +710,10 @@ div#dragmask {
 	border: 1px dotted #A0A0A0;
 }
 
+input[id="cache.override_size"] {
+	margin: 0 5px 0 0;
+}
+
 /* ********************************************** */
 
 div#tdetails {
@@ -752,7 +738,7 @@ div#lcont div { padding: 2px; }
 /* add dialog */
 
 div#dlgAdd {
-	width: 350px; height: 185px;
+	width: 350px; height: 165px;
 }
 
 #dlgAdd-header {
@@ -1004,6 +990,8 @@ a { outline: none; }
 	border: 0;
 }
 
+/* schedule table
+
 #sched_table {
 	border-collapse: collapse;
 	-moz-user-select: none;
@@ -1045,6 +1033,10 @@ a { outline: none; }
 	background-color: #686868;
 }
 
+*/
+
+/* progressbar
+
 .prbar {
 	height: 8px !important;
 	position: relative;
@@ -1069,7 +1061,9 @@ a { outline: none; }
 	left: 0px; top: 0px;
 }
 
-/* folders dialog */
+*/
+
+/* folders dialog
 
 div#dlgFolders {
 	width: 300px; height: 212px;
@@ -1135,6 +1129,8 @@ div#dlgFolders label {
 	background: #F5F5F5;
 	color: #686868;
 }
+
+*/
 
 #token {
 	display: none;
