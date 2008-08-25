@@ -5,12 +5,9 @@
  *
 */
 
-var VERSION = "0.350";
-var BUILD_REQUIRED = -1; // the ut build the webui requires
-var lang = lang || null;
-var has = function (obj, key) {
+function has(obj, key) {
 	return Object.prototype.hasOwnProperty.apply(obj, [key]);
-};
+}
 
 Array.implement({
 
@@ -81,7 +78,7 @@ Number.implement({
 
 	"toFileSize": function(precision) {
 		precision = precision || 1;
-		var sz = [lang.SIZE_KB, lang.SIZE_MB, lang.SIZE_GB];
+		var sz = [lang[CONST.SIZE_KB], lang[CONST.SIZE_MB], lang[CONST.SIZE_GB]];
 		var size = this;
 		var pos = 0;
 		size /= 1024;
@@ -145,52 +142,81 @@ function setupUI() {
 	
 	var colMask = utWebUI.config.trtCols;
 	utWebUI.trtTable.create("List", [
-			col(lang.OV_COL_NAME, TYPE_STRING, colMask & 0x0001),
-			col(lang.OV_COL_STATUS, TYPE_STRING, colMask & 0x0002),
-			col(lang.OV_COL_SIZE, TYPE_NUMBER, colMask & 0x0004),
-			col(lang.OV_COL_DONE, TYPE_NUMBER, colMask & 0x0008),
-			col(lang.OV_COL_DOWNLOADED, TYPE_NUMBER, colMask & 0x0010),
-			col(lang.OV_COL_UPPED, TYPE_NUMBER, colMask & 0x0020),
-			col(lang.OV_COL_SHARED, TYPE_NUMBER, colMask & 0x0040),
-			col(lang.OV_COL_DOWNSPD, TYPE_NUMBER, colMask & 0x0080),
-			col(lang.OV_COL_UPSPD, TYPE_NUMBER, colMask & 0x0100),
-			col(lang.OV_COL_ETA, TYPE_NUMBER, colMask & 0x0200),
-			col(lang.OV_COL_LABEL, TYPE_STRING, colMask & 0x0400),
-			col(lang.OV_COL_PEERS, TYPE_NUMBER, colMask & 0x0800),
-			col(lang.OV_COL_SEEDS, TYPE_NUMBER, colMask & 0x1000),
-			col(lang.OV_COL_AVAIL.split("||")[1], TYPE_NUMBER, colMask & 0x2000),
-			col(lang.OV_COL_ORDER, TYPE_NUMBER, colMask & 0x4000, ALIGN_LEFT),
-			col(lang.OV_COL_REMAINING, TYPE_NUMBER, colMask & 0x8000)
+			col(lang[CONST.OV_COL_NAME], TYPE_STRING, colMask & 0x0001),
+			col(lang[CONST.OV_COL_STATUS], TYPE_STRING, colMask & 0x0002),
+			col(lang[CONST.OV_COL_SIZE], TYPE_NUMBER, colMask & 0x0004),
+			col(lang[CONST.OV_COL_DONE], TYPE_NUMBER, colMask & 0x0008),
+			col(lang[CONST.OV_COL_DOWNLOADED], TYPE_NUMBER, colMask & 0x0010),
+			col(lang[CONST.OV_COL_UPPED], TYPE_NUMBER, colMask & 0x0020),
+			col(lang[CONST.OV_COL_SHARED], TYPE_NUMBER, colMask & 0x0040),
+			col(lang[CONST.OV_COL_DOWNSPD], TYPE_NUMBER, colMask & 0x0080),
+			col(lang[CONST.OV_COL_UPSPD], TYPE_NUMBER, colMask & 0x0100),
+			col(lang[CONST.OV_COL_ETA], TYPE_NUMBER, colMask & 0x0200),
+			col(lang[CONST.OV_COL_LABEL], TYPE_STRING, colMask & 0x0400),
+			col(lang[CONST.OV_COL_PEERS], TYPE_NUMBER, colMask & 0x0800),
+			col(lang[CONST.OV_COL_SEEDS], TYPE_NUMBER, colMask & 0x1000),
+			col(lang[CONST.OV_COL_AVAIL].split("||")[1], TYPE_NUMBER, colMask & 0x2000),
+			col(lang[CONST.OV_COL_ORDER], TYPE_NUMBER, colMask & 0x4000, ALIGN_LEFT),
+			col(lang[CONST.OV_COL_REMAINING], TYPE_NUMBER, colMask & 0x8000)
 		], $extend({
 		"format": function(values, index) {
-			if (index == null) {
-				values[2]  = values[2].toFileSize(2); // size
-				var d = values[3];
-				values[3] = (values[3] / 10).roundTo(1) + "%"; // done
-				values[4] = values[4].toFileSize(); // downloaded
-				values[5] = values[5].toFileSize(); // uploaded
-				values[6] = (values[6] == -1) ? "\u221E" : (values[6] / 1000).roundTo(3); // ratio
-				values[7] = (values[7] >= 103) ? (values[7].toFileSize() + "/s") : ""; // download speed
-				values[8] = (values[8] >= 103) ? (values[8].toFileSize() + "/s") : ""; // upload speed
-				values[9] = (values[9] == 0) ? "" :
-							(values[9] <= -1) ? "\u221E" : values[9].toTimeString(); // ETA
-				values[13] = (values[13] / 65535).roundTo(3); // availability
-				values[14] = (values[14] <= -1) ? "*" : values[14]; // ETA
-				values[15] = values[15].toFileSize(2); // remaining
-			} else {
+			var len = values.length;
+			if (isNaN(index))
+				index = 0;
+			for (var i = 0; i < len; i++) {
 				switch (index) {
-					case 2:  values = values.toFileSize(2); break;
-					case 3:  values = (values / 10).roundTo(1) + "%"; break;
-					case 4:  values = values.toFileSize(); break;
-					case 5:  values = values.toFileSize(); break;
-					case 6:  values = (values == -1) ? "\u221E" : (values / 1000).roundTo(3); break;
-					case 7:  values = (values > 103) ? (values.toFileSize() + "/s") : ""; break;
-					case 8:  values = (values > 103) ? (values.toFileSize() + "/s") : ""; break;
-					case 9:  values = (values <= -1) ? "\u221E" : values.toTimeString(); break;
-					case 13: values = (values / 65535).roundTo(3); break;
-					case 14: values = (values <= -1) ? "*" : values; break;
-					case 15: values = values.toFileSize(2); break;
+				case 0:
+				case 1:
+				case 10:
+				case 11:
+				case 12:
+					break;
+					
+				case 2:	
+					values[i]  = values[i].toFileSize(2); // size
+					break;
+				
+				case 3:
+					values[i] = (values[i] / 10).roundTo(1) + "%"; // done
+					break;
+					
+				case 4:
+					values[i] = values[i].toFileSize(); // downloaded
+					break;
+				
+				case 5:
+					values[i] = values[i].toFileSize(); // uploaded
+					break;
+				
+				case 6:
+					values[i] = (values[i] == -1) ? "\u221E" : (values[i] / 1000).roundTo(3); // ratio
+					break;
+				
+				case 7:
+					values[i] = (values[i] >= 103) ? (values[i].toFileSize() + "/s") : ""; // download speed
+					break;
+				
+				case 8:
+					values[i] = (values[i] >= 103) ? (values[i].toFileSize() + "/s") : ""; // upload speed
+					break;
+					
+				case 9:
+					values[i] = (values[i] == 0) ? "" :
+								(values[i] <= -1) ? "\u221E" : values[i].toTimeString(); // ETA
+					break;
+								
+				case 13:
+					values[i] = (values[i] / 65535).roundTo(3); // availability
+					break;
+					
+				case 14:
+					values[i] = (values[i] <= -1) ? "*" : values[i]; // ETA
+					break;
+				case 15:
+					values[i] = values[i].toFileSize(2); // remaining
+					break;
 				}
+				index++;
 			}
 			return values;
 		},
@@ -204,33 +230,40 @@ function setupUI() {
 
 	colMask = utWebUI.config.flsCols;
 	utWebUI.flsTable.create("FileList", [
-			col(lang.FI_COL_NAME, TYPE_STRING, colMask & 0x01),
-			col(lang.FI_COL_SIZE, TYPE_NUMBER, colMask & 0x02),
-			col(lang.FI_COL_DONE, TYPE_NUMBER, colMask & 0x04),
-			col(lang.FI_COL_PCT, TYPE_NUMBER, colMask & 0x08),
-			col(lang.FI_COL_PRIO, TYPE_NUMBER, colMask & 0x10)
+			col(lang[CONST.FI_COL_NAME], TYPE_STRING, colMask & 0x01),
+			col(lang[CONST.FI_COL_SIZE], TYPE_NUMBER, colMask & 0x02),
+			col(lang[CONST.FI_COL_DONE], TYPE_NUMBER, colMask & 0x04),
+			col(lang[CONST.FI_COL_PCT], TYPE_NUMBER, colMask & 0x08),
+			col(lang[CONST.FI_COL_PRIO], TYPE_NUMBER, colMask & 0x10)
 		], $extend({
 		"format": function(values, index) {
-			if (index == null) {
-				values[1] = values[1].toFileSize(2); //size
-				values[2] = values[2].toFileSize(2); //done
-				values[3] = values[3] + "%"; //%
-				values[4] = (values[4] == 0) ? "skip" :
-							(values[4] == 1) ? "low" :
-							(values[4] == 2) ? "normal" :
-							(values[4] == 3) ? "high" : "";
-			} else {
+			var len = values.length;
+			if (isNaN(index))
+				index = 0;
+			for (var i = 0; i < len; i++) {
 				switch (index) {
-					case 1:  values = values.toFileSize(2); break;
-					case 2:  values = values.toFileSize(2); break;
-					case 3:  values = values + "%"; break;
-					case 4:
-						values = (values == 0) ? "skip" :
-								 (values == 1) ? "low" :
-								 (values == 2) ? "normal" :
-								 (values == 3) ? "high" : "";
+				case 0:
 					break;
+					
+				case 1:
+					values[i] = values[i].toFileSize(2); //size
+					break;
+					
+				case 2:
+					values[i] = values[i].toFileSize(2); //done
+					break
+				
+				case 3:
+					values[i] = values[i] + "%"; //%
+					break;
+					
+				case 4:
+					values[i] = (values[i] == 0) ? "skip" :
+								(values[i] == 1) ? "low" :
+								(values[i] == 2) ? "normal" :
+								(values[i] == 3) ? "high" : "";
 				}
+				index++;
 			}
 			return values;
 		},
@@ -271,26 +304,6 @@ function setupUI() {
 	utWebUI.update();
 }
 
-/*
-function selcheck(obj, val, actions)
-{
-	var v = obj.options[obj.selectedIndex].value;
-	var b = (v == val);
-	for (var i=0,l=actions.length; i<l; i++)
-	{
-		var o = $(actions[i][1]);
-		if (o == null) continue;
-		if (actions[i][0] && b)
-		{
-			o.disabled = false;
-		} else
-		{
-			o.disabled = true;
-		}
-	}
-}
-*/
-
 function checkProxySettings() {
 
 	var auth = $("proxy.auth").checked;
@@ -301,17 +314,17 @@ function checkProxySettings() {
 		if (auth) {
 			$("proxy.username").disabled = false;
 			$("proxy.password").disabled = true;
-			$("DLG_SETT_3_18").addClass("disabled");
+			$("DLG_SETTINGS_4_CONN_18").addClass("disabled");
 		}
 	} else if (v == 4) {
 		$("proxy.p2p").disabled = true;
-		$("DLG_SETT_3_20").addClass("disabled");
+		$("DLG_SETTINGS_4_CONN_20").addClass("disabled");
 	}
 	if ((v > 1) && auth) {
 		$("proxy.username").disabled = false;
 		$("proxy.password").disabled = false;
-		$("DLG_SETT_3_16").removeClass("disabled");
-		$("DLG_SETT_3_18").removeClass("disabled");
+		$("DLG_SETTINGS_4_CONN_16").removeClass("disabled");
+		$("DLG_SETTINGS_4_CONN_18").removeClass("disabled");
 	}
 	
 }
@@ -342,7 +355,7 @@ function log(text) {
 	h = (h < 10) ? ("0" + h) : h;
 	m = (m < 10) ? ("0" + m) : m;
 	s = (s < 10) ? ("0" + s) : s;
-	$("lcont").appendText("[" + h + ":" + m + ":" + s + "] " + text);
+	$("lcont").grab(new Element("br"), "top").appendText("[" + h + ":" + m + ":" + s + "] " + text, "top");
 }
 
 var searchList = [
@@ -361,6 +374,7 @@ var searchActive = 0;
 
 function searchSet(index) {
 	searchActive = index;
+	$("query").focus();
 	return true;
 }
 
@@ -488,201 +502,223 @@ var TreeNode = new Class({
 */
 
 function loadLangStrings() {
-	
-	var tstr = lang.OV_TABS.split("||");
+	var tstr = lang[CONST.OV_TABS].split("||");
 	utWebUI.tabs = new Tabs($("tabs"), {
 		"tabs": {
 			"gcont": tstr[0],
-			"FileList": tstr[3],
-			"lcont": tstr[5]
+			"FileList": tstr[4],
+			"lcont": tstr[6]
 		},
 		"onChange": utWebUI.tabChange.bind(utWebUI)
 	}).draw().show("gcont");
-	
-	new Tabs($("stgmenu"), {
-		"tabs": {
-			"st_gl": lang.ST_CAPT_GENERAL,
-			"st_dl": lang.ST_CAPT_FOLDER,
-			"st_con": lang.ST_CAPT_CONNECTION,
-			"st_bw": "Bandwidth",
-			"st_bt": lang.ST_CAPT_TRANSFER,
-			"st_que": lang.ST_CAPT_SEEDING,
-			"st_sch": lang.ST_CAPT_SCHEDULER,
-			"st_ao": lang.ST_CAPT_ADVANCED,
-			"st_dc": lang.ST_CAPT_DISK_CACHE
-		}
-	}).draw().show("st_gl");
-
 	[
-		"OV_NEWLABEL_TEXT",
-		//"DLG_PRE_ADD_04",
-		//"DLG_PRE_ADD_05",
-		//"DLG_PRE_ADD_06",
-		//"DLG_PRE_ADD_08",
-		"DLG_TORRENTPROP_GEN_01",
-		"DLG_TORRENTPROP_GEN_03",
-		"DLG_TORRENTPROP_GEN_04",
-		"DLG_TORRENTPROP_GEN_06",
-		"DLG_TORRENTPROP_GEN_08",
-		"DLG_TORRENTPROP_GEN_10",
-		"DLG_TORRENTPROP_GEN_11",
-		"DLG_TORRENTPROP_GEN_12",
-		"DLG_TORRENTPROP_GEN_14",
-		"DLG_TORRENTPROP_GEN_16",
-		"DLG_TORRENTPROP_GEN_17",
-		"DLG_SETT_1_02",
-		"DLG_SETT_1_06",
-		"DLG_SETT_1_16",
-		"DLG_SETT_3_01",
-		"DLG_SETT_3_02",
-		"DLG_SETT_3_05",
-		"DLG_SETT_3_06",
-		//"DLG_SETT_3_07",
-		"DLG_SETT_3_08",
-		"DLG_SETT_3_09",
-		"DLG_SETT_3_11",
-		"DLG_SETT_3_13",
-		"DLG_SETT_3_15",
-		"DLG_SETT_3_16",
-		"DLG_SETT_3_18",
-		"DLG_SETT_3_20",
-		"DLG_SETT_3_21",
-		"DLG_SETT_3_22",
-		"DLG_SETT_3_23",
-		"DLG_SETT_3_24",
-		"DLG_SETT_3_25",
-		"DLG_SETT_3_26",
-		"DLG_SETT_3_28",
-		"DLG_SETT_3_30",
-		"DLG_SETT_4_01",
-		"DLG_SETT_4_02",
-		"DLG_SETT_4_04",
-		"DLG_SETT_4_06",
-		"DLG_SETT_4_08",
-		"DLG_SETT_4_09",
-		"DLG_SETT_4_10",
-		"DLG_SETT_4_11",
-		"DLG_SETT_4_12",
-		"DLG_SETT_4_13",
-		"DLG_SETT_4_14",
-		"DLG_SETT_4_15",
-		"DLG_SETT_4_16",
-		"DLG_SETT_4_18",
-		"DLG_SETT_4_19",
-		"DLG_SETT_4_21",
-		"DLG_SETT_5_01",
-		"DLG_SETT_5_02",
-		"DLG_SETT_5_04",
-		"DLG_SETT_5_06",
-		"DLG_SETT_5_07",
-		"DLG_SETT_5_09",
-		"DLG_SETT_5_11",
-		"DLG_SETT_5_12",
-		"DLG_SETT_5_13",
-		"DLG_SETT_6_01",
-		//"DLG_SETT_6_02",
-		"DLG_SETT_6_04",
-		"DLG_SETT_8_01",
-		"DLG_SETT_CACHE_01",
-		"DLG_SETT_CACHE_02",
-		"DLG_SETT_CACHE_03",
-		"DLG_SETT_CACHE_06",
-		"DLG_SETT_CACHE_07",
-		"DLG_SETT_CACHE_08",
-		"DLG_SETT_CACHE_11",
-		"DLG_SETT_WEBUI_01",
-		"DLG_SETT_WEBUI_02",
-		"DLG_SETT_WEBUI_03",
-		"DLG_SETT_WEBUI_05",
-		"DLG_SETT_WEBUI_07",
-		"DLG_SETT_WEBUI_09",
-		"DLG_SETT_WEBUI_10",
-		"DLG_SETT_WEBUI_12",
 		"OV_CAT_ALL",
 		"OV_CAT_DL",
 		"OV_CAT_COMPL",
 		"OV_CAT_ACTIVE",
 		"OV_CAT_INACTIVE",
 		"OV_CAT_NOLABEL",
-		"ST_COL_NAME",
-		"ST_COL_VALUE"
+		"DLG_TORRENTPROP_1_GEN_01",
+		"DLG_TORRENTPROP_1_GEN_03",
+		"DLG_TORRENTPROP_1_GEN_04",
+		"DLG_TORRENTPROP_1_GEN_06",
+		"DLG_TORRENTPROP_1_GEN_08",
+		"DLG_TORRENTPROP_1_GEN_10",
+		"DLG_TORRENTPROP_1_GEN_11",
+		"DLG_TORRENTPROP_1_GEN_12",
+		"DLG_TORRENTPROP_1_GEN_14",
+		"DLG_TORRENTPROP_1_GEN_16",
+		"DLG_TORRENTPROP_1_GEN_17",
+		"DLG_TORRENTPROP_1_GEN_18",
+		"DLG_TORRENTPROP_1_GEN_19",
 	].each(function(k) {
-		$(k).set("text", lang[k]);
+		$(k).set("text", lang[CONST[k]]);
 	});
-	/*
 	[
-		"DLG_PRE_ADD_03"
-	].each(function(k) {
-		$(k).set("value", lang[k]);
-	});
-	*/
-	[
-		["dlgProps-header", "DLG_TORRENTPROP_00"],
-		["lbl_prop-dht", "DLG_TORRENTPROP_GEN_18"],
-		["lbl_prop-pex", "DLG_TORRENTPROP_GEN_19"],
-		["dlgLabel-header", "OV_NEWLABEL_CAPTION"],
-		["dlgSettings-header", "DLG_SETTINGS_00"],
-		["lbl_sched_ul_rate", "DLG_SETT_6_05"],
-		["lbl_sched_dl_rate", "DLG_SETT_6_07"],
-		["lbl_sched_dis_dht", "DLG_SETT_6_09"],
-		["lbl_cache.override_size", "DLG_SETT_CACHE_05"],
-		["lbl_cache.writeout", "DLG_SETT_CACHE_09"],
-		["lbl_cache.writeimm", "DLG_SETT_CACHE_10"],
-		["lbl_cache.read_turnoff", "DLG_SETT_CACHE_12"],
-		["lbl_cache.read_prune", "DLG_SETT_CACHE_13"],
-		["lbl_cache.read_trash", "DLG_SETT_CACHE_14"]
+		["dlgProps-header", CONST.DLG_TORRENTPROP_00],
+		["dlgLabel-header", CONST.OV_NEWLABEL_CAPTION],
+		["dlgSettings-header", CONST.DLG_SETTINGS_00],
+		["dlgAdd-header", CONST.MENU_ADD_TORRENT]
 	].each(function(k) {
 		$(k[0]).set("text", lang[k[1]]);
 	});
+	
 	var timesListA = $("prop-seed_time"), timesListB = $("seed_time");
 	[0, 5400, 7200, 10800, 14400, 18000, 21600, 25200, 28800, 32400, 36000, 43200, 57600, 72000, 86400, 108000, 129600, 172800, 216000, 259200, 345600].each(function(t) {
 		var text = "";
 		if (t == 0) {
-			text = lang.ST_SEEDTIMES_IGNORE;
+			text = lang[CONST.ST_SEEDTIMES_IGNORE];
 		} else if (t == 5400) {
-			text = lang.ST_SEEDTIMES_MINUTES.replace(/%d/, 90);
+			text = lang[CONST.ST_SEEDTIMES_MINUTES].replace(/%d/, 90);
 		} else {
-			text = lang.ST_SEEDTIMES_HOURS.replace(/%d/, t / 3600);
+			text = lang[CONST.ST_SEEDTIMES_HOURS].replace(/%d/, t / 3600);
 		}
 		timesListA.grab(new Option(text, t, false, t == 0));
 		timesListB.grab(new Option(text, t, false, t == 0));
 	});
-	$("DLG_TORRENTPROP_01").set("value", lang.DLG_TORRENTPROP_01).addEvent("click", function() {
+	$("DLG_TORRENTPROP_01").set("value", lang[CONST.DLG_TORRENTPROP_01]).addEvent("click", function() {
 		$("dlgProps").hide();
 		utWebUI.setProperties();
 	});
-	$("DLG_TORRENTPROP_02").set("value", lang.DLG_TORRENTPROP_02).addEvent("click", function() {
+	$("DLG_TORRENTPROP_02").set("value", lang[CONST.DLG_TORRENTPROP_02]).addEvent("click", function() {
 		$('dlgProps').hide();
 	});
-	$("DLG_SETTINGS_02").set("value", lang.DLG_SETTINGS_02).addEvent("click", function() {
+}
+
+function loadSettingStrings() {
+	new Tabs($("stgmenu"), {
+		"tabs": {
+			"st_webui": lang[CONST.ST_CAPT_WEBUI],
+			"st_gl": lang[CONST.ST_CAPT_GENERAL],
+			"st_dirs": lang[CONST.ST_CAPT_FOLDER],
+			"st_con": lang[CONST.ST_CAPT_CONNECTION],
+			"st_bw": lang[CONST.ST_CAPT_BANDWIDTH],
+			"st_bt": lang[CONST.ST_CAPT_TRANSFER],
+			"st_que": lang[CONST.ST_CAPT_SEEDING],
+			"st_sch": lang[CONST.ST_CAPT_SCHEDULER],
+			"st_ao": lang[CONST.ST_CAPT_ADVANCED],
+			"st_dc": lang[CONST.ST_CAPT_DISK_CACHE]
+		}
+	}).draw().show("st_webui");
+
+	[
+		"DLG_SETTINGS_1_GENERAL_02",
+		"DLG_SETTINGS_1_GENERAL_10",
+		"DLG_SETTINGS_1_GENERAL_11",
+		"DLG_SETTINGS_1_GENERAL_12",
+		"DLG_SETTINGS_1_GENERAL_13",
+		"DLG_SETTINGS_1_GENERAL_17",
+		"DLG_SETTINGS_1_GENERAL_18",
+		"DLG_SETTINGS_1_GENERAL_19",
+		"DLG_SETTINGS_1_GENERAL_20",
+		"DLG_SETTINGS_2_UI_02",
+		"DLG_SETTINGS_2_UI_05",
+		"DLG_SETTINGS_2_UI_06",
+		"DLG_SETTINGS_2_UI_15",
+		"DLG_SETTINGS_2_UI_16",
+		"DLG_SETTINGS_3_PATHS_01",		
+		"DLG_SETTINGS_3_PATHS_02",		
+		"DLG_SETTINGS_3_PATHS_06",
+		"DLG_SETTINGS_3_PATHS_07",
+		"DLG_SETTINGS_3_PATHS_10",
+		"DLG_SETTINGS_3_PATHS_11",
+		"DLG_SETTINGS_3_PATHS_12",
+		"DLG_SETTINGS_3_PATHS_15",
+		"DLG_SETTINGS_3_PATHS_18",
+		"DLG_SETTINGS_3_PATHS_19",
+		"DLG_SETTINGS_4_CONN_01",
+		"DLG_SETTINGS_4_CONN_02",
+		"DLG_SETTINGS_4_CONN_04",
+		"DLG_SETTINGS_4_CONN_05",
+		"DLG_SETTINGS_4_CONN_06",
+		"DLG_SETTINGS_4_CONN_07",		
+		"DLG_SETTINGS_4_CONN_08",
+		"DLG_SETTINGS_4_CONN_09",
+		"DLG_SETTINGS_4_CONN_11",
+		"DLG_SETTINGS_4_CONN_13",		
+		"DLG_SETTINGS_4_CONN_15",
+		"DLG_SETTINGS_4_CONN_16",
+		"DLG_SETTINGS_4_CONN_18",
+		"DLG_SETTINGS_4_CONN_20",
+		"DLG_SETTINGS_4_CONN_21",		
+		"DLG_SETTINGS_5_BANDWIDTH_01",
+		"DLG_SETTINGS_5_BANDWIDTH_02",
+		"DLG_SETTINGS_5_BANDWIDTH_03",
+		"DLG_SETTINGS_5_BANDWIDTH_05",
+		"DLG_SETTINGS_5_BANDWIDTH_07",
+		"DLG_SETTINGS_5_BANDWIDTH_08",
+		"DLG_SETTINGS_5_BANDWIDTH_10",
+		"DLG_SETTINGS_5_BANDWIDTH_11",
+		"DLG_SETTINGS_5_BANDWIDTH_14",
+		"DLG_SETTINGS_5_BANDWIDTH_15",
+		"DLG_SETTINGS_5_BANDWIDTH_17",
+		"DLG_SETTINGS_6_BITTORRENT_01",
+		"DLG_SETTINGS_6_BITTORRENT_02",
+		"DLG_SETTINGS_6_BITTORRENT_03",
+		"DLG_SETTINGS_6_BITTORRENT_04",
+		"DLG_SETTINGS_6_BITTORRENT_05",
+		"DLG_SETTINGS_6_BITTORRENT_06",
+		"DLG_SETTINGS_6_BITTORRENT_07",
+		"DLG_SETTINGS_6_BITTORRENT_08",
+		"DLG_SETTINGS_6_BITTORRENT_10",
+		"DLG_SETTINGS_6_BITTORRENT_11",
+		"DLG_SETTINGS_6_BITTORRENT_13",
+		"DLG_SETTINGS_7_QUEUEING_01",
+		"DLG_SETTINGS_7_QUEUEING_02",
+		"DLG_SETTINGS_7_QUEUEING_04",
+		"DLG_SETTINGS_7_QUEUEING_06",
+		"DLG_SETTINGS_7_QUEUEING_07",
+		"DLG_SETTINGS_7_QUEUEING_09",
+		"DLG_SETTINGS_7_QUEUEING_11",
+		"DLG_SETTINGS_7_QUEUEING_12",
+		"DLG_SETTINGS_7_QUEUEING_13",
+		"DLG_SETTINGS_8_SCHEDULER_01",
+		"DLG_SETTINGS_8_SCHEDULER_04",
+		"DLG_SETTINGS_8_SCHEDULER_05",
+		"DLG_SETTINGS_8_SCHEDULER_07",
+		"DLG_SETTINGS_8_SCHEDULER_09",
+		"DLG_SETTINGS_9_WEBUI_01",
+		"DLG_SETTINGS_9_WEBUI_02",
+		"DLG_SETTINGS_9_WEBUI_03",
+		"DLG_SETTINGS_9_WEBUI_05",
+		"DLG_SETTINGS_9_WEBUI_07",
+		"DLG_SETTINGS_9_WEBUI_09",
+		"DLG_SETTINGS_9_WEBUI_10",
+		"DLG_SETTINGS_9_WEBUI_12",
+		"DLG_SETTINGS_A_ADVANCED_01",
+		"DLG_SETTINGS_C_ADV_CACHE_01",
+		"DLG_SETTINGS_C_ADV_CACHE_02",
+		"DLG_SETTINGS_C_ADV_CACHE_03",
+		"DLG_SETTINGS_C_ADV_CACHE_05",
+		"DLG_SETTINGS_C_ADV_CACHE_06",
+		"DLG_SETTINGS_C_ADV_CACHE_07",
+		"DLG_SETTINGS_C_ADV_CACHE_08",
+		"DLG_SETTINGS_C_ADV_CACHE_09",
+		"DLG_SETTINGS_C_ADV_CACHE_10",
+		"DLG_SETTINGS_C_ADV_CACHE_11",
+		"DLG_SETTINGS_C_ADV_CACHE_12",
+		"DLG_SETTINGS_C_ADV_CACHE_13",
+		"DLG_SETTINGS_C_ADV_CACHE_14",
+		"DLG_SETTINGS_C_ADV_CACHE_15",
+		"MENU_SHOW_CATEGORY",
+		"MENU_SHOW_DETAIL",
+		"OV_NEWLABEL_TEXT",
+		"ST_COL_NAME",
+		"ST_COL_VALUE"
+	].each(function(k) {
+		$(k).set("text", lang[CONST[k]]);
+	});
+
+	$("DLG_SETTINGS_03").set("value", lang[CONST.DLG_SETTINGS_03]).addEvent("click", function() {
 		$("dlgSettings").hide();
 		utWebUI.setSettings();
 	});
-	$("DLG_SETTINGS_03").set("value", lang.DLG_SETTINGS_03).addEvent("click", function() {
+	$("DLG_SETTINGS_04").set("value", lang[CONST.DLG_SETTINGS_04]).addEvent("click", function() {
 		$("dlgSettings").hide();
 		utWebUI.loadSettings();
 	});
-	$("DLG_SETT_3_04").set("value", lang.DLG_SETT_3_04).addEvent("click", function() {
+	$("DLG_SETTINGS_4_CONN_04").set("value", lang[CONST.DLG_SETTINGS_4_CONN_04]).addEvent("click", function() {
 		var v = utWebUI.settings["bind_port"], rnd = 0;
 		do {
-			rnd = (Math.random() * 45000).toInt() + 20000;
+			rnd = parseInt(Math.random() * 50000) + 15000;
 		} while (v == rnd);
 		$("bind_port").set("value", rnd);
 	});
 	var encList = $("encryption_mode");
-	lang.ST_CBO_ENCRYPTIONS.split("||").each(function(v, k) {
+	lang[CONST.ST_CBO_ENCRYPTIONS].split("||").each(function(v, k) {
 		if (v == "") return;
 		encList.grab(new Option(v, k, false, false));
 	});
+	encList.set("value", utWebUI.settings["encryption_mode"]);
 	var pxyList = $("proxy.type");
-	lang.ST_CBO_PROXY.split("||").each(function(v, k) {
+	lang[CONST.ST_CBO_PROXY].split("||").each(function(v, k) {
 		if (v == "") return;
 		pxyList.grab(new Option(v, k, false, false));
 	});
-	
-	/*
+	pxyList.set("value", utWebUI.settings["proxy.type"]);
+	/* TODO: implement
 	(function() {
-		var days = lang.SETT_DAYNAMES.split("||");
+		var days = lang[CONST.SETT_DAYNAMES].split("||");
 		var tbody = new Element("tbody");
 		var active = false;
 		var mode = 0;
@@ -723,14 +759,13 @@ function resizeUI(w, h) {
 
 	resizing = true;
 	$clear(resizeTimeout);
-	var eh = 0, th = $("toolbar").getSize().y;
-	
-	if (!isNaN(th))
-		eh += th;
 	
 	var size = window.getSize();
 	var ww = size.x, wh = size.y, winResize = false;
-	var showcat = utWebUI.config.showCategories, showdet = utWebUI.config.showDetails;
+	var showcat = utWebUI.config.showCategories, showdet = utWebUI.config.showDetails, showtb = utWebUI.config.showToolbar, eh = 0;
+	
+	if (!isGuest && showtb)
+		eh = $("toolbar").getSize().y;
 	
 	if (!w && !h) {
 		w = Math.floor(ww * ((showcat) ? utWebUI.config.hSplit : 1.0));
@@ -739,14 +774,14 @@ function resizeUI(w, h) {
 	}
 	
 	if (w)
-		w -= (showcat) ? 5 : 13;
+		w -= showcat ? 10 : 2;
 		
 	if (h)
-		h -= eh + (showdet ? 5 : 13);
+		h -= eh + ((showdet && showtb) ? 5 : showtb ? 8 : 2);
 		
 	if (showcat) {
 		if (w)
-			$("CatList").setStyle("width", ww - w - 10 - (Browser.Engine.trident4 ? 2 : 0));
+			$("CatList").setStyle("width", ww - 10 - w - (Browser.Engine.trident4 ? 2 : 0));
 			
 		if (h)
 			$("CatList").setStyle("height", h);
@@ -755,10 +790,11 @@ function resizeUI(w, h) {
 	if (showdet) {
 		$("tdetails").setStyle("width", ww - (Browser.Engine.trident4 ? 14 : 12));
 		if (h) {
-			$("tdetails").setStyle("height", wh - h - 10);
-			$("tdcont").setStyle("height", wh - h - 86);
-			$("gcont").setStyle("height", wh - h - 96);
-			utWebUI.flsTable.resizeTo(ww - 22, wh - h - 88);
+			var th = wh - h, cth = th - (showtb ? 46 : 41) - eh;
+			$("tdetails").setStyle("height", th - 10);
+			$("tdcont").setStyle("height", cth);
+			$("gcont").setStyle("height", cth - 8);
+			utWebUI.flsTable.resizeTo(ww - 22, cth - 2);
 		}
 	}
 
@@ -769,8 +805,11 @@ function resizeUI(w, h) {
 	$("VDivider").setStyle("width", ww);
 	
 	if (h) {
-		$("HDivider").setStyle("height", h + 2);
-		$("VDivider").setStyle("top", listPos.y + h + 2);
+		$("HDivider").setStyles({
+			"height": showcat ? (h + 2) : 0,
+			"top": showtb ? 43 : 0
+		});
+		$("VDivider").setStyle("top", showdet ? (listPos.y + h + 2) : -10);
 		if (showdet && !winResize)
 			utWebUI.config.vSplit = h / (wh - eh - 12);
 	}
@@ -781,11 +820,12 @@ function resizeUI(w, h) {
 	resizing = false;
 }
 
-function linked(obj, defstate, list) {
+function linked(obj, defstate, list, ignoreLabels) {
+	ignoreLabels = ignoreLabels || [];
 	var disabled = true, tag = obj.get("tag");
 	if (tag == "input") {
 		if (obj.type == "checkbox")
-			disabled = !obj.checked;
+			disabled = !obj.checked || obj.disabled;
 	} else if (tag == "select") {
 		disabled = (obj.get("value") == defstate);
 	} else {
@@ -797,6 +837,8 @@ function linked(obj, defstate, list) {
 		if (element.type != "checkbox")
 			element[(disabled ? "add" : "remove") + "Class"]("disabled");
 		element.disabled = disabled;
+		element.fireEvent("change");
+		if (ignoreLabels.contains(list[i])) continue;
 		var label = element.getPrevious();
 		if (!label || (label.get("tag") != "label")) {
 			label = element.getNext();
@@ -931,6 +973,11 @@ window.addEvent("domready", function() {
 			return true;
 		});
 	}
+	
+	if (isGuest) {
+		utWebUI.init();
+		return;
+	}
 
 	$("search").addEvent("click", function(ev) {
 		ev.stop();
@@ -1059,12 +1106,28 @@ window.addEvent("domready", function() {
 		linked(this, 0, ["sched_ul_rate", "sched_dl_rate", "sched_dis_dht"]);
 		//$("sched_table").toggleClass("disabled");
 	});
+	$("dir_active_download_flag").addEvent("change", function() {
+		linked(this, 0, ["dir_active_download"]);
+	});
+	$("dir_completed_download_flag").addEvent("change", function() {
+		linked(this, 0, ["dir_add_label", "dir_completed_download", "move_if_defdir"]);
+	});
+	$("dir_torrent_files_flag").addEvent("change", function() {
+		linked(this, 0, ["dir_torrent_files"]);
+	});
+	$("dir_completed_torrents_flag").addEvent("change", function() {
+		linked(this, 0, ["dir_completed_torrents"]);
+	});
+	$("dir_autoload_flag").addEvent("change", function() {
+		linked(this, 0, ["dir_autoload_delete", "dir_autoload"]);
+	});
 	$("ul_auto_throttle").addEvent("change", function() {
-		linked(this, 1, ["max_ul_rate", "max_ul_rate_seed_flag"]);
+		linked(this, 0, ["max_ul_rate", "max_ul_rate_seed_flag"], ["max_ul_rate"]);
 	});
 	$("max_ul_rate_seed_flag").addEvent("change", function() {
 		linked(this, 0, ["max_ul_rate_seed"]);
 	});
+
 	/*
 	(function() {
 		var toggle = false;
@@ -1077,6 +1140,6 @@ window.addEvent("domready", function() {
 		});
 	})();
 	*/
-	
+
 	utWebUI.init();
 });

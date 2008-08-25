@@ -304,7 +304,7 @@ var Browser = new Hash({
 
 if (window.opera) Browser.Engine = {name: 'presto', version: (document.getElementsByClassName) ? 950 : 925};
 else if (window.ActiveXObject) Browser.Engine = {name: 'trident', version: (window.XMLHttpRequest) ? 5 : 4};
-else if (!navigator.taintEnabled) Browser.Engine = {name: 'webkit', version: (Browser.Features.xpath) ? 420 : 419};
+else if (!navigator.taintEnabled) Browser.Engine = {name: 'webkit', version: (Browser.Features.xpath) ? ((document.querySelector) ? 525 : 420) : 419};
 else if (document.getBoxObjectFor != null) Browser.Engine = {name: 'gecko', version: (document.getElementsByClassName) ? 19 : 18};
 Browser.Engine[Browser.Engine.name] = Browser.Engine[Browser.Engine.name + Browser.Engine.version] = true;
 
@@ -2347,6 +2347,10 @@ Element.Events.domready = {
 	switch (Browser.Engine.name){
 
 		case 'webkit': (function(){
+			if (Browser.Engine.version == 525) {
+				document.addEvent('DOMContentLoaded', domready);
+				return;
+			}
 			(['loaded', 'complete'].contains(document.readyState)) ? domready() : arguments.callee.delay(50);
 		})(); break;
 

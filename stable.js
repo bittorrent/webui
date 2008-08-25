@@ -156,10 +156,9 @@ var dxSTable = new Class({
 			td = simpleClone(TD, false)
 				.set("text", this.colData[i].text)
 				.setStyle("width", this.colWidth[this.colOrder[i]])
+				.addClasses(this.id + "-hdcol-" + this.colOrder[i], this.colData[i].disabled ? "stable-hidden-column" : "")
 				.store("index", i)
 				.inject(tr);
-			if (this.colData[i].disabled)
-				td.addClass("stable-hidden-column");
 			this.tHeadCols[i] = td;
 			j++;
 		}
@@ -322,13 +321,17 @@ var dxSTable = new Class({
 			default:
 				align = (this.colData[i].type == TYPE_NUMBER) ? "right" : "left";
 			}
+			/*
 			this.tHeadCols[i].setStyle("textAlign", align);
 			(Browser.Engine.trident) ?
 				cols[i].setProperty("align", align)
 			:
-				sb += "." + this.id + "-col-" + this.colOrder[i] + " { text-align: " + align + " }";
+			*/
+			sb += "." + this.id + "-col-" + this.colOrder[i] + ", ." + this.id + "-hdcol-" + this.colOrder[i] + " { text-align: " + align + " }";
 		}
-		if (!Browser.Engine.trident) {
+		if (Browser.Engine.trident) {
+			$("colrules").cssText = sb;
+		} else {
 			$("colrules").appendText(sb);
 		}
 	},
@@ -415,10 +418,12 @@ var dxSTable = new Class({
 		this.clearCache(d);
 		this.isSorting = false;
 		
-		if (refresh)
+		if (refresh) {
+			this.curPage = 0;
 			this.refreshRows(true);
+		}
 			
-		this.fireEvent("onSort");
+		this.fireEvent("onSort", [this.sIndex, this.options.reverse]);
 	},
 
 	"sortNumeric": function(x, y) {
@@ -567,6 +572,11 @@ var dxSTable = new Class({
 		
 		this.fireEvent("onSelect", [ev, id]);
 	},
+	
+	// returns the range of rows currently visible
+	"getRowRange": function() {
+		
+	},
 
 	"addRow": function(data, id, icon, hidden) {
 		if (data.length != this.cols) return;
@@ -594,29 +604,37 @@ var dxSTable = new Class({
 	"fillRow": function(row, data, icon) {
 		this.colOrder.each(function(v, k) {
 			var cell = row.childNodes[k];
-			if (cell.hasChildNodes()) {
+			if (cell.lastChild) {
 				if ((v == 0) && icon)
 					cell.addClasses("stable-icon", icon, true);
-				cell.firstChild.nodeValue = data[v];
+				cell.lastChild.nodeValue = data[v];
 			} else {
 				if ((v == 0) && icon)
 					cell.addClasses("stable-icon", icon, true);
-				cell["append" + (($type(data[v]) == "element") ? "Child" : "Text")](data[v]);
+				cell.appendText(data[v]);
 			}
 		});
 	},
 	
+	"isDetached": false,
+	
 	"detachBody": function() {
+		if (this.isDetached) return;
 		this.tb.body.dispose();
+		this.isDetached = true;
 	},
 	
 	"attachBody": function() {
+		if (!this.isDetached) return;
 		this.tBody.grab(this.tb.body);
+		this.isDetached = false;
 	},
 
 	"removeRow": function(id) {
-		var rd = this.rowData[id];
+		var rd = this.rowData[id], row;
 		if (rd == null) return;
+		if (row = $(id))
+			row.setProperty("id", "");
 		if (has(this.activePos, id)) {
 			this.activeId.splice(this.activePos[id], 1);
 			for (var i = this.activePos[id], j = this.activeId.length; i < j; i++)
@@ -677,7 +695,7 @@ var dxSTable = new Class({
 	},
 
 	"hideRow": function(id) {
-		if (this.rowData[id].hidden) return;
+		if (this.rowData[id].hidden) return false;
 		if (has(this.activePos, id)) {
 			this.activeId.splice(this.activePos[id], 1);
 			for (var i = this.activePos[id], j = this.activeId.length; i < j; i++)
@@ -687,10 +705,12 @@ var dxSTable = new Class({
 				this.pageCount = Math.ceil(this.activeId.length / this.options.maxRows);
 		}
 		this.rowData[id].hidden = true;
+		this.rowData[id].rowIndex = -1;
+		return true;
 	},
 
 	"unhideRow": function(id) {
-		if (!this.rowData[id].hidden) return;
+		if (!this.rowData[id].hidden) return false;
 		if (!has(this.activePos, id)) {
 			if (this.sIndex == -1) {
 				this.activePos[id] = this.activeId.length;
@@ -709,6 +729,7 @@ var dxSTable = new Class({
 				this.pageCount = Math.ceil(this.activeId.length / this.options.maxRows);
 		}
 		this.rowData[id].hidden = false;
+		return true;
 	},
 
 	"refreshSelection": function() {
@@ -754,41 +775,41 @@ var dxSTable = new Class({
 	},
 
 	"getCache": function(index) {
-		var a = [];
-		index = this.colOrder[index];
+		var a = new Array(this.rows), c = 0, index = this.colOrder[index];
 		for (var key in this.rowData) {
-			a.push({
+			a[c++] = {
 				"key": key,
 				"v": this.rowData[key].data[index],
 				"e": this.rowData[key]
-			});
+			};
 		}
 		return a;
 	},
 
 	"clearCache": function(a) {
-		for (var i = 0, j = a.length; i < j; i++) {
-			a[i].key = null;
-			a[i].v = null;
-			a[i].e = null;
-			a[i] = null;
+		var len = a.length;
+		while (len--) {
+			a[len].key = null;
+			a[len].v = null;
+			a[len].e = null;
+			a[len] = null;
 		}
-		a = null;
+		a.length = 0;
 	},
 
 	"getValue": function(row, col) {
 		return row.data[this.colOrder[col]];
 	},
 
-	"setValue": function(id, col, val) {
+	"setValue": function(id, col, val, updateTable) {
 		var row = this.rowData[id];
 		if (row == null) return;
 		row.data[col] = val;
-		if (row.rowIndex == -1) return;
-		var r = this.tb.body.childNodes[row.rowIndex], index = this.colOrder.indexOf(col);
-		if (index == -1) return;
+		if ((row.rowIndex == -1) || !updateTable) return;
+		var r = this.tb.body.childNodes[row.rowIndex], i = this.colOrder.indexOf(col);
+		if (i == -1) return;
 		// lastChild should be a TextNode
-		r.childNodes[index].lastChild.nodeValue = this.options.format(val, col);
+		r.childNodes[i].lastChild.nodeValue = this.options.format([val], i)[0];
 	},
 
 	"setIcon": function(id, icon) {
@@ -796,14 +817,6 @@ var dxSTable = new Class({
 		var r = $(id), index = this.colOrder.indexOf(0);
 		if (!r || (index == -1) || r.childNodes[index].hasClass(icon)) return;
 		r.childNodes[index].className = "stable-icon " + icon;
-	},
-
-	"setAttr": function(id, name, value) {
-		this.rowData[id].attr[name] = value;
-	},
-
-	"getAttr": function(row, name) {
-		return this.rowData[row].attr[name];
 	},
 	
 	"setMaxRows": function(max) {
@@ -837,9 +850,9 @@ var dxSTable = new Class({
 			"display": hide ? "none" : ''
 		});
 		this.tHeadCols[index][hide ? "addClass" : "removeClass"]("stable-hidden-column");
-		$each(this.tb.body.childNodes, function(row) {
-			row.childNodes[index][hide ? "addClass" : "removeClass"]("stable-hidden-column");
-		});
+		for (var i = 0, j = this.tb.body.childNodes.length; i < j; i++) {
+			this.tb.body.childNodes[i].childNodes[index][hide ? "addClass" : "removeClass"]("stable-hidden-column");
+		};
 		this.fireEvent("onColToggle", [index, hide]);
 		this.calcSize();
 		return true;
@@ -928,6 +941,7 @@ var ColumnHandler = {
 			drag.element = drag.handle = st.colDragObj;
 			st.cancelMove = false;
 			st.colMove = {"from": st.colDragEle.retrieve("index"), "to": -1};
+			document.body.setStyle("cursor", "move");
 		} else {
 			var col = st.tHeadCols[st.hotCell];
 			var w = col.getSize().x;
@@ -988,6 +1002,7 @@ var ColumnHandler = {
 			default:
 				st.colDragObj.setStyles({"left": 0, "width": 0, "visibility": "hidden"});
 				st.colSep.setStyle("visibility", "hidden");
+				document.body.setStyle("cursor", "default");
 				moveColumn.call(st, st.colMove.from, st.colMove.to);
 		}
 		st.cancelSort = false;
@@ -1012,12 +1027,13 @@ var ColumnHandler = {
 };
 
 function resizeColumn(index) {
-	var cols = this.tBody.getElement("colgroup").getElements("col");
 	this.colWidth[this.colOrder[index]] = this.tHeadCols[index].getWidth();
 	var from = $pick(index, 0);
-	var to = $pick(index, cols.length - 1);
- 	for (var i = from; i <= to; i++)
-		cols[i].setStyle("width", this.tHeadCols[i].getWidth() - (Browser.Engine.trident ? 10 : 0));
+	var to = $pick(index, this.tBodyCols.length - 1);
+ 	for (var i = from; i <= to; i++) {
+		var w = this.tHeadCols[i].getWidth() - (Browser.Engine.trident ? 10 : 0);
+		this.tBodyCols[i].setStyle("width", w).setProperty("width", w);
+	}
 	var w = this.tHead.getSize().x;
 	this.tb.body.setStyle("width", w);
 	this.tBody.setStyle("width", w);

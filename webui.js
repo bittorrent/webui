@@ -5,6 +5,11 @@
  *
 */
 
+var VERSION = "0.350";
+var BUILD_REQUIRED = -1; // the ut build the webui requires
+var lang = lang || null;
+var isGuest = (window.location.pathname == "/gui/guest.html");
+
 var utWebUI = {
 
 	"torrents": {},
@@ -31,6 +36,7 @@ var utWebUI = {
 	"totalDL": 0,
 	"totalUL": 0,
 	"loaded": false,
+	"langLoaded": false,
 	"TOKEN": "",
 	"delActions": ["remove", "removedata"],
 
@@ -79,7 +85,7 @@ var utWebUI = {
 		new Request({
 			"url": this.url + qs,
 			"method": "get",
-			"onSuccess": ($type(fn) == "function") ? fn.bind(this) : $empty
+			"onSuccess": (fn) ? fn.bind(this) : $empty
 		}).send();
 	},
 	
@@ -108,37 +114,35 @@ var utWebUI = {
 			switch (act) {
 			
 			case "forcestart":
-				if ((stat & 1) && !(stat & 64) && !(stat & 32))
-					return;
+				if ((stat & 1) && !(stat & 64) && !(stat & 32)) continue;
 				break;
 
 			case "start":
-				if ((stat & 1) && !(stat & 32) && (stat & 64))
-					return;
+				if ((stat & 1) && !(stat & 32) && (stat & 64)) continue;
 				break;
 
 			case "pause":
-				if (stat & 32)
-					return;
+				if (stat & 32) continue;
 				break;
 
 			case "unpause":
-				if (!(stat & 32))
-					return;
+				if (!(stat & 32)) continue;
 				break;
 
 			case "stop":
-				if (!(stat & 1) && !(stat & 2) && !(stat & 16) && !(stat & 64))
-					return;
+				if (!(stat & 1) && !(stat & 2) && !(stat & 16) && !(stat & 64)) continue;
 				break;
 
 			case "recheck":
-				if (stat & 2)
-					return;
+				if (stat & 2) continue;
+				break;
+				
+			case "remove":
+			case "removedata":
 				break;
 				
 			default:
-			   return;
+			    continue;
 			}
 			hashes.push(key);
 		}
@@ -162,7 +166,7 @@ var utWebUI = {
 	},
 	
 	"remove": function(mode) {
-		if (!this.config.confirmDelete || confirm(lang.OV_CONFIRM_DELETE))
+		if (!this.config.confirmDelete || confirm(lang[CONST.OV_CONFIRM_DELETE]))
 			this.perform(this.delActions[mode]);
 	},
 	
@@ -180,25 +184,25 @@ var utWebUI = {
 	
 	"getStatusInfo": function(state, done) {
 		var res = ["", ""];
-		if (state & STATE_STARTED) { // started
-			if (state & STATE_PAUSED) { // paused
-				res = ["Status_Paused", lang.OV_FL_PAUSED];
+		if (state & CONST.STATE_STARTED) { // started
+			if (state & CONST.STATE_PAUSED) { // paused
+				res = ["Status_Paused", lang[CONST.OV_FL_PAUSED]];
 			} else { // seeding or leeching
-				res = [(done == 1000) ? "Status_Up" : "Status_Down", (done == 1000) ? lang.OV_FL_SEEDING : lang.OV_FL_DOWNLOADING];
+				res = [(done == 1000) ? "Status_Up" : "Status_Down", (done == 1000) ? lang[CONST.OV_FL_SEEDING] : lang[CONST.OV_FL_DOWNLOADING]];
 			}
-		} else if (state & STATE_CHECKING) { // checking
-			res = [(state & STATE_PAUSED) ? "Status_Paused" : "Status_Checking", lang.OV_FL_CHECKED.replace(/%:\.1d%/, "??")];
-		} else if (state & STATE_ERROR) { // error
-			res = ["Status_Error", lang.OV_FL_ERROR.replace(/%s/, "??")];
-		} else if (state & STATE_QUEUED) { // queued
-			res = [(done == 1000) ? "Status_Queued_Up" : "Status_Queued_Down", lang.OV_FL_QUEUED];
+		} else if (state & CONST.STATE_CHECKING) { // checking
+			res = [(state & CONST.STATE_PAUSED) ? "Status_Paused" : "Status_Checking", lang[CONST.OV_FL_CHECKED].replace(/%:\.1d%/, "??")];
+		} else if (state & CONST.STATE_ERROR) { // error
+			res = ["Status_Error", lang[CONST.OV_FL_ERROR].replace(/%s/, "??")];
+		} else if (state & CONST.STATE_QUEUED) { // queued
+			res = [(done == 1000) ? "Status_Queued_Up" : "Status_Queued_Down", lang[CONST.OV_FL_QUEUED]];
 		}
-		if (!(state & STATE_QUEUED) && !(state & STATE_CHECKING)) // forced started
+		if (!(state & CONST.STATE_QUEUED) && !(state & CONST.STATE_CHECKING)) // forced started
 			res[1] = "[F] " + res[1];
 		if ((done == 1000) && (res[0] == ""))
-			res = ["Status_Completed", lang.OV_FL_FINISHED];		
+			res = ["Status_Completed", lang[CONST.OV_FL_FINISHED]];		
 		else if ((done < 1000) && (res[0] == ""))
-			res = ["Status_Incompleted", lang.OV_FL_STOPPED];	
+			res = ["Status_Incompleted", lang[CONST.OV_FL_STOPPED]];	
 		return res;
 	},
 
@@ -225,17 +229,17 @@ var utWebUI = {
 			}
 		}
 		
-		var scroll = this.trtTable.dBody.getScroll();
+		var scroll = this.trtTable.dBody.getScroll(), noRefresh = true;
 		if (Browser.Engine.gecko || Browser.Engine.trident) // doing offline updating slows Presto & WebKit down
 			this.trtTable.detachBody();
 		for (var i = 0, len = torrents.length; i < len; i++) {
 			var tor = torrents[i];
-			var hash = tor[TORRENT_HASH];
-			var done = tor[TORRENT_PROGRESS];
-			var stat = this.getStatusInfo(tor[TORRENT_STATUS], done);
-			this.totalDL += tor[TORRENT_DOWNSPEED];
-			this.totalUL += tor[TORRENT_UPSPEED];
-			tor.swap(TORRENT_UPSPEED, TORRENT_DOWNSPEED);
+			var hash = tor[CONST.TORRENT_HASH];
+			var done = tor[CONST.TORRENT_PROGRESS];
+			var stat = this.getStatusInfo(tor[CONST.TORRENT_STATUS], done);
+			this.totalDL += tor[CONST.TORRENT_DOWNSPEED];
+			this.totalUL += tor[CONST.TORRENT_UPSPEED];
+			tor.swap(CONST.TORRENT_UPSPEED, CONST.TORRENT_DOWNSPEED);
 			tor.insertAt(stat[1], 3);
 			
 			if (!has(this.labels, hash))
@@ -260,26 +264,27 @@ var utWebUI = {
 					} else {
 						this.trtTable.hideRow(hash);
 					}
+					noRefresh = false;
 				}
 				if ((prevtor[0] != tor[1]) || (prevtor[3] != tor[4])) { // status/done changed?
 					this.torrents[hash][0] = tor[1];
 					this.trtTable.setIcon(hash, stat[0]);
-					this.trtTable.setValue(hash, 1, stat[1]);
+					this.trtTable.setValue(hash, 1, stat[1], noRefresh);
 				}
 				if ((prevtor[12] != tor[13]) || (prevtor[13] != tor[14])) { // # of peers changed?
 					this.torrents[hash][12] = tor[13];
 					this.torrents[hash][13] = tor[14];
-					this.trtTable.setValue(hash, 11, tor[13] + " (" + tor[14] + ")");
+					this.trtTable.setValue(hash, 11, tor[13] + " (" + tor[14] + ")", noRefresh);
 				}
 				if ((prevtor[14] != tor[15]) || (prevtor[15] != tor[16])) { // # of seeds changed?
 					this.torrents[hash][14] = tor[15];
 					this.torrents[hash][15] = tor[16];
-					this.trtTable.setValue(hash, 12, tor[15] + " (" + tor[16] + ")");
+					this.trtTable.setValue(hash, 12, tor[15] + " (" + tor[16] + ")", noRefresh);
 				}
 				for (var j = 16; j < 20; j++) {
 					if (prevtor[j] != tor[j + 1]) {
 						this.torrents[hash][j] = tor[j + 1];
-						this.trtTable.setValue(hash, j - 3, tor[j + 1]);
+						this.trtTable.setValue(hash, j - 3, tor[j + 1], noRefresh);
 					}
 				}
 				for (var j = 1; j < ln; j++) {
@@ -287,13 +292,15 @@ var utWebUI = {
 						this.torrents[hash][j] = tor[j + 1];
 						if ((j == 4) && (this.torrentID == hash))
 							this.updateFiles(hash);
-						this.trtTable.setValue(hash, j - 1, tor[j + 1]);
+						this.trtTable.setValue(hash, j - 1, tor[j + 1], noRefresh);
 					}
 				}
 			}
 			delete tor;
 		}
 		delete torrents;
+		if (!noRefresh)
+			this.trtTable.refreshRows(true);
 		if (Browser.Engine.gecko || Browser.Engine.trident)
 			this.trtTable.attachBody();
 		if (has(dobj, "torrentm")) {
@@ -345,19 +352,16 @@ var utWebUI = {
 		this.updateTimeout = this.update.delay(this.getInterval(), this);
 		this.updateDetails();
 		
-		if (this.config.showSpeed > 0)
-			this.updateSpeed();
+		this.updateSpeed();
 	},
 	
 	"updateSpeed": function () {
 		var str = "Download: " + this.totalDL.toFileSize() + "/s | " +
 				  "Upload: " + this.totalUL.toFileSize() + "/s";
-		if (this.config.showSpeed == 1) {
-			window.status = str;
-			window.defaultStatus = str;
-		} else if (this.config.showSpeed == 2) {
+		window.status = str;
+		window.defaultStatus = str;
+		if (this.config.showTitleSpeed)
 			document.title = "\u00B5Torrent WebUI v" + VERSION + " - " + str;
-		}
 	},
 	
 	"update": function () {
@@ -474,7 +478,7 @@ var utWebUI = {
 		var tmpl = "";
 		if (this.trtTable.selectedRows.length == 1)
 			tmpl = this.torrents[this.trtTable.selectedRows[0]][11];
-		$("txtLabel").set("value", (tmpl == "") ? lang.OV_NEW_LABEL : tmpl);
+		$("txtLabel").set("value", (tmpl == "") ? lang[CONST.OV_NEW_LABEL] : tmpl);
 		$("dlgLabel").centre().show();
 		return true;
 	},
@@ -539,11 +543,12 @@ var utWebUI = {
 				continue;
 			}
 			var val = settings[i][2];
-			if (val == "true")
-				val = "1";	
-			if (val == "false")
-				val = "0";	
-			this.settings[settings[i][0]] = {"t": settings[i][1], "v": val};
+			var typ = settings[i][1];
+			if (typ == 0)
+				val = parseInt(val);
+			if (typ == 1)
+				val = (val == "true");	
+			this.settings[settings[i][0]] = val;
 		}
 		var detectLang = (navigator.language) ? navigator.language : navigator.userLanguage;
 		var matches;
@@ -561,8 +566,8 @@ var utWebUI = {
 	
 	"loadSettings": function() {
 		for (var key in this.settings) {
-			var v = this.settings[key].v, ele;
-			if (!(ele = $(key))) continue;
+			var v = this.settings[key], ele;
+			if (!(ele = $(key))) continue;	
 			if (ele.type == "checkbox") {
 				ele.checked = ((v == "1") || (v == "true"));
 			} else {
@@ -576,7 +581,7 @@ var utWebUI = {
 			"showDetails",
 			"showCategories",
 			"showToolbar",
-			"showSpeed",
+			"showTitleSpeed",
 			"updateInterval",
 			"alternateRows",
 			"confirmDelete",
@@ -592,6 +597,12 @@ var utWebUI = {
 			}
 			ele.fireEvent("change");
 		});
+		if (!this.config.showCategories)
+			$("CatList").hide();
+		if (!this.config.showDetails)
+			$("tdetails").hide();
+		if (!this.config.showToolbar)
+			$("toolbar").hide();
 	},
 	
 	"setSettings": function() {
@@ -606,18 +617,14 @@ var utWebUI = {
 		value = $("webui.updateInterval").get("value").toInt();
 		if (this.config.updateInterval != value) {
 			this.config.updateInterval = value;
+			$clear(this.updateTimeout);
+			this.updateTimeout = this.update.delay(value, this);
 			hasChanged = true;
 		}
 			
-		value = $("webui.showSpeed").get("value").toInt();
-		if (this.config.showSpeed != value) {
-			this.config.showSpeed = value;
-			if ((value == 0) || (value == 2)) {
-				window.status = "";
-				window.defaultStatus = "";
-			}
-			if ((value == 0) || (value == 1))
-				document.title = "\u00B5Torrent WebUI v" + VERSION;
+		value = $("webui.showTitleSpeed").get("value").toInt();
+		if (this.config.showTitleSpeed != value) {
+			this.config.showTitleSpeed = value;
 			hasChanged = true;
 		}
 		
@@ -667,7 +674,7 @@ var utWebUI = {
 			str = "&s=webui.cookie&v=" + JSON.encode(this.config);
 		
 		for (var key in this.settings) {
-			v = this.settings[key].v;
+			v = this.settings[key];
 			var ele = $(key);
 			if (!ele) continue;
 			if (ele.type && (ele.type == "checkbox")) {
@@ -679,12 +686,13 @@ var utWebUI = {
 				nv *= 10;
 			if (v != nv) {
 				str += "&s=" + key + "&v=" + nv;
-				this.settings[key].v = nv;
+				this.settings[key] = nv;
+				log(key + " " + v + " --> " + nv);
 			}
 		}
 		if (str != "")
 			this.request("?token=" + this.TOKEN + "&action=setsetting" + str);
-		if (this.settings["webui.enable"].v == "0") {
+		if (this.settings["webui.enable"] == "0") {
 			$("msg").set("html", "Goodbye.");
 			$("cover").show();
 			return;
@@ -693,10 +701,10 @@ var utWebUI = {
 		var port = sp[1] || sp[5];
 		if (!$defined(port))
 			port = (window.location.protocol == "http:") ? 80 : 443;
-		if ((this.settings["webui.enable_listen"].v == "1") && (this.settings["webui.port"].v != port)) {
-			redirect.delay(1000, null, window.location.protocol + "//" + document.domain + ":" + this.settings["webui.port"].v + "/gui/");
-		} else if ((this.settings["webui.enable_listen"].v == "0") && (this.settings["bind_port"].v != port)) {
-			redirect.delay(1000, null, window.location.protocol + "//" + document.domain + ":" + this.settings["bind_port"].v + "/gui/");
+		if (this.settings["webui.enable_listen"] && (this.settings["webui.port"] != port)) {
+			redirect.delay(1000, null, window.location.protocol + "//" + document.domain + ":" + this.settings["webui.port"] + "/gui/");
+		} else if (!this.settings["webui.enable_listen"] && (this.settings["bind_port"] != port)) {
+			redirect.delay(1000, null, window.location.protocol + "//" + document.domain + ":" + this.settings["bind_port"] + "/gui/");
 		} else if (reload) {
 			window.location.reload();
 		} else if (resize) {
@@ -706,6 +714,8 @@ var utWebUI = {
 	},
 	
 	"showSettings": function() {
+		if (!this.langLoaded)
+			loadSettingStrings();
 		$("dlgSettings").centre();
 	},
 	
@@ -730,14 +740,14 @@ var utWebUI = {
 	
 	"showMenu": function(e, id) {
 		var state = this.torrents[id][0];
-		var fstart = [lang.ML_FORCE_START, this.forceStart.bind(this)];
-		var start = [lang.ML_START, this.start.bind(this)];
-		var pause = [lang.ML_PAUSE, this.pause.bind(this)];
-		var stop = [lang.ML_STOP,  this.stop.bind(this)];
-		var recheck = [lang.ML_FORCE_RECHECK, this.recheck.bind(this)];
+		var fstart = [lang[CONST.ML_FORCE_START], this.forceStart.bind(this)];
+		var start = [lang[CONST.ML_START], this.start.bind(this)];
+		var pause = [lang[CONST.ML_PAUSE], this.pause.bind(this)];
+		var stop = [lang[CONST.ML_STOP],  this.stop.bind(this)];
+		var recheck = [lang[CONST.ML_FORCE_RECHECK], this.recheck.bind(this)];
 		ContextMenu.clear();
 		if (!(state & 64)) {
-			ContextMenu.add([lang.ML_FORCE_START]);
+			ContextMenu.add([lang[CONST.ML_FORCE_START]]);
 		} else {
 			ContextMenu.add(fstart);
 		}
@@ -761,42 +771,42 @@ var utWebUI = {
 				if (!(state & 64)) {
 					ContextMenu.add(start);
 				} else {
-					ContextMenu.add([lang.ML_START]);
+					ContextMenu.add([lang[CONST.ML_START]]);
 				}
 				ContextMenu.add(pause);
 			}
 			ContextMenu.add(stop);
 			ContextMenu.add([CMENU_SEP]);
-			ContextMenu.add([lang.ML_FORCE_RECHECK]);
+			ContextMenu.add([lang[CONST.ML_FORCE_RECHECK]]);
 		} else if (state & 2) {
 			// checking
 			ContextMenu.clear();
 			if ((state & 4) || (state & 32)) {
-				ContextMenu.add([lang.ML_FORCE_START]);
+				ContextMenu.add([lang[CONST.ML_FORCE_START]]);
 			} else {
 				ContextMenu.add(fstart);
 			}
 			if (state & 64) {
-				ContextMenu.add([lang.ML_START]);
+				ContextMenu.add([lang[CONST.ML_START]]);
 			} else {
 				ContextMenu.add(start);
 			}
 			ContextMenu.add(pause);
 			ContextMenu.add(stop);
 			ContextMenu.add([CMENU_SEP]);
-			ContextMenu.add([lang.ML_FORCE_RECHECK]);
+			ContextMenu.add([lang[CONST.ML_FORCE_RECHECK]]);
 		} else if (state & 16) {
 			// error
 			ContextMenu.clear();
 			ContextMenu.add(fstart);
-			ContextMenu.add([lang.ML_START]);
-			ContextMenu.add([lang.ML_PAUSE]);
+			ContextMenu.add([lang[CONST.ML_START]]);
+			ContextMenu.add([lang[CONST.ML_PAUSE]]);
 			ContextMenu.add(stop);
 			ContextMenu.add([CMENU_SEP]);
 			ContextMenu.add(recheck);
 		} else if (state & 64) {
 			// queued
-			ContextMenu.add([lang.ML_START]);
+			ContextMenu.add([lang[CONST.ML_START]]);
 			ContextMenu.add(pause);
 			ContextMenu.add(stop);
 			ContextMenu.add([CMENU_SEP]);
@@ -805,8 +815,8 @@ var utWebUI = {
 			ContextMenu.clear();
 			ContextMenu.add(fstart);
 			ContextMenu.add(start);
-			ContextMenu.add([lang.ML_PAUSE]);
-			ContextMenu.add([lang.ML_STOP]);
+			ContextMenu.add([lang[CONST.ML_PAUSE]]);
+			ContextMenu.add([lang[CONST.ML_STOP]]);
 			ContextMenu.add([CMENU_SEP]);
 			ContextMenu.add(recheck);
 		}
@@ -820,14 +830,14 @@ var utWebUI = {
 			}
 		}, this);
 		lgroup.push([CMENU_SEP]);
-		lgroup.push([lang.OV_NEW_LABEL, this.newLabel.bind(this)]);
-		lgroup.push([lang.OV_REMOVE_LABEL, this.setLabel.bind(this, "")]);
-		ContextMenu.add([CMENU_CHILD, lang.ML_LABEL, lgroup]);
+		lgroup.push([lang[CONST.OV_NEW_LABEL], this.newLabel.bind(this)]);
+		lgroup.push([lang[CONST.OV_REMOVE_LABEL], this.setLabel.bind(this, "")]);
+		ContextMenu.add([CMENU_CHILD, lang[CONST.ML_LABEL], lgroup]);
 		ContextMenu.add([CMENU_SEP]);
-		ContextMenu.add([lang.ML_REMOVE, this.remove.bind(this, 0)]);
-		ContextMenu.add([CMENU_CHILD, lang.ML_REMOVE_AND, [[lang.ML_DELETE_DATA, this.remove.bind(this, 1)]]]);
+		ContextMenu.add([lang[CONST.ML_REMOVE], this.remove.bind(this, 0)]);
+		ContextMenu.add([CMENU_CHILD, lang[CONST.ML_REMOVE_AND], [[lang[CONST.ML_DELETE_DATA], this.remove.bind(this, 1)]]]);
 		ContextMenu.add([CMENU_SEP]);
-		ContextMenu.add([lang.ML_PROPERTIES, (this.trtTable.selCount > 1) ? null : this.showProperties.bind(this, id)]);
+		ContextMenu.add([lang[CONST.ML_PROPERTIES], (this.trtTable.selCount > 1) ? null : this.showProperties.bind(this, id)]);
 		ContextMenu.show(e.page);
 	},
 	
@@ -859,23 +869,19 @@ var utWebUI = {
 		$("prop-seed_ratio").value = props.seed_ratio / 10;
 		$("prop-seed_time").value = props.seed_time;
 		$("prop-superseed").checked = props.superseed;
-		ele = $("prop-dht");
-		if (props.dht == -1) {
-			ele.disabled = true;
-			$("lbl_prop-dht").addClass("disabled");
-		} else {
-			ele.disabled = false;
-			ele.checked = !!props.dht;
-			$("lbl_prop-dht").removeClass("disabled");
-		}
-		o = $("prop-pex");
-		if (props.pex == -1) {
-			ele.disabled = true;
-			$("lbl_prop-pex").addClass("disabled");
-		} else {
-			ele.disabled = false;
-			ele.checked = !!props.pex;
-			$("lbl_prop-pex").removeClass("disabled");
+		var ids = {
+			"superseed": 17,
+			"dht": 18,
+			"pex": 19
+		};
+		for (var k in ids) {
+			var dis = (props[k] == -1);
+			if (k == "dht")
+				dis = !this.settings.dht_per_torrent;
+			ele = $("prop-" + k);
+			ele.disabled = dis;
+			ele.checked = (props[k] == 1);
+			$("DLG_TORRENTPROP_1_GEN_" + ids[k])[dis ? "addClass" : "removeClass"]("disabled");
 		}
 		$("dlgProps").show().centre();
 	},
@@ -968,7 +974,6 @@ var utWebUI = {
 					this.flsTable.addRow(data, id + "_" + i);
 				}, this);
 				this.flsTable.calcSize();
-				this.flsTable.refresh();
 				this.flsTable.refreshRows(true);
 			}
 			this.flsTable.loadObj.hide();
@@ -1068,9 +1073,9 @@ var utWebUI = {
 		this.request("?token=" + this.TOKEN + "&action=setprio&hash=" + id + "&p=" + p + "&f=" + this.getFileIds(id, p).join("&f="));
 	},
 	
-	"trtSort": function() {
-		this.config.torrentTable.sIndex = this.trtTable.sIndex;
-		this.config.torrentTable.reverse = this.trtTable.reverse;
+	"trtSort": function(index, reverse) {
+		this.config.torrentTable.sIndex = index;
+		this.config.torrentTable.reverse = reverse;
 	},
 	
 	"trtColMove": function() {
@@ -1081,17 +1086,18 @@ var utWebUI = {
 		this.config.torrentTable.colWidth = this.trtTable.colWidth;
 	},
 	
-	"trtColToggle": function(index, state) {
-		if (state) {
-			this.config.trtCols |= 1 << index;
+	"trtColToggle": function(index, enable) {
+		var num = 1 << index;
+		if (enable) {
+			this.config.trtCols |= num;
 		} else {
-			this.config.trtCols &= ~(1 << index);
+			this.config.trtCols &= ~num;
 		}
 	},
 	
-	"flsSort": function() {
-		this.config.fileTable.sIndex = this.flsTable.sIndex;
-		this.config.fileTable.reverse = this.flsTable.reverse;
+	"flsSort": function(index, reverse) {
+		this.config.fileTable.sIndex = index;
+		this.config.fileTable.reverse = reverse;
 	},
 	
 	"flsColMove": function() {
@@ -1102,19 +1108,21 @@ var utWebUI = {
 		this.config.fileTable.colWidth = this.flsTable.colWidth;
 	},
 	
-	"flsColToggle": function(index, state) {
-		if (state) {
-			this.config.flsCols |= 1 << index;
+	"flsColToggle": function(index, enable) {
+		var num = 1 << index;
+		if (enable) {
+			this.config.flsCols |= num;
 		} else {
-			this.config.flsCols &= ~(1 << index);
+			this.config.flsCols &= ~num;
 		}
 	},
 	
 	"restoreUI" : function(bc) {
 		if ((bc != false) && !confirm("Are you sure that you want to restore the interface?")) return;
-		$("stg").hide();
+		//$("stg").hide();
 		$("msg").set("html", "Reloading...");
 		$("cover").show();
+		window.removeEvents("unload");
 		utWebUI.request("?token=" + this.TOKEN + "&action=setsetting&s=webui.cookie&v={}", function(){ window.location.reload(false); });
 	},
 	
@@ -1148,13 +1156,14 @@ var utWebUI = {
 	},
 	
 	"tabChange": function(id) {
-		if ((id == "FileList") && (this.config.showDetails) && (this.torrentID != "")) {
+		if (id == "FileList") {
+			if (this.torrentID == "") {
+				this.flsTable.calcSize();
+				return;
+			}
 			if (has(this.flsTable.rowData, this.torrentID + "_0")) return;
 			this.flsTable.loadObj.show();
 			this.loadFiles.delay(20, this);
-		} else if (id == "FileList")
-		{
-			this.flsTable.calcSize();
 		}
 	}/*,
 	

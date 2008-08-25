@@ -1,0 +1,59 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "XHTML1-s.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<!--
+/*
+ *
+ *     Copyright 2007 BitTorrent, Inc. All rights reserved.
+ *     Copyright 2008 Carsten Niebuhr
+ *
+*/
+-->
+	<head>
+		<title></title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<link href="./favicon.ico" rel="SHORTCUT ICON" type="image/x-icon" />
+		<link href="./stable.css" rel="stylesheet" type="text/css" />
+		<style type="text/css">@import "./main.css";</style>
+		<style type="text/css" id="colrules"></style>
+	</head>
+	<body>
+		<div id="token">##TOKEN##</div>
+		<div id="preload"></div>
+		<div id="cover"><div id="msg"><img src="./images/snake.gif" alt="Loading..." />&nbsp;&nbsp;Loading...</div></div>
+		<div id="modalbg"></div>
+		<div id="dragmask"></div>		
+		<div id="CatList">
+			<ul>
+				<li id="_all_" class="sel"><span id="OV_CAT_ALL"></span>&nbsp;(<span id="_all_c">0</span>)</li>
+				<li id="_dls_"><span id="OV_CAT_DL"></span>&nbsp;(<span id="_dls_c">0</span>)</li>
+				<li id="_com_"><span id="OV_CAT_COMPL"></span>&nbsp;(<span id="_com_c">0</span>)</li>
+				<li id="_act_"><span id="OV_CAT_ACTIVE"></span>&nbsp;(<span id="_act_c">0</span>)</li>
+				<li id="_iac_"><span id="OV_CAT_INACTIVE"></span>&nbsp;(<span id="_iac_c">0</span>)</li>
+				<li><hr /></li>
+				<li id="_nlb_"><span id="OV_CAT_NOLABEL"></span>&nbsp;(<span id="_nlb_c">0</span>)</li>
+			</ul>
+			<ul id="lbll"></ul>
+		</div><div id="List"></div><div id="tdetails">
+			<ul id="tabs"></ul>
+			<div id="tdcont">
+				<div id="gcont"><table cellpadding="5" cellspacing="2" style="width: 100%"><tr><td colspan="3" class="Header">Transfer</td></tr><tr><td style="width: 33%">Time Elapsed: <span id="et"></span></td><td style="width: 34%">Remaining: <span id="rm"></span></td><td style="width: 33%">Share Ratio: <span id="ra"></span></td></tr><tr><td>Downloaded: <span id="dl"></span></td><td>Download Speed: <span id="ds"></span></td><td>Down Limit: <span id="dll"></span></td></tr><tr><td>Uploaded: <span id="ul"></span></td><td>Upload Speed: <span id="us"></span></td><td>Up Limit: <span id="ull"></span></td></tr><tr><td>Seeds: <span id="se"></span></td><td>Peers: <span id="pe"></span></td><td>Wasted: <span id="wa"></span></td></tr><tr><td colspan="3" class="Header">Tracker</td></tr><tr><td colspan="3">Tracker URL:</td></tr><tr><td colspan="3">Tracker Status:</td></tr><tr><td colspan="3">Update In:</td></tr><tr><td colspan="3">DHT Status:</td></tr><tr><td colspan="3" class="Header">General</td></tr><tr><td colspan="3">Save As:</td></tr><tr><td colspan="3">Total Size:</td></tr><tr><td colspan="3">Created On:</td></tr><tr><td colspan="3">Comment:</td></tr></table></div>
+				<div id="FileList"></div>
+				<div id="lcont"></div>
+			</div>
+		</div>
+		<div id="VDivider"></div>
+		<div id="HDivider"></div>
+		<!-- [remove] -->
+		<script type="text/javascript" src="./temp.js"></script>
+		<!-- [/remove] -->
+		<script type="text/javascript" src="./lang/en.js"></script>
+		<!-- [jscompact] -->
+		<script type="text/javascript" src="./mootools.js"></script>
+		<script type="text/javascript" src="./stable.js"></script>
+		<script type="text/javascript" src="./webui.js"></script>
+		<script type="text/javascript" src="./contextmenu.js"></script>
+		<script type="text/javascript" src="./tabs.js"></script>
+		<script type="text/javascript" src="./main.js"></script>
+		<!-- [/jscompact] -->
+	</body>
+</html>

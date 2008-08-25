@@ -344,14 +344,14 @@ div#toolbar #search {
 }
 
 div#toolbar div#sb {
-	width: 170px;
-	float: right;
-	margin-right: 5px;
+	width: 145px;
+	float: left;
+	margin: 0 5px;
 	line-height: 26px;
 }
 
 div#toolbar div#sb input {
-	width: 124px; height: 16px;
+	width: 114px; height: 16px;
 	line-height: 16px;
 	font-size: 11px;
 	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
@@ -372,7 +372,36 @@ div.hcont {
 	line-height: 20px;
 	overflow: hidden;
 	padding: 0;
+	margin: 3px 0 0 0;
 	line-height: 20px;
+	clear: both;
+}
+
+.hcont .ralign {
+	width: 220px;
+	float: right;
+	padding: 0 0 0 10px;
+	text-align: left;
+}
+
+.tal {
+	text-align: left;
+}
+
+.flr {
+	float: right;
+}
+
+.hcont .lalign {
+	width: 50%;
+	float: left;
+	padding: 0;
+	text-align: left;
+	clear: none;
+}
+
+.hcont input[type="checkbox"] {
+	margin: 3px;
 }
  
 input.tbox, input.btn, select {
@@ -390,7 +419,7 @@ input.tbox, input.btn, select {
 input.tbox {
 	height: 16px !important;
 	background-color: #FFFFFF;
-	padding: 0 !important;
+	padding: 0 2px !important;
 	margin: 1px 0 !important;
 	vertical-align: top;
 }
@@ -410,6 +439,23 @@ a {
 	font-size: 11px;
 	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
 	color: #686868;
+}
+
+#dir_active_download, #dir_completed_download, #dir_torrent_files, #dir_completed_torrents, #dir_autoload {
+	width: 440px;
+	margin: 0 10px !important;
+}
+
+#DLG_SETTINGS_7_QUEUEING_07, #DLG_TORRENTPROP_1_GEN_12 {
+	margin: 0 10px 0 0;
+}
+
+#DLG_SETTINGS_7_QUEUEING_09, #DLG_TORRENTPROP_1_GEN_14 {
+	margin: 0 20px 0 10px;
+}
+
+#seed_time {
+	width: 150px;
 }
 
 /*******************************************
@@ -524,7 +570,7 @@ div#FileList {
 
 
 #dlgSettings {
-	width: 600px; height: 400px;
+	width: 600px; height: 420px;
 }
 
 #dlgSettings-header {
@@ -532,7 +578,7 @@ div#FileList {
 }
 
 div#dlgSettings .lm {
-	width: 100px; height: 375px;
+	width: 100px; height: 395px;
 	float: left;
 	position: relative;
 	background-color: #FFFFFF;
@@ -561,7 +607,7 @@ div.algnright { text-align: right; }
 .stg_con {
 	float: left;
 	position: relative;
-	width: 489px; height: 335px;
+	width: 489px; height: 355px;
 	padding: 5px;
 	background-color: #FAFAFA;
 }
@@ -600,10 +646,6 @@ fieldset {
 
 #DLG_SETT_3_16, #DLG_SETT_3_18 {
 	padding: 0 5px;
-}
-
-.flright {
-	float: right;
 }
 
 input.num {
@@ -942,7 +984,7 @@ div#dlgAbout div.content {
 /* properties dialog */
 
 div#dlgProps {
-	width: 400px; height: 400px;
+	width: 450px; height: 434px;
 }
 
 div#dlgProps div.dlg-header { 
@@ -950,21 +992,28 @@ div#dlgProps div.dlg-header {
 }
 
 div#dlgProps div.content {
-	width: 380px;
+	width: 430px;
 	padding: 10px;
 }
 
-div#dlgProps textarea#prop-trackers {
-	width: 100%; height: 70px;
+textarea#prop-trackers {
+	width: 100%; height: 100px;
 	background: #FFFFFF;
 	border: 1px solid #D0D0D0;
+	overflow: auto;
+	white-space: nowrap;
+	wrap: no-wrap;
 }
 
 div#dlgProps fieldset div {
 	line-height: 16px;
 }
 
-div#dlgProps fieldset div.props-spacer {
+div.props-spacer {
+	height: 16px;
+	line-height: 16px;
+	padding: 0;
+	margin: 0;
 	width: 30%;
 	float: left;
 }

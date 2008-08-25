@@ -5,10 +5,11 @@
  *
 */
 
-var CMENU_SEP = -1;
-var CMENU_CHILD = 0;
-var CMENU_SEL = 1;
-var CMENU_CHECK = 2;
+var CMENU_SEP = 0;
+var CMENU_CHILD = 1;
+var CMENU_SEL = 2;
+var CMENU_CHECK = 3;
+var LI = new Element("li");
 
 var ContextMenu = {
 
@@ -20,23 +21,18 @@ var ContextMenu = {
 		var args = $A(arguments);
 		var link, ul, li;
 		var ele = args[0];
-		if ($type(ele) == "element")
-		{
+		if ($type(ele) == "element") {
 			if (!ele.hasClass("CMenu")) return;
 			args.splice(0, 1);
-		} else
-		{
+		} else {
 			ele = this.obj;
 		}
-		for (var i = 0, j = args.length; i < j; i++)
-		{
-			li = new Element("li");
+		for (var i = 0, j = args.length; i < j; i++) {
+			li = LI.clone(false);
 			link = new Element("a");
-			if (args[i][0] === CMENU_SEP)
-			{
+			if (args[i][0] === CMENU_SEP) {
 				li.adopt(new Element("hr"));
-			} else if (args[i][0] === CMENU_CHILD)
-			{
+			} else if (args[i][0] === CMENU_CHILD) {
 				ul = new Element("ul");
 				ul.addClass("CMenu");
 				link.addClass("exp");
@@ -45,43 +41,38 @@ var ContextMenu = {
 				for (var k = 0, len = args[i][2].length; k < len; k++)
 					this.add(ul, args[i][2][k]);
 				li.adopt(ul);
-			} else if (args[i][0] === CMENU_SEL)
-			{
+			} else if (args[i][0] === CMENU_SEL) {
 				link.addClass("sel");
 				link.set("html", args[i][1]);
 				li.adopt(link);
-			} else if (args[i][0] === CMENU_CHECK)
-			{
+			} else if (args[i][0] === CMENU_CHECK) {
 				link.addClass("check");
 				link.setProperty("href", "#");
-				link.addEvent("click", function(ev, fn) {
+				var fn = args[i][2] || $lamda(true);
+				link.addEvent("click", function(ev) {
 					ev.stop();
-					this.itemClick(fn);
-				}.bindWithEvent(this, args[i][2]));
+					if (fn())
+						ContextMenu.hide();
+				});
 				link.set("html", args[i][1]);
 				li.adopt(link);
-			} else if (!$defined(args[i][1]))
-			{
+			} else if (!$defined(args[i][1])) {
 				link.addClass("dis");
 				link.set("html", args[i][0]);
 				li.adopt(link);
-			} else
-			{
+			} else {
 				link.setProperty("href", "#");
-				link.addEvent("click", function(ev, fn) {
+				var fn = args[i][1] || $lamda(true);
+				link.addEvent("click", function(ev) {
 					ev.stop();
-					this.itemClick(fn);
-				}.bindWithEvent(this, args[i][1]));
+					if (fn())
+						ContextMenu.hide();
+				});
 				link.set("html", args[i][0]);
 				li.adopt(link);
 			}
 			ele.adopt(li);
 		} 
-	},
-	
-	"itemClick": function(fn) {
-		if (fn())
-			this.hide();
 	},
 
 	"clear": function() {
@@ -103,10 +94,13 @@ var ContextMenu = {
 	},
 	
 	"hide": function() {
-		this.obj.setStyle("visibility", "hidden");
-		this.obj.hide();
-		this.obj.setStyles({"left": 0, "top": 0});
-		this.clear.delay(5, this);
+		this.obj.setStyles({
+			"visibility": "hidden",
+			"display": "none",
+			"left": 0,
+			"top": 0
+		});
+		this.clear.delay(20, this);
 	}
 
 };
