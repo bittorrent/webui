@@ -14,10 +14,23 @@ var LI = new Element("li");
 var ContextMenu = {
 
 	"init": function(id) {
-		this.obj = new Element("ul", {"id": id, "class": "CMenu"}).inject(document.body);
+		this.obj = new Element("ul", {
+			"id": id,
+			"class": "CMenu"
+		}).addEvent("mouseenter", function() {
+			ContextMenu.focused = true;
+		}).addEvent("mouseleave", function() {
+			ContextMenu.focused = false;
+		}).inject(document.body);
 	},
 	
 	"hideAfterClick": true,
+	
+	"hidden": true,
+	
+	"focused": false,
+	
+	"launched": false,
 
 	"add": function() {
 		var args = $A(arguments);
@@ -96,6 +109,8 @@ var ContextMenu = {
 		if (y + size.y > winSize.y)
 			y -= size.y;
 		this.obj.setStyles({"left": x, "top": y, "visibility": "visible"});
+		this.hidden = false;
+		this.launched = true;
 	},
 	
 	"hide": function() {
@@ -105,6 +120,7 @@ var ContextMenu = {
 			"left": 0,
 			"top": 0
 		});
+		this.hidden = true;
 		this.clear.delay(20, this);
 	}
 

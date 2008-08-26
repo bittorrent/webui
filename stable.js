@@ -137,11 +137,25 @@ var dxSTable = new Class({
 			}
 		}).detach();
 		tr.addEvent("mousemove", function(ev) {
-			if (ev.target && (ev.target.tagName.toLowerCase() == "td"))
-				ColumnHandler.check.apply($me, [ev, ev.target]);
+			var ele = ev.target;
+			if (!ele) return;
+			var tag = ele.get("tag");
+			if (tag == "span") {
+				ele = ele.parentNode;
+				tag = "td";
+			}
+			if (tag == "td")
+				ColumnHandler.check.apply($me, [ev, ele]);
 		}).addEvent("mousedown", function(ev) {
-			if (ev.target && (ev.target.tagName.toLowerCase() == "td")) {
-				nDrag.element = nDrag.handles = ev.target;
+			var ele = ev.target;
+			if (!ele) return;
+			var tag = ele.get("tag");
+			if (tag == "span") {
+				ele = ele.parentNode;
+				tag = "td";
+			}
+			if (tag == "td") {
+				nDrag.element = nDrag.handles = ele;
 				nDrag.attach().start(ev);
 			}
 		});
@@ -203,10 +217,14 @@ var dxSTable = new Class({
 		
 		if (this.options.rowsSelectable) {
 			this.dBody.addEvent("mousedown", function(ev) {
-				if (ev.target && (ev.target.tagName.toLowerCase() == "td"))
-					$me.selectRow(ev, ev.target.parentNode);
+				var ele = ev.target;
+				if (!ele) return;
+				if (ele.get("tag") == "td")
+					$me.selectRow(ev, ele);
 			}).addEvent("mouseup", function(ev) {
-				if (!ev.target || (ev.target.tagName.toLowerCase() != "td")) {
+				var ele = ev.target;
+				if (!ele) return;
+				if (ele.get("tag") != "td") {
 					var pos = this.getPosition();
 					if ((this.clientWidth > ev.page.x - pos.x - this.scrollLeft + 2) && (this.clientHeight > ev.page.y - pos.y - this.scrollTop + 2)) {
 						$me.clearSelection();
@@ -290,7 +308,7 @@ var dxSTable = new Class({
 			return false;
 		}).bind(this));
 		if (!this.options.rowsSelectable) return;
-		this.dCont.addEvent("keypress", (function(ev) {
+		this.dCont.addEvent("keydown", (function(ev) {
 			if (ev.key == "delete") { // DEL
 				this.fireEvent("onDelete");
 			} else if ((ev.key == "a") && ev.control) { // Ctrl + A

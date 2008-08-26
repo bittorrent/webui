@@ -872,7 +872,7 @@ window.addEvent("domready", function() {
 		return;
 	}
 	
-	document.addEvent("keypress", function(ev) {
+	document.addEvent("keydown", function(ev) {
 		switch (ev.key) {
 		
 		case "esc": // Esc
@@ -881,10 +881,8 @@ window.addEvent("domready", function() {
 			break;
 			
 		case "a": // Ctrl + A
-			if (ev.control) {
+			if (ev.control)
 				ev.stop();
-				return false;
-			}
 			break;
 			
 		case "e": // Ctrl + E
@@ -928,6 +926,53 @@ window.addEvent("domready", function() {
 		}
 	});
 	
+	if (Browser.Engine.presto) {
+		document.addEvent("keypress", function(ev) {
+			switch (ev.key) {
+			
+			case "esc": // Esc
+				ev.stop();
+				break;
+				
+			case "a": // Ctrl + A
+				if (ev.control)
+					ev.stop();
+				break;
+				
+			case "e": // Ctrl + E
+				if (ev.control)
+					ev.stop();
+				break;
+			  
+			case "o": // Ctrl + O
+				if (ev.control)
+					ev.stop();
+				break;
+				
+			case "p": // Ctrl + P
+				if (ev.control)
+					ev.stop();
+				break;
+				
+			case "f2": // F2
+				ev.stop();
+				break;
+				
+			case "f4": // F4
+				ev.stop();
+				break;
+				
+			case "f6": // F6
+				ev.stop();
+				break;
+				
+			case "f7": // F7
+				ev.stop();
+				break;
+			}
+		});
+	}
+	
 	window.addEvent("unload", function() {
 		utWebUI.saveConfig();
 	});
@@ -946,9 +991,10 @@ window.addEvent("domready", function() {
 		if (ev.rightClick) {
 			if (!(/^input|textarea$/i).test(ev.target.tagName))
 				ev.stop();
-		} else {
-			ContextMenu.hide.delay(50, ContextMenu);
 		}
+		if (!ContextMenu.hidden && !ContextMenu.focused && !ContextMenu.launched)
+			ContextMenu.hide.delay(10, ContextMenu);
+		ContextMenu.launched = false;
 	});
 	
 	if (Browser.Engine.presto && !("oncontextmenu" in document.createElement("foo"))) {
@@ -983,7 +1029,7 @@ window.addEvent("domready", function() {
 		});
 	} else if (Browser.Engine.trident || Browser.Engine.webkit) {
 		document.addEvent("contextmenu", function(ev) {
-			if (!({"input": 1, "textarea": 1})[ev.target.get("tag")]) {
+			if (!(/^input|textarea$/i).test(ev.target.tagName)) {
 				ev.stop();
 				return false;
 			}
