@@ -1,4 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "XHTML1-s.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <!--
 /*
@@ -15,6 +15,25 @@
 		<link href="./stable.css" rel="stylesheet" type="text/css" />
 		<style type="text/css">@import "./main.css";</style>
 		<style type="text/css" id="colrules"></style>
+		<!--[if IE]>
+		<style type="text/css">
+		fieldset {
+			padding: 5px;
+		}
+		.lm li {
+			margin: 0;
+			padding: 0;
+		}
+		.stg_con .hcont {
+			position: relative;
+		}
+		.stg_con label {
+			vertical-align: top;
+			top: 6px;
+			position: relative;
+		}
+		</style>
+		<![endif]-->
 	</head>
 	<body>
 		<div id="token">##TOKEN##</div>
@@ -62,10 +81,10 @@
 			</div>
 			
 			<div id="st_webui" class="stg_con">
-				<div class="hcont"><input type="checkbox" id="webui.enable" /><label for="webui.enable" id="DLG_SETTINGS_9_WEBUI_01"></label></div>
+				<span class="hcont"><input type="checkbox" id="webui.enable" /><label for="webui.enable" id="DLG_SETTINGS_9_WEBUI_01"></label></span>
 				<fieldset>
 					<legend id="DLG_SETTINGS_9_WEBUI_02"></legend>
-					<div class="hcont">
+					<span class="hcont">
 						<div class="ralign">
 							<input type="password" id="webui.password" class="tbox str flr" />
 							<label for="webui.password" id="DLG_SETTINGS_9_WEBUI_05"></label>
@@ -74,30 +93,30 @@
 							<input type="text" id="webui.username" class="tbox str flr" />
 							<label for="webui.username" id="DLG_SETTINGS_9_WEBUI_03"></label>
 						</div>
-					</div>
-					<div class="hcont">
+					</span>
+					<span class="hcont">
 						<div class="ralign"><input type="text" id="webui.guest" class="tbox str flr" disabled="disabled" /></div>
 						<input type="checkbox" id="webui.enable_guest" /><label for="webui.enable_guest" id="DLG_SETTINGS_9_WEBUI_07"></label>
-					</div>
+					</span>
 				</fieldset>
 				<fieldset>
 					<legend id="DLG_SETTINGS_9_WEBUI_09"></legend>
-					<div class="hcont">
+					<span class="hcont">
 						<input type="text" id="webui.port" class="tbox num flr" disabled="disabled" />
 						<input type="checkbox" id="webui.enable_listen" /><label for="webui.enable_listen" id="DLG_SETTINGS_9_WEBUI_10"></label>
-					</div>
+					</span>
 					<div id="DLG_SETTINGS_9_WEBUI_12"></div>
-					<div><input type="text" id="webui.restrict" class="tbox" /></div>
+					<span class="hcont"><input type="text" id="webui.restrict" class="tbox" /></span>
 				</fieldset>
 				<fieldset>
 					<legend>User Interface</legend>
 					<div class="hcont">
-						<div class="ralign"><input type="text" id="webui.updateInterval" class="tbox num flr" value="3000" /><label for="webui.updateInterval">Update GUI every (ms)</label>:&nbsp;</div>
+						<div class="ralign"><input type="text" id="webui.updateInterval" class="tbox num flr" value="3000" /><label for="webui.updateInterval">Update GUI every (ms):</label>&nbsp;</div>
 						<span><input type="checkbox" id="webui.confirmDelete" checked="checked" /><label for="webui.confirmDelete" id="DLG_SETTINGS_2_UI_02"></label></span>
 					</div>
 					
 					<div class="hcont">
-						<div class="ralign"><label for="webui.maxRows"><input type="text" id="webui.maxRows" class="tbox num flr" value="50" />Virtual Row Threshold</label>:&nbsp;</div>
+						<div class="ralign"><label for="webui.maxRows"><input type="text" id="webui.maxRows" class="tbox num flr" value="50" />Virtual Row Threshold:</label>&nbsp;</div>
 						<input type="checkbox" id="webui.alternateRows" /><label for="webui.alternateRows" id="DLG_SETTINGS_2_UI_05"></label>
 					</div>
 					<div class="hcont">
@@ -180,7 +199,7 @@
 			</div>
 			<div id="st_dirs" class="stg_con">
 				<fieldset>
-					<legend id="DLG_SETTINGS_3_PATHS_01">
+					<legend id="DLG_SETTINGS_3_PATHS_01"></legend>
 					<div class="hcont"><input type="checkbox" id="dir_active_download_flag" /><label for="dir_active_download_flag" id="DLG_SETTINGS_3_PATHS_02"></label></div>
 					<div class="hcont"><input type="text" id="dir_active_download" class="tbox" /></div>
 					<div class="hcont">
@@ -191,7 +210,7 @@
 					<div class="hcont"><input type="checkbox" id="move_if_defdir" /><label for="move_if_defdir" id="DLG_SETTINGS_3_PATHS_10"></label></div>
 				</fieldset>
 				<fieldset>
-					<legend id="DLG_SETTINGS_3_PATHS_11">
+					<legend id="DLG_SETTINGS_3_PATHS_11"></legend>
 					<div class="hcont"><input type="checkbox" id="dir_torrent_files_flag" /><label for="dir_torrent_files_flag" id="DLG_SETTINGS_3_PATHS_12"></label></div>
 					<div class="hcont"><input type="text" id="dir_torrent_files" class="tbox" /></div>
 					<div class="hcont"><input id="dir_completed_torrents_flag" type="checkbox" /><label for="dir_completed_torrents_flag" id="DLG_SETTINGS_3_PATHS_15"></label></div>
@@ -209,7 +228,7 @@
 					<legend id="DLG_SETTINGS_4_CONN_01"></legend>
 					<div class="hcont">
 						<div class="ralign" style="text-align: right"><input type="text" id="bind_port" class="tbox num" maxlength="6" />&nbsp;<input type="button" id="DLG_SETTINGS_4_CONN_04" class="btn" /></div>
-						<label for="bind_port" id="DLG_SETTINGS_4_CONN_02"></td>
+						<label for="bind_port" id="DLG_SETTINGS_4_CONN_02"></label>
 					</div>
 					<div class="hcont">
 						<div class="ralign"><input id="rand_port_on_start" type="checkbox" /><label for="rand_port_on_start" id="DLG_SETTINGS_4_CONN_05"></label></div>
@@ -744,7 +763,7 @@
 		<!-- [remove] -->
 		<script type="text/javascript" src="./temp.js"></script>
 		<!-- [/remove] -->
-		<script type="text/javascript" src="./lang/en.js"></script>
+		<script type="text/javascript" src="./lang/en.js" charset="utf-8"></script>
 		<!-- [jscompact] -->
 		<script type="text/javascript" src="./mootools.js"></script>
 		<script type="text/javascript" src="./stable.js"></script>

@@ -344,14 +344,14 @@ div#toolbar #search {
 }
 
 div#toolbar div#sb {
-	width: 145px;
-	float: left;
+	width: 180px;
+	float: right;
 	margin: 0 5px;
 	line-height: 26px;
 }
 
 div#toolbar div#sb input {
-	width: 114px; height: 16px;
+	width: 128px; height: 16px;
 	line-height: 16px;
 	font-size: 11px;
 	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
@@ -367,7 +367,7 @@ div#toolbar div#sb input {
  *                                         *
  *******************************************/
  
-div.hcont {
+.hcont {
 	width: 460px; height: 20px;
 	line-height: 20px;
 	overflow: hidden;
@@ -375,6 +375,7 @@ div.hcont {
 	margin: 3px 0 0 0;
 	line-height: 20px;
 	clear: both;
+	display: block;
 }
 
 .hcont .ralign {
@@ -590,13 +591,18 @@ div.algnright { text-align: right; }
 
 .lm ul {
 	margin: 0; padding: 0;
-	list-style-position: inside;
 	list-style: none;
+}
+
+.lm li {
+	margin: 0; padding: 0;
+	position: relative;
 }
 
 .lm li a {
 	padding: 3px 9px;
 	display: block;
+	white-space: nowrap;
 }
 
 .lm li.selected a {

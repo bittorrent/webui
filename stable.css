@@ -57,7 +57,7 @@ limitations under the License.
 }
 
 .stable-head td {
-	width: 100%; height: 16px !important;
+	height: 16px !important;
 	line-height: 16px !important;
 	font-size: 11px;
 	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
@@ -66,7 +66,10 @@ limitations under the License.
 	background: transparent url(./images/arrow.gif) no-repeat scroll right -32px;
 	padding: 0 12px 0 5px;
 	empty-cells: show;
-	overflow: hidden;
+	overflow: hidden !important;
+}
+
+.stable-head td span {
 	white-space: nowrap !important;
 }
 

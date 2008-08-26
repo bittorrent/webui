@@ -139,7 +139,7 @@ function setupUI() {
 			"disabled": !!disabled
 		};
 	};
-	
+
 	var colMask = utWebUI.config.trtCols;
 	utWebUI.trtTable.create("List", [
 			col(lang[CONST.OV_COL_NAME], TYPE_STRING, colMask & 0x0001),
@@ -258,10 +258,7 @@ function setupUI() {
 					break;
 					
 				case 4:
-					values[i] = (values[i] == 0) ? "skip" :
-								(values[i] == 1) ? "low" :
-								(values[i] == 2) ? "normal" :
-								(values[i] == 3) ? "high" : "";
+					values[i] = lang[CONST["FI_PRI" + values[i]]];
 				}
 				index++;
 			}
@@ -301,7 +298,7 @@ function setupUI() {
 		}
 	});
 	
-	utWebUI.update();
+	//utWebUI.update();
 }
 
 function checkProxySettings() {
@@ -386,7 +383,7 @@ function loadJS(source, properties) {
 		check: $lambda(true)
 	}, properties);
 	
-	var script = new Element('script', {'src': source, 'type': 'text/javascript'});
+	var script = new Element('script', {'src': source, 'type': 'text/javascript', 'charset': 'utf-8'});
 	
 	var load = properties.onload.bind(script), check = properties.check, doc = properties.document;
 	delete properties.onload; delete properties.check; delete properties.document;
@@ -530,7 +527,7 @@ function loadLangStrings() {
 		"DLG_TORRENTPROP_1_GEN_16",
 		"DLG_TORRENTPROP_1_GEN_17",
 		"DLG_TORRENTPROP_1_GEN_18",
-		"DLG_TORRENTPROP_1_GEN_19",
+		"DLG_TORRENTPROP_1_GEN_19"
 	].each(function(k) {
 		$(k).set("text", lang[CONST[k]]);
 	});
@@ -608,7 +605,6 @@ function loadSettingStrings() {
 		"DLG_SETTINGS_3_PATHS_19",
 		"DLG_SETTINGS_4_CONN_01",
 		"DLG_SETTINGS_4_CONN_02",
-		"DLG_SETTINGS_4_CONN_04",
 		"DLG_SETTINGS_4_CONN_05",
 		"DLG_SETTINGS_4_CONN_06",
 		"DLG_SETTINGS_4_CONN_07",		
@@ -848,6 +844,11 @@ function linked(obj, defstate, list, ignoreLabels) {
 	}
 }
 
+window.onerror = function(msg, url, linenumber) {
+	log("JS error: [" + linenumber + "] " + msg);
+	return true;
+};
+
 window.addEvent("domready", function() {
 
 	document.title = "\u00B5Torrent WebUI " + VERSION;
@@ -918,11 +919,6 @@ window.addEvent("domready", function() {
 		} else {
 			resizeUI();
 		}
-	});
-	
-	window.addEvent("error", function(msg, url, linenumber) {
-		log("JS error: [" + linenumber + "] " + msg);
-		return true;
 	});
 	
 	document.addEvent("click", function(ev) {

@@ -154,7 +154,7 @@ var dxSTable = new Class({
 				simpleClone(TD, false).addClasses(this.id + "-col-" + this.colOrder[i], this.colData[i].disabled ? "stable-hidden-column" : "")
 			);
 			td = simpleClone(TD, false)
-				.set("text", this.colData[i].text)
+				.grab(new Element("span", {"text": this.colData[i].text}))
 				.setStyle("width", this.colWidth[this.colOrder[i]])
 				.addClasses(this.id + "-hdcol-" + this.colOrder[i], this.colData[i].disabled ? "stable-hidden-column" : "")
 				.store("index", i)
@@ -163,7 +163,7 @@ var dxSTable = new Class({
 			j++;
 		}
 		this.tb.head.grab(tr);
-		
+
 		if (this.options.mode == MODE_VIRTUAL)
 			this.topPad = simpleClone(DIV, false).addClass("stable-pad").inject(this.dBody);
 		
@@ -174,7 +174,7 @@ var dxSTable = new Class({
 		
 		if (this.options.mode == MODE_VIRTUAL)
 			this.bottomPad = simpleClone(DIV, false).addClass("stable-pad").inject(this.dBody);
-		
+
 		var cg = new Element("colgroup").inject(this.tBody);
 		for (var i = 0; i < len; i++) {
 			this.tBodyCols[i] = new Element("col", {
@@ -192,7 +192,7 @@ var dxSTable = new Class({
 				return false;
 			});
 		}
-		
+
 		this.colDragEle = null;
 		this.colDragObj = simpleClone(DIV, false).addClass("stable-move-header").inject(this.dHead);		
 		this.colSep = simpleClone(DIV, false).addClass("stable-separator-header").inject(this.dHead);
@@ -215,7 +215,7 @@ var dxSTable = new Class({
 		for (var i = 0; i < this.options.maxRows; i++)
 			this.tb.body.appendChild(simpleClone(ROW, true).hide());
 		ROW = null;
-		
+
 		this.tBody.grab(this.tb.body);
 		if (this.options.mode == MODE_PAGE) {
 			this.pageMenu = simpleClone(DIV, false).addClass("stable-pagemenu").inject(this.dCont);
@@ -321,19 +321,16 @@ var dxSTable = new Class({
 			default:
 				align = (this.colData[i].type == TYPE_NUMBER) ? "right" : "left";
 			}
-			/*
-			this.tHeadCols[i].setStyle("textAlign", align);
-			(Browser.Engine.trident) ?
+			
+			if (Browser.Engine.trident) {
+				this.tHeadCols[i].setStyle("textAlign", align);
 				cols[i].setProperty("align", align)
-			:
-			*/
-			sb += "." + this.id + "-col-" + this.colOrder[i] + ", ." + this.id + "-hdcol-" + this.colOrder[i] + " { text-align: " + align + " }";
+			} else {
+				sb += "." + this.id + "-col-" + this.colOrder[i] + ", ." + this.id + "-hdcol-" + this.colOrder[i] + " { text-align: " + align + " }";
+			}
 		}
-		if (Browser.Engine.trident) {
-			$("colrules").cssText = sb;
-		} else {
+		if (!Browser.Engine.trident)
 			$("colrules").appendText(sb);
-		}
 	},
 	
 	"sort": function(col, shift) {
@@ -1031,7 +1028,7 @@ function resizeColumn(index) {
 	var from = $pick(index, 0);
 	var to = $pick(index, this.tBodyCols.length - 1);
  	for (var i = from; i <= to; i++) {
-		var w = this.tHeadCols[i].getWidth() - (Browser.Engine.trident ? 10 : 0);
+		var w = this.tHeadCols[i].getWidth() - 26;
 		this.tBodyCols[i].setStyle("width", w).setProperty("width", w);
 	}
 	var w = this.tHead.getSize().x;

@@ -303,7 +303,7 @@ var Browser = new Hash({
 });
 
 if (window.opera) Browser.Engine = {name: 'presto', version: (document.getElementsByClassName) ? 950 : 925};
-else if (window.ActiveXObject) Browser.Engine = {name: 'trident', version: (window.XMLHttpRequest) ? 5 : 4};
+else if (window.ActiveXObject) Browser.Engine = {name: 'trident', version: (window.XMLHttpRequest) ? ((document.querySelector) ? 6 : 5) : 4};
 else if (!navigator.taintEnabled) Browser.Engine = {name: 'webkit', version: (Browser.Features.xpath) ? ((document.querySelector) ? 525 : 420) : 419};
 else if (document.getBoxObjectFor != null) Browser.Engine = {name: 'gecko', version: (document.getElementsByClassName) ? 19 : 18};
 Browser.Engine[Browser.Engine.name] = Browser.Engine[Browser.Engine.name + Browser.Engine.version] = true;
@@ -1526,28 +1526,16 @@ Element.implement({
 		return (this.parentNode) ? this.parentNode.removeChild(this) : this;
 	},
 
+	// http://mootools.lighthouseapp.com/projects/2706/tickets/332-moo-element-clone-patch-fix
 	clone: function(contents, keepid){
-		switch ($type(this)){
-			case 'element':
-				var attributes = {};
-				for (var j = 0, l = this.attributes.length; j < l; j++){
-					var attribute = this.attributes[j], key = attribute.nodeName.toLowerCase();
-					if (Browser.Engine.trident && (/input/i).test(this.tagName) && (/width|height/).test(key)) continue;
-					var value = (key == 'style' && this.style) ? this.style.cssText : attribute.nodeValue;
-					if (!$chk(value) || key == 'uid' || (key == 'id' && !keepid)) continue;
-					if (value != 'inherit' && ['string', 'number'].contains($type(value))) attributes[key] = value;
-				}
-				var element = new Element(this.nodeName.toLowerCase(), attributes);
-				if (contents !== false){
-					for (var i = 0, k = this.childNodes.length; i < k; i++){
-						var child = Element.clone(this.childNodes[i], true, keepid);
-						if (child) element.grab(child);
-					}
-				}
-				return element;
-			case 'textnode': return document.newTextNode(this.nodeValue);
-		}
-		return null;
+	    var clone = this.cloneNode(!!contents);
+	    clone.uid = null;
+	    !keepid && clone.removeAttribute('id');
+	    if (Browser.Engine.trident) {
+	        clone.clearAttributes();
+	        clone.mergeAttributes(this);
+	    }
+	    return $(clone);
 	},
 
 	replaces: function(el){
@@ -1729,6 +1717,15 @@ Element.Properties.style = {
 		this.style.cssText = '';
 	}
 
+};
+
+// http://mootools.lighthouseapp.com/projects/2706/tickets/270
+Element.Properties.href =  {
+	set: function(href) {
+		(href = href.trim())
+			? this.href = (Browser.Engine.trident ? ' ' : '') + href // fix ie href bug
+			: this.removeProperty('href');                           // prevent link clickability                                      
+	}
 };
 
 Element.Properties.tag = {get: function(){
@@ -2191,11 +2188,19 @@ Element.implement({
 		return position;
 	},
 
+	// http://mootools.lighthouseapp.com/projects/2706/tickets/264
 	getPosition: function(relative){
 		if (isBody(this)) return {x: 0, y: 0};
+		var relativePosition = (relative && (relative = $(relative))) ? relative.getPosition() : {x: 0, y: 0};
+		if (Browser.Engine.trident) {
+	        var rect = this.getBoundingClientRect(), html = this.getDocument().documentElement;
+	        return {
+	            x: rect.left + html.scrollLeft - html.clientLeft - relativePosition.x,
+	            y: rect.top + html.scrollTop - html.clientTop - relativePosition.y
+	        };
+		}
 		var offset = this.getOffsets(), scroll = this.getScrolls();
 		var position = {x: offset.x - scroll.x, y: offset.y - scroll.y};
-		var relativePosition = (relative && (relative = $(relative))) ? relative.getPosition() : {x: 0, y: 0};
 		return {x: position.x - relativePosition.x, y: position.y - relativePosition.y};
 	},
 
@@ -2641,6 +2646,33 @@ Element.implement({
 
 });
 
+/*
+Script: Request.JSON.js
+	Extends the basic Request Class with additional methods for sending and receiving JSON data.
+
+License:
+	MIT-style license.
+*/
+
+Request.JSON = new Class({
+
+	Extends: Request,
+
+	options: {
+		secure: true
+	},
+
+	initialize: function(options){
+		this.parent(options);
+		this.headers.extend({'Accept': 'application/json', 'X-Request': 'JSON'});
+	},
+
+	success: function(text){
+		this.response.json = JSON.decode(text, this.options.secure);
+		this.onSuccess(this.response.json, text);
+	}
+
+});
 
 /*
 Script: Drag.js

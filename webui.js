@@ -82,7 +82,7 @@ var utWebUI = {
 	},
 	
 	"request": function(qs, fn) {
-		new Request({
+		new Request.JSON({
 			"url": this.url + qs,
 			"method": "get",
 			"onSuccess": (fn) ? fn.bind(this) : $empty
@@ -207,17 +207,16 @@ var utWebUI = {
 	},
 
 	"addTorrents": function(json) {
-		var dobj = JSON.decode(json), torrents = [];
-		delete json;
-		if (!has(dobj, "torrents")) {
-			torrents = dobj.torrentp;
-			delete dobj.torrentp;
+		var torrents = [];
+		if (!has(json, "torrents")) {
+			torrents = json.torrentp;
+			delete json.torrentp;
 		} else {
-			torrents = dobj.torrents;
-			delete dobj.torrents;
+			torrents = json.torrents;
+			delete json.torrents;
 		}
-		this.loadLabels($A(dobj.label));
-		delete dobj.label;
+		this.loadLabels($A(json.label));
+		delete json.label;
 		if (!this.loaded) {
 			if (!has(this.labels, this.config.activeLabel) && !has(this.customLabels, this.config.activeLabel)) {
 				this.config.activeLabel = "_all_";
@@ -230,7 +229,7 @@ var utWebUI = {
 		}
 		
 		var scroll = this.trtTable.dBody.getScroll(), noRefresh = true;
-		if (Browser.Engine.gecko || Browser.Engine.trident) // doing offline updating slows Presto & WebKit down
+		if (Browser.Engine.gecko || Browser.Engine.trident4) // doing offline updating slows Presto & WebKit down
 			this.trtTable.detachBody();
 		for (var i = 0, len = torrents.length; i < len; i++) {
 			var tor = torrents[i];
@@ -301,11 +300,11 @@ var utWebUI = {
 		delete torrents;
 		if (!noRefresh)
 			this.trtTable.refreshRows(true);
-		if (Browser.Engine.gecko || Browser.Engine.trident)
+		if (Browser.Engine.gecko || Browser.Engine.trident4)
 			this.trtTable.attachBody();
-		if (has(dobj, "torrentm")) {
-			for (var i = 0, j = dobj.torrentm.length; i < j; i++) {
-				var k = dobj.torrentm[i];
+		if (has(json, "torrentm")) {
+			for (var i = 0, j = json.torrentm.length; i < j; i++) {
+				var k = json.torrentm[i];
 				delete this.torrents[k];
 				
 				if (this.labels[k].indexOf("_nlb_") > -1)
@@ -327,13 +326,13 @@ var utWebUI = {
 				delete this.labels[k];
 				this.trtTable.removeRow(k);
 			}
-			delete dobj.torrentm;
+			delete json.torrentm;
 		}
 		this.trtTable.dBody.scrollTo(scroll.x, scroll.y);
 		this.trtTable.loadObj.hide();
 		
-		this.cacheID = dobj.torrentc;
-		dobj = null;
+		this.cacheID = json.torrentc;
+		json = null;
 		this.updateLabels();
 		this.loadTorrents();
 	},
@@ -525,11 +524,17 @@ var utWebUI = {
 	},
 	
 	"getSettings": function() {
-		this.request("?token=" + this.TOKEN + "&action=getsettings", this.addSettings);
+		var qs = "?token=" + this.TOKEN + "&action=getsettings";
+		if (!this.loaded) {
+			qs += "&list=1";
+			$clear(this.updateTimeout);
+			this.timer = $time();
+		}
+		this.request(qs, this.addSettings);
 	},
 	
-	"addSettings": function(settings) {
-		settings = JSON.decode(settings).settings;
+	"addSettings": function(json) {
+		var settings = json.settings;
 		if (BUILD_REQUIRED > -1) {
 			if (!has(settings, "build") || (settings.build < BUILD_REQUIRED)) {
 				alert("The WebUI requires atleast \u00B5Torrent (build " + BUILD_REQUIRED + ")");
@@ -550,15 +555,17 @@ var utWebUI = {
 				val = (val == "true");	
 			this.settings[settings[i][0]] = val;
 		}
-		var detectLang = (navigator.language) ? navigator.language : navigator.userLanguage;
-		var matches;
-		if (matches = detectLang.match(/af|ar|az|be|ca|cs|de|en|eo|es|et|fr|it|jp|nl|pt|sv/i))
-			detectLang = matches[0];
+		delete json.settings;
 		if (!this.loaded) {
-			if ((lang !== null) && ((lang.code == this.config.lang) || ((this.config.lang == "auto") && (lang.code == detectLang)))) {
+			var detectLang = (navigator.language) ? navigator.language : navigator.userLanguage;
+			var matches;
+			if (matches = detectLang.match(/af|ar|az|be|ca|cs|de|en|eo|es|et|fr|it|jp|nl|pt|sv/i))
+				detectLang = matches[0];
+			if ((lang !== null) && ((lang_code == this.config.lang) || ((this.config.lang == "auto") && (lang_code == detectLang)))) {
 				setupUI();
+				utWebUI.addTorrents(json);
 			} else {
-				loadJS(this.url + "lang/" + ((this.config.lang == "auto") ? detectLang : this.config.lang) + ".js", {"onload": setupUI});
+				loadJS(this.url + "lang/" + ((this.config.lang == "auto") ? detectLang : this.config.lang) + ".js", {"onload": function() { setupUI(); utWebUI.addTorrents(json); }});
 			}
 		}
 		this.loadSettings();
@@ -591,11 +598,10 @@ var utWebUI = {
 			if (!(ele = $("webui." + key))) return;
 			var v = utWebUI.config[key];
 			if (ele.type == "checkbox") {
-				ele.checked = ((v == "1") || (v == "true"));
+				ele.checked = ((v == 1) || (v == true));
 			} else {
 				ele.set("value", v);
 			}
-			ele.fireEvent("change");
 		});
 		if (!this.config.showCategories)
 			$("CatList").hide();
@@ -847,10 +853,9 @@ var utWebUI = {
 		return true;
 	},
 	
-	"loadProperties": function(str) {
-		var data = JSON.decode(str);
-		var props = data.props[0], id = this.propID;
-		if (!$defined(this.props[id]))
+	"loadProperties": function(json) {
+		var props = json.props[0], id = this.propID;
+		if (!has(this.props, id))
 			this.props[id] = {};
 		for (var k in props) 
 			this.props[id][k] = props[k];
@@ -992,8 +997,8 @@ var utWebUI = {
 		}
 	},
 	
-	"addFiles": function(fd) {
-		var files = JSON.decode(fd).files;
+	"addFiles": function(json) {
+		var files = json.files;
 		if (files == undefined) return;
 		this.files[files[0]] = files[1];
 		if (this.tabs.active == "FileList")
