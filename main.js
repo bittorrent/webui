@@ -376,7 +376,6 @@ var searchActive = 0;
 function searchSet(index) {
 	searchActive = index;
 	$("query").focus();
-	return true;
 }
 
 // MooTools.Utilities.Assets.js
@@ -873,7 +872,7 @@ window.addEvent("domready", function() {
 		return;
 	}
 	
-	document.addEvent("keydown", function(ev) {
+	document.addEvent("keypress", function(ev) {
 		switch (ev.key) {
 		
 		case "esc": // Esc
@@ -882,8 +881,10 @@ window.addEvent("domready", function() {
 			break;
 			
 		case "a": // Ctrl + A
-			if (ev.control)
+			if (ev.control) {
 				ev.stop();
+				return false;
+			}
 			break;
 			
 		case "e": // Ctrl + E

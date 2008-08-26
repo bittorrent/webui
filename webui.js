@@ -88,6 +88,8 @@ var utWebUI = {
 			}).send();
 		} else {
 			this.TOKEN = $("token").get("text");
+			if (this.TOKEN.charAt(0) == "#")
+				this.TOKEN = "";
 		}
 		
 		this.getSettings();
@@ -178,8 +180,16 @@ var utWebUI = {
 	},
 	
 	"remove": function(mode) {
-		if (!this.config.confirmDelete || confirm(lang[CONST.OV_CONFIRM_DELETE]))
-			this.perform(this.delActions[mode]);
+		var count = this.trtTable.selectedRows.length;
+		if (count == 0) return;
+		var ok = !this.config.confirmDelete;
+		if (!ok) {
+			var multiple = (count != 1);
+			var ask = (mode == 0) ? ((multiple) ? CONST.OV_CONFIRM_DELETE_MULTIPLE : CONST.OV_CONFIRM_DELETE_ONE) : ((multiple) ? CONST.OV_CONFIRM_DELETEDATA_MULTIPLE : CONST.OV_CONFIRM_DELETEDATA_ONE);
+			ok = confirm(lang[ask].replace(/%d/, count));
+		}
+		if (!ok) return;
+		this.perform(this.delActions[mode]);
 	},
 	
 	"recheck": function() {
@@ -704,7 +714,6 @@ var utWebUI = {
 			if (v != nv) {
 				str += "&s=" + key + "&v=" + nv;
 				this.settings[key] = nv;
-				log(key + " " + v + " --> " + nv);
 			}
 		}
 		if (str != "")

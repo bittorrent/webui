@@ -77,7 +77,8 @@ var dxSTable = new Class({
 		"format": $arguments(0),
 		"maxRows": 25,
 		"alternateRows": false,
-		"mode": MODE_PAGE
+		"mode": MODE_PAGE,
+		"rowsSelectable": true
 	},
 	"startSel": null,
 	"tHeadCols": [],
@@ -221,7 +222,7 @@ var dxSTable = new Class({
 		this.tBody.grab(this.tb.body);
 		if (this.options.mode == MODE_PAGE) {
 			this.pageMenu = simpleClone(DIV, false).addClass("stable-pagemenu").inject(this.dCont);
-			if (this.options.rowsSelectable) return;
+			if (this.options.rowsSelectable)
 				this.pageInfo = new Element("span", {"class": "pageinfo", "text": "0 row(s) selected."}).inject(this.pageMenu);
 			this.pageNext = simpleClone(DIV, false)
 				.addClass("nextlink-disabled")
@@ -289,17 +290,23 @@ var dxSTable = new Class({
 			return false;
 		}).bind(this));
 		if (!this.options.rowsSelectable) return;
-		this.dCont.addEvent("keydown", (function(ev) {
+		this.dCont.addEvent("keypress", (function(ev) {
 			if (ev.key == "delete") { // DEL
 				this.fireEvent("onDelete");
 			} else if ((ev.key == "a") && ev.control) { // Ctrl + A
 				this.fillSelection();
 				this.fireEvent("onSelect", ev);
-			} else if ((ev.key == "e") && ev.control) { // Ctrl + Z
+			} else if ((ev.key == "e") && ev.control) { // Ctrl + E
 				this.clearSelection();
 				this.fireEvent("onSelect", ev);
 			}
 		}).bind(this));
+		if (Browser.Engine.gecko) {
+			// http://n2.nabble.com/key-events-not-firing-on-div-in-FF--td663136.html
+			this.dCont.addEvent("mousedown", function(ev) {
+				this.focus();
+			}).setProperty("tabIndex", -1);
+		}
 	},
 
 	"setAlignment": function() {
@@ -1033,17 +1040,6 @@ function resizeColumn(index) {
 	if (Browser.Engine.trident)
 		w -= (index == 0) ? 30 : 10; // substract the left & right padding
 	this.tBodyCols[index].setStyle("width", w).setProperty("width", w);
-	/*
-	var from = $pick(index, 0);
-	var to = $pick(index, this.tBodyCols.length - 1);
- 	for (var i = from; i <= to; i++) {
-		var w = this.tHeadCols[i].getWidth() - 8;
-		log("resizing " + i + " --> " + w);
-		if (Browser.Engine.trident)
-			w = this.tHeadCols[i].getStyle("width").toInt() - 8;
-		this.tBodyCols[i].setStyle("width", w).setProperty("width", w);
-	}
-	*/
 	w = this.tHead.getSize().x;
 	this.tb.body.setStyle("width", w);
 	this.tBody.setStyle("width", w);

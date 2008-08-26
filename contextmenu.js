@@ -16,6 +16,8 @@ var ContextMenu = {
 	"init": function(id) {
 		this.obj = new Element("ul", {"id": id, "class": "CMenu"}).inject(document.body);
 	},
+	
+	"hideAfterClick": true,
 
 	"add": function() {
 		var args = $A(arguments);
@@ -48,10 +50,11 @@ var ContextMenu = {
 			} else if (args[i][0] === CMENU_CHECK) {
 				link.addClass("check");
 				link.setProperty("href", "#");
-				var fn = args[i][2] || $lamda(true);
+				var fn = args[i][2];
 				link.addEvent("click", function(ev) {
 					ev.stop();
-					if (fn())
+					fn();
+					if (ContextMenu.hideAfterClick)
 						ContextMenu.hide();
 				});
 				link.set("html", args[i][1]);
@@ -62,10 +65,11 @@ var ContextMenu = {
 				li.adopt(link);
 			} else {
 				link.setProperty("href", "#");
-				var fn = args[i][1] || $lamda(true);
+				var fn = args[i][1];
 				link.addEvent("click", function(ev) {
 					ev.stop();
-					if (fn())
+					fn();
+					if (ContextMenu.hideAfterClick)
 						ContextMenu.hide();
 				});
 				link.set("html", args[i][0]);
@@ -77,6 +81,7 @@ var ContextMenu = {
 
 	"clear": function() {
 		this.obj.empty();
+		this.hideAfterClick = true;
 	},
 	
 	"show": function(p) {
