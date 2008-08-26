@@ -63,7 +63,8 @@ var utWebUI = {
 				"maxRows": 50,
 				"colOrder": [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15],
 				"colWidth": [220,100,80,80,100,80,60,80,80,60,80,60,60,60,30,90],
-				"sIndex": -1
+				"sIndex": -1,
+				"rowsSelectable": !isGuest
 			},
 			"flsCols": 0x0000,
 			"fileTable": {
@@ -76,7 +77,18 @@ var utWebUI = {
 			"activeLabel": "_all_"
 		};
 		
-		this.TOKEN = $("token").get("text");
+		if (isGuest) {
+			new Request({
+				"url": this.url + "token.html",
+				"method": "get",
+				"async": false,
+				"onSuccess": function(str) {
+					utWebUI.TOKEN = str.substring(str.indexOf("none;'>") + 7, str.indexOf("</div>"));
+				}
+			}).send();
+		} else {
+			this.TOKEN = $("token").get("text");
+		}
 		
 		this.getSettings();
 	},
@@ -534,26 +546,25 @@ var utWebUI = {
 	},
 	
 	"addSettings": function(json) {
-		var settings = json.settings;
 		if (BUILD_REQUIRED > -1) {
-			if (!has(settings, "build") || (settings.build < BUILD_REQUIRED)) {
+			if (!has(json.settings, "build") || (json.settings.build < BUILD_REQUIRED)) {
 				alert("The WebUI requires atleast \u00B5Torrent (build " + BUILD_REQUIRED + ")");
 				return;
 			}
 		}
-		for (var i = 0, j = settings.length; i < j; i++) {
-			if ((settings[i][0] == "webui.cookie") && !this.loaded) { // only load webui.cookie on startup
-				$extend(this.config, JSON.decode(settings[i][2])); // if the user corrupts the "cookie," good for him/her
+		for (var i = 0, j = json.settings.length; i < j; i++) {
+			if ((json.settings[i][0] == "webui.cookie") && !this.loaded) { // only load webui.cookie on startup
+				$extend(this.config, JSON.decode(json.settings[i][2])); // if the user corrupts the "cookie," good for him/her
 				this.config.torrentTable.alternateRows = this.config.fileTable.alternateRows = this.config.alternateRows;
 				continue;
 			}
-			var val = settings[i][2];
-			var typ = settings[i][1];
+			var val = json.settings[i][2];
+			var typ = json.settings[i][1];
 			if (typ == 0)
 				val = parseInt(val);
 			if (typ == 1)
 				val = (val == "true");	
-			this.settings[settings[i][0]] = val;
+			this.settings[json.settings[i][0]] = val;
 		}
 		delete json.settings;
 		if (!this.loaded) {
@@ -605,9 +616,9 @@ var utWebUI = {
 		});
 		if (!this.config.showCategories)
 			$("CatList").hide();
-		if (!this.config.showDetails)
+		if (!this.config.showDetails && !isGuest)
 			$("tdetails").hide();
-		if (!this.config.showToolbar)
+		if (!this.config.showToolbar && !isGuest)
 			$("toolbar").hide();
 	},
 	
@@ -720,7 +731,7 @@ var utWebUI = {
 	},
 	
 	"showSettings": function() {
-		if (!this.langLoaded)
+		if (!this.langLoaded && !isGuest)
 			loadSettingStrings();
 		$("dlgSettings").centre();
 	},

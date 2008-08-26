@@ -77,7 +77,6 @@ a.dlg-close:active {
 
 div#preload {
 	width: 0px; height: 0px;
-	display: none;
 	background-image: url(./images/tbar.png);
 	background-image: url(./images/toolbar.png);
 	background-image: url(./images/tstatus.png);
@@ -88,6 +87,7 @@ div#preload {
 	background-image: url(./images/menucheck.png);
 	background-image: url(./images/menuexp.png);
 	background-image: url(./images/nextprev.png);
+	display: none;
 }
 
 div#cover {
@@ -104,6 +104,7 @@ div#msg {
 	top: 50%;
 	margin-top: -50px;
 	line-height: 100px;
+	vertical-align: middle;
 	font-size: 11px;
 	font-weight: bold;
 	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
@@ -457,6 +458,10 @@ a {
 
 #seed_time {
 	width: 150px;
+}
+
+#DLG_SETTINGS_4_CONN_11, #DLG_SETTINGS_4_CONN_13, #DLG_SETTINGS_4_CONN_16, #DLG_SETTINGS_4_CONN_18 {
+	padding: 0 10px 0 25px;
 }
 
 /*******************************************

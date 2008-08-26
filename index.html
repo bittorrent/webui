@@ -24,13 +24,15 @@
 			margin: 0;
 			padding: 0;
 		}
-		.stg_con .hcont {
-			position: relative;
+		.stg_con .hcont label {
+			vertical-align: baseline;
 		}
-		.stg_con label {
-			vertical-align: top;
-			top: 6px;
-			position: relative;
+		
+		ul#tabs {
+			padding: 5px 0 0 0;
+		}
+		.stable-body table {
+			border-collapse:collapse;
 		}
 		</style>
 		<![endif]-->
@@ -95,14 +97,14 @@
 						</div>
 					</span>
 					<span class="hcont">
-						<div class="ralign"><input type="text" id="webui.guest" class="tbox str flr" disabled="disabled" /></div>
+						<div class="ralign"><input type="text" id="webui.guest" class="tbox str flr" /></div>
 						<input type="checkbox" id="webui.enable_guest" /><label for="webui.enable_guest" id="DLG_SETTINGS_9_WEBUI_07"></label>
 					</span>
 				</fieldset>
 				<fieldset>
 					<legend id="DLG_SETTINGS_9_WEBUI_09"></legend>
 					<span class="hcont">
-						<input type="text" id="webui.port" class="tbox num flr" disabled="disabled" />
+						<input type="text" id="webui.port" class="tbox num flr" />
 						<input type="checkbox" id="webui.enable_listen" /><label for="webui.enable_listen" id="DLG_SETTINGS_9_WEBUI_10"></label>
 					</span>
 					<div id="DLG_SETTINGS_9_WEBUI_12"></div>
@@ -243,22 +245,22 @@
 					<legend id="DLG_SETTINGS_4_CONN_08"></legend>
 					<div class="hcont">
 						<label id="DLG_SETTINGS_4_CONN_09"></label>
-						<select id="proxy.type"></select>
-						<label for="proxy.proxy" class="disabled" id="DLG_SETTINGS_4_CONN_11"></label>
-						<input id="proxy.proxy" type="text" class="tbox str" disabled="disabled" />
-						<label for="proxy.port" class="disabled" id="DLG_SETTINGS_4_CONN_13"></label>
-						<input id="proxy.port" type="text" class="tbox num" disabled="disabled" />
+						<select id="proxy.type"><option>-------------------</option></select>
+						<label for="proxy.proxy" id="DLG_SETTINGS_4_CONN_11"></label>
+						<input id="proxy.proxy" type="text" class="tbox str" />
+						<label for="proxy.port" id="DLG_SETTINGS_4_CONN_13"></label>
+						<input id="proxy.port" type="text" class="tbox num" />
 					</div>
 					<div class="hcont">
-						<input id="proxy.auth" type="checkbox" disabled="disabled" /><label for="proxy.auth" class="disabled" id="DLG_SETTINGS_4_CONN_15"></label>
-						<label for="proxy.username" class="disabled" id="DLG_SETTINGS_4_CONN_16"></label>
-						<input id="proxy.username" type="text" class="tbox str" disabled="disabled" />
-						<label for="proxy.password" class="disabled" id="DLG_SETTINGS_4_CONN_18"></label>
-						<input id="proxy.password" type="text" class="tbox str" disabled="disabled" />
+						<input id="proxy.auth" type="checkbox" /><label for="proxy.auth" id="DLG_SETTINGS_4_CONN_15"></label>
+						<label for="proxy.username" id="DLG_SETTINGS_4_CONN_16"></label>
+						<input id="proxy.username" type="text" class="tbox str" />
+						<label for="proxy.password" id="DLG_SETTINGS_4_CONN_18"></label>
+						<input id="proxy.password" type="text" class="tbox str" />
 					</div>
 					<div class="hcont">
-						<input id="proxy.p2p" type="checkbox" disabled="disabled" />
-						<label for="proxy.p2p" class="disabled" id="DLG_SETTINGS_4_CONN_20"></label>
+						<input id="proxy.p2p" type="checkbox" />
+						<label for="proxy.p2p" id="DLG_SETTINGS_4_CONN_20"></label>
 					</div>
 				</fieldset>
 			</div>
@@ -328,7 +330,7 @@
 					<div class="hcont">
 						<div class="ralign"><input id="encryption_allow_legacy" type="checkbox" /><label for="encryption_allow_legacy" id="DLG_SETTINGS_6_BITTORRENT_13"></label></div>
 						<label id="DLG_SETTINGS_6_BITTORRENT_11"></label>
-						<select id="encryption_mode"></select>
+						<select id="encryption_mode"><option>-------------------</option></select>
 					</div>
 				</fieldset>
 			</div>
@@ -349,7 +351,7 @@
 					<legend id="DLG_SETTINGS_7_QUEUEING_06"></legend>
 					<div class="hcont">
 						<label for="seed_ratio" id="DLG_SETTINGS_7_QUEUEING_07"></label>
-						<input type="text" id="seed_ratio" class="tbox num" /><label for="seed_time" id="DLG_SETTINGS_7_QUEUEING_09"></label><select id="seed_time"></select>
+						<input type="text" id="seed_ratio" class="tbox num" /><label for="seed_time" id="DLG_SETTINGS_7_QUEUEING_09"></label><select id="seed_time"><option>-------------------</option></select>
 					</div>
 					<div class="hcont"><input id="seeds_prioritized" type="checkbox" /><label for="seeds_prioritized" id="DLG_SETTINGS_7_QUEUEING_11"></label></div>
 				</fieldset>
@@ -398,12 +400,12 @@
 				<fieldset>
 					<legend id="DLG_SETTINGS_C_ADV_CACHE_06"></legend>
 					<div><input id="cache.write" type="checkbox" /><label for="cache.write" id="DLG_SETTINGS_C_ADV_CACHE_07"></label></div>
-					<div class="indent"><input id="cache.writeout" type="checkbox" /><label for="cache.writeout" id="DLG_SETTINGS_C_ADV_CACHE_08" class="disabled"></label></div>
-					<div class="indent"><input id="cache.writeimm" type="checkbox" /><label for="cache.writeimm" id="DLG_SETTINGS_C_ADV_CACHE_09" class="disabled"></label></div>
+					<div class="indent"><input id="cache.writeout" type="checkbox" /><label for="cache.writeout" id="DLG_SETTINGS_C_ADV_CACHE_08"></label></div>
+					<div class="indent"><input id="cache.writeimm" type="checkbox" /><label for="cache.writeimm" id="DLG_SETTINGS_C_ADV_CACHE_09"></label></div>
 					<div><input id="cache.read" type="checkbox" /><label for="cache.read" id="DLG_SETTINGS_C_ADV_CACHE_10"></label></div>
-					<div class="indent"><input id="cache.read_turnoff" type="checkbox" /><label for="cache.read_turnoff" id="DLG_SETTINGS_C_ADV_CACHE_11" class="disabled"></label></div>
-					<div class="indent"><input id="cache.read_prune" type="checkbox" /><label for="cache.read_prune" id="DLG_SETTINGS_C_ADV_CACHE_12" class="disabled"></label></div>
-					<div class="indent"><input id="cache.read_trash" type="checkbox" /><label for="cache.read_trash" id="DLG_SETTINGS_C_ADV_CACHE_13" class="disabled"></label></div>
+					<div class="indent"><input id="cache.read_turnoff" type="checkbox" /><label for="cache.read_turnoff" id="DLG_SETTINGS_C_ADV_CACHE_11"></label></div>
+					<div class="indent"><input id="cache.read_prune" type="checkbox" /><label for="cache.read_prune" id="DLG_SETTINGS_C_ADV_CACHE_12"></label></div>
+					<div class="indent"><input id="cache.read_trash" type="checkbox" /><label for="cache.read_trash" id="DLG_SETTINGS_C_ADV_CACHE_13"></label></div>
 					<div><input id="cache.disable_win_write" type="checkbox" /><label for="cache.disable_win_write" id="DLG_SETTINGS_C_ADV_CACHE_14"></label></div>
 					<div><input id="cache.disable_win_read" type="checkbox" /><label for="cache.disable_win_read" id="DLG_SETTINGS_C_ADV_CACHE_15"></label></div>
 				</fieldset>
@@ -647,7 +649,7 @@
 						<input type="checkbox" id="prop-seed_override" /><label id="DLG_TORRENTPROP_1_GEN_11" for="prop-seed_override"></label>
 					</div>
 					<div>
-						<label for="prop-seed_ratio" id="DLG_TORRENTPROP_1_GEN_12"></label><input type="text" id="prop-seed_ratio" class="tbox" /><label for="prop-seed_time" id="DLG_TORRENTPROP_1_GEN_14"></label><select id="prop-seed_time"></select>
+						<label for="prop-seed_ratio" id="DLG_TORRENTPROP_1_GEN_12"></label><input type="text" id="prop-seed_ratio" class="tbox" /><label for="prop-seed_time" id="DLG_TORRENTPROP_1_GEN_14"></label><select id="prop-seed_time"><option>-------------------</option></select>
 					</div>
 				</fieldset>
 				<fieldset>

@@ -228,49 +228,51 @@ function setupUI() {
 		"onSelect": utWebUI.trtSelect.bind(utWebUI)
 	}, utWebUI.config.torrentTable));
 
-	colMask = utWebUI.config.flsCols;
-	utWebUI.flsTable.create("FileList", [
-			col(lang[CONST.FI_COL_NAME], TYPE_STRING, colMask & 0x01),
-			col(lang[CONST.FI_COL_SIZE], TYPE_NUMBER, colMask & 0x02),
-			col(lang[CONST.FI_COL_DONE], TYPE_NUMBER, colMask & 0x04),
-			col(lang[CONST.FI_COL_PCT], TYPE_NUMBER, colMask & 0x08),
-			col(lang[CONST.FI_COL_PRIO], TYPE_NUMBER, colMask & 0x10)
-		], $extend({
-		"format": function(values, index) {
-			var len = values.length;
-			if (isNaN(index))
-				index = 0;
-			for (var i = 0; i < len; i++) {
-				switch (index) {
-				case 0:
-					break;
+	if (!isGuest) {
+		colMask = utWebUI.config.flsCols;
+		utWebUI.flsTable.create("FileList", [
+				col(lang[CONST.FI_COL_NAME], TYPE_STRING, colMask & 0x01),
+				col(lang[CONST.FI_COL_SIZE], TYPE_NUMBER, colMask & 0x02),
+				col(lang[CONST.FI_COL_DONE], TYPE_NUMBER, colMask & 0x04),
+				col(lang[CONST.FI_COL_PCT], TYPE_NUMBER, colMask & 0x08),
+				col(lang[CONST.FI_COL_PRIO], TYPE_NUMBER, colMask & 0x10)
+			], $extend({
+			"format": function(values, index) {
+				var len = values.length;
+				if (isNaN(index))
+					index = 0;
+				for (var i = 0; i < len; i++) {
+					switch (index) {
+					case 0:
+						break;
+						
+					case 1:
+						values[i] = values[i].toFileSize(2); //size
+						break;
+						
+					case 2:
+						values[i] = values[i].toFileSize(2); //done
+						break
 					
-				case 1:
-					values[i] = values[i].toFileSize(2); //size
-					break;
-					
-				case 2:
-					values[i] = values[i].toFileSize(2); //done
-					break
-				
-				case 3:
-					values[i] = values[i] + "%"; //%
-					break;
-					
-				case 4:
-					values[i] = lang[CONST["FI_PRI" + values[i]]];
+					case 3:
+						values[i] = values[i] + "%"; //%
+						break;
+						
+					case 4:
+						values[i] = lang[CONST["FI_PRI" + values[i]]];
+					}
+					index++;
 				}
-				index++;
-			}
-			return values;
-		},
-		"onColResize": utWebUI.flsColResize.bind(utWebUI),
-		"onColMove": utWebUI.flsColMove.bind(utWebUI),
-		"onColToggle": utWebUI.trtColToggle.bind(utWebUI),
-		"onSort": utWebUI.flsSort.bind(utWebUI),
-		"onSelect": utWebUI.flsSelect.bind(utWebUI)
-	}, utWebUI.config.fileTable));
-	utWebUI.flsTable.loadObj.hide();
+				return values;
+			},
+			"onColResize": utWebUI.flsColResize.bind(utWebUI),
+			"onColMove": utWebUI.flsColMove.bind(utWebUI),
+			"onColToggle": utWebUI.trtColToggle.bind(utWebUI),
+			"onSort": utWebUI.flsSort.bind(utWebUI),
+			"onSelect": utWebUI.flsSelect.bind(utWebUI)
+		}, utWebUI.config.fileTable));
+		utWebUI.flsTable.loadObj.hide();
+	}
 	
 	resizeUI();
 	
@@ -279,6 +281,8 @@ function setupUI() {
 			utWebUI.switchLabel(this);
 		});
 	});
+	
+	if (isGuest) return;
 	
 	$("query").addEvent("keydown", function(ev) {
 		if (ev.code == 13)
@@ -499,6 +503,17 @@ var TreeNode = new Class({
 */
 
 function loadLangStrings() {
+	[
+		"OV_CAT_ALL",
+		"OV_CAT_DL",
+		"OV_CAT_COMPL",
+		"OV_CAT_ACTIVE",
+		"OV_CAT_INACTIVE",
+		"OV_CAT_NOLABEL"
+	].each(function(k) {
+		$(k).set("text", lang[CONST[k]]);
+	});
+	if (isGuest) return;
 	var tstr = lang[CONST.OV_TABS].split("||");
 	utWebUI.tabs = new Tabs($("tabs"), {
 		"tabs": {
@@ -509,12 +524,6 @@ function loadLangStrings() {
 		"onChange": utWebUI.tabChange.bind(utWebUI)
 	}).draw().show("gcont");
 	[
-		"OV_CAT_ALL",
-		"OV_CAT_DL",
-		"OV_CAT_COMPL",
-		"OV_CAT_ACTIVE",
-		"OV_CAT_INACTIVE",
-		"OV_CAT_NOLABEL",
 		"DLG_TORRENTPROP_1_GEN_01",
 		"DLG_TORRENTPROP_1_GEN_03",
 		"DLG_TORRENTPROP_1_GEN_04",
@@ -541,6 +550,7 @@ function loadLangStrings() {
 	});
 	
 	var timesListA = $("prop-seed_time"), timesListB = $("seed_time");
+	timesListA.options.length = timesListB.options.length = 0;
 	[0, 5400, 7200, 10800, 14400, 18000, 21600, 25200, 28800, 32400, 36000, 43200, 57600, 72000, 86400, 108000, 129600, 172800, 216000, 259200, 345600].each(function(t) {
 		var text = "";
 		if (t == 0) {
@@ -550,8 +560,8 @@ function loadLangStrings() {
 		} else {
 			text = lang[CONST.ST_SEEDTIMES_HOURS].replace(/%d/, t / 3600);
 		}
-		timesListA.grab(new Option(text, t, false, t == 0));
-		timesListB.grab(new Option(text, t, false, t == 0));
+		timesListA.options[timesListA.options.length] = new Option(text, t, false, t == 0);
+		timesListB.options[timesListB.options.length] = new Option(text, t, false, t == 0);
 	});
 	$("DLG_TORRENTPROP_01").set("value", lang[CONST.DLG_TORRENTPROP_01]).addEvent("click", function() {
 		$("dlgProps").hide();
@@ -701,17 +711,20 @@ function loadSettingStrings() {
 		$("bind_port").set("value", rnd);
 	});
 	var encList = $("encryption_mode");
+	encList.options.length = 0;
 	lang[CONST.ST_CBO_ENCRYPTIONS].split("||").each(function(v, k) {
 		if (v == "") return;
-		encList.grab(new Option(v, k, false, false));
+		encList.options[encList.options.length] = new Option(v, k, false, false);
 	});
 	encList.set("value", utWebUI.settings["encryption_mode"]);
 	var pxyList = $("proxy.type");
+	pxyList.options.length = 0;
 	lang[CONST.ST_CBO_PROXY].split("||").each(function(v, k) {
 		if (v == "") return;
-		pxyList.grab(new Option(v, k, false, false));
+		pxyList.options[pxyList.options.length] = new Option(v, k, false, false);
 	});
 	pxyList.set("value", utWebUI.settings["proxy.type"]);
+	utWebUI.langLoaded = true;
 	/* TODO: implement
 	(function() {
 		var days = lang[CONST.SETT_DAYNAMES].split("||");
@@ -765,7 +778,7 @@ function resizeUI(w, h) {
 	
 	if (!w && !h) {
 		w = Math.floor(ww * ((showcat) ? utWebUI.config.hSplit : 1.0));
-		h = Math.floor(wh * ((showdet) ? utWebUI.config.vSplit : 1.0));
+		h = Math.floor(wh * ((!isGuest && showdet) ? utWebUI.config.vSplit : 1.0));
 		winResize = true;
 	}
 	
@@ -783,7 +796,7 @@ function resizeUI(w, h) {
 			$("CatList").setStyle("height", h);
 	}
 	
-	if (showdet) {
+	if (!isGuest && showdet) {
 		$("tdetails").setStyle("width", ww - (Browser.Engine.trident4 ? 14 : 12));
 		if (h) {
 			var th = wh - h, cth = th - (showtb ? 46 : 41) - eh;
@@ -795,6 +808,8 @@ function resizeUI(w, h) {
 	}
 
 	utWebUI.trtTable.resizeTo(w, h);
+	
+	if (isGuest) return;
 	var listPos = $("List").getPosition();
 
 	$("HDivider").setStyle("left", listPos.x - 5);
@@ -833,7 +848,7 @@ function linked(obj, defstate, list, ignoreLabels) {
 		if (element.type != "checkbox")
 			element[(disabled ? "add" : "remove") + "Class"]("disabled");
 		element.disabled = disabled;
-		element.fireEvent("change");
+		element.fireEvent(((tag == "input") && Browser.Engine.trident) ? "click" : "change");
 		if (ignoreLabels.contains(list[i])) continue;
 		var label = element.getPrevious();
 		if (!label || (label.get("tag") != "label")) {
@@ -852,6 +867,11 @@ window.onerror = function(msg, url, linenumber) {
 window.addEvent("domready", function() {
 
 	document.title = "\u00B5Torrent WebUI " + VERSION;
+	
+	if (isGuest) {
+		utWebUI.init();
+		return;
+	}
 	
 	document.addEvent("keydown", function(ev) {
 		switch (ev.key) {
@@ -969,11 +989,6 @@ window.addEvent("domready", function() {
 			return true;
 		});
 	}
-	
-	if (isGuest) {
-		utWebUI.init();
-		return;
-	}
 
 	$("search").addEvent("click", function(ev) {
 		ev.stop();
@@ -1069,58 +1084,61 @@ window.addEvent("domready", function() {
 		});
 	});
 	
+	var linkedEvent = Browser.Engine.trident ? "click" : "change";
+	
+	// onchange fires in IE on <select>s
 	$("proxy.type").addEvent("change", function() {
 		linked(this, 0, ["proxy.proxy", "proxy.port", "proxy.auth", "proxy.p2p"]);
 		checkProxySettings();
 	});
-	$("proxy.auth").addEvent("change", function() {
+	$("proxy.auth").addEvent(linkedEvent, function() {
 		linked(this, 0, ["proxy.username", "proxy.password"]);
 		checkProxySettings();
 	});
-	$("cache.override").addEvent("change", function() {
+	$("cache.override").addEvent(linkedEvent, function() {
 		linked(this, 0, ["cache.override_size"]);
 	});
-	$("cache.write").addEvent("change", function() {
+	$("cache.write").addEvent(linkedEvent, function() {
 		linked(this, 0, ["cache.writeout", "cache.writeimm"]);
 	});
-	$("cache.read").addEvent("change", function() {
+	$("cache.read").addEvent(linkedEvent, function() {
 		linked(this, 0, ["cache.read_turnoff", "cache.read_prune", "cache.read_trash"]);
 	});
-	$("prop-seed_override").addEvent("change", function() {
+	$("prop-seed_override").addEvent(linkedEvent, function() {
 		linked(this, 0, ["prop-seed_ratio", "prop-seed_time"]);
 	});
-	$("webui.enable_guest").addEvent("change", function() {
+	$("webui.enable_guest").addEvent(linkedEvent, function() {
 		linked(this, 0, ["webui.guest"]);
 	});
-	$("webui.enable_listen").addEvent("change", function() {
+	$("webui.enable_listen").addEvent(linkedEvent, function() {
 		linked(this, 0, ["webui.port"]);
 	});
-	$("seed_prio_limitul_flag").addEvent("change", function() {
+	$("seed_prio_limitul_flag").addEvent(linkedEvent, function() {
 		linked(this, 0, ["seed_prio_limitul"]);
 	});
-	$("sched_enable").addEvent("change", function() {
+	$("sched_enable").addEvent(linkedEvent, function() {
 		linked(this, 0, ["sched_ul_rate", "sched_dl_rate", "sched_dis_dht"]);
 		//$("sched_table").toggleClass("disabled");
 	});
-	$("dir_active_download_flag").addEvent("change", function() {
+	$("dir_active_download_flag").addEvent(linkedEvent, function() {
 		linked(this, 0, ["dir_active_download"]);
 	});
-	$("dir_completed_download_flag").addEvent("change", function() {
+	$("dir_completed_download_flag").addEvent(linkedEvent, function() {
 		linked(this, 0, ["dir_add_label", "dir_completed_download", "move_if_defdir"]);
 	});
-	$("dir_torrent_files_flag").addEvent("change", function() {
+	$("dir_torrent_files_flag").addEvent(linkedEvent, function() {
 		linked(this, 0, ["dir_torrent_files"]);
 	});
-	$("dir_completed_torrents_flag").addEvent("change", function() {
+	$("dir_completed_torrents_flag").addEvent(linkedEvent, function() {
 		linked(this, 0, ["dir_completed_torrents"]);
 	});
-	$("dir_autoload_flag").addEvent("change", function() {
+	$("dir_autoload_flag").addEvent(linkedEvent, function() {
 		linked(this, 0, ["dir_autoload_delete", "dir_autoload"]);
 	});
-	$("ul_auto_throttle").addEvent("change", function() {
+	$("ul_auto_throttle").addEvent(linkedEvent, function() {
 		linked(this, 0, ["max_ul_rate", "max_ul_rate_seed_flag"], ["max_ul_rate"]);
 	});
-	$("max_ul_rate_seed_flag").addEvent("change", function() {
+	$("max_ul_rate_seed_flag").addEvent(linkedEvent, function() {
 		linked(this, 0, ["max_ul_rate_seed"]);
 	});
 

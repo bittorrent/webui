@@ -200,18 +200,20 @@ var dxSTable = new Class({
 		
 		this.loadObj = simpleClone(DIV, false).addClass("stable-loading").grab(simpleClone(DIV, false).addClass("stable-loading-text").set("html", "Loading...")).inject(this.dCont);
 		
-		this.dBody.addEvent("mousedown", function(ev) {
-			if (ev.target && (ev.target.tagName.toLowerCase() == "td"))
-				$me.selectRow(ev, ev.target.parentNode);
-		}).addEvent("mouseup", function(ev) {
-			if (!ev.target || (ev.target.tagName.toLowerCase() != "td")) {
-				var pos = this.getPosition();
-				if ((this.clientWidth > ev.page.x - pos.x - this.scrollLeft + 2) && (this.clientHeight > ev.page.y - pos.y - this.scrollTop + 2)) {
-					$me.clearSelection();
-					$me.fireEvent("onSelect", [ev, ""]);
+		if (this.options.rowsSelectable) {
+			this.dBody.addEvent("mousedown", function(ev) {
+				if (ev.target && (ev.target.tagName.toLowerCase() == "td"))
+					$me.selectRow(ev, ev.target.parentNode);
+			}).addEvent("mouseup", function(ev) {
+				if (!ev.target || (ev.target.tagName.toLowerCase() != "td")) {
+					var pos = this.getPosition();
+					if ((this.clientWidth > ev.page.x - pos.x - this.scrollLeft + 2) && (this.clientHeight > ev.page.y - pos.y - this.scrollTop + 2)) {
+						$me.clearSelection();
+						$me.fireEvent("onSelect", [ev, ""]);
+					}
 				}
-			}
-		});
+			});
+		}
 		for (var i = 0; i < this.options.maxRows; i++)
 			this.tb.body.appendChild(simpleClone(ROW, true).hide());
 		ROW = null;
@@ -219,7 +221,8 @@ var dxSTable = new Class({
 		this.tBody.grab(this.tb.body);
 		if (this.options.mode == MODE_PAGE) {
 			this.pageMenu = simpleClone(DIV, false).addClass("stable-pagemenu").inject(this.dCont);
-			this.pageInfo = new Element("span", {"class": "pageinfo", "text": "0 row(s) selected."}).inject(this.pageMenu);
+			if (this.options.rowsSelectable) return;
+				this.pageInfo = new Element("span", {"class": "pageinfo", "text": "0 row(s) selected."}).inject(this.pageMenu);
 			this.pageNext = simpleClone(DIV, false)
 				.addClass("nextlink-disabled")
 				.addEvent("click", this.nextPage.bind(this))
@@ -285,7 +288,7 @@ var dxSTable = new Class({
 			}
 			return false;
 		}).bind(this));
-		
+		if (!this.options.rowsSelectable) return;
 		this.dCont.addEvent("keydown", (function(ev) {
 			if (ev.key == "delete") { // DEL
 				this.fireEvent("onDelete");
@@ -730,6 +733,7 @@ var dxSTable = new Class({
 	},
 
 	"refreshSelection": function() {
+		if (!this.options.rowsSelectable) return;
 		var len = this.tb.body.childNodes.length, i = 0;
 		while (i < len) {
 			var row = this.tb.body.childNodes[i];
@@ -1024,14 +1028,23 @@ var ColumnHandler = {
 };
 
 function resizeColumn(index) {
-	this.colWidth[this.colOrder[index]] = this.tHeadCols[index].getWidth();
+	var w = this.tHeadCols[index].offsetWidth;
+	this.colWidth[this.colOrder[index]] = w;
+	if (Browser.Engine.trident)
+		w -= (index == 0) ? 30 : 10; // substract the left & right padding
+	this.tBodyCols[index].setStyle("width", w).setProperty("width", w);
+	/*
 	var from = $pick(index, 0);
 	var to = $pick(index, this.tBodyCols.length - 1);
  	for (var i = from; i <= to; i++) {
-		var w = this.tHeadCols[i].getWidth() - 26;
+		var w = this.tHeadCols[i].getWidth() - 8;
+		log("resizing " + i + " --> " + w);
+		if (Browser.Engine.trident)
+			w = this.tHeadCols[i].getStyle("width").toInt() - 8;
 		this.tBodyCols[i].setStyle("width", w).setProperty("width", w);
 	}
-	var w = this.tHead.getSize().x;
+	*/
+	w = this.tHead.getSize().x;
 	this.tb.body.setStyle("width", w);
 	this.tBody.setStyle("width", w);
 	this.fireEvent("onColResize");
