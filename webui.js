@@ -683,8 +683,9 @@ var utWebUI = {
 		value = $("webui.maxRows").value.toInt();
 		if (this.config.maxRows != value) {
 			this.config.maxRows = value;
-			this.trtTable.setMaxRows(this.config.maxRows);
-			this.flsTable.setMaxRows(this.config.maxRows);
+			//this.trtTable.setMaxRows(this.config.maxRows);
+			//this.flsTable.setMaxRows(this.config.maxRows);
+			reload = true;
 			hasChanged = true;
 		}
 		

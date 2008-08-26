@@ -220,7 +220,7 @@ var dxSTable = new Class({
 				var ele = ev.target;
 				if (!ele) return;
 				if (ele.get("tag") == "td")
-					$me.selectRow(ev, ele);
+					$me.selectRow(ev, ele.parentNode);
 			}).addEvent("mouseup", function(ev) {
 				var ele = ev.target;
 				if (!ele) return;
@@ -321,7 +321,7 @@ var dxSTable = new Class({
 		}).bind(this));
 		if (Browser.Engine.gecko) {
 			// http://n2.nabble.com/key-events-not-firing-on-div-in-FF--td663136.html
-			this.dCont.addEvent("mousedown", function(ev) {
+			this.dBody.addEvent("mousedown", function(ev) {
 				this.focus();
 			}).setProperty("tabIndex", -1);
 		}
