@@ -2352,7 +2352,7 @@ Element.Events.domready = {
 	switch (Browser.Engine.name){
 
 		case 'webkit': (function(){
-			if (Browser.Engine.version == 525) {
+			if (Browser.Engine.version >= 525) {
 				document.addEvent('DOMContentLoaded', domready);
 				return;
 			}

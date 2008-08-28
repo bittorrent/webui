@@ -20,6 +20,25 @@
 		.stable-body table {
 			border-collapse:collapse;
 		}
+		
+		.stable-pagemenu .pagestat select {
+			margin: 3px 0 0 0 !important;
+		}
+		
+		.stable-pagemenu .prevlink-disabled, .stable-pagemenu .nextlink-disabled {
+			filter: alpha(opacity=50);
+		}
+		
+		.stable-pagemenu .prevlink, .stable-pagemenu .nextlink {
+			filter: alpha(opacity=100);
+		}
+		</style>
+		<![endif]-->
+		<!--[if IE 6]>
+		<style type="text/css">
+		div#msg img {
+			margin-top: expression((100 - this.height)/2);
+		}
 		</style>
 		<![endif]-->
 	</head>
@@ -44,6 +63,7 @@
 		<script type="text/javascript" src="./lang/en.js"></script>
 		<!-- [jscompact] -->
 		<script type="text/javascript" src="./mootools.js"></script>
+		<script type="text/javascript" src="./utils.js"></script>
 		<script type="text/javascript" src="./stable.js"></script>
 		<script type="text/javascript" src="./webui.js"></script>
 		<script type="text/javascript" src="./contextmenu.js"></script>

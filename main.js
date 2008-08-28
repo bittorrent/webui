@@ -5,128 +5,6 @@
  *
 */
 
-function has(obj, key) {
-	return Object.prototype.hasOwnProperty.apply(obj, [key]);
-}
-
-Array.implement({
-
-	"binarySearch": function(value, comparator) {
-		comparator = comparator || function(a, b) {
-			if (a === b) return 0;
-			if (a < b) return -1;
-			return 1;
-		};
-		var left = 0;
-		var mid = 0;
-		var right = this.length - 1;
-		var found = false;
-		while (left <= right) {
-			mid = ((left + right) / 2).toInt();
-			var cv = comparator(value, this[mid]);
-			if (cv > 0) {
-				left = mid + 1;
-			} else if (cv < 0) {
-				right = mid - 1;
-			} else {
-				found = true;
-				break;
-			}
-		}
-		return found ? mid : (-mid + ((mid == left) ? -1 : -2));
-	},
-	
-	"insertAt": function(value, index) {
-		this.splice(index, 0, value);
-		return this;
-	},
-	
-	"swap": function(indexA, indexB) {
-		var temp = this[indexA];
-		this[indexA] = this[indexB];
-		this[indexB] = temp;
-		return this;
-	},
-	
-	"remove": function(item) { 
-		for (var i = this.length; i--;) {
-			if (this[i] === item) {
-				this.splice(i, 1);
-				return i;
-			}
-		}
-		return -1;
-	}
-
-});
-
-String.implement({
-	
-	"pad": function(len, str, type) {
-		var inp = this;
-		str = str || " ";
-		type = type || "right";
-		len -= inp.length;
-		if (len < 0) return inp;
-		str = (new Array(Math.ceil(len / str.length) + 1)).join(str).substr(0, len);
-		return ((type == "left") ? (str + inp) : (inp + str));
-	}
-
-});
-
-Number.implement({
-
-	"toFileSize": function(precision) {
-		precision = precision || 1;
-		var sz = [lang[CONST.SIZE_KB], lang[CONST.SIZE_MB], lang[CONST.SIZE_GB]];
-		var size = this;
-		var pos = 0;
-		size /= 1024;
-		while ((size >= 1024) && (pos < 2)) {
-			size /= 1024;
-			pos++;
-		}
-		return (size.roundTo(precision) + " " + sz[pos]);
-	},
-
-	"toTimeString": function() {
-		var secs = this;
-		if (secs >= 2419200) return "\u221E"; // secs >= 4 weeks ~= inf. :)
-		var div, w, d, h, m, s, output = [];
-		div = secs % (604800 * 52);
-		w = (div / 604800).toInt();
-		div = div % 604800;
-		d = (div / 86400).toInt();
-		div = div % 86400;
-		h = (div / 3600).toInt();
-		div = div % 3600;
-		m = (div / 60).toInt();
-		s = div % 60;
-		if (w > 0)
-			output.push(w + "w");
-		if (d > 0)
-			output.push(d + "d");
-		if ((h > 0) && (output.length < 2))
-			output.push(h + "h");
-		if ((m > 0) && (output.length < 2))
-			output.push(m + "m");
-		if (output.length < 2)
-			output.push(s + "s");
-		return output.join(" ");
-	},
-
-	"roundTo": function(precision) {
-		var num = "" + this.round(precision);
-		var offset = num.indexOf(".");
-		if (offset == -1) {
-			offset = num.length;
-			num += ".";
-		}
-		return num.pad(precision + ++offset, "0");
-	}
-
-});
-
 function setupUI() {
 
 	loadLangStrings();
@@ -301,8 +179,6 @@ function setupUI() {
 			resizeUI.delay(20, null, [null, this.value.now.y]);
 		}
 	});
-	
-	//utWebUI.update();
 }
 
 function checkProxySettings() {
@@ -328,10 +204,6 @@ function checkProxySettings() {
 		$("DLG_SETTINGS_4_CONN_18").removeClass("disabled");
 	}
 	
-}
-
-function redirect(url) {
-	window.location.href = url;
 }
 
 function checkUpload(frm) {
@@ -376,36 +248,6 @@ var searchActive = 0;
 function searchSet(index) {
 	searchActive = index;
 	$("query").focus();
-}
-
-// MooTools.Utilities.Assets.js
-function loadJS(source, properties) {
-	properties = $extend({
-		onload: $empty,
-		document: document,
-		check: $lambda(true)
-	}, properties);
-	
-	var script = new Element('script', {'src': source, 'type': 'text/javascript', 'charset': 'utf-8'});
-	
-	var load = properties.onload.bind(script), check = properties.check, doc = properties.document;
-	delete properties.onload; delete properties.check; delete properties.document;
-	
-	script.addEvents({
-		load: load,
-		readystatechange: function(){
-			if (Browser.Engine.trident && ['loaded', 'complete'].contains(this.readyState)) load(); 
-		}
-	}).setProperties(properties);
-	
-	
-	if (Browser.Engine.webkit419) var checker = (function(){
-		if (!$try(check)) return;
-		$clear(checker);
-		load();
-	}).periodical(50);
-	
-	return script.inject(doc.head);
 }
 
 /*
@@ -789,7 +631,7 @@ function resizeUI(w, h) {
 		
 	if (showcat) {
 		if (w)
-			$("CatList").setStyle("width", ww - 10 - w - (Browser.Engine.trident4 ? 2 : 0));
+			$("CatList").setStyle("width", ww - 10 - w - ((Browser.Engine.trident && !Browser.Engine.trident5) ? 4 : 0));
 			
 		if (h)
 			$("CatList").setStyle("height", h);
@@ -811,7 +653,7 @@ function resizeUI(w, h) {
 	if (isGuest) return;
 	var listPos = $("List").getPosition();
 
-	$("HDivider").setStyle("left", listPos.x - 5);
+	$("HDivider").setStyle("left", listPos.x - ((Browser.Engine.trident && !Browser.Engine.trident5) ? 7 : 5));
 	$("VDivider").setStyle("width", ww);
 	
 	if (h) {
@@ -858,12 +700,9 @@ function linked(obj, defstate, list, ignoreLabels) {
 	}
 }
 
-window.onerror = function(msg, url, linenumber) {
-	log("JS error: [" + linenumber + "] " + msg);
-	return true;
-};
-
 window.addEvent("domready", function() {
+	
+	$(document.body);
 
 	document.title = "\u00B5Torrent WebUI " + VERSION;
 	
@@ -991,10 +830,8 @@ window.addEvent("domready", function() {
 		if (ev.rightClick) {
 			if (!(/^input|textarea$/i).test(ev.target.tagName))
 				ev.stop();
-		}
-		if (!ContextMenu.hidden && !ContextMenu.focused && !ContextMenu.launched)
+		} else if (!ContextMenu.hidden && !ContextMenu.focused)
 			ContextMenu.hide.delay(10, ContextMenu);
-		ContextMenu.launched = false;
 	});
 	
 	if (Browser.Engine.presto && !("oncontextmenu" in document.createElement("foo"))) {
@@ -1104,29 +941,47 @@ window.addEvent("domready", function() {
 		ev.stop();
 		utWebUI.showSettings();
 	});
-	var winZ = 500;
-	$("modalbg").setStyle("opacity", 0.8);
+	var winZ = 500, dragMask = $("dragmask");
 	["dlgAdd", "dlgSettings", "dlgProps", "dlgAbout", "dlgLabel"].each(function(id) {
 		$(id).addEvent("mousedown", function(ev) {
+			var cls = ev.target.className;
+			if(cls.contains("dlg-header", " ") || cls.contains("dlg-close", " ")) return;
 			this.setStyle("zIndex", ++winZ);
 		}).getElement("a").addEvent("click", function(ev) {
 			ev.stop();
 			$(id).hide();
 		});
+		var dragElement = null;
 		new Drag(id, {
 			"handle": id + "-header",
 			"modifiers": {"x": "left", "y": "top"},
 			"onBeforeStart": function() {
-				this.element.setStyle("zIndex", ++winZ);
+				var size = this.element.getSize(), pos = this.element.getPosition();
+				dragMask.setStyles({
+					"width": size.x,
+					"height": size.y,
+					"left": pos.x,
+					"top": pos.y,
+					"display": "block",
+					"zIndex": this.element.getStyle("zIndex").toInt() + 2
+				});
+				dragElement = this.element;
+				this.element = dragMask;
 			},
 			"onStart": function() {
-				this.element.addClass("dlg-window-dragging");
 			},
 			"onCancel": function() {
-				this.element.removeClass("dlg-window-dragging");
+				this.element = dragElement;
 			},
 			"onComplete": function() {
-				this.element.removeClass("dlg-window-dragging");
+				this.element = dragElement;
+				var pos = dragMask.getPosition();
+				dragMask.setStyle("display", "none");
+				this.element.setStyles({
+					"left": pos.x,
+					"top": pos.y,
+					"zIndex": ++winZ
+				});
 			}
 		});
 	});

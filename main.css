@@ -30,18 +30,6 @@ div.dlg-window {
 	left: 0px; top: 0px;
 }
 
-div.dlg-window-dragging * {
-	display: none;
-}
-
-div.dlg-window-dragging div.dlg-header {
-	display: block;
-}
-
-div.dlg-window-dragging a.dlg-close {
-	display: block;
-}
-
 div.dlg-header {
 	padding: 2px 24px;
 	line-height: 20px;
@@ -112,15 +100,6 @@ div#msg {
 	background: #FDFDFD;
 	border-top: 1px solid #D0D0D0;
 	border-bottom: 1px solid #D0D0D0;
-}
-
-div#modalbg {
-	width: 100%; height: 100%;
-	left: 0px; top: 0px;
-	position: absolute;
-	z-index: 500;
-	background-color: #FFFFFF;
-	display: none;
 }
 
 sup { font-size: 8px; }
@@ -627,8 +606,8 @@ fieldset {
 	position: relative;
 	margin: 4px;
 	border: 1px solid #D0D0D0;
-	-webkit-border-radius: 6px;
-	-moz-border-radius: 6px;
+	-webkit-border-radius: 6px 6px 6px 6px;
+	-moz-border-radius: 6px 6px 6px 6px;
 	overflow: auto;
 }
 
@@ -760,7 +739,7 @@ div#dragmask {
 	position: absolute;
 	z-index: 5000;
 	display: none;
-	border: 1px dotted #A0A0A0;
+	border: 2px dotted #A0A0A0;
 }
 
 input[id="cache.override_size"] {

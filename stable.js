@@ -86,6 +86,8 @@ var dxSTable = new Class({
 	"cancelSort": false,
 	"cancelMove": false,
 	"hotCell": -1,
+	"colMove": null,
+	"colSep": null,
 	"isMoving": false,
 	"isResizing": false,
 	"isSorting": false,
@@ -171,7 +173,7 @@ var dxSTable = new Class({
 			td = simpleClone(TD, false)
 				.grab(new Element("span", {"text": this.colData[i].text}))
 				.setStyle("width", this.colWidth[this.colOrder[i]])
-				.addClasses(this.id + "-hdcol-" + this.colOrder[i], this.colData[i].disabled ? "stable-hidden-column" : "")
+				.addClass(this.colData[i].disabled ? "stable-hidden-column" : "")
 				.store("index", i)
 				.inject(tr);
 			this.tHeadCols[i] = td;
@@ -349,12 +351,11 @@ var dxSTable = new Class({
 			default:
 				align = (this.colData[i].type == TYPE_NUMBER) ? "right" : "left";
 			}
-			
+			this.tHeadCols[i].setStyle("textAlign", align);
 			if (Browser.Engine.trident) {
-				this.tHeadCols[i].setStyle("textAlign", align);
-				cols[i].setProperty("align", align)
+				cols[i].setStyle("textAlign", align);
 			} else {
-				sb += "." + this.id + "-col-" + this.colOrder[i] + ", ." + this.id + "-hdcol-" + this.colOrder[i] + " { text-align: " + align + " }";
+				sb += "." + this.id + "-col-" + this.colOrder[i] + " { text-align: " + align + " }";
 			}
 		}
 		if (!Browser.Engine.trident)
@@ -596,11 +597,6 @@ var dxSTable = new Class({
 		}
 		
 		this.fireEvent("onSelect", [ev, id]);
-	},
-	
-	// returns the range of rows currently visible
-	"getRowRange": function() {
-		
 	},
 
 	"addRow": function(data, id, icon, hidden) {
@@ -844,10 +840,6 @@ var dxSTable = new Class({
 		if (!r || (index == -1) || r.childNodes[index].hasClass(icon)) return;
 		r.childNodes[index].className = "stable-icon " + icon;
 	},
-	
-	"setMaxRows": function(max) {
-		this.maxRows = max;
-	},
 
 	"resizeTo": function(w, h) {
 		if (typeof w == "number")
@@ -966,7 +958,7 @@ var ColumnHandler = {
 			st.colDragEle = drag.element;
 			drag.element = drag.handle = st.colDragObj;
 			st.cancelMove = false;
-			st.colMove = {"from": st.colDragEle.retrieve("index"), "to": -1};
+			st.colMove = { "from": st.colDragEle.retrieve("index"), "to": -1 };
 			document.body.setStyle("cursor", "move");
 		} else {
 			var col = st.tHeadCols[st.hotCell];
@@ -975,7 +967,6 @@ var ColumnHandler = {
 			st.resizeCol = {"width": col.getStyle("width").toInt(), "left": l};
 			drag.value.now.x = l;
 			drag.mouse.pos.x = drag.mouse.start.x - l;
-			//st.resizeCol.left = l;
 			st.cancelMove = true;
 			st.isResizing = true;
 			st.colReszObj.setStyles({"left": l, "height": st.dBody.getSize().y, "visibility": "visible"});
@@ -1008,8 +999,6 @@ var ColumnHandler = {
 				w = 14;
 			var col = st.tHeadCols[st.hotCell];
 			col.setStyle("width", w);
-			if (window.ie || window.gecko)
-				st.tBody.setStyle("width", "auto");
 			$(document.body).setStyle("cursor", "e-resize");
 		}
 	},
@@ -1055,7 +1044,7 @@ var ColumnHandler = {
 function resizeColumn(index) {
 	var w = this.tHeadCols[index].offsetWidth;
 	this.colWidth[this.colOrder[index]] = w;
-	if (Browser.Engine.trident)
+	if (Browser.Engine.trident && !Browser.Engine.trident6)
 		w -= (index == 0) ? 30 : 10; // substract the left & right padding
 	this.tBodyCols[index].setStyle("width", w).setProperty("width", w);
 	w = this.tHead.getSize().x;

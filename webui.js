@@ -1106,6 +1106,7 @@ var utWebUI = {
 	
 	"trtColMove": function() {
 		this.config.torrentTable.colOrder = this.trtTable.colOrder;
+		this.config.torrentTable.sIndex = this.trtTable.sIndex;
 	},
 	
 	"trtColResize": function() {
@@ -1128,6 +1129,7 @@ var utWebUI = {
 	
 	"flsColMove": function() {
 		this.config.fileTable.colOrder = this.flsTable.colOrder;
+		this.config.fileTable.sIndex = this.flsTable.sIndex;
 	},
 	
 	"flsColResize": function() {

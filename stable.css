@@ -223,7 +223,6 @@ limitations under the License.
 	background-image: url(./images/nextprev.png);
 	background-position: -16px center;
 	opacity: 0.50;
-	filter: alpha(opacity=50);
 	-moz-opacity: 0.5;
 }
 
@@ -232,14 +231,12 @@ limitations under the License.
 	background-image: url(./images/nextprev.png);
 	background-position: -32px center;
 	opacity: 0.50;
-	filter: alpha(opacity=50);
 	-moz-opacity: 0.5;
 }
 
 .stable-pagemenu .prevlink {
 	background-position: -16px center;
 	opacity: 1.00;
-	filter: alpha(opacity=100);
 	-moz-opacity: 1.0;
 	cursor: pointer;
 }
@@ -247,7 +244,6 @@ limitations under the License.
 .stable-pagemenu .nextlink {
 	background-position: -32px center;
 	opacity: 1.00;
-	filter: alpha(opacity=100);
 	-moz-opacity: 1.0;
 	cursor: pointer;
 }
