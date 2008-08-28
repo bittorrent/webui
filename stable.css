@@ -207,7 +207,6 @@ limitations under the License.
 	width: 100px; height: 20px;
 	margin: auto 0;
 	float: right;
-	display: none;
 }
 
 .stable-pagemenu .pagestat select {

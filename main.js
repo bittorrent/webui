@@ -411,6 +411,13 @@ function loadLangStrings() {
 	$("DLG_TORRENTPROP_02").set("value", lang[CONST.DLG_TORRENTPROP_02]).addEvent("click", function() {
 		$('dlgProps').hide();
 	});
+	$("LBL_OK").set("value", lang[CONST.DLG_SETTINGS_03]).addEvent("click", function() {
+		$("dlgLabel").hide();
+		utWebUI.createLabel();
+	});
+	$("LBL_CANCEL").set("value", lang[CONST.DLG_SETTINGS_04]).addEvent("click", function() {
+		$("dlgLabel").hide();
+	});
 }
 
 function loadSettingStrings() {
@@ -972,6 +979,7 @@ window.addEvent("domready", function() {
 			},
 			"onCancel": function() {
 				this.element = dragElement;
+				dragMask.setStyle("display", "none");
 			},
 			"onComplete": function() {
 				this.element = dragElement;

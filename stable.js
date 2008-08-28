@@ -275,7 +275,8 @@ var dxSTable = new Class({
 					"change": function() {
 						$me.gotoPage(this.get("value").toInt());
 					}
-				}
+				},
+				"disabled": "disabled"
 			}).inject(this.pageStat);
 		}
 		
@@ -915,7 +916,7 @@ var dxSTable = new Class({
 		this.pageSelect.disabled = false;
 		for (var i = 0; i < this.pageCount; i++)
 			this.pageSelect.options[i] = new Option(/* text */ i + 1, /* value */ i, /* defaultSelected */ false, /* selected */ i == this.curPage);
-		this.pageStat.show();
+		//this.pageStat.show();
 	},
 
 	"gotoPage": function(i) {

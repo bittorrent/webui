@@ -326,7 +326,7 @@ div#toolbar #search {
 div#toolbar div#sb {
 	width: 180px;
 	float: right;
-	margin: 0 5px;
+	margin: 0;
 	line-height: 26px;
 }
 
@@ -352,7 +352,7 @@ div#toolbar div#sb input {
 	line-height: 20px;
 	overflow: hidden;
 	padding: 0;
-	margin: 3px 0 0 0;
+	margin: 0px 0 0 0;
 	line-height: 20px;
 	clear: both;
 	display: block;
@@ -382,7 +382,7 @@ div#toolbar div#sb input {
 }
 
 .hcont input[type="checkbox"] {
-	margin: 3px;
+	margin: 0 5px;
 }
  
 input.tbox, input.btn, select {
@@ -670,7 +670,7 @@ legend {
 	font-weight: bold;
 }
 
-div.indent { padding-left: 16px; }
+div.indent { padding-left: 16px; width: 444px; }
 
 #st_gl { display: block; }
 

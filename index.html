@@ -27,7 +27,7 @@
 		}
 		
 		.stg_con .hcont label {
-			vertical-align: baseline !important;
+			vertical-align: middle !important;
 		}
 		
 		ul#tabs {
@@ -53,8 +53,23 @@
 		<![endif]-->
 		<!--[if IE 6]>
 		<style type="text/css">
+		.stg_con .hcont label {
+			vertical-align: baseline !important;
+		}
+		
 		div#msg img {
 			margin-top: expression((100 - this.height)/2);
+		}
+		
+		.stg_con select {
+			padding: 2px 0;
+		}
+		</style>
+		<![endif]-->
+		<!--[if lte IE 7]>
+		<style type="text/css">
+		div#toolbar #search {
+			margin: 9px 0 0 0;
 		}
 		</style>
 		<![endif]-->
@@ -294,9 +309,9 @@
 						<label for="max_ul_rate" id="DLG_SETTINGS_5_BANDWIDTH_02"></label>
 						<input type="checkbox" id="ul_auto_throttle" /><label for="ul_auto_throttle" id="DLG_SETTINGS_5_BANDWIDTH_03"></label>
 					</div>
-					<div class="hcont">
+					<div class="hcont indent">
 						<input type="text" id="max_ul_rate_seed" class="tbox num flr" maxlength="6" />
-						<span>&nbsp;&nbsp;&nbsp;&nbsp;</span><input id="max_ul_rate_seed_flag" type="checkbox" /><label for="max_ul_rate_seed_flag" id="DLG_SETTINGS_5_BANDWIDTH_05"></label>
+						<input id="max_ul_rate_seed_flag" type="checkbox" /><label for="max_ul_rate_seed_flag" id="DLG_SETTINGS_5_BANDWIDTH_05"></label>
 					</div>
 				</fieldset>
 				<fieldset>
@@ -320,8 +335,8 @@
 						<input type="text" id="ul_slots_per_torrent" class="tbox num flr" maxlength="6" />
 						<label id="DLG_SETTINGS_5_BANDWIDTH_15" for="ul_slots_per_torrent"></label>
 					</div>
-					<div class="hcont">
-						<span>&nbsp;&nbsp;&nbsp;&nbsp;</span><input id="extra_ulslots" type="checkbox" /><label for="extra_ulslots" id="DLG_SETTINGS_5_BANDWIDTH_17"></label>
+					<div class="hcont indent">
+						<input id="extra_ulslots" type="checkbox" /><label for="extra_ulslots" id="DLG_SETTINGS_5_BANDWIDTH_17"></label>
 					</div>
 				</fieldset>
 			</div>
@@ -351,7 +366,7 @@
 					<div class="hcont">
 						<div class="ralign"><input id="encryption_allow_legacy" type="checkbox" /><label for="encryption_allow_legacy" id="DLG_SETTINGS_6_BITTORRENT_13"></label></div>
 						<label id="DLG_SETTINGS_6_BITTORRENT_11"></label>
-						<select id="encryption_mode"><option>-------------------</option></select>
+						<select id="encryption_mode"><option>----------------</option></select>
 					</div>
 				</fieldset>
 			</div>
@@ -420,15 +435,15 @@
 				</fieldset>
 				<fieldset>
 					<legend id="DLG_SETTINGS_C_ADV_CACHE_06"></legend>
-					<div><input id="cache.write" type="checkbox" /><label for="cache.write" id="DLG_SETTINGS_C_ADV_CACHE_07"></label></div>
-					<div class="indent"><input id="cache.writeout" type="checkbox" /><label for="cache.writeout" id="DLG_SETTINGS_C_ADV_CACHE_08"></label></div>
-					<div class="indent"><input id="cache.writeimm" type="checkbox" /><label for="cache.writeimm" id="DLG_SETTINGS_C_ADV_CACHE_09"></label></div>
-					<div><input id="cache.read" type="checkbox" /><label for="cache.read" id="DLG_SETTINGS_C_ADV_CACHE_10"></label></div>
-					<div class="indent"><input id="cache.read_turnoff" type="checkbox" /><label for="cache.read_turnoff" id="DLG_SETTINGS_C_ADV_CACHE_11"></label></div>
-					<div class="indent"><input id="cache.read_prune" type="checkbox" /><label for="cache.read_prune" id="DLG_SETTINGS_C_ADV_CACHE_12"></label></div>
-					<div class="indent"><input id="cache.read_trash" type="checkbox" /><label for="cache.read_trash" id="DLG_SETTINGS_C_ADV_CACHE_13"></label></div>
-					<div><input id="cache.disable_win_write" type="checkbox" /><label for="cache.disable_win_write" id="DLG_SETTINGS_C_ADV_CACHE_14"></label></div>
-					<div><input id="cache.disable_win_read" type="checkbox" /><label for="cache.disable_win_read" id="DLG_SETTINGS_C_ADV_CACHE_15"></label></div>
+					<div class="hcont"><input id="cache.write" type="checkbox" /><label for="cache.write" id="DLG_SETTINGS_C_ADV_CACHE_07"></label></div>
+					<div class="hcont indent"><input id="cache.writeout" type="checkbox" /><label for="cache.writeout" id="DLG_SETTINGS_C_ADV_CACHE_08"></label></div>
+					<div class="hcont indent""><input id="cache.writeimm" type="checkbox" /><label for="cache.writeimm" id="DLG_SETTINGS_C_ADV_CACHE_09"></label></div>
+					<div class="hcont indent""><input id="cache.read" type="checkbox" /><label for="cache.read" id="DLG_SETTINGS_C_ADV_CACHE_10"></label></div>
+					<div class="hcont"><input id="cache.read_turnoff" type="checkbox" /><label for="cache.read_turnoff" id="DLG_SETTINGS_C_ADV_CACHE_11"></label></div>
+					<div class="hcont indent""><input id="cache.read_prune" type="checkbox" /><label for="cache.read_prune" id="DLG_SETTINGS_C_ADV_CACHE_12"></label></div>
+					<div class="hcont indent""><input id="cache.read_trash" type="checkbox" /><label for="cache.read_trash" id="DLG_SETTINGS_C_ADV_CACHE_13"></label></div>
+					<div class="hcont"><input id="cache.disable_win_write" type="checkbox" /><label for="cache.disable_win_write" id="DLG_SETTINGS_C_ADV_CACHE_14"></label></div>
+					<div class="hcont"><input id="cache.disable_win_read" type="checkbox" /><label for="cache.disable_win_read" id="DLG_SETTINGS_C_ADV_CACHE_15"></label></div>
 				</fieldset>
 			</div>
 
@@ -711,8 +726,8 @@
 			<div class="content fxcaret">
 				<label for="txtLabel" id="OV_NEWLABEL_TEXT"></label><br />
 				<input type="text" id="txtLabel" class="tbox" /><br />
-				<input type="button" class="btn" value="   OK   " />&nbsp;&nbsp;
-				<input type="button" class="btn" value=" Cancel " />
+				<input type="button" class="btn" id="LBL_OK" value="" />&nbsp;&nbsp;
+				<input type="button" class="btn" id="LBL_CANCEL" value="" />
 			</div>
 		</div>
 		<!-- New Label Dialog */ -->

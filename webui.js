@@ -91,7 +91,10 @@ var utWebUI = {
 			if (this.TOKEN.charAt(0) == "#")
 				this.TOKEN = "";
 		}
-		
+		if (isGuest) {
+			this.addSettings();
+			return;
+		}
 		this.getSettings();
 	},
 	
@@ -250,7 +253,7 @@ var utWebUI = {
 			}
 		}
 		
-		var scroll = this.trtTable.dBody.getScroll(), noRefresh = true;
+		var scroll = this.trtTable.dBody.getScroll(), noRefresh = true, sIndex = this.trtTable.colOrder[this.trtTable.sIndex];
 		if (Browser.Engine.gecko || Browser.Engine.trident4) // doing offline updating slows Presto & WebKit down
 			this.trtTable.detachBody();
 		for (var i = 0, len = torrents.length; i < len; i++) {
@@ -291,21 +294,29 @@ var utWebUI = {
 					this.torrents[hash][0] = tor[1];
 					this.trtTable.setIcon(hash, stat[0]);
 					this.trtTable.setValue(hash, 1, stat[1], noRefresh);
+					if (sIndex == 3)
+						noRefresh = false;
 				}
 				if ((prevtor[12] != tor[13]) || (prevtor[13] != tor[14])) { // # of peers changed?
 					this.torrents[hash][12] = tor[13];
 					this.torrents[hash][13] = tor[14];
 					this.trtTable.setValue(hash, 11, tor[13] + " (" + tor[14] + ")", noRefresh);
+					if (sIndex == 11)
+						noRefresh = false;
 				}
 				if ((prevtor[14] != tor[15]) || (prevtor[15] != tor[16])) { // # of seeds changed?
 					this.torrents[hash][14] = tor[15];
 					this.torrents[hash][15] = tor[16];
 					this.trtTable.setValue(hash, 12, tor[15] + " (" + tor[16] + ")", noRefresh);
+					if (sIndex == 12)
+						noRefresh = false;
 				}
 				for (var j = 16; j < 20; j++) {
 					if (prevtor[j] != tor[j + 1]) {
 						this.torrents[hash][j] = tor[j + 1];
 						this.trtTable.setValue(hash, j - 3, tor[j + 1], noRefresh);
+						if (sIndex == j - 3)
+							noRefresh = false;
 					}
 				}
 				for (var j = 1; j < ln; j++) {
@@ -314,6 +325,8 @@ var utWebUI = {
 						if ((j == 4) && (this.torrentID == hash))
 							this.updateFiles(hash);
 						this.trtTable.setValue(hash, j - 1, tor[j + 1], noRefresh);
+						if (sIndex == j - 1)
+							noRefresh = false;
 					}
 				}
 			}
@@ -410,12 +423,7 @@ var utWebUI = {
 				if (i == 0) {
 					labelList.grab(li);
 				} else {
-					var ps = $("~" + labels[i - 1][0] + "~");
-					if (!ps.nextSibling) {
-						labelList.grab(li);
-					} else {
-						li.inject("before", ps.nextSibling);
-					}
+					li.inject("~" + labels[i - 1][0] + "~", "after");
 				}
 			} else {
 				li.getFirst().set("text", count);
@@ -426,7 +434,7 @@ var utWebUI = {
 		}
 		var resetLabel = false;
 		for (var k in this.customLabels) {
-			$("label_" + k).remove();
+			$("~" + k + "~").dispose();
 			if (this.config.activeLabel == k)
 				resetLabel = true;
 		}
@@ -492,16 +500,14 @@ var utWebUI = {
 		}
 		if (str != "")
 			this.request("?token=" + this.TOKEN + "&action=setprops&s=label" + str + "&v=" + lbl);
-		return true;
 	},
 	
 	"newLabel": function() {
 		var tmpl = "";
 		if (this.trtTable.selectedRows.length == 1)
 			tmpl = this.torrents[this.trtTable.selectedRows[0]][11];
-		$("txtLabel").set("value", (tmpl == "") ? lang[CONST.OV_NEW_LABEL] : tmpl);
 		$("dlgLabel").centre().show();
-		return true;
+		$("txtLabel").set("value", (tmpl == "") ? lang[CONST.OV_NEW_LABEL] : tmpl).focus();
 	},
 	
 	"createLabel": function() {
@@ -556,27 +562,29 @@ var utWebUI = {
 	},
 	
 	"addSettings": function(json) {
-		if (BUILD_REQUIRED > -1) {
-			if (!has(json.settings, "build") || (json.settings.build < BUILD_REQUIRED)) {
-				alert("The WebUI requires atleast \u00B5Torrent (build " + BUILD_REQUIRED + ")");
-				return;
+		if (!isGuest) {
+			if (BUILD_REQUIRED > -1) {
+				if (!has(json.settings, "build") || (json.settings.build < BUILD_REQUIRED)) {
+					alert("The WebUI requires atleast \u00B5Torrent (build " + BUILD_REQUIRED + ")");
+					return;
+				}
 			}
-		}
-		for (var i = 0, j = json.settings.length; i < j; i++) {
-			if ((json.settings[i][0] == "webui.cookie") && !this.loaded) { // only load webui.cookie on startup
-				$extend(this.config, JSON.decode(json.settings[i][2])); // if the user corrupts the "cookie," good for him/her
-				this.config.torrentTable.alternateRows = this.config.fileTable.alternateRows = this.config.alternateRows;
-				continue;
+			for (var i = 0, j = json.settings.length; i < j; i++) {
+				if ((json.settings[i][0] == "webui.cookie") && !this.loaded) { // only load webui.cookie on startup
+					$extend(this.config, JSON.decode(json.settings[i][2])); // if the user corrupts the "cookie," good for him/her
+					this.config.torrentTable.alternateRows = this.config.fileTable.alternateRows = this.config.alternateRows;
+					continue;
+				}
+				var val = json.settings[i][2];
+				var typ = json.settings[i][1];
+				if (typ == 0)
+					val = parseInt(val);
+				if (typ == 1)
+					val = (val == "true");	
+				this.settings[json.settings[i][0]] = val;
 			}
-			var val = json.settings[i][2];
-			var typ = json.settings[i][1];
-			if (typ == 0)
-				val = parseInt(val);
-			if (typ == 1)
-				val = (val == "true");	
-			this.settings[json.settings[i][0]] = val;
+			delete json.settings;
 		}
-		delete json.settings;
 		if (!this.loaded) {
 			var detectLang = (navigator.language) ? navigator.language : navigator.userLanguage;
 			var matches;
@@ -584,12 +592,16 @@ var utWebUI = {
 				detectLang = matches[0];
 			if ((lang !== null) && ((lang_code == this.config.lang) || ((this.config.lang == "auto") && (lang_code == detectLang)))) {
 				setupUI();
-				utWebUI.addTorrents(json);
+				if (isGuest)
+					this.update();
+				else
+					this.addTorrents(json);
 			} else {
-				loadJS(this.url + "lang/" + ((this.config.lang == "auto") ? detectLang : this.config.lang) + ".js", {"onload": function() { setupUI(); utWebUI.addTorrents(json); }});
+				loadJS(this.url + "lang/" + ((this.config.lang == "auto") ? detectLang : this.config.lang) + ".js", {"onload": isGuest ? setupUI : function() { setupUI(); utWebUI.addTorrents(json); }});
 			}
 		}
-		this.loadSettings();
+		if (!isGuest)
+			this.loadSettings();
 	},
 	
 	"loadSettings": function() {
