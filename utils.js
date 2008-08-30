@@ -47,15 +47,15 @@ function loadJS(source, properties) {
 
 Array.implement({
 
-	"binarySearch": function(value, comparator) {
+	"binarySearch": function(value, comparator, left, right) {
 		comparator = comparator || function(a, b) {
 			if (a === b) return 0;
 			if (a < b) return -1;
 			return 1;
 		};
-		var left = 0;
+		left = left || 0;
+		right = right || (this.length - 1);
 		var mid = 0;
-		var right = this.length - 1;
 		var found = false;
 		while (left <= right) {
 			mid = ((left + right) / 2).toInt();

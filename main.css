@@ -162,6 +162,9 @@ ul.CMenu li {
 
 ul.CMenu li a {
 	display: block;
+	line-height: 18px;
+	padding: 0 4px 0 16px;
+	font-weight: normal;
 }
 
 ul.CMenu li a.dis {
@@ -173,20 +176,15 @@ ul.CMenu li a.dis:hover {
 	color: #C0C0C0;
 }
 
-ul.CMenu li a {
-	line-height: 18px;
-	padding: 0 4px 0 16px;
-	font-weight: normal;
-}
-
-ul.CMenu li hr {
+ul.CMenu li .hr {
 	width: 90%;
+	border:none;
 	border-top: 1px solid #D0D0D0;
 	height: 0px;
-	margin-top: 2px;
-	margin-bottom: 2px;
-	padding: 0px;
+	margin: 2px auto;
+	padding: 0;
 	font-size: 1px;
+	zoom: 1;
 }
 
 ul.CMenu li a.exp {
@@ -202,11 +200,11 @@ ul.CMenu li a.check {
 }
 
 ul.CMenu li:hover a { background-color: #0099FF; color: #FFFFFF; }
-ul.CMenu li:hover ul {display: block; position: absolute; top: 0; left: 146px; width:150px;}
-ul.CMenu li:hover ul li ul {display: none;}
+ul.CMenu li:hover ul { display: block; position: absolute; top: 0; left: 150px; width: 150px; }
+ul.CMenu li:hover ul li ul { display: none; z-index: 1002; }
 ul.CMenu li:hover ul li a { display: block; background-color: #F6F6F6; color: #000000; }
 ul.CMenu li:hover ul li a:hover { background-color: #0099FF; color: #FFFFFF; }
-ul.CMenu li:hover ul.left { left: -150px; }
+ul.CMenu li:hover ul.left { left: -150px; z-index: 1002; }
 
 #sel {
 	width: 0px; height: 0px;
@@ -767,6 +765,14 @@ div#gcont table td.Header { font-weight: bold; background: #F6F6F6; border: 1px 
 div#lcont { font-size: 11px; font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif; line-height: 11px; background: #FFFFFF; }
 div#lcont div { padding: 2px; }
 
+#dettable td {
+	empty-cells: show;
+}
+#dettable label {
+	width: 100px;
+	float: left;
+}
+
 /* add dialog */
 
 div#dlgAdd {
@@ -847,12 +853,17 @@ ul#tabs {
 	padding: 3px 0 0 0;
 	list-style-type: none;
 	text-align: left;
+	clear: both;
+	position: relative;
+	z-index: 50;
 }
 
 ul#tabs li {
 	margin: 0;
 	padding: 0;
 	display: inline;
+	position: relative;
+	top: -4px;
 }
 
 ul#tabs li a:hover {
@@ -864,15 +875,15 @@ ul#tabs li a {
 	text-decoration: none;
 	border: 1px solid #D0D0D0;
 	border-top: 2px solid #D0D0D0;
-	border-right: 1px solid #D0D0D0;
 	background: #D0D0D0;
 	border-bottom: 0;
 	margin: 0;
 	padding: 2px 12px 4px 12px;
 	font-size: 11px;
 	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
-	vertical-align: top;
 	color: #3B3B3B;
+	vertical-align: top;
+	top: 4px;
 }
 
 ul#tabs li.selected a {
@@ -881,7 +892,6 @@ ul#tabs li.selected a {
 	vertical-align: top;
 	border: 1px solid #868686;
 	border-top: 2px solid #0099FF;
-	border-right: 1px solid #868686;
 	border-bottom: 1px solid #FFFFFF;
 	background: #FFFFFF;
 	color: #000000;

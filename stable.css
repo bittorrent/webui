@@ -141,6 +141,7 @@ limitations under the License.
 	font: menu;
 	padding: 1px 12px 2px 4px;
 	line-height: 13px;
+	opacity: 0.7;
 	-moz-opacity: 0.7;
 	-moz-user-select: none;
 	visibility: hidden;

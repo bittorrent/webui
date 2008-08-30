@@ -87,12 +87,12 @@
 			<div class="cont">
 				<form action="./?action=add-file" method="post" enctype="multipart/form-data" target="uploadfrm" id="upfrm">
 					<div class="hcont"><label for="torrent_file">Torrent file:</label><input type="file" name="torrent_file" id="torrent_file" class="tbox" /></div>
-					<div class="hcont"><label>&nbsp;</label><input type="submit" value="Add File" id="add_button" class="btn" /></div>
+					<div class="hcont"><label>&nbsp;</label><input type="submit" value="" id="ADD_FILE_OK" class="btn" />&nbsp;&nbsp;<input type="button" id="ADD_FILE_CANCEL" value="" class="btn" /></div>
 				</form>
 				<div class="hr"></div>
 				<div class="hcont"><label for="url">Torrent URL:</label><input type="text" id="url" class="tbox" /></div>
 				<div class="hcont"><label for="cookies">Cookies:</label><input type="text" id="cookies" class="tbox" /></div>
-				<div class="hcont"><label>&nbsp;</label><input type="button" value="Add URL" class="btn" /></div>
+				<div class="hcont"><label>&nbsp;</label><input type="button" id="ADD_URL_OK" value="" class="btn" />&nbsp;&nbsp;<input type="button" id="ADD_URL_CANCEL" value="" class="btn" /></div>
 				<!--
 				<fieldset>
 					<legend><a href="#" id="optadd">Options</a></legend>
@@ -234,7 +234,12 @@
 					<legend id="DLG_SETTINGS_2_UI_15"></legend>
 					<div class="hcont"><input type="checkbox" id="torrents_start_stopped" /><label for="torrents_start_stopped" id="DLG_SETTINGS_2_UI_16"></label></div>
 				</fieldset>
+				<fieldset>
+					<legend id="DLG_SETTINGS_B_ADV_UI_07"></legend>
+					<div class="hcont"><input type="text" id="gui.persistent_labels" class="tbox" style="width: 453px" /></div>
+				</fieldset>
 			</div>
+			
 			<div id="st_dirs" class="stg_con">
 				<fieldset>
 					<legend id="DLG_SETTINGS_3_PATHS_01"></legend>
@@ -437,11 +442,11 @@
 					<legend id="DLG_SETTINGS_C_ADV_CACHE_06"></legend>
 					<div class="hcont"><input id="cache.write" type="checkbox" /><label for="cache.write" id="DLG_SETTINGS_C_ADV_CACHE_07"></label></div>
 					<div class="hcont indent"><input id="cache.writeout" type="checkbox" /><label for="cache.writeout" id="DLG_SETTINGS_C_ADV_CACHE_08"></label></div>
-					<div class="hcont indent""><input id="cache.writeimm" type="checkbox" /><label for="cache.writeimm" id="DLG_SETTINGS_C_ADV_CACHE_09"></label></div>
-					<div class="hcont indent""><input id="cache.read" type="checkbox" /><label for="cache.read" id="DLG_SETTINGS_C_ADV_CACHE_10"></label></div>
+					<div class="hcont indent"><input id="cache.writeimm" type="checkbox" /><label for="cache.writeimm" id="DLG_SETTINGS_C_ADV_CACHE_09"></label></div>
+					<div class="hcont indent"><input id="cache.read" type="checkbox" /><label for="cache.read" id="DLG_SETTINGS_C_ADV_CACHE_10"></label></div>
 					<div class="hcont"><input id="cache.read_turnoff" type="checkbox" /><label for="cache.read_turnoff" id="DLG_SETTINGS_C_ADV_CACHE_11"></label></div>
-					<div class="hcont indent""><input id="cache.read_prune" type="checkbox" /><label for="cache.read_prune" id="DLG_SETTINGS_C_ADV_CACHE_12"></label></div>
-					<div class="hcont indent""><input id="cache.read_trash" type="checkbox" /><label for="cache.read_trash" id="DLG_SETTINGS_C_ADV_CACHE_13"></label></div>
+					<div class="hcont indent"><input id="cache.read_prune" type="checkbox" /><label for="cache.read_prune" id="DLG_SETTINGS_C_ADV_CACHE_12"></label></div>
+					<div class="hcont indent"><input id="cache.read_trash" type="checkbox" /><label for="cache.read_trash" id="DLG_SETTINGS_C_ADV_CACHE_13"></label></div>
 					<div class="hcont"><input id="cache.disable_win_write" type="checkbox" /><label for="cache.disable_win_write" id="DLG_SETTINGS_C_ADV_CACHE_14"></label></div>
 					<div class="hcont"><input id="cache.disable_win_read" type="checkbox" /><label for="cache.disable_win_read" id="DLG_SETTINGS_C_ADV_CACHE_15"></label></div>
 				</fieldset>
@@ -708,13 +713,12 @@
 			<div id="dlgAbout-header" class="dlg-header">About</div>
 			<div class="content">
 				<img style="float: right" src="./images/ut.png" alt="uTorrent" />
-				<b>Developer</b>:<br />&nbsp;&nbsp;&nbsp;Carsten Niebuhr (Directrix)<br /><br />
-				<b>Contributors</b>: <br />Firon,&nbsp;icleolion,&nbsp;<a href="http://www.ignorantcow.net/">Ignorantcow</a>,&nbsp;shawnz,&nbsp;Ultima<br /><br />
-				<b>Bug Tracker</b>:<br />&nbsp;&nbsp;&nbsp;<a href="http://utbugs.leetwebhosting.com" target="_blank">http://utbugs.leetwebhosting.com</a><br />&nbsp;&nbsp;&nbsp;- Provided and hosted by Asskick
-				<p>
-				<br />
+				<b>Developer</b>:&nbsp;Carsten Niebuhr (Directrix)<br /><br />
+				<b>Contributors</b>:<br />&nbsp;&nbsp;&nbsp;Firon,&nbsp;icleolion,&nbsp;<a href="http://www.ignorantcow.net/" target="_blank">Ignorantcow</a>,&nbsp;shawnz,&nbsp;Ultima<br /><br />
+				<b>Bug Tracker</b>:&nbsp;<a href="http://trac.utorrent.com/trac/report" target="_blank">Trac</a><br /><br />
+				<b>Skin</b>:&nbsp;<a href="http://forum.utorrent.com/viewtopic.php?id=15244" target="_blank">Aquazureus</a> by savaden<br /><br />
+				<b>Icons</b>:&nbsp;<a href="http://www.famfamfam.com/lab/icons/silk/" target="_blank">Silk</a> by Mark James<br /><br />
 				<a id="mootools" href="http://www.mootools.net/" target="_blank"><img src="./images/mootools.png" alt="MooTools" /></a>
-				</p>
 			</div>
 		</div>
 		<!-- About Dialog */ -->
@@ -791,7 +795,7 @@
 		</div><div id="List"></div><div id="tdetails">
 			<ul id="tabs"></ul>
 			<div id="tdcont">
-				<div id="gcont"><table cellpadding="5" cellspacing="2" style="width: 100%"><tr><td colspan="3" class="Header">Transfer</td></tr><tr><td style="width: 33%">Time Elapsed: <span id="et"></span></td><td style="width: 34%">Remaining: <span id="rm"></span></td><td style="width: 33%">Share Ratio: <span id="ra"></span></td></tr><tr><td>Downloaded: <span id="dl"></span></td><td>Download Speed: <span id="ds"></span></td><td>Down Limit: <span id="dll"></span></td></tr><tr><td>Uploaded: <span id="ul"></span></td><td>Upload Speed: <span id="us"></span></td><td>Up Limit: <span id="ull"></span></td></tr><tr><td>Seeds: <span id="se"></span></td><td>Peers: <span id="pe"></span></td><td>Wasted: <span id="wa"></span></td></tr><tr><td colspan="3" class="Header">Tracker</td></tr><tr><td colspan="3">Tracker URL:</td></tr><tr><td colspan="3">Tracker Status:</td></tr><tr><td colspan="3">Update In:</td></tr><tr><td colspan="3">DHT Status:</td></tr><tr><td colspan="3" class="Header">General</td></tr><tr><td colspan="3">Save As:</td></tr><tr><td colspan="3">Total Size:</td></tr><tr><td colspan="3">Created On:</td></tr><tr><td colspan="3">Comment:</td></tr></table></div>
+				<div id="gcont"><table id="dettable" cellpadding="5" cellspacing="2" style="width: 100%"><tbody><tr><td colspan="3" class="Header" id="GN_TRANSFER"></td></tr><tr><td style="width: 34%"><label id="GN_TP_04"></label><span id="rm"></span></td><td style="width: 33%"><label id="GN_TP_01"></label>&nbsp;<span id="dl"></span></td><td style="width: 33%"><label id="GN_TP_02"></label>&nbsp;<span id="ul"></span></td></tr><tr><td><label id="GN_TP_08"></label>&nbsp;<span id="ra"></span></td><td><label id="GN_TP_05"></label>&nbsp;<span id="ds"></span></td><td><label id="GN_TP_06"></label>&nbsp;<span id="us"></span></td></tr><tr><td><label id="GN_TP_03"></label>&nbsp;<span id="se"></span></td><td><label id="GN_TP_07"></label>&nbsp;<span id="pe"></span></td><td></td></tr></tbody></table></div>
 				<div id="FileList"></div>
 				<div id="lcont"></div>
 			</div>

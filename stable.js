@@ -33,6 +33,9 @@ var ALIGN_RIGHT  = 3;
 var MODE_PAGE = 0;
 var MODE_VIRTUAL = 1;
 
+var NO_CHANGE = 0;
+var HAS_CHANGED = 1;
+
 var TD = new Element("td");
 var TR = new Element("tr");
 var DIV = new Element("div");
@@ -282,6 +285,8 @@ var dxSTable = new Class({
 		
 		this.assignEvents();
 		this.setAlignment();
+		//if (this.sIndex >= 0)
+		//	this.tHeadCols[this.sIndex].setStyle("backgroundPosition", "right " + ((this.options.reverse) ? "0px" : "-16px"));
 	},
 	
 	"assignEvents": function() {
@@ -400,49 +405,48 @@ var dxSTable = new Class({
 		if (this.sIndex >= 0)
 			this.tb.head.childNodes[0].childNodes[this.sIndex].setStyle("backgroundPosition", "right -32px");
 
-		col.setStyle("backgroundPosition", "right " + ((this.options.reverse) ? "-16px" : "0px"));
+		col.setStyle("backgroundPosition", "right " + ((this.options.reverse) ? "0px" : "-16px"));
 
 		this.sIndex = ind;
-		var d = this.getCache(ind);
+		this.getCache(ind);
 		var $me = this;
 		switch (this.colData[ind].type) {
 		
 		case TYPE_STRING:
-			d.sort(function(x, y) {
+			this.rowCache.sort(function(x, y) {
 				return $me.sortAlphaNumeric(x, y);
 			});
 			break;
 			
 		case TYPE_NUMBER:
-			d.sort(function(x, y) {
+			this.rowCache.sort(function(x, y) {
 				return $me.sortNumeric(x, y);
 			});
 			break;
 
 		default:
-			d.sort(function(x, y) {
+			this.rowCache.sort(function(x, y) {
 				return Comparator.compare(x.v, y.v);
 			});
 		}
-		if (this.options.reverse)
-			d.reverse();
+		//if (this.options.reverse)
+		//	this.rowCache.reverse();
 
-		var refresh = false, j = 0;
 		this.activeId.length = 0;
-		for (var i = 0; i < this.rows; i++) {
-			var key = d[i].key;
-			if (!d[i].e.hidden) {
+		var refresh = false, end = (this.options.reverse) ? -1 : this.rows, i = (this.options.reverse) ? (this.rows - 1) : 0, diff = (this.options.reverse) ? -1 : 1;
+		while (i != end) {
+			var key = this.rowCache[i].key;
+			if (!this.rowCache[i].e.hidden) {
 				this.activePos[key] = this.activeId.length;
 				this.activeId.push(key);
 			}
+			if (this.rowData[key].index != i)
+				refresh = true;
 			this.rowData[key].index = i;
 			this.rowData[key].rowIndex = -1;
-			if (this.rowId[i] === key) continue;
-			this.rowId[i] = key;
-			refresh = true;
+			i += diff;
 		}
 
-		this.clearCache(d);
 		this.isSorting = false;
 		
 		if (refresh) {
@@ -464,12 +468,12 @@ var dxSTable = new Class({
 	},
 
 	"sortSecondary": function(x, y) {
-		var m = this.getValue(x.e, this.secIndex);
-		var n = this.getValue(y.e, this.secIndex);
-		var type = this.colData[this.colOrder[this.secIndex]].type;
+		var index = this.colOrder[this.secIndex];
+		var m = x.e.data[index];
+		var n = y.e.data[index];
+		var type = this.colData[index].type;
 		var r = 0;
 		switch (type) {
-		
 		case TYPE_STRING:
 			r = Comparator.compareAlphaNumeric(m, n);
 			break;
@@ -489,9 +493,22 @@ var dxSTable = new Class({
 			r = -r;	
 		return r;
 	},
+	
+	"getActiveRange": function() {
+		var max = this.options.maxRows, mni = 0, mxi = 0;
+		if (this.options.mode == MODE_VIRTUAL) {
+			var rt = (this.dBody.scrollHeight == 0) ? 0.0 : (this.dBody.scrollTop / this.dBody.scrollHeight);
+			if (rt > 1.0)
+				rt = 1.0;
+			mni = Math.floor(rt * this.activeId.length);
+		} else {
+			mni = max * this.curPage;
+		}
+		mxi = (mni + max - 1).min(this.activeId.length - 1);
+		return [mni, mxi];
+	},
 
-	"refreshRows": function(fromSort) {
-		if (fromSort !== true) return;
+	"refreshRows": function() {
 		var max = this.options.maxRows, mni = 0, mxi = 0;
 		if (this.options.mode == MODE_VIRTUAL) {
 			var rt = (this.dBody.scrollHeight == 0) ? 0.0 : (this.dBody.scrollTop / this.dBody.scrollHeight);
@@ -539,6 +556,7 @@ var dxSTable = new Class({
 			this.attachBody();
 		this.loadObj.hide();
 		this.refresh();
+		this.requiresRefresh = false;
 	},
 	
 	"refresh": function() {
@@ -603,25 +621,118 @@ var dxSTable = new Class({
 	"addRow": function(data, id, icon, hidden) {
 		if (data.length != this.cols) return;
 		id = id || (this.id + "-row-" + (1000 + this.rows));
-		var rowIndex = -1;
-		if (!hidden) {
-			if (this.viewRows < this.options.maxRows)
-				rowIndex = this.viewRows++;
-			this.activePos[id] = this.activeId.length;
-			this.activeId.push(id);
-			if (this.options.mode == MODE_PAGE)
-				this.pageCount = Math.ceil(this.activeId.length / this.options.maxRows);
-		}
 		this.rowData[id] = {
 			"data": data,
 			"icon": icon || '',
 			"hidden": hidden || false,
-			"index": this.rowId.length, 
-			"rowIndex": rowIndex
+			"index": -1, 
+			"rowIndex": -1
 		};
-		this.rowId.push(id);
+		this._insertRow(id, true);
 		this.rows++;
+		if (!hidden) {
+			if (this.viewRows < this.options.maxRows)
+				this.rowData[id].rowIndex = this.viewRows++;
+		}
 	},
+	
+	"rowCache": [],
+	
+	"_insertRow": function(id, skipOrderCheck) {
+		skipOrderCheck = !!skipOrderCheck;
+		var sindex = this.sIndex;
+		if (sindex >= 0) {
+			var $me = this, index = 0;
+			if (!skipOrderCheck) {
+				var comp = (this.colData[sindex].type == TYPE_STRING) ? function(x, y) { return $me.sortAlphaNumeric(x, y); } :
+							(this.colData[sindex].type == TYPE_NUMBER) ? function(x, y) { return $me.sortNumeric(x, y); } :
+							function(x, y) { return Comparator.compare(x.v, y.v); };
+				var from = 0, to = this.rowCache.length - 1, rIndex = this.rowData[id].index, item = {
+					"key": id,
+					"v": this.rowData[id].data[this.colOrder[sindex]],
+					"e": this.rowData[id]
+				};
+				/*
+				if (rIndex > 0) {
+					if ((comp(item, this.rowCache[rIndex - 1]) < 0) || this.options.reverse)
+						to = rIndex;
+				}
+				if ((rIndex >= 0) && (rIndex < this.rowCache.length - 1)) {
+					if ((comp(item, this.rowCache[rIndex + 1]) > 0) || this.options.reverse)
+						from = rIndex;
+				}
+				*/
+				index = this.rowCache.binarySearch(item, comp, from, to);
+				if (index < 0)
+					index = -(index + 1);
+				if (index === rIndex) return NO_CHANGE;
+				this.rowData[id].index = index;
+				if (rIndex >= 0)
+					this.rowCache.splice(rIndex, 1);
+				this.rowCache.splice(index, 0, item);
+				if (rIndex == -1) {
+					for (var i = index + 1, j = this.rowCache.length; i < j; i++)
+						this.rowData[this.rowCache[i].key].index = i;
+				} else {
+					if (index < rIndex) {
+						for (var i = index + 1, j = rIndex; i <= j; i++)
+							this.rowData[this.rowCache[i].key].index = i;
+					} else {
+						for (var i = rIndex, j = index; i < j; i++)
+							this.rowData[this.rowCache[i].key].index = i;
+					}
+				}
+			}
+			if (has(this.activePos, id)) {
+				index = this.activePos[id];
+				delete this.activePos[id];
+				this.activeId.splice(index, 1);
+				for (var i = index, j = this.activeId.length; i < j; i++)
+					this.activePos[this.activeId[i]] = i;
+			}
+			if (!this.rowData[id].hidden) {
+				index = this.activeId.binarySearch(this.rowData[id].index, function(val, key) {
+					return (val - $me.rowData[key].index);
+				});
+				
+				if (index < 0)
+					index = -(index + 1);
+				//if (this.options.reverse)
+				//	index = this.activeId.length - index;
+				this.activePos[id] = index;
+				this.activeId.splice(index, 0, id);
+				for (var i = index + 1, j = this.activeId.length; i < j; i++)
+					this.activePos[this.activeId[i]] = i;
+				//var range = this.getActiveRange();
+				//if ((index >= range[0]) && (index <= range[1]))
+					this.requiresRefresh = true;
+			}
+		} else {
+			if (!this.rowData[id].hidden && !has(this.activePos, id)) {
+				this.activePos[id] = this.activeId.length;
+				this.activeId.push(id);
+				var range = this.getActiveRange();
+				if ((this.activePos[id] >= range[0]) && (this.activePos[id] <= range[1]))
+					this.requiresRefresh = true;
+			} else if (this.rowData[id].hidden && has(this.activePos, id)) {
+				var index = this.activePos[id];
+				delete this.activePos[id];
+				this.activeId.splice(index, 1);
+				for (var i = index, j = this.activeId.length; i < j; i++)
+					this.activePos[this.activeId[i]] = i;
+			}
+		}
+		if (this.options.mode == MODE_PAGE)
+			this.pageCount = Math.ceil(this.activeId.length / this.options.maxRows);
+	},
+	
+	"clearActive": function() {
+		delete this.activePos;
+		this.activePos = {};
+		this.activeId.length = 0;
+	},
+	
+	"requiresRefresh": false,
 	
 	"fillRow": function(row, data, icon) {
 		this.colOrder.each(function(v, k) {
@@ -662,15 +773,20 @@ var dxSTable = new Class({
 			for (var i = this.activePos[id], j = this.activeId.length; i < j; i++)
 				this.activePos[this.activeId[i]]--;
 			delete this.activePos[id];
+			this.requiresRefresh = true;
 		}
 		if (has(this.rowSel, id)) {
 			this.selectedRows.splice(this.rowSel[id], 1);
 			for (var i = this.rowSel[id], j = this.selectedRows.length; i < j; i++)
 				this.rowSel[this.selectedRows[i]]--;
 			delete this.rowSel[id];
-			this.refreshSelection();
 		}
-		this.rowId.splice(rd.index, 1);
+		if (this.sIndex >= 0) {
+			this.rowCache.splice(rd.index, 1);
+			for (var i = rd.index, j = this.rowCache.length; i < j; i++)
+				this.rowData[this.rowCache[i].key].index--;
+		}
+		rd = null;
 		delete this.rowData[id];
 		this.rows--;
 	},
@@ -689,7 +805,7 @@ var dxSTable = new Class({
 			this.rowSel = {};
 			delete this.rowData;
 			this.rowData = {};
-			this.rowId.empty();
+			this.clearCache();
 			this.rows = this.curPage = this.pageCount = this.activeId.length = this.selectedRows.length = this.viewRows = this.dBody.scrollLeft = this.dBody.scrollTop = 0;
 			this.updatePageMenu();
 		}
@@ -717,41 +833,16 @@ var dxSTable = new Class({
 	},
 
 	"hideRow": function(id) {
-		if (this.rowData[id].hidden) return false;
-		if (has(this.activePos, id)) {
-			this.activeId.splice(this.activePos[id], 1);
-			for (var i = this.activePos[id], j = this.activeId.length; i < j; i++)
-				this.activePos[this.activeId[i]]--;
-			delete this.activePos[id];
-			if (this.options.mode == MODE_PAGE)
-				this.pageCount = Math.ceil(this.activeId.length / this.options.maxRows);
-		}
 		this.rowData[id].hidden = true;
 		this.rowData[id].rowIndex = -1;
-		return true;
+		this._insertRow(id, true);
+		this.requiresRefresh = true;
 	},
 
 	"unhideRow": function(id) {
-		if (!this.rowData[id].hidden) return false;
-		if (!has(this.activePos, id)) {
-			if (this.sIndex == -1) {
-				this.activePos[id] = this.activeId.length;
-				this.activeId.push(id);
-			} else {
-				var $me = this, index = this.activeId.binarySearch(this.rowData[id].index, function(val, id) {
-					return (val - $me.rowData[id].index);
-				});
-				index = -(index + 1);
-				this.activeId.splice(index, 0, id);
-				this.activePos[id] = index;
-				for (var i = index + 1, j = this.activeId.length; i < j; i++)
-					this.activePos[this.activeId[i]]++;
-			}
-			if (this.options.mode == MODE_PAGE)
-				this.pageCount = Math.ceil(this.activeId.length / this.options.maxRows);
-		}
 		this.rowData[id].hidden = false;
-		return true;
+		this._insertRow(id, true);
+		this.requiresRefresh = true;
 	},
 
 	"refreshSelection": function() {
@@ -798,41 +889,46 @@ var dxSTable = new Class({
 	},
 
 	"getCache": function(index) {
-		var a = new Array(this.rows), c = 0, index = this.colOrder[index];
+		this.clearCache();
+		this.rowCache = new Array(this.rows);
+		var c = 0, index = this.colOrder[index];
 		for (var key in this.rowData) {
-			a[c++] = {
+			this.rowCache[c++] = {
 				"key": key,
 				"v": this.rowData[key].data[index],
 				"e": this.rowData[key]
 			};
 		}
-		return a;
 	},
 
 	"clearCache": function(a) {
-		var len = a.length;
+		var len = this.rowCache.length;
 		while (len--) {
-			a[len].key = null;
-			a[len].v = null;
-			a[len].e = null;
-			a[len] = null;
+			this.rowCache[len].key = null;
+			this.rowCache[len].v = null;
+			this.rowCache[len].e = null;
+			this.rowCache[len] = null;
 		}
-		a.length = 0;
+		this.rowCache.length = 0;
 	},
-
+/*
 	"getValue": function(row, col) {
 		return row.data[this.colOrder[col]];
 	},
-
+*/
 	"setValue": function(id, col, val, updateTable) {
 		var row = this.rowData[id];
 		if (row == null) return;
+		var hasSortedChanged = ((row.data[col] !== val) && (this.sIndex >= 0) && (col == this.colOrder[this.sIndex]));
 		row.data[col] = val;
-		if ((row.rowIndex == -1) || !updateTable) return;
-		var r = this.tb.body.childNodes[row.rowIndex], i = this.colOrder.indexOf(col);
-		if (i == -1) return;
+		//if (hasSortedChanged)
+		//	this._insertRow(id, true);
+		if (!updateTable) return hasSortedChanged;
+		var r = $(id), i = this.colOrder.indexOf(col);
+		if (!r || (i == -1)) return hasSortedChanged;
 		// lastChild should be a TextNode
-		r.childNodes[i].lastChild.nodeValue = this.options.format([val], i)[0];
+		r.childNodes[i].lastChild.nodeValue = this.options.format([val], col)[0];
+		return hasSortedChanged;
 	},
 
 	"setIcon": function(id, icon) {
@@ -946,15 +1042,14 @@ var ColumnHandler = {
 	"start": function initColAct(st, drag) {
 		st.cancelSort = true; // just to be sure
 		if (st.hotCell == -1) {
-			var l = drag.element.getPosition().x - st.dCont.getPosition().x;
-			drag.value.now.x = l;
-			drag.mouse.pos.x = drag.mouse.start.x - l;
-			st.colDragObj.set("html", drag.element.get("text"));
-			st.colDragObj.setStyles({
-				"left": l,
+			var left = drag.element.getPosition(st.dCont).x + st.dBody.scrollLeft - (Browser.Engine.gecko19 ? 4 : 0);
+			drag.value.now.x = left;
+			drag.mouse.pos.x = drag.mouse.start.x - left;
+			st.colDragObj.set("html", drag.element.get("text")).setStyles({
+				"visibility": "visible",
+				"left": left,
 				"width": drag.element.getStyle("width").toInt(),
-				"textAlign": drag.element.getStyle("textAlign"),
-				"visibility": "visible"
+				"textAlign": drag.element.getStyle("textAlign")
 			});
 			st.colDragEle = drag.element;
 			drag.element = drag.handle = st.colDragObj;
@@ -964,13 +1059,17 @@ var ColumnHandler = {
 		} else {
 			var col = st.tHeadCols[st.hotCell];
 			var w = col.getSize().x;
-			var l = col.getPosition().x - st.dCont.getPosition().x + w - (Browser.Engine.gecko19 ? 4 : 0);
-			st.resizeCol = {"width": col.getStyle("width").toInt(), "left": l};
-			drag.value.now.x = l;
-			drag.mouse.pos.x = drag.mouse.start.x - l;
+			var left = col.getPosition(st.dCont).x + w - (Browser.Engine.gecko19 ? 4 : 0);
+			st.resizeCol = {"width": col.getStyle("width").toInt(), "left": left};
+			drag.value.now.x = left;
+			drag.mouse.pos.x = drag.mouse.start.x - left;
 			st.cancelMove = true;
 			st.isResizing = true;
-			st.colReszObj.setStyles({"left": l, "height": st.dBody.getSize().y, "visibility": "visible"});
+			st.colReszObj.setStyles({
+				"left": left,
+				"height": st.dBody.getSize().y + 2,
+				"visibility": "visible"
+			});
 			st.colDragEle = drag.element;
 			drag.element = drag.handle = st.colReszObj;
 		}
@@ -985,7 +1084,7 @@ var ColumnHandler = {
 				i++;
 			}
 			if (i >= st.cols) {
-				c = i;
+				c = st.cols;
 				st.colSep.setStyle("left", st.tHeadCols[c - 1].offsetLeft + st.tHeadCols[c - 1].getWidth() - 1);
 			} else {
 				st.colSep.setStyle("left", st.tHeadCols[i].offsetLeft);
@@ -998,8 +1097,7 @@ var ColumnHandler = {
 			var w = drag.value.now.x - st.resizeCol.left + st.resizeCol.width;
 			if (w < 14)
 				w = 14;
-			var col = st.tHeadCols[st.hotCell];
-			col.setStyle("width", w);
+			st.tHeadCols[st.hotCell].setStyle("width", w);
 			$(document.body).setStyle("cursor", "e-resize");
 		}
 	},

@@ -88,8 +88,9 @@ function setupUI() {
 					break;
 					
 				case 14:
-					values[i] = (values[i] <= -1) ? "*" : values[i]; // ETA
+					values[i] = (values[i] <= -1) ? "*" : values[i]; // queue position
 					break;
+					
 				case 15:
 					values[i] = values[i].toFileSize(2); // remaining
 					break;
@@ -212,7 +213,7 @@ function checkUpload(frm) {
 		alert("The file has to be a torrent file.");
 		return false;
 	}
-	$("add_button").disabled = true;
+	$("ADD_FILE_OK").disabled = true;
 	return true;
 }
 
@@ -377,7 +378,16 @@ function loadLangStrings() {
 		"DLG_TORRENTPROP_1_GEN_16",
 		"DLG_TORRENTPROP_1_GEN_17",
 		"DLG_TORRENTPROP_1_GEN_18",
-		"DLG_TORRENTPROP_1_GEN_19"
+		"DLG_TORRENTPROP_1_GEN_19",
+		"GN_TRANSFER",
+		"GN_TP_01",
+		"GN_TP_02",
+		"GN_TP_03",
+		"GN_TP_04",
+		"GN_TP_05",
+		"GN_TP_06",
+		"GN_TP_07",
+		"GN_TP_08"
 	].each(function(k) {
 		$(k).set("text", lang[CONST[k]]);
 	});
@@ -385,7 +395,7 @@ function loadLangStrings() {
 		["dlgProps-header", CONST.DLG_TORRENTPROP_00],
 		["dlgLabel-header", CONST.OV_NEWLABEL_CAPTION],
 		["dlgSettings-header", CONST.DLG_SETTINGS_00],
-		["dlgAdd-header", CONST.MENU_ADD_TORRENT]
+		["dlgAdd-header", CONST.OV_TB_ADDTORR]
 	].each(function(k) {
 		$(k[0]).set("text", lang[k[1]]);
 	});
@@ -417,6 +427,17 @@ function loadLangStrings() {
 	});
 	$("LBL_CANCEL").set("value", lang[CONST.DLG_SETTINGS_04]).addEvent("click", function() {
 		$("dlgLabel").hide();
+	});
+	$("ADD_FILE_OK").set("value", lang[CONST.DLG_SETTINGS_03]);
+	$("ADD_FILE_CANCEL").set("value", lang[CONST.DLG_SETTINGS_04]).addEvent("click", function() {
+		$("dlgAdd").hide();
+	});
+	$("ADD_URL_OK").set("value", lang[CONST.DLG_SETTINGS_03]).addEvent("click", function() {
+		$("dlgAdd").hide();
+		utWebUI.addURL();
+	});
+	$("ADD_URL_CANCEL").set("value", lang[CONST.DLG_SETTINGS_04]).addEvent("click", function() {
+		$("dlgAdd").hide();
 	});
 }
 
@@ -520,6 +541,7 @@ function loadSettingStrings() {
 		"DLG_SETTINGS_9_WEBUI_10",
 		"DLG_SETTINGS_9_WEBUI_12",
 		"DLG_SETTINGS_A_ADVANCED_01",
+		"DLG_SETTINGS_B_ADV_UI_07",
 		"DLG_SETTINGS_C_ADV_CACHE_01",
 		"DLG_SETTINGS_C_ADV_CACHE_02",
 		"DLG_SETTINGS_C_ADV_CACHE_03",
@@ -906,7 +928,7 @@ window.addEvent("domready", function() {
 		"src": "about:blank",
 		"onload": function(doc) {
 			$("torrent_file").set("value", "");
-			$("add_button").disabled = false;
+			$("ADD_FILE_OK").disabled = false;
 			var str = $(doc.body).get("html");
 			if (str != "") {
 				var data = JSON.decode(str);

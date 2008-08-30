@@ -46,7 +46,7 @@ var ContextMenu = {
 			li = LI.clone(false);
 			link = new Element("a");
 			if (args[i][0] === CMENU_SEP) {
-				li.adopt(new Element("hr"));
+				li.adopt(new Element("div", {"class": "hr"}));
 			} else if (args[i][0] === CMENU_CHILD) {
 				ul = new Element("ul");
 				ul.addClass("CMenu");
