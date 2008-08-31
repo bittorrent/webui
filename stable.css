@@ -205,9 +205,12 @@ limitations under the License.
 }
 
 .stable-pagemenu .pagestat {
-	width: 100px; height: 20px;
+	width: 130px; height: 20px;
 	margin: auto 0;
+	padding: 4px 0;
 	float: right;
+	line-height: 20px;
+	text-align: right;
 }
 
 .stable-pagemenu .pagestat select {
@@ -215,7 +218,15 @@ limitations under the License.
 	margin: 0;
 	padding: 0;
 	font-size: 11px;
+	float: right;
 	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+}
+
+.stable-pagemenu .pagestat a.refreshBtn div {
+	width: 16px; height: 16px;
+	margin: 0 5px 0 0;
+	float: right;
+	background: transparent url(./images/table_refresh.png) no-repeat scroll center center;
 }
 
 .stable-pagemenu .prevlink-disabled {

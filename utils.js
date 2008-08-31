@@ -47,12 +47,15 @@ function loadJS(source, properties) {
 
 Array.implement({
 
+/*
 	"binarySearch": function(value, comparator, left, right) {
-		comparator = comparator || function(a, b) {
-			if (a === b) return 0;
-			if (a < b) return -1;
-			return 1;
-		};
+		if (typeof comparator != "function") {
+			comparator = function(a, b) {
+				if (a === b) return 0;
+				if (a < b) return -1;
+				return 1;
+			};
+		}
 		left = left || 0;
 		right = right || (this.length - 1);
 		var mid = 0;
@@ -69,8 +72,34 @@ Array.implement({
 				break;
 			}
 		}
-		return found ? mid : (-mid + ((mid == left) ? -1 : -2));
+		return (found ? mid : (-mid + ((mid == left) ? -1 : -2)));
 	},
+*/
+	// http://www.leepoint.net/notes-java/algorithms/searching/binarysearch.html
+	"binarySearch": function(value, comparator, first, upto) {
+		if (typeof comparator != "function") {
+			comparator = function(a, b) {
+				if (a === b) return 0;
+				if (a < b) return -1;
+				return 1;
+			};
+		}
+		first = first || 0;
+	    upto = upto || this.length;
+	    while (first < upto) {
+	        var mid = parseInt((first + upto) / 2);
+			var cv = comparator(value, this[mid]);
+	        if (cv < 0) {
+	            upto = mid;
+	        } else if (cv > 0) {
+	            first = mid + 1;
+	        } else {
+	            return mid;
+	        }
+	    }
+	    return -(first + 1);
+	},
+
 	
 	"insertAt": function(value, index) {
 		this.splice(index, 0, value);
@@ -128,7 +157,7 @@ Number.implement({
 	"toTimeString": function() {
 		var secs = this;
 		if (secs >= 2419200) return "\u221E"; // secs >= 4 weeks ~= inf. :)
-		var div, w, d, h, m, s, output = [];
+		var div, w, d, h, m, s, output = "";
 		div = secs % (604800 * 52);
 		w = (div / 604800).toInt();
 		div = div % 604800;
@@ -138,17 +167,26 @@ Number.implement({
 		div = div % 3600;
 		m = (div / 60).toInt();
 		s = div % 60;
-		if (w > 0)
-			output.push(w + "w");
-		if (d > 0)
-			output.push(d + "d");
-		if ((h > 0) && (output.length < 2))
-			output.push(h + "h");
-		if ((m > 0) && (output.length < 2))
-			output.push(m + "m");
-		if (output.length < 2)
-			output.push(s + "s");
-		return output.join(" ");
+		var parts = 0;
+		if (w > 0) {
+			output += w + "w ";
+			parts++;
+		}
+		if (d > 0) {
+			output += d + "d ";
+			parts++;
+		}
+		if ((h > 0) && (parts < 2)) {
+			output += h + "h ";
+			parts++;
+		}
+		if ((m > 0) && (parts < 2)) {
+			output += m + "m ";
+			parts++;
+		}
+		if (parts < 2)
+			output += s + "s ";
+		return output.substr(0, output.length - 1);
 	},
 
 	"roundTo": function(precision) {

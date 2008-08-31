@@ -701,6 +701,7 @@ a {
 	background: #FFFFFF;
 	border: 1px solid #D0D0D0;
 	padding: 2px 0;
+	overflow-x: hidden;
 }
 
 #ST_COL_NAME, #ST_COL_VALUE {
@@ -754,8 +755,8 @@ div#tdetails {
 }
 div#tdetails a.h { margin: 0; }
 div#tdcont { height: 200px; background: #FFFFFF; border: 1px solid #868686; padding: 3px; }
-div#gcont, div#lcont { background: #FFFFFF; overflow: auto; }
-div#gcont {
+div#gcont, div#lcont {
+	background: #FFFFFF;
 	margin: 3px;
 	border: 1px solid #868686;
 	overflow: auto;
@@ -763,7 +764,7 @@ div#gcont {
 div#gcont table { font-size: 11px; font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif; line-height: 10px; }
 div#gcont table td.Header { font-weight: bold; background: #F6F6F6; border: 1px solid #D0D0D0; }
 div#lcont { font-size: 11px; font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif; line-height: 11px; background: #FFFFFF; }
-div#lcont div { padding: 2px; }
+div#lcont { padding: 2px; }
 
 #dettable td {
 	empty-cells: show;
@@ -800,7 +801,7 @@ div#dlgAdd .hcont label { text-align: right; width: 75px; padding-right: 20px; f
 
 div#dlgAdd .hcont {
 	margin-bottom: 5px;
-	overflow: auto;
+	overflow: hidden;
 }
 
 div.fifpcw {
@@ -912,7 +913,7 @@ ul#tabs li.selected a {
 /* label dialog */
 
 div#dlgLabel {
-	width: 250px; height: 110px;
+	width: 300px; height: 110px;
 }
 
 div#dlgLabel div.dlg-header {
@@ -920,7 +921,7 @@ div#dlgLabel div.dlg-header {
 }
 
 div#dlgLabel div.content {
-	width: 230px;
+	width: 280px;
 	margin: 5px;
 	padding: 5px;
 	line-height: 16px;
@@ -931,7 +932,7 @@ div#dlgLabel div.content input {
 }
 
 #txtLabel {
-	width: 200px;
+	width: 250px;
 }
 
 /* label dialog */

@@ -24,6 +24,7 @@ var TYPE_STRING = 0;
 var TYPE_NUMBER = 1;
 var TYPE_DATE = 2;
 var TYPE_STRING_NO_CASE = 3;
+var TYPE_NUM_ORDER = 3;
 
 var ALIGN_AUTO = 0;
 var ALIGN_LEFT = 1;
@@ -81,7 +82,8 @@ var dxSTable = new Class({
 		"maxRows": 25,
 		"alternateRows": false,
 		"mode": MODE_PAGE,
-		"rowsSelectable": true
+		"rowsSelectable": true,
+		"refreshable": false
 	},
 	"startSel": null,
 	"tHeadCols": [],
@@ -271,6 +273,7 @@ var dxSTable = new Class({
 						this.removeClass("prevlink-hover");
 				})
 				.inject(this.pageMenu);
+				
 			this.pageStat = new Element("span").addClass("pagestat").inject(this.pageMenu);
 			
 			this.pageSelect = new Element("select", {
@@ -281,12 +284,26 @@ var dxSTable = new Class({
 				},
 				"disabled": "disabled"
 			}).inject(this.pageStat);
+			
+			if (this.options.refreshable) {
+				new Element("a", {
+					"class": "refreshBtn",
+					"href": "#",
+					"events": {
+						"click": function(ev) {
+							ev.stop();
+							if ($me.rows)
+								$me.fireEvent("onRefresh");
+						}
+					}
+				}).grab(new Element("div", {"text": " "})).inject(this.pageStat);
+			}
 		}
 		
 		this.assignEvents();
 		this.setAlignment();
-		//if (this.sIndex >= 0)
-		//	this.tHeadCols[this.sIndex].setStyle("backgroundPosition", "right " + ((this.options.reverse) ? "0px" : "-16px"));
+		if (this.sIndex >= 0)
+			this.tHeadCols[this.sIndex].setStyle("backgroundPosition", "right " + ((this.options.reverse) ? "0px" : "-16px"));
 	},
 	
 	"assignEvents": function() {
@@ -307,7 +324,7 @@ var dxSTable = new Class({
 						this.isScrolling = false;
 						this.resizePads();
 						this.loadObj.show();
-						this.refreshRows(true);
+						this.refreshRows();
 					}).bind(this).delay(300);
 				} else {
 					$clear(scrollTimer);
@@ -409,62 +426,80 @@ var dxSTable = new Class({
 
 		this.sIndex = ind;
 		this.getCache(ind);
-		var $me = this;
+		var $me = this, comp;
 		switch (this.colData[ind].type) {
 		
 		case TYPE_STRING:
-			this.rowCache.sort(function(x, y) {
+			comp = function(x, y) {
 				return $me.sortAlphaNumeric(x, y);
-			});
+			};
 			break;
 			
 		case TYPE_NUMBER:
-			this.rowCache.sort(function(x, y) {
+			comp = function(x, y) {
 				return $me.sortNumeric(x, y);
-			});
+			};
+			break;
+			
+		case TYPE_NUM_ORDER:
+			comp = function(x, y) {
+				return $me.sortNumOrder(x, y);
+			};
 			break;
 
 		default:
-			this.rowCache.sort(function(x, y) {
+			comp = function(x, y) {
 				return Comparator.compare(x.v, y.v);
-			});
+			};
+			break;
 		}
-		//if (this.options.reverse)
-		//	this.rowCache.reverse();
+		this.rowCache.sort(comp);
 
-		this.activeId.length = 0;
-		var refresh = false, end = (this.options.reverse) ? -1 : this.rows, i = (this.options.reverse) ? (this.rows - 1) : 0, diff = (this.options.reverse) ? -1 : 1;
+		this.clearActive();
+		var end = this.rows, i = 0, diff = 1;
+		if (this.options.reverse) {
+			end = diff = -1;
+			i = this.rows - 1;
+		}
 		while (i != end) {
 			var key = this.rowCache[i].key;
 			if (!this.rowCache[i].e.hidden) {
 				this.activePos[key] = this.activeId.length;
 				this.activeId.push(key);
 			}
-			if (this.rowData[key].index != i)
-				refresh = true;
 			this.rowData[key].index = i;
-			this.rowData[key].rowIndex = -1;
 			i += diff;
 		}
 
 		this.isSorting = false;
 		
-		if (refresh) {
-			this.curPage = 0;
-			this.refreshRows(true);
-		}
+		this.curPage = 0;
+		this.refreshRows();
 			
 		this.fireEvent("onSort", [this.sIndex, this.options.reverse]);
 	},
+	
+	//"cmp": {}, // map for compare functions, type -> function
 
 	"sortNumeric": function(x, y) {
 		var r = Comparator.compareNumeric(x.v, y.v);
-		return ((r == 0) ? this.sortSecondary(x, y) : r);
+		return (((r == 0) && (this.secIndex != this.sIndex)) ? this.sortSecondary(x, y) : r);
+	},
+	
+	"sortNumOrder": function(x, y) {
+		var r = Comparator.compareNumeric(x.v, y.v);
+		if (r != 0) {
+			if (x.v == -1)
+				r = 1;
+			else if (y.v == -1)
+				r = -1;
+		}
+		return (((r == 0) && (this.secIndex != this.sIndex)) ? this.sortSecondary(x, y) : r);
 	},
 
 	"sortAlphaNumeric": function(x, y) {
 		var r = Comparator.compareAlphaNumeric(x.v, y.v);
-		return ((r == 0) ? this.sortSecondary(x, y) : r);
+		return (((r == 0) && (this.secIndex != this.sIndex)) ? this.sortSecondary(x, y) : r);
 	},
 
 	"sortSecondary": function(x, y) {
@@ -480,6 +515,16 @@ var dxSTable = new Class({
 			
 		case TYPE_NUMBER:
 			r = Comparator.compareNumeric(m, n);
+			break;
+			
+		case TYPE_NUM_ORDER:
+			r = Comparator.compareNumeric(m, n);
+			if (r != 0) {
+				if (m == -1)
+					r = 1;
+				else if (n == -1)
+					r = -1;
+			}
 			break;
 
 		default:
@@ -509,25 +554,12 @@ var dxSTable = new Class({
 	},
 
 	"refreshRows": function() {
-		var max = this.options.maxRows, mni = 0, mxi = 0;
-		if (this.options.mode == MODE_VIRTUAL) {
-			var rt = (this.dBody.scrollHeight == 0) ? 0.0 : (this.dBody.scrollTop / this.dBody.scrollHeight);
-			if (rt > 1.0)
-				rt = 1.0;
-			mni = Math.floor(rt * this.activeId.length);
-		} else {
-			mni = max * this.curPage;
-		}
-		mxi = (mni + max - 1).min(this.activeId.length - 1);
-		
-		// doing offline updating in IE helps speedwise,
-		// but IE7 doesn't render all cells (ie. text) after the
-		// table is re-inserted
-		if (Browser.Engine.gecko || Browser.Engine.trident)
+		var range = this.getActiveRange();
+		if (Browser.Engine.gecko || Browser.Engine.trident4)
 			this.detachBody();
 		var count = 0;
-		for (var i = mni; i <= mxi; i++) {
-			var id = this.activeId[i], rowData = this.rowData[id], row = $(id) || this.tb.body.childNodes[count], data = this.options.format($A(rowData.data)), icon = rowData.icon;
+		for (var i = range[0]; i <= range[1]; i++) {
+			var id = this.activeId[i], rdata = this.rowData[id], row = $(id) || this.tb.body.childNodes[count], data = this.options.format($A(rdata.data));
 			var clsName = "", clsChanged = row.hasClass("selected");
 			if (has(this.rowSel, id)) {
 				clsName += "selected";
@@ -544,15 +576,15 @@ var dxSTable = new Class({
 			}
 			if (clsChanged)
 				row.className = clsName.clean();
-			this.fillRow(row, data, icon);
+			this.fillRow(row, data, rdata.icon);
 			if (row != this.tb.body.childNodes[count])
 				row.inject(this.tb.body.childNodes[count], "before");
 			row.setProperties({"title": data[0], "id": id}).show(true);
-			rowData.rowIndex = count++;
+			rdata.rowIndex = count++;
 		}
-		for (var i = count; i < max; i++)
+		for (var i = count; i < this.options.maxRows; i++)
 			this.tb.body.childNodes[i].setProperty("id", "").hide();
-		if (Browser.Engine.gecko || Browser.Engine.trident)
+		if (Browser.Engine.gecko || Browser.Engine.trident4)
 			this.attachBody();
 		this.loadObj.hide();
 		this.refresh();
@@ -623,17 +655,13 @@ var dxSTable = new Class({
 		id = id || (this.id + "-row-" + (1000 + this.rows));
 		this.rowData[id] = {
 			"data": data,
-			"icon": icon || '',
+			"icon": icon || "",
 			"hidden": hidden || false,
 			"index": -1, 
 			"rowIndex": -1
 		};
-		this._insertRow(id, true);
+		this._insertRow(id);
 		this.rows++;
-		if (!hidden) {
-			if (this.viewRows < this.options.maxRows)
-				this.rowData[id].rowIndex = this.viewRows++;
-		}
 	},
 	
 	"rowCache": [],
@@ -644,68 +672,93 @@ var dxSTable = new Class({
 		if (sindex >= 0) {
 			var $me = this, index = 0;
 			if (!skipOrderCheck) {
-				var comp = (this.colData[sindex].type == TYPE_STRING) ? function(x, y) { return $me.sortAlphaNumeric(x, y); } :
-							(this.colData[sindex].type == TYPE_NUMBER) ? function(x, y) { return $me.sortNumeric(x, y); } :
-							function(x, y) { return Comparator.compare(x.v, y.v); };
-				var from = 0, to = this.rowCache.length - 1, rIndex = this.rowData[id].index, item = {
+				var comp, from = 0, to = this.rowCache.length, rIndex = this.rowData[id].index, item = {
 					"key": id,
 					"v": this.rowData[id].data[this.colOrder[sindex]],
 					"e": this.rowData[id]
 				};
-				/*
-				if (rIndex > 0) {
-					if ((comp(item, this.rowCache[rIndex - 1]) < 0) || this.options.reverse)
-						to = rIndex;
+				switch (this.colData[sindex].type) {
+				case TYPE_STRING:
+					comp = function(x, y) {
+						return $me.sortAlphaNumeric(x, y);
+					};
+					break;
+					
+				case TYPE_NUMBER:
+					comp = function(x, y) {
+						return $me.sortNumeric(x, y);
+					};
+					break;
+					
+				case TYPE_NUM_ORDER:
+					comp = function(x, y) {
+						return $me.sortNumOrder(x, y);
+					};
+					break;
+
+				default:
+					comp = function(x, y) {
+						return Comparator.compare(x.v, y.v);
+					};
+					break;
 				}
-				if ((rIndex >= 0) && (rIndex < this.rowCache.length - 1)) {
-					if ((comp(item, this.rowCache[rIndex + 1]) > 0) || this.options.reverse)
-						from = rIndex;
+				/*
+				if (rIndex >= 0) {
+					if ((rIndex != 0) && (comp(item, this.rowCache[rIndex - 1]) < 0)) {
+						to = rIndex;
+					} else if ((rIndex < this.rowCache.length - 1) && (comp(item, this.rowCache[rIndex + 1]) > 0)) {
+						from = rIndex + 1;
+					} else {
+						return;
+					}
 				}
 				*/
 				index = this.rowCache.binarySearch(item, comp, from, to);
 				if (index < 0)
 					index = -(index + 1);
-				if (index === rIndex) return NO_CHANGE;
-				this.rowData[id].index = index;
-				if (rIndex >= 0)
+				if (rIndex >= 0) {
 					this.rowCache.splice(rIndex, 1);
+					if (rIndex < index)
+						index--;
+				}
 				this.rowCache.splice(index, 0, item);
 				if (rIndex == -1) {
-					for (var i = index + 1, j = this.rowCache.length; i < j; i++)
+					for (var i = index, j = this.rowCache.length; i < j; i++)
 						this.rowData[this.rowCache[i].key].index = i;
 				} else {
 					if (index < rIndex) {
-						for (var i = index + 1, j = rIndex; i <= j; i++)
+						for (var i = index, j = rIndex; i <= j; i++)
 							this.rowData[this.rowCache[i].key].index = i;
 					} else {
-						for (var i = rIndex, j = index; i < j; i++)
+						for (var i = rIndex, j = index; i <= j; i++)
 							this.rowData[this.rowCache[i].key].index = i;
 					}
 				}
 			}
 			if (has(this.activePos, id)) {
+				this.rowData[id].rowIndex = -1;
 				index = this.activePos[id];
 				delete this.activePos[id];
 				this.activeId.splice(index, 1);
-				for (var i = index, j = this.activeId.length; i < j; i++)
+				for (var i = 0, j = this.activeId.length; i < j; i++)
 					this.activePos[this.activeId[i]] = i;
+				if (this.rowData[id].hidden)
+					this.requiresRefresh = true;
 			}
 			if (!this.rowData[id].hidden) {
-				index = this.activeId.binarySearch(this.rowData[id].index, function(val, key) {
-					return (val - $me.rowData[key].index);
+				index = this.activeId.binarySearch(id, function(idA, idB) {
+					return ($me.rowData[idA].index.toFloat() - $me.rowData[idB].index.toFloat()) * (($me.options.reverse) ? -1 : 1);
 				});
-				
 				if (index < 0)
 					index = -(index + 1);
-				//if (this.options.reverse)
-				//	index = this.activeId.length - index;
-				this.activePos[id] = index;
 				this.activeId.splice(index, 0, id);
-				for (var i = index + 1, j = this.activeId.length; i < j; i++)
+				for (var i = index, j = this.activeId.length; i < j; i++)
 					this.activePos[this.activeId[i]] = i;
-				//var range = this.getActiveRange();
-				//if ((index >= range[0]) && (index <= range[1]))
+				var range = this.getActiveRange();
+				if ((index >= range[0]) && (index <= range[1])) {
 					this.requiresRefresh = true;
+					this.rowData[id].rowIndex = index - range[0];
+				}
 			}
 		} else {
 			if (!this.rowData[id].hidden && !has(this.activePos, id)) {
@@ -735,7 +788,9 @@ var dxSTable = new Class({
 	"requiresRefresh": false,
 	
 	"fillRow": function(row, data, icon) {
+		var $me = this;
 		this.colOrder.each(function(v, k) {
+			if ($me.colData[k].disabled) return;
 			var cell = row.childNodes[k];
 			if (cell.lastChild) {
 				if ((v == 0) && icon)
@@ -836,13 +891,11 @@ var dxSTable = new Class({
 		this.rowData[id].hidden = true;
 		this.rowData[id].rowIndex = -1;
 		this._insertRow(id, true);
-		this.requiresRefresh = true;
 	},
 
 	"unhideRow": function(id) {
 		this.rowData[id].hidden = false;
 		this._insertRow(id, true);
-		this.requiresRefresh = true;
 	},
 
 	"refreshSelection": function() {
@@ -911,21 +964,18 @@ var dxSTable = new Class({
 		}
 		this.rowCache.length = 0;
 	},
-/*
-	"getValue": function(row, col) {
-		return row.data[this.colOrder[col]];
-	},
-*/
-	"setValue": function(id, col, val, updateTable) {
+
+	"setValue": function(id, col, val) {
 		var row = this.rowData[id];
 		if (row == null) return;
-		var hasSortedChanged = ((row.data[col] !== val) && (this.sIndex >= 0) && (col == this.colOrder[this.sIndex]));
+		var isSortedCol = ((this.sIndex >= 0) && (col == this.colOrder[this.sIndex]));
+		var hasSortedChanged = ((row.data[col] !== val) && isSortedCol);
 		row.data[col] = val;
-		//if (hasSortedChanged)
-		//	this._insertRow(id, true);
-		if (!updateTable) return hasSortedChanged;
-		var r = $(id), i = this.colOrder.indexOf(col);
-		if (!r || (i == -1)) return hasSortedChanged;
+		if (isSortedCol)
+			this._insertRow(id);
+		if (this.requiresRefresh) return hasSortedChanged;
+		if ((row.rowIndex == -1)) return hasSortedChanged;
+		var r = this.tb.body.childNodes[row.rowIndex], i = this.colOrder.indexOf(col);
 		// lastChild should be a TextNode
 		r.childNodes[i].lastChild.nodeValue = this.options.format([val], col)[0];
 		return hasSortedChanged;
@@ -967,8 +1017,10 @@ var dxSTable = new Class({
 		this.tHeadCols[index][hide ? "addClass" : "removeClass"]("stable-hidden-column");
 		for (var i = 0, j = this.tb.body.childNodes.length; i < j; i++) {
 			this.tb.body.childNodes[i].childNodes[index][hide ? "addClass" : "removeClass"]("stable-hidden-column");
-		};
-		this.fireEvent("onColToggle", [index, hide]);
+		}
+		if (index == this.sIndex)
+			this.sIndex = -1;
+		this.fireEvent("onColToggle", [this.colOrder[index], hide]);
 		this.calcSize();
 		return true;
 	},
@@ -1012,7 +1064,6 @@ var dxSTable = new Class({
 		this.pageSelect.disabled = false;
 		for (var i = 0; i < this.pageCount; i++)
 			this.pageSelect.options[i] = new Option(/* text */ i + 1, /* value */ i, /* defaultSelected */ false, /* selected */ i == this.curPage);
-		//this.pageStat.show();
 	},
 
 	"gotoPage": function(i) {
@@ -1021,7 +1072,7 @@ var dxSTable = new Class({
 		this.updatePageMenu();
 		if (Browser.Engine.gecko)
 			this.detachBody();
-		this.refreshRows(true);
+		this.refreshRows();
 		if (Browser.Engine.gecko)
 			this.attachBody();
 	},
