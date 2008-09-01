@@ -1092,55 +1092,5 @@ window.addEvent("domready", function() {
 		linked(this, 0, ["max_ul_rate_seed"]);
 	});
 
-	/*
-	var num_elements = 150;
-	var a = new Array(num_elements);
-    for (var i = 0; i < num_elements; i++) {
-		var v;
-		do {
-			v = $random(0, 500);
-		} while(a.contains(v));
-		a[i] = v;
-    }
-	
-    a.sort(function(a, b) { return a - b; });
-
-	console.log(a);
-    for(var i = 0; i < 100; i++) {
-        var present_val = $random(0, 500);
-        var index = a.binarySearch(present_val);
-		if (index < 0) {
-			index = -index - 1;
-			console.log([a[index - 1] <= present_val, a[index] >= present_val, a[index - 1], a[index]]);
-		}
-    }
-	
-	return;
-	
-	if (a.binarySearch(num_elements / 7) >= 0 ||
-        a.binarySearch(-1)               >= 0 ||
-        a.binarySearch(num_elements + 1) >= 0) {
-         console.log("ERROR");
-    }
-	*/
-
-	
-	//var a = [1,2,3,4,7];
-	//a.splice(-a.binarySearch(5) - 1, 0, 5);
-	//alert(a);
-
-	/*
-	(function() {
-		var toggle = false;
-		$("optadd").addEvent("click", function(ev) {
-			ev.stop();
-			this.setStyle("backgroundPosition", "2px " + (toggle ? 0 : -16) + "px");
-			$("dlgAdd").setStyle("height", toggle ? 185 : 260);
-			$("optadd-cont")[toggle ? "hide" : "show"]();
-			toggle = !toggle;
-		});
-	})();
-	*/
-
 	utWebUI.init();
 });

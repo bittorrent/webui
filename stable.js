@@ -773,6 +773,7 @@ var dxSTable = new Class({
 				this.activeId.splice(index, 1);
 				for (var i = index, j = this.activeId.length; i < j; i++)
 					this.activePos[this.activeId[i]] = i;
+				this.requiresRefresh = true;
 			}
 		}
 		if (this.options.mode == MODE_PAGE)
@@ -1068,12 +1069,15 @@ var dxSTable = new Class({
 
 	"gotoPage": function(i) {
 		if (this.curPage == i) return;
+		var range = this.getActiveRange();
+		for (var j = range[0]; j <= range[1]; j++)
+			this.rowData[this.activeId[j]].rowIndex = -1;
 		this.curPage = i;
 		this.updatePageMenu();
-		if (Browser.Engine.gecko)
+		if (Browser.Engine.gecko || Browser.Engine.trident4)
 			this.detachBody();
 		this.refreshRows();
-		if (Browser.Engine.gecko)
+		if (Browser.Engine.gecko || Browser.Engine.trident4)
 			this.attachBody();
 	},
 

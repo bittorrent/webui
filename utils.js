@@ -47,34 +47,6 @@ function loadJS(source, properties) {
 
 Array.implement({
 
-/*
-	"binarySearch": function(value, comparator, left, right) {
-		if (typeof comparator != "function") {
-			comparator = function(a, b) {
-				if (a === b) return 0;
-				if (a < b) return -1;
-				return 1;
-			};
-		}
-		left = left || 0;
-		right = right || (this.length - 1);
-		var mid = 0;
-		var found = false;
-		while (left <= right) {
-			mid = ((left + right) / 2).toInt();
-			var cv = comparator(value, this[mid]);
-			if (cv > 0) {
-				left = mid + 1;
-			} else if (cv < 0) {
-				right = mid - 1;
-			} else {
-				found = true;
-				break;
-			}
-		}
-		return (found ? mid : (-mid + ((mid == left) ? -1 : -2)));
-	},
-*/
 	// http://www.leepoint.net/notes-java/algorithms/searching/binarysearch.html
 	"binarySearch": function(value, comparator, first, upto) {
 		if (typeof comparator != "function") {
