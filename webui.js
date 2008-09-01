@@ -367,7 +367,9 @@ var utWebUI = {
 				this.clearDetails();
 			}
 		}
-		if (this.trtTable.requiresRefresh || sortedColChanged)
+		if (!this.loaded && (this.trtTable.sIndex >= 0))
+			this.trtTable.sort();
+		else if (this.trtTable.requiresRefresh || sortedColChanged)
 			this.trtTable.refreshRows();
 		if (Browser.Engine.gecko || Browser.Engine.trident4)
 			this.trtTable.attachBody();

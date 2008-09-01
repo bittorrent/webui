@@ -302,8 +302,6 @@ var dxSTable = new Class({
 		
 		this.assignEvents();
 		this.setAlignment();
-		if (this.sIndex >= 0)
-			this.tHeadCols[this.sIndex].setStyle("backgroundPosition", "right " + ((this.options.reverse) ? "0px" : "-16px"));
 	},
 	
 	"assignEvents": function() {
