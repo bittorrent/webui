@@ -135,6 +135,8 @@
 	"Peerov:",
 	"Ratio:",
 	"Prenos",
+	"%d z %d pripojených (vo swarme: %d)",
+	"D:%s U:%s - %s",
 	"Zobraziť zoznam kategórií",
 	"Zobraziť podrobnosti",
 	"Vymazať data",
@@ -212,5 +214,11 @@
 	"Hodnota",
 	"<= %d hodín",
 	"(Ignorovať)",
-	"<= %d minút"
+	"<= %d minút",
+	"%dd %dh",
+	"%dh %dm",
+	"%dm %ds",
+	"%ds",
+	"%dt %dd",
+	"%dr %dt"
 ], lang_code = "sk";

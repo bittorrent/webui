@@ -135,6 +135,8 @@
 	"Klientar:",
 	"Delingstilhøve:",
 	"Overføring",
+	"%d av %d påkopla (%d i sverm)",
+	"D:%s U:%s - %s",
 	"Vis kategoriliste",
 	"Vis detaljert info",
 	"Slett data",
@@ -212,5 +214,11 @@
 	"Verdi",
 	"<= %d timar",
 	"(ignorer)",
-	"<= %d minutt"
+	"<= %d minutt",
+	"%dd %dh",
+	"%dh %dm",
+	"%dm %ds",
+	"%ds",
+	"%dw %dd",
+	"%dy %dw"
 ], lang_code = "nnNO";

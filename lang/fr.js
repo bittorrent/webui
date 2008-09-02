@@ -135,6 +135,8 @@
 	"Clients:",
 	"Ratio:",
 	"Transfert",
+	"%d de %d connectés (%d visibles)",
+	"Reçu: %s Émis: %s - %s",
 	"Afficher la liste des catégories",
 	"Afficher les informations détaillées",
 	"Supprimer fichiers",
@@ -212,5 +214,11 @@
 	"Valeur",
 	"<= %d heures",
 	"(Ignoré)",
-	"<= %d minutes"
+	"<= %d minutes",
+	"%dj %dh",
+	"%dh %dm",
+	"%dm %ds",
+	"%ds",
+	"%dsem %dj",
+	"%dan %dsem"
 ], lang_code = "fr";

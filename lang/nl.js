@@ -135,6 +135,8 @@
 	"Peers:",
 	"Deelverh.:",
 	"Overdracht",
+	"%d van %d verbonden (%d in zwerm)",
+	"D:%s U:%s - %s",
 	"Toon categorielijst",
 	"Toon gedetailleerde info",
 	"Verwijder gegevens",
@@ -212,5 +214,11 @@
 	"Waarde",
 	"<= %d uren",
 	"(Negeer)",
-	"<= %d minuten"
+	"<= %d minuten",
+	"%dd %dh",
+	"%dh %dm",
+	"%dm %ds",
+	"%ds",
+	"%dw %dd",
+	"%dj %dw"
 ], lang_code = "nl";

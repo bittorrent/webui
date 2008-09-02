@@ -135,6 +135,8 @@
 	"Parteneri:",
 	"Raport [ratio]",
 	"Transfer",
+	"%d din %d conectați (%d în roi)",
+	"D:%s Î:%s - %s",
 	"Arată Lista de Categorii",
 	"Arată Informații Detaliate",
 	"Șterge Datele Descărcate",
@@ -212,5 +214,11 @@
 	"Valoare",
 	"<= %d ore",
 	"(Ignoră)",
-	"<= %d minute"
+	"<= %d minute",
+	"%dd %dh",
+	"%dh %dm",
+	"%dm %ds",
+	"%ds",
+	"%dw %dd",
+	"%dy %dw"
 ], lang_code = "ro";

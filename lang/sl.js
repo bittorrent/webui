@@ -135,6 +135,8 @@
 	"Odjemalci:",
 	"Delilno razmerje:",
 	"Prenos",
+	"%d od %d povezanih (%d v roju)",
+	"P:%s O:%s - %s",
 	"Pokaži seznam kategorij",
 	"Pokaži podrobnosti",
 	"Zbriši podatke",
@@ -212,5 +214,11 @@
 	"Vrednost",
 	"<= %d ur",
 	"(Prezri)",
-	"<= %d minut"
+	"<= %d minut",
+	"%dd %dh",
+	"%dh %dm",
+	"%dm %ds",
+	"%ds",
+	"%dt %dd",
+	"%dl %dt"
 ], lang_code = "sl";

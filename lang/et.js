@@ -135,6 +135,8 @@
 	"Peere:",
 	"Jagamise suhe:",
 	"Edastus",
+	"%d/%d ühendatud (sülemis %d)",
+	"A:%s Ü:%s - %s",
 	"Kategooriate nimekiri",
 	"Näita detailset infot",
 	"Kustuta andmed",
@@ -212,5 +214,11 @@
 	"Väärtus",
 	"<= %d tundi",
 	"(ignoreeri)",
-	"<= %d minutit"
+	"<= %d minutit",
+	"%dp %dt",
+	"%dt %dm",
+	"%dm %ds",
+	"%ds",
+	"%dn %dp",
+	"%da %dn"
 ], lang_code = "et";

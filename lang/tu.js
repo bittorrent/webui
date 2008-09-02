@@ -135,6 +135,8 @@
 	"Eşler:",
 	"Paylaşma Oranı:",
 	"Aktarım",
+	"%d tanesine %d içinden bağlandı (%d kümede)",
+	"D:%s U:%s - %s",
 	"Kategori Listesini Göster",
 	"Detaylı Bilgi Göster",
 	"Veriyi Sil",
@@ -212,5 +214,11 @@
 	"Değer",
 	"<= %d saat",
 	"(Yoksay)",
-	"<= %d dakika"
+	"<= %d dakika",
+	"%dd %dh",
+	"%dh %dm",
+	"%dm %ds",
+	"%ds",
+	"%dw %dd",
+	"%dy %dw"
 ], lang_code = "tu";

@@ -135,6 +135,8 @@
 	"Peers:",
 	"Share-Rate:",
 	"Verbindung",
+	"zu %d von %d verbunden (aus %d Verfügbaren)",
+	"D:%s U:%s - %s",
 	"Gruppen-Liste zeigen",
 	"Ausführliche Infos zeigen",
 	"nur Daten löschen",
@@ -212,5 +214,11 @@
 	"Wert",
 	"<= %d Stunden",
 	"(Ignorieren)",
-	"<= %d Minuten"
+	"<= %d Minuten",
+	"%dt %dh",
+	"%dh %dm",
+	"%dm %ds",
+	"%ds",
+	"%dw %dt",
+	"%dj %dw"
 ], lang_code = "de";

@@ -135,6 +135,8 @@
 	"Peer:",
 	"Rapp. condiv.:",
 	"Trasferimento",
+	"%d di %d connessi (%d visibili)",
+	"D:%s U:%s - %s",
 	"Mostra elenco categorie",
 	"Mostra informazioni dettagliate",
 	"Elimina dati",
@@ -212,5 +214,11 @@
 	"Valore",
 	"<= %d ore",
 	"(ignora)",
-	"<= %d minuti"
+	"<= %d minuti",
+	"%dd %dh",
+	"%dh %dm",
+	"%dm %ds",
+	"%ds",
+	"%dw %dd",
+	"%dy %dw"
 ], lang_code = "it";

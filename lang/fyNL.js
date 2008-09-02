@@ -135,6 +135,8 @@
 	"Peers:",
 	"Dielferhâlding:",
 	"Oerdracht",
+	"%d fan %d ferbûn (%d yn swerm)",
+	"Y:%s U:%s - %s",
 	"Lit Kategory List sjen",
 	"Lit Detailleaerre Ynfo Sjen",
 	"Wis Data",
@@ -212,5 +214,11 @@
 	"Wearde",
 	"<= %d oeren",
 	"(Negerje)",
-	"<= %d minúten"
+	"<= %d minúten",
+	"%dd %do",
+	"%do %dm",
+	"%dm %ds",
+	"%ds",
+	"%dw %dd",
+	"%dj %dw"
 ], lang_code = "fyNL";

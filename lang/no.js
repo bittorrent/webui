@@ -135,6 +135,8 @@
 	"Peers:",
 	"Delingsratio:",
 	"Overføring",
+	"%d av %d tilkoblet (%d i sverm)",
+	"D:%s U:%s - %s",
 	"Vis Kategoriliste",
 	"Vis Detaljert Info",
 	"Slett Data",
@@ -212,5 +214,11 @@
 	"Verdi",
 	"<= %d timer",
 	"(Ignorer)",
-	"<= %d minutter"
+	"<= %d minutter",
+	"%dd %dt",
+	"%dt %dm",
+	"%dm %ds",
+	"%dm %ds",
+	"%du %dd",
+	"%då %du"
 ], lang_code = "no";

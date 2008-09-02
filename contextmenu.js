@@ -110,6 +110,7 @@ var ContextMenu = {
 			y -= size.y;
 		this.obj.setStyles({"left": x, "top": y, "visibility": "visible"});
 		this.hidden = false;
+		this.focused = false;
 		this.launched = true;
 	},
 	
@@ -121,6 +122,8 @@ var ContextMenu = {
 			"top": 0
 		});
 		this.hidden = true;
+		this.focused = false;
+		this.launched = false;
 		this.clear.delay(20, this);
 	}
 

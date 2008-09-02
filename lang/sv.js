@@ -135,6 +135,8 @@
 	"Klienter:",
 	"Utdelad kvot:",
 	"Transport",
+	"%d av %d anslutna (%d i svärm)",
+	"N:%s U:%s - %s",
 	"Visa kategorilista",
 	"Visa detaljerad info",
 	"Ta bort data",
@@ -212,5 +214,11 @@
 	"Värde",
 	"<= %d timmar",
 	"(Ignorera)",
-	"<= %d minuter"
+	"<= %d minuter",
+	"%dd %dh",
+	"%dh %dm",
+	"%dm %ds",
+	"%ds",
+	"%dw %dd",
+	"%dy %dw"
 ], lang_code = "sv";

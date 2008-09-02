@@ -135,6 +135,8 @@
 	"Peers:",
 	"Dele forhold:",
 	"Overfør",
+	"%d af %d forbundet (%d i sværm)",
+	"N:%s O:%s - %s",
 	"Vis kategori liste",
 	"Vis detaljeret info",
 	"Slet data",
@@ -212,5 +214,11 @@
 	"Værdi",
 	"<= %d timer",
 	"(Ignorér)",
-	"<= %d minutter"
+	"<= %d minutter",
+	"%dd %dh",
+	"%dh %dm",
+	"%dm %ds",
+	"%ds",
+	"%dw %dd",
+	"%dy %dw"
 ], lang_code = "dk";

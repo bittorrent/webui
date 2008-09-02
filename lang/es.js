@@ -135,6 +135,8 @@
 	"Clientes:",
 	"Ratio:",
 	"Transferencia",
+	"%d de %d conectados (%d en el enjambre)",
+	"D:%s S:%s - %s",
 	"Mostrar lista por categoría",
 	"Mostrar información detallada",
 	"Eliminar datos",
@@ -212,5 +214,11 @@
 	"Valor",
 	"<= %d horas",
 	"(Ignorar)",
-	"<= %d minutos"
+	"<= %d minutos",
+	"%dd %dh",
+	"%dh %dm",
+	"%dm %ds",
+	"%ds",
+	"%dw %dd",
+	"%dy %dw"
 ], lang_code = "es";

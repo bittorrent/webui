@@ -135,6 +135,8 @@
 	"เพียร์:",
 	"สัดส่วนส่งต่อรับ:",
 	"การถ่ายโอน",
+	"ติดต่อกับ %d จาก %d (ทั้งหมด %d)",
+	"The torrent you are trying to add is already in the list of torrents. Do you want to load the trackers from it?",
 	"แสดงหมวด",
 	"แสดงรายละเอียดข้อมูล",
 	"ลบข้อมูล",
@@ -212,5 +214,11 @@
 	"ค่า",
 	"<= %d ชั่วโมง",
 	"(เพิกเฉย)",
-	"<= %d นาที"
+	"<= %d นาที",
+	"%dd %dh",
+	"%dh %dm",
+	"%dm %ds",
+	"%ds",
+	"%dw %dd",
+	"%dy %dw"
 ], lang_code = "th";

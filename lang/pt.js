@@ -135,6 +135,8 @@
 	"Peers:",
 	"Rácio de Part.:",
 	"Transferência",
+	"%d de %d ligados (%d no swarm)",
+	"R:%s E:%s - %s",
 	"Mostrar Lista de Categorias",
 	"Mostrar Informações Detalhadas",
 	"Eliminar Dados",
@@ -212,5 +214,11 @@
 	"Valor",
 	"<= %d horas",
 	"(Ignorar)",
-	"<= %d minutos"
+	"<= %d minutos",
+	"%dd %dh",
+	"%dh %dm",
+	"%dm %ds",
+	"%ds",
+	"%dsm %dd",
+	"%da %dsm"
 ], lang_code = "pt";

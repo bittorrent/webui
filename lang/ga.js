@@ -135,6 +135,8 @@
 	"Comhghleacaithe:",
 	"Cóimheas:",
 	"Aistriú",
+	"%d de %d nasctha (%d sa saithe)",
+	"Í:%s U:%s - %s",
 	"Taispeáin Réim na nAicmí",
 	"Taispeáin Faisnéis Sonraithe",
 	"Scrios na Sonraí",
@@ -212,5 +214,11 @@
 	"Luach",
 	"<= %d uaireanta",
 	"(Ná bac leis)",
-	"<= %d nóiméid"
+	"<= %d nóiméid",
+	"%dl %du",
+	"%du %dn",
+	"dn %ds",
+	"%ds",
+	"%ds %dl",
+	"%db %ds"
 ], lang_code = "ga";

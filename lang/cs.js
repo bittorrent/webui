@@ -135,6 +135,8 @@
 	"Peerů:",
 	"Ratio:",
 	"Přenos",
+	"%d z %d připojeno (%d ve swarmu)",
+	"D:%s U:%s - %s",
 	"Zobrazit Seznam kategorií",
 	"Zobrazit Detailní informace",
 	"vymazat data",
@@ -212,5 +214,11 @@
 	"Hodnota",
 	"<= %d hodin",
 	"neomezený",
-	"<= %d minut"
+	"<= %d minut",
+	"%dd %dh",
+	"%dh %dm",
+	"%dm %ds",
+	"%ds",
+	"%dt %dd",
+	"%dr %dt"
 ], lang_code = "cs";

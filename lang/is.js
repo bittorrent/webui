@@ -135,6 +135,8 @@
 	"Aðilar:",
 	"Hlutfall:",
 	"Umferð",
+	"%d af %d aðilum tengdir (af samtals %d)",
+	"N:%s S:%s - %s",
 	"Listi Yfir Flokka",
 	"Nákvæmar Upplýsingar",
 	"...eyða gögnum",
@@ -212,5 +214,11 @@
 	"Gildi",
 	"<= %d klukkutímar",
 	"(Ekki tilgreint)",
-	"<= %d mínútur"
+	"<= %d mínútur",
+	"%dd %dk",
+	"%dk %dm",
+	"%dm %ds",
+	"%ds",
+	"%dv %dd",
+	"%dá %dv"
 ], lang_code = "is";

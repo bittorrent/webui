@@ -128,9 +128,10 @@ Number.implement({
 
 	"toTimeString": function() {
 		var secs = this;
-		if (secs >= 2419200) return "\u221E"; // secs >= 4 weeks ~= inf. :)
-		var div, w, d, h, m, s, output = "";
-		div = secs % (604800 * 52);
+		if (secs > 63072000) return "\u221E"; // secs > 2 years ~= inf. :)
+		var div, y, w, d, h, m, s, output = "";
+		y = (secs / 31536000).toInt();
+		div = secs % 31536000;
 		w = (div / 604800).toInt();
 		div = div % 604800;
 		d = (div / 86400).toInt();
@@ -139,26 +140,17 @@ Number.implement({
 		div = div % 3600;
 		m = (div / 60).toInt();
 		s = div % 60;
-		var parts = 0;
-		if (w > 0) {
-			output += w + "w ";
-			parts++;
-		}
-		if (d > 0) {
-			output += d + "d ";
-			parts++;
-		}
-		if ((h > 0) && (parts < 2)) {
-			output += h + "h ";
-			parts++;
-		}
-		if ((m > 0) && (parts < 2)) {
-			output += m + "m ";
-			parts++;
-		}
-		if (parts < 2)
-			output += s + "s ";
-		return output.substr(0, output.length - 1);
+		if ((y > 0) && (w >= 0)) {
+			output = lang[CONST.TIME_YEARS_WEEKS].replace(/%d/, y).replace(/%d/, w);
+		} else if ((w > 0) && (d >= 0)) {
+			output = lang[CONST.TIME_WEEKS_DAYS].replace(/%d/, w).replace(/%d/, d);
+		} else if ((h > 0) && (m >= 0)) {
+			output = lang[CONST.TIME_HOURS_MINS].replace(/%d/, h).replace(/%d/, m);
+		} else if (m > 0) {
+			output = lang[CONST.TIME_MINS_SECS].replace(/%d/, m).replace(/%d/, s);
+		} else
+			output = lang[CONST.TIME_SECS].replace(/%d/, s);
+		return output;
 	},
 
 	"roundTo": function(precision) {

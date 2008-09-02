@@ -135,6 +135,8 @@
 	"Pikat:",
 	"Shpërndarë:",
 	"Transferimi",
+	"%d nga %d të lidhur (%d në tufë)",
+	"S:%s N:%s - %s",
 	"Trego Listë e Kategorive",
 	"Trego Info me Detaje",
 	"Fshiji të Dhënat",
@@ -212,5 +214,11 @@
 	"Vlera",
 	"<= %d orë",
 	"(Përbuze)",
-	"<= %d minuta"
+	"<= %d minuta",
+	"%dd %dh",
+	"%dh %dm",
+	"%dm %ds",
+	"%ds",
+	"%dw %dd",
+	"%dy %dw"
 ], lang_code = "sq";

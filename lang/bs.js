@@ -135,6 +135,8 @@
 	"Klijenata:",
 	"Omjer dijelj.:",
 	"Transfer",
+	"%d od %d povezano (%d u roju)",
+	"D:%s U:%s - %s",
 	"Pokaži listu kategorija",
 	"Pokaži detaljni info",
 	"Obriši podatke",
@@ -212,5 +214,11 @@
 	"Vrijednost",
 	"<= %d sati",
 	"(Ignoriraj)",
-	"<= %d minuta"
+	"<= %d minuta",
+	"%dd %dh",
+	"%dh %dm",
+	"%dm %ds",
+	"%ds",
+	"%dw %dd",
+	"%dy %dw"
 ], lang_code = "bs";

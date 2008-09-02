@@ -55,6 +55,7 @@ var dxSTable = new Class({
 	"rowId": [], // row ids in their current sorted order
 	"rowSel": {}, // rows' select state
 	"selectedRows": [], // the selected rows
+	"stSel": null, //
 	"activeId": [], // position -> id
 	"activePos": {}, // id -> position
 	"viewRows": 0, // # of visible rows
@@ -100,6 +101,8 @@ var dxSTable = new Class({
 	"selCount": 0,
 	"curPage": 0,
 	"pageCount": 0,
+	"rowCache": [],
+	"rowCover" : null,
 	
 	"create": function(id, columns, options) {
 		this.colHeader = columns;
@@ -131,15 +134,17 @@ var dxSTable = new Class({
 		this.tb.head = new Element("tbody").inject(this.tHead);
 		tr = simpleClone(TR, false);
 		var nDrag = new Drag(tr, {
-			"modifiers": {"x": "left", "y": false},
-			"snap": 2,
-			"onStart": function(){ ColumnHandler.start($me, this); },
-			"onDrag": function(){ ColumnHandler.drag($me, this); },
-			"onComplete": function(){ ColumnHandler.end($me, this); },
-			"onRightClick": this.colMenu.bind(this),
-			"onCancel": function(_, ev) {
+			"modifiers" : {"x": "left", "y": false},
+			"snap" : 1,
+			"onBeforeStart" : function() { if ($me.hotCell >= 0) { $me.rowCover.show(); } },
+			"onStart" : function(){ ColumnHandler.start($me, this); },
+			"onDrag" : function(){ ColumnHandler.drag($me, this); },
+			"onComplete" : function(){ ColumnHandler.end($me, this); },
+			"onRightClick" : this.colMenu.bind(this),
+			"onCancel" : function(_, ev) {
 				this.detach();
 				$me.cancelSort = false;
+				$me.rowCover.hide();
 				$me.sort(this.element, ev.shift);
 			}
 		}).detach();
@@ -185,6 +190,10 @@ var dxSTable = new Class({
 			j++;
 		}
 		this.tb.head.grab(tr);
+		
+		this.rowCover = new Element("div", {
+			"class": "rowcover"
+		}).inject(this.dHead);	
 
 		if (this.options.mode == MODE_VIRTUAL)
 			this.topPad = simpleClone(DIV, false).addClass("stable-pad").inject(this.dBody);
@@ -228,7 +237,7 @@ var dxSTable = new Class({
 				if (!ele) return;
 				if (ele.get("tag") == "td")
 					$me.selectRow(ev, ele.parentNode);
-			}).addEvent("mouseup", function(ev) {
+			}).addEvent("click", function(ev) {
 				var ele = ev.target;
 				if (!ele) return;
 				if (ele.get("tag") != "td") {
@@ -296,7 +305,7 @@ var dxSTable = new Class({
 								$me.fireEvent("onRefresh");
 						}
 					}
-				}).grab(new Element("div", {"text": " "})).inject(this.pageStat);
+				}).grab(new Element("div")).inject(this.pageStat);
 			}
 		}
 		
@@ -383,15 +392,42 @@ var dxSTable = new Class({
 			$("colrules").appendText(sb);
 	},
 	
+	"getCache": function(index) {
+		if (this.rowCache.length != this.rows) {
+			this.clearCache();
+			this.rowCache = new Array(this.rows);
+		}
+		var c = 0, index = this.colOrder[index];
+		for (var key in this.rowData) {
+			this.rowCache[c++] = {
+				"key": key,
+				"v": this.rowData[key].data[index],
+				"e": this.rowData[key]
+			};
+		}
+	},
+
+	"clearCache": function(a) {
+		var len = this.rowCache.length;
+		while (len--) {
+			this.rowCache[len].key = null;
+			this.rowCache[len].v = null;
+			this.rowCache[len].e = null;
+			this.rowCache[len] = null;
+		}
+		this.rowCache.length = 0;
+	},
+	
 	"sort": function(col, shift) {
 		if (this.cancelSort) return;
 		this.isSorting = true;
-		var rev = true;
+		var rev = true, simpleReverse = true;
 
 		if (col == null) {
 			if (this.sIndex == -1) return;
 			rev = false;
 			col = this.tb.head.childNodes[0].childNodes[this.sIndex];
+			simpleReverse = false;
 		}
 		
 		if (col.get("tag") != "td")
@@ -412,46 +448,51 @@ var dxSTable = new Class({
 			ind = this.sIndex;
 			rev = false;
 			col = this.tb.head.childNodes[0].childNodes[this.sIndex];
+			simpleReverse = false;
 		}
 
 		if (rev)
-			this.options.reverse = (this.sIndex == ind) ? (1 - this.options.reverse) : 0;
+			this.options.reverse = (this.sIndex == ind) ? !this.options.reverse : false;
 		
-		if (this.sIndex >= 0)
-			this.tb.head.childNodes[0].childNodes[this.sIndex].setStyle("backgroundPosition", "right -32px");
+		if (this.sIndex != ind) {
+			simpleReverse = false;
+			this.getCache(ind);
+			if (this.sIndex >= 0)
+				this.tb.head.childNodes[0].childNodes[this.sIndex].setStyle("backgroundPosition", "right -32px");
+		}
 
 		col.setStyle("backgroundPosition", "right " + ((this.options.reverse) ? "0px" : "-16px"));
 
 		this.sIndex = ind;
-		this.getCache(ind);
-		var $me = this, comp;
-		switch (this.colData[ind].type) {
-		
-		case TYPE_STRING:
-			comp = function(x, y) {
-				return $me.sortAlphaNumeric(x, y);
-			};
-			break;
-			
-		case TYPE_NUMBER:
-			comp = function(x, y) {
-				return $me.sortNumeric(x, y);
-			};
-			break;
-			
-		case TYPE_NUM_ORDER:
-			comp = function(x, y) {
-				return $me.sortNumOrder(x, y);
-			};
-			break;
+		if (!simpleReverse) {
+			var $me = this, comp;
+			switch (this.colData[ind].type) {
+			case TYPE_STRING:
+				comp = function(x, y) {
+					return $me.sortAlphaNumeric(x, y);
+				};
+				break;
+				
+			case TYPE_NUMBER:
+				comp = function(x, y) {
+					return $me.sortNumeric(x, y);
+				};
+				break;
+				
+			case TYPE_NUM_ORDER:
+				comp = function(x, y) {
+					return $me.sortNumOrder(x, y);
+				};
+				break;
 
-		default:
-			comp = function(x, y) {
-				return Comparator.compare(x.v, y.v);
-			};
-			break;
+			default:
+				comp = function(x, y) {
+					return Comparator.compare(x.v, y.v);
+				};
+				break;
+			}
+			this.rowCache.sort(comp);
 		}
-		this.rowCache.sort(comp);
 
 		this.clearActive();
 		var end = this.rows, i = 0, diff = 1;
@@ -593,6 +634,7 @@ var dxSTable = new Class({
 		if (this.isScrolling) return;
 		this.updatePageMenu();
 		this.dHead.setStyle("width", this.dBody.clientWidth);
+		this.rowCover.setStyle("width", this.dBody.clientWidth);
 		//if (this.options.mode == MODE_VIRTUAL)
 		//	this.resizePads();
 	},
@@ -662,8 +704,6 @@ var dxSTable = new Class({
 		this.rows++;
 	},
 	
-	"rowCache": [],
-	
 	"_insertRow": function(id, skipOrderCheck) {
 		skipOrderCheck = !!skipOrderCheck;
 		var sindex = this.sIndex;
@@ -700,38 +740,34 @@ var dxSTable = new Class({
 					};
 					break;
 				}
-				/*
 				if (rIndex >= 0) {
 					if ((rIndex != 0) && (comp(item, this.rowCache[rIndex - 1]) < 0)) {
-						to = rIndex;
+						to = rIndex + 1;
 					} else if ((rIndex < this.rowCache.length - 1) && (comp(item, this.rowCache[rIndex + 1]) > 0)) {
-						from = rIndex + 1;
-					} else {
-						return;
+						from = rIndex;
 					}
 				}
-				*/
 				index = this.rowCache.binarySearch(item, comp, from, to);
 				if (index < 0)
 					index = -(index + 1);
-				if (rIndex >= 0) {
-					this.rowCache.splice(rIndex, 1);
-					if (rIndex < index)
-						index--;
-				}
-				this.rowCache.splice(index, 0, item);
-				if (rIndex == -1) {
-					for (var i = index, j = this.rowCache.length; i < j; i++)
-						this.rowData[this.rowCache[i].key].index = i;
-				} else {
-					if (index < rIndex) {
-						for (var i = index, j = rIndex; i <= j; i++)
+				// TODO: get this working
+				//if (index != rIndex) {
+					if (rIndex >= 0) {
+						if (rIndex < index)
+							index--;
+						this.rowCache.splice(rIndex, 1);
+					}
+					this.rowCache.splice(index, 0, item);
+					if (rIndex == -1) {
+						for (var i = index, j = this.rowCache.length; i < j; i++)
 							this.rowData[this.rowCache[i].key].index = i;
 					} else {
+						for (var i = index, j = rIndex; i <= j; i++)
+							this.rowData[this.rowCache[i].key].index = i;
 						for (var i = rIndex, j = index; i <= j; i++)
 							this.rowData[this.rowCache[i].key].index = i;
 					}
-				}
+				//}
 			}
 			if (has(this.activePos, id)) {
 				this.rowData[id].rowIndex = -1;
@@ -789,7 +825,6 @@ var dxSTable = new Class({
 	"fillRow": function(row, data, icon) {
 		var $me = this;
 		this.colOrder.each(function(v, k) {
-			if ($me.colData[k].disabled) return;
 			var cell = row.childNodes[k];
 			if (cell.lastChild) {
 				if ((v == 0) && icon)
@@ -838,7 +873,7 @@ var dxSTable = new Class({
 		if (this.sIndex >= 0) {
 			this.rowCache.splice(rd.index, 1);
 			for (var i = rd.index, j = this.rowCache.length; i < j; i++)
-				this.rowData[this.rowCache[i].key].index--;
+				this.rowData[this.rowCache[i].key].index = i;
 		}
 		rd = null;
 		delete this.rowData[id];
@@ -928,6 +963,7 @@ var dxSTable = new Class({
 		this.selectedRows.length = 0;
 		delete this.rowSel;
 		this.rowSel = {};
+		this.stSel = null;
 		if (!noRefresh)
 			this.refreshSelection();
 	},
@@ -940,51 +976,31 @@ var dxSTable = new Class({
 			this.refreshSelection();
 	},
 
-	"getCache": function(index) {
-		this.clearCache();
-		this.rowCache = new Array(this.rows);
-		var c = 0, index = this.colOrder[index];
-		for (var key in this.rowData) {
-			this.rowCache[c++] = {
-				"key": key,
-				"v": this.rowData[key].data[index],
-				"e": this.rowData[key]
-			};
-		}
-	},
-
-	"clearCache": function(a) {
-		var len = this.rowCache.length;
-		while (len--) {
-			this.rowCache[len].key = null;
-			this.rowCache[len].v = null;
-			this.rowCache[len].e = null;
-			this.rowCache[len] = null;
-		}
-		this.rowCache.length = 0;
-	},
-
 	"setValue": function(id, col, val) {
 		var row = this.rowData[id];
 		if (row == null) return;
 		var isSortedCol = ((this.sIndex >= 0) && (col == this.colOrder[this.sIndex]));
-		var hasSortedChanged = ((row.data[col] !== val) && isSortedCol);
+		var hasSortedChanged = ((row.data[col] != val) && isSortedCol);
 		row.data[col] = val;
 		if (isSortedCol)
 			this._insertRow(id);
-		if (this.requiresRefresh) return hasSortedChanged;
-		if ((row.rowIndex == -1)) return hasSortedChanged;
-		var r = this.tb.body.childNodes[row.rowIndex], i = this.colOrder.indexOf(col);
-		// lastChild should be a TextNode
-		r.childNodes[i].lastChild.nodeValue = this.options.format([val], col)[0];
+		if (this.requiresRefresh || row.hidden || (row.rowIndex == -1)) return hasSortedChanged;
+		var r = this.tb.body.childNodes[row.rowIndex], i = this.colOrder.indexOf(col), cell = r.childNodes[i], fval = this.options.format([val], col)[0];
+		if (cell.lastChild) {
+			cell.lastChild.nodeValue = fval;
+		} else {
+			cell.appendText(fval);
+		}
 		return hasSortedChanged;
 	},
 
 	"setIcon": function(id, icon) {
-		this.rowData[id].icon = icon;
-		var r = $(id), index = this.colOrder.indexOf(0);
-		if (!r || (index == -1) || r.childNodes[index].hasClass(icon)) return;
-		r.childNodes[index].className = "stable-icon " + icon;
+		var row = this.rowData[id];
+		row.icon = icon;
+		if (row.rowIndex == -1) return;
+		var r = this.tb.body.childNodes[row.rowIndex], i = this.colOrder.indexOf(0);
+		if (r.childNodes[i].hasClass(icon)) return;
+		r.childNodes[i].className = "stable-icon " + icon;
 	},
 
 	"resizeTo": function(w, h) {
@@ -1017,8 +1033,6 @@ var dxSTable = new Class({
 		for (var i = 0, j = this.tb.body.childNodes.length; i < j; i++) {
 			this.tb.body.childNodes[i].childNodes[index][hide ? "addClass" : "removeClass"]("stable-hidden-column");
 		}
-		if (index == this.sIndex)
-			this.sIndex = -1;
 		this.fireEvent("onColToggle", [this.colOrder[index], hide]);
 		this.calcSize();
 		return true;
@@ -1088,6 +1102,7 @@ var dxSTable = new Class({
 		if (this.curPage < this.pageCount - 1)
 			this.gotoPage(this.curPage + 1);
 	}
+	
 });
 
 var ColumnHandler = {
@@ -1164,6 +1179,7 @@ var ColumnHandler = {
 				st.isResizing = false;
 				resizeColumn.call(st, st.hotCell);
 				document.body.setStyle("cursor", "default");
+				st.rowCover.hide();
 			break;
 		    
 			default:
@@ -1263,27 +1279,32 @@ function moveColumn(iCol, iNew) {
 		aO.push(this.colOrder[iCol]);
 	}
 	
+	/*
 	this.tHeadCols = aHC.slice(0);
 	this.tBodyCols = aBC.slice(0);
 	this.colData = aC.slice(0);
 	this.colOrder = aO.slice(0);
 	
 	aHC = aBC = aC = aO = null;
+	*/
+	this.tHeadCols = aHC;
+	this.tBodyCols = aBC;
+	this.colData = aC;
+	this.colOrder = aO;
 	
 	for (i = 0; i < this.cols; i++)
 		this.tHeadCols[i].store("index", i);
-
-	if ((iNew == this.sIndex) && (iCol > iNew)) {
-		// we moved a column that was to the right of the sorted column to the left of it
-		this.sIndex = iNew + 1;
-	} else if ((iCol < iNew) && (this.sIndex < iNew) && (this.sIndex > iCol)) {
-		// we moved a column that was to the left of the sorted column to the right of it
-		this.sIndex--;
-	} else if (iCol == this.sIndex) {
+	if (iCol == this.sIndex) {
 		// we moved the sorted column
 		this.sIndex = iNew;
 		if (iNew > iCol) // we moved it to the right
 			this.sIndex--;
+	} else if ((iNew <= this.sIndex) && (iNew < iCol)) {
+		// we moved a column that was to the right of the sorted column to the left of it
+		this.sIndex++;
+	} else if ((iCol < iNew) && (this.sIndex < iNew) && (this.sIndex > iCol)) {
+		// we moved a column that was to the left of the sorted column to the right of it
+		this.sIndex--;
 	}
 
 	this.cancelSort = false;
@@ -1307,4 +1328,5 @@ var Comparator = {
 		return (a < b) ? -1 :
 			   (a > b) ? 1 : 0;
 	}
+	
 };

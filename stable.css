@@ -47,6 +47,14 @@ limitations under the License.
 	-moz-user-select: none !important;
 }
 
+.stable-head .rowcover {
+	position: absolute;
+	left: 0; top: 0;
+	height: 20px; width: 1000px;
+	background: transparent;
+	display: none;
+}
+
 .stable-head table {
 	table-layout: fixed;
 	width: 0;

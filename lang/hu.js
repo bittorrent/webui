@@ -135,6 +135,8 @@
 	"Letöltők:",
 	"Arány:",
 	"Átvitel",
+	"Kapcsolódva: %d Összes: %d (%d a bolyban)",
+	"L:%s F:%s - %s",
 	"Kategória lista mutatása",
 	"Részletes infók",
 	"Adat törlése",
@@ -212,5 +214,11 @@
 	"Érték",
 	"<= %d óra",
 	"(Mellőz)",
-	"<= %d perc"
+	"<= %d perc",
+	"%dd %dh",
+	"%dh %dm",
+	"%dm %ds",
+	"%ds",
+	"%dw %dd",
+	"%dy %dw"
 ], lang_code = "hu";

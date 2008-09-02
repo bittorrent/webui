@@ -135,6 +135,8 @@
 	"Parellas:",
 	"Proporción (C/D):",
 	"Tranferencia",
+	"%d de %d conectadas (%d sen identificar)",
+	"D:%s C:%s - %s",
 	"Mostrar Lista de Categorías",
 	"Mostrar Información Detallada",
 	"Eliminar Datos",
@@ -212,5 +214,11 @@
 	"Valor",
 	"<= %d horas",
 	"(Ignorar)",
-	"<= %d minutos"
+	"<= %d minutos",
+	"%dd %dh",
+	"%dh %dm",
+	"%dm %dsg",
+	"%dsg",
+	"%dsm %dd",
+	"%da %dsm"
 ], lang_code = "gl";

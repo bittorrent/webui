@@ -5,7 +5,7 @@
  *
 */
 
-var VERSION = "0.360";
+var VERSION = "0.361";
 var BUILD_REQUIRED = -1; // the ut build the webui requires
 var lang = lang || null;
 var isGuest = (window.location.pathname == "/gui/guest.html");
@@ -98,13 +98,14 @@ var utWebUI = {
 		this.getSettings();
 	},
 	
-	"request": function(qs, fn) {
+	"request": function(qs, fn, async) {
 		if (this.TOKEN != "")
 			qs = "token=" + this.TOKEN + "&" + qs;
 		new Request.JSON({
 			"url": this.url + "?" + qs + "&t=" + $time(),
 			"method": "get",
-			"onSuccess": (fn) ? fn.bind(this) : $empty
+			"onSuccess": (fn) ? fn.bind(this) : $empty,
+			"async": !!async
 		}).send();
 	},
 	
@@ -255,7 +256,7 @@ var utWebUI = {
 				$(this.config.activeLabel).addClass("sel");
 			}
 		}
-
+		
 		var scroll = this.trtTable.dBody.getScroll(), sortedColChanged = false;
 		if (Browser.Engine.gecko || Browser.Engine.trident4) // doing offline updating slows Presto & WebKit down
 			this.trtTable.detachBody();
@@ -395,11 +396,10 @@ var utWebUI = {
 	},
 	
 	"updateSpeed": function () {
-		var str = "Download: " + this.totalDL.toFileSize() + "/s | " +
-				  "Upload: " + this.totalUL.toFileSize() + "/s";
-		window.status = str;
-		window.defaultStatus = str;
-		document.title = "\u00B5Torrent WebUI v" + VERSION + ((this.config.showTitleSpeed) ? (" - " + str) : "");
+		var str = lang[CONST.MAIN_TITLEBAR_SPEED].replace(/%s/, this.totalDL.toFileSize() + perSec).replace(/%s/, this.totalUL.toFileSize() + perSec);
+		window.status = window.defaultStatus = str.replace(/%s/, "");
+		if (this.config.showTitleSpeed)
+			document.title = str.replace(/%s/, "\u00B5Torrent WebUI v" + VERSION);
 	},
 	
 	"update": function () {
@@ -474,7 +474,7 @@ var utWebUI = {
 			if (this.labels[id].indexOf("_dls_") > -1)
 				this.labels["_dls_"]--;
 		}
-		if ((dls >= 1024) || (uls >= 1024)) {
+		if ((dls > 103) || (uls > 103)) {
 			labels.push("_act_");
 			if (this.labels[id].indexOf("_act_") == -1)
 				this.labels["_act_"]++;
@@ -583,18 +583,19 @@ var utWebUI = {
 				}
 			}
 			for (var i = 0, j = json.settings.length; i < j; i++) {
-				if ((json.settings[i][0] == "webui.cookie") && !this.loaded) { // only load webui.cookie on startup
+				var key = json.settings[i][0], typ = json.settings[i][1], val = json.settings[i][2];
+				if ((key == "webui.cookie") && !this.loaded) { // only load webui.cookie on startup
 					var cookie = JSON.decode(json.settings[i][2], true);
 					$extend(this.config, cookie); // if the user corrupts the "cookie," good for him/her
 					this.config.torrentTable.alternateRows = this.config.fileTable.alternateRows = this.config.alternateRows;
 					continue;
 				}
-				var val = json.settings[i][2];
-				var typ = json.settings[i][1];
-				if (typ == 0)
-					val = parseInt(val);
-				if (typ == 1)
-					val = (val == "true");	
+				if ((key != "proxy.proxy") && (key != "webui.username") && (key != "webui.password")) {
+					if (typ == 0)
+						val = parseInt(val);
+					if (typ == 1)
+						val = (val == "true");	
+				}
 				this.settings[json.settings[i][0]] = val;
 			}
 			delete json.settings;
@@ -650,6 +651,7 @@ var utWebUI = {
 				ele.set("value", v);
 			}
 		});
+		$("webui.maxRows").set("value", this.config.torrentTable.maxRows);
 		if (!this.config.showCategories)
 			$("CatList").hide();
 		if (!this.config.showDetails && !isGuest)
@@ -678,6 +680,8 @@ var utWebUI = {
 		value = $("webui.showTitleSpeed").checked;
 		if (this.config.showTitleSpeed != value) {
 			this.config.showTitleSpeed = value;
+			if (!this.config.showTitleSpeed)
+				document.title = "\u00B5Torrent WebUI v" + VERSION;
 			hasChanged = true;
 		}
 		
@@ -709,6 +713,7 @@ var utWebUI = {
 		value = $("webui.maxRows").value.toInt();
 		if (this.config.maxRows != value) {
 			this.config.maxRows = value;
+			this.config.torrentTable.maxRows = this.config.fileTable.maxRows = value;
 			//this.trtTable.setMaxRows(this.config.maxRows);
 			//this.flsTable.setMaxRows(this.config.maxRows);
 			reload = true;
@@ -726,6 +731,7 @@ var utWebUI = {
 		
 		if (Browser.Engine.presto && hasChanged)
 			str = "&s=webui.cookie&v=" + JSON.encode(this.config);
+			
 		var bind_port = -1, webui_port = -1;
 		for (var key in this.settings) {
 			v = this.settings[key];
@@ -750,7 +756,7 @@ var utWebUI = {
 			}
 		}
 		if (str != "")
-			this.request("action=setsetting" + str);
+			this.request("action=setsetting" + str, $empty, !reload);
 		if (this.settings["webui.enable"] == 0) {
 			$("msg").set("html", "Goodbye.");
 			$("cover").show();
@@ -883,15 +889,15 @@ var utWebUI = {
 			ContextMenu.add(recheck);
 		}
 		ContextMenu.add([CMENU_SEP]);
-		var lgroup = [];
+		var lgroup = [], $me = this;
 		$each(this.customLabels, function(_, k) {
 			k = k.substr(1, k.length - 2);
-			if ((this.trtTable.selCount == 1) && (this.torrents[id][11] == k)) {
+			if ($me.trtTable.selectedRows.every(function(item){ return ($me.torrents[item][11] == k); })) {
 				lgroup.push([CMENU_SEL, k]);
 	 		} else {
-				lgroup.push([k, this.setLabel.bind(this, k)]);
+				lgroup.push([k, $me.setLabel.bind($me, k)]);
 			}
-		}, this);
+		});
 		lgroup.push([CMENU_SEP]);
 		lgroup.push([lang[CONST.OV_NEW_LABEL], this.newLabel.bind(this)]);
 		lgroup.push([lang[CONST.OV_REMOVE_LABEL], this.setLabel.bind(this, "")]);
@@ -907,7 +913,6 @@ var utWebUI = {
 	"showProperties": function(k) {
 		this.propID = k;
 		this.request("action=getprops&hash=" + k, this.loadProperties);
-		return true;
 	},
 	
 	"loadProperties": function(json) {
@@ -1003,11 +1008,11 @@ var utWebUI = {
 			$("dl").set("html", d[4].toFileSize()); // downloaded
 			$("ul").set("html", d[5].toFileSize()); // uploaded
 			$("ra").set("html", (d[6] == -1) ? "\u221E" : (d[6] / 1000).roundTo(3)); // ratio
-			$("us").set("html", d[8].toFileSize() + "/s"); // upload speed
-			$("ds").set("html", d[7].toFileSize() + "/s"); // download speed
+			$("us").set("html", d[8].toFileSize() + perSec); // upload speed
+			$("ds").set("html", d[7].toFileSize() + perSec); // download speed
 			$("rm").set("html", (d[9] == 0) ? "" : (d[9] <= -1) ? "\u221E" : d[9].toTimeString()); // ETA
-			$("se").set("html", d[13] + " of " + d[14] + " connected"); // seeds
-			$("pe").set("html", d[11] + " of " + d[12] + " connected"); // peers
+			$("se").set("html", lang[CONST.GN_XCONN].replace(/%d/, d[13]).replace(/%d/, d[14]).replace(/%d/, "\u00BF?")); // seeds
+			$("pe").set("html", lang[CONST.GN_XCONN].replace(/%d/, d[11]).replace(/%d/, d[12]).replace(/%d/, "\u00BF?")); // peers
 		}
 	},
 	

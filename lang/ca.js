@@ -135,6 +135,8 @@
 	"Clients:",
 	"Relació comp.:",
 	"Transferint",
+	"%d de %d connectats (%d a l'eixam)",
+	"D:%s C:%s - %s",
 	"Mostra la llista de categories",
 	"Mostra informació detallada",
 	"Suprimeix les dades",
@@ -212,5 +214,11 @@
 	"Valor",
 	"<= %d hores",
 	"(Ignora)",
-	"<= %d minuts"
+	"<= %d minuts",
+	"%dd %dh",
+	"%dh %dm",
+	"%dm %ds",
+	"%ds",
+	"%dw %dd",
+	"%dy %dw"
 ], lang_code = "ca";

@@ -135,6 +135,8 @@
 	"Lataajia:",
 	"Jakosuhde:",
 	"Siirto",
+	"%d / %d yhteydessä (%d ryhmässä)",
+	"Lat:%s Läh:%s - %s",
 	"Näytä kategoriat",
 	"Näytä yksityiskohtaiset tiedot",
 	"Poista tiedosto(t)",
@@ -212,5 +214,11 @@
 	"Arvo",
 	"<= %d tuntia",
 	"(Ei käytössä)",
-	"<= %d minuuttia"
+	"<= %d minuuttia",
+	"%dpv %dt",
+	"%dt %dmin",
+	"%dmin %ds",
+	"%ds",
+	"%dvk %dpv",
+	"%dv %dvk"
 ], lang_code = "fi";

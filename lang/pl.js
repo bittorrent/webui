@@ -135,6 +135,8 @@
 	"Peerów:",
 	"Ratio:",
 	"Transfer",
+	"%d z %d połączonych (%d w kolejce)",
+	"D:%s U:%s - %s",
 	"Pokaż listę kategorii",
 	"Pokaż szczegółowe informacje",
 	"Usuń dane",
@@ -212,5 +214,11 @@
 	"Wartość",
 	"<= %d godzin",
 	"(Ignoruj)",
-	"<= %d minut"
+	"<= %d minut",
+	"%dd %dh",
+	"%dh %dm",
+	"%dm %ds",
+	"%ds",
+	"%dw %dd",
+	"%dy %dw"
 ], lang_code = "pl";

@@ -135,6 +135,8 @@
 	"Peers:",
 	"Ratio:",
 	"Transferência",
+	"%d de %d conectados (%d na multidão)",
+	"D:%s U:%s - %s",
 	"Exibir Lista de Categorias",
 	"Exibir Informações Detalhadas",
 	"Excluir Dados",
@@ -212,5 +214,11 @@
 	"Valor",
 	"<= %d horas",
 	"(Ignorar)",
-	"<= %d minutos"
+	"<= %d minutos",
+	"%dd %dh",
+	"%dh %dm",
+	"%dm %ds",
+	"%ds",
+	"%ds %dd",
+	"%da %ds"
 ], lang_code = "ptBR";

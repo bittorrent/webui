@@ -135,6 +135,8 @@
 	"Peer:",
 	"Tỉ lệ chia sẻ:",
 	"ChuyêÒn giaoChuyển Giao",
+	"%d của %d đã kết nối (%d trong tâp thể)",
+	"TV:%s TL:%s - %s",
 	"Hiện các nhóm",
 	"Hiện thông tin chi tiết",
 	"Xóa Dữ Liệu",
@@ -212,5 +214,11 @@
 	"Giá trị",
 	"<= %d giờ",
 	"(Bỏ qua)",
-	"<= %d phút"
+	"<= %d phút",
+	"%dn %dt",
+	"%dt %dp",
+	"%dp %dg",
+	"%dg",
+	"%dt %dn",
+	"%dn %dt"
 ], lang_code = "vi";

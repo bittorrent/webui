@@ -5,8 +5,9 @@
  *
 */
 
-function setupUI() {
+var perSec = "/s";
 
+function setupUI() {
 	loadLangStrings();
 	
 	var col = function(text, type, disabled, align) {
@@ -71,11 +72,11 @@ function setupUI() {
 					break;
 				
 				case 7:
-					values[i] = (values[i] >= 103) ? (values[i].toFileSize() + "/s") : ""; // download speed
+					values[i] = (values[i] >= 103) ? (values[i].toFileSize() + perSec) : ""; // download speed
 					break;
 				
 				case 8:
-					values[i] = (values[i] >= 103) ? (values[i].toFileSize() + "/s") : ""; // upload speed
+					values[i] = (values[i] >= 103) ? (values[i].toFileSize() + perSec) : ""; // upload speed
 					break;
 					
 				case 9:
@@ -154,7 +155,7 @@ function setupUI() {
 		}, utWebUI.config.fileTable));
 		utWebUI.flsTable.loadObj.hide();
 	}
-	
+
 	resizeUI();
 	
 	["_all_", "_dls_", "_com_", "_act_", "_iac_", "_nlb_"].each(function(k) {
@@ -367,6 +368,7 @@ function loadLangStrings() {
 		},
 		"onChange": utWebUI.tabChange.bind(utWebUI)
 	}).draw().show("gcont");
+	
 	[
 		"DLG_TORRENTPROP_1_GEN_01",
 		"DLG_TORRENTPROP_1_GEN_03",
@@ -390,7 +392,7 @@ function loadLangStrings() {
 		"GN_TP_06",
 		"GN_TP_07",
 		"GN_TP_08",
-		"OV_NEWLABEL_TEXT",
+		"OV_NEWLABEL_TEXT"
 	].each(function(k) {
 		$(k).set("text", lang[CONST[k]]);
 	});
@@ -402,7 +404,7 @@ function loadLangStrings() {
 	].each(function(k) {
 		$(k[0]).set("text", lang[k[1]]);
 	});
-	
+
 	var timesListA = $("prop-seed_time"), timesListB = $("seed_time");
 	timesListA.options.length = timesListB.options.length = 0;
 	[0, 5400, 7200, 10800, 14400, 18000, 21600, 25200, 28800, 32400, 36000, 43200, 57600, 72000, 86400, 108000, 129600, 172800, 216000, 259200, 345600].each(function(t) {
@@ -448,6 +450,7 @@ function loadLangStrings() {
 	});
 	$("setting").setProperty("title", lang[CONST.OV_TB_PREF]);
 	$("add").setProperty("title", lang[CONST.OV_TB_ADDTORR]);
+	perSec = "/" + lang[CONST.TIME_SECS].replace(/%d/, "").trim();
 }
 
 function loadSettingStrings() {
@@ -693,7 +696,7 @@ function resizeUI(w, h) {
 	var listPos = $("List").getPosition();
 
 	$("HDivider").setStyle("left", listPos.x - ((Browser.Engine.trident && !Browser.Engine.trident5) ? 7 : 5));
-	$("VDivider").setStyle("width", ww);
+	$("VDivider").setStyle("width", ww + (Browser.Engine.trident6 ? 4 : 0));
 	
 	
 	if (h) {
@@ -702,7 +705,7 @@ function resizeUI(w, h) {
 			"top": showtb ? 43 : 0
 		});
 
-		$("VDivider").setStyle("top", showdet ? (listPos.y + h + 2) : -10);
+		$("VDivider").setStyle("top", showdet ? (listPos.y + h + (!Browser.Engine.trident6 ? 2 : 0)) : -10);
 		if (showdet && !winResize)
 			utWebUI.config.vSplit = h / (wh - eh - 12);
 	}
@@ -757,6 +760,12 @@ window.addEvent("domready", function() {
 	}
 	
 	document.addEvent("keydown", function(ev) {
+		/*
+		if (ev.alt) {
+			ev.stop();
+			$clear(utWebUI.updateTimeout);
+		}
+		//*/
 		switch (ev.key) {
 		
 		case "esc": // Esc
@@ -871,13 +880,21 @@ window.addEvent("domready", function() {
 		}
 	});
 	
-	document.addEvent("click", function(ev) {
-		if (ev.rightClick) {
-			if (!(/^input|textarea|a$/i).test(ev.target.tagName))
-				ev.stop();
-		} else if (!ContextMenu.hidden && !ContextMenu.focused)
+	document.addEvent("mousedown", function(ev) {
+		if ((ev.rightClick && !ContextMenu.launched) || (!ev.rightClick && !ContextMenu.hidden && !ContextMenu.focused))
 			ContextMenu.hide.delay(10, ContextMenu);
+		ContextMenu.launched = false;
 	});
+	
+	if (Browser.Engine.gecko) {
+		document.addEvent("mousedown", function(ev) {
+			if (ev.rightClick && !(/^input|textarea|a$/i).test(ev.target.tagName))
+				ev.stop();
+		}).addEvent("click", function(ev) {
+			if (ev.rightClick && !(/^input|textarea|a$/i).test(ev.target.tagName))
+				ev.stop();
+		});
+	}
 	
 	if (Browser.Engine.presto && !("oncontextmenu" in document.createElement("foo"))) {
 		/*
@@ -979,7 +996,10 @@ window.addEvent("domready", function() {
 	["remove", "start", "pause", "stop"].each(function(act) {
 		$(act).addEvent("click", function(ev) {
 			ev.stop();
-			utWebUI[act]();
+			if (act == "remove")
+				utWebUI[act]((utWebUI.settings["gui.default_del_action"] <= 1) ? 0 : 1);
+			else
+				utWebUI[act]();
 		});
 	});
 	$("setting").addEvent("click", function(ev) {
@@ -1046,7 +1066,7 @@ window.addEvent("domready", function() {
 		checkProxySettings();
 	});
 	$("cache.override").addEvent(linkedEvent, function() {
-		linked(this, 0, ["cache.override_size"]);
+		linked(this, 0, ["cache.override_size"], ["cache.override_size"]);
 	});
 	$("cache.write").addEvent(linkedEvent, function() {
 		linked(this, 0, ["cache.writeout", "cache.writeimm"]);
@@ -1091,6 +1111,6 @@ window.addEvent("domready", function() {
 	$("max_ul_rate_seed_flag").addEvent(linkedEvent, function() {
 		linked(this, 0, ["max_ul_rate_seed"]);
 	});
-
+	
 	utWebUI.init();
 });

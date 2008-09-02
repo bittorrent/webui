@@ -135,6 +135,8 @@
 	"Iesaistītie:",
 	"A/L attiecība:",
 	"Pārsūtīti",
+	"%d no %d ir savienoti (%d gaida)",
+	"L:%s A:%s - %s",
 	"Rādīt kategoriju sarakstu",
 	"Rādīt detalizētu info",
 	"Dzēst datus",
@@ -212,5 +214,11 @@
 	"Vienība",
 	"<= %d stundas",
 	"(Ignorēt)",
-	"<= %d minūtes"
+	"<= %d minūtes",
+	"%dd %dh",
+	"%dh %dm",
+	"%dm %ds",
+	"%ds",
+	"%dw %dd",
+	"%dy %dw"
 ], lang_code = "lv";

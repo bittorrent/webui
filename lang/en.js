@@ -135,6 +135,8 @@
 	"Peers:",
 	"Share Ratio:",
 	"Transfer",
+	"%d of %d connected (%d in swarm)",
+	"D:%s U:%s - %s",
 	"Show Category List",
 	"Show Detailed Info",
 	"Delete Data",
@@ -212,5 +214,11 @@
 	"Value",
 	"<= %d hours",
 	"(Ignore)",
-	"<= %d minutes"
+	"<= %d minutes",
+	"%dd %dh",
+	"%dh %dm",
+	"%dm %ds",
+	"%ds",
+	"%dw %dd",
+	"%dy %dw"
 ], lang_code = "en";

@@ -135,6 +135,8 @@
 	"Parelles:",
 	"Ratio:",
 	"Transferència",
+	"%d de %d conectats (%d en l'eixam)",
+	"D:%s P:%s - %s",
 	"Mostrar Llista de Categories",
 	"Mostrar Llista Detallada",
 	"Eliminar Senyes",
@@ -212,5 +214,11 @@
 	"Valor",
 	"<= %d hores",
 	"(Ignorar)",
-	"<= %d minuts"
+	"<= %d minuts",
+	"%dd %dh",
+	"%dh %dm",
+	"%dm %ds",
+	"%ds",
+	"%dw %dd",
+	"%dy %dw"
 ], lang_code = "va";
