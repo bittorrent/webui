@@ -119,9 +119,9 @@ limitations under the License.
 
 
 .stable-body tr.selected td {
-	background-color: #A0A0A0;
-	color: #FFFFFF;
-	border-bottom: 1px solid #A0A0A0;
+	background-color: #A0A0A0 !important;
+	color: #FFFFFF !important;
+	border-bottom: 1px solid #A0A0A0 !important;
 }
 
 .stable-body td {

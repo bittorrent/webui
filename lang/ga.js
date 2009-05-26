@@ -1,4 +1,5 @@
 ﻿var lang = [
+	"Comhaid Torrent||*.torrent||Gach comhad (*.*)||*.*||",
 	"Sainroghanna",
 	"Tá go maith",
 	"Cealaigh",
@@ -139,6 +140,10 @@
 	"Í:%s U:%s - %s",
 	"Taispeáin Réim na nAicmí",
 	"Taispeáin Faisnéis Sonraithe",
+	"Ná Íosluchtaigh",
+	"Tosaíocht Ard",
+	"Tosaíocht Íseal",
+	"Gnáth Tosaíocht",
 	"Scrios na Sonraí",
 	"Éignigh Athdhearbhú",
 	"Éignigh Tosú",

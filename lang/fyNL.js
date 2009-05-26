@@ -1,4 +1,5 @@
 ﻿var lang = [
+	"Torrent triemen||*.torrent||Alle triemen (*.*)||*.*||",
 	"Ynstellings",
 	"Okee",
 	"Ofbrekke",
@@ -139,6 +140,10 @@
 	"Y:%s U:%s - %s",
 	"Lit Kategory List sjen",
 	"Lit Detailleaerre Ynfo Sjen",
+	"Net Ynlade",
+	"Hege Prioriteit",
+	"Lege Prioriteit",
+	"Normale Prioriteit",
 	"Wis Data",
 	"Forsear Her-Kontrôle",
 	"Forsear Start",

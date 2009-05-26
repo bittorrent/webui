@@ -2818,10 +2818,12 @@ var Drag = new Class({
 Element.implement({
 
 	"show": function(nonblock) {
+		this.fireEvent("show");
 		return this.setStyle("display", nonblock ? "" : "block");
 	},
 	
 	"hide": function() {
+		this.fireEvent("hide");
 		return this.setStyle("display", "none");
 	},
 	

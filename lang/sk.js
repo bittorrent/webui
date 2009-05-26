@@ -1,4 +1,5 @@
 ﻿var lang = [
+	"Súbory torrentov||*.torrent||Všetky súbory (*.*)||*.*||",
 	"Možnosti",
 	"OK",
 	"Zrušiť",
@@ -139,6 +140,10 @@
 	"D:%s U:%s - %s",
 	"Zobraziť zoznam kategórií",
 	"Zobraziť podrobnosti",
+	"Nesťahovať",
+	"Vysoká priorita",
+	"Nízka priorita",
+	"Normálna priorita",
 	"Vymazať data",
 	"Hash kontrola",
 	"Vynútený štart",

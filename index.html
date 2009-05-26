@@ -49,6 +49,33 @@
 		.stable-pagemenu .prevlink, .stable-pagemenu .nextlink {
 			filter: alpha(opacity=100);
 		}
+		
+		#modalbg {
+			filter: alpha(opacity=70);
+		}
+		
+		div#dlgProps fieldset {
+			padding: 0;
+		}
+		
+		#trckrfs {
+			margin-top: -8px !important;
+			overflow: hidden;
+		}
+		
+		#prop-trackers {
+			width: 400px !important;
+		}
+		
+		div#dlgProps fieldset div {
+			overflow: hidden;
+		}
+		
+		.props-spacer {
+			height: 19px !important;
+			line-height: 19px !important;
+		}
+		
 		</style>
 		<![endif]-->
 		<!--[if IE 6]>
@@ -82,6 +109,7 @@
 		<div id="token">##TOKEN##</div>
 		<div id="preload"></div>
 		<div id="cover"><div id="msg"><img src="./images/snake.gif" alt="Loading..." />&nbsp;&nbsp;Loading...</div></div>
+		<div id="modalbg"></div>
 		<div id="dragmask"></div>
 		
 		<!-- /* Torrent Add Dialog -->
@@ -197,6 +225,7 @@
 							<option value="jp">Japanese</option>
 							<option value="ko">Korean</option>
 							<option value="lv">Latvian</option>
+							<option value="lt">Lithuanian</option>
 							<option value="no">Norwegian</option>
 							<option value="nnNO">Norwegian Nynorsk</option>
 							<option value="pl">Polish</option>
@@ -204,6 +233,7 @@
 							<option value="pt">Portuguese (Portugal)</option>
 							<option value="ro">Romanian</option>
 							<option value="ru">Russian</option>
+							<option value="srSR">Serbian (Cyrillic)</option>
 							<option value="sk">Slovak</option>
 							<option value="sl">Slovenian</option>
 							<option value="es">Spanish</option>
@@ -211,6 +241,7 @@
 							<option value="tw">Taiwan</option>
 							<option value="th">Thai</option>
 							<option value="tu">Turkish</option>
+							<option value="ua">Ukrainian</option>
 							<option value="va">Valencian</option>
 							<option value="vi">Vietnamese</option>
 						</select>
@@ -363,7 +394,7 @@
 					</div>
 					<div class="hcont">
 						<div class="ralign"><input id="rate_limit_local_peers" type="checkbox" /><label for="rate_limit_local_peers" id="DLG_SETTINGS_6_BITTORRENT_07"></label></div>
-						<input id="_unknown_" type="checkbox" /><label for="_unknown_" id="DLG_SETTINGS_6_BITTORRENT_06"></label>
+						<input id="lsd" type="checkbox" /><label for="lsd" id="DLG_SETTINGS_6_BITTORRENT_06"></label>
 					</div>
 					<div class="hcont">
 						<div class="ralign"><input type="text" id="tracker_ip" class="tbox str" maxlength="50" /></div>
@@ -450,7 +481,7 @@
 					<div class="hcont indent"><input id="cache.read" type="checkbox" /><label for="cache.read" id="DLG_SETTINGS_C_ADV_CACHE_10"></label></div>
 					<div class="hcont"><input id="cache.read_turnoff" type="checkbox" /><label for="cache.read_turnoff" id="DLG_SETTINGS_C_ADV_CACHE_11"></label></div>
 					<div class="hcont indent"><input id="cache.read_prune" type="checkbox" /><label for="cache.read_prune" id="DLG_SETTINGS_C_ADV_CACHE_12"></label></div>
-					<div class="hcont indent"><input id="cache.read_trash" type="checkbox" /><label for="cache.read_trash" id="DLG_SETTINGS_C_ADV_CACHE_13"></label></div>
+					<div class="hcont indent"><input id="cache.read_thrash" type="checkbox" /><label for="cache.read_thrash" id="DLG_SETTINGS_C_ADV_CACHE_13"></label></div>
 					<div class="hcont"><input id="cache.disable_win_write" type="checkbox" /><label for="cache.disable_win_write" id="DLG_SETTINGS_C_ADV_CACHE_14"></label></div>
 					<div class="hcont"><input id="cache.disable_win_read" type="checkbox" /><label for="cache.disable_win_read" id="DLG_SETTINGS_C_ADV_CACHE_15"></label></div>
 				</fieldset>
@@ -558,6 +589,10 @@
 								<td><input type="text" id="dht.rate" class="tbox num" maxlength="10" /></td>
 							</tr>
 							<tr>
+								<td><label for="diskio.coalesce_write_size">diskio.coalesce_write_size</label></td>
+								<td><input type="text" id="diskio.coalesce_write_size" class="tbox num" maxlength="5" /></td>
+							</tr>
+							<tr>
 								<td><label for="diskio.coalesce_writes">diskio.coalesce_writes</label></td>
 								<td><input type="checkbox" id="diskio.coalesce_writes" /></td>
 							</tr>
@@ -568,6 +603,10 @@
 							<tr>
 								<td><label for="diskio.smart_hash">diskio.smart_hash</label></td>
 								<td><input type="checkbox" id="diskio.smart_hash" /></td>
+							</tr>
+							<tr>
+								<td><label for="diskio.smart_sparse_hash">diskio.smart_sparse_hash</label></td>
+								<td><input type="checkbox" id="diskio.smart_sparse_hash" /></td>
 							</tr>
 							<tr>
 								<td><label for="diskio.sparse_files">diskio.sparse_files</label></td>
@@ -594,6 +633,10 @@
 								<td><input type="text" id="net.bind_ip" class="tbox" maxlength="40" /></td>
 							</tr>
 							<tr>
+								<td><label for="net.calc_overhead">net.calc_overhead</label></td>
+								<td><input type="checkbox" id="net.calc_overhead" /></td>
+							</tr>
+							<tr>
 								<td><label for="net.low_cpu">net.low_cpu</label></td>
 								<td><input type="checkbox" id="net.low_cpu" /></td>
 							</tr>
@@ -612,6 +655,10 @@
 							<tr>
 								<td><label for="net.outgoing_port">net.outgoing_port</label></td>
 								<td><input type="text" id="net.outgoing_port" class="tbox num" maxlength="6" /></td>
+							</tr>
+							<tr>
+								<td><label for="net.upnp_tcp_only">net.upnp_tcp_only</label></td>
+								<td><input type="checkbox" id="net.upnp_tcp_only" /></td>
 							</tr>
 							<tr>
 								<td><label for="net.wsaevents">net.wsaevents</label></td>
@@ -661,6 +708,10 @@
 								<td><label for="sys.enable_wine_hacks">sys.enable_wine_hacks</label></td>
 								<td><input type="checkbox" id="sys.enable_wine_hacks" /></td>
 							</tr>
+							<tr>
+								<td><label for="webui.token_auth">webui.token_auth</label></td>
+								<td><input type="checkbox" id="webui.token_auth" /></td>
+							</tr>
 						</tbody>
 					</table>
 				</div>
@@ -678,8 +729,8 @@
 		<div id="dlgProps" class="dlg-window">
 			<a href="#" class="dlg-close"></a>
 			<div id="dlgProps-header" class="dlg-header"></div>
-			<div class="content fxcaret">
-				<fieldset>
+			<div class="content">
+				<fieldset id="trckrfs">
 					<legend id="DLG_TORRENTPROP_1_GEN_01"></legend>
 					<textarea id="prop-trackers" rows="0" cols="" wrap="off"></textarea>
 				</fieldset>
@@ -695,7 +746,7 @@
 						<input type="checkbox" id="prop-seed_override" /><label id="DLG_TORRENTPROP_1_GEN_11" for="prop-seed_override"></label>
 					</div>
 					<div>
-						<label for="prop-seed_ratio" id="DLG_TORRENTPROP_1_GEN_12"></label><input type="text" id="prop-seed_ratio" class="tbox" /><label for="prop-seed_time" id="DLG_TORRENTPROP_1_GEN_14"></label><select id="prop-seed_time"><option>-------------------</option></select>
+						<label for="prop-seed_ratio" id="DLG_TORRENTPROP_1_GEN_12"></label><input type="text" id="prop-seed_ratio" class="tbox" /><label for="prop-seed_time" id="DLG_TORRENTPROP_1_GEN_14"></label><input type="text" class="tbox num" id="prop-seed_time" />
 					</div>
 				</fieldset>
 				<fieldset>
@@ -793,7 +844,7 @@
 				<li id="_com_"><span id="OV_CAT_COMPL"></span>&nbsp;(<span id="_com_c">0</span>)</li>
 				<li id="_act_"><span id="OV_CAT_ACTIVE"></span>&nbsp;(<span id="_act_c">0</span>)</li>
 				<li id="_iac_"><span id="OV_CAT_INACTIVE"></span>&nbsp;(<span id="_iac_c">0</span>)</li>
-				<li><hr /></li>
+				<li class="hr"><hr /></li>
 				<li id="_nlb_"><span id="OV_CAT_NOLABEL"></span>&nbsp;(<span id="_nlb_c">0</span>)</li>
 			</ul>
 			<ul id="lbll"></ul>
@@ -802,6 +853,7 @@
 			<div id="tdcont">
 				<div id="gcont"><table id="dettable" cellpadding="5" cellspacing="2" style="width: 100%"><tbody><tr><td colspan="3" class="Header" id="GN_TRANSFER"></td></tr><tr><td style="width: 34%"><label id="GN_TP_04"></label><span id="rm"></span></td><td style="width: 33%"><label id="GN_TP_01"></label>&nbsp;<span id="dl"></span></td><td style="width: 33%"><label id="GN_TP_02"></label>&nbsp;<span id="ul"></span></td></tr><tr><td><label id="GN_TP_08"></label>&nbsp;<span id="ra"></span></td><td><label id="GN_TP_05"></label>&nbsp;<span id="ds"></span></td><td><label id="GN_TP_06"></label>&nbsp;<span id="us"></span></td></tr><tr><td><label id="GN_TP_03"></label>&nbsp;<span id="se"></span></td><td><label id="GN_TP_07"></label>&nbsp;<span id="pe"></span></td><td></td></tr></tbody></table></div>
 				<div id="FileList"></div>
+				<div id="spgraph"></div>
 				<div id="lcont"></div>
 			</div>
 		</div>
@@ -811,8 +863,12 @@
 		<script type="text/javascript" src="./temp.js"></script>
 		<!-- [/remove] -->
 		<script type="text/javascript" src="./lang/en.js" charset="utf-8"></script>
+		<!--[if IE]>
+		<script type="text/javascript" src="./excanvas.js"></script>
+		<![endif]-->
 		<!-- [jscompact] -->
 		<script type="text/javascript" src="./mootools.js"></script>
+		<script type="text/javascript" src="./flotr.js"></script>
 		<script type="text/javascript" src="./utils.js"></script>
 		<script type="text/javascript" src="./stable.js"></script>
 		<script type="text/javascript" src="./webui.js"></script>

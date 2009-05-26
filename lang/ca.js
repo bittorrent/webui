@@ -1,4 +1,5 @@
 ﻿var lang = [
+	"Fitxers Torrent||*.torrent||Tots els fitxers (*.*)||*.*||",
 	"Preferències",
 	"OK",
 	"Cancela",
@@ -139,6 +140,10 @@
 	"D:%s C:%s - %s",
 	"Mostra la llista de categories",
 	"Mostra informació detallada",
+	"No descarreguis",
+	"Prioritat alta",
+	"Prioritat baixa",
+	"Prioritat normal",
 	"Suprimeix les dades",
 	"Forçar Recomprobació",
 	"Força l'inici",

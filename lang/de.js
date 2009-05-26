@@ -1,4 +1,5 @@
 ﻿var lang = [
+	"Torrent Dateien||*.torrent||Alle Dateien (*.*)||*.*||",
 	"Einstellungen",
 	"OK",
 	"Abbruch",
@@ -139,6 +140,10 @@
 	"D:%s U:%s - %s",
 	"Gruppen-Liste zeigen",
 	"Ausführliche Infos zeigen",
+	"Nicht Laden",
+	"Hohe Priorität",
+	"Niedrige Priorität",
+	"Normale Priorität / wieder laden",
 	"nur Daten löschen",
 	"Erzwinge neuerliche Überprüfung",
 	"Erzwinge Start",
@@ -215,10 +220,10 @@
 	"<= %d Stunden",
 	"(Ignorieren)",
 	"<= %d Minuten",
-	"%dt %dh",
+	"%dd %dh",
 	"%dh %dm",
 	"%dm %ds",
 	"%ds",
-	"%dw %dt",
-	"%dj %dw"
+	"%dw %dd",
+	"%dy %dw"
 ], lang_code = "de";

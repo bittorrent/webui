@@ -1,4 +1,5 @@
 ﻿var lang = [
+	"Torrent filer||*.torrent||Alle filer (*.*)||*.*||",
 	"Indstillinger",
 	"OK",
 	"Annullér",
@@ -139,6 +140,10 @@
 	"N:%s O:%s - %s",
 	"Vis kategori liste",
 	"Vis detaljeret info",
+	"Download ikke",
+	"Høj prioritet",
+	"Lav prioritet",
+	"Normal prioritet",
 	"Slet data",
 	"Gennemtving tjek",
 	"Tvunget start",

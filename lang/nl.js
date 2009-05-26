@@ -1,4 +1,5 @@
 ﻿var lang = [
+	"Torrentbestanden||*.torrent||Alle bestanden (*.*)||*.*||",
 	"Voorkeuren",
 	"OK",
 	"Annuleren",
@@ -139,6 +140,10 @@
 	"D:%s U:%s - %s",
 	"Toon categorielijst",
 	"Toon gedetailleerde info",
+	"Niet downloaden",
+	"Hoge prioriteit",
+	"Lage prioriteit",
+	"Normale prioriteit",
 	"Verwijder gegevens",
 	"Forceer hercontrole",
 	"Forceer start",

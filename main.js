@@ -30,12 +30,12 @@ function setupUI() {
 			col(lang[CONST.OV_COL_SHARED], TYPE_NUMBER, colMask & 0x0040),
 			col(lang[CONST.OV_COL_DOWNSPD], TYPE_NUMBER, colMask & 0x0080),
 			col(lang[CONST.OV_COL_UPSPD], TYPE_NUMBER, colMask & 0x0100),
-			col(lang[CONST.OV_COL_ETA], TYPE_NUMBER, colMask & 0x0200),
+			col(lang[CONST.OV_COL_ETA], TYPE_NUM_ORDER, colMask & 0x0200),
 			col(lang[CONST.OV_COL_LABEL], TYPE_STRING, colMask & 0x0400),
 			col(lang[CONST.OV_COL_PEERS], TYPE_NUMBER, colMask & 0x0800),
 			col(lang[CONST.OV_COL_SEEDS], TYPE_NUMBER, colMask & 0x1000),
 			col(lang[CONST.OV_COL_AVAIL].split("||")[1], TYPE_NUMBER, colMask & 0x2000),
-			col(lang[CONST.OV_COL_ORDER], TYPE_NUM_ORDER, colMask & 0x4000, ALIGN_LEFT),
+			col(lang[CONST.OV_COL_ORDER], TYPE_NUM_ORDER, colMask & 0x4000, ALIGN_RIGHT),
 			col(lang[CONST.OV_COL_REMAINING], TYPE_NUMBER, colMask & 0x8000)
 		], $extend({
 		"format": function(values, index) {
@@ -81,7 +81,7 @@ function setupUI() {
 					
 				case 9:
 					values[i] = (values[i] == 0) ? "" :
-								(values[i] <= -1) ? "\u221E" : values[i].toTimeString(); // ETA
+								(values[i] == -1) ? "\u221E" : values[i].toTimeString(); // ETA
 					break;
 								
 				case 13:
@@ -105,7 +105,8 @@ function setupUI() {
 		"onColMove": utWebUI.trtColMove.bind(utWebUI),
 		"onColToggle": utWebUI.trtColToggle.bind(utWebUI),
 		"onSort": utWebUI.trtSort.bind(utWebUI),
-		"onSelect": utWebUI.trtSelect.bind(utWebUI)
+		"onSelect": utWebUI.trtSelect.bind(utWebUI),
+		"onDblClick": utWebUI.trtDblClk.bind(utWebUI)
 	}, utWebUI.config.torrentTable));
 
 	if (!isGuest) {
@@ -151,6 +152,7 @@ function setupUI() {
 			"onSort": utWebUI.flsSort.bind(utWebUI),
 			"onSelect": utWebUI.flsSelect.bind(utWebUI),
 			"onRefresh": function() { if (this.torrentID != "") utWebUI.getFiles(utWebUI.torrentID, true); },
+			"onDblClick": utWebUI.flsDblClk.bind(utWebUI),
 			"refreshable": true
 		}, utWebUI.config.fileTable));
 		utWebUI.flsTable.loadObj.hide();
@@ -347,6 +349,97 @@ var TreeNode = new Class({
 });
 */
 
+var DialogManager = {
+
+	"dragMask": null,
+	
+	"winZ": 500,
+
+	"items": {},
+	
+	"showing": [],
+	
+	"add": function(id, isModal) {
+		if (has(this.items, id)) return;
+		isModal = !!isModal;
+		this.items[id] = {"modal": isModal};
+		var oid = id, $me = this;
+		id = "dlg" + id;
+		$(id).addEvent("mousedown", function(ev) {
+			var cls = ev.target.className;
+			if (cls.contains("dlg-header", " ") || cls.contains("dlg-close", " ")) return;
+			this.setStyle("zIndex", ++DialogManager.winZ);
+		}).getElement("a").addEvent("click", function(ev) {
+			ev.stop();
+			$me.hide(oid);
+		});
+		var dragElement = null;
+		new Drag(id, {
+			"handle": id + "-header",
+			"modifiers": {"x": "left", "y": "top"},
+			"snap": 2,
+			"onBeforeStart": function() {
+				var size = this.element.getSize(), pos = this.element.getPosition();
+				$me.dragMask.setStyles({
+					"width": size.x - 4,
+					"height": size.y - 4,
+					"left": pos.x,
+					"top": pos.y,
+					"zIndex": ++DialogManager.winZ
+				});
+				dragElement = this.element;
+				this.element = $me.dragMask;
+			},
+			"onStart": function() {
+				this.element.show();
+			},
+			"onCancel": function() {
+				this.element = dragElement;
+				$me.bringToFront(oid);
+				$me.dragMask.setStyle("display", "none");
+			},
+			"onComplete": function() {
+				this.element = dragElement;
+				dragElement = null;
+				var pos = $me.dragMask.getPosition();
+				$me.dragMask.setStyle("display", "none");
+				this.element.setStyles({
+					"left": pos.x,
+					"top": pos.y
+				});
+				$me.bringToFront(oid);
+			}
+		});
+	},
+	
+	"show": function(id) {
+		this.bringToFront(id);
+		if (this.items[id].modal)
+			$("modalbg").show();
+		$("dlg" + id).setStyle("zIndex", ++this.winZ).centre();
+	},
+	
+	"hide": function(id) {
+		this.showing = this.showing.erase(id);
+		$("dlg" + id).hide();
+		if (this.items[id].modal)
+			$("modalbg").hide();
+	},
+	
+	"hideTopMost": function() {
+		if (this.showing.length == 0) return;
+		var id = this.showing.shift();
+		this.hide(id);
+	},
+	
+	"bringToFront": function(id) {
+		if (this.showing.contains(id))
+			this.showing = this.showing.erase(id);
+		this.showing.unshift(id);
+		$("dlg" + id).setStyle("zIndex", ++this.winZ);
+	}
+};
+
 function loadLangStrings() {
 	[
 		"OV_CAT_ALL",
@@ -364,6 +457,7 @@ function loadLangStrings() {
 		"tabs": {
 			"gcont": tstr[0],
 			"FileList": tstr[4],
+			"spgraph": tstr[5],
 			"lcont": tstr[6]
 		},
 		"onChange": utWebUI.tabChange.bind(utWebUI)
@@ -405,8 +499,8 @@ function loadLangStrings() {
 		$(k[0]).set("text", lang[k[1]]);
 	});
 
-	var timesListA = $("prop-seed_time"), timesListB = $("seed_time");
-	timesListA.options.length = timesListB.options.length = 0;
+	var timesList = $("seed_time");
+	timesList.options.length = 0;
 	[0, 5400, 7200, 10800, 14400, 18000, 21600, 25200, 28800, 32400, 36000, 43200, 57600, 72000, 86400, 108000, 129600, 172800, 216000, 259200, 345600].each(function(t) {
 		var text = "";
 		if (t == 0) {
@@ -416,33 +510,41 @@ function loadLangStrings() {
 		} else {
 			text = lang[CONST.ST_SEEDTIMES_HOURS].replace(/%d/, t / 3600);
 		}
-		timesListA.options[timesListA.options.length] = new Option(text, t, false, t == 0);
-		timesListB.options[timesListB.options.length] = new Option(text, t, false, t == 0);
+		timesList.options[timesList.options.length] = new Option(text, t, false, t == 0);
 	});
+	timesList.set("value", utWebUI.settings["seed_time"]);
 	$("DLG_TORRENTPROP_01").set("value", lang[CONST.DLG_TORRENTPROP_01]).addEvent("click", function() {
-		$("dlgProps").hide();
+		DialogManager.hide("Props");
 		utWebUI.setProperties();
 	});
 	$("DLG_TORRENTPROP_02").set("value", lang[CONST.DLG_TORRENTPROP_02]).addEvent("click", function() {
-		$('dlgProps').hide();
+		if (utWebUI.propID == "multi") {
+			[11, 17, 18, 19].each(function(v) {
+				$("DLG_TORRENTPROP_1_GEN_" + v).removeEvents("click");
+			});
+		}
+		this.propID = "";
+		DialogManager.hide("Props");
 	});
 	$("LBL_OK").set("value", lang[CONST.DLG_SETTINGS_03]).addEvent("click", function() {
-		$("dlgLabel").hide();
+		DialogManager.hide("Label");
 		utWebUI.createLabel();
 	});
 	$("LBL_CANCEL").set("value", lang[CONST.DLG_SETTINGS_04]).addEvent("click", function() {
 		$("dlgLabel").hide();
 	});
-	$("ADD_FILE_OK").set("value", lang[CONST.DLG_SETTINGS_03]);
+	$("ADD_FILE_OK").set("value", lang[CONST.DLG_SETTINGS_03]).addEvent("click", function() {
+		$("upfrm").set("action", "./?token=" + utWebUI.TOKEN + "&action=add-file");
+	});
 	$("ADD_FILE_CANCEL").set("value", lang[CONST.DLG_SETTINGS_04]).addEvent("click", function() {
-		$("dlgAdd").hide();
+		DialogManager.hide("Add");
 	});
 	$("ADD_URL_OK").set("value", lang[CONST.DLG_SETTINGS_03]).addEvent("click", function() {
-		$("dlgAdd").hide();
+		DialogManager.hide("Add");
 		utWebUI.addURL();
 	});
 	$("ADD_URL_CANCEL").set("value", lang[CONST.DLG_SETTINGS_04]).addEvent("click", function() {
-		$("dlgAdd").hide();
+		DialogManager.hide("Add");
 	});
 	
 	["remove", "start", "pause", "stop"].each(function(act) {
@@ -451,6 +553,35 @@ function loadLangStrings() {
 	$("setting").setProperty("title", lang[CONST.OV_TB_PREF]);
 	$("add").setProperty("title", lang[CONST.OV_TB_ADDTORR]);
 	perSec = "/" + lang[CONST.TIME_SECS].replace(/%d/, "").trim();
+	SpeedGraph.init($("spgraph"));
+	if (utWebUI.swfUpload) {
+		var filmask = lang[CONST.CT_MASK1].split("||"), filters = {};
+		filters[filmask[0]] = filmask[1];
+		//filters[filmask[2]] = filmask[3];
+		new Element("input", {
+			"type": "button",
+			"value": "Browse",
+			"events": {
+				"click": function() {
+					utWebUI.swfUpload.browse(filters);
+				}
+			},
+			"id": "swfBrowse"
+		}).replaces($("torrent_file"))
+		new Element("span", {
+			"id": "swfFile"
+		}).inject("swfBrowse", "after");
+		new Element("input", {
+			"type": "button",
+			"value": lang[CONST.DLG_SETTINGS_03],
+			"events": {
+				"click": function() {
+					utWebUI.swfUpload.upload();
+				}
+			},
+			"class": "btn"
+		}).replaces($("ADD_FILE_OK"));
+	}
 }
 
 function loadSettingStrings() {
@@ -577,13 +708,14 @@ function loadSettingStrings() {
 	});
 
 	$("DLG_SETTINGS_03").set("value", lang[CONST.DLG_SETTINGS_03]).addEvent("click", function() {
-		$("dlgSettings").hide();
+		DialogManager.hide("Settings");
 		utWebUI.setSettings();
 	});
 	$("DLG_SETTINGS_04").set("value", lang[CONST.DLG_SETTINGS_04]).addEvent("click", function() {
-		$("dlgSettings").hide();
+		DialogManager.hide("Settings");
 		utWebUI.loadSettings();
 	});
+	
 	$("DLG_SETTINGS_4_CONN_04").set("value", lang[CONST.DLG_SETTINGS_4_CONN_04]).addEvent("click", function() {
 		var v = utWebUI.settings["bind_port"], rnd = 0;
 		do {
@@ -650,7 +782,7 @@ function resizeUI(w, h) {
 
 	resizing = true;
 	$clear(resizeTimeout);
-	
+
 	var size = window.getSize();
 	var ww = size.x, wh = size.y, winResize = false;
 	var showcat = utWebUI.config.showCategories, showdet = utWebUI.config.showDetails, showtb = utWebUI.config.showToolbar, eh = 0;
@@ -663,7 +795,7 @@ function resizeUI(w, h) {
 		h = Math.floor(wh * ((!isGuest && showdet) ? utWebUI.config.vSplit : 1.0));
 		winResize = true;
 	}
-	
+
 	if (w)
 		w -= showcat ? 10 : 2;
 		
@@ -677,7 +809,7 @@ function resizeUI(w, h) {
 		if (h)
 			$("CatList").setStyle("height", h);
 	}
-	
+
 	if (!isGuest && showdet) {
 		$("tdetails").setStyle("width", ww - (Browser.Engine.trident4 ? 14 : 12));
 		if (h) {
@@ -685,13 +817,14 @@ function resizeUI(w, h) {
 			$("tdetails").setStyle("height", th - 10);
 			$("tdcont").setStyle("height", cth);
 			$("gcont").setStyle("height", cth - 8);
+			SpeedGraph.resize(null, cth - 12);
 			$("lcont").setStyle("height", cth - 12);
 			utWebUI.flsTable.resizeTo(ww - 22, cth - 2);
 		}
 	}
 
 	utWebUI.trtTable.resizeTo(w, h);
-	
+
 	if (isGuest) return;
 	var listPos = $("List").getPosition();
 
@@ -770,7 +903,11 @@ window.addEvent("domready", function() {
 		
 		case "esc": // Esc
 			ev.stop();
-			utWebUI.restoreUI();
+			if (DialogManager.showing.length > 0) {
+				DialogManager.hideTopMost();
+			} else {
+				utWebUI.restoreUI();
+			}
 			break;
 			
 		case "a": // Ctrl + A
@@ -786,7 +923,7 @@ window.addEvent("domready", function() {
 		case "o": // Ctrl + O
 			if (ev.control) {
 				ev.stop();
-				$("dlgAdd").setStyle("zIndex", ++winZ).centre();
+				DialogManager.show("Add");
 			}
 			break;
 			
@@ -799,7 +936,7 @@ window.addEvent("domready", function() {
 			
 		case "f2": // F2
 			ev.stop();
-			$("dlgAbout").setStyle("zIndex", ++winZ).centre();
+			DialogManager.show("About");
 			break;
 			
 		case "f4": // F4
@@ -885,7 +1022,7 @@ window.addEvent("domready", function() {
 			ContextMenu.hide.delay(10, ContextMenu);
 		ContextMenu.launched = false;
 	});
-	
+
 	if (Browser.Engine.gecko) {
 		document.addEvent("mousedown", function(ev) {
 			if (ev.rightClick && !(/^input|textarea|a$/i).test(ev.target.tagName))
@@ -894,9 +1031,7 @@ window.addEvent("domready", function() {
 			if (ev.rightClick && !(/^input|textarea|a$/i).test(ev.target.tagName))
 				ev.stop();
 		});
-	}
-	
-	if (Browser.Engine.presto && !("oncontextmenu" in document.createElement("foo"))) {
+	} else if (Browser.Engine.presto && !("oncontextmenu" in document.createElement("foo"))) {
 		/*
 		 * 	http://my.opera.com/community/forums/findpost.pl?id=2112305
 		 * 	http://dev.fckeditor.net/changeset/683
@@ -926,7 +1061,8 @@ window.addEvent("domready", function() {
 				}
 			}
 		});
-	} else if (Browser.Engine.trident || Browser.Engine.webkit) {
+	}
+	if (Browser.Engine.trident || Browser.Engine.webkit || (Browser.Engine.gecko && navigator.platform.test(/linux/i))) {
 		document.addEvent("contextmenu", function(ev) {
 			if (!(/^input|textarea|a$/i).test(ev.target.tagName)) {
 				ev.stop();
@@ -955,7 +1091,7 @@ window.addEvent("domready", function() {
 		pos.y += 14;
 		ContextMenu.show(pos);
 	});
-	
+
 	new IFrame({
 		"id": "uploadfrm",
 		"src": "about:blank",
@@ -986,8 +1122,9 @@ window.addEvent("domready", function() {
 		for (var key in utWebUI.customLabels)
 			ele.options[count++] = new Option(key, key, false, count == 0);
 		*/
-		$("dlgAdd").setStyle("zIndex", ++winZ).centre();
+		DialogManager.show("Add");
 	});
+
 	/*
 	$("DLG_PRE_ADD_03").addEvent("click", function() {
 		utWebUI.showFolderBrowser();
@@ -996,62 +1133,28 @@ window.addEvent("domready", function() {
 	["remove", "start", "pause", "stop"].each(function(act) {
 		$(act).addEvent("click", function(ev) {
 			ev.stop();
-			if (act == "remove")
-				utWebUI[act]((utWebUI.settings["gui.default_del_action"] <= 1) ? 0 : 1);
-			else
-				utWebUI[act]();
+			utWebUI[act]();
 		});
 	});
 	$("setting").addEvent("click", function(ev) {
 		ev.stop();
 		utWebUI.showSettings();
 	});
-	var dragMask = $("dragmask");
-	["dlgAdd", "dlgSettings", "dlgProps", "dlgAbout", "dlgLabel"].each(function(id) {
-		$(id).addEvent("mousedown", function(ev) {
-			var cls = ev.target.className;
-			if(cls.contains("dlg-header", " ") || cls.contains("dlg-close", " ")) return;
-			this.setStyle("zIndex", ++winZ);
-		}).getElement("a").addEvent("click", function(ev) {
-			ev.stop();
-			$(id).hide();
-		});
-		var dragElement = null;
-		new Drag(id, {
-			"handle": id + "-header",
-			"modifiers": {"x": "left", "y": "top"},
-			"snap": 2,
-			"onBeforeStart": function() {
-				var size = this.element.getSize(), pos = this.element.getPosition();
-				dragMask.setStyles({
-					"width": size.x - 4,
-					"height": size.y - 4,
-					"left": pos.x,
-					"top": pos.y,
-					"zIndex": ++winZ
-				});
-				dragElement = this.element;
-				this.element = dragMask;
-			},
-			"onStart": function() {
-				this.element.show();
-			},
-			"onCancel": function() {
-				this.element = dragElement;
-				this.element.setStyle("zIndex", ++winZ);
-				dragMask.setStyle("display", "none");
-			},
-			"onComplete": function() {
-				this.element = dragElement;
-				var pos = dragMask.getPosition();
-				dragMask.setStyle("display", "none");
-				this.element.setStyles({
-					"left": pos.x,
-					"top": pos.y,
-					"zIndex": ++winZ
-				});
-			}
-		});
+	DialogManager.dragMask = $("dragmask");
+	var dialogId = ["Add", "Settings", "Props", "About", "Label"];
+	for (var i = dialogId.length; i--;) 
+		DialogManager.add(dialogId[i], dialogId[i] == "Props");
+	
+	$("dlgSettings").getElement("a").addEvent("click", function(ev) {
+		utWebUI.loadSettings();
+	});
+	
+	$("dlgProps").getElement("a").addEvent("click", function(ev) {
+		if (utWebUI.propID == "multi") {
+			[11, 17, 18, 19].each(function(v) {
+				$("DLG_TORRENTPROP_1_GEN_" + v).removeEvents("click");
+			});
+		}
 	});
 	
 	var linkedEvent = Browser.Engine.trident ? "click" : "change";
@@ -1111,6 +1214,6 @@ window.addEvent("domready", function() {
 	$("max_ul_rate_seed_flag").addEvent(linkedEvent, function() {
 		linked(this, 0, ["max_ul_rate_seed"]);
 	});
-	
+
 	utWebUI.init();
 });

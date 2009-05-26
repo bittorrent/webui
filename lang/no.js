@@ -1,4 +1,5 @@
 ﻿var lang = [
+	"Torrent filer||*.torrent||Alle filer (*.*)||*.*||",
 	"Egenskaper",
 	"OK",
 	"Avbryt",
@@ -139,6 +140,10 @@
 	"D:%s U:%s - %s",
 	"Vis Kategoriliste",
 	"Vis Detaljert Info",
+	"Ikke last ned",
+	"Høy Prioritet",
+	"Lav Prioritet",
+	"Normal Prioritet",
 	"Slett Data",
 	"Tving Re-Sjekk",
 	"Tving Start",
@@ -218,7 +223,7 @@
 	"%dd %dt",
 	"%dt %dm",
 	"%dm %ds",
-	"%dm %ds",
+	"%ds",
 	"%du %dd",
 	"%då %du"
 ], lang_code = "no";

@@ -1,4 +1,5 @@
 ﻿var lang = [
+	"Archivos Torrent||*.torrent||Todos los archivos (*.*)||*.*||",
 	"Preferencias",
 	"OK",
 	"Cancelar",
@@ -139,6 +140,10 @@
 	"D:%s S:%s - %s",
 	"Mostrar lista por categoría",
 	"Mostrar información detallada",
+	"No descargar",
+	"Prioridad Alta",
+	"Prioridad Baja",
+	"Prioridad Normal",
 	"Eliminar datos",
 	"Forzar comprobación",
 	"Forzar inicio",

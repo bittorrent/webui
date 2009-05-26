@@ -1,4 +1,5 @@
 ﻿var lang = [
+	"Torrent állományok||*.torrent||Összes állomány (*.*)||*.*||",
 	"Beállítások",
 	"OK",
 	"Mégse",
@@ -139,6 +140,10 @@
 	"L:%s F:%s - %s",
 	"Kategória lista mutatása",
 	"Részletes infók",
+	"Kihagyás",
+	"Magas prioritás",
+	"Alacsony prioritás",
+	"Normál prioritás",
 	"Adat törlése",
 	"Kényszerített újraellenőrzés",
 	"Kényszerített indítás",

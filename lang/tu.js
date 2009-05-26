@@ -1,4 +1,5 @@
 ﻿var lang = [
+	"Torrent dosyaları||*.torrent||Tüm dosyalar (*.*)||*.*||",
 	"Tercihler",
 	"OK",
 	"İptal",
@@ -139,6 +140,10 @@
 	"D:%s U:%s - %s",
 	"Kategori Listesini Göster",
 	"Detaylı Bilgi Göster",
+	"İndirme",
+	"Yüksek Öncelik",
+	"Düşük Öncelik",
+	"Normal Öncelik",
 	"Veriyi Sil",
 	"Tekrar Kontrol Et",
 	"Zorlu Başlat",

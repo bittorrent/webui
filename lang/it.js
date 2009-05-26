@@ -1,4 +1,5 @@
 ﻿var lang = [
+	"File torrent||*.torrent||Tutti i file (*.*)||*.*||",
 	"Impostazioni",
 	"OK",
 	"Annulla",
@@ -139,6 +140,10 @@
 	"D:%s U:%s - %s",
 	"Mostra elenco categorie",
 	"Mostra informazioni dettagliate",
+	"Non scaricare",
+	"Priorità alta",
+	"Priorità bassa",
+	"Priorità normale",
 	"Elimina dati",
 	"Forza ricontrollo",
 	"Forza avvio",

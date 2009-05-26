@@ -1,4 +1,5 @@
 ﻿var lang = [
+	"Ficheiros .torrent||*.torrent||Todos os ficheiros (*.*)||*.*||",
 	"Preferencias",
 	"Aceptar",
 	"Cancelar",
@@ -139,6 +140,10 @@
 	"D:%s C:%s - %s",
 	"Mostrar Lista de Categorías",
 	"Mostrar Información Detallada",
+	"Non descargar",
+	"Prioridade Alta",
+	"Prioridade Baixa",
+	"Prioridade Normal",
 	"Eliminar Datos",
 	"Forzar a Recomprobación",
 	"Forzar Inicio",

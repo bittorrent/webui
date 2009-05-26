@@ -1,4 +1,5 @@
 ﻿var lang = [
+	"Datoteke torrent||*.torrent||Vse datoteke (*.*)||*.*||",
 	"Nastavitve",
 	"V redu",
 	"Prekliči",
@@ -139,6 +140,10 @@
 	"P:%s O:%s - %s",
 	"Pokaži seznam kategorij",
 	"Pokaži podrobnosti",
+	"Ne prenesi",
+	"Visoka prednost",
+	"Nizka prednost",
+	"Običajna prednost",
 	"Zbriši podatke",
 	"Vsili preverbo",
 	"Vsili začetek",

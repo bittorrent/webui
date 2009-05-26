@@ -57,7 +57,6 @@ var dxSTable = new Class({
 	"selectedRows": [], // the selected rows
 	"stSel": null, //
 	"activeId": [], // position -> id
-	"activePos": {}, // id -> position
 	"viewRows": 0, // # of visible rows
 	"cols": 0, // # of columns
 	"colData": [], // columns' data
@@ -114,7 +113,7 @@ var dxSTable = new Class({
 		delete options.sIndex;
 		this.setOptions(options);
 	
-		var tr, td, div, $me = this;
+		var tr, td, div, $me = this, isIE = Browser.Engine.trident;
 
 		this.id = "stable-" + id;
 		this.dCont = $(id).addClass("stable");
@@ -178,12 +177,11 @@ var dxSTable = new Class({
 			this.cols++;
 			this.colData[i] = this.colHeader[this.colOrder[i]];
 			ROW.grab(
-				simpleClone(TD, false).addClasses(this.id + "-col-" + this.colOrder[i], this.colData[i].disabled ? "stable-hidden-column" : "")
+				simpleClone(TD, false).addClass(this.id + "-col-" + this.colOrder[i]).setStyle(isIE ? "visibility" : "display", this.colData[i].disabled ? (isIE ? "hidden" : "none") : (isIE ? "visible" : ""))
 			);
 			td = simpleClone(TD, false)
 				.grab(new Element("span", {"text": this.colData[i].text}))
-				.setStyle("width", this.colWidth[this.colOrder[i]])
-				.addClass(this.colData[i].disabled ? "stable-hidden-column" : "")
+				.setStyles({"width": this.colWidth[this.colOrder[i]], "display": this.colData[i].disabled ? "none" : ""})
 				.store("index", i)
 				.inject(tr);
 			this.tHeadCols[i] = td;
@@ -211,7 +209,7 @@ var dxSTable = new Class({
 			this.tBodyCols[i] = new Element("col", {
 				"styles": {
 					"width": this.colWidth[this.colOrder[i]],
-					"display": this.colData[i].disabled ? "none" : ''
+					"display": this.colData[i].disabled ? "none" : ""
 				},
 				"width": this.colWidth[this.colOrder[i]],
 				"span": 1
@@ -247,6 +245,11 @@ var dxSTable = new Class({
 						$me.fireEvent("onSelect", [ev, ""]);
 					}
 				}
+			}).addEvent("dblclick", function(ev) {
+				var ele = ev.target;
+				if (!ele) return;
+				if (ele.get("tag") == "td")
+					$me.fireEvent("onDblClick", ele.parentNode.id);
 			});
 		}
 		for (var i = 0; i < this.options.maxRows; i++)
@@ -290,12 +293,12 @@ var dxSTable = new Class({
 					"change": function() {
 						$me.gotoPage(this.get("value").toInt());
 					}
-				},
-				"disabled": "disabled"
+				}
 			}).inject(this.pageStat);
+			this.pageSelect.disabled = true;			
 			
 			if (this.options.refreshable) {
-				new Element("a", {
+				this.pageStat.grab(new Element("a", {
 					"class": "refreshBtn",
 					"href": "#",
 					"events": {
@@ -305,7 +308,7 @@ var dxSTable = new Class({
 								$me.fireEvent("onRefresh");
 						}
 					}
-				}).grab(new Element("div")).inject(this.pageStat);
+				}).grab(new Element("div")));
 			}
 		}
 		
@@ -401,8 +404,7 @@ var dxSTable = new Class({
 		for (var key in this.rowData) {
 			this.rowCache[c++] = {
 				"key": key,
-				"v": this.rowData[key].data[index],
-				"e": this.rowData[key]
+				"v": this.rowData[key].data[index]
 			};
 		}
 	},
@@ -412,7 +414,6 @@ var dxSTable = new Class({
 		while (len--) {
 			this.rowCache[len].key = null;
 			this.rowCache[len].v = null;
-			this.rowCache[len].e = null;
 			this.rowCache[len] = null;
 		}
 		this.rowCache.length = 0;
@@ -454,7 +455,7 @@ var dxSTable = new Class({
 		if (rev)
 			this.options.reverse = (this.sIndex == ind) ? !this.options.reverse : false;
 		
-		if (this.sIndex != ind) {
+		if ((this.sIndex != ind) || (this.rowCache.length != this.rows)) {
 			simpleReverse = false;
 			this.getCache(ind);
 			if (this.sIndex >= 0)
@@ -502,13 +503,15 @@ var dxSTable = new Class({
 		}
 		while (i != end) {
 			var key = this.rowCache[i].key;
-			if (!this.rowCache[i].e.hidden) {
-				this.activePos[key] = this.activeId.length;
+			if (!this.rowData[key].hidden) {
+				this.rowData[key].activeIndex = this.activeId.length;
 				this.activeId.push(key);
 			}
 			this.rowData[key].index = i;
 			i += diff;
 		}
+		if (this.options.mode == MODE_PAGE)
+			this.pageCount = Math.ceil(this.activeId.length / this.options.maxRows);
 
 		this.isSorting = false;
 		
@@ -543,8 +546,8 @@ var dxSTable = new Class({
 
 	"sortSecondary": function(x, y) {
 		var index = this.colOrder[this.secIndex];
-		var m = x.e.data[index];
-		var n = y.e.data[index];
+		var m = this.rowData[x.key].data[index];
+		var n = this.rowData[y.key].data[index];
 		var type = this.colData[index].type;
 		var r = 0;
 		switch (type) {
@@ -570,7 +573,7 @@ var dxSTable = new Class({
 			r = Comparator.compare(m, n);
 		}
 		if (r == 0)
-			r = x.e.index - y.e.index;
+			r = this.rowData[x.key].index - this.rowData[y.key].index;
 		if (this.options.reverse)
 			r = -r;
 		if (this.secRev)
@@ -593,16 +596,15 @@ var dxSTable = new Class({
 	},
 
 	"refreshRows": function() {
-		var range = this.getActiveRange();
-		if (Browser.Engine.gecko || Browser.Engine.trident4)
+		var range = this.getActiveRange(), count = 0, tb = this.tb.body;
+		if (Browser.Engine.gecko || Browser.Engine.trident)
 			this.detachBody();
-		var count = 0;
 		for (var i = range[0]; i <= range[1]; i++) {
-			var id = this.activeId[i], rdata = this.rowData[id], row = $(id) || this.tb.body.childNodes[count], data = this.options.format($A(rdata.data));
-			var clsName = "", clsChanged = row.hasClass("selected");
+			var id = this.activeId[i], rdata = this.rowData[id], row = tb.childNodes[count], data = this.options.format($A(rdata.data));
+			var clsName = "", clsChanged = false;
 			if (has(this.rowSel, id)) {
 				clsName += "selected";
-				clsChanged = !clsChanged;
+				clsChanged = !row.hasClass("selected");
 			}
 			if (this.options.alternateRows) {
 				if (count & 1) {
@@ -616,14 +618,15 @@ var dxSTable = new Class({
 			if (clsChanged)
 				row.className = clsName.clean();
 			this.fillRow(row, data, rdata.icon);
-			if (row != this.tb.body.childNodes[count])
-				row.inject(this.tb.body.childNodes[count], "before");
-			row.setProperties({"title": data[0], "id": id}).show(true);
+			row.setProperties({
+				"title": data[0],
+				"id": id
+			}).show(true);
 			rdata.rowIndex = count++;
 		}
-		for (var i = count; i < this.options.maxRows; i++)
-			this.tb.body.childNodes[i].setProperty("id", "").hide();
-		if (Browser.Engine.gecko || Browser.Engine.trident4)
+		for (var i = count, j = tb.childNodes.length; i < j; i++)
+			tb.childNodes[i].setProperty("id", "").hide();
+		if (Browser.Engine.gecko || Browser.Engine.trident)
 			this.attachBody();
 		this.loadObj.hide();
 		this.refresh();
@@ -648,8 +651,8 @@ var dxSTable = new Class({
 					this.rowSel[id] = 0;
 					this.selectedRows.push(id);
 				} else {
-					var la = this.activePos[this.stSel];
-					var lb = this.activePos[id];
+					var la = this.rowData[this.stSel].activeIndex;
+					var lb = this.rowData[id].activeIndex;
 					var lo = la.min(lb);
 					var hi = la.max(lb);
 					this.selectedRows.length = 0;
@@ -666,7 +669,7 @@ var dxSTable = new Class({
 				if (has(this.rowSel, id)) {
 					this.selectedRows.splice(this.rowSel[id], 1);
 					for (var i = this.rowSel[id], j = this.selectedRows.length; i < j; i++)
-						this.rowSel[this.selectedRows[i]]--;
+						this.rowSel[this.selectedRows[i]] = i;
 					delete this.rowSel[id];
 				} else {
 					this.rowSel[id] = this.selectedRows.length;
@@ -690,7 +693,7 @@ var dxSTable = new Class({
 		this.fireEvent("onSelect", [ev, id]);
 	},
 
-	"addRow": function(data, id, icon, hidden) {
+	"addRow": function(data, id, icon, hidden, sortin) {
 		if (data.length != this.cols) return;
 		id = id || (this.id + "-row-" + (1000 + this.rows));
 		this.rowData[id] = {
@@ -698,22 +701,23 @@ var dxSTable = new Class({
 			"icon": icon || "",
 			"hidden": hidden || false,
 			"index": -1, 
-			"rowIndex": -1
+			"rowIndex": -1,
+			"activeIndex": -1
 		};
-		this._insertRow(id);
+		if ($pick(sortin, true))
+			this._insertRow(id);
 		this.rows++;
 	},
 	
 	"_insertRow": function(id, skipOrderCheck) {
-		skipOrderCheck = !!skipOrderCheck;
+		skipOrderCheck = (skipOrderCheck === true);
 		var sindex = this.sIndex;
 		if (sindex >= 0) {
 			var $me = this, index = 0;
 			if (!skipOrderCheck) {
 				var comp, from = 0, to = this.rowCache.length, rIndex = this.rowData[id].index, item = {
 					"key": id,
-					"v": this.rowData[id].data[this.colOrder[sindex]],
-					"e": this.rowData[id]
+					"v": this.rowData[id].data[this.colOrder[sindex]]
 				};
 				switch (this.colData[sindex].type) {
 				case TYPE_STRING:
@@ -750,8 +754,7 @@ var dxSTable = new Class({
 				index = this.rowCache.binarySearch(item, comp, from, to);
 				if (index < 0)
 					index = -(index + 1);
-				// TODO: get this working
-				//if (index != rIndex) {
+				if (index != rIndex) {
 					if (rIndex >= 0) {
 						if (rIndex < index)
 							index--;
@@ -762,32 +765,33 @@ var dxSTable = new Class({
 						for (var i = index, j = this.rowCache.length; i < j; i++)
 							this.rowData[this.rowCache[i].key].index = i;
 					} else {
-						for (var i = index, j = rIndex; i <= j; i++)
-							this.rowData[this.rowCache[i].key].index = i;
-						for (var i = rIndex, j = index; i <= j; i++)
+						var min = (index < rIndex) ? index : rIndex, max = (min == index) ? rIndex : index;
+						for (var i = min; i <= max; i++)
 							this.rowData[this.rowCache[i].key].index = i;
 					}
-				//}
+				} else {
+					this.rowCache[index].v = item.v;
+					item = item.key = item.v = null;
+				}
 			}
-			if (has(this.activePos, id)) {
-				this.rowData[id].rowIndex = -1;
-				index = this.activePos[id];
-				delete this.activePos[id];
+			if (this.rowData[id].activeIndex != -1) {
+				index = this.rowData[id].activeIndex;
+				this.rowData[id].rowIndex = this.rowData[id].activeIndex = -1;
 				this.activeId.splice(index, 1);
 				for (var i = 0, j = this.activeId.length; i < j; i++)
-					this.activePos[this.activeId[i]] = i;
+					this.rowData[this.activeId[i]].activeIndex = i;
 				if (this.rowData[id].hidden)
 					this.requiresRefresh = true;
 			}
 			if (!this.rowData[id].hidden) {
 				index = this.activeId.binarySearch(id, function(idA, idB) {
-					return ($me.rowData[idA].index.toFloat() - $me.rowData[idB].index.toFloat()) * (($me.options.reverse) ? -1 : 1);
+					return ($me.rowData[idA].index - $me.rowData[idB].index) * (($me.options.reverse) ? -1 : 1);
 				});
 				if (index < 0)
 					index = -(index + 1);
 				this.activeId.splice(index, 0, id);
 				for (var i = index, j = this.activeId.length; i < j; i++)
-					this.activePos[this.activeId[i]] = i;
+					this.rowData[this.activeId[i]].activeIndex = i;
 				var range = this.getActiveRange();
 				if ((index >= range[0]) && (index <= range[1])) {
 					this.requiresRefresh = true;
@@ -795,18 +799,18 @@ var dxSTable = new Class({
 				}
 			}
 		} else {
-			if (!this.rowData[id].hidden && !has(this.activePos, id)) {
-				this.activePos[id] = this.activeId.length;
+			if (!this.rowData[id].hidden && (this.rowData[id].activeIndex == -1)) {
+				index = this.rowData[id].activeIndex = this.activeId.length;
 				this.activeId.push(id);
 				var range = this.getActiveRange();
-				if ((this.activePos[id] >= range[0]) && (this.activePos[id] <= range[1]))
+				if ((index >= range[0]) && (index <= range[1]))
 					this.requiresRefresh = true;
-			} else if (this.rowData[id].hidden && has(this.activePos, id)) {
-				var index = this.activePos[id];
-				delete this.activePos[id];
+			} else if (this.rowData[id].hidden && (this.rowData[id].activeIndex != -1)) {
+				var index = this.rowData[id].activeIndex;
+				this.rowData[id].activeIndex = -1;
 				this.activeId.splice(index, 1);
 				for (var i = index, j = this.activeId.length; i < j; i++)
-					this.activePos[this.activeId[i]] = i;
+					this.rowData[this.activeId[i]].activeIndex = i;
 				this.requiresRefresh = true;
 			}
 		}
@@ -815,8 +819,8 @@ var dxSTable = new Class({
 	},
 	
 	"clearActive": function() {
-		delete this.activePos;
-		this.activePos = {};
+		for (var i = 0, j = this.activeId.length; i < j; i++)
+			this.rowData[this.activeId[i]].activeIndex = -1;
 		this.activeId.length = 0;
 	},
 	
@@ -826,13 +830,14 @@ var dxSTable = new Class({
 		var $me = this;
 		this.colOrder.each(function(v, k) {
 			var cell = row.childNodes[k];
+			if ((v == 0) && (icon != "") && !cell.hasClass(icon))
+				cell.className = "stable-icon " + icon;
 			if (cell.lastChild) {
-				if ((v == 0) && icon)
-					cell.addClasses("stable-icon", icon, true);
+				var toggle = ((cell.lastChild.nodeValue == "") && (data[v] != cell.lastChild.nodeValue));
 				cell.lastChild.nodeValue = data[v];
+				if (toggle && Browser.Engine.trident)
+					cell.toggleClass("stable-bogus");
 			} else {
-				if ((v == 0) && icon)
-					cell.addClasses("stable-icon", icon, true);
 				cell.appendText(data[v]);
 			}
 		});
@@ -857,17 +862,23 @@ var dxSTable = new Class({
 		if (rd == null) return;
 		if (row = $(id))
 			row.setProperty("id", "");
-		if (has(this.activePos, id)) {
-			this.activeId.splice(this.activePos[id], 1);
-			for (var i = this.activePos[id], j = this.activeId.length; i < j; i++)
-				this.activePos[this.activeId[i]]--;
-			delete this.activePos[id];
+		var index = rd.activeIndex;
+		if (index != -1) {
+			this.activeId.splice(index, 1);
+			for (var i = index, j = this.activeId.length; i < j; i++)
+				this.rowData[this.activeId[i]].activeIndex = i;
+			if (this.options.mode == MODE_PAGE) {
+				this.pageCount = Math.ceil(this.activeId.length / this.options.maxRows);
+				if (this.curPage >= this.pageCount)
+					this.curPage--;
+			}
 			this.requiresRefresh = true;
 		}
 		if (has(this.rowSel, id)) {
-			this.selectedRows.splice(this.rowSel[id], 1);
-			for (var i = this.rowSel[id], j = this.selectedRows.length; i < j; i++)
-				this.rowSel[this.selectedRows[i]]--;
+			index = this.rowSel[id];
+			this.selectedRows.splice(index, 1);
+			for (var i = index, j = this.selectedRows.length; i < j; i++)
+				this.rowSel[this.selectedRows[i]] = i;
 			delete this.rowSel[id];
 		}
 		if (this.sIndex >= 0) {
@@ -875,9 +886,12 @@ var dxSTable = new Class({
 			for (var i = rd.index, j = this.rowCache.length; i < j; i++)
 				this.rowData[this.rowCache[i].key].index = i;
 		}
+		if (this.stSel == id)
+			this.stSel = null;
 		rd = null;
 		delete this.rowData[id];
 		this.rows--;
+		this.refresh();
 	},
 
 	"clearRows": function() {
@@ -888,8 +902,6 @@ var dxSTable = new Class({
 				});
 				row.setProperty("id", "").hide();
 			});
-			delete this.activePos;
-			this.activePos = {};
 			delete this.rowSel;
 			this.rowSel = {};
 			delete this.rowData;
@@ -897,14 +909,13 @@ var dxSTable = new Class({
 			this.clearCache();
 			this.rows = this.curPage = this.pageCount = this.activeId.length = this.selectedRows.length = this.viewRows = this.dBody.scrollLeft = this.dBody.scrollTop = 0;
 			this.updatePageMenu();
+			this.stSel = null;
 		}
 	},
 
 	"calcSize": function() {
 		this.dBody.setStyle("height", (this.dCont.clientHeight - this.dHead.offsetHeight - ((this.options.mode == MODE_PAGE) ? 26 : 0)).max(52));
 		this.dBody.setStyle("width", (this.dCont.offsetWidth - 2).max(0));
-		if (Browser.Engine.trident && (Browser.Engine.version == 6))
-			this.dHead.setStyle("overflow", "visible");
 		this.dHead.setStyle("width", (this.dCont.offsetWidth + (((this.dBody.offsetWidth - this.dBody.clientWidth) == 0) ? -4 : -1)).max(0));
 		if (!this.isResizing) {
 			for (var i = 0, j = this.cols; i < j; i++) {
@@ -914,11 +925,13 @@ var dxSTable = new Class({
 				if (Browser.Engine.trident && (Browser.Engine.version < 6)) {
 					w = this.tBodyCols[i].offsetWidth - 19;
 				} else {
-					w = this.tBodyCols[i].width - (Browser.Engine.webkit ? 0 : 19);
+					w = parseInt(this.tBodyCols[i].width) - (Browser.Engine.webkit ? 0 : 19);
 				}
 				this.tHeadCols[i].setStyle("width", w.max(14));
 			}
 		}
+		if (Browser.Engine.webkit)
+			this.tBody.setStyle("width", this.tHead.getSize().x);
 	},
 
 	"hideRow": function(id) {
@@ -987,7 +1000,10 @@ var dxSTable = new Class({
 		if (this.requiresRefresh || row.hidden || (row.rowIndex == -1)) return hasSortedChanged;
 		var r = this.tb.body.childNodes[row.rowIndex], i = this.colOrder.indexOf(col), cell = r.childNodes[i], fval = this.options.format([val], col)[0];
 		if (cell.lastChild) {
+			var toggle = ((cell.lastChild.nodeValue == "") && (fval != cell.lastChild.nodeValue));
 			cell.lastChild.nodeValue = fval;
+			if (toggle && Browser.Engine.trident)
+				cell.toggleClass("stable-bogus");
 		} else {
 			cell.appendText(fval);
 		}
@@ -1023,18 +1039,17 @@ var dxSTable = new Class({
 	},
 	
 	"toggleColumn": function(index) {
-		var hide = !this.colData[index].disabled;
+		var hide = !this.colData[index].disabled, isIE = Browser.Engine.trident;
 		this.colData[index].disabled = hide;
-		this.tBodyCols[index].setStyles({
-			"width": hide ? 0 : (this.colWidth[this.colOrder[index]] || "auto"),
-			"display": hide ? "none" : ''
-		});
-		this.tHeadCols[index][hide ? "addClass" : "removeClass"]("stable-hidden-column");
-		for (var i = 0, j = this.tb.body.childNodes.length; i < j; i++) {
-			this.tb.body.childNodes[i].childNodes[index][hide ? "addClass" : "removeClass"]("stable-hidden-column");
-		}
+		this.tBodyCols[index].setStyle("display", hide ? "none" : "");
+		this.tHeadCols[index].setStyle("display", hide ? "none" : "");
+		var sname = isIE ? "visibility" : "display", svalue = hide ? (isIE ? "hidden" : "none") : (isIE ? "visible" : "");
+		for (var i = 0, j = this.tb.body.childNodes.length; i < j; i++)
+			this.tb.body.childNodes[i].childNodes[index].setStyle(sname, svalue);
 		this.fireEvent("onColToggle", [this.colOrder[index], hide]);
 		this.calcSize();
+		this.dHead.setStyle("width", this.dBody.clientWidth);
+		this.dHead.scrollLeft = this.dBody.scrollLeft;
 		return true;
 	},
 	
@@ -1068,15 +1083,18 @@ var dxSTable = new Class({
 			this.pageNext.addClass("nextlink")
 		:
 			this.pageNext.removeClass("nextlink").removeClass("nextlink-hover");
-			
 		this.pageSelect.options.length = 0;
+		this.pageSelect.empty();
 		if (this.pageCount <= 1) {
 			this.pageSelect.disabled = true;
 			return;
 		}
 		this.pageSelect.disabled = false;
-		for (var i = 0; i < this.pageCount; i++)
-			this.pageSelect.options[i] = new Option(/* text */ i + 1, /* value */ i, /* defaultSelected */ false, /* selected */ i == this.curPage);
+		for (var i = 0; i < this.pageCount; i++) {
+			this.pageSelect.options[i] = new Option(i + 1, i);
+			if (i == this.curPage)
+				this.pageSelect.options[i].selected = true;
+		}
 	},
 
 	"gotoPage": function(i) {
@@ -1086,11 +1104,7 @@ var dxSTable = new Class({
 			this.rowData[this.activeId[j]].rowIndex = -1;
 		this.curPage = i;
 		this.updatePageMenu();
-		if (Browser.Engine.gecko || Browser.Engine.trident4)
-			this.detachBody();
 		this.refreshRows();
-		if (Browser.Engine.gecko || Browser.Engine.trident4)
-			this.attachBody();
 	},
 
 	"prevPage": function() {
@@ -1173,20 +1187,17 @@ var ColumnHandler = {
 	"end": function (st, drag) {
 		drag.element = drag.handle = st.colDragEle;
 		st.colDragEle = null;
-		switch (true) {
-			case st.isResizing:
-				st.colReszObj.setStyles({"left": 0, "height": 0, "visibility": "hidden"});
-				st.isResizing = false;
-				resizeColumn.call(st, st.hotCell);
-				document.body.setStyle("cursor", "default");
-				st.rowCover.hide();
-			break;
-		    
-			default:
-				st.colDragObj.setStyles({"left": 0, "width": 0, "visibility": "hidden"});
-				st.colSep.setStyle("visibility", "hidden");
-				document.body.setStyle("cursor", "default");
-				moveColumn.call(st, st.colMove.from, st.colMove.to);
+		if (st.isResizing) {
+			st.colReszObj.setStyles({"left": 0, "height": 0, "visibility": "hidden"});
+			st.isResizing = false;
+			resizeColumn.call(st, st.hotCell);
+			document.body.setStyle("cursor", "default");
+			st.rowCover.hide();
+		} else {
+			st.colDragObj.setStyles({"left": 0, "width": 0, "visibility": "hidden"});
+			st.colSep.setStyle("visibility", "hidden");
+			document.body.setStyle("cursor", "default");
+			moveColumn.call(st, st.colMove.from, st.colMove.to);
 		}
 		st.cancelSort = false;
 	},
@@ -1216,8 +1227,10 @@ function resizeColumn(index) {
 		w -= (index == 0) ? 30 : 10; // substract the left & right padding
 	this.tBodyCols[index].setStyle("width", w).setProperty("width", w);
 	w = this.tHead.getSize().x;
-	this.tb.body.setStyle("width", w);
-	this.tBody.setStyle("width", w);
+	if (Browser.Engine.webkit)
+		this.tBody.setStyle("width", w);
+	else
+		this.tb.body.setStyle("width", w);
 	this.fireEvent("onColResize");
 }
 

@@ -1,4 +1,5 @@
 ﻿var lang = [
+	"Torrents||*.torrent||Tots els archius (*.*)||*.*||",
 	"Preferències",
 	"Acceptar",
 	"Cancelar",
@@ -139,6 +140,10 @@
 	"D:%s P:%s - %s",
 	"Mostrar Llista de Categories",
 	"Mostrar Llista Detallada",
+	"No Descarregar",
+	"Prioritat Alta",
+	"Prioritat Baixa",
+	"Prioritat Normal",
 	"Eliminar Senyes",
 	"Forçar Comprovació",
 	"Forçar Inici",

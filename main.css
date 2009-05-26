@@ -32,6 +32,7 @@ div.dlg-window {
 
 div.dlg-header {
 	padding: 2px 24px;
+	margin: 0;
 	line-height: 20px;
 	background: #F5F5F5 url(./images/blank.gif) no-repeat scroll 4px center;
 	font-size: 11px;
@@ -39,27 +40,34 @@ div.dlg-header {
 	font-weight: bold;
 	border-bottom: 1px solid #909090;
 	color: #000000;
+	white-space: nowrap !important;
+	overflow: hidden;
+	z-index: 1;
+}
+
+a.dlg-close {
+	z-index: 2;
+	position: absolute;
+	top: 5px;
+	right: 5px;
+	border: 1px solid #FF0000;
 }
 
 a.dlg-close:link, a.dlg-close:visited {
 	width: 14px; height: 14px;
-	margin: 5px;
 	background: transparent url(./images/close.png) no-repeat scroll left center;
-	float: right;
 	border: 0;
 }
 
 a.dlg-close:hover {
 	width: 14px; height: 14px;
 	background: transparent url(./images/close.png) no-repeat scroll -14px center;
-	float: right;
 	border: 0;
 }
 
 a.dlg-close:active {
 	width: 14px; height: 14px;
 	background: transparent url(./images/close.png) no-repeat scroll -28px center;
-	float: right;
 	border: 0;
 }
 
@@ -78,12 +86,18 @@ div#preload {
 	display: none;
 }
 
-div#cover {
+div#cover, div#modalbg {
 	width: 100%; height: 100%;
 	left: 0px; top: 0px;
 	position: absolute;
 	z-index: 500;
 	background: #FFFFFF;
+}
+
+div#modalbg {
+	opacity: 0.7;
+	-moz-opacity: 0.7;
+	display: none;
 }
 
 div#msg {
@@ -464,7 +478,7 @@ div#CatList ul {
 }
 
 div#CatList ul li {
-	padding: 0 4px;
+	padding: 0 4px 0 22px;
 	margin: 0;
 	line-height: 16px;
 	font-size: 11px;
@@ -474,9 +488,30 @@ div#CatList ul li {
 }
 
 div#CatList ul li.sel {
-	background-color: #0099FF;
-	border: 1px dotted #0099FF;
-	color: #FFFFFF;
+	background-color: #D0E1F2;
+	border: 1px solid #D0E1F2;
+}
+
+#_all_, #_dls_, #_com_, #_act_, #_iac_ {
+	background-image: url(./images/tstatus.png);
+	background-repeat: no-repeat;
+	background-position: 4px 0px;
+}
+#_all_ {
+	background-position: 4px -176px;
+}
+#_com_ {
+	background-position: 4px -16px;
+}
+#_act_ {
+	background-position: 4px -160px;
+}
+#_iac_ {
+	background-position: 4px -192px;
+}
+
+div#CatList ul li.hr {
+	padding: 0 4px !important;
 }
 
 div#HDivider, div#VDivider { position: absolute; z-index: 200; font-size: 0; }
@@ -763,8 +798,8 @@ div#gcont, div#lcont {
 }
 div#gcont table { font-size: 11px; font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif; line-height: 10px; }
 div#gcont table td.Header { font-weight: bold; background: #F6F6F6; border: 1px solid #D0D0D0; }
-div#lcont { font-size: 11px; font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif; line-height: 11px; background: #FFFFFF; }
-div#lcont { padding: 2px; }
+div#lcont { font-size: 11px; font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif; line-height: 11px; background: #FFFFFF; padding: 2px; }
+#spgraph { font-size: 11px; font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif; overflow: hidden; }
 
 #dettable td {
 	empty-cells: show;
@@ -828,8 +863,8 @@ div#dlgAdd legend a {
 }
 
 #torrent_file {
-	height: 19px;
-	line-height: 19px;
+	height: 19px !important;
+	line-height: 19px !important;
 }
 
 #dlpath {
@@ -867,11 +902,30 @@ ul#tabs li {
 	top: -4px;
 }
 
-ul#tabs li a:hover {
-	color: #868686;
+ul#tabs li a {
+	margin: 0;
+	position: relative;
+	vertical-align: top;
+	padding: 2px 12px 4px 12px;
+	font-size: 11px;
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	color: #3B3B3B;
+	vertical-align: top;
+	top: 4px;
+	border: 1px solid #B0B0B0;
+	border-bottom: 1px solid #868686;
+	-webkit-border-top-left-radius: 5px;
+	-webkit-border-top-right-radius: 5px;
+	-moz-border-radius-topleft: 5px;
+	-moz-border-radius-topright: 5px;
 }
 
-ul#tabs li a {
+ul#tabs li a:hover {
+	border-top: 2px solid #0099FF;
+	background: #E0E0E0;
+}
+
+/*ul#tabs li a {
 	position: relative;
 	text-decoration: none;
 	border: 1px solid #D0D0D0;
@@ -885,7 +939,7 @@ ul#tabs li a {
 	color: #3B3B3B;
 	vertical-align: top;
 	top: 4px;
-}
+}*/
 
 ul#tabs li.selected a {
 	margin: 0;
@@ -1189,4 +1243,24 @@ div#dlgFolders label {
 form {
   margin: 0;
   padding: 0;
+}
+
+#swfBrowse {
+	height: 19px;
+	line-height: 19px;
+	border: 1px solid #A0A0A0;
+	background: #F0F0F0 url(./images/header.png) repeat-x center bottom;
+	font-size: 11px;
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	padding: 0;
+	margin: 0;
+	color: #000000;
+	padding: 0 5px;
+}
+
+#swfFile {
+	margin: 0 0 0 5px;
+	line-height: 19px;
+	font-size: 11px;
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
 }

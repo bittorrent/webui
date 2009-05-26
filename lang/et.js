@@ -1,4 +1,5 @@
 ﻿var lang = [
+	"Torrenti failid||*.torrent||Kõik failid (*.*)||*.*||",
 	"Eelistused",
 	"OK",
 	"Loobu",
@@ -139,6 +140,10 @@
 	"A:%s Ü:%s - %s",
 	"Kategooriate nimekiri",
 	"Näita detailset infot",
+	"Ära lae alla",
+	"Kõrge prioriteet",
+	"Madal prioriteet",
+	"Normaalne prioriteet",
 	"Kustuta andmed",
 	"Sunni uuestikontrolli",
 	"Sunni käivituma",

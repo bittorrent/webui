@@ -1,4 +1,5 @@
 ﻿var lang = [
+	"Torrent-tiedostot||*.torrent||Kaikki tiedostot (*.*)||*.*||",
 	"Asetukset",
 	"OK",
 	"Peruuta",
@@ -139,6 +140,10 @@
 	"Lat:%s Läh:%s - %s",
 	"Näytä kategoriat",
 	"Näytä yksityiskohtaiset tiedot",
+	"Älä lataa",
+	"Korkea tärkeysaste",
+	"Alhainen tärkeysaste",
+	"Normaali tärkeysaste",
 	"Poista tiedosto(t)",
 	"Pakota uudelleentarkistus",
 	"Pakota aloitus",
