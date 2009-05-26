@@ -690,7 +690,8 @@ input.disabled {
 
 td.disabled, label.disabled, span.disabled, div.disabled { color: #C0C0C0; cursor: default; }
 fieldset div { padding: 3px; }
-input[id="proxy.proxy"] { width: 70px; margin: 0 4px; font-size: 11px; padding: 1px 4px; }
+input[id="proxy.proxy"] { width: 140px; margin: 0 4px; font-size: 11px; padding: 1px 4px; }
+input[id="proxy.port"] { width: 40px; margin: 0 4px; font-size: 11px; padding: 1px 4px; }
 input[id="proxy.username"] { width: 70px; margin: 0 4px; font-size: 11px; padding: 1px 4px; }
 input[id="proxy.password"] { width: 70px; margin: 0 4px; font-size: 11px; padding: 1px 4px; }
 input[id="webui.restrict"] { width: 405px; }

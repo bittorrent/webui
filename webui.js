@@ -1252,24 +1252,24 @@ var utWebUI = {
 			ContextMenu.add(normal);
 			ContextMenu.add(low);
 			ContextMenu.add([CMENU_SEP]);
-			ContextMenu.add(["Don't Download"]);
+			ContextMenu.add([lang[CONST.MF_DONT]]);
 		} else if (p == 1) {
 			// low
 			ContextMenu.add(high);
 			ContextMenu.add(normal);
-			ContextMenu.add(["Low Priority"]);
+			ContextMenu.add([lang[CONST.MF_LOW]]);
 			ContextMenu.add([CMENU_SEP]);
 			ContextMenu.add(skip);
 		} else if (p == 2) {
 			// normal
 			ContextMenu.add(high);
-			ContextMenu.add(["Normal Priority"]);
+			ContextMenu.add([lang[CONST.MF_NORMAL]]);
 			ContextMenu.add(low);
 			ContextMenu.add([CMENU_SEP]);
 			ContextMenu.add(skip);
 		} else if (p == 3) {
 			// high
-			ContextMenu.add(["High Priority"]);
+			ContextMenu.add([lang[CONST.MF_HIGH]]);
 			ContextMenu.add(normal);
 			ContextMenu.add(low);
 			ContextMenu.add([CMENU_SEP]);
