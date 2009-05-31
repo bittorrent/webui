@@ -1043,24 +1043,8 @@ window.addEvent("domready", function() {
 				var doc = ev.target.ownerDocument;
 				overrideButton = doc.createElement("input");
 				overrideButton.type = "button";
+				overrideButton.style.cssText = "z-index:1000;position:fixed;top:" + (ev.client.y - 2) + "px;left:" + (ev.client.x - 2) + "px;width:5px;height:5px;opacity:0.01";
 				(doc.body || doc.documentElement).appendChild(overrideButton);
-
-				// BEGIN: Hack to fix listview auto-scrollback on Opera (Part I)
-				// TODO: Implement a cleaner solution
-					var trtBody = utWebUI.trtTable.dBody
-					var flsBody = utWebUI.flsTable.dBody;
-					var trtPos = [trtBody.scrollTop, trtBody.scrollLeft];
-					var flsPos = [flsBody.scrollTop, flsBody.scrollLeft];
-				// END: Hack to fix listview auto-scrollback on Opera (Part I)
-
-				overrideButton.style.cssText = "z-index: 1000;position:absolute;top:" + (ev.client.y - 2) + "px;left:" + (ev.client.x - 2) + "px;width:5px;height:5px;opacity:0.01";
-
-				// BEGIN: Hack to fix listview auto-scrollback on Opera (Part II)
-					trtBody.scrollTop = trtPos[0];
-					trtBody.scrollLeft = trtPos[1];
-					flsBody.scrollTop = flsPos[0];
-					flsBody.scrollLeft = flsPos[1];
-				// END: Hack to fix listview auto-scrollback on Opera (Part II)
 			}
 		});
 		document.addEvent("mouseup", function(ev) {

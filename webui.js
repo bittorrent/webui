@@ -1375,7 +1375,7 @@ var utWebUI = {
 	
 	"saveConfig": function(async) {
 		new Request({
-			"url": this.url + "?action=setsetting&s=webui.cookie&v=" + JSON.encode(this.config),
+			"url": this.url + "?token=" + this.TOKEN + "&action=setsetting&s=webui.cookie&v=" + JSON.encode(this.config),
 			"method": "get",
 			"async": async || false
 		}).send();
