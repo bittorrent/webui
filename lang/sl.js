@@ -1,4 +1,4 @@
-﻿var lang = [
+var lang = [
 	"Datoteke torrent||*.torrent||Vse datoteke (*.*)||*.*||",
 	"Nastavitve",
 	"V redu",
@@ -135,6 +135,7 @@
 	"Hitrost oddajanja:",
 	"Odjemalci:",
 	"Delilno razmerje:",
+	"Izvleček:",
 	"Prenos",
 	"%d od %d povezanih (%d v roju)",
 	"P:%s O:%s - %s",

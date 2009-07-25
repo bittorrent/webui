@@ -1,4 +1,4 @@
-﻿var lang = [
+var lang = [
 	"Deiliskrár||*.torrent||Allar skrár (*.*)||*.*||",
 	"Stilligar",
 	"Í lagi",
@@ -135,6 +135,7 @@
 	"Hraði Upphals:",
 	"Jafnokar:",
 	"Hlutfall:",
+	"Tætisumma:",
 	"Umferð",
 	"%d af %d tengdir (af samtals %d)",
 	"N:%s S:%s - %s",

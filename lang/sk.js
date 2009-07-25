@@ -1,4 +1,4 @@
-﻿var lang = [
+var lang = [
 	"Súbory torrentov||*.torrent||Všetky súbory (*.*)||*.*||",
 	"Možnosti",
 	"OK",
@@ -135,6 +135,7 @@
 	"Odosielanie:",
 	"Peerov:",
 	"Ratio:",
+	"Hash:",
 	"Prenos",
 	"%d z %d pripojených (vo swarme: %d)",
 	"D:%s U:%s - %s",

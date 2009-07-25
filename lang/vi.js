@@ -1,4 +1,4 @@
-﻿var lang = [
+var lang = [
 	"Tập tin torrent||*.torrent||Tất cả tập tin (*.*)||*.*||",
 	"Cài đặt",
 	"OK",
@@ -135,6 +135,7 @@
 	"Tốc độ tải lên:",
 	"Peer:",
 	"Tỉ lệ chia sẻ:",
+	"Hash:",
 	"Hoạt động",
 	"%d của %d đã kết nối (%d trong tâp thể)",
 	"TV:%s TL:%s - %s",

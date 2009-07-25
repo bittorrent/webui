@@ -1,4 +1,4 @@
-﻿var lang = [
+var lang = [
 	"Comhaid Torrent||*.torrent||Gach comhad (*.*)||*.*||",
 	"Sainroghanna",
 	"Tá go maith",
@@ -135,6 +135,7 @@
 	"Luas Uasluchtú:",
 	"Comhghleacaithe:",
 	"Cóimheas:",
+	"Hais:",
 	"Aistriú",
 	"%d de %d nasctha (%d sa saithe)",
 	"Í:%s U:%s - %s",

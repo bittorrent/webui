@@ -1,4 +1,4 @@
-﻿var lang = [
+var lang = [
 	"Archivos Torrent||*.torrent||Todos los archivos (*.*)||*.*||",
 	"Preferencias",
 	"OK",
@@ -135,6 +135,7 @@
 	"Vel. de subida:",
 	"Clientes:",
 	"Ratio:",
+	"Hash:",
 	"Transferencia",
 	"%d de %d conectados (%d en el enjambre)",
 	"D:%s S:%s - %s",

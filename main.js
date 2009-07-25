@@ -486,6 +486,7 @@ function loadLangStrings() {
 		"GN_TP_06",
 		"GN_TP_07",
 		"GN_TP_08",
+		"GN_TP_09",
 		"OV_NEWLABEL_TEXT"
 	].each(function(k) {
 		$(k).set("text", lang[CONST[k]]);
@@ -940,8 +941,10 @@ window.addEvent("domready", function() {
 			break;
 			
 		case "f4": // F4
-			ev.stop();
-			utWebUI.toggleToolbar();
+			if (!ev.alt) {
+				ev.stop();
+				utWebUI.toggleToolbar();
+			}
 			break;
 			
 		case "f6": // F6
@@ -1025,11 +1028,15 @@ window.addEvent("domready", function() {
 
 	if (Browser.Engine.gecko) {
 		document.addEvent("mousedown", function(ev) {
-			if (ev.rightClick && !(/^input|textarea|a$/i).test(ev.target.tagName))
+			if (ev.rightClick && !(/^input|textarea|a$/i).test(ev.target.tagName)) {
 				ev.stop();
+				return false;
+			}
 		}).addEvent("click", function(ev) {
-			if (ev.rightClick && !(/^input|textarea|a$/i).test(ev.target.tagName))
+			if (ev.rightClick && !(/^input|textarea|a$/i).test(ev.target.tagName)) {
 				ev.stop();
+				return false;
+			}
 		});
 	} else if (Browser.Engine.presto && !("oncontextmenu" in document.createElement("foo"))) {
 		/*
@@ -1058,13 +1065,12 @@ window.addEvent("domready", function() {
 			}
 		});
 	}
-	if (Browser.Engine.trident || Browser.Engine.webkit || (Browser.Engine.gecko && navigator.platform.test(/linux/i))) {
+	if (Browser.Engine.trident || Browser.Engine.webkit || Browser.Engine.gecko) {
 		document.addEvent("contextmenu", function(ev) {
 			if (!(/^input|textarea|a$/i).test(ev.target.tagName)) {
 				ev.stop();
 				return false;
 			}
-			return true;
 		});
 	}
 

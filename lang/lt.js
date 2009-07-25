@@ -1,4 +1,4 @@
-﻿var lang = [
+var lang = [
 	"Torento failai||*.torrent||Visi failai (*.*)||*.*||",
 	"Nustatymai",
 	"Gerai",
@@ -135,6 +135,7 @@
 	"Išsiuntimo greitis:",
 	"Siuntėjų:",
 	"Dalinimosi sant.:",
+	"Hash:",
 	"Perkėlimas",
 	"%d iš %d susijungta (%d grupėje)",
 	"Ats.:%s Išs:%s - %s",

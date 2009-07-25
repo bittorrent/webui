@@ -1,4 +1,4 @@
-﻿var lang = [
+var lang = [
 	"Fitxers Torrent||*.torrent||Tots els fitxers (*.*)||*.*||",
 	"Preferències",
 	"OK",
@@ -135,6 +135,7 @@
 	"Vel. càrrega:",
 	"Clients:",
 	"Relació comp.:",
+	"'Hash':",
 	"Transferint",
 	"%d de %d connectats (%d a l'eixam)",
 	"D:%s C:%s - %s",

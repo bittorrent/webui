@@ -1,4 +1,4 @@
-﻿var lang = [
+var lang = [
 	"Torrent files||*.torrent||All files (*.*)||*.*||",
 	"Preferences",
 	"OK",
@@ -135,6 +135,7 @@
 	"Upload Speed:",
 	"Peers:",
 	"Share Ratio:",
+	"Hash:",
 	"Transfer",
 	"%d of %d connected (%d in swarm)",
 	"D:%s U:%s - %s",

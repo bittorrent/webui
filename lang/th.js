@@ -1,4 +1,4 @@
-﻿var lang = [
+var lang = [
 	"แฟ้มส่งต่อ||*.torrent||แฟ้มทั้งหมด (*.*)||*.*||",
 	"การตั้งค่า",
 	"ตกลง",
@@ -135,6 +135,7 @@
 	"ส่งข้อมูลเร็ว:",
 	"เพียร์:",
 	"สัดส่วนส่งต่อรับ:",
+	"Hash:",
 	"การถ่ายโอน",
 	"ติดต่อกับ %d จาก %d (ทั้งหมด %d)",
 	"The torrent you are trying to add is already in the list of torrents. Do you want to load the trackers from it?",

@@ -1,4 +1,4 @@
-﻿var lang = [
+var lang = [
 	"Torrent triemen||*.torrent||Alle triemen (*.*)||*.*||",
 	"Ynstellings",
 	"Okee",
@@ -135,6 +135,7 @@
 	"Utlaad Faasje:",
 	"Peers:",
 	"Dielferhâlding:",
+	"Hash:",
 	"Oerdracht",
 	"%d fan %d ferbûn (%d yn swerm)",
 	"Y:%s U:%s - %s",

@@ -1142,7 +1142,7 @@ var utWebUI = {
 	},
 	
 	"clearDetails": function() {
-		["rm", "dl", "ul", "ra", "us", "ds", "se", "pe"].each(function(id) {
+		["rm", "dl", "ul", "ra", "us", "ds", "se", "pe", "hs"].each(function(id) {
 			$(id).set("html", "");
 		});
 	},
@@ -1150,6 +1150,7 @@ var utWebUI = {
 	"updateDetails": function() {
 		if (this.torrentID != "") {
 			var d = this.torrents[this.torrentID].slice(1);
+			$("hs").set("html", this.torrentID); // hash
 			$("dl").set("html", d[4].toFileSize()); // downloaded
 			$("ul").set("html", d[5].toFileSize()); // uploaded
 			$("ra").set("html", (d[6] == -1) ? "\u221E" : (d[6] / 1000).roundTo(3)); // ratio

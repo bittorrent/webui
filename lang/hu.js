@@ -1,4 +1,4 @@
-﻿var lang = [
+var lang = [
 	"Torrent állományok||*.torrent||Összes állomány (*.*)||*.*||",
 	"Beállítások",
 	"OK",
@@ -135,6 +135,7 @@
 	"Feltöltési seb.:",
 	"Letöltők:",
 	"Arány:",
+	"Ellenőrző-összeg:",
 	"Átvitel",
 	"Kapcsolódva: %d Összes: %d (%d a bolyban)",
 	"L:%s F:%s - %s",

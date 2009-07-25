@@ -1,4 +1,4 @@
-﻿var lang = [
+var lang = [
 	"Torrent fajlovi||*.torrent||Svi fajlovi (*.*)||*.*||",
 	"Podešavanja",
 	"U redu",
@@ -135,6 +135,7 @@
 	"Brzina slanja:",
 	"Klijenata:",
 	"Omjer dijelj.:",
+	"Kont. segment:",
 	"Transfer",
 	"%d od %d povezano (%d u roju)",
 	"D:%s U:%s - %s",

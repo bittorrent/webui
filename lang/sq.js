@@ -1,4 +1,4 @@
-﻿var lang = [
+var lang = [
 	"Skedat torrent||*.torrent||Gjithë skedat (*.*)||*.*||",
 	"Pëlqimet",
 	"OK",
@@ -135,6 +135,7 @@
 	"Ngarkimi:",
 	"Pikat:",
 	"Shpërndarë:",
+	"Hashi:",
 	"Transferimi",
 	"%d nga %d të lidhur (%d në tufë)",
 	"S:%s N:%s - %s",

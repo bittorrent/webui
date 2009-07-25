@@ -1,4 +1,4 @@
-﻿var lang = [
+var lang = [
 	"Torentu faili||*.torrent||Visi faili (*.*)||*.*||",
 	"Atribūti",
 	"Labi",
@@ -135,6 +135,7 @@
 	"Augšup. ātrums:",
 	"Iesaistītie:",
 	"A/L attiecība:",
+	"Hash:",
 	"Pārsūtīti",
 	"%d no %d ir savienoti (%d gaida)",
 	"L:%s A:%s - %s",

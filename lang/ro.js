@@ -1,4 +1,4 @@
-﻿var lang = [
+var lang = [
 	"Fișiere Torent||*.torrent||Toate Fișierele (*.*)||*.*||",
 	"Preferințe",
 	"OK",
@@ -135,6 +135,7 @@
 	"Viteza Încărcării:",
 	"Parteneri:",
 	"Raport [ratio]",
+	"Haș:",
 	"Transfer",
 	"%d din %d conectați (%d în roi)",
 	"D:%s Î:%s - %s",
