@@ -3006,7 +3006,7 @@ var Drag = new Class({
 		this.document.removeEvent('mouseup', this.bound.cancel);
 		if (event){
 			this.document.removeEvent(this.selection, this.bound.eventStop);
-			this.fireEvent('cancel', this.element);
+			this.fireEvent('cancel', [this.element, event]);
 		}
 	},
 
