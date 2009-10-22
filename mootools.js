@@ -1,24 +1,28 @@
 /*
-Script: Core.js
-	MooTools - My Object Oriented JavaScript Tools.
+---
 
-License:
-	MIT-style license.
+script: Core.js
 
-Copyright:
-	Copyright (c) 2006-2008 [Valerio Proietti](http://mad4milk.net/).
+description: The core of MooTools, contains all the base functions and the Native and Hash implementations. Required by all the other scripts.
 
-Code & Documentation:
-	[The MooTools production team](http://mootools.net/developers/).
+license: MIT-style license.
 
-Inspiration:
-	- Class implementation inspired by [Base.js](http://dean.edwards.name/weblog/2006/03/base/) Copyright (c) 2006 Dean Edwards, [GNU Lesser General Public License](http://opensource.org/licenses/lgpl-license.php)
-	- Some functionality inspired by [Prototype.js](http://prototypejs.org) Copyright (c) 2005-2007 Sam Stephenson, [MIT License](http://opensource.org/licenses/mit-license.php)
+copyright: Copyright (c) 2006-2008 [Valerio Proietti](http://mad4milk.net/).
+
+authors: The MooTools production team (http://mootools.net/developers/)
+
+inspiration:
+- Class implementation inspired by [Base.js](http://dean.edwards.name/weblog/2006/03/base/) Copyright (c) 2006 Dean Edwards, [GNU Lesser General Public License](http://opensource.org/licenses/lgpl-license.php)
+- Some functionality inspired by [Prototype.js](http://prototypejs.org) Copyright (c) 2005-2007 Sam Stephenson, [MIT License](http://opensource.org/licenses/mit-license.php)
+
+provides: [Mootools, Native, Hash.base, Array.each, $util]
+
+...
 */
 
 var MooTools = {
-	'version': '1.2.3',
-	'build': '4980aa0fb74d2f6eb80bcd9f5b8e1fd6fbb8f607'
+	'version': '1.2.4',
+	'build': '0d9113241a90b9cd5643b926795852a2026710d4'
 };
 
 var Native = function(options){
@@ -288,11 +292,21 @@ function $unlink(object){
 
 
 /*
-Script: Browser.js
-	The Browser Core. Contains Browser initialization, Window and Document, and the Browser Hash.
+---
 
-License:
-	MIT-style license.
+script: Browser.js
+
+description: The Browser Core. Contains Browser initialization, Window and Document, and the Browser Hash.
+
+license: MIT-style license.
+
+requires: 
+- /Native
+- /$util
+
+provides: [Browser, Window, Document, $exec]
+
+...
 */
 
 var Browser = $merge({
@@ -312,7 +326,7 @@ var Browser = $merge({
 		},
 
 		trident: function(){
-			return (!window.ActiveXObject) ? false : ((window.XMLHttpRequest) ? 5 : 4);
+			return (!window.ActiveXObject) ? false : ((window.XMLHttpRequest) ? ((document.querySelectorAll) ? 6 : 5) : 4);
 		},
 
 		webkit: function(){
@@ -320,7 +334,7 @@ var Browser = $merge({
 		},
 
 		gecko: function(){
-			return (document.getBoxObjectFor == undefined) ? false : ((document.getElementsByClassName) ? 19 : 18);
+			return (!document.getBoxObjectFor && window.mozInnerScreenX == null) ? false : ((document.getElementsByClassName) ? 19 : 18);
 		}
 
 	}
@@ -351,6 +365,8 @@ Browser.Request = function(){
 		return new XMLHttpRequest();
 	}, function(){
 		return new ActiveXObject('MSXML2.XMLHTTP');
+	}, function(){
+		return new ActiveXObject('Microsoft.XMLHTTP');
 	});
 };
 
@@ -427,7 +443,7 @@ var Document = new Native({
 		if (Browser.Engine.trident && Browser.Engine.version <= 4) $try(function(){
 			doc.execCommand("BackgroundImageCache", false, true);
 		});
-		if (Browser.Engine.trident) doc.window.attachEvent('onunload', function() {
+		if (Browser.Engine.trident) doc.window.attachEvent('onunload', function(){
 			doc.window.detachEvent('onunload', arguments.callee);
 			doc.head = doc.html = doc.window = null;
 		});
@@ -446,11 +462,21 @@ new Document(document);
 
 
 /*
-Script: Array.js
-	Contains Array Prototypes like each, contains, and erase.
+---
 
-License:
-	MIT-style license.
+script: Array.js
+
+description: Contains Array Prototypes like each, contains, and erase.
+
+license: MIT-style license.
+
+requires:
+- /$util
+- /Array.each
+
+provides: [Array]
+
+...
 */
 
 Array.implement({
@@ -470,7 +496,7 @@ Array.implement({
 		return results;
 	},
 
-	clean: function() {
+	clean: function(){
 		return this.filter($defined);
 	},
 
@@ -588,11 +614,21 @@ Array.implement({
 
 
 /*
-Script: Function.js
-	Contains Function Prototypes like create, bind, pass, and delay.
+---
 
-License:
-	MIT-style license.
+script: Function.js
+
+description: Contains Function Prototypes like create, bind, pass, and delay.
+
+license: MIT-style license.
+
+requires:
+- /Native
+- /$util
+
+provides: [Function]
+
+...
 */
 
 Function.implement({
@@ -651,11 +687,21 @@ Function.implement({
 
 
 /*
-Script: Number.js
-	Contains Number Prototypes like limit, round, times, and ceil.
+---
 
-License:
-	MIT-style license.
+script: Number.js
+
+description: Contains Number Prototypes like limit, round, times, and ceil.
+
+license: MIT-style license.
+
+requires:
+- /Native
+- /$util
+
+provides: [Number]
+
+...
 */
 
 Number.implement({
@@ -697,11 +743,20 @@ Number.alias('times', 'each');
 
 
 /*
-Script: String.js
-	Contains String Prototypes like camelCase, capitalize, test, and toInt.
+---
 
-License:
-	MIT-style license.
+script: String.js
+
+description: Contains String Prototypes like camelCase, capitalize, test, and toInt.
+
+license: MIT-style license.
+
+requires:
+- /Native
+
+provides: [String]
+
+...
 */
 
 String.implement({
@@ -784,11 +839,20 @@ String.implement({
 
 
 /*
-Script: Hash.js
-	Contains Hash Prototypes. Provides a means for overcoming the JavaScript practical impossibility of extending native Objects.
+---
 
-License:
-	MIT-style license.
+script: Hash.js
+
+description: Contains Hash Prototypes. Provides a means for overcoming the JavaScript practical impossibility of extending native Objects.
+
+license: MIT-style license.
+
+requires:
+- /Hash.base
+
+provides: [Hash]
+
+...
 */
 
 Hash.implement({
@@ -920,11 +984,25 @@ Hash.alias({keyOf: 'indexOf', hasValue: 'contains'});
 
 
 /*
-Script: Event.js
-	Contains the Event Native, to make the event object completely crossbrowser.
+---
 
-License:
-	MIT-style license.
+script: Event.js
+
+description: Contains the Event Class, to make the event object cross-browser.
+
+license: MIT-style license.
+
+requires:
+- /Window
+- /Document
+- /Hash
+- /Array
+- /Function
+- /String
+
+provides: [Event]
+
+...
 */
 
 var Event = new Native({
@@ -1036,11 +1114,26 @@ Event.implement({
 
 
 /*
-Script: Class.js
-	Contains the Class Function for easily creating, extending, and implementing reusable Classes.
+---
 
-License:
-	MIT-style license.
+script: Class.js
+
+description: Contains the Class Function for easily creating, extending, and implementing reusable Classes.
+
+license: MIT-style license.
+
+requires:
+- /$util
+- /Native
+- /Array
+- /String
+- /Function
+- /Number
+- /Hash
+
+provides: [Class]
+
+...
 */
 
 function Class(params){
@@ -1190,11 +1283,20 @@ Class.Mutators = {
 
 
 /*
-Script: Class.Extras.js
-	Contains Utility Classes that can be implemented into your own Classes to ease the execution of many common tasks.
+---
 
-License:
-	MIT-style license.
+script: Class.Extras.js
+
+description: Contains Utility Classes that can be implemented into your own Classes to ease the execution of many common tasks.
+
+license: MIT-style license.
+
+requires:
+- /Class
+
+provides: [Chain, Events, Options]
+
+...
 */
 
 var Chain = new Class({
@@ -1270,7 +1372,7 @@ var Events = new Class({
 });
 
 Events.removeOn = function(string){
-	return string.replace(/^on([A-Z])/, function(full, first) {
+	return string.replace(/^on([A-Z])/, function(full, first){
 		return first.toLowerCase();
 	});
 };
@@ -1292,12 +1394,26 @@ var Options = new Class({
 
 
 /*
-Script: Element.js
-	One of the most important items in MooTools. Contains the dollar function, the dollars function, and an handful of cross-browser,
-	time-saver methods to let you easily work with HTML Elements.
+---
 
-License:
-	MIT-style license.
+script: Element.js
+
+description: One of the most important items in MooTools. Contains the dollar function, the dollars function, and an handful of cross-browser, time-saver methods to let you easily work with HTML Elements.
+
+license: MIT-style license.
+
+requires:
+- /Window
+- /Document
+- /Array
+- /String
+- /Function
+- /Number
+- /Hash
+
+provides: [Element, Elements, $, $$, Iframe]
+
+...
 */
 
 var Element = new Native({
@@ -1380,7 +1496,7 @@ var Elements = new Native({
 					if (uniques[el.uid]) continue;
 					uniques[el.uid] = true;
 				}
-				returned.push(el);
+				if (el) returned.push(el);
 			}
 			elements = returned;
 		}
@@ -1764,7 +1880,7 @@ Element.implement({
 		return walk(this, 'parentNode', null, match, true, nocash);
 	},
 	
-	getSiblings: function(match, nocash) {
+	getSiblings: function(match, nocash){
 		return this.getParent().getChildren(match, nocash).erase(this);
 	},
 
@@ -1989,11 +2105,21 @@ if (Browser.Engine.webkit && Browser.Engine.version < 420) Element.Properties.te
 
 
 /*
-Script: Element.Event.js
-	Contains Element methods for dealing with events, and custom Events.
+---
 
-License:
-	MIT-style license.
+script: Element.Event.js
+
+description: Contains Element methods for dealing with events. This file also includes mouseenter and mouseleave custom Element Events.
+
+license: MIT-style license.
+
+requires: 
+- /Element
+- /Event
+
+provides: [Element.Event]
+
+...
 */
 
 Element.Properties.events = {set: function(events){
@@ -2139,11 +2265,20 @@ Element.Events = new Hash({
 
 
 /*
-Script: Element.Style.js
-	Contains methods for interacting with the styles of Elements in a fashionable way.
+---
 
-License:
-	MIT-style license.
+script: Element.Style.js
+
+description: Contains methods for interacting with the styles of Elements in a fashionable way.
+
+license: MIT-style license.
+
+requires:
+- /Element
+
+provides: [Element.Style]
+
+...
 */
 
 Element.Properties.styles = {set: function(styles){
@@ -2281,15 +2416,24 @@ Element.ShortStyles = {margin: {}, padding: {}, border: {}, borderWidth: {}, bor
 
 
 /*
-Script: Element.Dimensions.js
-	Contains methods to work with size, scroll, or positioning of Elements and the window object.
+---
 
-License:
-	MIT-style license.
+script: Element.Dimensions.js
 
-Credits:
-	- Element positioning based on the [qooxdoo](http://qooxdoo.org/) code and smart browser fixes, [LGPL License](http://www.gnu.org/licenses/lgpl.html).
-	- Viewport dimensions based on [YUI](http://developer.yahoo.com/yui/) code, [BSD License](http://developer.yahoo.com/yui/license.html).
+description: Contains methods to work with size, scroll, or positioning of Elements and the window object.
+
+license: MIT-style license.
+
+credits:
+- Element positioning based on the [qooxdoo](http://qooxdoo.org/) code and smart browser fixes, [LGPL License](http://www.gnu.org/licenses/lgpl.html).
+- Viewport dimensions based on [YUI](http://developer.yahoo.com/yui/) code, [BSD License](http://developer.yahoo.com/yui/license.html).
+
+requires:
+- /Element
+
+provides: [Element.Dimensions]
+
+...
 */
 
 (function(){
@@ -2341,15 +2485,18 @@ Element.implement({
 		return null;
 	},
 
-	getOffsets: function(){		
+	getOffsets: function(){
 		if (this.getBoundingClientRect){
 			var bound = this.getBoundingClientRect(),
-			html = document.id(this.getDocument().documentElement),
-			scroll = html.getScroll(),
-			isFixed = (styleString(this, 'position') == 'fixed');
+				html = document.id(this.getDocument().documentElement),
+				htmlScroll = html.getScroll(),
+				elemScrolls = this.getScrolls(),
+				elemScroll = this.getScroll(),
+				isFixed = (styleString(this, 'position') == 'fixed');
+
 			return {
-				x: parseInt(bound.left, 10) + ((isFixed) ? 0 : scroll.x) - html.clientLeft,
-				y: parseInt(bound.top, 10) +  ((isFixed) ? 0 : scroll.y) - html.clientTop
+				x: bound.left.toInt() + elemScrolls.x - elemScroll.x + ((isFixed) ? 0 : htmlScroll.x) - html.clientLeft,
+				y: bound.top.toInt()  + elemScrolls.y - elemScroll.y + ((isFixed) ? 0 : htmlScroll.y) - html.clientTop
 			};
 		}
 
@@ -2386,23 +2533,36 @@ Element.implement({
 
 	getPosition: function(relative){
 		if (isBody(this)) return {x: 0, y: 0};
-		var offset = this.getOffsets(), scroll = this.getScrolls();
-		var position = {x: offset.x - scroll.x, y: offset.y - scroll.y};
+		var offset = this.getOffsets(),
+				scroll = this.getScrolls();
+		var position = {
+			x: offset.x - scroll.x,
+			y: offset.y - scroll.y
+		};
 		var relativePosition = (relative && (relative = document.id(relative))) ? relative.getPosition() : {x: 0, y: 0};
 		return {x: position.x - relativePosition.x, y: position.y - relativePosition.y};
 	},
 
 	getCoordinates: function(element){
 		if (isBody(this)) return this.getWindow().getCoordinates();
-		var position = this.getPosition(element), size = this.getSize();
-		var obj = {left: position.x, top: position.y, width: size.x, height: size.y};
+		var position = this.getPosition(element),
+				size = this.getSize();
+		var obj = {
+			left: position.x,
+			top: position.y,
+			width: size.x,
+			height: size.y
+		};
 		obj.right = obj.left + obj.width;
 		obj.bottom = obj.top + obj.height;
 		return obj;
 	},
 
 	computePosition: function(obj){
-		return {left: obj.x - styleNumber(this, 'margin-left'), top: obj.y - styleNumber(this, 'margin-top')};
+		return {
+			left: obj.x - styleNumber(this, 'margin-left'),
+			top: obj.y - styleNumber(this, 'margin-top')
+		};
 	},
 
 	setPosition: function(obj){
@@ -2415,7 +2575,7 @@ Element.implement({
 Native.implement([Document, Window], {
 
 	getSize: function(){
-		if (Browser.Engine.presto || Browser.Engine.webkit) {
+		if (Browser.Engine.presto || Browser.Engine.webkit){
 			var win = this.getWindow();
 			return {x: win.innerWidth, y: win.innerHeight};
 		}
@@ -2516,11 +2676,20 @@ Native.implement([Window, Document, Element], {
 
 
 /*
-Script: Domready.js
-	Contains the domready custom event.
+---
 
-License:
-	MIT-style license.
+script: DomReady.js
+
+description: Contains the custom event domready.
+
+license: MIT-style license.
+
+requires:
+- /Element.Event
+
+provides: [DomReady]
+
+...
 */
 
 Element.Events.domready = {
@@ -2539,6 +2708,8 @@ Element.Events.domready = {
 		window.fireEvent('domready');
 		document.fireEvent('domready');
 	};
+	
+	window.addEvent('load', domready);
 
 	if (Browser.Engine.trident){
 		var temp = document.createElement('div');
@@ -2553,7 +2724,6 @@ Element.Events.domready = {
 			(['loaded', 'complete'].contains(document.readyState)) ? domready() : arguments.callee.delay(50);
 		})();
 	} else {
-		window.addEvent('load', domready);
 		document.addEvent('DOMContentLoaded', domready);
 	}
 
@@ -2561,18 +2731,33 @@ Element.Events.domready = {
 
 
 /*
-Script: JSON.js
-	JSON encoder and decoder.
+---
 
-License:
-	MIT-style license.
+script: JSON.js
 
-See Also:
-	<http://www.json.org/>
+description: JSON encoder and decoder.
+
+license: MIT-style license.
+
+See Also: <http://www.json.org/>
+
+requires:
+- /Array
+- /String
+- /Number
+- /Function
+- /Hash
+
+provides: [JSON]
+
+...
 */
 
-var JSON = new Hash({
-
+var JSON = new Hash(this.JSON && {
+	stringify: JSON.stringify,
+	parse: JSON.parse
+}).extend({
+	
 	$specialChars: {'\b': '\\b', '\t': '\\t', '\n': '\\n', '\f': '\\f', '\r': '\\r', '"' : '\\"', '\\': '\\\\'},
 
 	$replaceChars: function(chr){
@@ -2616,11 +2801,24 @@ Native.implement([Hash, Array, String, Number], {
 
 
 /*
-Script: Request.js
-	Powerful all purpose Request Class. Uses XMLHTTPRequest.
+---
 
-License:
-	MIT-style license.
+script: Request.js
+
+description: Powerful all purpose Request Class. Uses XMLHTTPRequest.
+
+license: MIT-style license.
+
+requires:
+- /Element
+- /Chain
+- /Events
+- /Options
+- /Browser
+
+provides: [Request]
+
+...
 */
 
 var Request = new Class({
@@ -2731,7 +2929,7 @@ var Request = new Class({
 
 		var old = this.options;
 		options = $extend({data: old.data, url: old.url, method: old.method}, options);
-		var data = options.data, url = options.url, method = options.method.toLowerCase();
+		var data = options.data, url = String(options.url), method = options.method.toLowerCase();
 
 		switch ($type(data)){
 			case 'element': data = document.id(data).toQueryString(); break;
@@ -2843,11 +3041,20 @@ Element.implement({
 
 
 /*
-Script: Request.JSON.js
-	Extends the basic Request Class with additional methods for sending and receiving JSON data.
+---
 
-License:
-	MIT-style license.
+script: Request.JSON.js
+
+description: Extends the basic Request Class with additional methods for sending and receiving JSON data.
+
+license: MIT-style license.
+
+requires:
+- /Request JSON
+
+provides: [Request.HTML]
+
+...
 */
 
 Request.JSON = new Class({
@@ -2872,21 +3079,56 @@ Request.JSON = new Class({
 
 //MooTools More, <http://mootools.net/more>. Copyright (c) 2006-2009 Aaron Newton <http://clientcide.com/>, Valerio Proietti <http://mad4milk.net> & the MooTools team <http://mootools.net/developers>, MIT Style License.
 
+/*
+---
+
+script: More.js
+
+description: MooTools More
+
+license: MIT-style license
+
+authors:
+- Guillermo Rauch
+- Thomas Aylott
+- Scott Kyle
+
+requires:
+- core:1.2.4/MooTools
+
+provides: [MooTools.More]
+
+...
+*/
+
 MooTools.More = {
-	'version': '1.2.3.1'
+	'version': '1.2.4.2dev',
+	'build': '%build%'
 };
 
 /*
-Script: Drag.js
-	The base Drag Class. Can be used to drag and resize Elements using mouse events.
+---
 
-	License:
-		MIT-style license.
+script: Drag.js
 
-	Authors:
-		Valerio Proietti
-		Tom Occhinno
-		Jan Kassens
+description: The base Drag Class. Can be used to drag and resize Elements using mouse events.
+
+license: MIT-style license
+
+authors:
+- Valerio Proietti
+- Tom Occhinno
+- Jan Kassens
+
+requires:
+- core:1.2.4/Events
+- core:1.2.4/Options
+- core:1.2.4/Element.Event
+- core:1.2.4/Element.Style
+- /MooTools.More
+
+provides: [Drag]
+
 */
 
 var Drag = new Class({
@@ -2945,7 +3187,16 @@ var Drag = new Class({
 	},
 
 	start: function(event){
+// uTorrent WebUI Patch - BEGIN
+//		if (event.rightClick) return;
+// uTorrent WebUI Patch - END
 		if (this.options.preventDefault) event.preventDefault();
+// uTorrent WebUI Patch - BEGIN
+		if (event.rightClick) {
+			this.fireEvent("onRightClick", event.page);
+			return;
+		}
+// uTorrent WebUI Patch - END
 		this.mouse.start = event.page;
 		this.fireEvent('beforeStart', this.element);
 		var limit = this.options.limit;
@@ -2995,8 +3246,11 @@ var Drag = new Class({
 				}
 			}
 			if (this.options.grid[z]) this.value.now[z] -= ((this.value.now[z] - (this.limit[z][0]||0)) % this.options.grid[z]);
-			if (this.options.style) this.element.setStyle(this.options.modifiers[z], this.value.now[z] + this.options.unit);
-			else this.element[this.options.modifiers[z]] = this.value.now[z];
+			if (this.options.style) {
+				this.element.setStyle(this.options.modifiers[z], this.value.now[z] + this.options.unit);
+			} else {
+				this.element[this.options.modifiers[z]] = this.value.now[z];
+			}
 		}
 		this.fireEvent('drag', [this.element, event]);
 	},
@@ -3006,7 +3260,10 @@ var Drag = new Class({
 		this.document.removeEvent('mouseup', this.bound.cancel);
 		if (event){
 			this.document.removeEvent(this.selection, this.bound.eventStop);
+// uTorrent WebUI Patch - BEGIN
+//			this.fireEvent('cancel', this.element);
 			this.fireEvent('cancel', [this.element, event]);
+// uTorrent WebUI Patch - END
 		}
 	},
 
@@ -3027,23 +3284,20 @@ Element.implement({
 		return drag.addEvent('drag', function(){
 			this.fireEvent('resize', drag);
 		}.bind(this));
-	}
+// uTorrent WebUI Patch - BEGIN
+	},
 
-});
-
-Element.implement({
-
-	"show": function(nonblock) {
+	show: function(nonblock){
 		this.fireEvent("show");
 		return this.setStyle("display", nonblock ? "" : "block");
 	},
 	
-	"hide": function() {
+	hide: function(){
 		this.fireEvent("hide");
 		return this.setStyle("display", "none");
 	},
 	
-	"centre": function() {
+	centre: function(){
 		this.show();
 		var ws = window.getSize();
 		var es = this.getSize();
@@ -3053,7 +3307,7 @@ Element.implement({
 		});
 	},
 	
-	"addClasses": function() {
+	addClasses: function(){
 		var l = arguments.length, clear = false, hasChanged = false;
 		if (typeof arguments[l - 1] == "boolean")
 			clear = arguments[--l];
@@ -3068,6 +3322,7 @@ Element.implement({
 		if (hasChanged)
 			this.className = cls.clean();
 		return this;
+// uTorrent WebUI Patch - END
 	}
 
 });
