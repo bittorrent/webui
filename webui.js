@@ -8,7 +8,8 @@
 var VERSION = "0.362";
 var BUILD_REQUIRED = -1; // the ut build the webui requires
 var lang = lang || null;
-var isGuest = (window.location.pathname == "/gui/guest.html");
+var req_prefix = window.location.pathname.substr(0, window.location.pathname.indexOf("/gui"));
+var isGuest = (window.location.pathname == req_prefix + "/gui/guest.html");
 
 var utWebUI = {
 
@@ -44,7 +45,7 @@ var utWebUI = {
 		var port = (location.host.split(":"))[1];
 		if (!$defined(port))
 			port = (window.location.protocol == "http:") ? 80 : 443;
-		this.url = window.location.protocol + "//" + document.domain + ":" + port + "/gui/";
+		this.url = window.location.protocol + "//" + document.domain + ":" + port + req_prefix + "/gui/";
 		
 		this.config = {
 			"showDetails": true,
@@ -857,11 +858,11 @@ var utWebUI = {
 		if ((this.settings["webui.enable_listen"]) && (webui_port != -1) && ((webui_port == port) || (bind_port == port))) {
 			$("msg").set("html", "Redirecting...");
 			$("cover").show();
-			redirect.delay(500, null, window.location.protocol + "//" + document.domain + ":" + this.settings["webui.port"] + "/gui/");
+			redirect.delay(500, null, window.location.protocol + "//" + document.domain + ":" + this.settings["webui.port"] + req_prefix + "/gui/");
 		} else if ((!this.settings["webui.enable_listen"]) && (bind_port != -1) && ((bind_port == port) || (webui_port == port))) {
 			$("msg").set("html", "Redirecting...");
 			$("cover").show();
-			redirect.delay(500, null, window.location.protocol + "//" + document.domain + ":" + this.settings["bind_port"] + "/gui/");
+			redirect.delay(500, null, window.location.protocol + "//" + document.domain + ":" + this.settings["bind_port"] + req_prefix + "/gui/");
 		} else if (reload) {
 			window.location.reload();
 		} else if (resize) {
