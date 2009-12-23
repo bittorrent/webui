@@ -6,8 +6,20 @@ function has(obj, key) {
 	return Object.prototype.hasOwnProperty.apply(obj, [key]);
 }
 
-function redirect(url) {
-	window.location.href = url;
+function changePort(port) {
+	if (window.location.port != port) {
+		// window.location.port = port; // Does NOT work on Opera
+
+		function isIPv6(hostname) {
+			return (hostname.search(/\[.*?\]/) >= 0);
+		}
+
+		var hostname = window.location.hostname;
+		if (isIPv6(window.location.host) && !isIPv6(hostname))
+			hostname = "[" + hostname + "]"; // Fix for Firefox
+
+		window.location.href = window.location.protocol + "//" + hostname + ":" + port + window.location.pathname + window.location.search;
+	}
 }
 
 window.onerror = function(msg, url, linenumber) {

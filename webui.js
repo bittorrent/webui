@@ -8,8 +8,8 @@
 var VERSION = "0.362";
 var BUILD_REQUIRED = -1; // the ut build the webui requires
 var lang = lang || null;
-var req_prefix = window.location.pathname.substr(0, window.location.pathname.indexOf("/gui"));
-var isGuest = (window.location.pathname == req_prefix + "/gui/guest.html");
+var urlBase = window.location.pathname.substr(0, window.location.pathname.indexOf("/gui") + 4) + "/";
+var isGuest = (window.location.pathname.search(/.*guest.html$/) >= 0);
 
 var utWebUI = {
 
@@ -42,11 +42,6 @@ var utWebUI = {
 	"delActions": ["remove", "removedata"],
 
 	"init": function() {
-		var port = (location.host.split(":"))[1];
-		if (!$defined(port))
-			port = (window.location.protocol == "http:") ? 80 : 443;
-		this.url = window.location.protocol + "//" + document.domain + ":" + port + req_prefix + "/gui/";
-
 		this.config = {
 			"showDetails": true,
 			"showCategories": true,
@@ -77,20 +72,14 @@ var utWebUI = {
 			},
 			"activeLabel": "_all_"
 		};
-		if (isGuest) {
-			new Request({
-				"url": this.url + "token.html",
-				"method": "get",
-				"async": false,
-				"onSuccess": function(str) {
-					utWebUI.TOKEN = str.substring(str.indexOf("none;'>") + 7, str.indexOf("</div>"));
-				}
-			}).send();
-		} else {
-			this.TOKEN = $("token").get("text");
-			if (this.TOKEN.charAt(0) == "#")
-				this.TOKEN = "";
-		}
+		new Request({
+			"url": urlBase + "token.html",
+			"method": "get",
+			"async": false,
+			"onSuccess": function(str) {
+				utWebUI.TOKEN = str.substring(str.indexOf("none;'>") + 7, str.indexOf("</div>"));
+			}
+		}).send();
 		if (isGuest) {
 			this.addSettings();
 			return;
@@ -102,7 +91,7 @@ var utWebUI = {
 		if (this.TOKEN != "")
 			qs = "token=" + this.TOKEN + "&" + qs;
 		new Request.JSON({
-			"url": this.url + "?" + qs + "&t=" + $time(),
+			"url": urlBase + "?" + qs + "&t=" + $time(),
 			"method": "get",
 			"onSuccess": (fn) ? fn.bind(this) : $empty,
 			"async": !!async
@@ -407,7 +396,9 @@ var utWebUI = {
 
 		this.updateTimeout = this.update.delay(this.getInterval(), this);
 		this.updateDetails();
-		SpeedGraph.addData(this.totalUL, this.totalDL);
+		if (!isGuest) {
+			SpeedGraph.addData(this.totalUL, this.totalDL);
+		}
 
 		this.updateSpeed();
 	},
@@ -692,7 +683,7 @@ var utWebUI = {
 				else
 					this.loadTorrents(json);
 			} else {
-				loadJS(this.url + "lang/" + ((this.config.lang == "auto") ? detectLang : this.config.lang) + ".js", {"onload": isGuest ? setupUI : function() { setupUI(); utWebUI.loadTorrents(json); }});
+				loadJS("lang/" + ((this.config.lang == "auto") ? detectLang : this.config.lang) + ".js", {"onload": isGuest ? setupUI : function() { setupUI(); utWebUI.loadTorrents(json); }});
 			}
 		}
 	},
@@ -822,11 +813,10 @@ var utWebUI = {
 		if (Browser.Engine.presto && hasChanged)
 			str = "&s=webui.cookie&v=" + JSON.encode(this.config);
 
-		var bind_port = -1, webui_port = -1;
 		for (var key in this.settings) {
-			v = this.settings[key];
 			var ele = $(key);
 			if (!ele) continue;
+			v = this.settings[key];
 			if (ele.type && (ele.type == "checkbox")) {
 				nv = ele.checked ? 1 : 0;
 			} else {
@@ -836,11 +826,7 @@ var utWebUI = {
 				nv *= 10;
 			if (v != nv) {
 				this.settings[key] = nv;
-				if (key == "webui.port")
-					webui_port = v;
-				else if (key == "bind_port")
-					bind_port = v;
-				else if (key == "gui.persistent_labels")
+				if (key == "gui.persistent_labels")
 					nv = encodeURIComponent(nv);
 				str += "&s=" + key + "&v=" + nv;
 			}
@@ -852,17 +838,12 @@ var utWebUI = {
 			$("cover").show();
 			return;
 		}
-		var port = (location.host.split(":"))[1];
-		if (!$defined(port))
-			port = (window.location.protocol == "http:") ? 80 : 443;
-		if ((this.settings["webui.enable_listen"]) && (webui_port != -1) && ((webui_port == port) || (bind_port == port))) {
+		var port = (window.location.port ? window.location.port : (window.location.protocol == "http:" ? 80 : 443)),
+			new_port = (this.settings["webui.enable_listen"] ? this.settings["webui.port"] : this.settings["bind_port"]);
+		if (port != new_port) {
 			$("msg").set("html", "Redirecting...");
 			$("cover").show();
-			redirect.delay(500, null, window.location.protocol + "//" + document.domain + ":" + this.settings["webui.port"] + req_prefix + "/gui/");
-		} else if ((!this.settings["webui.enable_listen"]) && (bind_port != -1) && ((bind_port == port) || (webui_port == port))) {
-			$("msg").set("html", "Redirecting...");
-			$("cover").show();
-			redirect.delay(500, null, window.location.protocol + "//" + document.domain + ":" + this.settings["bind_port"] + req_prefix + "/gui/");
+			changePort.delay(500, null, new_port);
 		} else if (reload) {
 			window.location.reload();
 		} else if (resize) {
@@ -1377,7 +1358,7 @@ var utWebUI = {
 
 	"saveConfig": function(async) {
 		new Request({
-			"url": this.url + "?token=" + this.TOKEN + "&action=setsetting&s=webui.cookie&v=" + JSON.encode(this.config),
+			"url": urlBase + "?token=" + this.TOKEN + "&action=setsetting&s=webui.cookie&v=" + JSON.encode(this.config),
 			"method": "get",
 			"async": async || false
 		}).send();
