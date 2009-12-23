@@ -23,13 +23,13 @@ var ContextMenu = {
 			ContextMenu.focused = false;
 		}).inject(document.body);
 	},
-	
+
 	"hideAfterClick": true,
-	
+
 	"hidden": true,
-	
+
 	"focused": false,
-	
+
 	"launched": false,
 
 	"add": function() {
@@ -89,14 +89,14 @@ var ContextMenu = {
 				li.adopt(link);
 			}
 			ele.adopt(li);
-		} 
+		}
 	},
 
 	"clear": function() {
 		this.obj.empty();
 		this.hideAfterClick = true;
 	},
-	
+
 	"show": function(p) {
 		this.obj.setStyle("visibility", "hidden");
 		this.obj.show();
@@ -113,7 +113,7 @@ var ContextMenu = {
 		this.focused = false;
 		this.launched = true;
 	},
-	
+
 	"hide": function() {
 		this.obj.setStyles({
 			"visibility": "hidden",

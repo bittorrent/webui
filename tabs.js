@@ -8,9 +8,9 @@
 var Tabs = new Class({
 
 	"tabs": {},
-	
+
 	"active": "",
-	
+
 	"initialize": function(ele, options) {
 		this.element = ele;
 		this.tabs = options.tabs;
@@ -22,10 +22,10 @@ var Tabs = new Class({
 				$me.show(ev.target.retrieve("showId"));
 		});
 	},
-	
+
 	"draw": function() {
 		this.element.empty();
-		for (var k in this.tabs) {			
+		for (var k in this.tabs) {
 			this.element.adopt(new Element("li", {
 				"id": "tab_" + k
 			}).adopt(new Element("a", {
@@ -35,7 +35,7 @@ var Tabs = new Class({
 		};
 		return this;
 	},
-	
+
 	"show": function(id) {
 		if (!has(this.tabs, id)) return;
 		for (var k in this.tabs) {
@@ -46,5 +46,5 @@ var Tabs = new Class({
 		this.onChange(id);
 		return this;
 	}
-	
+
 });

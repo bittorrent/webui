@@ -9,7 +9,7 @@ var perSec = "/s";
 
 function setupUI() {
 	loadLangStrings();
-	
+
 	var col = function(text, type, disabled, align) {
 		return {
 			"text": text,
@@ -50,48 +50,48 @@ function setupUI() {
 				case 11:
 				case 12:
 					break;
-					
-				case 2:	
+
+				case 2:
 					values[i]  = values[i].toFileSize(2); // size
 					break;
-				
+
 				case 3:
 					values[i] = (values[i] / 10).roundTo(1) + "%"; // done
 					break;
-					
+
 				case 4:
 					values[i] = values[i].toFileSize(); // downloaded
 					break;
-				
+
 				case 5:
 					values[i] = values[i].toFileSize(); // uploaded
 					break;
-				
+
 				case 6:
 					values[i] = (values[i] == -1) ? "\u221E" : (values[i] / 1000).roundTo(3); // ratio
 					break;
-				
+
 				case 7:
 					values[i] = (values[i] >= 103) ? (values[i].toFileSize() + perSec) : ""; // download speed
 					break;
-				
+
 				case 8:
 					values[i] = (values[i] >= 103) ? (values[i].toFileSize() + perSec) : ""; // upload speed
 					break;
-					
+
 				case 9:
 					values[i] = (values[i] == 0) ? "" :
 								(values[i] == -1) ? "\u221E" : values[i].toTimeString(); // ETA
 					break;
-								
+
 				case 13:
 					values[i] = (values[i] / 65535).roundTo(3); // availability
 					break;
-					
+
 				case 14:
 					values[i] = (values[i] <= -1) ? "*" : values[i]; // queue position
 					break;
-					
+
 				case 15:
 					values[i] = values[i].toFileSize(2); // remaining
 					break;
@@ -126,19 +126,19 @@ function setupUI() {
 					switch (index) {
 					case 0:
 						break;
-						
+
 					case 1:
 						values[i] = values[i].toFileSize(2); //size
 						break;
-						
+
 					case 2:
 						values[i] = values[i].toFileSize(2); //done
 						break
-					
+
 					case 3:
 						values[i] = values[i] + "%"; //%
 						break;
-						
+
 					case 4:
 						values[i] = lang[CONST["FI_PRI" + values[i]]];
 					}
@@ -159,20 +159,20 @@ function setupUI() {
 	}
 
 	resizeUI();
-	
+
 	["_all_", "_dls_", "_com_", "_act_", "_iac_", "_nlb_"].each(function(k) {
 		$(k).addEvent("click", function() {
 			utWebUI.switchLabel(this);
 		});
 	});
-	
+
 	if (isGuest) return;
-	
+
 	$("query").addEvent("keydown", function(ev) {
 		if (ev.code == 13)
 			Search();
 	});
-	
+
 	new Drag("HDivider", {
 		"modifiers": {"x": "left", "y": ""},
 		"onComplete": function() {
@@ -209,7 +209,7 @@ function checkProxySettings() {
 		$("DLG_SETTINGS_4_CONN_16").removeClass("disabled");
 		$("DLG_SETTINGS_4_CONN_18").removeClass("disabled");
 	}
-	
+
 }
 
 function checkUpload(frm) {
@@ -319,7 +319,7 @@ var TreeNode = new Class({
 			}
 		}
 	},
-	
+
 	"setSelected": function(node) {
 		if (this.head) {
 			if (this.selected)
@@ -330,18 +330,18 @@ var TreeNode = new Class({
 			this.parent.setSelected($pick(node, this));
 		}
 	},
-	
+
 	"insert": function(options) {
 		this.children.push(new TreeNode(options, this));
 	},
-	
+
 	"clear": function() {
 		this.children.each(function(node) {
 			node.element.remove();
 		});
 		this.children = [];
 	},
-	
+
 	"getRoot": function() {
 		return this.head ? this.element : this.parent.getRoot();
 	}
@@ -352,13 +352,13 @@ var TreeNode = new Class({
 var DialogManager = {
 
 	"dragMask": null,
-	
+
 	"winZ": 500,
 
 	"items": {},
-	
+
 	"showing": [],
-	
+
 	"add": function(id, isModal) {
 		if (has(this.items, id)) return;
 		isModal = !!isModal;
@@ -411,27 +411,27 @@ var DialogManager = {
 			}
 		});
 	},
-	
+
 	"show": function(id) {
 		this.bringToFront(id);
 		if (this.items[id].modal)
 			$("modalbg").show();
 		$("dlg" + id).setStyle("zIndex", ++this.winZ).centre();
 	},
-	
+
 	"hide": function(id) {
 		this.showing = this.showing.erase(id);
 		$("dlg" + id).hide();
 		if (this.items[id].modal)
 			$("modalbg").hide();
 	},
-	
+
 	"hideTopMost": function() {
 		if (this.showing.length == 0) return;
 		var id = this.showing.shift();
 		this.hide(id);
 	},
-	
+
 	"bringToFront": function(id) {
 		if (this.showing.contains(id))
 			this.showing = this.showing.erase(id);
@@ -462,7 +462,7 @@ function loadLangStrings() {
 		},
 		"onChange": utWebUI.tabChange.bind(utWebUI)
 	}).draw().show("gcont");
-	
+
 	[
 		"DLG_TORRENTPROP_1_GEN_01",
 		"DLG_TORRENTPROP_1_GEN_03",
@@ -547,7 +547,7 @@ function loadLangStrings() {
 	$("ADD_URL_CANCEL").set("value", lang[CONST.DLG_SETTINGS_04]).addEvent("click", function() {
 		DialogManager.hide("Add");
 	});
-	
+
 	["remove", "start", "pause", "stop"].each(function(act) {
 		$(act).setProperty("title", lang[CONST["OV_TB_" + act.toUpperCase()]]);
 	});
@@ -616,8 +616,8 @@ function loadSettingStrings() {
 		"DLG_SETTINGS_2_UI_06",
 		"DLG_SETTINGS_2_UI_15",
 		"DLG_SETTINGS_2_UI_16",
-		"DLG_SETTINGS_3_PATHS_01",		
-		"DLG_SETTINGS_3_PATHS_02",		
+		"DLG_SETTINGS_3_PATHS_01",
+		"DLG_SETTINGS_3_PATHS_02",
 		"DLG_SETTINGS_3_PATHS_06",
 		"DLG_SETTINGS_3_PATHS_07",
 		"DLG_SETTINGS_3_PATHS_10",
@@ -630,16 +630,16 @@ function loadSettingStrings() {
 		"DLG_SETTINGS_4_CONN_02",
 		"DLG_SETTINGS_4_CONN_05",
 		"DLG_SETTINGS_4_CONN_06",
-		"DLG_SETTINGS_4_CONN_07",		
+		"DLG_SETTINGS_4_CONN_07",
 		"DLG_SETTINGS_4_CONN_08",
 		"DLG_SETTINGS_4_CONN_09",
 		"DLG_SETTINGS_4_CONN_11",
-		"DLG_SETTINGS_4_CONN_13",		
+		"DLG_SETTINGS_4_CONN_13",
 		"DLG_SETTINGS_4_CONN_15",
 		"DLG_SETTINGS_4_CONN_16",
 		"DLG_SETTINGS_4_CONN_18",
 		"DLG_SETTINGS_4_CONN_20",
-		"DLG_SETTINGS_4_CONN_21",		
+		"DLG_SETTINGS_4_CONN_21",
 		"DLG_SETTINGS_5_BANDWIDTH_01",
 		"DLG_SETTINGS_5_BANDWIDTH_02",
 		"DLG_SETTINGS_5_BANDWIDTH_03",
@@ -716,7 +716,7 @@ function loadSettingStrings() {
 		DialogManager.hide("Settings");
 		utWebUI.loadSettings();
 	});
-	
+
 	$("DLG_SETTINGS_4_CONN_04").set("value", lang[CONST.DLG_SETTINGS_4_CONN_04]).addEvent("click", function() {
 		var v = utWebUI.settings["bind_port"], rnd = 0;
 		do {
@@ -724,7 +724,7 @@ function loadSettingStrings() {
 		} while (v == rnd);
 		$("bind_port").set("value", rnd);
 	});
-	
+
 	var encList = $("encryption_mode");
 	encList.options.length = 0;
 	lang[CONST.ST_CBO_ENCRYPTIONS].split("||").each(function(v, k) {
@@ -787,10 +787,10 @@ function resizeUI(w, h) {
 	var size = window.getSize();
 	var ww = size.x, wh = size.y, winResize = false;
 	var showcat = utWebUI.config.showCategories, showdet = utWebUI.config.showDetails, showtb = utWebUI.config.showToolbar, eh = 0;
-	
+
 	if (!isGuest && showtb)
 		eh = $("toolbar").getSize().y;
-	
+
 	if (!w && !h) {
 		w = Math.floor(ww * ((showcat) ? utWebUI.config.hSplit : 1.0));
 		h = Math.floor(wh * ((!isGuest && showdet) ? utWebUI.config.vSplit : 1.0));
@@ -799,14 +799,14 @@ function resizeUI(w, h) {
 
 	if (w)
 		w -= showcat ? 10 : 2;
-		
+
 	if (h)
 		h -= eh + ((showdet && showtb) ? 5 : showtb ? 8 : 2);
-		
+
 	if (showcat) {
 		if (w)
 			$("CatList").setStyle("width", ww - 10 - w - ((Browser.Engine.trident && !Browser.Engine.trident5) ? 4 : 0));
-			
+
 		if (h)
 			$("CatList").setStyle("height", h);
 	}
@@ -831,8 +831,8 @@ function resizeUI(w, h) {
 
 	$("HDivider").setStyle("left", listPos.x - ((Browser.Engine.trident && !Browser.Engine.trident5) ? 7 : 5));
 	$("VDivider").setStyle("width", ww + (Browser.Engine.trident6 ? 4 : 0));
-	
-	
+
+
 	if (h) {
 		$("HDivider").setStyles({
 			"height": showcat ? (h + 2) : 0,
@@ -843,10 +843,10 @@ function resizeUI(w, h) {
 		if (showdet && !winResize)
 			utWebUI.config.vSplit = h / (wh - eh - 12);
 	}
-	
+
 	if (w && showcat && !winResize)
 		utWebUI.config.hSplit = w / ww;
-		
+
 	resizing = false;
 }
 
@@ -883,16 +883,16 @@ function linked(obj, defstate, list, ignoreLabels, reverse) {
 var winZ = 500;
 
 window.addEvent("domready", function() {
-	
+
 	$(document.body);
 
 	document.title = "\u00B5Torrent WebUI " + VERSION;
-	
+
 	if (isGuest) {
 		utWebUI.init();
 		return;
 	}
-	
+
 	document.addEvent("keydown", function(ev) {
 		/*
 		if (ev.alt) {
@@ -901,7 +901,7 @@ window.addEvent("domready", function() {
 		}
 		//*/
 		switch (ev.key) {
-		
+
 		case "esc": // Esc
 			ev.stop();
 			if (DialogManager.showing.length > 0) {
@@ -910,102 +910,102 @@ window.addEvent("domready", function() {
 				utWebUI.restoreUI();
 			}
 			break;
-			
+
 		case "a": // Ctrl + A
 			if (ev.control)
 				ev.stop();
 			break;
-			
+
 		case "e": // Ctrl + E
 			if (ev.control)
 				ev.stop();
 			break;
-		  
+
 		case "o": // Ctrl + O
 			if (ev.control) {
 				ev.stop();
 				DialogManager.show("Add");
 			}
 			break;
-			
+
 		case "p": // Ctrl + P
 			if (ev.control) {
 				ev.stop();
 				utWebUI.showSettings();
 			}
 			break;
-			
+
 		case "f2": // F2
 			ev.stop();
 			DialogManager.show("About");
 			break;
-			
+
 		case "f4": // F4
-			if (!ev.alt) {
+			if (!(ev.alt || ev.control)) {
 				ev.stop();
 				utWebUI.toggleToolbar();
 			}
 			break;
-			
+
 		case "f6": // F6
 			ev.stop();
 			utWebUI.toggleDetPanel();
 			break;
-			
+
 		case "f7": // F7
 			ev.stop();
 			utWebUI.toggleCatPanel();
 			break;
 		}
 	});
-	
+
 	if (Browser.Engine.presto) {
 		document.addEvent("keypress", function(ev) {
 			switch (ev.key) {
-			
+
 			case "esc": // Esc
 				ev.stop();
 				break;
-				
+
 			case "a": // Ctrl + A
 				if (ev.control)
 					ev.stop();
 				break;
-				
+
 			case "e": // Ctrl + E
 				if (ev.control)
 					ev.stop();
 				break;
-			  
+
 			case "o": // Ctrl + O
 				if (ev.control)
 					ev.stop();
 				break;
-				
+
 			case "p": // Ctrl + P
 				if (ev.control)
 					ev.stop();
 				break;
-				
+
 			case "f2": // F2
 				ev.stop();
 				break;
-				
+
 			case "f4": // F4
 				ev.stop();
 				break;
-				
+
 			case "f6": // F6
 				ev.stop();
 				break;
-				
+
 			case "f7": // F7
 				ev.stop();
 				break;
 			}
 		});
 	}
-	
+
 	window.addEvent("unload", function() {
 		utWebUI.saveConfig();
 	});
@@ -1019,7 +1019,7 @@ window.addEvent("domready", function() {
 			resizeUI();
 		}
 	});
-	
+
 	document.addEvent("mousedown", function(ev) {
 		if ((ev.rightClick && !ContextMenu.launched) || (!ev.rightClick && !ContextMenu.hidden && !ContextMenu.focused))
 			ContextMenu.hide.delay(10, ContextMenu);
@@ -1103,18 +1103,18 @@ window.addEvent("domready", function() {
 			var str = $(doc.body).get("html");
 			if (str != "") {
 				var data = JSON.decode(str);
-				if (has(data, "error")) 
+				if (has(data, "error"))
 					alert(data.error);
 			}
 		}
 	}).inject(document.body);
-	
+
 	$("upfrm").addEvent("submit", function() {
 		return checkUpload(this);
 	});
 
 	ContextMenu.init("ContextMenu");
-	
+
 	$("add").addEvent("click", function(ev) {
 		ev.stop();
 		/*
@@ -1144,13 +1144,13 @@ window.addEvent("domready", function() {
 	});
 	DialogManager.dragMask = $("dragmask");
 	var dialogId = ["Add", "Settings", "Props", "About", "Label"];
-	for (var i = dialogId.length; i--;) 
+	for (var i = dialogId.length; i--;)
 		DialogManager.add(dialogId[i], dialogId[i] == "Props");
-	
+
 	$("dlgSettings").getElement("a").addEvent("click", function(ev) {
 		utWebUI.loadSettings();
 	});
-	
+
 	$("dlgProps").getElement("a").addEvent("click", function(ev) {
 		if (utWebUI.propID == "multi") {
 			[11, 17, 18, 19].each(function(v) {
@@ -1158,9 +1158,9 @@ window.addEvent("domready", function() {
 			});
 		}
 	});
-	
+
 	var linkedEvent = Browser.Engine.trident ? "click" : "change";
-	
+
 	// onchange fires in IE on <select>s
 	$("proxy.type").addEvent("change", function() {
 		linked(this, 0, ["proxy.proxy", "proxy.port", "proxy.auth", "proxy.p2p"]);

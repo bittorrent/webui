@@ -102,7 +102,7 @@ var dxSTable = new Class({
 	"pageCount": 0,
 	"rowCache": [],
 	"rowCover" : null,
-	
+
 	"create": function(id, columns, options) {
 		this.colHeader = columns;
 		this.colWidth = options.colWidth || (new Array(columns.length));
@@ -112,7 +112,7 @@ var dxSTable = new Class({
 		delete options.colWidth;
 		delete options.sIndex;
 		this.setOptions(options);
-	
+
 		var tr, td, div, $me = this, isIE = Browser.Engine.trident;
 
 		this.id = "stable-" + id;
@@ -124,12 +124,12 @@ var dxSTable = new Class({
 			"cellpadding": 0,
 			"cellspacing": 0
 		}).inject(this.dHead);
-		
+
 		this.tHead.addEvent("contextmenu", function(ev) {
 			ev.stop();
 			return false;
 		});
-		
+
 		this.tb.head = new Element("tbody").inject(this.tHead);
 		tr = simpleClone(TR, false);
 		var nDrag = new Drag(tr, {
@@ -188,19 +188,19 @@ var dxSTable = new Class({
 			j++;
 		}
 		this.tb.head.grab(tr);
-		
+
 		this.rowCover = new Element("div", {
 			"class": "rowcover"
-		}).inject(this.dHead);	
+		}).inject(this.dHead);
 
 		if (this.options.mode == MODE_VIRTUAL)
 			this.topPad = simpleClone(DIV, false).addClass("stable-pad").inject(this.dBody);
-		
+
 		this.tBody = new Element("table", {
 			"cellpadding": 0,
 			"cellspacing": 0
 		}).inject(this.dBody);
-		
+
 		if (this.options.mode == MODE_VIRTUAL)
 			this.bottomPad = simpleClone(DIV, false).addClass("stable-pad").inject(this.dBody);
 
@@ -223,12 +223,12 @@ var dxSTable = new Class({
 		}
 
 		this.colDragEle = null;
-		this.colDragObj = simpleClone(DIV, false).addClass("stable-move-header").inject(this.dHead);		
+		this.colDragObj = simpleClone(DIV, false).addClass("stable-move-header").inject(this.dHead);
 		this.colSep = simpleClone(DIV, false).addClass("stable-separator-header").inject(this.dHead);
 		this.colReszObj = simpleClone(DIV, false).addClass("stable-resize-header").inject(this.dBody);
-		
+
 		this.loadObj = simpleClone(DIV, false).addClass("stable-loading").grab(simpleClone(DIV, false).addClass("stable-loading-text").set("html", "Loading...")).inject(this.dCont);
-		
+
 		if (this.options.rowsSelectable) {
 			this.dBody.addEvent("mousedown", function(ev) {
 				var ele = ev.target;
@@ -285,9 +285,9 @@ var dxSTable = new Class({
 						this.removeClass("prevlink-hover");
 				})
 				.inject(this.pageMenu);
-				
+
 			this.pageStat = new Element("span").addClass("pagestat").inject(this.pageMenu);
-			
+
 			this.pageSelect = new Element("select", {
 				"events": {
 					"change": function() {
@@ -295,8 +295,8 @@ var dxSTable = new Class({
 					}
 				}
 			}).inject(this.pageStat);
-			this.pageSelect.disabled = true;			
-			
+			this.pageSelect.disabled = true;
+
 			if (this.options.refreshable) {
 				this.pageStat.grab(new Element("a", {
 					"class": "refreshBtn",
@@ -311,11 +311,11 @@ var dxSTable = new Class({
 				}).grab(new Element("div")));
 			}
 		}
-		
+
 		this.assignEvents();
 		this.setAlignment();
 	},
-	
+
 	"assignEvents": function() {
 		var scrollDiff = 0, scrollTimer = null;
 		this.dBody.addEvent("scroll", (function() {
@@ -367,19 +367,19 @@ var dxSTable = new Class({
 		for (var i = 0; i < this.cols; i++) {
 			var align = "";
 			switch (this.colData[i].align) {
-			
+
 			case ALIGN_LEFT:
 				align = "left";
 				break;
-				
+
 			case ALIGN_CENTER:
 				align = "center";
 				break;
-				
+
 			case ALIGN_RIGHT:
 				align = "right";
 				break;
-				
+
 			case ALIGN_AUTO:
 			default:
 				align = (this.colData[i].type == TYPE_NUMBER) ? "right" : "left";
@@ -394,7 +394,7 @@ var dxSTable = new Class({
 		if (!Browser.Engine.trident)
 			$("colrules").appendText(sb);
 	},
-	
+
 	"getCache": function(index) {
 		if (this.rowCache.length != this.rows) {
 			this.clearCache();
@@ -418,7 +418,7 @@ var dxSTable = new Class({
 		}
 		this.rowCache.length = 0;
 	},
-	
+
 	"sort": function(col, shift) {
 		if (this.cancelSort) return;
 		this.isSorting = true;
@@ -430,7 +430,7 @@ var dxSTable = new Class({
 			col = this.tb.head.childNodes[0].childNodes[this.sIndex];
 			simpleReverse = false;
 		}
-		
+
 		if (col.get("tag") != "td")
 			col = col.getParent("td");
 
@@ -454,7 +454,7 @@ var dxSTable = new Class({
 
 		if (rev)
 			this.options.reverse = (this.sIndex == ind) ? !this.options.reverse : false;
-		
+
 		if ((this.sIndex != ind) || (this.rowCache.length != this.rows)) {
 			simpleReverse = false;
 			this.getCache(ind);
@@ -473,13 +473,13 @@ var dxSTable = new Class({
 					return $me.sortAlphaNumeric(x, y);
 				};
 				break;
-				
+
 			case TYPE_NUMBER:
 				comp = function(x, y) {
 					return $me.sortNumeric(x, y);
 				};
 				break;
-				
+
 			case TYPE_NUM_ORDER:
 				comp = function(x, y) {
 					return $me.sortNumOrder(x, y);
@@ -514,20 +514,20 @@ var dxSTable = new Class({
 			this.pageCount = Math.ceil(this.activeId.length / this.options.maxRows);
 
 		this.isSorting = false;
-		
+
 		this.curPage = 0;
 		this.refreshRows();
-			
+
 		this.fireEvent("onSort", [this.sIndex, this.options.reverse]);
 	},
-	
+
 	//"cmp": {}, // map for compare functions, type -> function
 
 	"sortNumeric": function(x, y) {
 		var r = Comparator.compareNumeric(x.v, y.v);
 		return (((r == 0) && (this.secIndex != this.sIndex)) ? this.sortSecondary(x, y) : r);
 	},
-	
+
 	"sortNumOrder": function(x, y) {
 		var r = Comparator.compareNumeric(x.v, y.v);
 		if (r != 0) {
@@ -554,11 +554,11 @@ var dxSTable = new Class({
 		case TYPE_STRING:
 			r = Comparator.compareAlphaNumeric(m, n);
 			break;
-			
+
 		case TYPE_NUMBER:
 			r = Comparator.compareNumeric(m, n);
 			break;
-			
+
 		case TYPE_NUM_ORDER:
 			r = Comparator.compareNumeric(m, n);
 			if (r != 0) {
@@ -577,10 +577,10 @@ var dxSTable = new Class({
 		if (this.options.reverse)
 			r = -r;
 		if (this.secRev)
-			r = -r;	
+			r = -r;
 		return r;
 	},
-	
+
 	"getActiveRange": function() {
 		var max = this.options.maxRows, mni = 0, mxi = 0;
 		if (this.options.mode == MODE_VIRTUAL) {
@@ -632,7 +632,7 @@ var dxSTable = new Class({
 		this.refresh();
 		this.requiresRefresh = false;
 	},
-	
+
 	"refresh": function() {
 		if (this.isScrolling) return;
 		this.updatePageMenu();
@@ -641,7 +641,7 @@ var dxSTable = new Class({
 		//if (this.options.mode == MODE_VIRTUAL)
 		//	this.resizePads();
 	},
-	
+
 	"selectRow": function(ev, row) {
 		var id = row.id;
 		if (!(ev.rightClick && has(this.rowSel, id))) {
@@ -683,13 +683,13 @@ var dxSTable = new Class({
 				this.rowSel[id] = 0;
 				this.selectedRows.push(id);
 			}
-			
+
 			if (this.selectedRows.length == 0)
 				this.stSel = null;
-				
+
 			this.refreshSelection();
 		}
-		
+
 		this.fireEvent("onSelect", [ev, id]);
 	},
 
@@ -700,7 +700,7 @@ var dxSTable = new Class({
 			"data": data,
 			"icon": icon || "",
 			"hidden": hidden || false,
-			"index": -1, 
+			"index": -1,
 			"rowIndex": -1,
 			"activeIndex": -1
 		};
@@ -708,7 +708,7 @@ var dxSTable = new Class({
 			this._insertRow(id);
 		this.rows++;
 	},
-	
+
 	"_insertRow": function(id, skipOrderCheck) {
 		skipOrderCheck = (skipOrderCheck === true);
 		var sindex = this.sIndex;
@@ -725,13 +725,13 @@ var dxSTable = new Class({
 						return $me.sortAlphaNumeric(x, y);
 					};
 					break;
-					
+
 				case TYPE_NUMBER:
 					comp = function(x, y) {
 						return $me.sortNumeric(x, y);
 					};
 					break;
-					
+
 				case TYPE_NUM_ORDER:
 					comp = function(x, y) {
 						return $me.sortNumOrder(x, y);
@@ -817,15 +817,15 @@ var dxSTable = new Class({
 		if (this.options.mode == MODE_PAGE)
 			this.pageCount = Math.ceil(this.activeId.length / this.options.maxRows);
 	},
-	
+
 	"clearActive": function() {
 		for (var i = 0, j = this.activeId.length; i < j; i++)
 			this.rowData[this.activeId[i]].activeIndex = -1;
 		this.activeId.length = 0;
 	},
-	
+
 	"requiresRefresh": false,
-	
+
 	"fillRow": function(row, data, icon) {
 		var $me = this;
 		this.colOrder.each(function(v, k) {
@@ -842,15 +842,15 @@ var dxSTable = new Class({
 			}
 		});
 	},
-	
+
 	"isDetached": false,
-	
+
 	"detachBody": function() {
 		if (this.isDetached) return;
 		this.tb.body.dispose();
 		this.isDetached = true;
 	},
-	
+
 	"attachBody": function() {
 		if (!this.isDetached) return;
 		this.tBody.grab(this.tb.body);
@@ -1026,7 +1026,7 @@ var dxSTable = new Class({
 			this.dCont.setStyle("height", h);
 		this.calcSize();
 	},
-	
+
 	"colMenu": function(coords) {
 		ContextMenu.clear();
 		for (var i = 0; i < this.cols; i++) {
@@ -1037,7 +1037,7 @@ var dxSTable = new Class({
 		}
 		ContextMenu.show(coords);
 	},
-	
+
 	"toggleColumn": function(index) {
 		var hide = !this.colData[index].disabled, isIE = Browser.Engine.trident;
 		this.colData[index].disabled = hide;
@@ -1052,7 +1052,7 @@ var dxSTable = new Class({
 		this.dHead.scrollLeft = this.dBody.scrollLeft;
 		return true;
 	},
-	
+
 	"resizePads": function() {
 		if (this.options.mode != MODE_VIRTUAL) return;
 		var mr = this.options.maxRows;
@@ -1116,7 +1116,7 @@ var dxSTable = new Class({
 		if (this.curPage < this.pageCount - 1)
 			this.gotoPage(this.curPage + 1);
 	}
-	
+
 });
 
 var ColumnHandler = {
@@ -1217,7 +1217,7 @@ var ColumnHandler = {
 			cell.setStyle("cursor", "default");
 		}
 	}
-	
+
 };
 
 function resizeColumn(index) {
@@ -1258,7 +1258,7 @@ function moveColumn(iCol, iNew) {
 		oParent.grab(oCol, insertAtEnd ? "bottom" : "top")
 	:
 		oCol.inject(oBefore, "before");
-	
+
 	$each(this.tb.body.childNodes, function(row) {
 		var bef = insertOuter ? null : row.childNodes[iNew];
 		var cell = row.childNodes[iCol].dispose();
@@ -1267,7 +1267,7 @@ function moveColumn(iCol, iNew) {
 		:
 			cell.inject(bef, "before");
 	});
-	
+
 	var aHC = [], aBC = [], aC = [], aO = [];
 	oCol = this.tHeadCols[iCol];
 	var oBCol = this.tBodyCols[iCol];
@@ -1284,27 +1284,27 @@ function moveColumn(iCol, iNew) {
 		aC.push(this.colData[i]);
 		aO.push(this.colOrder[i]);
 	}
-	
+
 	if (iNew == this.cols) {
 		aHC.push(oCol);
 		aBC.push(oBCol);
 		aC.push(this.colData[iCol]);
 		aO.push(this.colOrder[iCol]);
 	}
-	
+
 	/*
 	this.tHeadCols = aHC.slice(0);
 	this.tBodyCols = aBC.slice(0);
 	this.colData = aC.slice(0);
 	this.colOrder = aO.slice(0);
-	
+
 	aHC = aBC = aC = aO = null;
 	*/
 	this.tHeadCols = aHC;
 	this.tBodyCols = aBC;
 	this.colData = aC;
 	this.colOrder = aO;
-	
+
 	for (i = 0; i < this.cols; i++)
 		this.tHeadCols[i].store("index", i);
 	if (iCol == this.sIndex) {
@@ -1331,15 +1331,15 @@ var Comparator = {
 		return (a < b) ? -1 :
 			   (a > b) ? 1 : 0;
 	},
-	
+
 	"compareNumeric": function(x, y) {
 		return (x.toFloat() - y.toFloat());
 	},
-	
+
 	"compareAlphaNumeric": function(x, y) {
 		var a = ('' + x).toLowerCase(), b = ('' + y).toLowerCase();
 		return (a < b) ? -1 :
 			   (a > b) ? 1 : 0;
 	}
-	
+
 };

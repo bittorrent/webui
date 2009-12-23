@@ -1,14 +1,14 @@
 var Flotr = (function(){
-	var plotCnt = 0;		
+	var plotCnt = 0;
 	/**
 	 * Function: (private) getSeries
-	 * 
-	 * Collects dataseries from input and parses the series into the right format. It 
+	 *
+	 * Collects dataseries from input and parses the series into the right format. It
 	 * returns an Array of Objects each having at least the 'data' key set.
-	 * 
+	 *
 	 * Parameters:
 	 * 		data - Object or array of dataseries
-	 * 
+	 *
 	 * Returns:
 	 * 		Array of Objects parsed into the right format ({(...,) data: [[x1,y1], [x2,y2], ...] (, ...)})
 	 */
@@ -16,46 +16,46 @@ var Flotr = (function(){
 		return data.map(function(serie){
 			return (serie.data) ? $extend(serie,{}) : {'data': serie};
 		});
-	}	
+	}
 	/**
 	 * Function: (private) getTickSize
-	 * 
+	 *
 	 * Function calculates the ticksize and returns it.
-	 * 
+	 *
 	 * Parameters:
 	 * 		noTicks - Number of ticks
 	 * 		min - Lower bound integer value for the current axis.
 	 * 		max - Upper bound integer value for the current axis.
 	 * 		decimals - Number of decimals for the ticks.
-	 * 
+	 *
 	 * Returns:
 	 * 		Returns the size of a tick.
 	 */
 	function getTickSize(noTicks, min, max, decimals){
-		var delta = (max - min) / noTicks;	
+		var delta = (max - min) / noTicks;
 		var magn = getMagnitude(delta);
-		
+
 		/**
 		 * Norm is between 1.0 and 10.0.
 		 */
 		var norm = delta / magn;
-		
+
 		var tickSize = 10;
 		if(norm < 1.5) tickSize = 1;
 		else if(norm < 2.25) tickSize = 2;
 		else if(norm < 3) tickSize = ((decimals == 0) ? 2 : 2.5);
 		else if(norm < 7.5) tickSize = 5;
-				
+
 		return tickSize * magn;
 	}
 	/**
 	 * Function: (private) defaultTickFormatter
-	 * 
+	 *
 	 * Formats the ticks.
-	 * 
+	 *
 	 * Parameters:
 	 * 		val - Tick value integer.
-	 * 
+	 *
 	 * Returns:
 	 * 		Formatted tick string.
 	 */
@@ -64,26 +64,26 @@ var Flotr = (function(){
 	}
 	/**
 	 * Function: (private) defaultTrackFormatter
-	 * 
+	 *
 	 * Formats the mouse tracker values.
-	 * 
+	 *
 	 * Parameters:
 	 * 		val - Track value Object {x:..,y:..}.
-	 * 
+	 *
 	 * Returns:
 	 * 		Formatted track string.
 	 */
 	function defaultTrackFormatter(obj){
 		return '('+obj.x+', '+obj.y+')';
-	}	 
+	}
 	/**
 	 * Function: (private) getMagnitude
-	 * 
+	 *
 	 * Returns the magnitude of the input value.
-	 * 
+	 *
 	 * Parameters:
 	 * 		x - Integer or float value
-	 * 
+	 *
 	 * Returns:
 	 * 		Returns the magnitude of the input value.
 	 */
@@ -92,45 +92,45 @@ var Flotr = (function(){
 	}
 	/**
 	 * Function: (private) parseColor
-	 * 
+	 *
 	 * Parses a color string and returns a corresponding Color.
-	 * 
+	 *
 	 * Parameters:
 	 * 		str - String that represents a color.
 	 */
 	function parseColor(str){
 		var result;
-		
+
 		/**
 		 * rgb(num,num,num)
 		 */
 		if((result = /rgb\(\s*([0-9]{1,3})\s*,\s*([0-9]{1,3})\s*,\s*([0-9]{1,3})\s*\)/.exec(str)))
 			return new Color(parseInt(result[1]), parseInt(result[2]), parseInt(result[3]));
-	
+
 		/**
 		 * rgba(num,num,num,num)
 		 */
 		if((result = /rgba\(\s*([0-9]{1,3})\s*,\s*([0-9]{1,3})\s*,\s*([0-9]{1,3})\s*,\s*([0-9]+(?:\.[0-9]+)?)\s*\)/.exec(str)))
 			return new Color(parseInt(result[1]), parseInt(result[2]), parseInt(result[3]), parseFloat(result[4]));
-			
+
 		/**
 		 * rgb(num%,num%,num%)
 		 */
 		if((result = /rgb\(\s*([0-9]+(?:\.[0-9]+)?)\%\s*,\s*([0-9]+(?:\.[0-9]+)?)\%\s*,\s*([0-9]+(?:\.[0-9]+)?)\%\s*\)/.exec(str)))
 			return new Color(parseFloat(result[1])*2.55, parseFloat(result[2])*2.55, parseFloat(result[3])*2.55);
-	
+
 		/**
 		 * rgba(num%,num%,num%,num)
 		 */
 		if((result = /rgba\(\s*([0-9]+(?:\.[0-9]+)?)\%\s*,\s*([0-9]+(?:\.[0-9]+)?)\%\s*,\s*([0-9]+(?:\.[0-9]+)?)\%\s*,\s*([0-9]+(?:\.[0-9]+)?)\s*\)/.exec(str)))
 			return new Color(parseFloat(result[1])*2.55, parseFloat(result[2])*2.55, parseFloat(result[3])*2.55, parseFloat(result[4]));
-			
+
 		/**
 		 * #a0b1c2
 		 */
 		if((result = /#([a-fA-F0-9]{2})([a-fA-F0-9]{2})([a-fA-F0-9]{2})/.exec(str)))
 			return new Color(parseInt(result[1],16), parseInt(result[2],16), parseInt(result[3],16));
-	
+
 		/**
 		 * #fff
 		 */
@@ -149,29 +149,29 @@ var Flotr = (function(){
 	}
 	/**
 	 * Function: (private) extractColor
-	 * 
+	 *
 	 * Returns the background-color of the canvas container color string.
-	 * 
+	 *
 	 * Parameters:
 	 * 		element - String that represents a color.
-	 * 
+	 *
 	 * Returns:
 	 * 		Returns the background-color of the canvas container color string.
 	 */
 	function extractColor(element){
 		var color;
 		/**
-		 * Loop until we find an element with a background color and stop when we hit the body element. 
+		 * Loop until we find an element with a background color and stop when we hit the body element.
 		 */
 		do{
 			color = element.getStyle('background-color').toLowerCase();
-			if(!(color == '' || color == 'transparent')) break;		
+			if(!(color == '' || color == 'transparent')) break;
 			element = element.getParent();
 		}while(element.nodeName.toLowerCase() != 'body');
 
 		/**
 		 * Catch Safari's way of signalling transparent
-		 */		
+		 */
 		return (color == 'rgba(0, 0, 0, 0)') ? 'transparent' : color;
 	}
 	/**
@@ -188,13 +188,13 @@ var Flotr = (function(){
 	 * Returns:
 	 * 		void
 	 */
-	function Color(r, g, b, a){	   
+	function Color(r, g, b, a){
 		var rgba = ['r','g','b','a'];
 		var x = 4;
 		while(-1<--x){
 			this[rgba[x]] = arguments[x] || ((x==3) ? 1.0 : 0);
 		}
-	   
+
 		this.toString = function(){
 			return (this.a >= 1.0) ? 'rgb('+[this.r,this.g,this.b].join(',')+')' : 'rgba('+[this.r,this.g,this.b,this.a].join(',')+')';
 		};
@@ -279,17 +279,17 @@ var Flotr = (function(){
 		silver:[192,192,192],
 		white:[255,255,255],
 		yellow:[255,255,0]
-	};	
+	};
 	function Plot(container, data, opts) {
 		/**
 		 * Initialize variables.
 		 */
-		var options, canvas, overlay, ctx, octx;		
+		var options, canvas, overlay, ctx, octx;
 		var target = container;
 		this.id = id = 'flotr-' + plotCnt++;
 		this.series = series = getSeries(data);
 		this.xaxis = xaxis = {};
-		this.yaxis = yaxis = {};		
+		this.yaxis = yaxis = {};
 		this.plotOffset = plotOffset = {left: 0, right: 0, top: 0, bottom: 0};
 		var labelMaxWidth = 0;
 		var labelMaxHeight = 0;
@@ -300,23 +300,23 @@ var Flotr = (function(){
 		var hozScale = 0;
 		var vertScale = 0;
 		this.options = setOptions(opts);
-		
+
 		this.repaint = repaint;
-			
+
 		/**
 		 * Function: (private) setOptions
-		 * 
-		 * Merges user-defined and default options. Also generates colors for series for which 
-		 * the user didn't specify a color, and merge user-defined series options with default options. 
-		 * 
+		 *
+		 * Merges user-defined and default options. Also generates colors for series for which
+		 * the user didn't specify a color, and merge user-defined series options with default options.
+		 *
 		 * Parameters:
 		 * 		none
-		 * 
+		 *
 		 * Returns:
 		 * 		void
 		 */
 		function setOptions(o){
-			
+
 			options = $merge({
 				colors: ['#00A8F0', '#C0D800', '#cb4b4b', '#4da74d', '#9440ed'], //=> The default colorscheme. When there are > 5 series, additional colors are generated.
 				legend: {
@@ -399,7 +399,7 @@ var Flotr = (function(){
 				shadowSize: 4				// => size of the 'fake' shadow
 			}, o);
 
-			
+
 			/**
 			 * Collect colors assigned by the user to a serie.
 			 */
@@ -412,44 +412,44 @@ var Flotr = (function(){
 					else usedColors.push(parseColor(series[i].color));
 				}
 			}
-			
+
 			/**
 			 * Calculate the number of colors that need to be generated.
 			 */
 			for(var j = assignedColors.length - 1; j > -1; --j)
 				neededColors = Math.max(neededColors, assignedColors[j] + 1);
-	
+
 			/**
 			 * Generate colors.
 			 */
 			var colors = [], variation = 0, k = 0;
 			while(colors.length < neededColors){
 				var c = (options.colors.length == k) ? new Color(100, 100, 100) : parseColor(options.colors[k]);
-				
+
 				/**
 				 * Make sure each serie gets a different color.
 				 */
 				var sign = variation % 2 == 1 ? -1 : 1;
 				var factor = 1 + sign * Math.ceil(variation / 2) * 0.2;
 				c.scale(factor, factor, factor);
-	
+
 				/**
 				 * @todo if we're getting to close to something else, we should probably skip this one
 				 */
 				colors.push(c);
-				
+
 				if(++k >= options.colors.length){
 					k = 0;
 					++variation;
 				}
 			}
-		
+
 			/**
 			 * Fill the options with the generated colors.
 			 */
 			for(var m = 0, ln = series.length, n = 0, s; m < ln; ++m){
 				s = series[m];
-				
+
 				/**
 				 * Assign the color.
 				 */
@@ -458,17 +458,17 @@ var Flotr = (function(){
 	            }else if($type(s.color) == 'number'){
 					s.color = colors[s.color].toString();
 				}
-	
+
 				s.lines = $extend($extend({}, options.lines), s.lines||{});
 				s.points = $extend($extend({}, options.points), s.points||{});
 				s.bars = $extend($extend({}, options.bars), s.bars||{});
 				s.mouse = $extend($extend({}, options.mouse), s.mouse||{});
-				
+
 				if(s.shadowSize == null) s.shadowSize = options.shadowSize;
-			}						
+			}
 			return options;
 		}
-		
+
 		function repaint() {
 			constructCanvas();
 			//bindEvents();
@@ -483,16 +483,16 @@ var Flotr = (function(){
 			draw();
 			insertLegend();
 		}
-		
+
 		/**
 		 * Function: (private) constructCanvas
-		 * 
+		 *
 		 * Initializes the canvas and it's overlay canvas. When the browser is IE, we make use of excanvas.
 		 * The overlay canvas is inserted for displaying interaction.
-		 * 
+		 *
 		 * Parameters:
 		 * 		none
-		 * 
+		 *
 		 * Returns:
 		 * 		void
 		 */
@@ -501,7 +501,7 @@ var Flotr = (function(){
 	        canvasWidth = size.x;
 	        canvasHeight = size.y;
 			//target.innerHTML = '';
-			
+
 			/**
 			 * For positioning labels and overlay.
 			 */
@@ -509,11 +509,11 @@ var Flotr = (function(){
 				"position": "relative",
 				"cursor": "default"
 			});
-			
+
 			if (canvasWidth <= 0 || canvasHeight <= 0) {
 				throw 'Invalid dimensions for plot, width = ' + canvasWidth + ', height = ' + canvasHeight;
 			}
-	
+
 			/**
 			 * Insert main canvas.
 			 */
@@ -523,7 +523,7 @@ var Flotr = (function(){
 					"height": canvasHeight,
 					"id": id
 				});
-				target.appendChild(canvas);	
+				target.appendChild(canvas);
 				if (Browser.Engine.trident && !Browser.Engine.trident6) {
 					canvas = $(window.G_vmlCanvasManager.initElement(canvas));
 				}
@@ -533,7 +533,7 @@ var Flotr = (function(){
 				width: canvasWidth,
 				height: canvasHeight
 			});
-	
+
 			/**
 			 * Insert overlay canvas for interactive features.
 			 */
@@ -549,7 +549,7 @@ var Flotr = (function(){
 				overlay.injectAfter(canvas);
 				if (Browser.Engine.trident && !Browser.Engine.trident6) {
 					overlay = $(window.G_vmlCanvasManager.initElement(overlay));
-				}	
+				}
 				octx = overlay.getContext('2d');
 			}
 			overlay.setProperties({
@@ -559,41 +559,41 @@ var Flotr = (function(){
 		}
 		/**
 		 * Function: (private) bindEvents
-		 * 
-		 * 
-		 * 
+		 *
+		 *
+		 *
 		 * Parameters:
 		 * 		none
-		 * 
+		 *
 		 * Returns:
 		 * 		void
 		 */
 		function bindEvents() {
 			if (options.selection.mode != null)
-            	overlay.addEvent('mousedown', mouseDownHandler);				
+            	overlay.addEvent('mousedown', mouseDownHandler);
 
 			overlay.addEvent('mousemove', mouseMoveHandler)
 			overlay.addEvent('click', clickHandler)
 		}
 		/**
 		 * Function: (private) findDataRanges
-		 * 
+		 *
 		 * Function determines the min and max values for the xaxis and yaxis.
-		 * 
+		 *
 		 * Parameters:
 		 * 		none
-		 * 
+		 *
 		 * Returns:
 		 * 		void
 		 */
 		function findDataRanges(){
 			yaxis.datamin = xaxis.datamin = 0;
-			xaxis.datamax = yaxis.datamax = 1;		
+			xaxis.datamax = yaxis.datamax = 1;
 			if (series.length == 0) return;
-	
+
 			/**
 			 * Get datamin, datamax start values
-			 */ 
+			 */
 			var found = false;
 			for (var i = 0; i < series.length; ++i) {
 				if (series[i].data.length > 0) {
@@ -603,12 +603,12 @@ var Flotr = (function(){
 					break;
 				}
 			}
-			
+
 			/**
 			 * Return because series are empty.
 			 */
 			if (!found) return;
-	
+
 			/**
 			 * then find real datamin, datamax
 			 */
@@ -626,41 +626,41 @@ var Flotr = (function(){
 		}
 		/**
 		 * Function: (private) calculateRange
-		 * 
-		 * 
+		 *
+		 *
 		 * Parameters:
 		 * 		none
-		 * 
+		 *
 		 * Returns:
 		 * 		void
 		 */
 		function calculateRange(axis, axisOptions) {
 			var min = axisOptions.min != null ? axisOptions.min : axis.datamin;
-			var max = axisOptions.max != null ? axisOptions.max : axis.datamax;	
+			var max = axisOptions.max != null ? axisOptions.max : axis.datamax;
 			if(max - min == 0.0){
 				var widen = (max == 0.0) ? 1.0 : 0.01;
 				min -= widen;
 				max += widen;
-			}			
+			}
 			axis.tickSize = getTickSize(axisOptions.noTicks, min, max, axisOptions.tickDecimals);
-				
+
 			/**
 			 * Autoscaling.
 			 */
 			var margin;
 			if (axisOptions.min == null) {
-				
+
 				/**
 				 * Add a margin.
 				 */
 				margin = axisOptions.autoscaleMargin;
 				if (margin != 0) {
-					min -= axis.tickSize * margin;				
+					min -= axis.tickSize * margin;
 					/**
 					 * Make sure we don't go below zero if all values are positive.
 					 */
 					if (min < 0 && axis.datamin >= 0)
-						min = 0;				
+						min = 0;
 					min = axis.tickSize * Math.floor(min / axis.tickSize);
 				}
 			}
@@ -669,7 +669,7 @@ var Flotr = (function(){
 				if (margin != 0) {
 					max += axis.tickSize * margin;
 					if (max > 0 && axis.datamax <= 0)
-						max = 0;				
+						max = 0;
 					max = axis.tickSize * Math.ceil(max / axis.tickSize);
 				}
 			}
@@ -678,12 +678,12 @@ var Flotr = (function(){
 		}
 		/**
 		 * Function: (private) extendXRangeIfNeededByBar
-		 * 
+		 *
 		 * Bar series autoscaling in x direction.
-		 * 
+		 *
 		 * Parameters:
 		 * 		none
-		 * 
+		 *
 		 * Returns:
 		 * 		void
 		 */
@@ -703,12 +703,12 @@ var Flotr = (function(){
 		}
 		/**
 		 * Function: (private) extendYRangeIfNeededByBar
-		 * 
+		 *
 		 * Bar series autoscaling in y direction.
-		 * 
+		 *
 		 * Parameters:
 		 * 		none
-		 * 
+		 *
 		 * Returns:
 		 * 		void
 		 */
@@ -728,24 +728,24 @@ var Flotr = (function(){
 		}
 		/**
 		 * Function: (private) calculateTicks
-		 * 
-		 * 
-		 * 
+		 *
+		 *
+		 *
 		 * Parameters:
 		 * 		none
-		 * 
+		 *
 		 * Returns:
 		 * 		void
 		 */
 		function calculateTicks(axis, axisOptions) {
-			axis.ticks = [];	
+			axis.ticks = [];
 			if (axisOptions.ticks) {
 				var ticks = axisOptions.ticks;
-	
+
 	            if ($type(ticks) == 'function') {
 					ticks = ticks({ min: axis.min, max: axis.max });
 				}
-				
+
 				/**
 				 * Clean up the user-supplied ticks, copy them over.
 				 */
@@ -770,14 +770,14 @@ var Flotr = (function(){
 				 */
 				for (i = 0; start + i * axis.tickSize <= axis.max; ++i) {
 					v = start + i * axis.tickSize;
-					
+
 					/**
 					 * Round (this is always needed to fix numerical instability).
 					 */
 					var decimals = axisOptions.tickDecimals;
 					if(decimals == null) decimals = 1 - Math.floor(Math.log(axis.tickSize) / Math.LN10);
 					if(decimals < 0) decimals = 0;
-					
+
 					v = v.toFixed(decimals);
 					axis.ticks.push({ v: v, label: axisOptions.tickFormatter(v) });
 				}
@@ -785,12 +785,12 @@ var Flotr = (function(){
 		}
 		/**
 		 * Function: (private) calculateSpacing
-		 * 
+		 *
 		 * Calculates axis label sizes.
-		 * 
+		 *
 		 * Parameters:
 		 * 		none
-		 * 
+		 *
 		 * Returns:
 		 * 		void
 		 */
@@ -801,8 +801,8 @@ var Flotr = (function(){
 				if(l > max_label.length){
 					max_label = yaxis.ticks[i].label;
 				}
-			}	
-	
+			}
+
 	        var dummyDiv = new Element('div', {
 				"styles": {
 					'position': 'absolute',
@@ -816,7 +816,7 @@ var Flotr = (function(){
 	        labelMaxWidth = size.x;
 	        labelMaxHeight = size.y;
 			dummyDiv.destroy();
-	
+
 			/**
 			 * Grid outline line width.
 			 */
@@ -829,10 +829,10 @@ var Flotr = (function(){
 					maxOutset = Math.max(maxOutset, series[j].points.radius + series[j].points.lineWidth/2);
 				}
 			}
-	
+
 			plotOffset.left = plotOffset.right = plotOffset.top = plotOffset.bottom = maxOutset;
 			plotOffset.left += labelMaxWidth + options.grid.labelMargin;
-			plotOffset.bottom += labelMaxHeight + options.grid.labelMargin;			
+			plotOffset.bottom += labelMaxHeight + options.grid.labelMargin;
 			plotWidth = canvasWidth - plotOffset.left - plotOffset.right;
 			plotHeight = canvasHeight - plotOffset.bottom - plotOffset.top;
 			hozScale = plotWidth / (xaxis.max - xaxis.min);
@@ -840,23 +840,23 @@ var Flotr = (function(){
 		}
 		/**
 		 * Function: (private) draw
-		 * 
+		 *
 		 * Draws grid, labels and series.
-		 * 
+		 *
 		 * Parameters:
 		 * 		none
-		 * 
+		 *
 		 * Returns:
 		 * 		void
 		 */
 		function draw() {
 
 			ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-			
+
 			drawGrid();
 
 			drawLabels();
-			
+
 			if (series.length) {
 				for (var i = 0, j = series.length; i < j; i++)
 					drawSeries(series[i]);
@@ -864,12 +864,12 @@ var Flotr = (function(){
 		}
 		/**
 		 * Function: (private) tHoz
-		 * 
+		 *
 		 * Translates absolute horizontal x coordinates to relative coordinates.
-		 * 
+		 *
 		 * Parameters:
 		 * 		x - Absolute integer x coordinate.
-		 * 
+		 *
 		 * Returns:
 		 * 		Translated relative x coordinate.
 		 */
@@ -878,12 +878,12 @@ var Flotr = (function(){
 		}
 		/**
 		 * Function: (private) tVert
-		 * 
+		 *
 		 * Translates absolute vertical x coordinates to relative coordinates.
-		 * 
+		 *
 		 * Parameters:
 		 * 		y - Absolute integer y coordinate.
-		 * 
+		 *
 		 * Returns:
 		 * 		Translated relative y coordinate.
 		 */
@@ -892,19 +892,19 @@ var Flotr = (function(){
 		}
 		/**
 		 * Function: (private) drawGrid
-		 * 
+		 *
 		 * Draws a grid for the graph
-		 * 
+		 *
 		 * Parameters:
 		 * 		none
-		 * 
+		 *
 		 * Returns:
 		 * 		void
 		 */
 		function drawGrid() {
 			ctx.save();
 			ctx.translate(plotOffset.left, plotOffset.top);
-	
+
 			/**
 			 * Draw grid background, when defined.
 			 */
@@ -912,7 +912,7 @@ var Flotr = (function(){
 				ctx.fillStyle = options.grid.backgroundColor;
 				ctx.fillRect(0, 0, plotWidth, plotHeight);
 			}
-			
+
 			/**
 			 * Draw grid lines in vertical direction.
 			 */
@@ -926,12 +926,12 @@ var Flotr = (function(){
 					 * Don't show lines on upper and lower bounds.
 					 */
 					if ((v == xaxis.min || v == xaxis.max) && options.grid.outlineWidth != 0) continue;
-		
+
 					ctx.moveTo(Math.floor(tHoz(v)) + ctx.lineWidth/2, 0);
 					ctx.lineTo(Math.floor(tHoz(v)) + ctx.lineWidth/2, plotHeight);
 				}
 			}
-			
+
 			/**
 			 * Draw grid lines in horizontal direction.
 			 */
@@ -942,13 +942,13 @@ var Flotr = (function(){
 					 * Don't show lines on upper and lower bounds.
 					 */
 					if ((v == yaxis.min || v == yaxis.max) && options.grid.outlineWidth != 0) continue;
-		
+
 					ctx.moveTo(0, Math.floor(tVert(v)) + ctx.lineWidth/2);
 					ctx.lineTo(plotWidth, Math.floor(tVert(v)) + ctx.lineWidth/2);
 				}
 			}
 			ctx.stroke();
-			
+
 			/**
 			 * Draw axis/grid border.
 			 */
@@ -960,22 +960,22 @@ var Flotr = (function(){
 			}
 			ctx.restore();
 		}
-		
+
 		var labelWrapper = null;
 	 	/**
 		 * Function: (private) drawLabels
-		 * 
+		 *
 		 * Draws labels for x and y axis.
-		 * 
+		 *
 		 * Parameters:
 		 * 		none
-		 * 
+		 *
 		 * Returns:
 		 * 		void
-		 */   
-		function drawLabels() {		
+		 */
+		function drawLabels() {
 			/**
-			 * Construct fixed width label boxes, which can be styled easily. 
+			 * Construct fixed width label boxes, which can be styled easily.
 			 */
 
 			var noLabels = 0;
@@ -991,7 +991,7 @@ var Flotr = (function(){
 					'color': options.grid.color
 				}
 			});
-			
+
 			/**
 			 * Add xlabels.
 			 */
@@ -1004,12 +1004,12 @@ var Flotr = (function(){
 						'top': (plotOffset.top + plotHeight + options.grid.labelMargin) + 'px',
 						'left': (plotOffset.left + tHoz(tick.v) - xBoxWidth/2) + 'px',
 						'width': xBoxWidth + 'px',
-						'text-align': 'center'			
+						'text-align': 'center'
 					},
 					"text": tick.label
 				}));
 			}
-			
+
 			/**
 			 * Add ylabels.
 			 */
@@ -1022,7 +1022,7 @@ var Flotr = (function(){
 						'top': (plotOffset.top + tVert(tick.v) - labelMaxHeight/2) + 'px',
 						'left': 0,
 						'width': labelMaxWidth + 'px',
-						'text-align': 'right'			
+						'text-align': 'right'
 					},
 					"class": "gridLabel",
 					"text": tick.label
@@ -1031,29 +1031,29 @@ var Flotr = (function(){
 
 			target.adopt(labelWrapper);
 		}
-		
+
 		/**
 		 * Function: (private) drawSeries
-		 * 
+		 *
 		 * Actually draws the graph.
-		 * 
+		 *
 		 * Parameters:
 		 * 		series - Array of series that need to be drawn.
-		 * 
+		 *
 		 * Returns:
 		 * 		void
 		 */
 		function drawSeries(series) {
 			function plotLine(data, offset) {
 				if(data.length < 2) return;
-	
+
 				var prevx = tHoz(data[0][0]), prevy = tVert(data[0][1]) + offset;
-	
+
 				ctx.beginPath();
 				ctx.moveTo(prevx, prevy);
 				for (var i = 0; i < data.length - 1; ++i) {
 					var x1 = data[i][0], y1 = data[i][1], x2 = data[i+1][0], y2 = data[i+1][1];
-	
+
 					/**
 					 * Clip with ymin.
 					 */
@@ -1062,7 +1062,7 @@ var Flotr = (function(){
 						 * Line segment is outside the drawing area.
 						 */
 						if(y2 < yaxis.min) continue;
-						
+
 						/**
 						 * Compute new intersection point.
 						 */
@@ -1073,10 +1073,10 @@ var Flotr = (function(){
 						x2 = (yaxis.min - y1) / (y2 - y1) * (x2 - x1) + x1;
 						y2 = yaxis.min;
 					}
-	
+
 					/**
 					 * Clip with ymax.
-					 */ 
+					 */
 					if (y1 >= y2 && y1 > yaxis.max) {
 						if(y2 > yaxis.max) continue;
 						x1 = (yaxis.max - y1) / (y2 - y1) * (x2 - x1) + x1;
@@ -1086,7 +1086,7 @@ var Flotr = (function(){
 						x2 = (yaxis.max - y1) / (y2 - y1) * (x2 - x1) + x1;
 						y2 = yaxis.max;
 					}
-	
+
 					/**
 					 * Clip with xmin.
 					 */
@@ -1099,7 +1099,7 @@ var Flotr = (function(){
 						y2 = (xaxis.min - x1) / (x2 - x1) * (y2 - y1) + y1;
 						x2 = xaxis.min;
 					}
-	
+
 					/**
 					 * Clip with xmax.
 					 */
@@ -1112,21 +1112,21 @@ var Flotr = (function(){
 						y2 = (xaxis.max - x1) / (x2 - x1) * (y2 - y1) + y1;
 						x2 = xaxis.max;
 					}
-	
+
 					if (prevx != tHoz(x1) || prevy != tVert(y1) + offset)
 						ctx.moveTo(tHoz(x1), tVert(y1) + offset);
-					
+
 					prevx = tHoz(x2);
 					prevy = tVert(y2) + offset;
 					ctx.lineTo(prevx, prevy);
 				}
 				ctx.stroke();
 			}
-			
+
 			ctx.save();
 			ctx.translate(plotOffset.left, plotOffset.top);
 			ctx.lineJoin = 'round';
-	
+
 			var lw = series.lines.lineWidth;
 			var sw = series.shadowSize;
 			/**
@@ -1136,41 +1136,41 @@ var Flotr = (function(){
 				ctx.lineWidth = sw / 2;
 				ctx.strokeStyle = "rgba(0,0,0,0.1)";
 				plotLine(series.data, lw/2 + sw/2 + ctx.lineWidth/2);
-	
+
 				ctx.lineWidth = sw / 2;
 				ctx.strokeStyle = "rgba(0,0,0,0.2)";
 				plotLine(series.data, lw/2 + ctx.lineWidth/2);
 			}
-	
+
 			ctx.lineWidth = lw;
 			ctx.strokeStyle = series.color;
-	
+
 			plotLine(series.data, 0);
 			ctx.restore();
 		}
-		
+
 		function insertLegend(){
 			if (!options.legend.show) return;
-			
+
 			var fragments = [];
 			var rowStarted = false;
 			for (var i = 0; i < series.length; ++i) {
 				if (!series[i].label) continue;
-				
+
 				if (i % options.legend.noColumns == 0) {
 					fragments.push((rowStarted) ? '</tr><tr>' : '<tr>');
 					rowStarted = true;
 				}
-	
+
 				var label = series[i].label;
 				if (options.legend.labelFormatter != null)
 					label = options.legend.labelFormatter(label);
-				
+
 				fragments.push('<td class="flotr-legend-color-box"><div style="border:1px solid ' + options.legend.labelBoxBorderColor + ';padding:1px"><div style="width:14px;height:10px;background-color:' + series[i].color + '"></div></div></td><td class="flotr-legend-label">' + label + '</td>');
 			}
 			if (rowStarted)
 				fragments.push('</tr>');
-			
+
 			if (fragments.length > 0) {
 				var table = '<table style="font-size:smaller;color:' + options.grid.color + '">' + fragments.join("") + '</table>';
 				if (options.legend.container != null) {
@@ -1178,11 +1178,11 @@ var Flotr = (function(){
 				} else {
 					var pos = {};
 					var p = options.legend.position, m = options.legend.margin;
-					
+
 					if (p.charAt(0) == 'n')
 						pos.top = (m + plotOffset.top) + 'px';
 					else if (p.charAt(0) == 's')
-						pos.bottom = (m + plotOffset.bottom) + 'px';					
+						pos.bottom = (m + plotOffset.bottom) + 'px';
 					if (p.charAt(1) == 'e')
 						pos.right = (m + plotOffset.right) + 'px';
 					else if (p.charAt(1) == 'w')
@@ -1192,20 +1192,20 @@ var Flotr = (function(){
 						'z-index': 2
 					})).set("html", table);
 					target.adopt(div);
-					
+
 					if (options.legend.backgroundOpacity != 0.0) {
 						/**
 						 * Put in the transparent background separately to avoid blended labels and
 						 * label boxes.
 						 */
-						
+
 						var c = options.legend.backgroundColor;
-						
+
 						if(c == null){
 							var tmp = (options.grid.backgroundColor != null) ? options.grid.backgroundColor : extractColor(div);
 							c = parseColor(tmp).adjust(null, null, null, 1).toString();
 						}
-						
+
 						var size = div.getSize();
 						var bgdiv = new Element('div').addClass('flotr-legend-bg').setStyles($extend(pos,{
 							'position': 'absolute',
@@ -1215,15 +1215,15 @@ var Flotr = (function(){
 							'opacity': options.legend.backgroundOpacity
 						}));
 
-						bgdiv.injectBefore(div);				
+						bgdiv.injectBefore(div);
 					}
 				}
 			}
 		}
-	}	
+	}
 
 return {
-	
+
 	"Plot": Plot
 };
 

@@ -276,18 +276,18 @@ if (!console) {
 		if (name == "") return;
 		timers[name] = $time();
 	};
-	
+
 	console.timeEnd = console.timeEnd || function(name) {
 		if (name == "" || !timers.hasOwnProperty(name)) return;
 		console.log(name + ": " + ($time() - timers[name]) + "ms");
 		delete timers[name];
 	};
-	
+
 	console.assert = console.assert || function() {
 		var args = $A(arguments), expr = args.shift();
 		if (!expr) {
 			throw new Error(false);
 		}
 	};
-	
+
 })();

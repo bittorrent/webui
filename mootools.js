@@ -3102,8 +3102,8 @@ provides: [MooTools.More]
 */
 
 MooTools.More = {
-	'version': '1.2.4.2dev',
-	'build': '%build%'
+	'version': '1.2.4.2',
+	'build': 'bd5a93c0913cce25917c48cbdacde568e15e02ef'
 };
 
 /*
@@ -3150,6 +3150,7 @@ var Drag = new Class({
 		handle: false,
 		invert: false,
 		preventDefault: false,
+		stopPropagation: false,
 		modifiers: {x: 'left', y: 'top'}
 	},
 
@@ -3191,6 +3192,7 @@ var Drag = new Class({
 //		if (event.rightClick) return;
 // uTorrent WebUI Patch - END
 		if (this.options.preventDefault) event.preventDefault();
+		if (this.options.stopPropagation) event.stopPropagation();
 // uTorrent WebUI Patch - BEGIN
 		if (event.rightClick) {
 			this.fireEvent("onRightClick", event.page);

@@ -22,26 +22,26 @@ function loadJS(source, properties) {
 		document: document,
 		check: $lambda(true)
 	}, properties);
-	
+
 	var script = new Element('script', {'src': source, 'type': 'text/javascript', 'charset': 'utf-8'});
-	
+
 	var load = properties.onload.bind(script), check = properties.check, doc = properties.document;
 	delete properties.onload; delete properties.check; delete properties.document;
-	
+
 	script.addEvents({
 		load: load,
 		readystatechange: function(){
-			if (Browser.Engine.trident && ['loaded', 'complete'].contains(this.readyState)) load(); 
+			if (Browser.Engine.trident && ['loaded', 'complete'].contains(this.readyState)) load();
 		}
 	}).setProperties(properties);
-	
-	
+
+
 	if (Browser.Engine.webkit419) var checker = (function(){
 		if (!$try(check)) return;
 		$clear(checker);
 		load();
 	}).periodical(50);
-	
+
 	return script.inject(doc.head);
 }
 
@@ -72,20 +72,20 @@ Array.implement({
 	    return -(first + 1);
 	},
 
-	
+
 	"insertAt": function(value, index) {
 		this.splice(index, 0, value);
 		return this;
 	},
-	
+
 	"swap": function(indexA, indexB) {
 		var temp = this[indexA];
 		this[indexA] = this[indexB];
 		this[indexB] = temp;
 		return this;
 	},
-	
-	"remove": function(item) { 
+
+	"remove": function(item) {
 		for (var i = this.length; i--;) {
 			if (this[i] === item) {
 				this.splice(i, 1);
@@ -98,7 +98,7 @@ Array.implement({
 });
 
 String.implement({
-	
+
 	"pad": function(len, str, type) {
 		var inp = this;
 		str = str || " ";
@@ -182,12 +182,12 @@ var SpeedGraph = {
 		this.maxSeconds = 600;
 		this.seconds = -1;
 		this.startSeconds = $time() / 1000;
-		this.plot = new Flotr.Plot(this.element, [{ label: lang[CONST.OV_COL_UPSPD], data: [] }, { label: lang[CONST.OV_COL_DOWNSPD], data: [] }], { 
+		this.plot = new Flotr.Plot(this.element, [{ label: lang[CONST.OV_COL_UPSPD], data: [] }, { label: lang[CONST.OV_COL_DOWNSPD], data: [] }], {
 			"colors" : ["#009900", "#1C8DFF"],
 			"lines" : {
 				show: true
 			},
-			"xaxis" : { 
+			"xaxis" : {
 				"max" : (this.seconds - this.startSeconds >= this.maxSeconds) ? null : this.maxSeconds + this.startSeconds,
 				"tickSize" : 60,
 				"tickFormatter" : function(n) {
@@ -201,10 +201,10 @@ var SpeedGraph = {
 					return (h + ":" + m + ":" + s);
 				}
 			},
-			"yaxis" : { 
+			"yaxis" : {
 				"min": 0,
 				"minTickSize": 5 * 1024,
-				"tickFormatter": function(n) { return (parseInt(n).toFileSize() + perSec); } 
+				"tickFormatter": function(n) { return (parseInt(n).toFileSize() + perSec); }
 			},
 			"grid": {
 				"color": "#868686"
@@ -236,7 +236,7 @@ var SpeedGraph = {
 		this.plot.series[1].data.push([this.seconds, downSpeed]);
 		var data = this.plot.series[0].data;
 		while ((data[data.length - 1][0] - data[0][0]) > this.maxSeconds) {
-			this.plot.series[0].data.shift(); 
+			this.plot.series[0].data.shift();
 			this.plot.series[1].data.shift();
 		}
 		this.plot.options.xaxis.max = (this.seconds - this.startSeconds >= this.maxSeconds) ? null : this.maxSeconds + this.startSeconds;
