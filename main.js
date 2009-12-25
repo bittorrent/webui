@@ -24,7 +24,7 @@ function setupUI() {
 			col(lang[CONST.OV_COL_NAME], TYPE_STRING, colMask & 0x0001),
 			col(lang[CONST.OV_COL_STATUS], TYPE_STRING, colMask & 0x0002),
 			col(lang[CONST.OV_COL_SIZE], TYPE_NUMBER, colMask & 0x0004),
-			col(lang[CONST.OV_COL_DONE], TYPE_NUMBER, colMask & 0x0008),
+			col(lang[CONST.OV_COL_DONE], (utWebUI.settings["gui.graphic_progress"] ? TYPE_NUM_PROGRESS : TYPE_NUMBER), colMask & 0x0008),
 			col(lang[CONST.OV_COL_DOWNLOADED], TYPE_NUMBER, colMask & 0x0010),
 			col(lang[CONST.OV_COL_UPPED], TYPE_NUMBER, colMask & 0x0020),
 			col(lang[CONST.OV_COL_SHARED], TYPE_NUMBER, colMask & 0x0040),
@@ -115,7 +115,7 @@ function setupUI() {
 				col(lang[CONST.FI_COL_NAME], TYPE_STRING, colMask & 0x01),
 				col(lang[CONST.FI_COL_SIZE], TYPE_NUMBER, colMask & 0x02),
 				col(lang[CONST.FI_COL_DONE], TYPE_NUMBER, colMask & 0x04),
-				col(lang[CONST.FI_COL_PCT], TYPE_NUMBER, colMask & 0x08),
+				col(lang[CONST.FI_COL_PCT], (utWebUI.settings["gui.graphic_progress"] ? TYPE_NUM_PROGRESS : TYPE_NUMBER), colMask & 0x08),
 				col(lang[CONST.FI_COL_PRIO], TYPE_NUMBER, colMask & 0x10)
 			], $extend({
 			"format": function(values, index) {

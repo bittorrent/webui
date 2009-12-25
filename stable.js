@@ -23,8 +23,8 @@ limitations under the License.
 var TYPE_STRING = 0;
 var TYPE_NUMBER = 1;
 var TYPE_DATE = 2;
-var TYPE_STRING_NO_CASE = 3;
 var TYPE_NUM_ORDER = 3;
+var TYPE_NUM_PROGRESS = 4;
 
 var ALIGN_AUTO = 0;
 var ALIGN_LEFT = 1;
@@ -40,6 +40,7 @@ var HAS_CHANGED = 1;
 var TD = new Element("td");
 var TR = new Element("tr");
 var DIV = new Element("div");
+var SPAN = new Element("span");
 function simpleClone(element, content) {
 	element = $(element.cloneNode(!!content));
 	element.uid = null;
@@ -233,23 +234,43 @@ var dxSTable = new Class({
 			this.dBody.addEvent("mousedown", function(ev) {
 				var ele = ev.target;
 				if (!ele) return;
-				if (ele.get("tag") == "td")
-					$me.selectRow(ev, ele.parentNode);
+				switch (ele.get("tag")) {
+					case "span":
+						ele = ele.parentNode;
+					case "div":
+						ele = ele.parentNode;
+					case "td":
+						$me.selectRow(ev, ele.parentNode);
+						break;
+				}
 			}).addEvent("click", function(ev) {
 				var ele = ev.target;
 				if (!ele) return;
-				if (ele.get("tag") != "td") {
-					var pos = this.getPosition();
-					if ((this.clientWidth > ev.page.x - pos.x - this.scrollLeft + 2) && (this.clientHeight > ev.page.y - pos.y - this.scrollTop + 2)) {
-						$me.clearSelection();
-						$me.fireEvent("onSelect", [ev, ""]);
-					}
+				switch (ele.get("tag")) {
+					case "td":
+					case "div":
+					case "span":
+						break;
+
+					default:
+						var pos = this.getPosition();
+						if ((this.clientWidth > ev.page.x - pos.x - this.scrollLeft + 2) && (this.clientHeight > ev.page.y - pos.y - this.scrollTop + 2)) {
+							$me.clearSelection();
+							$me.fireEvent("onSelect", [ev, ""]);
+						}
 				}
 			}).addEvent("dblclick", function(ev) {
 				var ele = ev.target;
 				if (!ele) return;
-				if (ele.get("tag") == "td")
-					$me.fireEvent("onDblClick", ele.parentNode.id);
+				switch (ele.get("tag")) {
+					case "span":
+						ele = ele.parentNode;
+					case "div":
+						ele = ele.parentNode;
+					case "td":
+						$me.fireEvent("onDblClick", ele.parentNode.id);
+						break;
+				}
 			});
 		}
 		for (var i = 0; i < this.options.maxRows; i++)
@@ -367,22 +388,17 @@ var dxSTable = new Class({
 		for (var i = 0; i < this.cols; i++) {
 			var align = "";
 			switch (this.colData[i].align) {
+				case ALIGN_LEFT: align = "left"; break;
+				case ALIGN_CENTER: align = "center"; break;
+				case ALIGN_RIGHT: align = "right"; break;
 
-			case ALIGN_LEFT:
-				align = "left";
-				break;
-
-			case ALIGN_CENTER:
-				align = "center";
-				break;
-
-			case ALIGN_RIGHT:
-				align = "right";
-				break;
-
-			case ALIGN_AUTO:
-			default:
-				align = (this.colData[i].type == TYPE_NUMBER) ? "right" : "left";
+				case ALIGN_AUTO:
+				default:
+					switch (this.colData[i].type) {
+						case TYPE_NUMBER: align = "right"; break;
+						case TYPE_NUM_PROGRESS: align = "center"; break;
+						default: align = "left";
+					}
 			}
 			this.tHeadCols[i].setStyle("textAlign", align);
 			if (Browser.Engine.trident) {
@@ -475,6 +491,7 @@ var dxSTable = new Class({
 				break;
 
 			case TYPE_NUMBER:
+			case TYPE_NUM_PROGRESS:
 				comp = function(x, y) {
 					return $me.sortNumeric(x, y);
 				};
@@ -556,6 +573,7 @@ var dxSTable = new Class({
 			break;
 
 		case TYPE_NUMBER:
+		case TYPE_NUM_PROGRESS:
 			r = Comparator.compareNumeric(m, n);
 			break;
 
@@ -727,6 +745,7 @@ var dxSTable = new Class({
 					break;
 
 				case TYPE_NUMBER:
+				case TYPE_NUM_PROGRESS:
 					comp = function(x, y) {
 						return $me.sortNumeric(x, y);
 					};
@@ -832,7 +851,11 @@ var dxSTable = new Class({
 			var cell = row.childNodes[k];
 			if ((v == 0) && (icon != "") && !cell.hasClass(icon))
 				cell.className = "stable-icon " + icon;
-			if (cell.lastChild) {
+			if ($me.colData[k].type == TYPE_NUM_PROGRESS) {
+				var prog = simpleClone(DIV, false).addClass("stable-progress").set("html", "&nbsp;").inject(cell.empty());
+				var pbar = simpleClone(SPAN, false).addClass("stable-progress-bar").set("html", "&nbsp;").setStyle("width", data[v]).inject(prog);
+				var ptxt = simpleClone(SPAN, false).addClass("stable-progress-text").set("text", data[v]).inject(prog);
+			} else if (cell.lastChild) {
 				var toggle = ((cell.lastChild.nodeValue == "") && (data[v] != cell.lastChild.nodeValue));
 				cell.lastChild.nodeValue = data[v];
 				if (toggle && Browser.Engine.trident)
@@ -999,7 +1022,12 @@ var dxSTable = new Class({
 			this._insertRow(id);
 		if (this.requiresRefresh || row.hidden || (row.rowIndex == -1)) return hasSortedChanged;
 		var r = this.tb.body.childNodes[row.rowIndex], i = this.colOrder.indexOf(col), cell = r.childNodes[i], fval = this.options.format([val], col)[0];
-		if (cell.lastChild) {
+		if (this.colData[i].type == TYPE_NUM_PROGRESS) {
+			var pcnt = (val / 10).roundTo(1) + "%";
+			var prog = simpleClone(DIV, false).addClass("stable-progress").set("html", "&nbsp;").inject(cell.empty());
+			var pbar = simpleClone(SPAN, false).addClass("stable-progress-bar").set("html", "&nbsp;").setStyle("width", pcnt).inject(prog);
+			var ptxt = simpleClone(SPAN, false).addClass("stable-progress-text").set("text", pcnt).inject(prog);
+		} else if (cell.lastChild) {
 			var toggle = ((cell.lastChild.nodeValue == "") && (fval != cell.lastChild.nodeValue));
 			cell.lastChild.nodeValue = fval;
 			if (toggle && Browser.Engine.trident)

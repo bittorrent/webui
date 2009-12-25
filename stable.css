@@ -306,3 +306,30 @@ limitations under the License.
 .stable-hidden-column {
 	display: none;
 }
+
+.stable-progress {
+	background: #C0D1E2;
+	border: 1px solid #B0B0B0;
+	height: 12px;
+	margin: 0;
+	overflow: hidden;
+	position: relative;
+}
+
+.stable-progress-bar {
+	background: #2299FF;
+	line-height: 1.1em;
+	left: 0;
+	position: absolute;
+	top: 0;
+}
+
+.stable-progress-text {
+	height: 100%;
+	line-height: 1em;
+	left: 0;
+	position: absolute;
+	right: 0;
+	top: 0;
+	z-index: 1;
+}

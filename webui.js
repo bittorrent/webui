@@ -642,7 +642,6 @@ var utWebUI = {
 					key == "gui.sg_mode" ||
 					key == "gui.speed_in_title" ||
 					key == "gui.limits_in_statusbar" ||
-					key == "gui.graphic_progress" ||
 					key == "gui.piecebar_progress" ||
 					key == "gui.tall_category_list" ||
 					key == "gui.bypass_search_redirect" ||
