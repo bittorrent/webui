@@ -176,13 +176,21 @@ function setupUI() {
 	new Drag("HDivider", {
 		"modifiers": {"x": "left", "y": ""},
 		"onComplete": function() {
-			resizeUI.delay(20, null, [window.getSize().x - this.value.now.x, null]);
+			(function () {
+				resizeUI(window.getSize().x - this.value.now.x, null);
+				if (Browser.Engine.presto)
+					utWebUI.saveConfig(true);
+			}).delay(20, this);
 		}
 	});
 	new Drag("VDivider", {
 		"modifiers": {"x": "", "y": "top"},
 		"onComplete": function() {
-			resizeUI.delay(20, null, [null, this.value.now.y]);
+			(function () {
+				resizeUI(null, this.value.now.y);
+				if (Browser.Engine.presto)
+					utWebUI.saveConfig(true);
+			}).delay(20, this);
 		}
 	});
 }
@@ -1053,8 +1061,7 @@ window.addEvent("domready", function() {
 				overrideButton.style.cssText = "z-index:1000;position:fixed;top:" + (ev.client.y - 2) + "px;left:" + (ev.client.x - 2) + "px;width:5px;height:5px;opacity:0.01";
 				(doc.body || doc.documentElement).appendChild(overrideButton);
 			}
-		});
-		document.addEvent("mouseup", function(ev) {
+		}).addEvent("mouseup", function(ev) {
 			if (overrideButton) {
 				overrideButton.parentNode.removeChild(overrideButton);
 				overrideButton = undefined;
@@ -1065,14 +1072,14 @@ window.addEvent("domready", function() {
 			}
 		});
 	}
-	if (Browser.Engine.trident || Browser.Engine.webkit || Browser.Engine.gecko) {
+//	if (Browser.Engine.trident || Browser.Engine.webkit || Browser.Engine.gecko || Browser.Engine.presto) {
 		document.addEvent("contextmenu", function(ev) {
 			if (!(/^input|textarea|a$/i).test(ev.target.tagName)) {
 				ev.stop();
 				return false;
 			}
 		});
-	}
+//	}
 
 	$("search").addEvent("click", function(ev) {
 		ev.stop();
@@ -1100,7 +1107,7 @@ window.addEvent("domready", function() {
 		"onload": function(doc) {
 			$("torrent_file").set("value", "");
 			$("ADD_FILE_OK").disabled = false;
-			var str = $(doc.body).get("html");
+			var str = $(doc.body).get("text");
 			if (str != "") {
 				var data = JSON.decode(str);
 				if (has(data, "error"))

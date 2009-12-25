@@ -1353,15 +1353,12 @@ var utWebUI = {
 		$("msg").set("html", "Reloading...");
 		$("cover").show();
 		window.removeEvents("unload");
-		utWebUI.request("action=setsetting&s=webui.cookie&v={}", function(){ window.location.reload(false); });
+		this.config = {};
+		this.request("action=setsetting&s=webui.cookie&v={}", function(){ window.location.reload(false); });
 	},
 
 	"saveConfig": function(async) {
-		new Request({
-			"url": urlBase + "?token=" + this.TOKEN + "&action=setsetting&s=webui.cookie&v=" + JSON.encode(this.config),
-			"method": "get",
-			"async": async || false
-		}).send();
+		this.request("action=setsetting&s=webui.cookie&v=" + JSON.encode(this.config), null, async || false);
 	},
 
 	"toggleCatPanel": function() {
