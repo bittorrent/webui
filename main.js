@@ -543,7 +543,7 @@ function loadLangStrings() {
 		$("dlgLabel").hide();
 	});
 	$("ADD_FILE_OK").set("value", lang[CONST.DLG_SETTINGS_03]).addEvent("click", function() {
-		$("upfrm").set("action", "./?token=" + utWebUI.TOKEN + "&action=add-file");
+		$("upfrm").set("action", urlBase + "?token=" + utWebUI.TOKEN + "&action=add-file");
 	});
 	$("ADD_FILE_CANCEL").set("value", lang[CONST.DLG_SETTINGS_04]).addEvent("click", function() {
 		DialogManager.hide("Add");

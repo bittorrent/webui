@@ -8,7 +8,7 @@
 var VERSION = "0.362";
 var BUILD_REQUIRED = -1; // the ut build the webui requires
 var lang = lang || null;
-var urlBase = window.location.pathname.substr(0, window.location.pathname.indexOf("/gui") + 4) + "/";
+var urlBase = window.location.pathname.substr(0, window.location.pathname.indexOf("/gui")) + "/gui/";
 var isGuest = (window.location.pathname.search(/.*guest.html$/) >= 0);
 
 var utWebUI = {
