@@ -9,7 +9,7 @@ var VERSION = "0.362";
 var BUILD_REQUIRED = -1; // the ut build the webui requires
 var lang = lang || null;
 var urlBase = window.location.pathname.substr(0, window.location.pathname.indexOf("/gui")) + "/gui/";
-var isGuest = (window.location.pathname.search(/.*guest.html$/) >= 0);
+var isGuest = window.location.pathname.test(/.*guest.html$/);
 
 var utWebUI = {
 
@@ -34,6 +34,7 @@ var utWebUI = {
 	"timer": 0,
 	"updateTimeout": null,
 	"interval": -1,
+	"retryDelay": 3000,
 	"totalDL": 0,
 	"totalUL": 0,
 	"loaded": false,
@@ -72,14 +73,6 @@ var utWebUI = {
 			},
 			"activeLabel": "_all_"
 		};
-		new Request({
-			"url": urlBase + "token.html",
-			"method": "get",
-			"async": false,
-			"onSuccess": function(str) {
-				utWebUI.TOKEN = str.substring(str.indexOf("none;'>") + 7, str.indexOf("</div>"));
-			}
-		}).send();
 		if (isGuest) {
 			this.addSettings();
 			return;
@@ -88,14 +81,55 @@ var utWebUI = {
 	},
 
 	"request": function(qs, fn, async) {
-		if (this.TOKEN != "")
-			qs = "token=" + this.TOKEN + "&" + qs;
-		new Request.JSON({
-			"url": urlBase + "?" + qs + "&t=" + $time(),
-			"method": "get",
-			"onSuccess": (fn) ? fn.bind(this) : $empty,
-			"async": !!async
-		}).send();
+		var req = (function() {
+			var logged = false;
+			var reqfail = (function() {
+				if (!logged) {
+					logged = true;
+					log("Request failed (will retry in " + this.retryDelay + " ms): " + qs);
+				}
+				$clear(this.updateTimeout);
+				this.TOKEN = "";
+				this.request.delay(this.retryDelay, this, [qs, (function(json) {
+					this.updateTimeout = this.update.delay(this.config.updateInterval, this);
+					if (fn) fn(json);
+				}).bind(this), async]);
+			}).bind(this);
+
+			try {
+				new Request.JSON({
+					"url": urlBase + "?token=" + this.TOKEN + "&" + qs + "&t=" + $time(),
+					"method": "get",
+					"async": !!async,
+					"onFailure": reqfail,
+					"onSuccess": (fn) ? fn.bind(this) : $empty
+				}).send();
+			} catch(e){
+				reqfail();
+			}
+		}).bind(this);
+
+		if (!this.TOKEN)
+			this.requestToken(req, true);
+		else
+			req();
+	},
+
+	"requestToken": function(fn, async) {
+		try {
+			new Request({
+				"url": urlBase + "token.html?t=" + $time(),
+				"method": "get",
+				"async": !!async,
+				"onFailure": (fn) ? fn.bind(this) : $empty,
+				"onSuccess": (function(str) {
+					this.TOKEN = str.substring(str.indexOf("none;'>") + 7, str.indexOf("</div>"));
+					if (fn) fn.delay(0); // break recursion
+				}).bind(this)
+			}).send();
+		} catch(e){
+			if (fn) fn.delay(0); // break recursion
+		}
 	},
 
 	"perform": function(action) {
@@ -667,9 +701,8 @@ var utWebUI = {
 				this.settings[json.settings[i][0]] = val;
 			}
 			delete json.settings;
-		}
-		if (!isGuest)
 			this.loadSettings();
+		}
 		if (!this.loaded) {
 			var detectLang = (navigator.language) ? navigator.language : navigator.userLanguage;
 			var matches;

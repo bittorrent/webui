@@ -19,62 +19,62 @@
 		fieldset {
 			padding: 5px !important;
 		}
-		
+
 		.lm li {
 			margin: 0 !important;
 			padding: 0 !important;
 		}
-		
+
 		.stg_con .hcont label {
 			vertical-align: middle !important;
 		}
-		
+
 		ul#tabs {
 			padding: 5px 0 0 0 !important;
 		}
-		
+
 		.stable-body table {
 			border-collapse: collapse !important;
 		}
-		
+
 		.stable-pagemenu .pagestat select {
 			margin: 3px 0 0 0 !important;
 		}
-		
+
 		.stable-pagemenu .prevlink-disabled, .stable-pagemenu .nextlink-disabled {
 			filter: alpha(opacity=50);
 		}
-		
+
 		.stable-pagemenu .prevlink, .stable-pagemenu .nextlink {
 			filter: alpha(opacity=100);
 		}
-		
+
 		#modalbg {
 			filter: alpha(opacity=70);
 		}
-		
+
 		div#dlgProps fieldset {
 			padding: 0;
 		}
-		
+
 		#trckrfs {
 			margin-top: -8px !important;
 			overflow: hidden;
 		}
-		
+
 		#prop-trackers {
 			width: 400px !important;
 		}
-		
+
 		div#dlgProps fieldset div {
 			overflow: hidden;
 		}
-		
+
 		.props-spacer {
 			height: 19px !important;
 			line-height: 19px !important;
 		}
-		
+
 		</style>
 		<![endif]-->
 		<!--[if IE 6]>
@@ -82,15 +82,15 @@
 		.stg_con .hcont label {
 			vertical-align: baseline !important;
 		}
-		
+
 		div#msg img {
 			margin-top: expression((100 - this.height)/2);
 		}
-		
+
 		.stg_con select {
 			padding: 2px 0;
 		}
-		
+
 		#st_ao_h {
 			overflow-x: hidden;
 		}
@@ -105,12 +105,11 @@
 		<![endif]-->
 	</head>
 	<body>
-		<div id="token">##TOKEN##</div>
 		<div id="preload"></div>
 		<div id="cover"><div id="msg"><img src="./images/snake.gif" alt="Loading..." />&nbsp;&nbsp;Loading...</div></div>
 		<div id="modalbg"></div>
 		<div id="dragmask"></div>
-		
+
 		<!-- /* Torrent Add Dialog -->
 		<div id="dlgAdd" class="dlg-window">
 			<a href="#" class="dlg-close"></a>
@@ -139,7 +138,7 @@
 			</div>
 		</div>
 		<!-- Torrent Add Dialog */  -->
-		
+
 		<!-- /* Settings Dialog -->
 		<div id="dlgSettings" class="dlg-window">
 			<a href="#" class="dlg-close"></a>
@@ -148,7 +147,7 @@
 			<div class="lm">
 				<ul id="stgmenu"></ul>
 			</div>
-			
+
 			<div id="st_webui" class="stg_con">
 				<span class="hcont"><input type="checkbox" id="webui.enable" /><label for="webui.enable" id="DLG_SETTINGS_9_WEBUI_01"></label></span>
 				<fieldset>
@@ -183,17 +182,17 @@
 						<div class="ralign"><input type="text" id="webui.updateInterval" class="tbox num flr" value="3000" /><label for="webui.updateInterval">Update GUI every (ms):</label>&nbsp;</div>
 						<span><input type="checkbox" id="webui.confirmDelete" checked="checked" /><label for="webui.confirmDelete" id="DLG_SETTINGS_2_UI_02"></label></span>
 					</div>
-					
+
 					<div class="hcont">
 						<div class="ralign"><label for="webui.maxRows"><input type="text" id="webui.maxRows" class="tbox num flr" value="50" />Max. rows per page:</label>&nbsp;</div>
 						<input type="checkbox" id="webui.alternateRows" /><label for="webui.alternateRows" id="DLG_SETTINGS_2_UI_05"></label>
 					</div>
 					<div class="hcont">
-						<div class="ralign"><input type="checkbox" id="webui.showDetails" checked="checked" /><label for="webui.showDetails" id="MENU_SHOW_DETAIL"></label></div>						
+						<div class="ralign"><input type="checkbox" id="webui.showDetails" checked="checked" /><label for="webui.showDetails" id="MENU_SHOW_DETAIL"></label></div>
 						<input type="checkbox" id="webui.showCategories" checked="checked" /><label for="webui.showCategories" id="MENU_SHOW_CATEGORY"></label>
 					</div>
 					<div class="hcont">
-						<div class="ralign"><input type="checkbox" id="webui.showTitleSpeed" /><label for="webui.showTitleSpeed" id="DLG_SETTINGS_2_UI_06"></label></div>						
+						<div class="ralign"><input type="checkbox" id="webui.showTitleSpeed" /><label for="webui.showTitleSpeed" id="DLG_SETTINGS_2_UI_06"></label></div>
 						<label for="webui.lang" id="DLG_SETTINGS_1_GENERAL_02"></label>
 						<select id="webui.lang">
 							<option value="sq">Albanian</option>
@@ -273,7 +272,7 @@
 					<div class="hcont"><input type="text" id="gui.persistent_labels" class="tbox" style="width: 453px" /></div>
 				</fieldset>
 			</div>
-			
+
 			<div id="st_dirs" class="stg_con">
 				<fieldset>
 					<legend id="DLG_SETTINGS_3_PATHS_01"></legend>
@@ -339,7 +338,7 @@
 					</div>
 				</fieldset>
 			</div>
-			
+
 			<div id="st_bw" class="stg_con">
 				<fieldset>
 					<legend id="DLG_SETTINGS_5_BANDWIDTH_01"></legend>
@@ -379,7 +378,7 @@
 					</div>
 				</fieldset>
 			</div>
-			
+
 			<div id="st_bt" class="stg_con">
 				<fieldset>
 					<legend id="DLG_SETTINGS_6_BITTORRENT_01"></legend>
@@ -409,7 +408,7 @@
 					</div>
 				</fieldset>
 			</div>
-			
+
 			<div id="st_que" class="stg_con">
 				<fieldset>
 					<legend id="DLG_SETTINGS_7_QUEUEING_01"></legend>
@@ -438,7 +437,7 @@
 					</div>
 				</fieldset>
 			</div>
-			
+
 			<div id="st_sch" class="stg_con">
 				<div class="hcont"><input id="sched_enable" type="checkbox" /><label for="sched_enable" id="DLG_SETTINGS_8_SCHEDULER_01"></label></div>
 				<!--
@@ -530,7 +529,7 @@
 							<tr>
 								<td><label for="bt.compact_allocation">bt.compact_allocation</label></td>
 								<td><input type="checkbox" id="bt.compact_allocation" /></td>
-							</tr>							
+							</tr>
 							<tr>
 								<td><label for="bt.connect_speed">bt.connect_speed</label></td>
 								<td><input type="text" id="bt.connect_speed" class="tbox num" maxlength="5" /></td>
@@ -727,7 +726,7 @@
 			</div>
 		</div>
 		<!-- Settings Dialog */ -->
-		
+
 		<!-- /* Torrent Properties Dialog -->
 		<div id="dlgProps" class="dlg-window">
 			<a href="#" class="dlg-close"></a>
@@ -765,7 +764,7 @@
 			</div>
 		</div>
 		<!-- Torrent Properties Dialog */ -->
-		
+
 		<!-- /* About Dialog -->
 		<div id="dlgAbout" class="dlg-window">
 			<a href="#" class="dlg-close"></a>
@@ -781,7 +780,7 @@
 			</div>
 		</div>
 		<!-- About Dialog */ -->
-		
+
 		<!-- /* New Label Dialog -->
  		<div id="dlgLabel" class="dlg-window">
 			<a href="#" class="dlg-close"></a>
@@ -794,7 +793,7 @@
 			</div>
 		</div>
 		<!-- New Label Dialog */ -->
-		
+
 		<!-- /* Delete Confirmation Dialog
  		<div id="dlgDelTor" class="dlg-window">
 			<a href="#" class="dlg-close"></a>
@@ -806,7 +805,7 @@
 			</div>
 		</div>
 		Delete Confirmation Dialog */ -->
-		
+
 		<!-- /* Folders Dialog
  		<div id="dlgFolders" class="dlg-window">
 			<a href="#" class="dlg-close"></a>
@@ -822,7 +821,7 @@
 			</div>
 		</div>
 		Folders Dialog */ -->
-		
+
 		<!-- /* Toolbar -->
 		<div id="toolbar">
 			<div id="sb">
@@ -839,7 +838,7 @@
 			<a id="setting" href="#"><span></span></a>
 		</div>
 		<!-- Toolbar */ -->
-		
+
 		<div id="CatList">
 			<ul>
 				<li id="_all_" class="sel"><span id="OV_CAT_ALL"></span>&nbsp;(<span id="_all_c">0</span>)</li>

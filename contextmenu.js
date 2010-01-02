@@ -100,12 +100,12 @@ var ContextMenu = {
 	"show": function(p) {
 		this.obj.setStyle("visibility", "hidden");
 		this.obj.show();
-		var x = p.x + 8;
+		var x = p.x + 1;
 		var size = this.obj.getSize();
 		var winSize = window.getSize();
 		if (x + size.x > winSize.x)
 			x -= size.x;
-		var y = p.y + 8;
+		var y = p.y + 1;
 		if (y + size.y > winSize.y)
 			y -= size.y;
 		this.obj.setStyles({"left": x, "top": y, "visibility": "visible"});

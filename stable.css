@@ -97,6 +97,7 @@ limitations under the License.
 .stable-body {
 	background: #FFFFFF;
 	overflow: auto;
+	position: relative;
 }
 
 .stable-body table {

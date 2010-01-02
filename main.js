@@ -20,11 +20,12 @@ function setupUI() {
 	};
 
 	var colMask = utWebUI.config.trtCols;
+	var useProgress = (isGuest || utWebUI.settings["gui.graphic_progress"]);
 	utWebUI.trtTable.create("List", [
 			col(lang[CONST.OV_COL_NAME], TYPE_STRING, colMask & 0x0001),
 			col(lang[CONST.OV_COL_STATUS], TYPE_STRING, colMask & 0x0002),
 			col(lang[CONST.OV_COL_SIZE], TYPE_NUMBER, colMask & 0x0004),
-			col(lang[CONST.OV_COL_DONE], (utWebUI.settings["gui.graphic_progress"] ? TYPE_NUM_PROGRESS : TYPE_NUMBER), colMask & 0x0008),
+			col(lang[CONST.OV_COL_DONE], (useProgress ? TYPE_NUM_PROGRESS : TYPE_NUMBER), colMask & 0x0008),
 			col(lang[CONST.OV_COL_DOWNLOADED], TYPE_NUMBER, colMask & 0x0010),
 			col(lang[CONST.OV_COL_UPPED], TYPE_NUMBER, colMask & 0x0020),
 			col(lang[CONST.OV_COL_SHARED], TYPE_NUMBER, colMask & 0x0040),
@@ -35,7 +36,7 @@ function setupUI() {
 			col(lang[CONST.OV_COL_PEERS], TYPE_NUMBER, colMask & 0x0800),
 			col(lang[CONST.OV_COL_SEEDS], TYPE_NUMBER, colMask & 0x1000),
 			col(lang[CONST.OV_COL_AVAIL].split("||")[1], TYPE_NUMBER, colMask & 0x2000),
-			col(lang[CONST.OV_COL_ORDER], TYPE_NUM_ORDER, colMask & 0x4000, ALIGN_RIGHT),
+			col(lang[CONST.OV_COL_ORDER], TYPE_NUM_ORDER, colMask & 0x4000),
 			col(lang[CONST.OV_COL_REMAINING], TYPE_NUMBER, colMask & 0x8000)
 		], $extend({
 		"format": function(values, index) {
@@ -51,49 +52,49 @@ function setupUI() {
 				case 12:
 					break;
 
-				case 2:
-					values[i]  = values[i].toFileSize(2); // size
+				case 2: // size
+					values[i]  = values[i].toFileSize(2);
 					break;
 
-				case 3:
-					values[i] = (values[i] / 10).roundTo(1) + "%"; // done
+				case 3: // done
+					values[i] = (values[i] / 10).roundTo(1) + "%";
 					break;
 
-				case 4:
-					values[i] = values[i].toFileSize(); // downloaded
+				case 4: // downloaded
+					values[i] = values[i].toFileSize();
 					break;
 
-				case 5:
-					values[i] = values[i].toFileSize(); // uploaded
+				case 5: // uploaded
+					values[i] = values[i].toFileSize();
 					break;
 
-				case 6:
-					values[i] = (values[i] == -1) ? "\u221E" : (values[i] / 1000).roundTo(3); // ratio
+				case 6: // ratio
+					values[i] = (values[i] == -1) ? "\u221E" : (values[i] / 1000).roundTo(3);
 					break;
 
-				case 7:
-					values[i] = (values[i] >= 103) ? (values[i].toFileSize() + perSec) : ""; // download speed
+				case 7: // download speed
+					values[i] = (values[i] >= 103) ? (values[i].toFileSize() + perSec) : "";
 					break;
 
-				case 8:
-					values[i] = (values[i] >= 103) ? (values[i].toFileSize() + perSec) : ""; // upload speed
+				case 8: // upload speed
+					values[i] = (values[i] >= 103) ? (values[i].toFileSize() + perSec) : "";
 					break;
 
-				case 9:
+				case 9: // ETA
 					values[i] = (values[i] == 0) ? "" :
-								(values[i] == -1) ? "\u221E" : values[i].toTimeString(); // ETA
+								(values[i] == -1) ? "\u221E" : values[i].toTimeString();
 					break;
 
-				case 13:
-					values[i] = (values[i] / 65535).roundTo(3); // availability
+				case 13: // availability
+					values[i] = (values[i] / 65536).roundTo(3);
 					break;
 
-				case 14:
-					values[i] = (values[i] <= -1) ? "*" : values[i]; // queue position
+				case 14: // queue position
+					values[i] = (values[i] <= -1) ? "*" : values[i];
 					break;
 
-				case 15:
-					values[i] = values[i].toFileSize(2); // remaining
+				case 15: // remaining
+					values[i] = values[i].toFileSize(2);
 					break;
 				}
 				index++;
@@ -115,7 +116,7 @@ function setupUI() {
 				col(lang[CONST.FI_COL_NAME], TYPE_STRING, colMask & 0x01),
 				col(lang[CONST.FI_COL_SIZE], TYPE_NUMBER, colMask & 0x02),
 				col(lang[CONST.FI_COL_DONE], TYPE_NUMBER, colMask & 0x04),
-				col(lang[CONST.FI_COL_PCT], (utWebUI.settings["gui.graphic_progress"] ? TYPE_NUM_PROGRESS : TYPE_NUMBER), colMask & 0x08),
+				col(lang[CONST.FI_COL_PCT], (useProgress ? TYPE_NUM_PROGRESS : TYPE_NUMBER), colMask & 0x08),
 				col(lang[CONST.FI_COL_PRIO], TYPE_NUMBER, colMask & 0x10)
 			], $extend({
 			"format": function(values, index) {
@@ -1110,8 +1111,10 @@ window.addEvent("domready", function() {
 			var str = $(doc.body).get("text");
 			if (str != "") {
 				var data = JSON.decode(str);
-				if (has(data, "error"))
+				if (has(data, "error")) {
 					alert(data.error);
+					log("[Add Torrent File Error] " + data.error);
+				}
 			}
 		}
 	}).inject(document.body);

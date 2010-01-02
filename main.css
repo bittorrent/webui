@@ -359,7 +359,7 @@ div#toolbar div#sb input {
  *                  MISC                   *
  *                                         *
  *******************************************/
- 
+
 .hcont {
 	width: 460px; height: 20px;
 	line-height: 20px;
@@ -397,7 +397,7 @@ div#toolbar div#sb input {
 .hcont input[type="checkbox"] {
 	margin: 0 5px;
 }
- 
+
 input.tbox, input.btn, select {
 	height: 16px;
 	line-height: 16px;
@@ -461,7 +461,7 @@ a {
  *                CATEGORY                 *
  *                                         *
  *******************************************/
- 
+
 div#CatList {
 	width: 18%;
 	border: 1px solid #868686;
@@ -470,7 +470,7 @@ div#CatList {
 	margin: 0 5px 0 0;
 	float: left;
 }
- 
+
 div#CatList ul {
 	padding: 0;
 	margin: 0;
@@ -1018,7 +1018,7 @@ div#dlgAbout {
 	width: 250px; height: 230px;
 }
 
-div#dlgAbout div.dlg-header { 
+div#dlgAbout div.dlg-header {
 	background-image: url(./images/about.png);
 }
 
@@ -1044,7 +1044,7 @@ div#dlgProps {
 	width: 450px; height: 434px;
 }
 
-div#dlgProps div.dlg-header { 
+div#dlgProps div.dlg-header {
 	background-image: url(./images/props.png);
 }
 
@@ -1175,7 +1175,7 @@ div#dlgFolders {
 	width: 300px; height: 212px;
 }
 
-div#dlgFolders div.dlg-header { 
+div#dlgFolders div.dlg-header {
 	background-image: url(./images/folder_explore.png);
 }
 
@@ -1237,10 +1237,6 @@ div#dlgFolders label {
 }
 
 */
-
-#token {
-	display: none;
-}
 
 form {
   margin: 0;

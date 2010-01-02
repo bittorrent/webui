@@ -86,7 +86,6 @@ var dxSTable = new Class({
 		"rowsSelectable": true,
 		"refreshable": false
 	},
-	"startSel": null,
 	"tHeadCols": [],
 	"tBodyCols": [],
 	"cancelSort": false,
@@ -98,7 +97,6 @@ var dxSTable = new Class({
 	"isResizing": false,
 	"isSorting": false,
 	"isScrolling": false,
-	"selCount": 0,
 	"curPage": 0,
 	"pageCount": 0,
 	"rowCache": [],
@@ -386,18 +384,17 @@ var dxSTable = new Class({
 	"setAlignment": function() {
 		var sb = "", cols = this.tBody.getElement("colgroup").getElements("col");
 		for (var i = 0; i < this.cols; i++) {
-			var align = "";
+			var align = "left";
 			switch (this.colData[i].align) {
-				case ALIGN_LEFT: align = "left"; break;
 				case ALIGN_CENTER: align = "center"; break;
 				case ALIGN_RIGHT: align = "right"; break;
 
 				case ALIGN_AUTO:
 				default:
 					switch (this.colData[i].type) {
+						case TYPE_NUM_ORDER:
 						case TYPE_NUMBER: align = "right"; break;
 						case TYPE_NUM_PROGRESS: align = "center"; break;
-						default: align = "left";
 					}
 			}
 			this.tHeadCols[i].setStyle("textAlign", align);
@@ -610,7 +607,7 @@ var dxSTable = new Class({
 			mni = max * this.curPage;
 		}
 		mxi = (mni + max - 1).min(this.activeId.length - 1);
-		return [mni, mxi];
+		return [(mni < 0 ? 0 : mni), (mxi < 0 ? 0 : mxi)];
 	},
 
 	"refreshRows": function() {
@@ -618,19 +615,20 @@ var dxSTable = new Class({
 		if (Browser.Engine.gecko || Browser.Engine.trident)
 			this.detachBody();
 		for (var i = range[0]; i <= range[1]; i++) {
-			var id = this.activeId[i], rdata = this.rowData[id], row = tb.childNodes[count], data = this.options.format($A(rdata.data));
+			var id = this.activeId[i], rdata = this.rowData[id];
+			if (!rdata) continue;
+			var row = tb.childNodes[count], data = this.options.format($A(rdata.data));
 			var clsName = "", clsChanged = false;
-			if (has(this.rowSel, id)) {
+			if (has(this.rowSel, id))
 				clsName += "selected";
-				clsChanged = !row.hasClass("selected");
-			}
+			clsChanged = (clsName.test("selected") != row.hasClass("selected"));
 			if (this.options.alternateRows) {
 				if (count & 1) {
 					clsName += " odd";
-					clsChanged = clsChanged | !row.hasClass("odd");
+					clsChanged = clsChanged || !row.hasClass("odd");
 				} else {
 					clsName += " even";
-					clsChanged = clsChanged | !row.hasClass("even");
+					clsChanged = clsChanged || !row.hasClass("even");
 				}
 			}
 			if (clsChanged)
@@ -663,7 +661,14 @@ var dxSTable = new Class({
 	"selectRow": function(ev, row) {
 		var id = row.id;
 		if (!(ev.rightClick && has(this.rowSel, id))) {
-			if (ev.shift) {
+			if (row.tagName.toLowerCase() == "body") {
+				if (!(ev.shift || ev.control)) {
+					this.selectedRows.length = 0;
+					delete this.rowSel;
+					this.rowSel = {};
+				}
+			}
+			else if (ev.shift) {
 				if (this.stSel === null) {
 					this.stSel = id;
 					this.rowSel[id] = 0;
@@ -1023,10 +1028,9 @@ var dxSTable = new Class({
 		if (this.requiresRefresh || row.hidden || (row.rowIndex == -1)) return hasSortedChanged;
 		var r = this.tb.body.childNodes[row.rowIndex], i = this.colOrder.indexOf(col), cell = r.childNodes[i], fval = this.options.format([val], col)[0];
 		if (this.colData[i].type == TYPE_NUM_PROGRESS) {
-			var pcnt = (val / 10).roundTo(1) + "%";
 			var prog = simpleClone(DIV, false).addClass("stable-progress").set("html", "&nbsp;").inject(cell.empty());
-			var pbar = simpleClone(SPAN, false).addClass("stable-progress-bar").set("html", "&nbsp;").setStyle("width", pcnt).inject(prog);
-			var ptxt = simpleClone(SPAN, false).addClass("stable-progress-text").set("text", pcnt).inject(prog);
+			var pbar = simpleClone(SPAN, false).addClass("stable-progress-bar").set("html", "&nbsp;").setStyle("width", fval).inject(prog);
+			var ptxt = simpleClone(SPAN, false).addClass("stable-progress-text").set("text", fval).inject(prog);
 		} else if (cell.lastChild) {
 			var toggle = ((cell.lastChild.nodeValue == "") && (fval != cell.lastChild.nodeValue));
 			cell.lastChild.nodeValue = fval;
