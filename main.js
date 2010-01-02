@@ -835,26 +835,27 @@ function resizeUI(w, h) {
 
 	utWebUI.trtTable.resizeTo(w, h);
 
-	if (isGuest) return;
-	var listPos = $("List").getPosition();
+	if (!isGuest) {
+		var listPos = $("List").getPosition();
 
-	$("HDivider").setStyle("left", listPos.x - ((Browser.Engine.trident && !Browser.Engine.trident5) ? 7 : 5));
-	$("VDivider").setStyle("width", ww + (Browser.Engine.trident6 ? 4 : 0));
+		$("HDivider").setStyle("left", listPos.x - ((Browser.Engine.trident && !Browser.Engine.trident5) ? 7 : 5));
+		$("VDivider").setStyle("width", ww + (Browser.Engine.trident6 ? 4 : 0));
 
 
-	if (h) {
-		$("HDivider").setStyles({
-			"height": showcat ? (h + 2) : 0,
-			"top": showtb ? 43 : 0
-		});
+		if (h) {
+			$("HDivider").setStyles({
+				"height": showcat ? (h + 2) : 0,
+				"top": showtb ? 43 : 0
+			});
 
-		$("VDivider").setStyle("top", showdet ? (listPos.y + h + (!Browser.Engine.trident6 ? 2 : 0)) : -10);
-		if (showdet && !winResize)
-			utWebUI.config.vSplit = h / (wh - eh - 12);
+			$("VDivider").setStyle("top", showdet ? (listPos.y + h + (!Browser.Engine.trident6 ? 2 : 0)) : -10);
+			if (showdet && !winResize)
+				utWebUI.config.vSplit = h / (wh - eh - 12);
+		}
+
+		if (w && showcat && !winResize)
+			utWebUI.config.hSplit = w / ww;
 	}
-
-	if (w && showcat && !winResize)
-		utWebUI.config.hSplit = w / ww;
 
 	resizing = false;
 }
@@ -896,6 +897,16 @@ window.addEvent("domready", function() {
 	$(document.body);
 
 	document.title = "\u00B5Torrent WebUI " + VERSION;
+
+	window.addEvent("resize", function() {
+		if (resizing) return;
+		if (Browser.Engine.trident && !resizing) { // IE is stupid
+			$clear(resizeTimeout);
+			resizeTimeout = resizeUI.delay(100);
+		} else {
+			resizeUI();
+		}
+	});
 
 	if (isGuest) {
 		utWebUI.init();
@@ -1017,16 +1028,6 @@ window.addEvent("domready", function() {
 
 	window.addEvent("unload", function() {
 		utWebUI.saveConfig();
-	});
-
-	window.addEvent("resize", function() {
-		if (resizing) return;
-		if (Browser.Engine.trident && !resizing) { // IE is stupid
-			$clear(resizeTimeout);
-			resizeTimeout = resizeUI.delay(100);
-		} else {
-			resizeUI();
-		}
 	});
 
 	document.addEvent("mousedown", function(ev) {

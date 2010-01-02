@@ -1397,7 +1397,7 @@ var utWebUI = {
 		var show = !this.config.showCategories;
 		$("CatList")[show ? "show" : "hide"]();
 		this.config.showCategories = show;
-		resizeUI();
+		resizeUI.delay(0);
 	},
 
 	"toggleDetPanel": function() {
