@@ -270,20 +270,39 @@ var utWebUI = {
 		} else {
 			torrents = json.torrents;
 			delete json.torrents;
-			/*
+
+			// What:
+			//   Remove torrents that no longer exist, for the situation in which
+			//   the backend sends 'torrents' even though a cid was sent with the
+			//   list=1 request.
+			// When:
+			//   This happens when the sent cid is not valid, which happens when
+			//   multiple sessions of WebUI are sending interleaved list=1&cid=...
+			//   requests.
+			// Why:
+			//   When this happens, WebUI no longer has a proper 'torrentm' list
+			//   by which it can remove torrents that have been removed.
+			// How:
+			//   This fixes it by comparing the received 'torrents' list with the
+			//   list of existing torrents to see which hashes no longer exist,
+			//   and manually generating a 'torrentm' list from that.
+			// Note:
+			//   The alternative, instead of comparing, would be to clear the
+			//   list completely and replace it with this list instead, but that
+			//   is likely to be slower because DOM manipulations are slow.
+
 			json.torrentm = [];
-			var temp = {};
+			var exhashes = {};
 			for (var k in this.torrents) {
-				temp[k] = 1;
+				exhashes[k] = 1;
 			}
 			for (var i = 0, len = torrents.length; i < len; i++) {
-				if (!has(temp, tor[CONST.TORRENT_HASH]))
-					delete temp[tor[CONST.TORRENT_HASH]];
+				if (has(exhashes, torrents[i][CONST.TORRENT_HASH]))
+					delete exhashes[torrents[i][CONST.TORRENT_HASH]];
 			}
-			for (var k in temp) {
+			for (var k in exhashes) {
 				json.torrentm.push(k);
 			}
-			*/
 		}
 		this.loadLabels($A(json.label));
 		delete json.label;

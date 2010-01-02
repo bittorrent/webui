@@ -897,7 +897,7 @@ var dxSTable = new Class({
 				this.rowData[this.activeId[i]].activeIndex = i;
 			if (this.options.mode == MODE_PAGE) {
 				this.pageCount = Math.ceil(this.activeId.length / this.options.maxRows);
-				if (this.curPage >= this.pageCount)
+				if (this.curPage > this.pageCount)
 					this.curPage--;
 			}
 			this.requiresRefresh = true;
