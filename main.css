@@ -328,19 +328,31 @@ div#toolbar a span {
 	-moz-opacity: 0.7;
 }
 
-div#toolbar #search {
-	width: 16px; height: 14px;
-	margin: 8px 0 0 0;
-	background: #FFFFFF url(./images/zoom.png) no-repeat center center;
+div#toolbar #search, div#toolbar #searchsel {
+	height: 14px;
 	border: 1px solid #C0C0C0;
-	border-right: 0;
+	border-left: 0;
+}
+
+div#toolbar #search {
+	width: 16px;
+	background: #FFFFFF url(./images/zoom.png) no-repeat center center;
+}
+
+div#toolbar #searchsel {
+	width: 5px;
+	background: #FFFFFF url(./images/arrow.gif) no-repeat -2px 3px;
 }
 
 div#toolbar div#sb {
-	width: 180px;
 	float: right;
-	margin: 0;
+	margin: 8px 8px 0 0;
 	line-height: 26px;
+}
+
+div#toolbar div#sb * {
+	float: left;
+	margin: 0 !important;
 }
 
 div#toolbar div#sb input {
@@ -348,10 +360,8 @@ div#toolbar div#sb input {
 	line-height: 16px;
 	font-size: 11px;
 	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
-	margin: 8px 0 0 0;
 	padding: 3px 2px 1px 2px;
 	border: 1px solid #C0C0C0;
-	border-left: 0;
 }
 
 /*******************************************

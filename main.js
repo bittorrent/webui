@@ -1084,6 +1084,11 @@ window.addEvent("domready", function() {
 //	}
 
 	$("search").addEvent("click", function(ev) {
+		Search();
+		ev.stop();
+		return false;
+	});
+	$("searchsel").addEvent("click", function(ev) {
 		ev.stop();
 		ContextMenu.clear();
 		for (var i = 0, j = searchList.length; i < j; i++) {
@@ -1098,8 +1103,8 @@ window.addEvent("domready", function() {
 			}
 		}
 		var pos = this.getPosition();
-		pos.x -= 8;
-		pos.y += 14;
+		pos.x += 4;
+		pos.y += 12;
 		ContextMenu.show(pos);
 	});
 
