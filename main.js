@@ -1087,6 +1087,9 @@ window.addEvent("domready", function() {
 		Search();
 		ev.stop();
 		return false;
+	}).addEvent("contextmenu", function(ev) {
+		ev.stop();
+		return false;
 	});
 	$("searchsel").addEvent("click", function(ev) {
 		ev.stop();
@@ -1106,6 +1109,9 @@ window.addEvent("domready", function() {
 		pos.x += 4;
 		pos.y += 12;
 		ContextMenu.show(pos);
+	}).addEvent("contextmenu", function(ev) {
+		ev.stop();
+		return false;
 	});
 
 	new IFrame({
