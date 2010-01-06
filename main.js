@@ -798,17 +798,17 @@ function resizeUI(hDiv, vDiv) {
 
 	var size = window.getSize(), ww = size.x, wh = size.y;
 
-	var showCat = true, showDet = false, showTB = false,
-		minHSplit = 25, minVSplit = 150, minTrtH = 100, minTrtW = 100;
+	var uiMetrics = utWebUI.metrics,
+		minHSplit = uiMetrics.minHSplit,
+		minVSplit = uiMetrics.minVSplit,
+		minTrtH = uiMetrics.minTrtH,
+		minTrtW = uiMetrics.minTrtW;
 
+	var showCat = true, showDet = false, showTB = false;
 	if (!isGuest) {
 		showCat = utWebUI.config.showCategories;
 		showDet = utWebUI.config.showDetails;
 		showTB = utWebUI.config.showToolbar;
-		minHSplit = utWebUI.config.minHSplit;
-		minVSplit = utWebUI.config.minVSplit;
-		minTrtH = utWebUI.config.minTrtH;
-		minTrtW = utWebUI.config.minTrtW;
 	}
 
 	var th = (showTB ? $("toolbar").getSize().y + 5 : 0);
@@ -828,7 +828,7 @@ function resizeUI(hDiv, vDiv) {
 		hDiv = 0;
 		if (showCat) {
 			hDiv = utWebUI.config.hSplit;
-			if ((typeof(hDiv) != "number") || (hDiv <= 0)) hDiv = utWebUI.config.defHSplit;
+			if ((typeof(hDiv) != "number") || (hDiv <= 0)) hDiv = uiMetrics.defHSplit;
 		}
 	}
 
@@ -847,7 +847,7 @@ function resizeUI(hDiv, vDiv) {
 		vDiv = 0;
 		if (showDet) {
 			vDiv = utWebUI.config.vSplit;
-			if ((typeof(vDiv) != "number") || (vDiv <= 0)) vDiv = utWebUI.config.defVSplit;
+			if ((typeof(vDiv) != "number") || (vDiv <= 0)) vDiv = uiMetrics.defVSplit;
 		}
 		vDiv = wh - vDiv;
 	}

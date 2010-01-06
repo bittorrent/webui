@@ -27,6 +27,14 @@ var utWebUI = {
 	},
 	"customLabels": {},
 	"cacheID": 0,
+	"metrics": {
+		"defHSplit": 150,
+		"defVSplit": 350,
+		"minHSplit": 25,
+		"minVSplit": 150,
+		"minTrtH": 100,
+		"minTrtW": 150
+	},
 	"torrentID": "", // selected torrent
 	"propID": "", // selected torrent (single)
 	"trtTable": new dxSTable(),
@@ -52,12 +60,8 @@ var utWebUI = {
 			"alternateRows": false,
 			"confirmDelete": true,
 			"lang": "en",
-			"defHSplit": 150,
-			"defVSplit": 350,
-			"minHSplit": 25,
-			"minVSplit": 150,
-			"minTrtH": 100,
-			"minTrtW": 150,
+			"hSplit": this.metrics.defHSplit,
+			"vSplit": this.metrics.defVSplit,
 			"trtCols": 0x0000,
 			"torrentTable": {
 				"reverse": false,
