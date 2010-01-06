@@ -661,8 +661,20 @@ var dxSTable = new Class({
 	"selectRow": function(ev, row) {
 		var id = row.id;
 		if (!(ev.rightClick && has(this.rowSel, id))) {
-			if (row.tagName.toLowerCase() == "body") {
-				if (!(ev.shift || ev.control)) {
+			var clickdRow = false, ele = row;
+			while (ele && ele.tagName) {
+				if (ele.tagName.toLowerCase() == "tr") {
+					clickdRow = true;
+					break;
+				}
+				ele = ele.parentNode;
+			}
+
+			if (!clickdRow) {
+				if (ev.shift || ev.control) {
+					return;
+				}
+				else {
 					this.selectedRows.length = 0;
 					delete this.rowSel;
 					this.rowSel = {};
@@ -857,9 +869,10 @@ var dxSTable = new Class({
 			if ((v == 0) && (icon != "") && !cell.hasClass(icon))
 				cell.className = "stable-icon " + icon;
 			if ($me.colData[k].type == TYPE_NUM_PROGRESS) {
+				var pcnt = (parseFloat(data[v]) || 0).toFixed(1) + "%";
 				var prog = simpleClone(DIV, false).addClass("stable-progress").set("html", "&nbsp;").inject(cell.empty());
-				var pbar = simpleClone(SPAN, false).addClass("stable-progress-bar").set("html", "&nbsp;").setStyle("width", data[v]).inject(prog);
-				var ptxt = simpleClone(SPAN, false).addClass("stable-progress-text").set("text", data[v]).inject(prog);
+				var pbar = simpleClone(SPAN, false).addClass("stable-progress-bar").set("html", "&nbsp;").setStyle("width", pcnt).inject(prog);
+				var ptxt = simpleClone(SPAN, false).addClass("stable-progress-text").set("text", pcnt).inject(prog);
 			} else if (cell.lastChild) {
 				var toggle = ((cell.lastChild.nodeValue == "") && (data[v] != cell.lastChild.nodeValue));
 				cell.lastChild.nodeValue = data[v];
@@ -1028,9 +1041,10 @@ var dxSTable = new Class({
 		if (this.requiresRefresh || row.hidden || (row.rowIndex == -1)) return hasSortedChanged;
 		var r = this.tb.body.childNodes[row.rowIndex], i = this.colOrder.indexOf(col), cell = r.childNodes[i], fval = this.options.format([val], col)[0];
 		if (this.colData[i].type == TYPE_NUM_PROGRESS) {
+			var pcnt = (parseFloat(fval) || 0).toFixed(1) + "%";
 			var prog = simpleClone(DIV, false).addClass("stable-progress").set("html", "&nbsp;").inject(cell.empty());
-			var pbar = simpleClone(SPAN, false).addClass("stable-progress-bar").set("html", "&nbsp;").setStyle("width", fval).inject(prog);
-			var ptxt = simpleClone(SPAN, false).addClass("stable-progress-text").set("text", fval).inject(prog);
+			var pbar = simpleClone(SPAN, false).addClass("stable-progress-bar").set("html", "&nbsp;").setStyle("width", pcnt).inject(prog);
+			var ptxt = simpleClone(SPAN, false).addClass("stable-progress-text").set("text", pcnt).inject(prog);
 		} else if (cell.lastChild) {
 			var toggle = ((cell.lastChild.nodeValue == "") && (fval != cell.lastChild.nodeValue));
 			cell.lastChild.nodeValue = fval;

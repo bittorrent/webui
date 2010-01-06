@@ -57,7 +57,7 @@ function setupUI() {
 					break;
 
 				case 3: // done
-					values[i] = (values[i] / 10).roundTo(1) + "%";
+					values[i] = (values[i] / 10).toFixed(1) + "%";
 					break;
 
 				case 4: // downloaded
@@ -69,7 +69,7 @@ function setupUI() {
 					break;
 
 				case 6: // ratio
-					values[i] = (values[i] == -1) ? "\u221E" : (values[i] / 1000).roundTo(3);
+					values[i] = (values[i] == -1) ? "\u221E" : (values[i] / 1000).toFixed(3);
 					break;
 
 				case 7: // download speed
@@ -86,7 +86,7 @@ function setupUI() {
 					break;
 
 				case 13: // availability
-					values[i] = (values[i] / 65536).roundTo(3);
+					values[i] = (values[i] / 65536).toFixed(3);
 					break;
 
 				case 14: // queue position

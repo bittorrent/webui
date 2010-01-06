@@ -135,7 +135,7 @@ Number.implement({
 			size /= 1024;
 			pos++;
 		}
-		return (size.roundTo(precision) + " " + sz[pos]);
+		return (size.toFixed(precision) + " " + sz[pos]);
 	},
 
 	"toTimeString": function() {
@@ -166,16 +166,6 @@ Number.implement({
 			output = lang[CONST.TIME_SECS].replace(/%d/, s);
 		}
 		return output;
-	},
-
-	"roundTo": function(precision) {
-		var num = "" + this.round(precision);
-		var offset = num.indexOf(".");
-		if (offset == -1) {
-			offset = num.length;
-			num += ".";
-		}
-		return num.pad(precision + ++offset, "0");
 	}
 
 });

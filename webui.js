@@ -28,8 +28,8 @@ var utWebUI = {
 	"customLabels": {},
 	"cacheID": 0,
 	"metrics": {
-		"defHSplit": 150,
-		"defVSplit": 350,
+		"defHSplit": 125,
+		"defVSplit": 225,
 		"minHSplit": 25,
 		"minVSplit": 150,
 		"minTrtH": 100,
@@ -1194,7 +1194,7 @@ var utWebUI = {
 			$("hs").set("html", this.torrentID); // hash
 			$("dl").set("html", d[4].toFileSize()); // downloaded
 			$("ul").set("html", d[5].toFileSize()); // uploaded
-			$("ra").set("html", (d[6] == -1) ? "\u221E" : (d[6] / 1000).roundTo(3)); // ratio
+			$("ra").set("html", (d[6] == -1) ? "\u221E" : (d[6] / 1000).toFixed(3)); // ratio
 			$("us").set("html", d[8].toFileSize() + perSec); // upload speed
 			$("ds").set("html", d[7].toFileSize() + perSec); // download speed
 			$("rm").set("html", (d[9] == 0) ? "" : (d[9] <= -1) ? "\u221E" : d[9].toTimeString()); // ETA
@@ -1231,7 +1231,7 @@ var utWebUI = {
 				this.files[id].each(function(file, i) {
 					var data = $A(file);
 					data.push(data[3].toInt());
-					data[3] = ((data[1] > 0) ? ((data[2] / data[1]) * 100).roundTo(1) : 100);
+					data[3] = ((data[1] > 0) ? ((data[2] / data[1]) * 100).toFixed(1) : 100);
 					this.flsTable.addRow(data, id + "_" + i);
 				}, this);
 				this.flsTable.calcSize();
