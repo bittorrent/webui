@@ -27,7 +27,9 @@ var utWebUI = {
 	},
 	"customLabels": {},
 	"cacheID": 0,
-	"metrics": {
+	"limits": {
+		"minRows": 5,
+		"minUpdateInterval": 500,
 		"defHSplit": 125,
 		"defVSplit": 225,
 		"minHSplit": 25,
@@ -60,8 +62,8 @@ var utWebUI = {
 			"alternateRows": false,
 			"confirmDelete": true,
 			"lang": "en",
-			"hSplit": this.metrics.defHSplit,
-			"vSplit": this.metrics.defVSplit,
+			"hSplit": this.limits.defHSplit,
+			"vSplit": this.limits.defVSplit,
 			"trtCols": 0x0000,
 			"torrentTable": {
 				"reverse": false,
@@ -779,7 +781,7 @@ var utWebUI = {
 				ele.set("value", v);
 			}
 		});
-		this.config.torrentTable.maxRows = this.config.fileTable.maxRows = this.config.torrentTable.maxRows.max(5);
+		this.config.torrentTable.maxRows = this.config.fileTable.maxRows = this.config.torrentTable.maxRows.max(this.limits.minRows);
 		$("webui.maxRows").set("value", this.config.torrentTable.maxRows);
 		this.props.multi = {
 			"trackers": 0,
@@ -810,7 +812,11 @@ var utWebUI = {
 			hasChanged = true;
 		}
 
-		value = $("webui.updateInterval").get("value").toInt();
+		value = ($("webui.updateInterval").get("value").toInt() || 0);
+		if (value < this.limits.minUpdateInterval) {
+			value = this.limits.minUpdateInterval;
+			$("webui.updateInterval").set("value", value);
+		}
 		if (this.config.updateInterval != value) {
 			this.config.updateInterval = value;
 			$clear(this.updateTimeout);

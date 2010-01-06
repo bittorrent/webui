@@ -798,11 +798,11 @@ function resizeUI(hDiv, vDiv) {
 
 	var size = window.getSize(), ww = size.x, wh = size.y;
 
-	var uiMetrics = utWebUI.metrics,
-		minHSplit = uiMetrics.minHSplit,
-		minVSplit = uiMetrics.minVSplit,
-		minTrtH = uiMetrics.minTrtH,
-		minTrtW = uiMetrics.minTrtW;
+	var uiLimits = utWebUI.limits,
+		minHSplit = uiLimits.minHSplit,
+		minVSplit = uiLimits.minVSplit,
+		minTrtH = uiLimits.minTrtH,
+		minTrtW = uiLimits.minTrtW;
 
 	var showCat = true, showDet = false, showTB = false;
 	if (!isGuest) {
@@ -828,7 +828,7 @@ function resizeUI(hDiv, vDiv) {
 		hDiv = 0;
 		if (showCat) {
 			hDiv = utWebUI.config.hSplit;
-			if ((typeof(hDiv) != "number") || (hDiv <= 0)) hDiv = uiMetrics.defHSplit;
+			if ((typeof(hDiv) != "number") || (hDiv <= 0)) hDiv = uiLimits.defHSplit;
 		}
 	}
 
@@ -847,7 +847,7 @@ function resizeUI(hDiv, vDiv) {
 		vDiv = 0;
 		if (showDet) {
 			vDiv = utWebUI.config.vSplit;
-			if ((typeof(vDiv) != "number") || (vDiv <= 0)) vDiv = uiMetrics.defVSplit;
+			if ((typeof(vDiv) != "number") || (vDiv <= 0)) vDiv = uiLimits.defVSplit;
 		}
 		vDiv = wh - vDiv;
 	}
@@ -901,7 +901,7 @@ function resizeUI(hDiv, vDiv) {
 		var dw = ww - 10;
 		$("tdetails").setStyle("width", dw);
 		if (vDiv) {
-			var dh = wh - vDiv - 41;
+			var dh = wh - vDiv - $("tabs").getSize().y - 21;
 			$("tdcont").setStyle("height", dh);
 			$("tdcont").setStyle("height", dh);
 			$("gcont").setStyle("height", dh - 8);
