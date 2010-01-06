@@ -178,7 +178,7 @@ function setupUI() {
 		"modifiers": {"x": "left", "y": ""},
 		"onComplete": function() {
 			(function () {
-				resizeUI(window.getSize().x - this.value.now.x, null);
+				resizeUI(this.value.now.x, null);
 				if (Browser.Engine.presto)
 					utWebUI.saveConfig(true);
 			}).delay(20, this);
@@ -788,74 +788,148 @@ function loadSettingStrings() {
 }
 
 var resizing = false, resizeTimeout = null;
-function resizeUI(w, h) {
+function resizeUI(hDiv, vDiv) {
 
 	resizing = true;
 	$clear(resizeTimeout);
 
-	var size = window.getSize();
-	var ww = size.x, wh = size.y, winResize = false;
-	var showcat = utWebUI.config.showCategories, showdet = utWebUI.config.showDetails, showtb = utWebUI.config.showToolbar, eh = 0;
+	var manualH = (typeof(hDiv) == "number"),
+		manualV = (typeof(vDiv) == "number");
 
-	if (!isGuest && showtb)
-		eh = $("toolbar").getSize().y;
+	var size = window.getSize(), ww = size.x, wh = size.y;
 
-	if (!w && !h) {
-		w = Math.floor(ww * ((showcat) ? utWebUI.config.hSplit : 1.0));
-		h = Math.floor(wh * ((!isGuest && showdet) ? utWebUI.config.vSplit : 1.0));
-		winResize = true;
-	}
-
-	if (w)
-		w -= showcat ? 10 : 2;
-
-	if (h)
-		h -= eh + ((showdet && showtb) ? 5 : showtb ? 8 : 2);
-
-	if (showcat) {
-		if (w)
-			$("CatList").setStyle("width", ww - 10 - w - ((Browser.Engine.trident && !Browser.Engine.trident5) ? 4 : 0));
-
-		if (h)
-			$("CatList").setStyle("height", h);
-	}
-
-	if (!isGuest && showdet) {
-		$("tdetails").setStyle("width", ww - (Browser.Engine.trident4 ? 14 : 12));
-		if (h) {
-			var th = wh - h, cth = th - (showtb ? 46 : 41) - eh;
-			$("tdetails").setStyle("height", th - 10);
-			$("tdcont").setStyle("height", cth);
-			$("gcont").setStyle("height", cth - 8);
-			SpeedGraph.resize(null, cth - 12);
-			$("lcont").setStyle("height", cth - 12);
-			utWebUI.flsTable.resizeTo(ww - 22, cth - 2);
-		}
-	}
-
-	utWebUI.trtTable.resizeTo(w, h);
+	var showCat = true, showDet = false, showTB = false,
+		minHSplit = 25, minVSplit = 150, minTrtH = 100, minTrtW = 100;
 
 	if (!isGuest) {
-		var listPos = $("List").getPosition();
-
-		$("HDivider").setStyle("left", listPos.x - ((Browser.Engine.trident && !Browser.Engine.trident5) ? 7 : 5));
-		$("VDivider").setStyle("width", ww + (Browser.Engine.trident6 ? 4 : 0));
-
-
-		if (h) {
-			$("HDivider").setStyles({
-				"height": showcat ? (h + 2) : 0,
-				"top": showtb ? 43 : 0
-			});
-
-			$("VDivider").setStyle("top", showdet ? (listPos.y + h + (!Browser.Engine.trident6 ? 2 : 0)) : -10);
-			if (showdet && !winResize)
-				utWebUI.config.vSplit = h / (wh - eh - 12);
-		}
-
-		if (w && showcat && !winResize)
-			utWebUI.config.hSplit = w / ww;
+		showCat = utWebUI.config.showCategories;
+		showDet = utWebUI.config.showDetails;
+		showTB = utWebUI.config.showToolbar;
+		minHSplit = utWebUI.config.minHSplit;
+		minVSplit = utWebUI.config.minVSplit;
+		minTrtH = utWebUI.config.minTrtH;
+		minTrtW = utWebUI.config.minTrtW;
 	}
+
+	var th = (showTB ? $("toolbar").getSize().y + 5 : 0);
+
+	if (manualH) {
+		hDiv -= 2;
+
+		// Sanity check manual drag of divider
+		if (hDiv < minHSplit) {
+			hDiv = minHSplit;
+		}
+		else if (hDiv > ww - minTrtW) {
+			hDiv = ww - minTrtW;
+		}
+	}
+	else {
+		hDiv = 0;
+		if (showCat) {
+			hDiv = utWebUI.config.hSplit;
+			if ((typeof(hDiv) != "number") || (hDiv <= 0)) hDiv = utWebUI.config.defHSplit;
+		}
+	}
+
+	if (manualV) {
+		vDiv -= 2;
+
+		// Sanity check manual drag of divider
+		if (vDiv > wh - minVSplit) {
+			vDiv = wh - minVSplit;
+		}
+		else if (vDiv < th + minTrtH) {
+			vDiv = th + minTrtH;
+		}
+	}
+	else {
+		vDiv = 0;
+		if (showDet) {
+			vDiv = utWebUI.config.vSplit;
+			if ((typeof(vDiv) != "number") || (vDiv <= 0)) vDiv = utWebUI.config.defVSplit;
+		}
+		vDiv = wh - vDiv;
+	}
+
+	// Resize torrent list
+	var trtw = ww - (hDiv + 2 + (showCat ? 8 : 0)),
+		trth = vDiv - (2 + th + (showDet ? 4 : 0)) + 6;
+
+	if (trtw < minTrtW) {
+		// Gracefully degrade if torrent list too small
+		hDiv -= minTrtW - trtw;
+		if (showCat) {
+			if (hDiv < minHSplit) {
+				$("CatList").hide();
+				showCat = false;
+				trtw = ww - 2;
+			}
+			else {
+				$("CatList").show();
+				trtw = minTrtW;
+			}
+		}
+	}
+
+	if (trth < minTrtH) {
+		// Gracefully degrade if torrent list too small
+		vDiv += minTrtH - trth;
+		if (showDet) {
+			if (vDiv > wh - minVSplit) {
+				$("tdetails").hide();
+				showDet = false;
+				trth = wh - th - 2;
+			}
+			else {
+				$("tdetails").show();
+				trth = minTrtH;
+			}
+		}
+	}
+
+	utWebUI.trtTable.resizeTo(trtw, trth);
+
+	// Resize category/label list
+	if (showCat) {
+		if (hDiv) $("CatList").setStyle("width", hDiv);
+		if (trth) $("CatList").setStyle("height", trth);
+	}
+
+	// Resize detailed info pane
+	if (showDet) {
+		var dw = ww - 10;
+		$("tdetails").setStyle("width", dw);
+		if (vDiv) {
+			var dh = wh - vDiv - 41;
+			$("tdcont").setStyle("height", dh);
+			$("tdcont").setStyle("height", dh);
+			$("gcont").setStyle("height", dh - 8);
+			SpeedGraph.resize(null, dh - 12);
+			$("lcont").setStyle("height", dh - 12);
+			utWebUI.flsTable.resizeTo(dw - 10, dh - 2);
+		}
+	}
+
+	// Reposition dividers
+	if ($("HDivider")) {
+		$("HDivider").setStyles({
+			"height": trth + 2,
+			"left": showCat ? hDiv + 2 : -10,
+			"top": th
+		});
+	}
+
+	if ($("VDivider")) {
+		$("VDivider").setStyles({
+			"width": ww,
+			"top":  showDet ? vDiv + 2 : -10
+		});
+	}
+
+	// Store new divider position(s)
+	if (hDiv && showCat && manualH) utWebUI.config.hSplit = hDiv;
+	if (vDiv && showDet && manualV) utWebUI.config.vSplit = (wh - vDiv);
 
 	resizing = false;
 }
