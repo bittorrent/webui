@@ -505,9 +505,7 @@ div#CatList ul li.sel {
 }
 
 #_all_, #_dls_, #_com_, #_act_, #_iac_ {
-	background-image: url(./images/tstatus.png);
-	background-repeat: no-repeat;
-	background-position: 4px 0px;
+	background: transparent url(./images/tstatus.png) no-repeat 4px 0px;
 }
 #_all_ {
 	background-position: 4px -176px;

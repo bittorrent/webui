@@ -892,7 +892,7 @@ function resizeUI(hDiv, vDiv) {
 
 	// Resize category/label list
 	if (showCat) {
-		if (hDiv) $("CatList").setStyle("width", hDiv);
+		if (hDiv) $("CatList").setStyle("width", hDiv - (Browser.Engine.trident && Browser.Engine.version <= 4 ? 2 : 0));
 		if (trth) $("CatList").setStyle("height", trth);
 	}
 
