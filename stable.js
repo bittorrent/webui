@@ -373,12 +373,12 @@ var dxSTable = new Class({
 				this.fireEvent("onSelect", ev);
 			}
 		}).bind(this));
-		if (Browser.Engine.gecko) {
+//		if (Browser.Engine.gecko) {
 			// http://n2.nabble.com/key-events-not-firing-on-div-in-FF--td663136.html
 			this.dBody.addEvent("mousedown", function(ev) {
 				this.focus();
 			}).setProperty("tabIndex", -1);
-		}
+//		}
 	},
 
 	"setAlignment": function() {
