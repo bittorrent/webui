@@ -873,6 +873,8 @@ var utWebUI = {
 		if (Browser.Engine.presto && hasChanged)
 			str = "&s=webui.cookie&v=" + JSON.encode(this.config);
 
+		resize = resize || (!!this.settings["gui.tall_category_list"] != $("webui.lang").checked);
+
 		for (var key in this.settings) {
 			var ele = $(key);
 			if (!ele) continue;

@@ -798,11 +798,12 @@ function resizeUI(hDiv, vDiv) {
 		minTrtH = uiLimits.minTrtH,
 		minTrtW = uiLimits.minTrtW;
 
-	var showCat = true, showDet = false, showTB = false;
+	var showCat = true, showDet = false, showTB = false, tallCat = false;
 	if (!isGuest) {
 		showCat = utWebUI.config.showCategories;
 		showDet = utWebUI.config.showDetails;
 		showTB = utWebUI.config.showToolbar;
+		tallCat = !!utWebUI.settings["gui.tall_category_list"];
 	}
 
 	var th = (showTB ? $("toolbar").getSize().y + 5 : 0);
@@ -847,8 +848,8 @@ function resizeUI(hDiv, vDiv) {
 	}
 
 	// Resize torrent list
-	var trtw = ww - (hDiv + 2 + (showCat ? 8 : 0)),
-		trth = vDiv - (2 + th + (showDet ? 4 : 0)) + 6;
+	var trtw = ww - (hDiv + 2 + (showCat ? 7 : 0)),
+		trth = vDiv - (th + (showDet ? 0 : 2));
 
 	if (trtw < minTrtW) {
 		// Gracefully degrade if torrent list too small
@@ -887,28 +888,33 @@ function resizeUI(hDiv, vDiv) {
 	// Resize category/label list
 	if (showCat) {
 		if (hDiv) $("CatList").setStyle("width", hDiv - (Browser.Engine.trident && Browser.Engine.version <= 4 ? 2 : 0));
-		if (trth) $("CatList").setStyle("height", trth);
+
+		if (tallCat) {
+			$("CatList").setStyle("height", wh - th - 2);
+		}
+		else if (trth) {
+			$("CatList").setStyle("height", trth);
+		}
 	}
 
 	// Resize detailed info pane
 	if (showDet) {
-		var dw = ww - 10;
+		var dw = ww - (3 + (showCat && tallCat ? hDiv + 7 : 0)) - (Browser.Engine.trident && Browser.Engine.version <= 4 ? 2 : 0);
 		$("tdetails").setStyle("width", dw);
 		if (vDiv) {
-			var dh = wh - vDiv - $("tabs").getSize().y - 21;
-			$("tdcont").setStyle("height", dh);
-			$("tdcont").setStyle("height", dh);
-			$("gcont").setStyle("height", dh - 8);
-			SpeedGraph.resize(null, dh - 12);
-			$("lcont").setStyle("height", dh - 12);
-			utWebUI.flsTable.resizeTo(dw - 10, dh - 2);
+			var dh = wh - vDiv - $("tabs").getSize().y - 16;
+			$("tdcont").setStyles({"width": dw - 5, "height": dh});
+			$("gcont").setStyles({"width": dw - 10, "height": dh - 5});
+			SpeedGraph.resize(dw - 5, dh - 12);
+			$("lcont").setStyles({"width": dw - 14, "height": dh - 9});
+			utWebUI.flsTable.resizeTo(dw - 7, dh - 2);
 		}
 	}
 
 	// Reposition dividers
 	if ($("HDivider")) {
 		$("HDivider").setStyles({
-			"height": trth + 2,
+			"height": tallCat ? wh - th : trth + 2,
 			"left": showCat ? hDiv + 2 : -10,
 			"top": th
 		});
@@ -917,6 +923,7 @@ function resizeUI(hDiv, vDiv) {
 	if ($("VDivider")) {
 		$("VDivider").setStyles({
 			"width": ww,
+			"left": tallCat ? hDiv + 7 : -10,
 			"top":  showDet ? vDiv + 2 : -10
 		});
 	}

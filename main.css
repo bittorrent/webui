@@ -794,9 +794,9 @@ input[id="cache.override_size"] {
 /* ********************************************** */
 
 div#tdetails {
+	float:left;
 	height: 50%;
 	margin: 6px 0 0 0;
-	padding: 0 5px 5px 5px;
 	background-color: #D0D0D0;
 }
 div#tdetails a.h { margin: 0; }
