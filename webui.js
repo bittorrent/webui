@@ -28,7 +28,7 @@ var utWebUI = {
 	"customLabels": {},
 	"cacheID": 0,
 	"limits": {
-		"minRows": 5,
+		"minTableRows": 5,
 		"minUpdateInterval": 500,
 		"defHSplit": 125,
 		"defVSplit": 225,
@@ -781,7 +781,7 @@ var utWebUI = {
 				ele.set("value", v);
 			}
 		});
-		this.config.torrentTable.maxRows = this.config.fileTable.maxRows = this.config.torrentTable.maxRows.max(this.limits.minRows);
+		this.config.torrentTable.maxRows = this.config.fileTable.maxRows = this.config.torrentTable.maxRows.max(this.limits.minTableRows);
 		$("webui.maxRows").set("value", this.config.torrentTable.maxRows);
 		this.props.multi = {
 			"trackers": 0,

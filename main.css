@@ -967,14 +967,6 @@ ul#tabs li.selected a {
 	-moz-border-radius-topright: 5px;
 }
 
-#minrows {
-	width: 30px;
-}
-
-#update_interval {
-	width: 50px;
-}
-
 /* label dialog */
 
 div#dlgLabel {

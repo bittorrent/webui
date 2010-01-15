@@ -787,11 +787,10 @@ function loadSettingStrings() {
 	*/
 }
 
-var resizing = false, resizeTimeout = null;
+var resizing = false;
 function resizeUI(hDiv, vDiv) {
-
+	if (resizing) return;
 	resizing = true;
-	$clear(resizeTimeout);
 
 	var manualH = (typeof(hDiv) == "number"),
 		manualV = (typeof(vDiv) == "number");
@@ -972,15 +971,7 @@ window.addEvent("domready", function() {
 
 	document.title = "\u00B5Torrent WebUI " + VERSION;
 
-	window.addEvent("resize", function() {
-		if (resizing) return;
-		if (Browser.Engine.trident && !resizing) { // IE is stupid
-			$clear(resizeTimeout);
-			resizeTimeout = resizeUI.delay(100);
-		} else {
-			resizeUI();
-		}
-	});
+	window.addEvent("resize", resizeUI);
 
 	if (isGuest) {
 		utWebUI.init();
