@@ -653,74 +653,69 @@ var utWebUI = {
 					return;
 				}
 			}
+			var ignored = {
+				"activate_on_file": 1,
+				"ascon": 1,
+				"asdl": 1,
+				"asdns": 1,
+				"asip": 1,
+				"autostart": 1,
+				"boss_key": 1,
+				"check_assoc_on_start": 1,
+				"close_to_tray": 1,
+				"confirm_exit": 1,
+				"confirm_remove_tracker": 1,
+				"confirm_when_deleting": 1,
+				"ct_hist_comm": 1,
+				"ct_hist_flags": 1,
+				"ct_hist_skip": 1,
+				"extras": 1,
+				"gui.alternate_color": 1,
+				"gui.dblclick_dl": 1,
+				"gui.dblclick_seed": 1,
+				"gui.dlrate_menu": 1,
+				"gui.last_overview_tab-1.8": 1,
+				"gui.last_preference_tab-1.8": 1,
+				"gui.limits_in_statusbar": 1,
+				"gui.manual_ratemenu": 1,
+				"gui.sg_mode": 1,
+				"gui.speed_in_title": 1,
+				"gui.ulrate_menu": 1,
+				"gui.update_rate": 1,
+				"k": 1,
+				"language": 1,
+				"logger_mask": 1,
+				"mainwnd_split": 1,
+				"mainwnd_split_x": 1,
+				"minimize_to_tray": 1,
+				"notify_complete": 1,
+				"pd": 1,
+				"peer.resolve_country": 1,
+				"pu": 1,
+				"reload_freq": 1,
+				"resolve_peerips": 1,
+				"score": 1,
+				"show_add_dialog": 1,
+				"show_category": 1,
+				"show_details": 1,
+				"show_status": 1,
+				"show_tabicons": 1,
+				"show_toolbar": 1,
+				"tray.show": 1,
+				"tray.single_click": 1,
+				"tray_activate": 1,
+				"v": 1
+			};
+
 			for (var i = 0, j = json.settings.length; i < j; i++) {
 				var key = json.settings[i][0], typ = json.settings[i][1], val = json.settings[i][2];
+				if (key in ignored) continue;
 				if ((key == "webui.cookie") && !this.loaded) { // only load webui.cookie on startup
 					var cookie = JSON.decode(json.settings[i][2], true);
 					$extend(this.config, cookie); // if the user corrupts the "cookie," good for him/her
 					this.config.torrentTable.alternateRows = this.config.fileTable.alternateRows = this.config.alternateRows;
 					continue;
 				}
-				if (key == "confirm_when_deleting" ||
-					key == "confirm_exit" ||
-					key == "close_to_tray" ||
-					key == "minimize_to_tray" ||
-					key == "tray_activate" ||
-					key == "tray.show" ||
-					key == "tray.single_click" ||
-					key == "activate_on_file" ||
-					key == "confirm_remove_tracker" ||
-					key == "check_assoc_on_start" ||
-					key == "reload_freq" ||
-					key == "gui.ulrate_menu" ||
-					key == "gui.dlrate_menu" ||
-					key == "gui.manual_ratemenu" ||
-					key == "gui.compat_diropen" ||
-					key == "gui.alternate_color" ||
-					key == "mainwnd_split" ||
-					key == "mainwnd_split_x" ||
-					key == "resolve_peerips" ||
-					key == "show_toolbar" ||
-					key == "show_details" ||
-					key == "show_status" ||
-					key == "show_category" ||
-					key == "show_tabicons" ||
-					key == "language" ||
-					key == "logger_mask" ||
-					key == "autostart" ||
-					key == "notify_complete" ||
-					key == "extras" ||
-					key == "score" ||
-					key == "show_add_dialog" ||
-					key == "always_show_add_dialog" ||
-					key == "gui.log_date" ||
-					key == "ct_hist_comm" ||
-					key == "ct_hist_flags" ||
-					key == "ct_hist_skip" ||
-					key == "boss_key" ||
-					key == "rss.smart_repack_filter" ||
-					key == "gui.dblclick_seed" ||
-					key == "gui.dblclick_dl" ||
-					key == "gui.update_rate" ||
-					key == "gui.sg_mode" ||
-					key == "gui.speed_in_title" ||
-					key == "gui.limits_in_statusbar" ||
-					key == "gui.piecebar_progress" ||
-					key == "gui.tall_category_list" ||
-					key == "gui.bypass_search_redirect" ||
-					key == "gui.last_preference_tab-1.8" ||
-					key == "gui.last_overview_tab-1.8" ||
-					key == "peer.resolve_country" ||
-					key == "pd" ||
-					key == "pu" ||
-					key == "asip" ||
-					key == "asdns" ||
-					key == "ascon" ||
-					key == "asdl" ||
-					key == "isp.bep22" ||
-					key == "proxy.resolve" ||
-					key == "k" ||
-					key == "v") continue;
 				if ((key != "proxy.proxy") && (key != "webui.username") && (key != "webui.password")) {
 					if (typ == 0)
 						val = parseInt(val);
@@ -735,7 +730,7 @@ var utWebUI = {
 		if (!this.loaded) {
 			var detectLang = (navigator.language) ? navigator.language : navigator.userLanguage;
 			var matches;
-			if (matches = detectLang.match(/af|ar|az|be|ca|cs|de|en|eo|es|et|fr|it|jp|nl|pt|sv/i))
+			if (matches = detectLang.match(/af|ar|az|be|ca|cs|de|en|eo|es|et|fr|it|ja|nl|pt|sv/i))
 				detectLang = matches[0];
 			if ((lang !== null) && ((lang_code == this.config.lang) || ((this.config.lang == "auto") && (lang_code == detectLang)))) {
 				setupUI();

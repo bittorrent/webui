@@ -204,7 +204,7 @@
 							<option value="zhCN">Chinese (Simplified)</option>
 							<option value="zhTW">Chinese (Traditional)</option>
 							<option value="cs">Czech</option>
-							<option value="dk">Danish</option>
+							<option value="da">Danish</option>
 							<option value="nl">Dutch</option>
 							<option value="en">English</option>
 							<option value="et">Estonian</option>
@@ -213,14 +213,14 @@
 							<option value="fyNL">Frisian</option>
 							<option value="ga">Gaeilge</option>
 							<option value="gl">Galician</option>
-							<option value="ge">Georgian</option>
+							<option value="ka">Georgian</option>
 							<option value="de">German</option>
 							<option value="el">Greek</option>
 							<option value="he">Hebrew</option>
 							<option value="hu">Hungarian</option>
 							<option value="is">Icelandic</option>
 							<option value="it">Italian</option>
-							<option value="jp">Japanese</option>
+							<option value="ja">Japanese</option>
 							<option value="ko">Korean</option>
 							<option value="lv">Latvian</option>
 							<option value="lt">Lithuanian</option>
@@ -238,8 +238,8 @@
 							<option value="sv">Swedish</option>
 							<option value="tw">Taiwan</option>
 							<option value="th">Thai</option>
-							<option value="tu">Turkish</option>
-							<option value="ua">Ukrainian</option>
+							<option value="tr">Turkish</option>
+							<option value="uk">Ukrainian</option>
 							<option value="va">Valencian</option>
 							<option value="vi">Vietnamese</option>
 						</select>
@@ -276,26 +276,29 @@
 			<div id="st_dirs" class="stg_con">
 				<fieldset>
 					<legend id="DLG_SETTINGS_3_PATHS_01"></legend>
-					<div class="hcont"><input type="checkbox" id="dir_active_download_flag" /><label for="dir_active_download_flag" id="DLG_SETTINGS_3_PATHS_02"></label></div>
-					<div class="hcont"><input type="text" id="dir_active_download" class="tbox" /></div>
+					<div class="hcont">
+						<div class="ralign"><input type="checkbox" id="always_show_add_dialog" /><label for="always_show_add_dialog" id="DLG_SETTINGS_3_PATHS_03"></label></div>
+						<input type="checkbox" id="dir_active_download_flag" /><label for="dir_active_download_flag" id="DLG_SETTINGS_3_PATHS_02"></label>
+					</div>
+					<div class="hcont indent"><input type="text" id="dir_active_download" class="tbox" /></div>
 					<div class="hcont">
 						<div class="ralign"><input type="checkbox" id="dir_add_label" /><label for="dir_add_label" id="DLG_SETTINGS_3_PATHS_07"></label></div>
 						<input type="checkbox" id="dir_completed_download_flag" /><label for="dir_completed_download_flag" id="DLG_SETTINGS_3_PATHS_06"></label>
 					</div>
-					<div class="hcont"><input type="text" id="dir_completed_download" class="tbox" /></div>
-					<div class="hcont"><input type="checkbox" id="move_if_defdir" /><label for="move_if_defdir" id="DLG_SETTINGS_3_PATHS_10"></label></div>
+					<div class="hcont indent"><input type="text" id="dir_completed_download" class="tbox" /></div>
+					<div class="hcont indent"><input type="checkbox" id="move_if_defdir" /><label for="move_if_defdir" id="DLG_SETTINGS_3_PATHS_10"></label></div>
 				</fieldset>
 				<fieldset>
 					<legend id="DLG_SETTINGS_3_PATHS_11"></legend>
 					<div class="hcont"><input type="checkbox" id="dir_torrent_files_flag" /><label for="dir_torrent_files_flag" id="DLG_SETTINGS_3_PATHS_12"></label></div>
-					<div class="hcont"><input type="text" id="dir_torrent_files" class="tbox" /></div>
+					<div class="hcont indent"><input type="text" id="dir_torrent_files" class="tbox" /></div>
 					<div class="hcont"><input id="dir_completed_torrents_flag" type="checkbox" /><label for="dir_completed_torrents_flag" id="DLG_SETTINGS_3_PATHS_15"></label></div>
-					<div class="hcont"><input type="text" id="dir_completed_torrents" class="tbox" /></div>
+					<div class="hcont indent"><input type="text" id="dir_completed_torrents" class="tbox" /></div>
 					<div class="hcont">
 						<div class="ralign"><input type="checkbox" id="dir_autoload_delete" /><label for="dir_autoload_delete" id="DLG_SETTINGS_3_PATHS_19"></label></div>
 						<input type="checkbox" id="dir_autoload_flag" /><label for="dir_autoload_flag" id="DLG_SETTINGS_3_PATHS_18"></label>
 					</div>
-					<div class="hcont"><input type="text" id="dir_autoload" class="tbox" /></div>
+					<div class="hcont indent"><input type="text" id="dir_autoload" class="tbox" /></div>
 				</fieldset>
 			</div>
 
@@ -319,7 +322,7 @@
 					<legend id="DLG_SETTINGS_4_CONN_08"></legend>
 					<div class="hcont">
 						<label id="DLG_SETTINGS_4_CONN_09"></label>
-						<select id="proxy.type"><option>-------------------</option></select>
+						<select id="proxy.type"><option value="0"></option></select>
 						<label for="proxy.proxy" id="DLG_SETTINGS_4_CONN_11"></label>
 						<input id="proxy.proxy" type="text" class="tbox str" />
 						<label for="proxy.port" id="DLG_SETTINGS_4_CONN_13"></label>
@@ -331,6 +334,10 @@
 						<input id="proxy.username" type="text" class="tbox str" />
 						<label for="proxy.password" id="DLG_SETTINGS_4_CONN_18"></label>
 						<input id="proxy.password" type="password" class="tbox str" />
+					</div>
+					<div class="hcont">
+						<input id="proxy.resolve" type="checkbox" />
+						<label for="proxy.resolve" id="DLG_SETTINGS_4_CONN_19"></label>
 					</div>
 					<div class="hcont">
 						<input id="proxy.p2p" type="checkbox" />
@@ -476,8 +483,8 @@
 					<div class="hcont"><input id="cache.write" type="checkbox" /><label for="cache.write" id="DLG_SETTINGS_C_ADV_CACHE_07"></label></div>
 					<div class="hcont indent"><input id="cache.writeout" type="checkbox" /><label for="cache.writeout" id="DLG_SETTINGS_C_ADV_CACHE_08"></label></div>
 					<div class="hcont indent"><input id="cache.writeimm" type="checkbox" /><label for="cache.writeimm" id="DLG_SETTINGS_C_ADV_CACHE_09"></label></div>
-					<div class="hcont indent"><input id="cache.read" type="checkbox" /><label for="cache.read" id="DLG_SETTINGS_C_ADV_CACHE_10"></label></div>
-					<div class="hcont"><input id="cache.read_turnoff" type="checkbox" /><label for="cache.read_turnoff" id="DLG_SETTINGS_C_ADV_CACHE_11"></label></div>
+					<div class="hcont"><input id="cache.read" type="checkbox" /><label for="cache.read" id="DLG_SETTINGS_C_ADV_CACHE_10"></label></div>
+					<div class="hcont indent"><input id="cache.read_turnoff" type="checkbox" /><label for="cache.read_turnoff" id="DLG_SETTINGS_C_ADV_CACHE_11"></label></div>
 					<div class="hcont indent"><input id="cache.read_prune" type="checkbox" /><label for="cache.read_prune" id="DLG_SETTINGS_C_ADV_CACHE_12"></label></div>
 					<div class="hcont indent"><input id="cache.read_thrash" type="checkbox" /><label for="cache.read_thrash" id="DLG_SETTINGS_C_ADV_CACHE_13"></label></div>
 					<div class="hcont"><input id="cache.disable_win_write" type="checkbox" /><label for="cache.disable_win_write" id="DLG_SETTINGS_C_ADV_CACHE_14"></label></div>
@@ -497,26 +504,6 @@
 							<tr>
 								<td><label for="bt.allow_same_ip">bt.allow_same_ip</label></td>
 								<td><input type="checkbox" id="bt.allow_same_ip" /></td>
-							</tr>
-							<tr>
-								<td><label for="bt.auto_ul_factor">bt.auto_ul_factor</label></td>
-								<td><input type="text" id="bt.auto_ul_factor" class="tbox num" maxlength="5" /></td>
-							</tr>
-							<tr>
-								<td><label for="bt.auto_ul_interval">bt.auto_ul_interval</label></td>
-								<td><input type="text" id="bt.auto_ul_interval" class="tbox num" maxlength="5" /></td>
-							</tr>
-							<tr>
-								<td><label for="bt.auto_ul_min">bt.auto_ul_min</label></td>
-								<td><input type="text" id="bt.auto_ul_min" class="tbox num" maxlength="5" /></td>
-							</tr>
-							<tr>
-								<td><label for="bt.auto_ul_sample_average">bt.auto_ul_sample_average</label></td>
-								<td><input type="text" id="bt.auto_ul_sample_average" class="tbox num" maxlength="5" /></td>
-							</tr>
-							<tr>
-								<td><label for="bt.auto_ul_sample_window">bt.auto_ul_sample_window</label></td>
-								<td><input type="text" id="bt.auto_ul_sample_window" class="tbox num" maxlength="5" /></td>
 							</tr>
 							<tr>
 								<td><label for="bt.ban_ratio">bt.ban_ratio</label></td>
@@ -559,6 +546,10 @@
 								<td><input type="checkbox" id="bt.prio_first_last_piece" /></td>
 							</tr>
 							<tr>
+								<td><label for="bt.ratelimit_tcp_only">bt.ratelimit_tcp_only</label></td>
+								<td><input type="checkbox" id="bt.ratelimit_tcp_only" /></td>
+							</tr>
+							<tr>
 								<td><label for="bt.scrape_stopped">bt.scrape_stopped</label></td>
 								<td><input type="checkbox" id="bt.scrape_stopped" /></td>
 							</tr>
@@ -569,6 +560,18 @@
 							<tr>
 								<td><label for="bt.set_sockbuf">bt.set_sockbuf</label></td>
 								<td><input type="checkbox" id="bt.set_sockbuf" /></td>
+							</tr>
+							<tr>
+								<td><label for="bt.shutdown_tracker_timeout">bt.shutdown_tracker_timeout</label></td>
+								<td><input type="text" id="bt.shutdown_tracker_timeout" class="tbox num" maxlength="6" /></td>
+							</tr>
+							<tr>
+								<td><label for="bt.shutdown_upnp_timeout">bt.shutdown_upnp_timeout</label></td>
+								<td><input type="text" id="bt.shutdown_upnp_timeout" class="tbox num" maxlength="6" /></td>
+							</tr>
+							<tr>
+								<td><label for="bt.tcp_rate_control">bt.tcp_rate_control</label></td>
+								<td><input type="checkbox" id="bt.tcp_rate_control" /></td>
 							</tr>
 							<tr>
 								<td><label for="bt.transp_disposition">bt.transp_disposition</label></td>
@@ -588,7 +591,7 @@
 							</tr>
 							<tr>
 								<td><label for="diskio.coalesce_write_size">diskio.coalesce_write_size</label></td>
-								<td><input type="text" id="diskio.coalesce_write_size" class="tbox num" maxlength="5" /></td>
+								<td><input type="text" id="diskio.coalesce_write_size" class="tbox num" maxlength="20" /></td>
 							</tr>
 							<tr>
 								<td><label for="diskio.coalesce_writes">diskio.coalesce_writes</label></td>
@@ -597,6 +600,10 @@
 							<tr>
 								<td><label for="diskio.flush_files">diskio.flush_files</label></td>
 								<td><input type="checkbox" id="diskio.flush_files" /></td>
+							</tr>
+							<tr>
+								<td><label for="diskio.no_zero">diskio.no_zero</label></td>
+								<td><input type="checkbox" id="diskio.no_zero" /></td>
 							</tr>
 							<tr>
 								<td><label for="diskio.smart_hash">diskio.smart_hash</label></td>
@@ -615,6 +622,18 @@
 								<td><input type="checkbox" id="diskio.use_partfile" /></td>
 							</tr>
 							<tr>
+								<td><label for="gui.auto_restart">gui.auto_restart</label></td>
+								<td><input type="checkbox" id="gui.auto_restart" /></td>
+							</tr>
+							<tr>
+								<td><label for="gui.bypass_search_redirect">gui.bypass_search_redirect</label></td>
+								<td><input type="checkbox" id="gui.bypass_search_redirect" /></td>
+							</tr>
+							<tr>
+								<td><label for="gui.compat_diropen">gui.compat_diropen</label></td>
+								<td><input type="checkbox" id="gui.compat_diropen" /></td>
+							</tr>
+							<tr>
 								<td><label for="gui.default_del_action">gui.default_del_action</label></td>
 								<td><input type="text" id="gui.default_del_action" class="tbox num" maxlength="1" /></td>
 							</tr>
@@ -627,8 +646,28 @@
 								<td><input type="checkbox" id="gui.graphic_progress" /></td>
 							</tr>
 							<tr>
+								<td><label for="gui.log_date">gui.log_date</label></td>
+								<td><input type="checkbox" id="gui.log_date" /></td>
+							</tr>
+							<tr>
+								<td><label for="gui.piecebar_progress">gui.piecebar_progress</label></td>
+								<td><input type="checkbox" id="gui.piecebar_progress" /></td>
+							</tr>
+							<tr>
+								<td><label for="gui.tall_category_list">gui.tall_category_list</label></td>
+								<td><input type="checkbox" id="gui.tall_category_list" /></td>
+							</tr>
+							<tr>
+								<td><label for="gui.update_rate">gui.update_rate</label></td>
+								<td><input type="text" id="gui.update_rate" class="tbox num" maxlength="20" /></td>
+							</tr>
+							<tr>
 								<td><label for="ipfilter.enable">ipfilter.enable</label></td>
 								<td><input type="checkbox" id="ipfilter.enable" /></td>
+							</tr>
+							<tr>
+								<td><label for="isp.bep22">isp.bep22</label></td>
+								<td><input type="checkbox" id="isp.bep22" /></td>
 							</tr>
 							<tr>
 								<td><label for="net.bind_ip">net.bind_ip</label></td>
@@ -637,6 +676,10 @@
 							<tr>
 								<td><label for="net.calc_overhead">net.calc_overhead</label></td>
 								<td><input type="checkbox" id="net.calc_overhead" /></td>
+							</tr>
+							<tr>
+								<td><label for="net.limit_excludes_local">net.limit_excludes_local</label></td>
+								<td><input type="checkbox" id="net.limit_excludes_local" /></td>
 							</tr>
 							<tr>
 								<td><label for="net.low_cpu">net.low_cpu</label></td>
@@ -652,15 +695,23 @@
 							</tr>
 							<tr>
 								<td><label for="net.outgoing_max_port">net.outgoing_max_port</label></td>
-								<td><input type="text" id="net.outgoing_max_port" class="tbox num" maxlength="6" /></td>
+								<td><input type="text" id="net.outgoing_max_port" class="tbox num" maxlength="5" /></td>
 							</tr>
 							<tr>
 								<td><label for="net.outgoing_port">net.outgoing_port</label></td>
-								<td><input type="text" id="net.outgoing_port" class="tbox num" maxlength="6" /></td>
+								<td><input type="text" id="net.outgoing_port" class="tbox num" maxlength="5" /></td>
 							</tr>
 							<tr>
 								<td><label for="net.upnp_tcp_only">net.upnp_tcp_only</label></td>
 								<td><input type="checkbox" id="net.upnp_tcp_only" /></td>
+							</tr>
+							<tr>
+								<td><label for="net.utp_receive_target_delay">net.utp_receive_target_delay</label></td>
+								<td><input type="text" id="net.utp_receive_target_delay" class="tbox num" maxlength="20" /></td>
+							</tr>
+							<tr>
+								<td><label for="net.utp_target_delay">net.utp_target_delay</label></td>
+								<td><input type="text" id="net.utp_target_delay" class="tbox num" maxlength="20" /></td>
 							</tr>
 							<tr>
 								<td><label for="net.wsaevents">net.wsaevents</label></td>
@@ -677,6 +728,10 @@
 							<tr>
 								<td><label for="peer.lazy_bitfield">peer.lazy_bitfield</label></td>
 								<td><input type="checkbox" id="peer.lazy_bitfield" /></td>
+							</tr>
+							<tr>
+								<td><label for="peer.resolve_country">peer.resolve_country</label></td>
+								<td><input type="checkbox" id="peer.resolve_country" /></td>
 							</tr>
 							<tr>
 								<td><label for="queue.dont_count_slow_dl">queue.dont_count_slow_dl</label></td>
@@ -703,6 +758,14 @@
 								<td><input type="checkbox" id="queue.use_seed_peer_ratio" /></td>
 							</tr>
 							<tr>
+								<td><label for="rss.feed_as_default_label">rss.feed_as_default_label</label></td>
+								<td><input type="checkbox" id="rss.feed_as_default_label" /></td>
+							</tr>
+							<tr>
+								<td><label for="rss.smart_repack_filter">rss.smart_repack_filter</label></td>
+								<td><input type="checkbox" id="rss.smart_repack_filter" /></td>
+							</tr>
+							<tr>
 								<td><label for="rss.update_interval">rss.update_interval</label></td>
 								<td><input type="text" id="rss.update_interval" class="tbox num" maxlength="4" /></td>
 							</tr>
@@ -710,6 +773,12 @@
 								<td><label for="sys.enable_wine_hacks">sys.enable_wine_hacks</label></td>
 								<td><input type="checkbox" id="sys.enable_wine_hacks" /></td>
 							</tr>
+<!--
+							<tr>
+								<td><label for="webui.allow_pairing">webui.allow_pairing</label></td>
+								<td><input type="checkbox" id="webui.allow_pairing" /></td>
+							</tr>
+-->
 							<tr>
 								<td><label for="webui.token_auth">webui.token_auth</label></td>
 								<td><input type="checkbox" id="webui.token_auth" /></td>

@@ -199,24 +199,17 @@ function setupUI() {
 function checkProxySettings() {
 
 	var auth = $("proxy.auth").checked;
-	var v = $("proxy.type").get("value").toInt();
-	if (v == 0) {
-		$("proxy.username").disabled = $("proxy.password").disabled = true;
-	} else if (v == 1) {
-		if (auth) {
-			$("proxy.username").disabled = false;
-			$("proxy.password").disabled = true;
-			$("DLG_SETTINGS_4_CONN_18").addClass("disabled");
-		}
-	} else if (v == 4) {
-		$("proxy.p2p").disabled = true;
-		$("DLG_SETTINGS_4_CONN_20").addClass("disabled");
-	}
-	if ((v > 1) && auth) {
-		$("proxy.username").disabled = false;
-		$("proxy.password").disabled = false;
-		$("DLG_SETTINGS_4_CONN_16").removeClass("disabled");
-		$("DLG_SETTINGS_4_CONN_18").removeClass("disabled");
+	var v = $("proxy.type").get("value").toInt() || 0;
+
+	switch (v) {
+		case 1: // Socks4
+			if (auth) {
+				$("proxy.password").disabled = true;
+				$("proxy.password").addClass("disabled");
+				$("DLG_SETTINGS_4_CONN_18").addClass("disabled");
+			}
+
+			break;
 	}
 
 }
@@ -627,6 +620,7 @@ function loadSettingStrings() {
 		"DLG_SETTINGS_2_UI_16",
 		"DLG_SETTINGS_3_PATHS_01",
 		"DLG_SETTINGS_3_PATHS_02",
+		"DLG_SETTINGS_3_PATHS_03",
 		"DLG_SETTINGS_3_PATHS_06",
 		"DLG_SETTINGS_3_PATHS_07",
 		"DLG_SETTINGS_3_PATHS_10",
@@ -647,6 +641,7 @@ function loadSettingStrings() {
 		"DLG_SETTINGS_4_CONN_15",
 		"DLG_SETTINGS_4_CONN_16",
 		"DLG_SETTINGS_4_CONN_18",
+		"DLG_SETTINGS_4_CONN_19",
 		"DLG_SETTINGS_4_CONN_20",
 		"DLG_SETTINGS_4_CONN_21",
 		"DLG_SETTINGS_5_BANDWIDTH_01",
@@ -1250,9 +1245,9 @@ window.addEvent("domready", function() {
 
 	// onchange fires in IE on <select>s
 	$("proxy.type").addEvent("change", function() {
-		linked(this, 0, ["proxy.proxy", "proxy.port", "proxy.auth", "proxy.p2p"]);
+		linked(this, 0, ["proxy.proxy", "proxy.port", "proxy.auth", "proxy.resolve", "proxy.p2p"]);
 		checkProxySettings();
-	});
+	}).fireEvent("change");
 	$("proxy.auth").addEvent(linkedEvent, function() {
 		linked(this, 0, ["proxy.username", "proxy.password"]);
 		checkProxySettings();
@@ -1264,7 +1259,7 @@ window.addEvent("domready", function() {
 		linked(this, 0, ["cache.writeout", "cache.writeimm"]);
 	});
 	$("cache.read").addEvent(linkedEvent, function() {
-		linked(this, 0, ["cache.read_turnoff", "cache.read_prune", "cache.read_trash"]);
+		linked(this, 0, ["cache.read_turnoff", "cache.read_prune", "cache.read_thrash"]);
 	});
 	$("prop-seed_override").addEvent(linkedEvent, function() {
 		linked(this, 0, ["prop-seed_ratio", "prop-seed_time"]);
@@ -1283,7 +1278,7 @@ window.addEvent("domready", function() {
 		//$("sched_table").toggleClass("disabled");
 	});
 	$("dir_active_download_flag").addEvent(linkedEvent, function() {
-		linked(this, 0, ["dir_active_download"]);
+		linked(this, 0, ["always_show_add_dialog", "dir_active_download"]);
 	});
 	$("dir_completed_download_flag").addEvent(linkedEvent, function() {
 		linked(this, 0, ["dir_add_label", "dir_completed_download", "move_if_defdir"]);

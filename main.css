@@ -447,8 +447,8 @@ a {
 }
 
 #dir_active_download, #dir_completed_download, #dir_torrent_files, #dir_completed_torrents, #dir_autoload {
-	width: 440px;
-	margin: 0 10px !important;
+	width: 430px;
+	margin: 0 0 3px 3px !important;
 }
 
 #DLG_SETTINGS_7_QUEUEING_07, #DLG_TORRENTPROP_1_GEN_12 {
@@ -714,7 +714,7 @@ legend {
 	font-weight: bold;
 }
 
-div.indent { padding-left: 16px; width: 444px; }
+div.indent { padding-left: 18px; width: 442px; }
 
 #st_gl { display: block; }
 
