@@ -229,6 +229,7 @@ function Search() {
 }
 
 function log(text) {
+	if (!$("lcont")) return;
 	var dt = new Date();
 	var h = dt.getHours();
 	var m = dt.getMinutes();
@@ -798,6 +799,7 @@ function resizeUI(hDiv, vDiv) {
 		minTrtH = uiLimits.minTrtH,
 		minTrtW = uiLimits.minTrtW;
 
+	var badIE = (Browser.Engine.trident && Browser.Engine.version <= 4);
 	var showCat = true, showDet = false, showTB = false, tallCat = false;
 	if (!isGuest) {
 		showCat = utWebUI.config.showCategories;
@@ -848,8 +850,8 @@ function resizeUI(hDiv, vDiv) {
 	}
 
 	// Resize torrent list
-	var trtw = ww - (hDiv + 2 + (showCat ? 7 : 0)),
-		trth = vDiv - (th + (showDet ? 0 : 2));
+	var trtw = ww - (hDiv + 2 + (showCat ? 7 : 0)) - (badIE ? 2 : 0),
+		trth = vDiv - (th + (showDet ? 0 : 2)) - (badIE ? 1 : 0);
 
 	if (trtw < minTrtW) {
 		// Gracefully degrade if torrent list too small
@@ -887,7 +889,7 @@ function resizeUI(hDiv, vDiv) {
 
 	// Resize category/label list
 	if (showCat) {
-		if (hDiv) $("CatList").setStyle("width", hDiv - (Browser.Engine.trident && Browser.Engine.version <= 4 ? 2 : 0));
+		if (hDiv) $("CatList").setStyle("width", hDiv - (badIE ? 2 : 0));
 
 		if (tallCat) {
 			$("CatList").setStyle("height", wh - th - 2);
@@ -899,7 +901,7 @@ function resizeUI(hDiv, vDiv) {
 
 	// Resize detailed info pane
 	if (showDet) {
-		var dw = ww - (3 + (showCat && tallCat ? hDiv + 7 : 0)) - (Browser.Engine.trident && Browser.Engine.version <= 4 ? 2 : 0);
+		var dw = ww - (3 + (showCat && tallCat ? hDiv + 7 : 0)) - (badIE ? 2 : 0);
 		$("tdetails").setStyle("width", dw);
 		if (vDiv) {
 			var dh = wh - vDiv - $("tabs").getSize().y - 16;
@@ -923,7 +925,7 @@ function resizeUI(hDiv, vDiv) {
 	if ($("VDivider")) {
 		$("VDivider").setStyles({
 			"width": ww,
-			"left": tallCat ? hDiv + 7 : -10,
+			"left": tallCat ? hDiv + 7 : 0,
 			"top":  showDet ? vDiv + 2 : -10
 		});
 	}
@@ -1094,7 +1096,7 @@ window.addEvent("domready", function() {
 	}
 
 	window.addEvent("unload", function() {
-		utWebUI.saveConfig();
+		utWebUI.saveConfig(false);
 	});
 
 	document.addEvent("mousedown", function(ev) {

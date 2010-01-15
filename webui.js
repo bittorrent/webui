@@ -28,6 +28,8 @@ var utWebUI = {
 	"customLabels": {},
 	"cacheID": 0,
 	"limits": {
+		"reqRetryDelayBase": 2, // seconds
+		"reqRetryMaxAttempts": 6,
 		"minTableRows": 5,
 		"minUpdateInterval": 500,
 		"defHSplit": 125,
@@ -44,7 +46,6 @@ var utWebUI = {
 	"timer": 0,
 	"updateTimeout": null,
 	"interval": -1,
-	"retryDelay": 3000,
 	"totalDL": 0,
 	"totalUL": 0,
 	"loaded": false,
@@ -90,56 +91,71 @@ var utWebUI = {
 		this.getSettings();
 	},
 
-	"request": function(qs, fn, async) {
-		var req = (function() {
-			var logged = false;
-			var reqfail = (function() {
-				if (!logged) {
-					logged = true;
-					log("Request failed (will retry in " + this.retryDelay + " ms): " + qs);
-				}
-				$clear(this.updateTimeout);
-				this.TOKEN = "";
-				this.request.delay(this.retryDelay, this, [qs, (function(json) {
-					this.updateTimeout = this.update.delay(this.config.updateInterval, this);
-					if (fn) fn(json);
-				}).bind(this), async]);
-			}).bind(this);
+	"request": function(qs, fn, async, fails) {
+		if (typeof(fails) != 'object' || fails.constructor != Array)
+			fails = [0]; // array so to pass by reference
 
+		var self = this;
+
+		var req = function() {
 			try {
 				new Request.JSON({
-					"url": urlBase + "?token=" + this.TOKEN + "&" + qs + "&t=" + $time(),
+					"url": urlBase + "?token=" + self.TOKEN + "&" + qs + "&t=" + $time(),
 					"method": "get",
 					"async": !!async,
-					"onFailure": reqfail,
-					"onSuccess": (fn) ? fn.bind(this) : $empty
-				}).send();
-			} catch(e){
-				reqfail();
-			}
-		}).bind(this);
+					"onFailure": function() {
+						$clear(self.updateTimeout);
 
-		if (!this.TOKEN)
-			this.requestToken(req, true);
+						fails[0]++;
+						var delay = Math.pow(self.limits.reqRetryDelayBase, fails[0]);
+						if (fails[0] <= self.limits.reqRetryMaxAttempts) {
+							log("Request failure #" + fails[0] + " (will retry in " + delay + " seconds): " + qs);
+						}
+						else {
+							window.removeEvents("unload");
+							$("msg").set("html", "WebUI is having trouble contacting &micro;Torrent. Try <a href='#' onclick='window.location.reload()'>reloading</a> the page.");
+							$("cover").show();
+							return;
+						}
+
+						self.TOKEN = "";
+						self.request.delay(delay * 1000, self, [qs, function(json) {
+							if (fails[0]) {
+								fails[0] = 0;
+									// Make sure callback gets called only once. Otherwise, WebUI may
+									// hammer the backend with tons of requests after failure recovery (to
+									// be exact, it may spam as many requests as there have been failures)
+
+								if (fn) fn.delay(0, self, json);
+								self.updateTimeout = self.update.delay(self.config.updateInterval, self);
+							}
+						}, async, fails]);
+					},
+					"onSuccess": (fn) ? fn.bind(self) : $empty
+				}).send();
+			} catch(e){}
+		};
+
+		if (!self.TOKEN)
+			self.requestToken(req, true);
 		else
 			req();
 	},
 
 	"requestToken": function(fn, async) {
+		var self = this;
 		try {
 			new Request({
 				"url": urlBase + "token.html?t=" + $time(),
 				"method": "get",
 				"async": !!async,
-				"onFailure": (fn) ? fn.bind(this) : $empty,
-				"onSuccess": (function(str) {
-					this.TOKEN = str.substring(str.indexOf("none;'>") + 7, str.indexOf("</div>"));
-					if (fn) fn.delay(0); // break recursion
-				}).bind(this)
+				"onFailure": (fn) ? fn.bind(self) : $empty,
+				"onSuccess": function(str) {
+					self.TOKEN = str.substring(str.indexOf("none;'>") + 7, str.indexOf("</div>"));
+					if (fn) fn.delay(0);
+				}
 			}).send();
-		} catch(e){
-			if (fn) fn.delay(0); // break recursion
-		}
+		} catch(e){}
 	},
 
 	"perform": function(action) {
@@ -1416,11 +1432,11 @@ var utWebUI = {
 		$("cover").show();
 		window.removeEvents("unload");
 		this.config = {};
-		this.request("action=setsetting&s=webui.cookie&v={}", function(){ window.location.reload(false); });
+		this.saveConfig(false, function(){ window.location.reload(false); });
 	},
 
-	"saveConfig": function(async) {
-		this.request("action=setsetting&s=webui.cookie&v=" + JSON.encode(this.config), null, async || false);
+	"saveConfig": function(async, callback) {
+		this.request("action=setsetting&s=webui.cookie&v=" + JSON.encode(this.config), callback || null, async || false);
 	},
 
 	"toggleCatPanel": function() {

@@ -809,7 +809,7 @@ div#gcont, div#lcont {
 }
 div#gcont table { font-size: 11px; font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif; line-height: 10px; }
 div#gcont table td.Header { font-weight: bold; background: #F6F6F6; border: 1px solid #D0D0D0; }
-div#lcont { font-size: 11px; font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif; line-height: 11px; background: #FFFFFF; padding: 2px; }
+div#lcont { font-size: 12px; font-family: Consolas, monospace; line-height: 14px; background: #FFFFFF; padding: 2px; }
 #spgraph { font-size: 11px; font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif; overflow: hidden; }
 
 #dettable td {
