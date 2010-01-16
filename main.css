@@ -76,6 +76,7 @@ div#preload {
 	background-image: url(./images/tbar.png);
 	background-image: url(./images/toolbar.png);
 	background-image: url(./images/tstatus.png);
+	background-image: url(./images/tabs.png);
 	background-image: url(./images/arrow.gif);
 	background-image: url(./images/snake.gif);
 	background-image: url(./images/close.png);
@@ -558,44 +559,44 @@ div#FileList {
 	-moz-user-input: enabled;
 }
 
-.Status_Down {
+.Status_Down, .Status_Up, .Status_Checking, .Status_Incompleted, .Status_Paused, .Status_Error_Down, .Status_Error_Up, .Status_Error, .Status_Completed, .Status_Queued_Down, .Status_Queued_Up {
 	background: transparent url(./images/tstatus.png) no-repeat 5px top;
 }
 
 .Status_Up {
-	background: transparent url(./images/tstatus.png) no-repeat 5px -16px;
+	background-position: 5px -16px;
 }
 
 .Status_Checking, .Status_Incompleted {
-	background: transparent url(./images/tstatus.png) no-repeat 5px -32px;
+	background-position: 5px -32px;
 }
 
 .Status_Paused {
-	background: transparent url(./images/tstatus.png) no-repeat 5px -48px;
+	background-position: 5px -48px;
 }
 
 .Status_Error_Down {
-	background: transparent url(./images/tstatus.png) no-repeat 5px -64px;
+	background-position: 5px -64px;
 }
 
 .Status_Error_Up {
-	background: transparent url(./images/tstatus.png) no-repeat 5px -80px;
+	background-position: 5px -80px;
 }
 
 .Status_Error {
-	background: transparent url(./images/tstatus.png) no-repeat 5px -96px;
+	background-position: 5px -96px;
 }
 
 .Status_Completed {
-	background: transparent url(./images/tstatus.png) no-repeat 5px -112px;
+	background-position: 5px -112px;
 }
 
 .Status_Queued_Down {
-	background: transparent url(./images/tstatus.png) no-repeat 5px -128px;
+	background-position: 5px -128px;
 }
 
 .Status_Queued_Up {
-	background: transparent url(./images/tstatus.png) no-repeat 5px -144px;
+	background-position: 5px -144px;
 }
 
 /* Details */
@@ -921,7 +922,7 @@ ul#tabs li a {
 	margin: 0;
 	position: relative;
 	vertical-align: top;
-	padding: 2px 12px 4px 12px;
+	padding: 2px 0 4px 0;
 	font-size: 11px;
 	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
 	color: #3B3B3B;
@@ -937,24 +938,8 @@ ul#tabs li a {
 
 ul#tabs li a:hover {
 	border-top: 2px solid #0099FF;
-	background: #E0E0E0;
+	background-color: #E0E0E0;
 }
-
-/*ul#tabs li a {
-	position: relative;
-	text-decoration: none;
-	border: 1px solid #D0D0D0;
-	border-top: 2px solid #D0D0D0;
-	background: #D0D0D0;
-	border-bottom: 0;
-	margin: 0;
-	padding: 2px 12px 4px 12px;
-	font-size: 11px;
-	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
-	color: #3B3B3B;
-	vertical-align: top;
-	top: 4px;
-}*/
 
 ul#tabs li.selected a {
 	margin: 0;
@@ -963,12 +948,53 @@ ul#tabs li.selected a {
 	border: 1px solid #868686;
 	border-top: 2px solid #0099FF;
 	border-bottom: 1px solid #FFFFFF;
-	background: #FFFFFF;
+	background-color: #FFFFFF;
 	color: #000000;
 	-webkit-border-top-left-radius: 5px;
 	-webkit-border-top-right-radius: 5px;
 	-moz-border-radius-topleft: 5px;
 	-moz-border-radius-topright: 5px;
+}
+
+ul#tabs li a span {
+	padding: 0 10px 3px 24px;
+	vertical-align: top;
+}
+
+li#tab_gcont span, li#tab_FileList span, li#tab_spgraph span, li#tab_lcont span {
+	background: transparent url(./images/tabs.png) no-repeat 4px top;
+}
+
+li.selected#tab_gcont span {
+	background-position: 4px -16px;
+}
+
+li#tab_gcont span {
+	background-position: 4px -144px;
+}
+
+li.selected#tab_FileList span {
+	background-position: 4px -80px;
+}
+
+li#tab_FileList span {
+	background-position: 4px -208px;
+}
+
+li.selected#tab_spgraph span {
+	background-position: 4px -96px;
+}
+
+li#tab_spgraph span {
+	background-position: 4px -224px;
+}
+
+li.selected#tab_lcont span {
+	background-position: 4px -112px;
+}
+
+li#tab_lcont span {
+	background-position: 4px -240px;
 }
 
 /* label dialog */

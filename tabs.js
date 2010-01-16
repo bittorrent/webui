@@ -18,6 +18,8 @@ var Tabs = new Class({
 		var $me = this;
 		this.element.addEvent("click", function(ev) {
 			ev.stop();
+			if (ev.target && (ev.target.get("tag") == "span"))
+				ev.target = ev.target.parentNode;
 			if (ev.target && (ev.target.get("tag") == "a"))
 				$me.show(ev.target.retrieve("showId"));
 		});
@@ -29,9 +31,10 @@ var Tabs = new Class({
 			this.element.adopt(new Element("li", {
 				"id": "tab_" + k
 			}).adopt(new Element("a", {
-				"href": "#",
+				"href": "#"
+			}).store("showId", k).adopt(new Element("span", {
 				"html": this.tabs[k]
-			}).store("showId", k)));
+			}))));
 		};
 		return this;
 	},
