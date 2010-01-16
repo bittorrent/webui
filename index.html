@@ -246,6 +246,7 @@
 					</div>
 				</fieldset>
 			</div>
+
 			<div id="st_gl" class="stg_con">
 				<fieldset>
 					<legend id="DLG_SETTINGS_1_GENERAL_10"></legend>
@@ -411,63 +412,82 @@
 					<div class="hcont">
 						<div class="ralign"><input id="encryption_allow_legacy" type="checkbox" /><label for="encryption_allow_legacy" id="DLG_SETTINGS_6_BITTORRENT_13"></label></div>
 						<label id="DLG_SETTINGS_6_BITTORRENT_11"></label>
-						<select id="encryption_mode"><option>----------------</option></select>
+						<select id="encryption_mode"><option></option></select>
+					</div>
+				</fieldset>
+			</div>
+
+			<div id="st_tc" class="stg_con">
+				<div class="hcont"><input id="multi_day_transfer_limit_en" type="checkbox" /><label for="multi_day_transfer_limit_en" id="DLG_SETTINGS_7_TRANSFERCAP_01"></label></div>
+				<fieldset>
+					<legend id="DLG_SETTINGS_7_TRANSFERCAP_02"></legend>
+					<div class="hcont">
+						<label for="multi_day_transfer_mode" id="DLG_SETTINGS_7_TRANSFERCAP_03"></label>
+						<select id="multi_day_transfer_mode"><option></option></select>
+					</div>
+					<div class="hcont indent">
+						<label for="multi_day_transfer_limit_value" id="DLG_SETTINGS_7_TRANSFERCAP_04"></label>
+						<input type="text" id="multi_day_transfer_limit_value" class="tbox num" /> <select id="multi_day_transfer_limit_unit"><option></option></select>
+						<label for="multi_day_transfer_limit_span" id="DLG_SETTINGS_7_TRANSFERCAP_05"></label>
+						<select id="multi_day_transfer_limit_span"><option></option></select>
+						<span id="DLG_SETTINGS_7_TRANSFERCAP_06"></span>
 					</div>
 				</fieldset>
 			</div>
 
 			<div id="st_que" class="stg_con">
 				<fieldset>
-					<legend id="DLG_SETTINGS_7_QUEUEING_01"></legend>
+					<legend id="DLG_SETTINGS_8_QUEUEING_01"></legend>
 					<div class="hcont">
 						<input type="text" id="max_active_torrent" class="tbox num flr" maxlength="6" />
-						<label for="max_active_torrent" id="DLG_SETTINGS_7_QUEUEING_02"></label>
+						<label for="max_active_torrent" id="DLG_SETTINGS_8_QUEUEING_02"></label>
 					</div>
 					<div class="hcont">
 						<input type="text" id="max_active_downloads" class="tbox num flr" maxlength="6" />
-						<label for="max_active_downloads" id="DLG_SETTINGS_7_QUEUEING_04"></label>
+						<label for="max_active_downloads" id="DLG_SETTINGS_8_QUEUEING_04"></label>
 					</div>
 				</fieldset>
 				<fieldset>
-					<legend id="DLG_SETTINGS_7_QUEUEING_06"></legend>
+					<legend id="DLG_SETTINGS_8_QUEUEING_06"></legend>
 					<div class="hcont">
-						<label for="seed_ratio" id="DLG_SETTINGS_7_QUEUEING_07"></label>
-						<input type="text" id="seed_ratio" class="tbox num" /><label for="seed_time" id="DLG_SETTINGS_7_QUEUEING_09"></label><select id="seed_time"><option>-------------------</option></select>
+						<label for="seed_ratio" id="DLG_SETTINGS_8_QUEUEING_07"></label>
+						<input type="text" id="seed_ratio" class="tbox num" /><label for="seed_time" id="DLG_SETTINGS_8_QUEUEING_09"></label><select id="seed_time"><option></option></select>
 					</div>
-					<div class="hcont"><input id="seeds_prioritized" type="checkbox" /><label for="seeds_prioritized" id="DLG_SETTINGS_7_QUEUEING_11"></label></div>
+					<div class="hcont"><input id="seeds_prioritized" type="checkbox" /><label for="seeds_prioritized" id="DLG_SETTINGS_8_QUEUEING_11"></label></div>
 				</fieldset>
 				<fieldset>
-					<legend id="DLG_SETTINGS_7_QUEUEING_12"></legend>
+					<legend id="DLG_SETTINGS_8_QUEUEING_12"></legend>
 					<div class="hcont">
 						<input type="text" id="seed_prio_limitul" class="tbox num flr" maxlength="6" />
-						<input id="seed_prio_limitul_flag" type="checkbox" /><label for="seed_prio_limitul_flag" id="DLG_SETTINGS_7_QUEUEING_13"></label>
+						<input id="seed_prio_limitul_flag" type="checkbox" /><label for="seed_prio_limitul_flag" id="DLG_SETTINGS_8_QUEUEING_13"></label>
 					</div>
 				</fieldset>
 			</div>
 
 			<div id="st_sch" class="stg_con">
-				<div class="hcont"><input id="sched_enable" type="checkbox" /><label for="sched_enable" id="DLG_SETTINGS_8_SCHEDULER_01"></label></div>
+				<div class="hcont"><input id="sched_enable" type="checkbox" /><label for="sched_enable" id="DLG_SETTINGS_9_SCHEDULER_01"></label></div>
 				<!--
 				<fieldset>
-					<legend id="DLG_SETTINGS_8_SCHEDULER_02"></legend>
+					<legend id="DLG_SETTINGS_9_SCHEDULER_02"></legend>
 					<table id="sched_table" cellpadding="0" cellspacing="0"></table>
 				</fieldset>
 				-->
 				<fieldset>
-					<legend id="DLG_SETTINGS_8_SCHEDULER_04"></legend>
+					<legend id="DLG_SETTINGS_9_SCHEDULER_04"></legend>
 					<div class="hcont">
-						<div class="ralign"><input id="sched_dis_dht" type="checkbox" /><label id="DLG_SETTINGS_8_SCHEDULER_09" for="sched_dis_dht"></label></div>
+						<div class="ralign"><input id="sched_dis_dht" type="checkbox" /><label id="DLG_SETTINGS_9_SCHEDULER_09" for="sched_dis_dht"></label></div>
 						<div style="clear: none; padding: 0">
 							<input type="text" id="sched_ul_rate" class="tbox num flr" maxlength="6" />
-							<label for="sched_ul_rate" id="DLG_SETTINGS_8_SCHEDULER_05"></label>
+							<label for="sched_ul_rate" id="DLG_SETTINGS_9_SCHEDULER_05"></label>
 						</div>
 					</div>
 					<div class="hcont" style="width: 230px">
 						<input type="text" id="sched_dl_rate" class="tbox num flr" maxlength="6" />
-						<label for="sched_dl_rate" id="DLG_SETTINGS_8_SCHEDULER_07"></label>
+						<label for="sched_dl_rate" id="DLG_SETTINGS_9_SCHEDULER_07"></label>
 					</div>
 				</fieldset>
 			</div>
+
 			<div id="st_dc" class="stg_con">
 				<fieldset>
 					<legend id="DLG_SETTINGS_C_ADV_CACHE_01"></legend>

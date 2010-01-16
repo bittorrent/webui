@@ -723,6 +723,7 @@ var utWebUI = {
 				"v": 1
 			};
 
+			var tcmode = 0;
 			for (var i = 0, j = json.settings.length; i < j; i++) {
 				var key = json.settings[i][0], typ = json.settings[i][1], val = json.settings[i][2];
 				if (key in ignored) continue;
@@ -738,8 +739,14 @@ var utWebUI = {
 					if (typ == 1)
 						val = (val == "true");
 				}
-				this.settings[json.settings[i][0]] = val;
+				switch (key) {
+					case "multi_day_transfer_mode_ul": if (val) tcmode = 0; break;
+					case "multi_day_transfer_mode_dl": if (val) tcmode = 1; break;
+					case "multi_day_transfer_mode_uldl": if (val) tcmode = 2; break;
+				}
+				this.settings[key] = val;
 			}
+			this.settings["multi_day_transfer_mode"] = tcmode;
 			delete json.settings;
 			this.loadSettings();
 		}
@@ -904,8 +911,16 @@ var utWebUI = {
 				nv *= 10;
 			if (v != nv) {
 				this.settings[key] = nv;
-				if (key == "gui.persistent_labels")
+				if (key == "multi_day_transfer_mode") {
+					str +=
+						"&s=multi_day_transfer_mode_ul&v=" + (nv == 0 ? 1 : 0) +
+						"&s=multi_day_transfer_mode_dl&v=" + (nv == 1 ? 1 : 0) +
+						"&s=multi_day_transfer_mode_uldl&v=" + (nv == 2 ? 1 : 0);
+					continue;
+				}
+				if (key == "gui.persistent_labels") {
 					nv = encodeURIComponent(nv);
+				}
 				str += "&s=" + key + "&v=" + nv;
 			}
 		}

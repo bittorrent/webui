@@ -196,6 +196,18 @@ function setupUI() {
 	});
 }
 
+function checkCapSettings() {
+
+	var capped = $("multi_day_transfer_limit_en").checked;
+	if (capped) {
+		$("DLG_SETTINGS_7_TRANSFERCAP_06").removeClass("disabled");
+	}
+	else {
+		$("DLG_SETTINGS_7_TRANSFERCAP_06").addClass("disabled");
+	}
+
+}
+
 function checkProxySettings() {
 
 	var auth = $("proxy.auth").checked;
@@ -596,7 +608,8 @@ function loadSettingStrings() {
 			"st_dirs": lang[CONST.ST_CAPT_FOLDER],
 			"st_con": lang[CONST.ST_CAPT_CONNECTION],
 			"st_bw": lang[CONST.ST_CAPT_BANDWIDTH],
-			"st_bt": lang[CONST.ST_CAPT_TRANSFER],
+			"st_bt": lang[CONST.ST_CAPT_BITTORRENT],
+			"st_tc": lang[CONST.ST_CAPT_TRANSFER_CAP],
 			"st_que": lang[CONST.ST_CAPT_SEEDING],
 			"st_sch": lang[CONST.ST_CAPT_SCHEDULER],
 			"st_ao": lang[CONST.ST_CAPT_ADVANCED],
@@ -667,20 +680,26 @@ function loadSettingStrings() {
 		"DLG_SETTINGS_6_BITTORRENT_10",
 		"DLG_SETTINGS_6_BITTORRENT_11",
 		"DLG_SETTINGS_6_BITTORRENT_13",
-		"DLG_SETTINGS_7_QUEUEING_01",
-		"DLG_SETTINGS_7_QUEUEING_02",
-		"DLG_SETTINGS_7_QUEUEING_04",
-		"DLG_SETTINGS_7_QUEUEING_06",
-		"DLG_SETTINGS_7_QUEUEING_07",
-		"DLG_SETTINGS_7_QUEUEING_09",
-		"DLG_SETTINGS_7_QUEUEING_11",
-		"DLG_SETTINGS_7_QUEUEING_12",
-		"DLG_SETTINGS_7_QUEUEING_13",
-		"DLG_SETTINGS_8_SCHEDULER_01",
-		"DLG_SETTINGS_8_SCHEDULER_04",
-		"DLG_SETTINGS_8_SCHEDULER_05",
-		"DLG_SETTINGS_8_SCHEDULER_07",
-		"DLG_SETTINGS_8_SCHEDULER_09",
+		"DLG_SETTINGS_7_TRANSFERCAP_01",
+		"DLG_SETTINGS_7_TRANSFERCAP_02",
+		"DLG_SETTINGS_7_TRANSFERCAP_03",
+		"DLG_SETTINGS_7_TRANSFERCAP_04",
+		"DLG_SETTINGS_7_TRANSFERCAP_05",
+		"DLG_SETTINGS_7_TRANSFERCAP_06",
+		"DLG_SETTINGS_8_QUEUEING_01",
+		"DLG_SETTINGS_8_QUEUEING_02",
+		"DLG_SETTINGS_8_QUEUEING_04",
+		"DLG_SETTINGS_8_QUEUEING_06",
+		"DLG_SETTINGS_8_QUEUEING_07",
+		"DLG_SETTINGS_8_QUEUEING_09",
+		"DLG_SETTINGS_8_QUEUEING_11",
+		"DLG_SETTINGS_8_QUEUEING_12",
+		"DLG_SETTINGS_8_QUEUEING_13",
+		"DLG_SETTINGS_9_SCHEDULER_01",
+		"DLG_SETTINGS_9_SCHEDULER_04",
+		"DLG_SETTINGS_9_SCHEDULER_05",
+		"DLG_SETTINGS_9_SCHEDULER_07",
+		"DLG_SETTINGS_9_SCHEDULER_09",
 		"DLG_SETTINGS_9_WEBUI_01",
 		"DLG_SETTINGS_9_WEBUI_02",
 		"DLG_SETTINGS_9_WEBUI_03",
@@ -730,20 +749,12 @@ function loadSettingStrings() {
 		$("bind_port").set("value", rnd);
 	});
 
-	var encList = $("encryption_mode");
-	encList.options.length = 0;
-	lang[CONST.ST_CBO_ENCRYPTIONS].split("||").each(function(v, k) {
-		if (v == "") return;
-		encList.options[encList.options.length] = new Option(v, k, false, false);
-	});
-	encList.set("value", utWebUI.settings["encryption_mode"]);
-	var pxyList = $("proxy.type");
-	pxyList.options.length = 0;
-	lang[CONST.ST_CBO_PROXY].split("||").each(function(v, k) {
-		if (v == "") return;
-		pxyList.options[pxyList.options.length] = new Option(v, k, false, false);
-	});
-	pxyList.set("value", utWebUI.settings["proxy.type"]);
+	populateCombobox($("encryption_mode"), lang[CONST.ST_CBO_ENCRYPTIONS].split("||"), utWebUI.settings["encryption_mode"]);
+	populateCombobox($("proxy.type"), lang[CONST.ST_CBO_PROXY].split("||"), utWebUI.settings["proxy.type"]);
+	populateCombobox($("multi_day_transfer_mode"), lang[CONST.ST_CBO_TCAP_MODES].split("||"), utWebUI.settings["multi_day_transfer_mode"]);
+	populateCombobox($("multi_day_transfer_limit_unit"), lang[CONST.ST_CBO_TCAP_UNITS].split("||"), utWebUI.settings["multi_day_transfer_limit_unit"]);
+	populateCombobox($("multi_day_transfer_limit_span"), lang[CONST.ST_CBO_TCAP_PERIODS].split("||"), utWebUI.settings["multi_day_transfer_limit_span"]);
+
 	utWebUI.langLoaded = true;
 	/* TODO: implement
 	(function() {
@@ -781,6 +792,15 @@ function loadSettingStrings() {
 		$("sched_table").grab(tbody);
 	})();
 	*/
+}
+
+function populateCombobox(ele, vals, def) {
+	ele.options.length = 0;
+	vals.each(function(v, k) {
+		if (v == "") return;
+		ele.options[ele.options.length] = new Option(v, k, false, false);
+	});
+	ele.set("value", def);
 }
 
 var resizing = false;
@@ -1278,6 +1298,10 @@ window.addEvent("domready", function() {
 	});
 	$("webui.enable_listen").addEvent(linkedEvent, function() {
 		linked(this, 0, ["webui.port"]);
+	});
+	$("multi_day_transfer_limit_en").addEvent(linkedEvent, function() {
+		linked(this, 0, ["multi_day_transfer_mode", "multi_day_transfer_limit_value", "multi_day_transfer_limit_unit", "multi_day_transfer_limit_span"]);
+		checkCapSettings();
 	});
 	$("seed_prio_limitul_flag").addEvent(linkedEvent, function() {
 		linked(this, 0, ["seed_prio_limitul"]);

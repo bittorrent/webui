@@ -421,6 +421,10 @@ input.tbox, input.btn, select {
 	border: 1px solid #D0D0D0;
 }
 
+select {
+	height: 18px;
+}
+
 input.tbox {
 	height: 16px !important;
 	background-color: #FFFFFF;
@@ -451,11 +455,11 @@ a {
 	margin: 0 0 3px 3px !important;
 }
 
-#DLG_SETTINGS_7_QUEUEING_07, #DLG_TORRENTPROP_1_GEN_12 {
+#DLG_SETTINGS_8_QUEUEING_07, #DLG_TORRENTPROP_1_GEN_12 {
 	margin: 0 10px 0 0;
 }
 
-#DLG_SETTINGS_7_QUEUEING_09, #DLG_TORRENTPROP_1_GEN_14 {
+#DLG_SETTINGS_8_QUEUEING_09, #DLG_TORRENTPROP_1_GEN_14 {
 	margin: 0 20px 0 10px;
 }
 
@@ -693,7 +697,7 @@ input.str {
 
 td label, div label { cursor: pointer; }
 
-input.disabled {
+input.disabled, select.disabled {
 	color: #808080;
 	background-color: #FAFAFA;
 }
