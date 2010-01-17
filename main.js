@@ -696,6 +696,7 @@ function loadSettingStrings() {
 		"DLG_SETTINGS_8_QUEUEING_12",
 		"DLG_SETTINGS_8_QUEUEING_13",
 		"DLG_SETTINGS_9_SCHEDULER_01",
+		"DLG_SETTINGS_9_SCHEDULER_02",
 		"DLG_SETTINGS_9_SCHEDULER_04",
 		"DLG_SETTINGS_9_SCHEDULER_05",
 		"DLG_SETTINGS_9_SCHEDULER_07",
@@ -727,9 +728,18 @@ function loadSettingStrings() {
 		"MENU_SHOW_CATEGORY",
 		"MENU_SHOW_DETAIL",
 		"ST_COL_NAME",
-		"ST_COL_VALUE"
+		"ST_COL_VALUE",
+		"ST_SCH_LGND_FULL",
+		"ST_SCH_LGND_LIMITED",
+		"ST_SCH_LGND_OFF",
+		"ST_SCH_LGND_SEEDING"
 	].each(function(k) {
-		$(k).set("text", lang[CONST[k]]);
+		if ($(k)) {
+			$(k).set("text", lang[CONST[k]]);
+		}
+		else {
+			console.log("Element '" + k + "' not found... Language string not set.");
+		}
 	});
 
 	$("DLG_SETTINGS_03").set("value", lang[CONST.DLG_SETTINGS_03]).addEvent("click", function() {
@@ -756,9 +766,11 @@ function loadSettingStrings() {
 	populateCombobox($("multi_day_transfer_limit_span"), lang[CONST.ST_CBO_TCAP_PERIODS].split("||"), utWebUI.settings["multi_day_transfer_limit_span"]);
 
 	utWebUI.langLoaded = true;
-	/* TODO: implement
-	(function() {
-		var days = lang[CONST.SETT_DAYNAMES].split("||");
+
+	$("sched_table").addEvent("change", function() {
+		var sv = (utWebUI.settings["sched_table"] || "").pad(7*24, "0").substring(0, 7*24);
+		var daycd = lang[CONST.ST_SCH_DAYCODES].split("||");
+		var daynm = lang[CONST.ST_SCH_DAYNAMES].split("||");
 		var tbody = new Element("tbody");
 		var active = false;
 		var mode = 0;
@@ -767,31 +779,72 @@ function loadSettingStrings() {
 			for (var j = 0; j < 25; j++) {
 				var td = simpleClone(TD, false);
 				if (j == 0) {
-					td.set("text", days[i]);
+					td.set("text", daycd[i]);
 				} else {
-					td.addClass("block").addClass("mode0").addEvent("mousedown", function() {
-						for (var k = 0; k <= 3; k++) {
-							if (this.hasClass("mode" + k)) {
-								mode = (k + 1) % 4;
-								this.removeClass("mode" + k).addClass("mode" + mode);
-								break;
+					(function() {
+						// Closure used here to ensure that each cell gets its own copy of idx...
+						// Otherwise, weird JavaScript scoping rules apply, and all cells will
+						// receive references to a shared idx (a variable's scope is function-wide
+						// in JavaScript, not block-wide as in most other C-styled languages)
+						var idx = i*24+j-1;
+						td.set("class", "block mode" + sv.substr(idx, 1)).addEvent("mousedown", function() {
+							if (!active && $("sched_enable").checked) {
+								for (var k = 0; k <= 3; k++) {
+									if (this.hasClass("mode" + k)) {
+										mode = (k + 1) % 4;
+										this.set("class", "block mode" + mode);
+										sv = sv.substring(0, idx) + mode + sv.substring(idx+1);
+										break;
+									}
+								}
+								active = true;
 							}
+
+							return false;
+						}).addEvent("mouseup", function() {
+							if ($("sched_enable").checked) {
+								$("sched_table").set("value", sv);
+							}
+							active = false;
+						}).addEvent("mouseenter", function() {
+							var day = Math.floor(idx / 24), hour = (idx % 24);
+							$("sched_table_info").set("text", daynm[day] + ", " + hour + ":00 - " + hour + ":59");
+
+							if ($("sched_enable").checked && active && !this.hasClass("mode" + mode)) {
+								this.set("class", "block mode" + mode);
+								sv = sv.substring(0, idx) + mode + sv.substring(idx+1);
+							}
+						}).addEvent("mouseleave", function() {
+							$("sched_table_info").empty();
+						});
+						if (Browser.Engine.trident) {
+							// Prevent text selection in IE
+							td.addEvent("selectstart", $lambda(false));
 						}
-						active = true;
-					}).addEvent("mouseup", function() {
-						active = false;
-					}).addEvent("mouseenter", function() {
-						if (active)
-							this.className = "block mode" + mode;
-					});
+					})();
 				}
 				tr.grab(td);
 			}
 			tbody.grab(tr);
 		}
-		$("sched_table").grab(tbody);
-	})();
-	*/
+		$("sched_table").empty().grab(tbody);
+	}).fireEvent("change");
+
+	var lgndex = {
+		"full": lang[CONST.ST_SCH_LGND_FULLEX],
+		"limited": lang[CONST.ST_SCH_LGND_LIMITEDEX],
+		"off": lang[CONST.ST_SCH_LGND_OFFEX],
+		"seeding": lang[CONST.ST_SCH_LGND_SEEDINGEX]
+	};
+
+	$$("#sched_table_lgnd ul li").addEvents({
+		"mouseenter": function() {
+			$("sched_table_info").set("text", lgndex[this.get("id").match(/.*_([^_]+)$/)[1]]);
+		},
+		"mouseleave": function() {
+			$("sched_table_info").empty();
+		}
+	});
 }
 
 function populateCombobox(ele, vals, def) {
@@ -1014,6 +1067,9 @@ window.addEvent("domready", function() {
 		case "esc": // Esc
 			ev.stop();
 			if (DialogManager.showing.length > 0) {
+				if (DialogManager.showing[0] == "Settings") {
+					utWebUI.loadSettings();
+				}
 				DialogManager.hideTopMost();
 			} else {
 				utWebUI.restoreUI();
@@ -1308,7 +1364,10 @@ window.addEvent("domready", function() {
 	});
 	$("sched_enable").addEvent(linkedEvent, function() {
 		linked(this, 0, ["sched_ul_rate", "sched_dl_rate", "sched_dis_dht"]);
-		//$("sched_table").toggleClass("disabled");
+		["sched_table", "sched_table_lgnd", "sched_table_info"].each(
+			this.checked ? function(k) { $(k).removeClass("disabled"); }
+			             : function(k) { $(k).addClass("disabled"); }
+		);
 	});
 	$("dir_active_download_flag").addEvent(linkedEvent, function() {
 		linked(this, 0, ["always_show_add_dialog", "dir_active_download"]);

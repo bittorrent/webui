@@ -1127,7 +1127,7 @@ a { outline: none; }
 	border: 0;
 }
 
-/* schedule table
+/* schedule table */
 
 #sched_table {
 	border-collapse: collapse;
@@ -1136,69 +1136,72 @@ a { outline: none; }
 }
 
 #sched_table * {
+	font-weight: bold;
+	font-size: 9px;
 	-webkit-user-select: ignore !important;
 }
 
-#sched_table td.block {
+#sched_table_lgnd ul {
+	cursor: default;
+	margin: 5px 0 0 16px;
+	padding: 0;
+	float: right;
+	list-style-type: none;
+}
+
+#sched_table_lgnd .block {
+	padding: 0 6px;
+	line-height: 16px;
+}
+
+#sched_table_info {
+	width: 200px;
+}
+
+#st_sch .block {
 	width: 16px; height: 16px;
 	border: 1px solid #000000;
 }
 
-#sched_table td.mode0 {
+#st_sch .mode0 {
 	background-color: #00A800;
 }
-#sched_table td.mode0:hover {
+#st_sch .mode0:hover {
 	background-color: #009300;
 }
-
-#sched_table td.mode1 {
-	background-color: #8DCE8D;
-}
-#sched_table td.mode1:hover {
-	background-color: #8DCE8D;
+#st_sch .disabled .mode0 {
+	background-color: #545454;
 }
 
-#sched_table td.mode2 {
+#st_sch .mode1 {
+	background-color: #8DCE8D;
+}
+#st_sch .mode1:hover {
+	background-color: #7BB47B;
+}
+#st_sch .disabled .mode1 {
+	background-color: #8E8E8E;
+}
+
+#st_sch .mode2 {
 	background-color: #FFFFFF;
 }
+#st_sch .mode2:hover {
+	background-color: #DFDFDF;
+}
+#st_sch .disabled .mode2 {
+	background-color: #BBBBBB;
+}
 
-#sched_table td.mode3 {
+#st_sch .mode3 {
 	background-color: #FFC0C0;
 }
-
-#sched_table.disabled td.block {
-	background-color: #686868;
+#st_sch .mode3:hover {
+	background-color: #DFA8A8;
 }
-
-*/
-
-/* progressbar
-
-.prbar {
-	height: 8px !important;
-	position: relative;
+#st_sch .disabled .mode3 {
+	background-color: #D0D0D0;
 }
-
-.prbar span {
-	width: 50px;
-	position: absolute;
-	line-height: 14px;
-	z-index: 10;
-	margin: 0 0 0 -25px;
-	left: 50%; top: -3px;
-	text-align: center;
-	font-weight: bold;
-}
-
-.prbar div {
-	height: 8px !important;
-	background-color: #8BBBE8;
-	position: absolute;
-	z-index: 9;
-	left: 0px; top: 0px;
-}
-
-*/
 
 /* folders dialog
 

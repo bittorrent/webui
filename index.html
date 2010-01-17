@@ -466,12 +466,21 @@
 
 			<div id="st_sch" class="stg_con">
 				<div class="hcont"><input id="sched_enable" type="checkbox" /><label for="sched_enable" id="DLG_SETTINGS_9_SCHEDULER_01"></label></div>
-				<!--
 				<fieldset>
 					<legend id="DLG_SETTINGS_9_SCHEDULER_02"></legend>
 					<table id="sched_table" cellpadding="0" cellspacing="0"></table>
+					<div id="sched_table_lgnd">
+						<ul>
+							<li id="sched_table_lgnd_off"><span class="block mode2">&nbsp;</span> <span id="ST_SCH_LGND_OFF"></span></li>
+							<li id="sched_table_lgnd_seeding"><span class="block mode3">&nbsp;</span> <span id="ST_SCH_LGND_SEEDING"></span></li>
+						</ul>
+						<ul>
+							<li id="sched_table_lgnd_full"><span class="block mode0">&nbsp;</span> <span id="ST_SCH_LGND_FULL"></span></li>
+							<li id="sched_table_lgnd_limited"><span class="block mode1">&nbsp;</span> <span id="ST_SCH_LGND_LIMITED"></span></li>
+						</ul>
+					</div>
+					<div id="sched_table_info"></div>
 				</fieldset>
-				-->
 				<fieldset>
 					<legend id="DLG_SETTINGS_9_SCHEDULER_04"></legend>
 					<div class="hcont">
@@ -698,8 +707,8 @@
 								<td><input type="checkbox" id="net.calc_overhead" /></td>
 							</tr>
 							<tr>
-								<td><label for="net.limit_excludes_local">net.limit_excludes_local</label></td>
-								<td><input type="checkbox" id="net.limit_excludes_local" /></td>
+								<td><label for="net.limit_excludeslocal">net.limit_excludeslocal</label></td>
+								<td><input type="checkbox" id="net.limit_excludeslocal" /></td>
 							</tr>
 							<tr>
 								<td><label for="net.low_cpu">net.low_cpu</label></td>

@@ -29,7 +29,7 @@ var utWebUI = {
 	"cacheID": 0,
 	"limits": {
 		"reqRetryDelayBase": 2, // seconds
-		"reqRetryMaxAttempts": 6,
+		"reqRetryMaxAttempts": 5,
 		"minTableRows": 5,
 		"minUpdateInterval": 500,
 		"defHSplit": 125,
@@ -778,7 +778,8 @@ var utWebUI = {
 					v /= 10;
 				ele.set("value", v);
 			}
-			ele.fireEvent(Browser.Engine.trident ? "click" : "change");
+			ele.fireEvent("change");
+			if (Browser.Engine.trident) ele.fireEvent("click");
 		}
 		[
 			"showDetails",
@@ -951,12 +952,12 @@ var utWebUI = {
 		DialogManager.show("Settings");
 	},
 
-	"trtSelect": function(e, id) {
-		if (e.rightClick) {
+	"trtSelect": function(ev, id) {
+		if (ev.rightClick) {
 			if (this.config.showDetails && (this.trtTable.selectedRows.length == 1))
 				this.showDetails(id);
 			if (this.trtTable.selectedRows.length > 0)
-				this.showMenu(e, id);
+				this.showMenu(ev, id);
 		} else {
 			if (this.config.showDetails) {
 				if (this.trtTable.selectedRows.length == 0) {
