@@ -214,9 +214,9 @@ limitations under the License.
 }
 
 .stable-pagemenu .pagestat {
-	width: 130px; height: 20px;
+	width: 130px; height: 17px;
 	margin: auto 0;
-	padding: 4px 0;
+	padding: 5px 0 4px;
 	float: right;
 	line-height: 20px;
 	text-align: right;
@@ -233,7 +233,7 @@ limitations under the License.
 
 .stable-pagemenu .pagestat a.refreshBtn div {
 	width: 16px; height: 16px;
-	margin: 0 5px 0 0;
+	margin: 0 4px 0 0;
 	float: right;
 	background: transparent url(./images/table_refresh.png) no-repeat scroll center center;
 }

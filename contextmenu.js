@@ -13,6 +13,11 @@ var LI = new Element("li");
 
 var ContextMenu = {
 
+	"hideAfterClick": true,
+	"hidden": true,
+	"focused": false,
+	"launched": false,
+
 	"init": function(id) {
 		this.obj = new Element("ul", {
 			"id": id,
@@ -23,14 +28,6 @@ var ContextMenu = {
 			ContextMenu.focused = false;
 		}).inject(document.body);
 	},
-
-	"hideAfterClick": true,
-
-	"hidden": true,
-
-	"focused": false,
-
-	"launched": false,
 
 	"add": function() {
 		var args = $A(arguments);

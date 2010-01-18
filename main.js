@@ -1050,10 +1050,68 @@ window.addEvent("domready", function() {
 
 	window.addEvent("resize", resizeUI);
 
+	ContextMenu.init("ContextMenu");
+	document.addEvent("mousedown", function(ev) {
+		if ((ev.rightClick && !ContextMenu.launched) || (!ev.rightClick && !ContextMenu.hidden && !ContextMenu.focused))
+			ContextMenu.hide.delay(10, ContextMenu);
+		ContextMenu.launched = false;
+	});
+
+	if (Browser.Engine.gecko) {
+		document.addEvent("mousedown", function(ev) {
+			if (ev.rightClick && !(/^input|textarea|a$/i).test(ev.target.tagName)) {
+				ev.stop();
+				return false;
+			}
+		}).addEvent("click", function(ev) {
+			if (ev.rightClick && !(/^input|textarea|a$/i).test(ev.target.tagName)) {
+				ev.stop();
+				return false;
+			}
+		});
+	} else if (Browser.Engine.presto && !("oncontextmenu" in document.createElement("foo"))) {
+		/*
+		 * 	http://my.opera.com/community/forums/findpost.pl?id=2112305
+		 * 	http://dev.fckeditor.net/changeset/683
+		 */
+		var overrideButton;
+		document.addEvent("mousedown", function(ev) {
+			if (!ev.rightClick) return;
+			if (!overrideButton) {
+				var doc = ev.target.ownerDocument;
+				overrideButton = doc.createElement("input");
+				overrideButton.type = "button";
+				overrideButton.style.cssText = "z-index:1000;position:fixed;top:" + (ev.client.y - 2) + "px;left:" + (ev.client.x - 2) + "px;width:5px;height:5px;opacity:0.01";
+				(doc.body || doc.documentElement).appendChild(overrideButton);
+			}
+		}).addEvent("mouseup", function(ev) {
+			if (overrideButton) {
+				overrideButton.parentNode.removeChild(overrideButton);
+				overrideButton = undefined;
+				if (ev.rightClick && !(/^input|textarea|a$/i).test(ev.target.tagName)) {
+					ev.stop();
+					return false;
+				}
+			}
+		});
+	}
+//	if (Browser.Engine.trident || Browser.Engine.webkit || Browser.Engine.gecko || Browser.Engine.presto) {
+		document.addEvent("contextmenu", function(ev) {
+			if (!(/^input|textarea|a$/i).test(ev.target.tagName)) {
+				ev.stop();
+				return false;
+			}
+		});
+//	}
+
 	if (isGuest) {
 		utWebUI.init();
 		return;
 	}
+
+	window.addEvent("unload", function() {
+		utWebUI.saveConfig(false);
+	});
 
 	document.addEvent("keydown", function(ev) {
 		/*
@@ -1171,63 +1229,6 @@ window.addEvent("domready", function() {
 		});
 	}
 
-	window.addEvent("unload", function() {
-		utWebUI.saveConfig(false);
-	});
-
-	document.addEvent("mousedown", function(ev) {
-		if ((ev.rightClick && !ContextMenu.launched) || (!ev.rightClick && !ContextMenu.hidden && !ContextMenu.focused))
-			ContextMenu.hide.delay(10, ContextMenu);
-		ContextMenu.launched = false;
-	});
-
-	if (Browser.Engine.gecko) {
-		document.addEvent("mousedown", function(ev) {
-			if (ev.rightClick && !(/^input|textarea|a$/i).test(ev.target.tagName)) {
-				ev.stop();
-				return false;
-			}
-		}).addEvent("click", function(ev) {
-			if (ev.rightClick && !(/^input|textarea|a$/i).test(ev.target.tagName)) {
-				ev.stop();
-				return false;
-			}
-		});
-	} else if (Browser.Engine.presto && !("oncontextmenu" in document.createElement("foo"))) {
-		/*
-		 * 	http://my.opera.com/community/forums/findpost.pl?id=2112305
-		 * 	http://dev.fckeditor.net/changeset/683
-		 */
-		var overrideButton;
-		document.addEvent("mousedown", function(ev) {
-			if (!ev.rightClick) return;
-			if (!overrideButton) {
-				var doc = ev.target.ownerDocument;
-				overrideButton = doc.createElement("input");
-				overrideButton.type = "button";
-				overrideButton.style.cssText = "z-index:1000;position:fixed;top:" + (ev.client.y - 2) + "px;left:" + (ev.client.x - 2) + "px;width:5px;height:5px;opacity:0.01";
-				(doc.body || doc.documentElement).appendChild(overrideButton);
-			}
-		}).addEvent("mouseup", function(ev) {
-			if (overrideButton) {
-				overrideButton.parentNode.removeChild(overrideButton);
-				overrideButton = undefined;
-				if (ev.rightClick && !(/^input|textarea|a$/i).test(ev.target.tagName)) {
-					ev.stop();
-					return false;
-				}
-			}
-		});
-	}
-//	if (Browser.Engine.trident || Browser.Engine.webkit || Browser.Engine.gecko || Browser.Engine.presto) {
-		document.addEvent("contextmenu", function(ev) {
-			if (!(/^input|textarea|a$/i).test(ev.target.tagName)) {
-				ev.stop();
-				return false;
-			}
-		});
-//	}
-
 	$("search").addEvent("click", function(ev) {
 		Search();
 		ev.stop();
@@ -1280,8 +1281,6 @@ window.addEvent("domready", function() {
 		return checkUpload(this);
 	});
 
-	ContextMenu.init("ContextMenu");
-
 	$("add").addEvent("click", function(ev) {
 		ev.stop();
 		/*
@@ -1299,20 +1298,23 @@ window.addEvent("domready", function() {
 		utWebUI.showFolderBrowser();
 	});
 	*/
+
 	["remove", "start", "pause", "stop"].each(function(act) {
 		$(act).addEvent("click", function(ev) {
 			ev.stop();
 			utWebUI[act]();
 		});
 	});
+
 	$("setting").addEvent("click", function(ev) {
 		ev.stop();
 		utWebUI.showSettings();
 	});
+
 	DialogManager.dragMask = $("dragmask");
-	var dialogId = ["Add", "Settings", "Props", "About", "Label"];
-	for (var i = dialogId.length; i--;)
-		DialogManager.add(dialogId[i], dialogId[i] == "Props");
+	["Add", "Settings", "Props", "About", "Label"].each(function(k) {
+		DialogManager.add(k, k == "Props");
+	});
 
 	$("dlgSettings").getElement("a").addEvent("click", function(ev) {
 		utWebUI.loadSettings();

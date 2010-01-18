@@ -14,32 +14,7 @@
 		<link href="./stable.css" rel="stylesheet" type="text/css" />
 		<style type="text/css">@import "./main.css";</style>
 		<style type="text/css" id="colrules"></style>
-		<!--[if IE]>
-		<style type="text/css">
-		.stable-body table {
-			border-collapse:collapse;
-		}
-
-		.stable-pagemenu .pagestat select {
-			margin: 3px 0 0 0 !important;
-		}
-
-		.stable-pagemenu .prevlink-disabled, .stable-pagemenu .nextlink-disabled {
-			filter: alpha(opacity=50);
-		}
-
-		.stable-pagemenu .prevlink, .stable-pagemenu .nextlink {
-			filter: alpha(opacity=100);
-		}
-		</style>
-		<![endif]-->
-		<!--[if IE 6]>
-		<style type="text/css">
-		div#msg img {
-			margin-top: expression((100 - this.height)/2);
-		}
-		</style>
-		<![endif]-->
+		<!--[if IE]><style type="text/css">@import "./ie.css";</style><![endif]-->
 	</head>
 	<body>
 		<div id="preload"></div>
@@ -51,11 +26,12 @@
 				<li id="_com_"><span id="OV_CAT_COMPL"></span>&nbsp;(<span id="_com_c">0</span>)</li>
 				<li id="_act_"><span id="OV_CAT_ACTIVE"></span>&nbsp;(<span id="_act_c">0</span>)</li>
 				<li id="_iac_"><span id="OV_CAT_INACTIVE"></span>&nbsp;(<span id="_iac_c">0</span>)</li>
-				<li><hr /></li>
+				<li class="hr"><hr /></li>
 				<li id="_nlb_"><span id="OV_CAT_NOLABEL"></span>&nbsp;(<span id="_nlb_c">0</span>)</li>
 			</ul>
 			<ul id="lbll"></ul>
-		</div><div id="List"></div>
+		</div>
+		<div id="List"></div>
 		<!-- [remove] -->
 		<script type="text/javascript" src="./temp.js"></script>
 		<!-- [/remove] -->

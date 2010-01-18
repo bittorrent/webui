@@ -231,43 +231,32 @@ var dxSTable = new Class({
 		if (this.options.rowsSelectable) {
 			this.dBody.addEvent("mousedown", function(ev) {
 				var ele = ev.target;
-				if (!ele) return;
-				switch (ele.get("tag")) {
-					case "span":
-						ele = ele.parentNode;
-					case "div":
-						ele = ele.parentNode;
-					case "td":
-						$me.selectRow(ev, ele.parentNode);
-						break;
+				if (ele.get("tag") != "td")
+					ele = ele.getParent("td");
+
+				if (ele) {
+					$me.selectRow(ev, ele.parentNode);
 				}
 			}).addEvent("click", function(ev) {
-				var ele = ev.target;
-				if (!ele) return;
-				switch (ele.get("tag")) {
-					case "td":
-					case "div":
-					case "span":
-						break;
+				if (ev.control || ev.shift) return;
 
-					default:
-						var pos = this.getPosition();
-						if ((this.clientWidth > ev.page.x - pos.x - this.scrollLeft + 2) && (this.clientHeight > ev.page.y - pos.y - this.scrollTop + 2)) {
-							$me.clearSelection();
-							$me.fireEvent("onSelect", [ev, ""]);
-						}
+				var ele = ev.target;
+				if (!(ele.get("tag") == "td" || ele.getParent("td"))) {
+					var pos = this.getPosition();
+					if ((this.clientWidth > ev.page.x - pos.x - this.scrollLeft + 2) && (this.clientHeight > ev.page.y - pos.y - this.scrollTop + 2)) {
+						$me.clearSelection();
+						$me.fireEvent("onSelect", [ev, ""]);
+					}
 				}
 			}).addEvent("dblclick", function(ev) {
+				if (ev.control || ev.shift) return;
+
 				var ele = ev.target;
-				if (!ele) return;
-				switch (ele.get("tag")) {
-					case "span":
-						ele = ele.parentNode;
-					case "div":
-						ele = ele.parentNode;
-					case "td":
-						$me.fireEvent("onDblClick", ele.parentNode.id);
-						break;
+				if (ele.get("tag") != "td")
+					ele = ele.getParent("td");
+
+				if (ele) {
+					$me.fireEvent("onDblClick", ele.parentNode.id);
 				}
 			});
 		}
@@ -647,6 +636,7 @@ var dxSTable = new Class({
 		this.loadObj.hide();
 		this.refresh();
 		this.requiresRefresh = false;
+		this.refreshPageInfo();
 	},
 
 	"refresh": function() {
@@ -661,26 +651,7 @@ var dxSTable = new Class({
 	"selectRow": function(ev, row) {
 		var id = row.id;
 		if (!(ev.rightClick && has(this.rowSel, id))) {
-			var clickdRow = false, ele = row;
-			while (ele && ele.tagName) {
-				if (ele.tagName.toLowerCase() == "tr") {
-					clickdRow = true;
-					break;
-				}
-				ele = ele.parentNode;
-			}
-
-			if (!clickdRow) {
-				if (ev.shift || ev.control) {
-					return;
-				}
-				else {
-					this.selectedRows.length = 0;
-					delete this.rowSel;
-					this.rowSel = {};
-				}
-			}
-			else if (ev.shift) {
+			if (ev.shift) {
 				if (this.stSel === null) {
 					this.stSel = id;
 					this.rowSel[id] = 0;
@@ -951,6 +922,7 @@ var dxSTable = new Class({
 			this.rows = this.curPage = this.pageCount = this.activeId.length = this.selectedRows.length = this.viewRows = this.dBody.scrollLeft = this.dBody.scrollTop = 0;
 			this.updatePageMenu();
 			this.stSel = null;
+			this.refreshPageInfo();
 		}
 	},
 
@@ -986,6 +958,12 @@ var dxSTable = new Class({
 		this._insertRow(id, true);
 	},
 
+	"refreshPageInfo": function() {
+		if (this.pageInfo) {
+			this.pageInfo.set("text", this.selectedRows.length + " row(s) selected.");
+		}
+	},
+
 	"refreshSelection": function() {
 		if (!this.options.rowsSelectable) return;
 		var len = this.tb.body.childNodes.length, i = 0;
@@ -999,17 +977,17 @@ var dxSTable = new Class({
 			if (this.options.alternateRows) {
 				if (i & 1) {
 					clsName += " odd";
-					clsChanged = clsChanged | !row.hasClass("odd");
+					clsChanged = clsChanged || !row.hasClass("odd");
 				} else {
 					clsName += " even";
-					clsChanged = clsChanged | !row.hasClass("even");
+					clsChanged = clsChanged || !row.hasClass("even");
 				}
 			}
 			if (clsChanged)
 				row.className = clsName.clean();
 			i++;
 		}
-		this.pageInfo.set("text", this.selectedRows.length + " row(s) selected.");
+		this.refreshPageInfo();
 	},
 
 	"clearSelection": function(noRefresh) {

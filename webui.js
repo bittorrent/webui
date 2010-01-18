@@ -104,6 +104,14 @@ var utWebUI = {
 					"method": "get",
 					"async": !!async,
 					"onFailure": function() {
+						// TODO: Need to be able to distinguish between recoverable and unrecoverable errors...
+						//       Recoverable errors should be retried, unrecoverable errors should not.
+						//       This is not possible without backend cooperation, because as of uTorrent 2.1,
+						//       the backend returns the same error code/message whether or not the error is
+						//       recoverable. Examples:
+						//       - Recoverable: Bad token (just get a new token)
+						//       - Unrecoverable: "/gui/?action=setsetting&s=webui.cookie&v=..." failing
+
 						$clear(self.updateTimeout);
 
 						fails[0]++;
@@ -168,7 +176,6 @@ var utWebUI = {
 		if (hashes.length == 0) return;
 		if (action.test(/^remove/) && (hashes.indexOf(this.torrentID) > -1)) {
 			this.torrentID = "";
-			this.flsTable.clearRows();
 			this.clearDetails();
 		}
 		this.getTorrents("action=" + action + "&hash=" + hashes.join("&hash="));
@@ -450,7 +457,6 @@ var utWebUI = {
 			delete json.torrentm;
 			if (clear) {
 				this.torrentID = "";
-				this.flsTable.clearRows();
 				this.clearDetails();
 			}
 		}
@@ -625,7 +631,6 @@ var utWebUI = {
 
 		if (this.torrentID != "") {
 			this.torrentID = "";
-			this.flsTable.clearRows();
 			this.clearDetails();
 		}
 
@@ -728,9 +733,20 @@ var utWebUI = {
 				var key = json.settings[i][0], typ = json.settings[i][1], val = json.settings[i][2];
 				if (key in ignored) continue;
 				if ((key == "webui.cookie") && !this.loaded) { // only load webui.cookie on startup
-					var cookie = JSON.decode(json.settings[i][2], true);
-					$extend(this.config, cookie); // if the user corrupts the "cookie," good for him/her
-					this.config.torrentTable.alternateRows = this.config.fileTable.alternateRows = this.config.alternateRows;
+					var oldcookie = this.config, newcookie = JSON.decode(json.settings[i][2], true);
+
+					for (var key in oldcookie) {
+						// Pull out only data from received cookie that we already know about.
+						// Next best thing short of sanity checking every single value.
+						if (typeof(oldcookie[key]) == typeof(newcookie[key])) {
+							oldcookie[key] = newcookie[key];
+						}
+					}
+
+					this.config.torrentTable.alternateRows =
+					this.config.fileTable.alternateRows =
+						this.config.alternateRows;
+
 					continue;
 				}
 				if ((key != "proxy.proxy") && (key != "webui.username") && (key != "webui.password")) {
@@ -962,7 +978,6 @@ var utWebUI = {
 			if (this.config.showDetails) {
 				if (this.trtTable.selectedRows.length == 0) {
 					this.torrentID = "";
-					this.flsTable.clearRows();
 					this.clearDetails();
 				} else if (this.trtTable.selectedRows.length == 1) {
 					this.showDetails(id);
@@ -1218,6 +1233,7 @@ var utWebUI = {
 	},
 
 	"clearDetails": function() {
+		this.flsTable.clearRows();
 		["rm", "dl", "ul", "ra", "us", "ds", "se", "pe", "hs"].each(function(id) {
 			$(id).set("html", "");
 		});
