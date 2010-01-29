@@ -1,7 +1,3 @@
-select {
-	z-index: -1;
-}
-
 .stg_con select {
 	vertical-align: middle !important;
 }

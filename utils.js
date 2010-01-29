@@ -2,6 +2,17 @@
  * @author Directrix
  */
 
+
+function eventToKey(ev) {
+	return (
+		(ev.shift ? "shift " : "") +
+		(ev.control ? "ctrl " : "") +
+		(ev.alt ? "alt " : "") +
+		(ev.meta ? "meta " : "") +
+		ev.key
+	);
+}
+
 function has(obj, key) {
 	return Object.prototype.hasOwnProperty.apply(obj, [key]);
 }

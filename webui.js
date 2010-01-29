@@ -6,7 +6,7 @@
 */
 
 var VERSION = "0.362";
-var BUILD_REQUIRED = -1; // the ut build the webui requires
+var BUILD_REQUIRED = -1; // the uT build that WebUI requires
 var lang = lang || null;
 var urlBase = window.location.pathname.substr(0, window.location.pathname.indexOf("/gui")) + "/gui/";
 var isGuest = window.location.pathname.test(/.*guest.html$/);
@@ -92,8 +92,7 @@ var utWebUI = {
 	},
 
 	"request": function(qs, fn, async, fails) {
-		if (typeof(fails) != 'object' || fails.constructor != Array)
-			fails = [0]; // array so to pass by reference
+		if ($type(fails) != "array") fails = [0]; // array so to pass by reference
 
 		var self = this;
 
@@ -816,7 +815,7 @@ var utWebUI = {
 				ele.set("value", v);
 			}
 		});
-		this.config.torrentTable.maxRows = this.config.fileTable.maxRows = this.config.torrentTable.maxRows.max(this.limits.minTableRows);
+		this.config.torrentTable.maxRows = (this.config.fileTable.maxRows || 0).max(this.limits.minTableRows);
 		$("webui.maxRows").set("value", this.config.torrentTable.maxRows);
 		this.props.multi = {
 			"trackers": 0,
@@ -913,7 +912,7 @@ var utWebUI = {
 		if (Browser.Engine.presto && hasChanged)
 			str = "&s=webui.cookie&v=" + JSON.encode(this.config);
 
-		resize = resize || (!!this.settings["gui.tall_category_list"] != $("webui.lang").checked);
+		resize = resize || (!!this.settings["gui.tall_category_list"] != $("gui.tall_category_list").checked);
 
 		for (var key in this.settings) {
 			var ele = $(key);

@@ -149,7 +149,7 @@ function setupUI() {
 			},
 			"onColResize": utWebUI.flsColResize.bind(utWebUI),
 			"onColMove": utWebUI.flsColMove.bind(utWebUI),
-			"onColToggle": utWebUI.trtColToggle.bind(utWebUI),
+			"onColToggle": utWebUI.flsColToggle.bind(utWebUI),
 			"onSort": utWebUI.flsSort.bind(utWebUI),
 			"onSelect": utWebUI.flsSelect.bind(utWebUI),
 			"onRefresh": function() { if (this.torrentID != "") utWebUI.getFiles(utWebUI.torrentID, true); },
@@ -194,18 +194,6 @@ function setupUI() {
 			}).delay(20, this);
 		}
 	});
-}
-
-function checkCapSettings() {
-
-	var capped = $("multi_day_transfer_limit_en").checked;
-	if (capped) {
-		$("DLG_SETTINGS_7_TRANSFERCAP_06").removeClass("disabled");
-	}
-	else {
-		$("DLG_SETTINGS_7_TRANSFERCAP_06").addClass("disabled");
-	}
-
 }
 
 function checkProxySettings() {
@@ -367,11 +355,8 @@ var TreeNode = new Class({
 var DialogManager = {
 
 	"dragMask": null,
-
 	"winZ": 500,
-
 	"items": {},
-
 	"showing": [],
 
 	"add": function(id, isModal) {
@@ -441,10 +426,12 @@ var DialogManager = {
 			$("modalbg").hide();
 	},
 
-	"hideTopMost": function() {
+	"hideTopMost": function(fireClose) {
 		if (this.showing.length == 0) return;
 		var id = this.showing.shift();
 		this.hide(id);
+		if (fireClose)
+			$("dlg" + id).getElement("a").fireEvent("click");
 	},
 
 	"bringToFront": function(id) {
@@ -734,12 +721,7 @@ function loadSettingStrings() {
 		"ST_SCH_LGND_OFF",
 		"ST_SCH_LGND_SEEDING"
 	].each(function(k) {
-		if ($(k)) {
-			$(k).set("text", lang[CONST[k]]);
-		}
-		else {
-			console.log("Element '" + k + "' not found... Language string not set.");
-		}
+		$(k).set("text", lang[CONST[k]]);
 	});
 
 	$("DLG_SETTINGS_03").set("value", lang[CONST.DLG_SETTINGS_03]).addEvent("click", function() {
@@ -1040,15 +1022,16 @@ function linked(obj, defstate, list, ignoreLabels, reverse) {
 	}
 }
 
-var winZ = 500;
-
 window.addEvent("domready", function() {
-
 	$(document.body);
 
-	document.title = "\u00B5Torrent WebUI " + VERSION;
+	document.title = "\u00B5Torrent WebUI v" + VERSION;
 
 	window.addEvent("resize", resizeUI);
+
+	//
+	// Mouse Click
+	//
 
 	ContextMenu.init("ContextMenu");
 	document.addEvent("mousedown", function(ev) {
@@ -1095,303 +1078,255 @@ window.addEvent("domready", function() {
 			}
 		});
 	}
-//	if (Browser.Engine.trident || Browser.Engine.webkit || Browser.Engine.gecko || Browser.Engine.presto) {
-		document.addEvent("contextmenu", function(ev) {
-			if (!(/^input|textarea|a$/i).test(ev.target.tagName)) {
+
+	document.addEvent("contextmenu", function(ev) {
+		if (!(/^input|textarea|a$/i).test(ev.target.tagName)) {
+			ev.stop();
+			return false;
+		}
+	});
+
+	//
+	// Non-guest Setup
+	//
+
+	if (!isGuest) {
+
+		window.addEvent("unload", function() {
+			utWebUI.saveConfig(false);
+		});
+
+		//
+		// Keyboard Shortcuts
+		//
+
+		var keyBindings = {
+			"ctrl a": $empty,
+			"ctrl e": $empty,
+
+			"ctrl o": function() { DialogManager.show("Add"); },
+			"ctrl p": function() { utWebUI.showSettings(); },
+			"f2": function() { DialogManager.show("About"); },
+			"f4": function() { utWebUI.toggleToolbar(); },
+			"f6": function() { utWebUI.toggleDetPanel(); },
+			"f7": function() { utWebUI.toggleCatPanel(); },
+
+			"esc": function() {
+				if (DialogManager.showing.length > 0) {
+					if (DialogManager.showing[0] == "Settings") {
+						utWebUI.loadSettings();
+					}
+					DialogManager.hideTopMost();
+				} else {
+					utWebUI.restoreUI();
+				}
+			}
+		};
+
+		document.addEvent("keydown", function(ev) {
+			var key = eventToKey(ev);
+			if (keyBindings[key]) {
+				keyBindings[key]();
 				ev.stop();
 				return false;
 			}
 		});
-//	}
 
-	if (isGuest) {
-		utWebUI.init();
-		return;
-	}
-
-	window.addEvent("unload", function() {
-		utWebUI.saveConfig(false);
-	});
-
-	document.addEvent("keydown", function(ev) {
-		/*
-		if (ev.alt) {
-			ev.stop();
-			$clear(utWebUI.updateTimeout);
-		}
-		//*/
-		switch (ev.key) {
-
-		case "esc": // Esc
-			ev.stop();
-			if (DialogManager.showing.length > 0) {
-				if (DialogManager.showing[0] == "Settings") {
-					utWebUI.loadSettings();
+		if (Browser.Engine.presto) {
+			document.addEvent("keypress", function(ev) {
+				var key = eventToKey(ev);
+				if (keyBindings[key]) {
+					ev.stop();
+					return false;
 				}
-				DialogManager.hideTopMost();
-			} else {
-				utWebUI.restoreUI();
-			}
-			break;
-
-		case "a": // Ctrl + A
-			if (ev.control)
-				ev.stop();
-			break;
-
-		case "e": // Ctrl + E
-			if (ev.control)
-				ev.stop();
-			break;
-
-		case "o": // Ctrl + O
-			if (ev.control) {
-				ev.stop();
-				DialogManager.show("Add");
-			}
-			break;
-
-		case "p": // Ctrl + P
-			if (ev.control) {
-				ev.stop();
-				utWebUI.showSettings();
-			}
-			break;
-
-		case "f2": // F2
-			ev.stop();
-			DialogManager.show("About");
-			break;
-
-		case "f4": // F4
-			if (!(ev.alt || ev.control)) {
-				ev.stop();
-				utWebUI.toggleToolbar();
-			}
-			break;
-
-		case "f6": // F6
-			ev.stop();
-			utWebUI.toggleDetPanel();
-			break;
-
-		case "f7": // F7
-			ev.stop();
-			utWebUI.toggleCatPanel();
-			break;
-		}
-	});
-
-	if (Browser.Engine.presto) {
-		document.addEvent("keypress", function(ev) {
-			switch (ev.key) {
-
-			case "esc": // Esc
-				ev.stop();
-				break;
-
-			case "a": // Ctrl + A
-				if (ev.control)
-					ev.stop();
-				break;
-
-			case "e": // Ctrl + E
-				if (ev.control)
-					ev.stop();
-				break;
-
-			case "o": // Ctrl + O
-				if (ev.control)
-					ev.stop();
-				break;
-
-			case "p": // Ctrl + P
-				if (ev.control)
-					ev.stop();
-				break;
-
-			case "f2": // F2
-				ev.stop();
-				break;
-
-			case "f4": // F4
-				ev.stop();
-				break;
-
-			case "f6": // F6
-				ev.stop();
-				break;
-
-			case "f7": // F7
-				ev.stop();
-				break;
-			}
-		});
-	}
-
-	$("search").addEvent("click", function(ev) {
-		Search();
-		ev.stop();
-		return false;
-	}).addEvent("contextmenu", function(ev) {
-		ev.stop();
-		return false;
-	});
-	$("searchsel").addEvent("click", function(ev) {
-		ev.stop();
-		ContextMenu.clear();
-		for (var i = 0, j = searchList.length; i < j; i++) {
-			if (searchList[i].length == 0) {
-				ContextMenu.add([CMENU_SEP]);
-			} else {
-				if (i == searchActive) {
-					ContextMenu.add([CMENU_SEL, searchList[i][0]]);
-				} else {
-					ContextMenu.add([searchList[i][0], searchSet.pass(i)]);
-				}
-			}
-		}
-		var pos = this.getPosition();
-		pos.x += 4;
-		pos.y += 12;
-		ContextMenu.show(pos);
-	}).addEvent("contextmenu", function(ev) {
-		ev.stop();
-		return false;
-	});
-
-	new IFrame({
-		"id": "uploadfrm",
-		"src": "about:blank",
-		"onload": function(doc) {
-			$("torrent_file").set("value", "");
-			$("ADD_FILE_OK").disabled = false;
-			var str = $(doc.body).get("text");
-			if (str != "") {
-				var data = JSON.decode(str);
-				if (has(data, "error")) {
-					alert(data.error);
-					log("[Add Torrent File Error] " + data.error);
-				}
-			}
-		}
-	}).inject(document.body);
-
-	$("upfrm").addEvent("submit", function() {
-		return checkUpload(this);
-	});
-
-	$("add").addEvent("click", function(ev) {
-		ev.stop();
-		/*
-		var ele = $("addlab");
-		ele.options.length = 0;
-		var count = 0;
-		for (var key in utWebUI.customLabels)
-			ele.options[count++] = new Option(key, key, false, count == 0);
-		*/
-		DialogManager.show("Add");
-	});
-
-	/*
-	$("DLG_PRE_ADD_03").addEvent("click", function() {
-		utWebUI.showFolderBrowser();
-	});
-	*/
-
-	["remove", "start", "pause", "stop"].each(function(act) {
-		$(act).addEvent("click", function(ev) {
-			ev.stop();
-			utWebUI[act]();
-		});
-	});
-
-	$("setting").addEvent("click", function(ev) {
-		ev.stop();
-		utWebUI.showSettings();
-	});
-
-	DialogManager.dragMask = $("dragmask");
-	["Add", "Settings", "Props", "About", "Label"].each(function(k) {
-		DialogManager.add(k, k == "Props");
-	});
-
-	$("dlgSettings").getElement("a").addEvent("click", function(ev) {
-		utWebUI.loadSettings();
-	});
-
-	$("dlgProps").getElement("a").addEvent("click", function(ev) {
-		if (utWebUI.propID == "multi") {
-			[11, 17, 18, 19].each(function(v) {
-				$("DLG_TORRENTPROP_1_GEN_" + v).removeEvents("click");
 			});
 		}
-	});
 
-	var linkedEvent = Browser.Engine.trident ? "click" : "change";
+		//
+		// Search Toolbar
+		//
 
-	// onchange fires in IE on <select>s
-	$("proxy.type").addEvent("change", function() {
-		linked(this, 0, ["proxy.proxy", "proxy.port", "proxy.auth", "proxy.resolve", "proxy.p2p"]);
-		checkProxySettings();
-	}).fireEvent("change");
-	$("proxy.auth").addEvent(linkedEvent, function() {
-		linked(this, 0, ["proxy.username", "proxy.password"]);
-		checkProxySettings();
-	});
-	$("cache.override").addEvent(linkedEvent, function() {
-		linked(this, 0, ["cache.override_size"], ["cache.override_size"]);
-	});
-	$("cache.write").addEvent(linkedEvent, function() {
-		linked(this, 0, ["cache.writeout", "cache.writeimm"]);
-	});
-	$("cache.read").addEvent(linkedEvent, function() {
-		linked(this, 0, ["cache.read_turnoff", "cache.read_prune", "cache.read_thrash"]);
-	});
-	$("prop-seed_override").addEvent(linkedEvent, function() {
-		linked(this, 0, ["prop-seed_ratio", "prop-seed_time"]);
-	});
-	$("webui.enable_guest").addEvent(linkedEvent, function() {
-		linked(this, 0, ["webui.guest"]);
-	});
-	$("webui.enable_listen").addEvent(linkedEvent, function() {
-		linked(this, 0, ["webui.port"]);
-	});
-	$("multi_day_transfer_limit_en").addEvent(linkedEvent, function() {
-		linked(this, 0, ["multi_day_transfer_mode", "multi_day_transfer_limit_value", "multi_day_transfer_limit_unit", "multi_day_transfer_limit_span"]);
-		checkCapSettings();
-	});
-	$("seed_prio_limitul_flag").addEvent(linkedEvent, function() {
-		linked(this, 0, ["seed_prio_limitul"]);
-	});
-	$("sched_enable").addEvent(linkedEvent, function() {
-		linked(this, 0, ["sched_ul_rate", "sched_dl_rate", "sched_dis_dht"]);
-		["sched_table", "sched_table_lgnd", "sched_table_info"].each(
-			this.checked ? function(k) { $(k).removeClass("disabled"); }
-			             : function(k) { $(k).addClass("disabled"); }
-		);
-	});
-	$("dir_active_download_flag").addEvent(linkedEvent, function() {
-		linked(this, 0, ["always_show_add_dialog", "dir_active_download"]);
-	});
-	$("dir_completed_download_flag").addEvent(linkedEvent, function() {
-		linked(this, 0, ["dir_add_label", "dir_completed_download", "move_if_defdir"]);
-	});
-	$("dir_torrent_files_flag").addEvent(linkedEvent, function() {
-		linked(this, 0, ["dir_torrent_files"]);
-	});
-	$("dir_completed_torrents_flag").addEvent(linkedEvent, function() {
-		linked(this, 0, ["dir_completed_torrents"]);
-	});
-	$("dir_autoload_flag").addEvent(linkedEvent, function() {
-		linked(this, 0, ["dir_autoload_delete", "dir_autoload"]);
-	});
-	$("ul_auto_throttle").addEvent(linkedEvent, function() {
-		linked(this, 0, ["max_ul_rate", "max_ul_rate_seed_flag"], ["max_ul_rate"], true);
-	});
-	$("max_ul_rate_seed_flag").addEvent(linkedEvent, function() {
-		linked(this, 0, ["max_ul_rate_seed"]);
-	});
+		$("search").addEvent("click", function(ev) {
+			Search();
+			ev.stop();
+			return false;
+		}).addEvent("contextmenu", function(ev) {
+			ev.stop();
+			return false;
+		});
+
+		$("searchsel").addEvent("click", function(ev) {
+			ev.stop();
+			ContextMenu.clear();
+			for (var i = 0, j = searchList.length; i < j; i++) {
+				if (searchList[i].length == 0) {
+					ContextMenu.add([CMENU_SEP]);
+				} else {
+					if (i == searchActive) {
+						ContextMenu.add([CMENU_SEL, searchList[i][0]]);
+					} else {
+						ContextMenu.add([searchList[i][0], searchSet.pass(i)]);
+					}
+				}
+			}
+			var pos = this.getPosition();
+			pos.x += 4;
+			pos.y += 12;
+			ContextMenu.show(pos);
+		}).addEvent("contextmenu", function(ev) {
+			ev.stop();
+			return false;
+		});
+
+		//
+		// Toolbar Buttons
+		//
+
+		["remove", "start", "pause", "stop"].each(function(act) {
+			$(act).addEvent("click", function(ev) {
+				ev.stop();
+				utWebUI[act]();
+			});
+		});
+
+		$("setting").addEvent("click", function(ev) {
+			ev.stop();
+			utWebUI.showSettings();
+		});
+
+		//
+		// Torrent Adding
+		//
+
+		$("add").addEvent("click", function(ev) {
+			ev.stop();
+			/*
+			var ele = $("addlab");
+			ele.options.length = 0;
+			var count = 0;
+			for (var key in utWebUI.customLabels)
+				ele.options[count++] = new Option(key, key, false, count == 0);
+			*/
+			DialogManager.show("Add");
+		});
+
+		$("upfrm").addEvent("submit", function() {
+			return checkUpload(this);
+		});
+
+		/*
+		$("DLG_PRE_ADD_03").addEvent("click", function() {
+			utWebUI.showFolderBrowser();
+		});
+		*/
+
+		new IFrame({
+			"id": "uploadfrm",
+			"src": "about:blank",
+			"onload": function(doc) {
+				$("torrent_file").set("value", "");
+				$("ADD_FILE_OK").disabled = false;
+				var str = $(doc.body).get("text");
+				if (str != "") {
+					var data = JSON.decode(str);
+					if (has(data, "error")) {
+						alert(data.error);
+						log("[Add Torrent File Error] " + data.error);
+					}
+				}
+			}
+		}).inject(document.body);
+
+		//
+		// Dialogs
+		//
+
+		DialogManager.dragMask = $("dragmask");
+
+		["Add", "Settings", "Props", "About", "Label"].each(function(k) {
+			DialogManager.add(k, k == "Props");
+		});
+
+		$("dlgProps").getElement("a").addEvent("click", function(ev) {
+			if (utWebUI.propID == "multi") {
+				[11, 17, 18, 19].each(function(v) {
+					$("DLG_TORRENTPROP_1_GEN_" + v).removeEvents("click");
+				});
+			}
+		});
+
+		//
+		// Settings Dialog
+		//
+
+		$("dlgSettings").getElement("a").addEvent("click", function(ev) {
+			utWebUI.loadSettings();
+		});
+
+		var linkedEvent = Browser.Engine.trident ? "click" : "change";
+
+		// onchange fires in IE on <select>s
+		$("proxy.type").addEvent("change", function() {
+			linked(this, 0, ["proxy.proxy", "proxy.port", "proxy.auth", "proxy.resolve", "proxy.p2p"]);
+		}).fireEvent("change");
+		$("proxy.auth").addEvent(linkedEvent, function() {
+			linked(this, 0, ["proxy.username"]);
+			linked(this, 0, ["proxy.password"], null, (this.checked && ($("proxy.type").get("value").toInt() == 1)));
+		});
+		$("cache.override").addEvent(linkedEvent, function() {
+			linked(this, 0, ["cache.override_size"], ["cache.override_size"]);
+		});
+		$("cache.write").addEvent(linkedEvent, function() {
+			linked(this, 0, ["cache.writeout", "cache.writeimm"]);
+		});
+		$("cache.read").addEvent(linkedEvent, function() {
+			linked(this, 0, ["cache.read_turnoff", "cache.read_prune", "cache.read_thrash"]);
+		});
+		$("prop-seed_override").addEvent(linkedEvent, function() {
+			linked(this, 0, ["prop-seed_ratio", "prop-seed_time"]);
+		});
+		$("webui.enable_guest").addEvent(linkedEvent, function() {
+			linked(this, 0, ["webui.guest"]);
+		});
+		$("webui.enable_listen").addEvent(linkedEvent, function() {
+			linked(this, 0, ["webui.port"]);
+		});
+		$("multi_day_transfer_limit_en").addEvent(linkedEvent, function() {
+			linked(this, 0, ["multi_day_transfer_mode", "multi_day_transfer_limit_value", "multi_day_transfer_limit_unit", "multi_day_transfer_limit_span", "DLG_SETTINGS_7_TRANSFERCAP_06"]);
+		});
+		$("seed_prio_limitul_flag").addEvent(linkedEvent, function() {
+			linked(this, 0, ["seed_prio_limitul"]);
+		});
+		$("sched_enable").addEvent(linkedEvent, function() {
+			linked(this, 0, ["sched_ul_rate", "sched_dl_rate", "sched_dis_dht"]);
+			["sched_table", "sched_table_lgnd", "sched_table_info"].each(
+				this.checked ? function(k) { $(k).removeClass("disabled"); }
+							 : function(k) { $(k).addClass("disabled"); }
+			);
+		});
+		$("dir_active_download_flag").addEvent(linkedEvent, function() {
+			linked(this, 0, ["always_show_add_dialog", "dir_active_download"]);
+		});
+		$("dir_completed_download_flag").addEvent(linkedEvent, function() {
+			linked(this, 0, ["dir_add_label", "dir_completed_download", "move_if_defdir"]);
+		});
+		$("dir_torrent_files_flag").addEvent(linkedEvent, function() {
+			linked(this, 0, ["dir_torrent_files"]);
+		});
+		$("dir_completed_torrents_flag").addEvent(linkedEvent, function() {
+			linked(this, 0, ["dir_completed_torrents"]);
+		});
+		$("dir_autoload_flag").addEvent(linkedEvent, function() {
+			linked(this, 0, ["dir_autoload_delete", "dir_autoload"]);
+		});
+		$("ul_auto_throttle").addEvent(linkedEvent, function() {
+			linked(this, 0, ["max_ul_rate", "max_ul_rate_seed_flag"], ["max_ul_rate"], true);
+		});
+		$("max_ul_rate_seed_flag").addEvent(linkedEvent, function() {
+			linked(this, 0, ["max_ul_rate_seed"]);
+		});
+
+	}
 
 	utWebUI.init();
 });
