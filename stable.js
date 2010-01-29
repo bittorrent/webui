@@ -650,7 +650,7 @@ var dxSTable = new Class({
 
 	"selectRow": function(ev, row) {
 		var id = row.id;
-		if (!(ev.rightClick && has(this.rowSel, id))) {
+		if (!(ev.isRightClick() && has(this.rowSel, id))) {
 			if (ev.shift) {
 				if (this.stSel === null) {
 					this.stSel = id;

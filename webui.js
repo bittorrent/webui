@@ -968,7 +968,7 @@ var utWebUI = {
 	},
 
 	"trtSelect": function(ev, id) {
-		if (ev.rightClick) {
+		if (ev.isRightClick()) {
 			if (this.config.showDetails && (this.trtTable.selectedRows.length == 1))
 				this.showDetails(id);
 			if (this.trtTable.selectedRows.length > 0)
@@ -1315,13 +1315,13 @@ var utWebUI = {
 			this.loadFiles();
 	},
 
-	"flsSelect": function(e, id) {
+	"flsSelect": function(ev, id) {
 		if (this.flsTable.selectedRows.length > 0)
 			this.showFileMenu(e, id.substr(41).toInt());
 	},
 
-	"showFileMenu": function(e, ind) {
-		if (!e.rightClick) return;
+	"showFileMenu": function(ev, ind) {
+		if (!ev.isRightClick()) return;
 
 		var id = this.torrentID;
 		var p = this.files[id][ind][3];
@@ -1367,7 +1367,7 @@ var utWebUI = {
 			ContextMenu.add([CMENU_SEP]);
 			ContextMenu.add(skip);
 		}
-		ContextMenu.show(e.page);
+		ContextMenu.show(ev.page);
 	},
 
 	"getFileIds": function(id, p) {

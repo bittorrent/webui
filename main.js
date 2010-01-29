@@ -945,19 +945,19 @@ window.addEvent("domready", function() {
 
 	ContextMenu.init("ContextMenu");
 	document.addEvent("mousedown", function(ev) {
-		if ((ev.rightClick && !ContextMenu.launched) || (!ev.rightClick && !ContextMenu.hidden && !ContextMenu.focused))
+		if ((ev.isRightClick() && !ContextMenu.launched) || (!ev.isRightClick() && !ContextMenu.hidden && !ContextMenu.focused))
 			ContextMenu.hide.delay(10, ContextMenu);
 		ContextMenu.launched = false;
 	});
 
 	if (Browser.Engine.gecko) {
 		document.addEvent("mousedown", function(ev) {
-			if (ev.rightClick && !(/^input|textarea|a$/i).test(ev.target.tagName)) {
+			if (ev.isRightClick() && !(/^input|textarea|a$/i).test(ev.target.tagName)) {
 				ev.stop();
 				return false;
 			}
 		}).addEvent("click", function(ev) {
-			if (ev.rightClick && !(/^input|textarea|a$/i).test(ev.target.tagName)) {
+			if (ev.isRightClick() && !(/^input|textarea|a$/i).test(ev.target.tagName)) {
 				ev.stop();
 				return false;
 			}
@@ -969,7 +969,7 @@ window.addEvent("domready", function() {
 		 */
 		var overrideButton;
 		document.addEvent("mousedown", function(ev) {
-			if (!ev.rightClick) return;
+			if (!ev.isRightClick()) return;
 			if (!overrideButton) {
 				var doc = ev.target.ownerDocument;
 				overrideButton = doc.createElement("input");
@@ -981,7 +981,7 @@ window.addEvent("domready", function() {
 			if (overrideButton) {
 				overrideButton.parentNode.removeChild(overrideButton);
 				overrideButton = undefined;
-				if (ev.rightClick && !(/^input|textarea|a$/i).test(ev.target.tagName)) {
+				if (ev.isRightClick() && !(/^input|textarea|a$/i).test(ev.target.tagName)) {
 					ev.stop();
 					return false;
 				}
@@ -1023,15 +1023,24 @@ window.addEvent("domready", function() {
 
 			"esc": function() {
 				if (DialogManager.showing.length > 0) {
-					if (DialogManager.showing[0] == "Settings") {
-						utWebUI.loadSettings();
-					}
-					DialogManager.hideTopMost();
+					DialogManager.hideTopMost(true);
 				} else {
 					utWebUI.restoreUI();
 				}
 			}
 		};
+
+		if (Browser.Platform.mac) {
+			keyBindings["meta a"] = keyBindings["ctrl a"];
+			keyBindings["meta e"] = keyBindings["ctrl e"];
+			keyBindings["meta o"] = keyBindings["ctrl o"];
+			keyBindings["meta p"] = keyBindings["ctrl p"];
+
+			delete keyBindings["ctrl a"];
+			delete keyBindings["ctrl e"];
+			delete keyBindings["ctrl o"];
+			delete keyBindings["ctrl p"];
+		}
 
 		document.addEvent("keydown", function(ev) {
 			var key = eventToKey(ev);
