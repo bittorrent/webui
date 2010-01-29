@@ -777,7 +777,7 @@ var utWebUI = {
 				else
 					this.loadTorrents(json);
 			} else {
-				loadJS("lang/" + ((this.config.lang == "auto") ? detectLang : this.config.lang) + ".js", {"onload": isGuest ? setupUI : function() { setupUI(); utWebUI.loadTorrents(json); }});
+				Asset.javascript("lang/" + ((this.config.lang == "auto") ? detectLang : this.config.lang) + ".js", {"onload": isGuest ? setupUI : function() { setupUI(); utWebUI.loadTorrents(json); }});
 			}
 		}
 	},

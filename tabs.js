@@ -7,12 +7,11 @@
 
 var Tabs = new Class({
 
+	"active": "",
 	"tabs": {},
 
-	"active": "",
-
 	"initialize": function(ele, options) {
-		this.element = ele;
+		this.element = $(ele);
 		this.tabs = options.tabs;
 		this.onChange = options.onChange || $empty;
 		var $me = this;
@@ -36,6 +35,13 @@ var Tabs = new Class({
 				"html": this.tabs[k]
 			}))));
 		};
+		return this;
+	},
+
+	"setNames": function(names) {
+		for (var k in names) {
+			$("tab_" + k).getElement("span").set("html", names[k]);
+		}
 		return this;
 	},
 

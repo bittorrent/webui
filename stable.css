@@ -36,6 +36,7 @@ limitations under the License.
 }
 
 .stable-head {
+	height: 18px;
 	position: relative;
 	overflow: hidden;
 	background: transparent url(./images/header.png) repeat-x scroll center top;

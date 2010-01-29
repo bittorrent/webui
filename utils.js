@@ -72,36 +72,6 @@ function changePort(port) {
 	}
 }
 
-// MooTools.Utilities.Assets.js
-function loadJS(source, properties) {
-	properties = $extend({
-		onload: $empty,
-		document: document,
-		check: $lambda(true)
-	}, properties);
-
-	var script = new Element('script', {'src': source, 'type': 'text/javascript', 'charset': 'utf-8'});
-
-	var load = properties.onload.bind(script), check = properties.check, doc = properties.document;
-	delete properties.onload; delete properties.check; delete properties.document;
-
-	script.addEvents({
-		load: load,
-		readystatechange: function(){
-			if (Browser.Engine.trident && ['loaded', 'complete'].contains(this.readyState)) load();
-		}
-	}).setProperties(properties);
-
-
-	if (Browser.Engine.webkit419) var checker = (function(){
-		if (!$try(check)) return;
-		$clear(checker);
-		load();
-	}).periodical(50);
-
-	return script.inject(doc.head);
-}
-
 Array.implement({
 
 	// http://www.leepoint.net/notes-java/algorithms/searching/binarysearch.html
@@ -211,6 +181,47 @@ Number.implement({
 			output = lang[CONST.TIME_SECS].replace(/%d/, s);
 		}
 		return output;
+	}
+
+});
+
+Element.implement({
+
+	show: function(nonblock){
+		this.fireEvent("show");
+		return this.setStyle("display", nonblock ? "" : "block");
+	},
+	
+	hide: function(){
+		this.fireEvent("hide");
+		return this.setStyle("display", "none");
+	},
+	
+	centre: function(){
+		this.show();
+		var ws = window.getSize();
+		var es = this.getSize();
+		return this.setStyles({
+			"left": ((ws.x - es.x) / 2).max(0),
+			"top": ((ws.y - es.y) / 2).max(0)
+		});
+	},
+	
+	addClasses: function(){
+		var l = arguments.length, clear = false, hasChanged = false;
+		if (typeof arguments[l - 1] == "boolean")
+			clear = arguments[--l];
+		var cls = clear ? "" : this.className;
+		while (l--) {
+			var className = arguments[l];
+			if ((className != "") && !cls.contains(className, " ")) {
+				cls += " " + className;
+				hasChanged = true;
+			}
+		}
+		if (hasChanged)
+			this.className = cls.clean();
+		return this;
 	}
 
 });
