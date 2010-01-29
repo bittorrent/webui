@@ -279,38 +279,3 @@ var CONST = {
 	"TIME_WEEKS_DAYS": 249,
 	"TIME_YEARS_WEEKS": 250
 };
-
-if (!console) {
-	var console = {};
-}
-
-(function() {
-
-	console.log = console.log || function(str) {
-		if (window.opera) {
-			opera.postError(str);
-		} else {
-			log(str);
-		}
-	};
-
-	var timers = {};
-	console.time = console.time || function(name) {
-		if (name == "") return;
-		timers[name] = $time();
-	};
-
-	console.timeEnd = console.timeEnd || function(name) {
-		if (name == "" || !timers.hasOwnProperty(name)) return;
-		console.log(name + ": " + ($time() - timers[name]) + "ms");
-		delete timers[name];
-	};
-
-	console.assert = console.assert || function() {
-		var args = $A(arguments), expr = args.shift();
-		if (!expr) {
-			throw new Error(false);
-		}
-	};
-
-})();
