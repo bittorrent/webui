@@ -444,7 +444,7 @@ function loadLangStrings() {
 		utWebUI.createLabel();
 	});
 	$("LBL_CANCEL").set("value", lang[CONST.DLG_SETTINGS_04]).addEvent("click", function() {
-		$("dlgLabel").hide();
+		DialogManager.hide("Label");
 	});
 	$("ADD_FILE_OK").set("value", lang[CONST.DLG_SETTINGS_03]).addEvent("click", function() {
 		$("upfrm").set("action", urlBase + "?token=" + utWebUI.TOKEN + "&action=add-file");
@@ -1163,7 +1163,8 @@ window.addEvent("domready", function() {
 		DialogManager.dragMask = $("dragmask");
 
 		["Add", "Settings", "Props", "About", "Label"].each(function(k) {
-			DialogManager.add(k, k == "Props");
+			var isModal = (["Label", "Props"].indexOf(k) >= 0);
+			DialogManager.add(k, isModal);
 		});
 
 		$("dlgProps").getElement("a").addEvent("click", function(ev) {
