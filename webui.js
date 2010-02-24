@@ -369,7 +369,10 @@ var utWebUI = {
 				this.torrents[hash] = tor.slice(1);
 				this.labels[hash] = labels;
 				tor.splice(0, 2); // remove the hash & status from the array
-				tor[11] = tor[11] + " (" + tor[12] + ")";
+	                        // Remove the SID from the list before it goes to
+                                // the table for display.
+                                tor.pop(); tor.pop();
+			        tor[11] = tor[11] + " (" + tor[12] + ")";
 				tor[12] = tor[13] + " (" + tor[14] + ")";
 				tor[13] = tor[15];
 				tor.splice(13, 2);
