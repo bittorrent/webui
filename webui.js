@@ -736,15 +736,27 @@ var utWebUI = {
 				var key = json.settings[i][0], typ = json.settings[i][1], val = json.settings[i][2];
 				if (key in ignored) continue;
 				if ((key == "webui.cookie") && !this.loaded) { // only load webui.cookie on startup
-					var oldcookie = this.config, newcookie = JSON.decode(json.settings[i][2], true);
+					function safeCopy(objOrig, objNew) {
+						$each(objOrig, function (v, k) {
+							var tOrig = $type(objOrig[k]),
+								tNew = $type(objNew[k]);
 
-					for (var key in oldcookie) {
-						// Pull out only data from received cookie that we already know about.
-						// Next best thing short of sanity checking every single value.
-						if (typeof(oldcookie[key]) == typeof(newcookie[key])) {
-							oldcookie[key] = newcookie[key];
-						}
+							if (tOrig == tNew) {
+								if (tOrig == "object") {
+									safeCopy(objOrig[k], objNew[k]);
+								}
+								else {
+									objOrig[k] = objNew[k];
+								}
+							}
+						});
 					}
+
+					var oldcookie = this.config, newcookie = JSON.decode(val, true);
+
+					// Pull out only data from received cookie that we already know about.
+					// Next best thing short of sanity checking every single value.
+					safeCopy(oldcookie, newcookie);
 
 					this.config.torrentTable.alternateRows =
 					this.config.fileTable.alternateRows =
@@ -765,7 +777,11 @@ var utWebUI = {
 				}
 				this.settings[key] = val;
 			}
+
+			// Insert custom keys...
 			this.settings["multi_day_transfer_mode"] = tcmode;
+
+			// Cleanup
 			delete json.settings;
 			this.loadSettings();
 		}
