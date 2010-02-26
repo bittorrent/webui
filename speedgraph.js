@@ -12,7 +12,8 @@ var SpeedGraph = {
 		this.maxSeconds = 600;
 		this.seconds = -1;
 		this.startSeconds = $time() / 1000;
-		this.plot = new Flotr.Plot(this.element, [{ label: lang[CONST.OV_COL_UPSPD], data: [] }, { label: lang[CONST.OV_COL_DOWNSPD], data: [] }], {
+
+		this.plot = new Flotr.Plot(this.element, [{ data: [] }, { data: [] }], {
 			"colors" : ["#009900", "#1C8DFF"],
 			"lines" : {
 				show: true
@@ -34,7 +35,7 @@ var SpeedGraph = {
 			"yaxis" : {
 				"min": 0,
 				"minTickSize": 5 * 1024,
-				"tickFormatter": function(n) { return (parseInt(n).toFileSize() + perSec); }
+				"tickFormatter": function(n) { return (parseInt(n).toFileSize() + g_perSec); }
 			},
 			"grid": {
 				"color": "#868686"
@@ -57,6 +58,11 @@ var SpeedGraph = {
 			style.height = h;
 		this.element.setStyles(style);
 		this.draw();
+	},
+
+	"setLabels": function(upLabel, downLabel) {
+		if (upLabel) this.plot.series[0].label = upLabel;
+		if (downLabel) this.plot.series[1].label = downLabel;
 	},
 
 	"addData": function(upSpeed, downSpeed) {

@@ -1,3 +1,5 @@
+// TODO: Stop letting code outside stable.js reference internal data structures directly!
+
 /*
 
 	Copyright Emil A Eklund - Column List Widget 1.03
@@ -25,6 +27,7 @@ var TYPE_NUMBER = 1;
 var TYPE_DATE = 2;
 var TYPE_NUM_ORDER = 3;
 var TYPE_NUM_PROGRESS = 4;
+var TYPE_CUSTOM = 5;
 
 var ALIGN_AUTO = 0;
 var ALIGN_LEFT = 1;
@@ -62,6 +65,7 @@ var dxSTable = new Class({
 	"viewRows": 0, // # of visible rows
 	"cols": 0, // # of columns
 	"colData": [], // columns' data
+	"sortCustom": null, // the custom sort function callback, function(col, datax, datay)
 	"dCont": null, // the main container
 	"dHead": null, // head container
 	"dBody": null, // body container
@@ -77,7 +81,6 @@ var dxSTable = new Class({
 	"secIndex": 0,
 	"secRev": 0,
 	"colOrder": [],
-	"colWidth": [],
 	"colHeader": [],
 	"options": {
 		"format": $arguments(0),
@@ -103,16 +106,28 @@ var dxSTable = new Class({
 	"rowCache": [],
 	"rowCover" : null,
 	"rowModel" : null,
+	"resetText": null,
 
 	"create": function(id, columns, options) {
 		this.cols = columns.length;
-		this.colHeader = columns;
-		this.colWidth = options.colWidth || (new Array(columns.length));
-		this.colOrder = options.colOrder || (new Array(columns.length));
-		this.sIndex = isNaN(options.sIndex) ? -1 : options.sIndex.toInt().limit(-1, columns.length - 1);
+		this.colHeader = columns.map(function(item) {
+			return {
+				  "id": item[0]
+				, "width": item[1]
+				, "type": item[2]
+				, "disabled": !!$pick(item[3], !item[1])
+				, "align": item[4] || ALIGN_AUTO
+				, "text": item[5] || item[0] || ""
+			};
+		});
+		this.colOrder = (options.colOrder.length == this.cols) ? options.colOrder : columns.map(function(item, i) { return i; });
+		this.sIndex = isNaN(options.sIndex) ? -1 : options.sIndex.toInt().limit(-1, this.cols - 1);
 		delete options.colOrder;
-		delete options.colWidth;
 		delete options.sIndex;
+		if (options.sortCustom) {
+			this.sortCustom = options.sortCustom;
+			delete options.sortCustom;
+		}
 		this.setOptions(options);
 
 		var tr, td, div, $me = this, isIE = Browser.Engine.trident;
@@ -122,15 +137,17 @@ var dxSTable = new Class({
 		this.dHead = simpleClone(DIV, false).addClass("stable-head").inject(this.dCont);
 		this.dBody = simpleClone(DIV, false).addClass("stable-body").inject(this.dCont);
 
+		this.dHead.addEvents({
+			"mousedown": function(ev) {
+				if (ev.isRightClick())
+					$me.colMenu.delay(0, $me, ev.page);
+			}
+		});
+
 		this.tHead = new Element("table", {
 			"cellpadding": 0,
 			"cellspacing": 0
 		}).inject(this.dHead);
-
-		this.tHead.addEvent("contextmenu", function(ev) {
-			ev.stop();
-			return false;
-		});
 
 		this.tb.head = new Element("tbody").inject(this.tHead);
 		tr = simpleClone(TR, false);
@@ -141,7 +158,7 @@ var dxSTable = new Class({
 			"onStart" : function(){ ColumnHandler.start($me, this); },
 			"onDrag" : function(){ ColumnHandler.drag($me, this); },
 			"onComplete" : function(){ ColumnHandler.end($me, this); },
-			"onRightClick" : this.colMenu.bind(this),
+/*			"onRightClick" : this.colMenu.bind(this),*/
 			"onCancel" : function(_, ev) {
 				this.detach();
 				$me.cancelSort = false;
@@ -184,8 +201,8 @@ var dxSTable = new Class({
 				simpleClone(TD, false).addClass(this.id + "-col-" + this.colOrder[i]).setStyle(isIE ? "visibility" : "display", this.colData[i].disabled ? (isIE ? "hidden" : "none") : (isIE ? "visible" : ""))
 			);
 			td = simpleClone(TD, false)
-				.grab(new Element("span", {"text": this.colData[i].text}))
-				.setStyles({"width": this.colWidth[this.colOrder[i]], "display": this.colData[i].disabled ? "none" : ""})
+				.grab(new Element("span", {"id": this.id + "-head-" + this.colData[i].id, "text": this.colData[i].text}))
+				.setStyles({"width": this.colHeader[i].width, "display": this.colData[i].disabled ? "none" : ""})
 				.store("index", i)
 				.inject(tr);
 			this.tHeadCols[i] = td;
@@ -212,10 +229,10 @@ var dxSTable = new Class({
 		for (var i = 0; i < len; i++) {
 			this.tBodyCols[i] = new Element("col", {
 				"styles": {
-					"width": this.colWidth[this.colOrder[i]],
+					"width": this.colHeader[i].width,
 					"display": this.colData[i].disabled ? "none" : ""
 				},
-				"width": this.colWidth[this.colOrder[i]],
+				"width": this.colHeader[i].width,
 				"span": 1
 			}).inject(cg);
 		}
@@ -403,19 +420,249 @@ var dxSTable = new Class({
 			if (Browser.Engine.trident) {
 				cols[i].setStyle("textAlign", align);
 			} else {
-				sb += "." + this.id + "-col-" + this.colOrder[i] + " { text-align: " + align + " }";
+				sb += "." + this.id + "-col-" + this.colOrder.indexOf(i) + " { text-align: " + align + " }";
 			}
 		}
 		if (!Browser.Engine.trident)
 			$("colrules").appendText(sb);
 	},
 
+	"isValidCol": function(iCol, allowUpEdge) {
+		return ($chk(iCol) && 0 <= iCol && (allowUpEdge ? iCol <= this.cols : iCol < this.cols));
+	},
+
+	"setColumnDisabled": function(iCol, disabled) {
+		if (!this.isValidCol(iCol)) return;
+
+		var isIE = Browser.Engine.trident;
+		this.colData[iCol].disabled = disabled;
+		this.tHeadCols[iCol].setStyle("display", disabled ? "none" : "");
+		this.tBodyCols[iCol].setStyle("display", disabled ? "none" : "");
+		var sname = isIE ? "visibility" : "display", svalue = disabled ? (isIE ? "hidden" : "none") : (isIE ? "visible" : "");
+		this.rowModel.childNodes[iCol].setStyle(sname, svalue); // update "model" row in case it's needed again (adding more rows)
+		for (var i = 0, j = this.tb.body.childNodes.length; i < j; i++)
+			this.tb.body.childNodes[i].childNodes[iCol].setStyle(sname, svalue);
+		this.calcSize();
+		this.dHead.setStyle("width", this.dBody.clientWidth);
+		this.dHead.scrollLeft = this.dBody.scrollLeft;
+	},
+
+	"setColumnPosition": function(iCol, iNew) {
+		iCol = this.colOrder[iCol];
+		if (iNew < 0 || iCol == iNew) return;
+
+		// Move DOM elements around
+		var headTarg = this.tHeadCols[iNew], headCol = this.tHeadCols[iCol];
+		var bodyParent = this.tBody.getElement("colgroup"), bodyTarg = bodyParent.childNodes[iNew], bodyCol = bodyParent.childNodes[iCol].dispose();
+
+		if (iNew == this.cols) {
+			headCol.parentNode.grab(headCol.dispose(), "bottom");
+			bodyParent.grab(bodyCol, "bottom");
+
+			this.rowModel.grab(this.rowModel.childNodes[iCol].dispose(), "bottom"); // update "model" row in case it's needed again (adding more rows)
+			$each(this.tb.body.childNodes, function(row) {
+				row.grab(row.childNodes[iCol].dispose(), "bottom");
+			});
+		}
+		else {
+			headCol.dispose().inject(headTarg, "before");
+			bodyCol.inject(bodyTarg, "before");
+
+			var cellTarg = this.rowModel.childNodes[iNew];
+			this.rowModel.childNodes[iCol].dispose().inject(cellTarg, "before"); // update "model" row in case it's needed again (adding more rows)
+			$each(this.tb.body.childNodes, function(row) {
+				cellTarg= row.childNodes[iNew];
+				row.childNodes[iCol].dispose().inject(cellTarg, "before");
+			});
+		}
+
+		// Slide internal data structures around
+		function slide(arr) { arr.splice(iNew - (iCol < iNew ? 1 : 0), 0, arr.splice(iCol, 1)[0]); }
+		slide(this.tHeadCols);
+		slide(this.tBodyCols);
+		slide(this.colData);
+
+		// Update column order
+		this.colOrder = this.colHeader.map(function(item) {
+			return this.colData.indexOf(item);
+		}, this);
+	},
+
+	"getColumnWidths": function() {
+		return this.colHeader.map(function(item) {
+			return item.width;
+		});
+	},
+
+	"setColumnWidth": function(iCol, iWidth) {
+		if (!this.isValidCol(iCol)) return;
+
+		this.colData[iCol].width = iWidth;
+
+		var safetyX = (this.tb.body.childNodes[0].childNodes[iCol].hasClass("stable-icon") ? 30 : 10);
+
+		// Set column header width
+		var offset = this.tHeadCols[iCol].getWidth();
+		if (offset <= 0 && !!this.colData[iCol].disabled) {
+			this.tHeadCols[iCol].setStyle("display", "");
+			offset = this.tHeadCols[iCol].getWidth();
+			this.tHeadCols[iCol].setStyle("display", "none");
+		}
+		offset -= this.tHeadCols[iCol].getStyle("width").toInt();
+		if (iWidth - safetyX < offset)
+			iWidth = offset + safetyX + 5;
+
+		this.tHeadCols[iCol].setStyle("width", iWidth - offset).setProperty("width", iWidth - offset);
+
+		// Set column body width
+		if (Browser.Engine.trident && !Browser.Engine.trident6)
+			iWidth -= safetyX; // substract the left & right padding
+		this.tBodyCols[iCol].setStyle("width", iWidth).setProperty("width", iWidth);
+		iWidth = this.tHead.getWidth();
+		if (Browser.Engine.webkit)
+			this.tBody.setStyle("width", iWidth);
+		else
+			this.tb.body.setStyle("width", iWidth);
+	},
+
+	"setConfig": function(options) {
+		// NOTE: The order in which these settings are applied may be important
+		//       in some cases. Watch out for regressions if changes are required.
+
+		var val, refresh = false;
+
+		// Map column header IDs to indices
+		var ind, colHdr = this.colHeader;
+		var colHdrIdx = colHdr.map(function(item, idx) {
+			return idx;
+		}).associate(colHdr.map(function(item) {
+			return item.id;
+		}));
+
+		//--------------------------------------------------
+		// COLUMN OPTIONS
+		//--------------------------------------------------
+
+		val = options.colMask; // bitfield
+		if ($defined(val)) {
+			for (var i = 0, bit = 1, len = this.cols; i < len; ++i, bit <<= 1) {
+				this.setColumnDisabled(this.colOrder[i], !!(options.colMask & bit));
+			}
+		}
+
+		val = options.resetText; // string
+		if ($defined(val)) {
+			this.resetText = val;
+		}
+
+		val = options.colText; // { colID : colText, ... }
+		if ($defined(val)) {
+			$each(val, function(v, k) {
+				ind = colHdrIdx[k];
+				if ($chk(colHdr[ind])) {
+					colHdr[ind].text = v;
+					$(this.id + "-head-" + k).set("html", v);
+				}
+			}, this);
+		}
+
+		val = options.colType; // { colID : colType, ... }
+		if ($defined(val)) {
+			var changedCols = [];
+			$each(val, function(v, k) {
+				ind = colHdrIdx[k];
+				if ($chk(colHdr[ind]) && colHdr[ind].type != v) {
+					changedCols.push(ind);
+					colHdr[ind].type = v;
+				}
+			}, this);
+
+			refresh = true;
+		}
+
+		val = options.colAlign; // { colID : colAlign, ... }
+		if ($defined(val)) {
+			$each(val, function(v, k) {
+				ind = colHdrIdx[k];
+				if ($chk(colHdr[ind])) {
+					colHdr[ind].align = v;
+				}
+			}, this);
+
+			this.setAlignment();
+		}
+
+		val = options.colOrder; // [ colMIdx, colNIdx, ... ]
+		if ($defined(val)) {
+			if (val.length == this.cols) {
+				var orderOK = true, orderT = $A(val).sort(function(a, b) { return (a-b); });
+				for (var i = 0, l = orderT.length; i < l; ++i) {
+					if (i != orderT[i]) {
+						orderOK = false;
+						break;
+					}
+				}
+
+				if (orderOK) {
+					$each(val, function(v, k, a) {
+						if (a.indexOf(k) != this.colOrder.indexOf(k)) {
+							this.setColumnPosition(a.indexOf(k), k);
+						}
+					}, this);
+				}
+			}
+		}
+
+		val = options.colWidth; // [ col1Width, col2Width, ... ]
+		if ($defined(val)) {
+			if (val.length == this.cols) {
+				$each(val, function(v, k) {
+					this.setColumnWidth(this.colOrder[k], v);
+				}, this);
+			}
+		}
+
+		val = options.colSort; // [colIdx, reverse]
+		if ($defined(val)) {
+			if ($chk(val[1])) this.options.reverse = !!val[1];
+			this.sort(val[0]);
+		}
+
+		//--------------------------------------------------
+		// ROW OPTIONS
+		//--------------------------------------------------
+
+		val = options.rowMaxCount; // integer
+		if ($defined(val) && (val >= 1)) {
+			var tbBody = this.tb.body;
+			while (tbBody.childNodes.length < val)
+				tbBody.appendChild(simpleClone(this.rowModel, true).hide());
+
+			this.options.maxRows = val;
+			this.curPage = 0;
+			this.updatePageMenu();
+			refresh = true;
+		}
+
+		val = options.rowAlternate; // boolean
+		if ($defined(val) && (val != this.options.alternateRows)) {
+			this.options.alternateRows = !!val;
+			refresh = true;
+		}
+
+		//--------------------------------------------------
+		if (refresh) {
+			this.refreshRows();
+		}
+	},
+
 	"getCache": function(index) {
+		if (!this.isValidCol(index)) return;
 		if (this.rowCache.length != this.rows) {
 			this.clearCache();
 			this.rowCache = new Array(this.rows);
 		}
-		var c = 0, index = this.colOrder[index];
+		var c = 0;
 		for (var key in this.rowData) {
 			this.rowCache[c++] = {
 				"key": key,
@@ -434,24 +681,30 @@ var dxSTable = new Class({
 		this.rowCache.length = 0;
 	},
 
-	"sort": function(col, shift) {
+	"sort": function(col, shift, revtoggle) {
 		if (this.cancelSort) return;
 		this.isSorting = true;
 		var rev = true, simpleReverse = true;
 
-		if (col == null) {
-			if (this.sIndex == -1) return;
-			rev = false;
-			col = this.tb.head.childNodes[0].childNodes[this.sIndex];
+		if (!$chk(col))
+			col = this.sIndex;
+
+		if ($type(col) == "number") {
+			if (!this.isValidCol(col)) return;
+
+			col = this.tHeadCols[this.colOrder[col]];
+			rev = !!this.options.reverse;
 			simpleReverse = false;
 		}
 
 		if (col.get("tag") != "td")
 			col = col.getParent("td");
+		if (!$chk(col))
+			return;
 
 		var ind = col.retrieve("index");
 		if (shift) { //secondary sorting
-			if (ind == this.sIndex) {
+			if (ind == this.sIndex || !this.isValidCol(this.sIndex)) {
 				this.secIndex = 0;
 				return;
 			}
@@ -463,18 +716,18 @@ var dxSTable = new Class({
 			this.secIndex = ind;
 			ind = this.sIndex;
 			rev = false;
-			col = this.tb.head.childNodes[0].childNodes[this.sIndex];
+			col = this.tHeadCols[this.colOrder[ind]];
 			simpleReverse = false;
 		}
 
-		if (rev)
+		if (rev && !!revtoggle)
 			this.options.reverse = (this.sIndex == ind) ? !this.options.reverse : false;
 
 		if ((this.sIndex != ind) || (this.rowCache.length != this.rows)) {
 			simpleReverse = false;
 			this.getCache(ind);
-			if (this.sIndex >= 0)
-				this.tb.head.childNodes[0].childNodes[this.sIndex].setStyle("backgroundPosition", "right -32px");
+			if (this.isValidCol(this.sIndex))
+				this.tHeadCols[this.colOrder[this.sIndex]].setStyle("backgroundPosition", "right -32px");
 		}
 
 		col.setStyle("backgroundPosition", "right " + ((this.options.reverse) ? "0px" : "-16px"));
@@ -482,7 +735,7 @@ var dxSTable = new Class({
 		this.sIndex = ind;
 		if (!simpleReverse) {
 			var $me = this, comp;
-			switch (this.colData[ind].type) {
+			switch (this.colHeader[ind].type) {
 				case TYPE_STRING:
 					comp = function(x, y) {
 						return $me.sortAlphaNumeric(x, y);
@@ -501,6 +754,14 @@ var dxSTable = new Class({
 						return $me.sortNumOrder(x, y);
 					};
 					break;
+
+				case TYPE_CUSTOM:
+					if ($me.sortCustom) {
+						comp = function(x, y) {
+							return $me.sortCustom(ind, $me.rowData[x.key].data, $me.rowData[y.key].data);
+						}
+						break;
+					}
 
 				default:
 					comp = function(x, y) {
@@ -560,11 +821,12 @@ var dxSTable = new Class({
 	},
 
 	"sortSecondary": function(x, y) {
-		var index = this.colOrder[this.secIndex];
+		var index = this.secIndex;
+		if (!this.isValidCol(index)) return;
 		var m = this.rowData[x.key].data[index];
 		var n = this.rowData[y.key].data[index];
 		var r = 0;
-		switch (this.colData[index].type) {
+		switch (this.colHeader[index].type) {
 			case TYPE_STRING:
 				r = Comparator.compareAlphaNumeric(m, n);
 				break;
@@ -573,6 +835,12 @@ var dxSTable = new Class({
 			case TYPE_NUM_PROGRESS:
 				r = Comparator.compareNumeric(m, n);
 				break;
+
+			case TYPE_CUSTOM:
+				if (this.sortCustom) {
+					r = this.sortCustom(index, this.rowData[x.key].data, this.rowData[y.key].data);
+					break;
+				}
 
 			case TYPE_NUM_ORDER:
 				r = Comparator.compareNumeric(m, n);
@@ -734,14 +1002,14 @@ var dxSTable = new Class({
 	"_insertRow": function(id, skipOrderCheck) {
 		skipOrderCheck = (skipOrderCheck === true);
 		var sindex = this.sIndex;
-		if (sindex >= 0) {
+		if (this.isValidCol(sindex)) {
 			var $me = this, index = 0;
 			if (!skipOrderCheck) {
 				var comp, from = 0, to = this.rowCache.length, rIndex = this.rowData[id].index, item = {
 					"key": id,
-					"v": this.rowData[id].data[this.colOrder[sindex]]
+					"v": this.rowData[id].data[sindex]
 				};
-				switch (this.colData[sindex].type) {
+				switch (this.colHeader[sindex].type) {
 					case TYPE_STRING:
 						comp = function(x, y) {
 							return $me.sortAlphaNumeric(x, y);
@@ -760,6 +1028,14 @@ var dxSTable = new Class({
 							return $me.sortNumOrder(x, y);
 						};
 						break;
+
+					case TYPE_CUSTOM:
+						if ($me.sortCustom) {
+							comp = function(x, y) {
+								return $me.sortCustom(sindex, $me.rowData[x.key].data, $me.rowData[y.key].data);
+							}
+							break;
+						}
 
 					default:
 						comp = function(x, y) {
@@ -851,11 +1127,11 @@ var dxSTable = new Class({
 	"fillRow": function(row, data, icon) {
 		var $me = this;
 		this.colOrder.each(function(v, k) {
-			var cell = row.childNodes[k];
-			if ((v == 0) && (icon != "") && !cell.hasClass(icon))
+			var cell = row.childNodes[v];
+			if ((k == 0) && (icon != "") && !cell.hasClass(icon))
 				cell.className = "stable-icon " + icon;
-			if ($me.colData[k].type == TYPE_NUM_PROGRESS) {
-				var pcnt = (parseFloat(data[v]) || 0).toFixed(1) + "%";
+			if ($me.colHeader[k].type == TYPE_NUM_PROGRESS) {
+				var pcnt = (parseFloat(data[k]) || 0).toFixed(1) + "%";
 				var prog = simpleClone(DIV, false).addClass("stable-progress").set("html", "&nbsp;").inject(cell.empty());
 				var pbar = simpleClone(SPAN, false).addClass("stable-progress-bar").set("html", "&nbsp;").setStyle("width", pcnt).inject(prog);
 				var ptxt = simpleClone(SPAN, false).addClass("stable-progress-text").set("text", pcnt).inject(prog);
@@ -1027,17 +1303,18 @@ var dxSTable = new Class({
 			this.refreshSelection();
 	},
 
-	"setValue": function(id, col, val) {
+	"updateCell": function(id, col, data) {
 		var row = this.rowData[id];
 		if (row == null) return;
-		var isSortedCol = ((this.sIndex >= 0) && (col == this.colOrder[this.sIndex]));
-		var hasSortedChanged = ((row.data[col] != val) && isSortedCol);
-		row.data[col] = val;
+		data = (data || row.data);
+		var isSortedCol = ((this.sIndex >= 0) && (col == this.sIndex));
+		var hasSortedChanged = ((row.data[col] != data[col]) && isSortedCol);
+		row.data[col] = data[col];
 		if (isSortedCol)
 			this._insertRow(id);
 		if (this.requiresRefresh || row.hidden || (row.rowIndex == -1)) return hasSortedChanged;
-		var r = this.tb.body.childNodes[row.rowIndex], i = this.colOrder.indexOf(col), cell = r.childNodes[i], fval = this.options.format([val], col)[0];
-		if (this.colData[i].type == TYPE_NUM_PROGRESS) {
+		var r = this.tb.body.childNodes[row.rowIndex], cell = r.childNodes[this.colOrder[col]], fval = this.options.format($A(data), col);
+		if (this.colHeader[col].type == TYPE_NUM_PROGRESS) {
 			var pcnt = (parseFloat(fval) || 0).toFixed(1) + "%";
 			var prog = simpleClone(DIV, false).addClass("stable-progress").set("html", "&nbsp;").inject(cell.empty());
 			var pbar = simpleClone(SPAN, false).addClass("stable-progress-bar").set("html", "&nbsp;").setStyle("width", pcnt).inject(prog);
@@ -1061,7 +1338,7 @@ var dxSTable = new Class({
 		var row = this.rowData[id];
 		row.icon = icon;
 		if (row.rowIndex == -1) return;
-		var r = this.tb.body.childNodes[row.rowIndex], i = this.colOrder.indexOf(0);
+		var r = this.tb.body.childNodes[row.rowIndex], i = this.colOrder[0];
 		if (r.childNodes[i].hasClass(icon)) return;
 		r.childNodes[i].className = "stable-icon " + icon;
 	},
@@ -1076,27 +1353,23 @@ var dxSTable = new Class({
 
 	"colMenu": function(coords) {
 		ContextMenu.clear();
-		for (var i = 0; i < this.cols; i++) {
-			var opts = [this.colData[i].text, this.toggleColumn.bind(this, i)];
-			if (!this.colData[i].disabled)
+		this.colHeader.each(function(col, idx) {
+			var opts = [col.text, this.toggleColumn.bind(this, idx)];
+			if (!col.disabled)
 				opts.splice(0, 0, CMENU_CHECK);
 			ContextMenu.add(opts);
+		}, this);
+		if (this.resetText) {
+			ContextMenu.add([CMENU_SEP]);
+			ContextMenu.add([this.resetText, (function() { this.fireEvent("onColReset"); }).bind(this)]);
 		}
 		ContextMenu.show(coords);
 	},
 
 	"toggleColumn": function(index) {
-		var hide = !this.colData[index].disabled, isIE = Browser.Engine.trident;
-		this.colData[index].disabled = hide;
-		this.tBodyCols[index].setStyle("display", hide ? "none" : "");
-		this.tHeadCols[index].setStyle("display", hide ? "none" : "");
-		var sname = isIE ? "visibility" : "display", svalue = hide ? (isIE ? "hidden" : "none") : (isIE ? "visible" : "");
-		for (var i = 0, j = this.tb.body.childNodes.length; i < j; i++)
-			this.tb.body.childNodes[i].childNodes[index].setStyle(sname, svalue);
-		this.fireEvent("onColToggle", [this.colOrder[index], hide]);
-		this.calcSize();
-		this.dHead.setStyle("width", this.dBody.clientWidth);
-		this.dHead.scrollLeft = this.dBody.scrollLeft;
+		var hide = !this.colHeader[index].disabled;
+		this.setColumnDisabled(this.colOrder[index], hide);
+		this.fireEvent("onColToggle", [index, hide]);
 		return true;
 	},
 
@@ -1173,11 +1446,19 @@ var ColumnHandler = {
 	"check": function(ev, cell) {
 		if (this.isResizing) return;
 		var x = ev.page.x - cell.getPosition().x;
-		var i = cell.retrieve("index");
-		if ((x <= 8) && (i > 0)) {
-			this.hotCell = i - 1;
-			cell.setStyle("cursor", "e-resize");
-		} else if (x >= cell.offsetWidth - 8) {
+		var i = this.colOrder[cell.retrieve("index")];
+
+		if ((x <= 4) && (i > 0)) { // resizing, mouse slightly to right of resize grip
+			// Skip hidden columns...
+			var j = i - 1;
+			while (j >= 0 && this.colData[j].disabled) --j;
+			if (j >= 0) {
+				x += cell.offsetWidth;
+				i = j;
+			}
+		}
+
+		if (x >= cell.offsetWidth - 6) { // resizing, mouse slightly to left of resize grip
 			this.hotCell = i;
 			cell.setStyle("cursor", "e-resize");
 		} else { // reordering
@@ -1191,7 +1472,7 @@ var ColumnHandler = {
 		if (st.hotCell != -1) { // resizing
 			var col = st.tHeadCols[st.hotCell];
 			var w = col.getWidth();
-			var left = col.getPosition(st.dCont).x + w - (Browser.Engine.gecko19 ? 4 : 0);
+			var left = col.getPosition(st.dCont).x + w + st.dBody.scrollLeft;
 			st.resizeCol = {"width": col.getStyle("width").toInt(), "left": left};
 			drag.value.now.x = left;
 			drag.mouse.pos.x = drag.mouse.start.x - left;
@@ -1204,6 +1485,8 @@ var ColumnHandler = {
 			});
 			st.colDragEle = drag.element;
 			drag.element = drag.handle = st.colReszObj;
+			drag.limit.x = [];
+			drag.options.limit = true;
 		} else { // reordering
 			var left = drag.element.getPosition(st.dCont).x + st.dBody.scrollLeft - (Browser.Engine.gecko19 ? 4 : 0);
 			drag.value.now.x = left;
@@ -1211,7 +1494,7 @@ var ColumnHandler = {
 			st.colDragObj.set("html", drag.element.get("text")).setStyles({
 				"visibility": "visible",
 				"left": left,
-				"width": drag.element.getStyle("width").toInt(),
+				"width": drag.element.getStyle("width").toInt() - (Browser.Engine.webkit ? 19 : 0),
 				"textAlign": drag.element.getStyle("textAlign")
 			});
 
@@ -1223,155 +1506,50 @@ var ColumnHandler = {
 		}
 	},
 
-	"drag": function (st, drag) {
+	"drag": function(st, drag) {
 		if (st.cancelMove) { // resizing
 			var w = drag.value.now.x - st.resizeCol.left + st.resizeCol.width;
-			if (w < 14)
-				w = 14;
-			st.tHeadCols[st.hotCell].setStyle("width", w);
+			drag.limit.x[0] = st.tHeadCols[st.hotCell].getPosition(st.dCont).x + st.dBody.getScrollLeft();
+			st.tHeadCols[st.hotCell].setStyle("width", w.max(14));
 			$(document.body).setStyle("cursor", "e-resize");
 		} else { // reordering
-			var offsetX = 0, i = 0;
-			var x = drag.value.now.x;
-			while ((offsetX < x) && (i <= st.cols)) {
-				offsetX += st.tHeadCols[i].getWidth();
-				i++;
-			}
+			var i = 0, x = drag.mouse.now.x;
+			while ((i < st.cols) && (st.colData[i].disabled || ((st.tHeadCols[i].getLeft() + (st.tHeadCols[i].getWidth() / 2)) < x))) ++i;
+
 			if (i >= st.cols) {
-				c = st.cols;
-				st.colSep.setStyle("left", st.tHeadCols[c - 1].offsetLeft + st.tHeadCols[c - 1].getWidth() - 1);
+				i = st.cols;
+				st.colSep.setStyle("left", st.tHeadCols[i - 2].offsetLeft + st.tHeadCols[i - 2].getWidth() - 1);
 			} else {
 				st.colSep.setStyle("left", st.tHeadCols[i].offsetLeft);
 			}
 			st.colSep.setStyle("visibility", "visible");
 			st.colMove.to = i;
-			if (i == st.colMove.from)
-				st.colMove.to++;
 		}
 	},
 
-	"end": function (st, drag) {
+	"end": function(st, drag) {
 		drag.element = drag.handle = st.colDragEle;
 		st.colDragEle = null;
 		if (st.isResizing) { // resizing
 			st.colReszObj.setStyles({"left": 0, "height": 0, "visibility": "hidden"});
 			st.isResizing = false;
-			resizeColumn.call(st, st.hotCell);
+			st.setColumnWidth(st.hotCell, st.tHeadCols[st.hotCell].getWidth());
+			st.fireEvent("onColResize");
 			document.body.setStyle("cursor", "default");
 			st.rowCover.hide();
+			drag.options.limit = false;
 		} else { // reordering
 			st.colDragObj.setStyles({"left": 0, "width": 0, "visibility": "hidden"});
 			st.colSep.setStyle("visibility", "hidden");
 			document.body.setStyle("cursor", "default");
-			moveColumn.call(st, st.colMove.from, st.colMove.to);
+			st.setColumnPosition(st.colMove.from, st.colMove.to);
+			st.cancelSort = false;
+			st.fireEvent("onColMove");
 		}
 		st.cancelSort = false;
 	}
+
 };
-
-function resizeColumn(index) {
-	var w = this.tHeadCols[index].offsetWidth;
-	this.colWidth[this.colOrder[index]] = w;
-	if (Browser.Engine.trident && !Browser.Engine.trident6)
-		w -= (index == 0) ? 30 : 10; // substract the left & right padding
-	this.tBodyCols[index].setStyle("width", w).setProperty("width", w);
-	w = this.tHead.getSize().x;
-	if (Browser.Engine.webkit)
-		this.tBody.setStyle("width", w);
-	else
-		this.tb.body.setStyle("width", w);
-	this.fireEvent("onColResize");
-}
-
-// move column iCol infront of column iNew
-function moveColumn(iCol, iNew) {
-	if ((iNew == -1) || (iCol == iNew - 1)) return;
-	var i, l, oParent, oCol, oBefore, aRows, a;
-	var insertAtEnd = (iNew == this.cols)
-	var insertOuter = (iNew == 0) || insertAtEnd;
-	var moveToFront = (iNew < iCol);
-	var moveToBack = (iNew > iCol);
-
-	oCol = this.tHeadCols[iCol];
-	oParent = oCol.parentNode;
-	oCol.dispose();
-	insertOuter ?
-		oParent.grab(oCol, insertAtEnd ? "bottom" : "top")
-	:
-		oCol.inject(this.tHeadCols[iNew], "before");
-
-	oParent = this.tBody.getElement("colgroup");
-	oBefore = insertOuter ? null : oParent.childNodes[iNew];
-	oCol = oParent.childNodes[iCol].dispose();
-	insertOuter ?
-		oParent.grab(oCol, insertAtEnd ? "bottom" : "top")
-	:
-		oCol.inject(oBefore, "before");
-
-	$each(this.tb.body.childNodes, function(row) {
-		var bef = insertOuter ? null : row.childNodes[iNew];
-		var cell = row.childNodes[iCol].dispose();
-		insertOuter ?
-			row.grab(cell, insertAtEnd ? "bottom" : "top")
-		:
-			cell.inject(bef, "before");
-	});
-
-	var aHC = [], aBC = [], aC = [], aO = [];
-	oCol = this.tHeadCols[iCol];
-	var oBCol = this.tBodyCols[iCol];
-	for (i = 0; i < this.cols; i++) {
-		if (i == iCol) continue;
-		if (i == iNew) {
-			aHC.push(oCol);
-			aBC.push(oBCol)
-			aC.push(this.colData[iCol]);
-			aO.push(this.colOrder[iCol]);
-		}
-		aHC.push(this.tHeadCols[i]);
-		aBC.push(this.tBodyCols[i]);
-		aC.push(this.colData[i]);
-		aO.push(this.colOrder[i]);
-	}
-
-	if (iNew == this.cols) {
-		aHC.push(oCol);
-		aBC.push(oBCol);
-		aC.push(this.colData[iCol]);
-		aO.push(this.colOrder[iCol]);
-	}
-
-	/*
-	this.tHeadCols = aHC.slice(0);
-	this.tBodyCols = aBC.slice(0);
-	this.colData = aC.slice(0);
-	this.colOrder = aO.slice(0);
-
-	aHC = aBC = aC = aO = null;
-	*/
-	this.tHeadCols = aHC;
-	this.tBodyCols = aBC;
-	this.colData = aC;
-	this.colOrder = aO;
-
-	for (i = 0; i < this.cols; i++)
-		this.tHeadCols[i].store("index", i);
-	if (iCol == this.sIndex) {
-		// we moved the sorted column
-		this.sIndex = iNew;
-		if (iNew > iCol) // we moved it to the right
-			this.sIndex--;
-	} else if ((iNew <= this.sIndex) && (iNew < iCol)) {
-		// we moved a column that was to the right of the sorted column to the left of it
-		this.sIndex++;
-	} else if ((iCol < iNew) && (this.sIndex < iNew) && (this.sIndex > iCol)) {
-		// we moved a column that was to the left of the sorted column to the right of it
-		this.sIndex--;
-	}
-
-	this.cancelSort = false;
-	this.fireEvent("onColMove");
-}
 
 var Comparator = {
 

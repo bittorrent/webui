@@ -1,253 +1,255 @@
 var lang = [
-	"Fișiere Torent||*.torrent||Toate Fișierele (*.*)||*.*||",
-	"Preferințe",
-	"OK",
-	"Anulează",
-	"Limbă:",
-	"Confidențialitate",
-	"Caută automat actualizări",
-	"Actualizează și la versiunile beta",
-	"Trimite informații anonime la căutarea actualizărilor",
-	"La Descărcare",
-	"Atașează .!ut la fișierele incomplete",
-	"Prealocă toate fișierele",
-	"Interzice veghea [standby] cînd sînt torente active",
-	"Confirmare la ștergerea torentelor",
-	"Culoare de fundal alternantă",
-	"Arată viteza curentă în bara de titlu",
-	"La Adăugarea Torentelor",
-	"Nu porni automat descărcarea",
-	"Locul Fișierelor Descărcate",
-	"Pune descărcările noi în:",
-	"Arată dialogul la adăugare manuală",
-	"Mută descărcările terminate în:",
-	"Atașează eticheta torentului",
-	"Mută doar din dosarul implicit de descărcare",
-	"Locul fișierelor torent",
-	"Stochează torentele în:",
-	"Mută torentele sarcinilor terminate în:",
-	"Încarcă automat torentele din:",
-	"Șterge torentele încărcate",
-	"Portul de Ascultare",
-	"Portul folosit pentru conexiunile intrînde:",
-	"Port Aleator",
-	"Port aleator la fiecare pornire",
-	"Activează maparea UPnP",
-	"Activează maparea NAT-PMP",
-	"Serverul Proxy",
-	"Tip:",
-	"Proxy:",
-	"Port:",
-	"Autentificare",
-	"Utilizator:",
-	"Parolă:",
-	"Rezolvă numele gazdelor prin proxy",
-	"Folosește proxy pt. conexiunile partener-la-partener [peer-to-peer]",
-	"Adaugă la excepțiile paravanului",
-	"Limitarea Globală a Vitezei de Încărcare",
-	"Vit. Max de Înc. (KB/s): [0: nelimitată]",
-	"Automată",
-	"Vit. de Încărcare cînd nu se descarcă (KB/s):",
-	"Limitarea Globală a Vitezei de Descărcare",
-	"Vit. Max de Descărcare (KB/s): [0: nelimitată]",
-	"Numărul de Conexiuni",
-	"Numărul maxim global de conexiuni:",
-	"Numărul maxim de parteneri conectați per torent:",
-	"Numărul de sloturi de încărcare per torent:",
-	"Folosește sloturi de încărcare suplimentare cînd vit. de încărcare e < 90%",
-	"Facilități BitTorrent Obișnuite",
-	"Activ. DHT (Tabelă Hașuri Distrib.)",
-	"Solicită info de răzuire [scrape]",
-	"Activează DHT pt. torentele noi",
-	"Permite schimbul de parteneri [PEX]",
-	"Descoperă partenerii locali",
-	"Limitează banda partenerilor locali",
-	"IP / NumeGazdă raportate trackerului:",
-	"Criptarea Protocolului BitTorrent",
-	"La Ieșire:",
-	"Permite conex. intrînde necriptate",
-	"Activează Limita de Transfer",
-	"Setările Limitei",
-	"Oprește torentele cînd:",
-	"interval",
-	"în ultimele",
-	"zile",
-	"Setările Cozii de Așteptare",
-	"Numărul maxim de torente active (încărcate sau descărcate):",
-	"Numărul maxim de descărcări active:",
-	"Donează atîta timp cît",
-	"Raportul e:  <=",
-	"%  sau timpul donării:",
-	"Sarcinile de donare [seed] au o prioritate mai mare decît cele de descărcare",
-	"Cînd µTorrent atinge obiectivul de donare",
-	"Limitează viteza de încărcare la (KB/s): [0: stop]",
-	"Activează Planificatorul",
-	"Tabela Planificatorului",
-	"Setările Planificatorului",
-	"Limita vitezei de încărcare (KB/s):",
-	"Limita vitezei de descărcare (KB/s):",
-	"Dezactivează DHT la închidere",
-	"Activează Interfața Web",
-	"Autentificare",
-	"Utilizator:",
-	"Parolă:",
-	"Activează contul oaspete folosind utilizatorul:",
-	"Conectivitate",
-	"Port de ascultare alternativ (implicitul e cel de conectare):",
-	"Restricționează accesul adreselor IP (separă intrările multiple cu virgulă):",
-	"Opțiuni Avansate [ATENȚIE: Nu le modificați!]",
-	"Etichete Persistente [Separați etichetele multiple cu caracterul | ]",
-	"Setări de Bază ale Cașului [cache]",
-	"Cașul discului e folosit pt. a păstra în memorie datele accesate frecvent pt. a reduce nr. de citiri și scrieri pe hardisc. µTorrent administrează de obicei cașul în mod automat, dar puteți schimba acest comportament modificînd setările.",
-	"Ignoră mărimea automată a cașului și specific-o manual (MB):",
-	"Diminuează folosirea memoriei cînd cașul nu e necesar",
-	"Setări Avansate ale Cașului",
-	"Activează cașarea [caching] scrierilor pe hardisc",
-	"Scrie blocurile neatinse la fiecare 2 minute",
-	"Scrie imediat părțile finalizate",
-	"Activează cașarea citirilor de pe hardisc",
-	"Dezactivează cașarea citirilor dacă viteza de încărcare e mică",
-	"Înlătură blocurile vechi din caș",
-	"Crește mărimea automată a cașului cînd e necesar",
-	"Dezactivează cașarea scrierilor pe hardisc",
-	"Dezactivează cașarea citirilor de pe hardisc",
-	"Proprietățile Torentului",
-	"OK",
-	"Anulează",
-	"Trackere (separați-le cu o linie goală)",
-	"Setările Lățimii de Bandă",
-	"Viteza Maximă de Încărcare (KB/s): [0: implicită]",
-	"Viteza Maximă de Descărcare (KB/s): [0: implicită]",
-	"Numărul de Sloturi de Încărcare: [0: implicit]",
-	"Donează atîta timp cît",
-	"Ignoră setările implicite",
-	"Raportul e:  <=",
-	"%  sau donarea e:",
-	"Alte Setări",
-	"Donare Inițială",
-	"Activează DHT",
-	"Sch. de Parteneri",
-	"Realizat",
-	"Nume",
-	"%",
-	"Prioritate",
-	"Mărime",
-	"salt",
-	"scăzută",
-	"normală",
-	"crescută",
-	"Descărcat:",
-	"Încărcat:",
-	"Donatori:",
-	"Rămas:",
-	"Viteza Descărcării:",
-	"Viteza Încărcării:",
-	"Parteneri:",
-	"Raport [ratio]",
-	"Haș:",
-	"Transfer",
-	"%d din %d conectați (%d în roi)",
-	"D:%s Î:%s - %s",
-	"Arată Lista de Categorii",
-	"Arată Informații Detaliate",
-	"Nu Descărca",
-	"Prioritate Înaltă",
-	"Prioritate Scăzută",
-	"Prioritate Normală",
-	"Șterge Datele Descărcate",
-	"Forțează Reverificarea",
-	"Forțează Pornirea",
-	"Etichetă",
-	"Pauză",
-	"Proprietăți",
-	"Șterge",
-	"Șterge",
-	"Start",
-	"Stop",
-	"Active",
-	"Toate",
-	"Terminate",
-	"În Desfășurare",
-	"Inactive",
-	"Fără Etichetă",
-	"||Disponibilitate||Disponibilitate",
-	"Progres",
-	"Descărcat",
-	"Descărcare",
-	"Estimat",
-	"Etichetă",
-	"Nume",
-	"Rang",
-	"Parteneri",
-	"Rămas",
-	"Donatori",
-	"Donatori/Parteneri",
-	"Raport",
-	"Mărime",
-	"Stare",
-	"Încărcat",
-	"Încărcare",
-	"Sigur doriți să înlăturați cele %d torente selectate și datele descărcate?",
-	"Sigur doriți să înlăturați torentul selectat și datele descărcate?",
-	"Sigur doriți să înlăturați cele %d torente selectate?",
-	"Sigur doriți să înlăturați torentul selectat?",
-	"Verificat %:.1d%%",
-	"Descarc",
-	"Eroare: %s",
-	"Terminat",
-	"Pauzat",
-	"Pus în Coadă",
-	"Donez",
-	"Oprit",
-	"Introduceți Eticheta",
-	"Introduceți eticheta nouă pentru torentele selectate:",
-	"Etichetă Nouă...",
-	"Înlătură Eticheta",
-	"Generalități||Trackere||Parteneri||Părți||Fișiere||Viteză||Jurnal||",
-	"Deschide Torent",
-	"Pauză",
-	"Preferințe",
-	"Șterge",
-	"Start",
-	"Stop",
-	"GB",
-	"KB",
-	"MB",
-	"Avansate",
-	"Lățime de Bandă",
-	"Conexiune",
-	"Cașul Discului",
-	"Dosare",
-	"Generale",
-	"Planificator",
-	"Coada",
-	"BitTorrent",
-	"Web UI",
-	"Limită de Transfer",
-	"Dezactivată||Activată||Forțată||",
-	"(nimic)||Socks4||Socks5||HTTPS||HTTP||",
-	"Încărcări||Descărcări||Încărcări + Descărcări||",
-	"MB||GB||",
-	"1||2||5||7||10||14||15||20||21||28||30||31||",
-	"Nume",
-	"Valoare",
-	"Lun||Mar||Mie||Joi||Vin||Sîm||Dum||",
-	"Luni||Marți||Miercuri||Joi||Vineri||Sîmbătă||Duminică||",
-	"Viteză Max",
-	"Viteză Max - Folosește limitările lățimii de bandă normale globale",
-	"Limitare",
-	"Limitare - Folosește limitările lățimii de bandă specificate de planificator",
-	"Doar Donare",
-	"Doar Donare - Doar încarcă date (inclusiv incomplete)",
-	"Închidere",
-	"Închidere - Oprește toate torentele care nu sînt forțate",
-	"<= %d ore",
-	"(Ignoră)",
-	"<= %d minute",
-	"%dd %dh",
-	"%dh %dm",
-	"%dm %ds",
-	"%ds",
-	"%dw %dd",
-	"%dy %dw"
-], lang_code = "ro";
+	  "Fișiere Torent||*.torrent||Toate Fișierele (*.*)||*.*||"
+	, "OK"
+	, "Anulează"
+	, "Aplică"
+	, "Preferințe"
+	, "Limbă:"
+	, "Confidențialitate"
+	, "Caută automat actualizări"
+	, "Actualizează și la versiunile beta"
+	, "Trimite informații anonime la căutarea actualizărilor"
+	, "La Descărcare"
+	, "Atașează .!ut la fișierele incomplete"
+	, "Prealocă toate fișierele"
+	, "Interzice veghea [standby] cînd sînt torente active"
+	, "Confirmare la ștergerea torentelor"
+	, "Culoare de fundal alternantă"
+	, "Arată viteza curentă în bara de titlu"
+	, "La Adăugarea Torentelor"
+	, "Nu porni automat descărcarea"
+	, "Locul Fișierelor Descărcate"
+	, "Pune descărcările noi în:"
+	, "Arată dialogul la adăugare manuală"
+	, "Mută descărcările terminate în:"
+	, "Atașează eticheta torentului"
+	, "Mută doar din dosarul implicit de descărcare"
+	, "Locul fișierelor torent"
+	, "Stochează torentele în:"
+	, "Mută torentele sarcinilor terminate în:"
+	, "Încarcă automat torentele din:"
+	, "Șterge torentele încărcate"
+	, "Portul de Ascultare"
+	, "Portul folosit pentru conexiunile intrînde:"
+	, "Port Aleator"
+	, "Port aleator la fiecare pornire"
+	, "Activează maparea UPnP"
+	, "Activează maparea NAT-PMP"
+	, "Serverul Proxy"
+	, "Tip:"
+	, "Proxy:"
+	, "Port:"
+	, "Autentificare"
+	, "Utilizator:"
+	, "Parolă:"
+	, "Rezolvă numele gazdelor prin proxy"
+	, "Folosește proxy pt. conexiunile partener-la-partener [peer-to-peer]"
+	, "Adaugă la excepțiile paravanului"
+	, "Limitarea Globală a Vitezei de Încărcare"
+	, "Vit. Max de Înc. (KB/s): [0: nelimitată]"
+	, "Automată"
+	, "Vit. de Încărcare cînd nu se descarcă (KB/s):"
+	, "Limitarea Globală a Vitezei de Descărcare"
+	, "Vit. Max de Descărcare (KB/s): [0: nelimitată]"
+	, "Numărul de Conexiuni"
+	, "Numărul maxim global de conexiuni:"
+	, "Numărul maxim de parteneri conectați per torent:"
+	, "Numărul de sloturi de încărcare per torent:"
+	, "Folosește sloturi de încărcare suplimentare cînd vit. de încărcare e < 90%"
+	, "Facilități BitTorrent Obișnuite"
+	, "Activ. DHT (Tabelă Hașuri Distrib.)"
+	, "Solicită info de răzuire [scrape]"
+	, "Activează DHT pt. torentele noi"
+	, "Permite schimbul de parteneri [PEX]"
+	, "Descoperă partenerii locali"
+	, "Limitează banda partenerilor locali"
+	, "IP / NumeGazdă raportate trackerului:"
+	, "Criptarea Protocolului BitTorrent"
+	, "La Ieșire:"
+	, "Permite conex. intrînde necriptate"
+	, "Activează Limita de Transfer"
+	, "Setările Limitei"
+	, "Oprește torentele cînd:"
+	, "interval"
+	, "în ultimele"
+	, "zile"
+	, "Setările Cozii de Așteptare"
+	, "Numărul maxim de torente active (încărcate sau descărcate):"
+	, "Numărul maxim de descărcări active:"
+	, "Donează atîta timp cît"
+	, "Raportul e:  <="
+	, "%  sau timpul donării:"
+	, "Sarcinile de donare [seed] au o prioritate mai mare decît cele de descărcare"
+	, "Cînd µTorrent atinge obiectivul de donare"
+	, "Limitează viteza de încărcare la (KB/s): [0: stop]"
+	, "Activează Planificatorul"
+	, "Tabela Planificatorului"
+	, "Setările Planificatorului"
+	, "Limita vitezei de încărcare (KB/s):"
+	, "Limita vitezei de descărcare (KB/s):"
+	, "Dezactivează DHT la închidere"
+	, "Activează Interfața Web"
+	, "Autentificare"
+	, "Utilizator:"
+	, "Parolă:"
+	, "Activează contul oaspete folosind utilizatorul:"
+	, "Conectivitate"
+	, "Port de ascultare alternativ (implicitul e cel de conectare):"
+	, "Restricționează accesul adreselor IP (separă intrările multiple cu virgulă):"
+	, "Opțiuni Avansate [ATENȚIE: Nu le modificați!]"
+	, "Etichete Persistente [Separați etichetele multiple cu caracterul | ]"
+	, "Motoare de Căutare [Format: nume| URL]"
+	, "Setări de Bază ale Cașului [cache]"
+	, "Cașul discului e folosit pt. a păstra în memorie datele accesate frecvent pt. a reduce nr. de citiri și scrieri pe hardisc. µTorrent administrează de obicei cașul în mod automat, dar puteți schimba acest comportament modificînd setările."
+	, "Ignoră mărimea automată a cașului și specific-o manual (MB):"
+	, "Diminuează folosirea memoriei cînd cașul nu e necesar"
+	, "Setări Avansate ale Cașului"
+	, "Activează cașarea [caching] scrierilor pe hardisc"
+	, "Scrie blocurile neatinse la fiecare 2 minute"
+	, "Scrie imediat părțile finalizate"
+	, "Activează cașarea citirilor de pe hardisc"
+	, "Dezactivează cașarea citirilor dacă viteza de încărcare e mică"
+	, "Înlătură blocurile vechi din caș"
+	, "Crește mărimea automată a cașului cînd e necesar"
+	, "Dezactivează cașarea scrierilor pe hardisc"
+	, "Dezactivează cașarea citirilor de pe hardisc"
+	, "Proprietățile Torentului"
+	, "Trackere (separați-le cu o linie goală)"
+	, "Setările Lățimii de Bandă"
+	, "Viteza Maximă de Încărcare (KB/s): [0: implicită]"
+	, "Viteza Maximă de Descărcare (KB/s): [0: implicită]"
+	, "Numărul de Sloturi de Încărcare: [0: implicit]"
+	, "Donează atîta timp cît"
+	, "Ignoră setările implicite"
+	, "Raportul e:  <="
+	, "%  sau donarea e:"
+	, "Alte Setări"
+	, "Donare Inițială"
+	, "Activează DHT"
+	, "Sch. de Parteneri"
+	, "Realizat"
+	, "Nume"
+	, "%"
+	, "Prioritate"
+	, "Mărime"
+	, "salt"
+	, "scăzută"
+	, "normală"
+	, "crescută"
+	, "Descărcat:"
+	, "Încărcat:"
+	, "Donatori:"
+	, "Rămas:"
+	, "Viteza Descărcării:"
+	, "Viteza Încărcării:"
+	, "Parteneri:"
+	, "Raport [ratio]"
+	, "Haș:"
+	, "Transfer"
+	, "%d din %d conectați (%d în roi)"
+	, "D:%s Î:%s - %s"
+	, "Arată Lista de Categorii"
+	, "Arată Informații Detaliate"
+	, "Resetează"
+	, "Nu Descărca"
+	, "Prioritate Înaltă"
+	, "Prioritate Scăzută"
+	, "Prioritate Normală"
+	, "Șterge Datele Descărcate"
+	, "Forțează Reverificarea"
+	, "Forțează Pornirea"
+	, "Etichetă"
+	, "Pauză"
+	, "Proprietăți"
+	, "Șterge"
+	, "Șterge"
+	, "Start"
+	, "Stop"
+	, "Active"
+	, "Toate"
+	, "Terminate"
+	, "În Desfășurare"
+	, "Inactive"
+	, "Fără Etichetă"
+	, "||Disponibilitate||Disponibilitate"
+	, "Progres"
+	, "Descărcat"
+	, "Descărcare"
+	, "Estimat"
+	, "Etichetă"
+	, "Nume"
+	, "Rang"
+	, "Parteneri"
+	, "Rămas"
+	, "Donatori"
+	, "Donatori/Parteneri"
+	, "Raport"
+	, "Mărime"
+	, "Stare"
+	, "Încărcat"
+	, "Încărcare"
+	, "Sigur doriți să înlăturați cele %d torente selectate și datele descărcate?"
+	, "Sigur doriți să înlăturați torentul selectat și datele descărcate?"
+	, "Sigur doriți să înlăturați cele %d torente selectate?"
+	, "Sigur doriți să înlăturați torentul selectat?"
+	, "Verificat %:.1d%%"
+	, "Descarc"
+	, "Eroare: %s"
+	, "Terminat"
+	, "Pauzat"
+	, "Pus în Coadă"
+	, "Donare pusă în coadă"
+	, "Donez"
+	, "Oprit"
+	, "Introduceți Eticheta"
+	, "Introduceți eticheta nouă pentru torentele selectate:"
+	, "Etichetă Nouă..."
+	, "Înlătură Eticheta"
+	, "Generalități||Trackere||Parteneri||Părți||Fișiere||Viteză||Jurnal||"
+	, "Deschide Torent"
+	, "Pauză"
+	, "Preferințe"
+	, "Șterge"
+	, "Start"
+	, "Stop"
+	, "GB"
+	, "KB"
+	, "MB"
+	, "Avansate"
+	, "Lățime de Bandă"
+	, "Conexiune"
+	, "Cașul Discului"
+	, "Dosare"
+	, "Generale"
+	, "Planificator"
+	, "Coada"
+	, "BitTorrent"
+	, "Web UI"
+	, "Limită de Transfer"
+	, "Dezactivată||Activată||Forțată||"
+	, "(nimic)||Socks4||Socks5||HTTPS||HTTP||"
+	, "Încărcări||Descărcări||Încărcări + Descărcări||"
+	, "MB||GB||"
+	, "1||2||5||7||10||14||15||20||21||28||30||31||"
+	, "Nume"
+	, "Valoare"
+	, "Lun||Mar||Mie||Joi||Vin||Sîm||Dum||"
+	, "Luni||Marți||Miercuri||Joi||Vineri||Sîmbătă||Duminică||"
+	, "Viteză Max"
+	, "Viteză Max - Folosește limitările lățimii de bandă normale globale"
+	, "Limitare"
+	, "Limitare - Folosește limitările lățimii de bandă specificate de planificator"
+	, "Doar Donare"
+	, "Doar Donare - Doar încarcă date (inclusiv incomplete)"
+	, "Închidere"
+	, "Închidere - Oprește toate torentele care nu sînt forțate"
+	, "<= %d ore"
+	, "(Ignoră)"
+	, "<= %d minute"
+	, "%dd %dh"
+	, "%dh %dm"
+	, "%dm %ds"
+	, "%ds"
+	, "%dw %dd"
+	, "%dy %dw"
+];

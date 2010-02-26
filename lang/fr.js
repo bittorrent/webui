@@ -1,253 +1,255 @@
 var lang = [
-	"Fichiers torrent||*.torrent||Tous (*.*)||*.*||",
-	"Préférences",
-	"OK",
-	"Annuler",
-	"Langue:",
-	"Privé",
-	"Vérification des mises à jour disponibles",
-	"Mise à jour par des versions \"Bêta\"",
-	"Envoyer des informations anonymes lors de la vérification des mises à jour",
-	"Téléchargement",
-	"Apposer .!ut aux fichiers incomplets",
-	"Pré-allouer tous les fichiers",
-	"Empêcher la mise en veille de l'ordinateur",
-	"Avertir pour annuler les torrents",
-	"Couleurs de fond de liste alternées",
-	"Taux dans la barre de titre",
-	"Ajout des Torrents",
-	"Ne pas télécharger automatiquement",
-	"Destination des fichiers téléchargés",
-	"Dossier de réception",
-	"Afficher la fenêtre de dialogue",
-	"Complets, déplacer les fichiers vers:",
-	"Apposer une étiquette",
-	"Déplacer seulement à partir du dossier par défaut",
-	"Destination des .torrents",
-	"Sauvegarder les .torrents dans:",
-	"Déplacer les .torrents des téléchargements terminés vers:",
-	"Charger automatiquement depuis:",
-	"Supprimer les .torrents chargés",
-	"Port d'écoute",
-	"Port utilisé pour les connexions entrantes:",
-	"Port aléatoire",
-	"Port aléatoire à chaque démarrage",
-	"Activer le mappage de port UPnP",
-	"Activer le mappage de port NAT-PMP",
-	"Serveur Proxy",
-	"Type:",
-	"Proxy:",
-	"Port:",
-	"Authentification",
-	"Identifiant:",
-	"M. passe:",
-	"Résoudre les noms d'hôtes par Proxy",
-	"Utiliser un serveur proxy pour les connexions clients-à-clients",
-	"Ajout aux exceptions du Pare-feu",
-	"Limitation globale du taux d'émission",
-	"Taux max. en émission (ko/s): [0: illimité]",
-	"Automatique",
-	"Taux d'émission alternatif sans téléchargement (ko/s):",
-	"Limitation globale du taux de réception",
-	"Taux max. en réception (ko/s): [0: illimité]",
-	"Nombre de connexions",
-	"Nombre global et maximum de connexions:",
-	"Nombre maximum de clients connectés par torrent:",
-	"Nombre de slots d'émission par torrent:",
-	"Ajouter des slots d'émission lorsque le taux d'émission < 90%",
-	"Fonctions BitTorrent basiques",
-	"Activer le support réseau des DHT",
-	"Infos de Scrape par le Tracker",
-	"Activer DHT pour les nouv. torrents",
-	"Activer l'échange de clients",
-	"Activer la recherche locale de clients",
-	"Limiter la bande passante locale",
-	"IP/Nom d'hôte à rapporter au Tracker:",
-	"Protocole d'encryptage",
-	"Sortant:",
-	"Connexions entrantes héritées",
-	"Activer le plafonnement",
-	"Paramètres du plafonnement",
-	"Arrêter les torrents lorsqu'ils:",
-	"atteignent",
-	"dans le(s)",
-	"jour(s)",
-	"Options de file d'attente",
-	"Nombre maximum de torrents actifs (émission et réception):",
-	"Nombre maximum de téléchargements actifs:",
-	"Paramètres de partage [Valeurs par défaut]",
-	"Par ratio <=",
-	"%     ou en temps",
-	"Donner la priorité aux tâches de partage",
-	"Définition des limites de partage",
-	"Limiter l'émission à (ko/s): [0: stop]",
-	"Activer le planificateur",
-	"Tableau du planificateur",
-	"Paramètres du planificateur",
-	"Taux d'émission limité (ko/s):",
-	"Taux de réception limité (ko/s):",
-	"Désactiver les DHT à l'arrêt",
-	"Activer le plugin WebUI",
-	"Authentification",
-	"Identifiant:",
-	"M. passe:",
-	"Activer le compte invité avec pour identifiant:",
-	"Connectivité",
-	"Port d'écoute alternatif [Port de connexion par défaut]:",
-	"Accès restreint aux adresses IP suivantes [Séparez les IPs par une virgule]",
-	"Options avancées [ATTENTION: modifications déconseillées]",
-	"Étiquettes permanentes [Séparez les multiples étiquettes avec le caractère | ]",
-	"Paramètres basics du cache",
-	"Le cache disque est nécessaire pour accéder fréquemment aux données en mémoire afin de réduire le nombre de lectures et d'écritures sur le disque dur. Vous pouvez modifier son comportement en modifiant les quelques paramètres ci-dessous.",
-	"Définir manuellement la taille du cache (Mo):",
-	"Réduire l'usage de la mémoire lorsque le cache n'est pas nécessaire",
-	"Paramètres avancés du cache",
-	"Activer le cache disque en écriture",
-	"Écriture des blocs intacts toutes les 2 minutes",
-	"Écriture immédiate des pièces terminées",
-	"Activer le cache disque en lecture",
-	"Désactiver le cache en lecture si le taux d'émission est faible",
-	"Supprimer les anciens blocs du cache",
-	"Augmenter automatiquement la taille du cache si celui-ci devient insuffisant",
-	"Désactiver le cache disque Windows en écriture",
-	"Désactiver le cache disque Windows en lecture",
-	"Propriétés du torrent",
-	"OK",
-	"Annuler",
-	"Trackers (... chacun séparé par une ligne vierge)",
-	"Paramètres de la bande passante",
-	"Taux maximum en émission (ko/s): [0: défaut]",
-	"Taux maximum en réception (ko/s): [0: défaut]",
-	"Nombre de slots d'émission: [0: défaut]",
-	"Paramètres de partage",
-	"Modifier les paramètres",
-	"Par ratio <=",
-	"%     ou en temps",
-	"Autres options",
-	"Premier partage",
-	"Activer les DHT",
-	"Échange de clients",
-	"Reçu",
-	"Nom",
-	"%",
-	"Priorité",
-	"Taille",
-	"ignoré",
-	"basse",
-	"normale",
-	"haute",
-	"Reçu:",
-	"Partagé:",
-	"Sources:",
-	"Temps estimé:",
-	"Réception:",
-	"Émission:",
-	"Clients:",
-	"Ratio:",
-	"Hash:",
-	"Transfert",
-	"%d de %d connectés (%d visibles)",
-	"Reçu: %s Émis: %s - %s",
-	"Afficher la liste des catégories",
-	"Afficher les informations détaillées",
-	"Ne pas télécharger",
-	"Priorité Haute",
-	"Priorité Basse",
-	"Priorité Normale",
-	"Supprimer fichiers",
-	"Vérification forcée",
-	"Démarrage forcé",
-	"Étiquette",
-	"Suspendre",
-	"Propriétés",
-	"Annuler",
-	"Annuler et...",
-	"Démarrer",
-	"Arrêter",
-	"Actif",
-	"Tous",
-	"Terminé",
-	"En cours",
-	"Inactif",
-	"Sans étiquette",
-	"||Disponibilité||Disponibilité",
-	"%",
-	"Reçu",
-	"Réception",
-	"Estimé",
-	"Étiquette",
-	"Nom",
-	"#",
-	"Clients",
-	"Restant",
-	"Sources",
-	"Sources/Clients",
-	"Ratio",
-	"Taille",
-	"Statut",
-	"Partagé",
-	"Émission",
-	"Souhaitez-vous vraiment annuler les %d torrents sélectionnés et supprimer toutes les données associées ?",
-	"Souhaitez-vous vraiment annuler le torrent sélectionné et supprimer toutes les données associées ?",
-	"Souhaitez-vous vraiment annuler les %d torrents sélectionnés ?",
-	"Souhaitez-vous vraiment annuler le torrent sélectionné ?",
-	"Vérifié %:.1d%%",
-	"Téléchargement",
-	"Erreur: %s",
-	"Terminé",
-	"Suspendu",
-	"En attente",
-	"Partage",
-	"Arrêté",
-	"Création d'une nouvelle étiquette",
-	"Entrez l'étiquette pour les torrents sélectionnés:",
-	"Nouvelle étiquette...",
-	"Supprimer l'étiquette",
-	"Général||Trackers||Clients||Pièces||Fichiers||Graphiques||Journal||",
-	"Ajouter un torrent",
-	"Suspendre",
-	"Préférences",
-	"Annuler",
-	"Démarrer",
-	"Arrêter",
-	"Go",
-	"ko",
-	"Mo",
-	"Avancées",
-	"Bande passante",
-	"Connexion",
-	"Cache disque",
-	"Dossiers",
-	"Générales",
-	"Planificateur",
-	"File d'attente",
-	"BitTorrent",
-	"Plugin WebUI",
-	"Plafond de transfert",
-	"Désactivé||Activé||Forcé||",
-	"(aucun)||Socks4||Socks5||HTTPS||HTTP||",
-	"Émissions||Réceptions||Émissions + Réceptions||",
-	"Mo||Go||",
-	"1||2||5||7||10||14||15||20||21||28||30||31||",
-	"Nom",
-	"Valeur",
-	"Lun||Mar||Mer||Jeu||Ven||Sam||Dim||",
-	"Lundi||Mardi||Mercredi||Jeudi||Vendredi||Samedi||Dimanche||",
-	"Illimité",
-	"Illimité - Utilise pleinement la bande passante spécifiée par le planificateur",
-	"Limité",
-	"Limité - Utilise les limitations de bande passante spécifiées par le planificateur",
-	"Partage seulement",
-	"Partage seulement - Uniquement en partage de données (inclus les torrents incomplets)",
-	"Arrêté",
-	"Arrêté - Arrêt de tous les torrents si ceux-ci ne sont pas en mode forcé",
-	"<= %d heures",
-	"(Ignoré)",
-	"<= %d minutes",
-	"%dj %dh",
-	"%dh %dm",
-	"%dm %ds",
-	"%ds",
-	"%dsem %dj",
-	"%dan %dsem"
-], lang_code = "fr";
+	  "Fichiers torrent||*.torrent||Tous (*.*)||*.*||"
+	, "OK"
+	, "Annuler"
+	, "Appliquer"
+	, "Préférences"
+	, "Langue:"
+	, "Privé"
+	, "Vérification des mises à jour disponibles"
+	, "Mise à jour par des versions \"Bêta\""
+	, "Envoyer des informations anonymes lors de la vérification des mises à jour"
+	, "Téléchargement"
+	, "Apposer .!ut aux fichiers incomplets"
+	, "Pré-allouer tous les fichiers"
+	, "Empêcher la mise en veille de l'ordinateur"
+	, "Avertir pour annuler les torrents"
+	, "Couleurs de fond de liste alternées"
+	, "Taux dans la barre de titre"
+	, "Ajout des Torrents"
+	, "Ne pas télécharger automatiquement"
+	, "Destination des fichiers téléchargés"
+	, "Dossier de réception"
+	, "Afficher la fenêtre de dialogue"
+	, "Complets, déplacer les fichiers vers:"
+	, "Apposer une étiquette"
+	, "Déplacer seulement à partir du dossier par défaut"
+	, "Destination des .torrents"
+	, "Sauvegarder les .torrents dans:"
+	, "Déplacer les .torrents des téléchargements terminés vers:"
+	, "Charger automatiquement depuis:"
+	, "Supprimer les .torrents chargés"
+	, "Port d'écoute"
+	, "Port utilisé pour les connexions entrantes:"
+	, "Port aléatoire"
+	, "Port aléatoire à chaque démarrage"
+	, "Activer le mappage de port UPnP"
+	, "Activer le mappage de port NAT-PMP"
+	, "Serveur Proxy"
+	, "Type:"
+	, "Proxy:"
+	, "Port:"
+	, "Authentification"
+	, "Identifiant:"
+	, "M. passe:"
+	, "Résoudre les noms d'hôtes par Proxy"
+	, "Utiliser un serveur proxy pour les connexions clients-à-clients"
+	, "Ajout aux exceptions du Pare-feu"
+	, "Limitation globale du taux d'émission"
+	, "Taux max. en émission (ko/s): [0: illimité]"
+	, "Automatique"
+	, "Taux d'émission alternatif sans téléchargement (ko/s):"
+	, "Limitation globale du taux de réception"
+	, "Taux max. en réception (ko/s): [0: illimité]"
+	, "Nombre de connexions"
+	, "Nombre global et maximum de connexions:"
+	, "Nombre maximum de clients connectés par torrent:"
+	, "Nombre de slots d'émission par torrent:"
+	, "Ajouter des slots d'émission lorsque le taux d'émission < 90%"
+	, "Fonctions BitTorrent basiques"
+	, "Activer le support réseau des DHT"
+	, "Infos de Scrape par le Tracker"
+	, "Activer DHT pour les nouv. torrents"
+	, "Activer l'échange de clients"
+	, "Activer la recherche locale de clients"
+	, "Limiter la bande passante locale"
+	, "IP/Nom d'hôte à rapporter au Tracker:"
+	, "Protocole d'encryptage"
+	, "Sortant:"
+	, "Connexions entrantes héritées"
+	, "Activer le plafonnement"
+	, "Paramètres du plafonnement"
+	, "Arrêter les torrents lorsqu'ils:"
+	, "atteignent"
+	, "dans le(s)"
+	, "jour(s)"
+	, "Options de file d'attente"
+	, "Nombre maximum de torrents actifs (émission et réception):"
+	, "Nombre maximum de téléchargements actifs:"
+	, "Paramètres de partage [Valeurs par défaut]"
+	, "Par ratio <="
+	, "%     ou en temps"
+	, "Donner la priorité aux tâches de partage"
+	, "Définition des limites de partage"
+	, "Limiter l'émission à (ko/s): [0: stop]"
+	, "Activer le planificateur"
+	, "Tableau du planificateur"
+	, "Paramètres du planificateur"
+	, "Taux d'émission limité (ko/s):"
+	, "Taux de réception limité (ko/s):"
+	, "Désactiver les DHT à l'arrêt"
+	, "Activer le plugin WebUI"
+	, "Authentification"
+	, "Identifiant:"
+	, "M. passe:"
+	, "Activer le compte invité avec pour identifiant:"
+	, "Connectivité"
+	, "Port d'écoute alternatif [Port de connexion par défaut]:"
+	, "Accès restreint aux adresses IP suivantes [Séparez les IPs par une virgule]"
+	, "Options avancées [ATTENTION: modifications déconseillées]"
+	, "Étiquettes permanentes [Séparez les multiples étiquettes avec le caractère | ]"
+	, "Moteurs de recherche [Format: nom|url]"
+	, "Paramètres basics du cache"
+	, "Le cache disque est nécessaire pour accéder fréquemment aux données en mémoire afin de réduire le nombre de lectures et d'écritures sur le disque dur. Vous pouvez modifier son comportement en modifiant les quelques paramètres ci-dessous."
+	, "Définir manuellement la taille du cache (Mo):"
+	, "Réduire l'usage de la mémoire lorsque le cache n'est pas nécessaire"
+	, "Paramètres avancés du cache"
+	, "Activer le cache disque en écriture"
+	, "Écriture des blocs intacts toutes les 2 minutes"
+	, "Écriture immédiate des pièces terminées"
+	, "Activer le cache disque en lecture"
+	, "Désactiver le cache en lecture si le taux d'émission est faible"
+	, "Supprimer les anciens blocs du cache"
+	, "Augmenter automatiquement la taille du cache si celui-ci devient insuffisant"
+	, "Désactiver le cache disque Windows en écriture"
+	, "Désactiver le cache disque Windows en lecture"
+	, "Propriétés du torrent"
+	, "Trackers (... chacun séparé par une ligne vierge)"
+	, "Paramètres de la bande passante"
+	, "Taux maximum en émission (ko/s): [0: défaut]"
+	, "Taux maximum en réception (ko/s): [0: défaut]"
+	, "Nombre de slots d'émission: [0: défaut]"
+	, "Paramètres de partage"
+	, "Modifier les paramètres"
+	, "Par ratio <="
+	, "%     ou en temps"
+	, "Autres options"
+	, "Premier partage"
+	, "Activer les DHT"
+	, "Échange de clients"
+	, "Reçu"
+	, "Nom"
+	, "%"
+	, "Priorité"
+	, "Taille"
+	, "ignoré"
+	, "basse"
+	, "normale"
+	, "haute"
+	, "Reçu:"
+	, "Partagé:"
+	, "Sources:"
+	, "Temps estimé:"
+	, "Réception:"
+	, "Émission:"
+	, "Clients:"
+	, "Ratio:"
+	, "Hash:"
+	, "Transfert"
+	, "%d de %d connectés (%d visibles)"
+	, "Reçu: %s Émis: %s - %s"
+	, "Afficher la liste des catégories"
+	, "Afficher les informations détaillées"
+	, "Réinitialiser"
+	, "Ne pas télécharger"
+	, "Priorité Haute"
+	, "Priorité Basse"
+	, "Priorité Normale"
+	, "Supprimer fichiers"
+	, "Vérification forcée"
+	, "Démarrage forcé"
+	, "Étiquette"
+	, "Suspendre"
+	, "Propriétés"
+	, "Annuler"
+	, "Annuler et..."
+	, "Démarrer"
+	, "Arrêter"
+	, "Actif"
+	, "Tous"
+	, "Terminé"
+	, "En cours"
+	, "Inactif"
+	, "Sans étiquette"
+	, "||Disponibilité||Disponibilité"
+	, "%"
+	, "Reçu"
+	, "Réception"
+	, "Estimé"
+	, "Étiquette"
+	, "Nom"
+	, "#"
+	, "Clients"
+	, "Restant"
+	, "Sources"
+	, "Sources/Clients"
+	, "Ratio"
+	, "Taille"
+	, "Statut"
+	, "Partagé"
+	, "Émission"
+	, "Souhaitez-vous vraiment annuler les %d torrents sélectionnés et supprimer toutes les données associées ?"
+	, "Souhaitez-vous vraiment annuler le torrent sélectionné et supprimer toutes les données associées ?"
+	, "Souhaitez-vous vraiment annuler les %d torrents sélectionnés ?"
+	, "Souhaitez-vous vraiment annuler le torrent sélectionné ?"
+	, "Vérifié %:.1d%%"
+	, "Téléchargement"
+	, "Erreur: %s"
+	, "Terminé"
+	, "Suspendu"
+	, "En attente"
+	, "Partage en attente"
+	, "Partage"
+	, "Arrêté"
+	, "Création d'une nouvelle étiquette"
+	, "Entrez l'étiquette pour les torrents sélectionnés:"
+	, "Nouvelle étiquette..."
+	, "Supprimer l'étiquette"
+	, "Général||Trackers||Clients||Pièces||Fichiers||Graphiques||Journal||"
+	, "Ajouter un torrent"
+	, "Suspendre"
+	, "Préférences"
+	, "Annuler"
+	, "Démarrer"
+	, "Arrêter"
+	, "Go"
+	, "ko"
+	, "Mo"
+	, "Avancées"
+	, "Bande passante"
+	, "Connexion"
+	, "Cache disque"
+	, "Dossiers"
+	, "Générales"
+	, "Planificateur"
+	, "File d'attente"
+	, "BitTorrent"
+	, "Plugin WebUI"
+	, "Plafond de transfert"
+	, "Désactivé||Activé||Forcé||"
+	, "(aucun)||Socks4||Socks5||HTTPS||HTTP||"
+	, "Émissions||Réceptions||Émissions + Réceptions||"
+	, "Mo||Go||"
+	, "1||2||5||7||10||14||15||20||21||28||30||31||"
+	, "Nom"
+	, "Valeur"
+	, "Lun||Mar||Mer||Jeu||Ven||Sam||Dim||"
+	, "Lundi||Mardi||Mercredi||Jeudi||Vendredi||Samedi||Dimanche||"
+	, "Illimité"
+	, "Illimité - Utilise pleinement la bande passante spécifiée par le planificateur"
+	, "Limité"
+	, "Limité - Utilise les limitations de bande passante spécifiées par le planificateur"
+	, "Partage seulement"
+	, "Partage seulement - Uniquement en partage de données (inclus les torrents incomplets)"
+	, "Arrêté"
+	, "Arrêté - Arrêt de tous les torrents si ceux-ci ne sont pas en mode forcé"
+	, "<= %d heures"
+	, "(Ignoré)"
+	, "<= %d minutes"
+	, "%dj %dh"
+	, "%dh %dm"
+	, "%dm %ds"
+	, "%ds"
+	, "%dsem %dj"
+	, "%dan %dsem"
+];

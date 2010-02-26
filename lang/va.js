@@ -1,253 +1,255 @@
 var lang = [
-	"Torrents||*.torrent||Tots els archius (*.*)||*.*||",
-	"Preferències",
-	"Acceptar",
-	"Cancelar",
-	"Idioma:",
-	"Privacitat",
-	"Buscar actualisacions automàticament",
-	"Actualisar a versions beta",
-	"Enviar informació anònima en la comprovació de les actualisacions",
-	"Quan finalise la descàrrega",
-	"Afegir .!ut als archius incomplets",
-	"Preasignar tots els archius",
-	"Previndre standby si hi han torrents actius",
-	"Confirmar quan es borren torrents",
-	"Alternar el color del fondo de la llista",
-	"Mostrar la vel. en la barra de títul",
-	"A l'afegir Torrents",
-	"No començar la transferència automàticament",
-	"Carpeta d'archius descarregats",
-	"Posar les descàrregues en:",
-	"Mostrar sempre el dialec d'agregació manual",
-	"Moure descàrreges completes a:",
-	"Afegir l'etiqueta del torrent",
-	"Només moure des de la carpeta de descàrregues per defecte",
-	"Ubicació dels .torrents",
-	"Guardar .torrents en:",
-	"Moure .torrents de faenes acabades a:",
-	"Carregar automàticament .torrents desde:",
-	"Borrar .torrents carregats",
-	"Escoltar Port",
-	"Port utilisat per a conexions entrants:",
-	"Port aleatori",
-	"Seleccionar un port aleatori cuan inicies",
-	"Activar UPnP port mapping",
-	"Activar NAT-PMP port mapping",
-	"Servidor Proxy",
-	"Tipo:",
-	"Proxy:",
-	"Port:",
-	"Autentificació",
-	"Usuari:",
-	"Contrasenya:",
-	"Resoldre els hostnames a través del proxy",
-	"Utilisar un servidor proxy per a les conexions p2p",
-	"Afegir com excepció al Firewall de Windows",
-	"Llimitació de velocitat de pujada",
-	"Velocitat màxima de pujada (kB/s): [0: illimitat]",
-	"Automàtic",
-	"Alternar vel. de pujada quan no descarreges (kB/s):",
-	"Llimitació de velocitat de baixada",
-	"Vel. màx. de descàrrega (kB/s): [0: illimitat]",
-	"Número de Conexions:",
-	"Número màxim de conexions globals:",
-	"Número màxim de conexions per torrent:",
-	"Número de slots de pujada per torrent:",
-	"Utilisar slots extra si la velocitat de pujada es < 90%",
-	"Característiques basiques de Bittorrent",
-	"Activar xàrcia DHT",
-	"Demanar al tracker info. de scrape",
-	"Activar DHT per als nous torrents",
-	"Activar Intercanvi de Parelles",
-	"Activar Descobriment de Parelles Locals",
-	"Llímit d'ample de banda entre parelles locals",
-	"Informar de la IP/Hostname al tracker:",
-	"Protocol d'Encriptació",
-	"Ixent:",
-	"Permetre conexions entrants heredades",
-	"Enable Transfer Cap",
-	"Cap Settings",
-	"Stop torrents when:",
-	"reach",
-	"in the last",
-	"days",
-	"Config. de la coa",
-	"Número màxim de torrents actius (pujada o descàrrega):",
-	"Número màxim de descàrregues actives:",
-	"Compartir mentres [valors predeterminats]",
-	"Ratio es:  <=",
-	"%   o temps pujant es:",
-	"Faenes de compartició en més prioritat que les de descàrrega",
-	"Cuant µTorrent acabe de compartir",
-	"Llímit de vel. de pujada a: [0: parat]",
-	"Activar planificador",
-	"Taula de planificació",
-	"Preferències planificador",
-	"Velocitat de pujada (kB/s):",
-	"Velocitat de descàrrega (kB/s):",
-	"Desactivar DHT a l'apagar",
-	"Activar Web UI",
-	"Autentificació",
-	"Usuari:",
-	"Contrasenya:",
-	"Activar conte Convidat en nom d'usuari:",
-	"Conectivitat",
-	"Port d'escolta alternatiu (per defecte el port de conexió):",
-	"Restringir accés a les següents IP's (Separar entrades multiples en ,)",
-	"Opcions avançades [Atenció: No modificar!]",
-	"Etiquetes [Separa-les en un |]",
-	"Configuració basica de Cache",
-	"La cache de disc s'utilisa per a mantindre les senyes accedides constantment en la memòria per a reduir el número de llectures i escritures en el disc. µTorrent sol administrar la cache automàticament, pero pot canviar-ho des d'ací.",
-	"Especificar un tamany de cache manualment:",
-	"Reduir l'us de memòria quan no se necessita la cache",
-	"Configuració Avançada de  Cache",
-	"Activar cache d'escritures de disc",
-	"Escriure blocs intactes cada 2 minuts",
-	"Escriure peces acabades inmediatament",
-	"Activar cache de llectures de disc",
-	"Apagar cache de llectura si la velocitat de pujada es baixa",
-	"Eliminar blocs vells de la cache",
-	"Aumentar el tamany de la cache automàticament quan se necessite",
-	"Desactivar finestra cache d'escritures de disc",
-	"Desactivar finestra cache de llectures de disc",
-	"Propietats del Torrent",
-	"Acceptar",
-	"Cancelar",
-	"Trackers (Separa'ls posant una llínia buida)",
-	"Ajusts de l'Ample de Banda",
-	"Vel. Màxima de Pujada (kB/s): [0: defecte]",
-	"Vel. Màxima de Descàrrega (kB/s): [0: defecte]",
-	"Número de slots de pujada: [blanc: defecte]",
-	"Compartir mentres",
-	"Invalidar ajusts per defecte",
-	"Ratio es:  <=",
-	"%  o temps compartint es:",
-	"Atres Ajusts",
-	"Compartició Inicial",
-	"Activar DHT",
-	"Intercanvi de Parelles",
-	"Fet",
-	"Nom",
-	"%",
-	"Prioritat",
-	"Tamany",
-	"Botar",
-	"Baixa",
-	"Normal",
-	"Alta",
-	"Descarregat:",
-	"Pujat:",
-	"Origens:",
-	"Esperant:",
-	"Vel. Descàrrega:",
-	"Vel. Pujada:",
-	"Parelles:",
-	"Ratio:",
-	"Hash:",
-	"Transferència",
-	"%d de %d conectats (%d en l'eixam)",
-	"D:%s P:%s - %s",
-	"Mostrar Llista de Categories",
-	"Mostrar Llista Detallada",
-	"No Descarregar",
-	"Prioritat Alta",
-	"Prioritat Baixa",
-	"Prioritat Normal",
-	"Eliminar Senyes",
-	"Forçar Comprovació",
-	"Forçar Inici",
-	"Etiqueta",
-	"Pausa",
-	"Propietats",
-	"Eliminar",
-	"Eliminar i",
-	"Començar",
-	"Parar",
-	"Actiu",
-	"Tots",
-	"Completat",
-	"Descarregant",
-	"Inactiu",
-	"Sense Etiqueta",
-	"||Dispon.||Disponibilitat",
-	"Fet",
-	"Descarregat",
-	"Vel. Descàrrega",
-	"Temps restant",
-	"Etiqueta",
-	"Nom",
-	"#",
-	"Parelles",
-	"Esperant",
-	"Origens",
-	"Origens/Parelles",
-	"Ratio",
-	"Tamany",
-	"Estat",
-	"Pujat",
-	"Vel. Pujada",
-	"¿Estàs segur que vols eliminar els %d torrents seleccionats i les seues senyes?",
-	"¿Estàs segur que vols eliminar el torrent seleccionat i les seues senyes?",
-	"¿Estàs segur que vols eliminar els %d torrents seleccionats?",
-	"¿Estàs segur que vols eliminar el torrent seleccionat?",
-	"Comprovat%:.1d%%",
-	"Descarregant",
-	"Error: %s",
-	"Acabat",
-	"Pausat",
-	"En Coa",
-	"Compartint",
-	"Parat",
-	"Pose una Etiqueta",
-	"Pose una nova etiqueta per als torrents seleccionats:",
-	"Nova Etiqueta...",
-	"Eliminar Etiqueta",
-	"General||Trackers||Parelles||Peces||Archius||Velocitat||Registrar||",
-	"Afegir torrent",
-	"Pausa",
-	"Preferències",
-	"Eliminar",
-	"Començar",
-	"Parar",
-	"GB",
-	"kB",
-	"MB",
-	"Avançat",
-	"Ample de banda",
-	"Conexió",
-	"Cache de Disc",
-	"Directoris",
-	"General",
-	"Planificador",
-	"En Coa",
-	"BitTorrent",
-	"Web UI",
-	"Transfer Cap",
-	"Desactivat||Activat||Forçat||",
-	"(Cap)||Socks4||Socks5||HTTPS||HTTP||",
-	"Uploads||Downloads||Uploads + Downloads||",
-	"MB||GB||",
-	"1||2||5||7||10||14||15||20||21||28||30||31||",
-	"Nom",
-	"Valor",
-	"Dil||Dima||Dime||Dij||Div||Dis||Dum||",
-	"Dilluns||Dimarts||Dimecres||Dijous||Divendres||Dissabte||Dumenge||",
-	"Vel. Compl.",
-	"Vel. Màxima - Utilisar llímits d'ample de banda globals",
-	"Llimitada",
-	"Llimitat- Utilisar llímits d'ample de banda especificats en el planificador",
-	"Només compartir",
-	"Només compartir - Només pujar senyes (inclosos els incomplets)",
-	"Apagar",
-	"Apagar - Parar tots els torrents que no estiguen forçats",
-	"<= %d hores",
-	"(Ignorar)",
-	"<= %d minuts",
-	"%dd %dh",
-	"%dh %dm",
-	"%dm %ds",
-	"%ds",
-	"%dw %dd",
-	"%dy %dw"
-], lang_code = "va";
+	  "Torrents||*.torrent||Tots els archius (*.*)||*.*||"
+	, "Acceptar"
+	, "Cancelar"
+	, "Aplicar"
+	, "Preferències"
+	, "Idioma:"
+	, "Privacitat"
+	, "Buscar actualisacions automàticament"
+	, "Actualisar a versions beta"
+	, "Enviar informació anònima en la comprovació de les actualisacions"
+	, "Quan finalise la descàrrega"
+	, "Afegir .!ut als archius incomplets"
+	, "Preasignar tots els archius"
+	, "Previndre standby si hi han torrents actius"
+	, "Confirmar quan es borren torrents"
+	, "Alternar el color del fondo de la llista"
+	, "Mostrar la vel. en la barra de títul"
+	, "A l'afegir Torrents"
+	, "No començar la transferència automàticament"
+	, "Carpeta d'archius descarregats"
+	, "Posar les descàrregues en:"
+	, "Mostrar sempre el dialec d'agregació manual"
+	, "Moure descàrreges completes a:"
+	, "Afegir l'etiqueta del torrent"
+	, "Només moure des de la carpeta de descàrregues per defecte"
+	, "Ubicació dels .torrents"
+	, "Guardar .torrents en:"
+	, "Moure .torrents de faenes acabades a:"
+	, "Carregar automàticament .torrents desde:"
+	, "Borrar .torrents carregats"
+	, "Escoltar Port"
+	, "Port utilisat per a conexions entrants:"
+	, "Port aleatori"
+	, "Seleccionar un port aleatori cuan inicies"
+	, "Activar UPnP port mapping"
+	, "Activar NAT-PMP port mapping"
+	, "Servidor Proxy"
+	, "Tipo:"
+	, "Proxy:"
+	, "Port:"
+	, "Autentificació"
+	, "Usuari:"
+	, "Contrasenya:"
+	, "Resoldre els hostnames a través del proxy"
+	, "Utilisar un servidor proxy per a les conexions p2p"
+	, "Afegir com excepció al Firewall de Windows"
+	, "Llimitació de velocitat de pujada"
+	, "Velocitat màxima de pujada (kB/s): [0: illimitat]"
+	, "Automàtic"
+	, "Alternar vel. de pujada quan no descarreges (kB/s):"
+	, "Llimitació de velocitat de baixada"
+	, "Vel. màx. de descàrrega (kB/s): [0: illimitat]"
+	, "Número de Conexions:"
+	, "Número màxim de conexions globals:"
+	, "Número màxim de conexions per torrent:"
+	, "Número de slots de pujada per torrent:"
+	, "Utilisar slots extra si la velocitat de pujada es < 90%"
+	, "Característiques basiques de Bittorrent"
+	, "Activar xàrcia DHT"
+	, "Demanar al tracker info. de scrape"
+	, "Activar DHT per als nous torrents"
+	, "Activar Intercanvi de Parelles"
+	, "Activar Descobriment de Parelles Locals"
+	, "Llímit d'ample de banda entre parelles locals"
+	, "Informar de la IP/Hostname al tracker:"
+	, "Protocol d'Encriptació"
+	, "Ixent:"
+	, "Permetre conexions entrants heredades"
+	, "Enable Transfer Cap"
+	, "Cap Settings"
+	, "Stop torrents when:"
+	, "reach"
+	, "in the last"
+	, "days"
+	, "Config. de la coa"
+	, "Número màxim de torrents actius (pujada o descàrrega):"
+	, "Número màxim de descàrregues actives:"
+	, "Compartir mentres [valors predeterminats]"
+	, "Ratio es:  <="
+	, "%   o temps pujant es:"
+	, "Faenes de compartició en més prioritat que les de descàrrega"
+	, "Cuant µTorrent acabe de compartir"
+	, "Llímit de vel. de pujada a: [0: parat]"
+	, "Activar planificador"
+	, "Taula de planificació"
+	, "Preferències planificador"
+	, "Velocitat de pujada (kB/s):"
+	, "Velocitat de descàrrega (kB/s):"
+	, "Desactivar DHT a l'apagar"
+	, "Activar Web UI"
+	, "Autentificació"
+	, "Usuari:"
+	, "Contrasenya:"
+	, "Activar conte Convidat en nom d'usuari:"
+	, "Conectivitat"
+	, "Port d'escolta alternatiu (per defecte el port de conexió):"
+	, "Restringir accés a les següents IP's (Separar entrades multiples en ,)"
+	, "Opcions avançades [Atenció: No modificar!]"
+	, "Etiquetes [Separa-les en un |]"
+	, "Motor de Busca [Format: nom|URL]"
+	, "Configuració basica de Cache"
+	, "La cache de disc s'utilisa per a mantindre les senyes accedides constantment en la memòria per a reduir el número de llectures i escritures en el disc. µTorrent sol administrar la cache automàticament, pero pot canviar-ho des d'ací."
+	, "Especificar un tamany de cache manualment:"
+	, "Reduir l'us de memòria quan no se necessita la cache"
+	, "Configuració Avançada de  Cache"
+	, "Activar cache d'escritures de disc"
+	, "Escriure blocs intactes cada 2 minuts"
+	, "Escriure peces acabades inmediatament"
+	, "Activar cache de llectures de disc"
+	, "Apagar cache de llectura si la velocitat de pujada es baixa"
+	, "Eliminar blocs vells de la cache"
+	, "Aumentar el tamany de la cache automàticament quan se necessite"
+	, "Desactivar finestra cache d'escritures de disc"
+	, "Desactivar finestra cache de llectures de disc"
+	, "Propietats del Torrent"
+	, "Trackers (Separa'ls posant una llínia buida)"
+	, "Ajusts de l'Ample de Banda"
+	, "Vel. Màxima de Pujada (kB/s): [0: defecte]"
+	, "Vel. Màxima de Descàrrega (kB/s): [0: defecte]"
+	, "Número de slots de pujada: [blanc: defecte]"
+	, "Compartir mentres"
+	, "Invalidar ajusts per defecte"
+	, "Ratio es:  <="
+	, "%  o temps compartint es:"
+	, "Atres Ajusts"
+	, "Compartició Inicial"
+	, "Activar DHT"
+	, "Intercanvi de Parelles"
+	, "Fet"
+	, "Nom"
+	, "%"
+	, "Prioritat"
+	, "Tamany"
+	, "Botar"
+	, "Baixa"
+	, "Normal"
+	, "Alta"
+	, "Descarregat:"
+	, "Pujat:"
+	, "Origens:"
+	, "Esperant:"
+	, "Vel. Descàrrega:"
+	, "Vel. Pujada:"
+	, "Parelles:"
+	, "Ratio:"
+	, "Hash:"
+	, "Transferència"
+	, "%d de %d conectats (%d en l'eixam)"
+	, "D:%s P:%s - %s"
+	, "Mostrar Llista de Categories"
+	, "Mostrar Llista Detallada"
+	, "Reset"
+	, "No Descarregar"
+	, "Prioritat Alta"
+	, "Prioritat Baixa"
+	, "Prioritat Normal"
+	, "Eliminar Senyes"
+	, "Forçar Comprovació"
+	, "Forçar Inici"
+	, "Etiqueta"
+	, "Pausa"
+	, "Propietats"
+	, "Eliminar"
+	, "Eliminar i"
+	, "Començar"
+	, "Parar"
+	, "Actiu"
+	, "Tots"
+	, "Completat"
+	, "Descarregant"
+	, "Inactiu"
+	, "Sense Etiqueta"
+	, "||Dispon.||Disponibilitat"
+	, "Fet"
+	, "Descarregat"
+	, "Vel. Descàrrega"
+	, "Temps restant"
+	, "Etiqueta"
+	, "Nom"
+	, "#"
+	, "Parelles"
+	, "Esperant"
+	, "Origens"
+	, "Origens/Parelles"
+	, "Ratio"
+	, "Tamany"
+	, "Estat"
+	, "Pujat"
+	, "Vel. Pujada"
+	, "¿Estàs segur que vols eliminar els %d torrents seleccionats i les seues senyes?"
+	, "¿Estàs segur que vols eliminar el torrent seleccionat i les seues senyes?"
+	, "¿Estàs segur que vols eliminar els %d torrents seleccionats?"
+	, "¿Estàs segur que vols eliminar el torrent seleccionat?"
+	, "Comprovat%:.1d%%"
+	, "Descarregant"
+	, "Error: %s"
+	, "Acabat"
+	, "Pausat"
+	, "En Coa"
+	, "Orige en coa"
+	, "Compartint"
+	, "Parat"
+	, "Pose una Etiqueta"
+	, "Pose una nova etiqueta per als torrents seleccionats:"
+	, "Nova Etiqueta..."
+	, "Eliminar Etiqueta"
+	, "General||Trackers||Parelles||Peces||Archius||Velocitat||Registrar||"
+	, "Afegir torrent"
+	, "Pausa"
+	, "Preferències"
+	, "Eliminar"
+	, "Començar"
+	, "Parar"
+	, "GB"
+	, "kB"
+	, "MB"
+	, "Avançat"
+	, "Ample de banda"
+	, "Conexió"
+	, "Cache de Disc"
+	, "Directoris"
+	, "General"
+	, "Planificador"
+	, "En Coa"
+	, "BitTorrent"
+	, "Web UI"
+	, "Transfer Cap"
+	, "Desactivat||Activat||Forçat||"
+	, "(Cap)||Socks4||Socks5||HTTPS||HTTP||"
+	, "Uploads||Downloads||Uploads + Downloads||"
+	, "MB||GB||"
+	, "1||2||5||7||10||14||15||20||21||28||30||31||"
+	, "Nom"
+	, "Valor"
+	, "Dil||Dima||Dime||Dij||Div||Dis||Dum||"
+	, "Dilluns||Dimarts||Dimecres||Dijous||Divendres||Dissabte||Dumenge||"
+	, "Vel. Compl."
+	, "Vel. Màxima - Utilisar llímits d'ample de banda globals"
+	, "Llimitada"
+	, "Llimitat- Utilisar llímits d'ample de banda especificats en el planificador"
+	, "Només compartir"
+	, "Només compartir - Només pujar senyes (inclosos els incomplets)"
+	, "Apagar"
+	, "Apagar - Parar tots els torrents que no estiguen forçats"
+	, "<= %d hores"
+	, "(Ignorar)"
+	, "<= %d minuts"
+	, "%dd %dh"
+	, "%dh %dm"
+	, "%dm %ds"
+	, "%ds"
+	, "%dw %dd"
+	, "%dy %dw"
+];

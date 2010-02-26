@@ -1,253 +1,255 @@
 var lang = [
-	"Torrent triemen||*.torrent||Alle triemen (*.*)||*.*||",
-	"Ynstellings",
-	"Okee",
-	"Ofbrekke",
-	"Taal:",
-	"Privacy",
-	"Kontrolear automatysk nei updates",
-	"Fernije nei beta ferzjes",
-	"Stjoer anonyme ynformaasje by it kontrolearen nei fernijngs",
-	"Wylst Ynladen",
-	"Foech .!ut ta oan ynkomplete triemen",
-	"Reservear romte foar alle triemen",
-	"Kom stand-by te foar at der aktive torrents binne",
-	"Befêstig by it wissen fan data",
-	"Alternative achtergrûnkleur fan list",
-	"Lit hjoeddeiske faasje sjen yn titel balke",
-	"Wylst Torrents Tafoege wurde",
-	"Begjin de ynlaad net automatysk",
-	"Lokaasje fan de ynladen triemen",
-	"Pleats nije ynladings nei:",
-	"Altiid finster sjen litte by mei de hân tafoechjen",
-	"Ferpleats foltôge triemen nei:",
-	"Foech it label fan'e torrent ta",
-	"Ferpleats allinne fan standert ynlaad map",
-	"Lokaasje fan .torrents",
-	"Sla .torrents op yn:",
-	"Ferpleats .torrents fan foltôge taken nei:",
-	"Automatysk .torrents lade út:",
-	"Wis laden .torrents",
-	"Harkjende Poarte",
-	"Poarte foar ynkommende ferbinings:",
-	"Samar in poarte",
-	"Samar in poarte eltse opstart",
-	"Poarten tawize troch UPnP",
-	"Poarten tawize troch NAT-PMP",
-	"Proxy Server",
-	"Type:",
-	"Proxy:",
-	"Poarte:",
-	"Autentikaasje",
-	"Brûkersnamme:",
-	"Wachtwurd:",
-	"Hostnammen via proxy útsykje",
-	"Brûk proxy server foar peer-nei-peer ferbinings",
-	"Foech Windows Brânmuorre eksepsje ta",
-	"Globale Utlaad Feart Limytaasje",
-	"Maksimum útlaad faasje (kB/s): [0: unbeheind]",
-	"Automatysk",
-	"Plakferfangende útlaad feart by gjin ynlaad (kB/s):",
-	"Globale Ynlaad Feart Limytaasje",
-	"Maksimale ynlaad faasje (kB/s): [0: ûnbeheind]",
-	"Oantal ferbinings",
-	"Globaal maksimum oantal ferbinings:",
-	"Maksimum oantal ferbûne peers per torrent:",
-	"Oantal útlaadplakken per torrent:",
-	"Mear útlaadplakken brûke as útlaad faasje < 90%",
-	"Basis BitTorrent Mooglikheden",
-	"DHT Netwurk Ynskeakelje",
-	"Freechje tracker nei scrape ynformaasje",
-	"DHT ynskeakelje foar nije torrents",
-	"Peer Utwisseling Ynskeakelje",
-	"Lokale Peer Untdekke Ynskeakelje",
-	"Bergrinzje lokale peer bânbreedte",
-	"Rapportear IP/Hostnamme oan tracker:",
-	"Protokol Fersifering",
-	"Utgeand:",
-	"Ynkommende legacy ferbinings tastean",
-	"Enable Transfer Cap",
-	"Cap Settings",
-	"Stop torrents when:",
-	"reach",
-	"in the last",
-	"days",
-	"Wachtrige Ynstellings",
-	"Maksimum oantal aktive torrents (útlaad of ynlaad):",
-	"Maksimum oantal aktive ynladings:",
-	"Seed Wylst [Standert wearden]",
-	"Ferhâlding is:  <=",
-	"%   of seed tiid is:",
-	"Seed taken hawwe hegere prioriteit as ynlaad taken",
-	"As µTorrent It Seeding Doel Berikt Hat",
-	"Bergrinzje útlaad faasje nei [0: stoppe]:",
-	"Skeakel Planner Yn",
-	"Planningtabel",
-	"Planner Opsjes",
-	"Limiteare útlaadfaasje (kB/s):",
-	"Limiteare ynlaadfaasje (kB/s):",
-	"DHT útsette by ôfslúten",
-	"Skeakelje Web UI yn",
-	"Autentikaasje",
-	"Brûkersnamme:",
-	"Wachtwurd:",
-	"Skeakel Gast abonnemint yn mei brûkersnamme:",
-	"Ferbining",
-	"Oare hark poarte (standert is de ferbiningspoarte):",
-	"Beheint tagong foar de neikommende IPs (skied ferskate ynjeftes mei in komma):",
-	"Avansearre Opsjes [WARSKÔGING: Net oanpasse!]",
-	"Bliuwende Labels [Skied mearfâldiche labels mei in | teken",
-	"Basis Cache Ynstellings",
-	"It lyts ûnthâld fan de skiif wurd brûkt om data dat gauris opfrege wurdt yn it ûnthâld te setten dat sadwaande it oantal lês- en skriuwbewurkingen nei de hurde skiif beheind wurd. Yn 'e regel wurd it automatysk troch µTorrent dien, mar it hâlden en dragen kin oanpast wurde troch dizze ynstellings te feroarjen.",
-	"Oerwâldzje automatyske lyts ûnthâld grutte en spesifisear de grutte sels (MB):",
-	"Ferminderje ûnthâld gebrûk at it lyts ûnthâld net nedich is.",
-	"Avansearre Lyts Unthâld Ynstellings",
-	"Skeakelje lyst ûnthald gebrûk fan skiif skriuwen yn",
-	"Skriuw ûnoantaaste blokken eltse 2 minúten út",
-	"Skriuw foltôge parten fuortendaliks út",
-	"Skeakelje lyst ûnthâld foar skiif lêzen yn",
-	"Lyts ûnthâld lêzen útskeakelje as de útlaad faasje stadich is",
-	"Ferwider âlde blokken út it lyts ûnthâld",
-	"Ferheegje automatyske cache grutte by cache bedobjen",
-	"Skeakelje Windows caching fan skiif skriuwen út",
-	"Skeakelje Windows caching fan skiif lêzen út",
-	"Torrent Eigenskippen",
-	"Okee",
-	"Ofbrekke",
-	"Trackers (skied tiers mei in lege rige)",
-	"Bânbreedte Ynstellings",
-	"Maksimum útlaad faasje (kB/s): [0: standert]",
-	"Maksimum ynlaad faasje (kB/s): [0: standert]",
-	"Oantal útlaadplakken: [leech: standert]",
-	"Seed Wylst",
-	"Oerskriuw standert ynstellings",
-	"Ferhâlding is:  <=",
-	"%  of seed tiid is:",
-	"Oare Ynstellings",
-	"Earste Seeding",
-	"DHT Ynskeakelje",
-	"Peer Utwisseling",
-	"Dien",
-	"Namme",
-	"%",
-	"Prioriteit",
-	"Grutte",
-	"oerslaan",
-	"leech",
-	"normaal",
-	"heech",
-	"Ynladen:",
-	"Utladen:",
-	"Seeds:",
-	"Oer:",
-	"Ynlaad Faasje:",
-	"Utlaad Faasje:",
-	"Peers:",
-	"Dielferhâlding:",
-	"Hash:",
-	"Oerdracht",
-	"%d fan %d ferbûn (%d yn swerm)",
-	"Y:%s U:%s - %s",
-	"Lit Kategory List sjen",
-	"Lit Detailleaerre Ynfo Sjen",
-	"Net Ynlade",
-	"Hege Prioriteit",
-	"Lege Prioriteit",
-	"Normale Prioriteit",
-	"Wis Data",
-	"Forsear Her-Kontrôle",
-	"Forsear Start",
-	"Label",
-	"Skoft",
-	"Eigenskippen",
-	"Ferwider",
-	"Ferwider En",
-	"Start",
-	"Stop",
-	"Aktyf",
-	"Alle",
-	"Net aktyf",
-	"Oan't ynladen",
-	"Net aktyf",
-	"Gjin Label",
-	"||Besk.||Beskikberens",
-	"Dien",
-	"Ynladen",
-	"Yn Faasje",
-	"ETA",
-	"Label",
-	"Namme",
-	"#",
-	"Peers",
-	"Oerblieuwend",
-	"Seeds",
-	"Seeds/Peers",
-	"Ratio",
-	"Grutte",
-	"Tastân",
-	"Utladen",
-	"Út Faasje",
-	"Binne jo wis dat jo de %d sselekteare torrents ferwiderje wolle en alle assosjeare data?",
-	"Binne jo wis dat jo de selekteare torrent ferwiderje wolle en alle assosjeare data?",
-	"Binne jo wis dat jo de %d selekteare torrents ferwiderje wolle?",
-	"Binne jo wis dat jo de selekteare torrent ferwiderje wolle?",
-	"Kontrolearre %:.1d%%",
-	"Ynladen",
-	"Flater: %s",
-	"Klear",
-	"Pauseard",
-	"Yn Wachtrige",
-	"Klear",
-	"Stoppe",
-	"Jou label yn",
-	"Fier it nije label foar selektearre torrents yn:",
-	"Nij Label...",
-	"Ferwider label",
-	"Algemien||Trackers||Peers||Parten||Triemen||Faasje||Logger||",
-	"Torrent tafoechje",
-	"Skoft",
-	"Ynstellings",
-	"Wis",
-	"Start",
-	"Stop",
-	"GB",
-	"kB",
-	"MB",
-	"Avansearre",
-	"Bânbreedte",
-	"Ferbining",
-	"Skiif Cache",
-	"Mappen",
-	"Algemien",
-	"Planner",
-	"Yn wachtrige",
-	"BitTorrent",
-	"Web UI",
-	"Transfer Cap",
-	"Útskeakeld||Ynskeakeld||Forsearre||",
-	"(gjin)||Socks4||Socks5||HTTPS||HTTP||",
-	"Uploads||Downloads||Uploads + Downloads||",
-	"MB||GB||",
-	"1||2||5||7||10||14||15||20||21||28||30||31||",
-	"Namme",
-	"Wearde",
-	"Mo||Ti||Wo||To||Fr||Sneon||Snein||",
-	"Moandei||Tiisdei||Woansdei||Tongersdei||Freed||Sneon||Snein||",
-	"Rap",
-	"Rap - Brûkt normale globale bânbreedte limyt",
-	"Limiteare",
-	"Limiteare - Brûkt planner-spesifiseare bânbreedte limyt",
-	"Allinne seed",
-	"Allinne seed - Alinne útladings data (inclusief ynkomplete)",
-	"Utsette",
-	"Utsette - Stopt alletorrents dy't net forseard binne",
-	"<= %d oeren",
-	"(Negerje)",
-	"<= %d minúten",
-	"%dd %do",
-	"%do %dm",
-	"%dm %ds",
-	"%ds",
-	"%dw %dd",
-	"%dj %dw"
-], lang_code = "fyNL";
+	  "Torrent triemen||*.torrent||Alle triemen (*.*)||*.*||"
+	, "Okee"
+	, "Ofbrekke"
+	, "Tapasse"
+	, "Ynstellings"
+	, "Taal:"
+	, "Privacy"
+	, "Kontrolear automatysk nei updates"
+	, "Fernije nei beta ferzjes"
+	, "Stjoer anonyme ynformaasje by it kontrolearen nei fernijngs"
+	, "Wylst Ynladen"
+	, "Foech .!ut ta oan ynkomplete triemen"
+	, "Reservear romte foar alle triemen"
+	, "Kom stand-by te foar at der aktive torrents binne"
+	, "Befêstig by it wissen fan data"
+	, "Alternative achtergrûnkleur fan list"
+	, "Lit hjoeddeiske faasje sjen yn titel balke"
+	, "Wylst Torrents Tafoege wurde"
+	, "Begjin de ynlaad net automatysk"
+	, "Lokaasje fan de ynladen triemen"
+	, "Pleats nije ynladings nei:"
+	, "Altiid finster sjen litte by mei de hân tafoechjen"
+	, "Ferpleats foltôge triemen nei:"
+	, "Foech it label fan'e torrent ta"
+	, "Ferpleats allinne fan standert ynlaad map"
+	, "Lokaasje fan .torrents"
+	, "Sla .torrents op yn:"
+	, "Ferpleats .torrents fan foltôge taken nei:"
+	, "Automatysk .torrents lade út:"
+	, "Wis laden .torrents"
+	, "Harkjende Poarte"
+	, "Poarte foar ynkommende ferbinings:"
+	, "Samar in poarte"
+	, "Samar in poarte eltse opstart"
+	, "Poarten tawize troch UPnP"
+	, "Poarten tawize troch NAT-PMP"
+	, "Proxy Server"
+	, "Type:"
+	, "Proxy:"
+	, "Poarte:"
+	, "Autentikaasje"
+	, "Brûkersnamme:"
+	, "Wachtwurd:"
+	, "Hostnammen via proxy útsykje"
+	, "Brûk proxy server foar peer-nei-peer ferbinings"
+	, "Foech Windows Brânmuorre eksepsje ta"
+	, "Globale Utlaad Feart Limytaasje"
+	, "Maksimum útlaad faasje (kB/s): [0: unbeheind]"
+	, "Automatysk"
+	, "Plakferfangende útlaad feart by gjin ynlaad (kB/s):"
+	, "Globale Ynlaad Feart Limytaasje"
+	, "Maksimale ynlaad faasje (kB/s): [0: ûnbeheind]"
+	, "Oantal ferbinings"
+	, "Globaal maksimum oantal ferbinings:"
+	, "Maksimum oantal ferbûne peers per torrent:"
+	, "Oantal útlaadplakken per torrent:"
+	, "Mear útlaadplakken brûke as útlaad faasje < 90%"
+	, "Basis BitTorrent Mooglikheden"
+	, "DHT Netwurk Ynskeakelje"
+	, "Freechje tracker nei scrape ynformaasje"
+	, "DHT ynskeakelje foar nije torrents"
+	, "Peer Utwisseling Ynskeakelje"
+	, "Lokale Peer Untdekke Ynskeakelje"
+	, "Bergrinzje lokale peer bânbreedte"
+	, "Rapportear IP/Hostnamme oan tracker:"
+	, "Protokol Fersifering"
+	, "Utgeand:"
+	, "Ynkommende legacy ferbinings tastean"
+	, "Enable Transfer Cap"
+	, "Cap Settings"
+	, "Stop torrents when:"
+	, "reach"
+	, "in the last"
+	, "days"
+	, "Wachtrige Ynstellings"
+	, "Maksimum oantal aktive torrents (útlaad of ynlaad):"
+	, "Maksimum oantal aktive ynladings:"
+	, "Seed Wylst [Standert wearden]"
+	, "Ferhâlding is:  <="
+	, "%   of seed tiid is:"
+	, "Seed taken hawwe hegere prioriteit as ynlaad taken"
+	, "As µTorrent It Seeding Doel Berikt Hat"
+	, "Bergrinzje útlaad faasje nei [0: stoppe]:"
+	, "Skeakel Planner Yn"
+	, "Planningtabel"
+	, "Planner Opsjes"
+	, "Limiteare útlaadfaasje (kB/s):"
+	, "Limiteare ynlaadfaasje (kB/s):"
+	, "DHT útsette by ôfslúten"
+	, "Skeakelje Web UI yn"
+	, "Autentikaasje"
+	, "Brûkersnamme:"
+	, "Wachtwurd:"
+	, "Skeakel Gast abonnemint yn mei brûkersnamme:"
+	, "Ferbining"
+	, "Oare hark poarte (standert is de ferbiningspoarte):"
+	, "Beheint tagong foar de neikommende IPs (skied ferskate ynjeftes mei in komma):"
+	, "Avansearre Opsjes [WARSKÔGING: Net oanpasse!]"
+	, "Bliuwende Labels [Skied mearfâldiche labels mei in | teken"
+	, "Sykmasines [Formaat: namme|URL]"
+	, "Basis Cache Ynstellings"
+	, "It lyts ûnthâld fan de skiif wurd brûkt om data dat gauris opfrege wurdt yn it ûnthâld te setten dat sadwaande it oantal lês- en skriuwbewurkingen nei de hurde skiif beheind wurd. Yn 'e regel wurd it automatysk troch µTorrent dien, mar it hâlden en dragen kin oanpast wurde troch dizze ynstellings te feroarjen."
+	, "Oerwâldzje automatyske lyts ûnthâld grutte en spesifisear de grutte sels (MB):"
+	, "Ferminderje ûnthâld gebrûk at it lyts ûnthâld net nedich is."
+	, "Avansearre Lyts Unthâld Ynstellings"
+	, "Skeakelje lyst ûnthald gebrûk fan skiif skriuwen yn"
+	, "Skriuw ûnoantaaste blokken eltse 2 minúten út"
+	, "Skriuw foltôge parten fuortendaliks út"
+	, "Skeakelje lyst ûnthâld foar skiif lêzen yn"
+	, "Lyts ûnthâld lêzen útskeakelje as de útlaad faasje stadich is"
+	, "Ferwider âlde blokken út it lyts ûnthâld"
+	, "Ferheegje automatyske cache grutte by cache bedobjen"
+	, "Skeakelje Windows caching fan skiif skriuwen út"
+	, "Skeakelje Windows caching fan skiif lêzen út"
+	, "Torrent Eigenskippen"
+	, "Trackers (skied tiers mei in lege rige)"
+	, "Bânbreedte Ynstellings"
+	, "Maksimum útlaad faasje (kB/s): [0: standert]"
+	, "Maksimum ynlaad faasje (kB/s): [0: standert]"
+	, "Oantal útlaadplakken: [leech: standert]"
+	, "Seed Wylst"
+	, "Oerskriuw standert ynstellings"
+	, "Ferhâlding is:  <="
+	, "%  of seed tiid is:"
+	, "Oare Ynstellings"
+	, "Earste Seeding"
+	, "DHT Ynskeakelje"
+	, "Peer Utwisseling"
+	, "Dien"
+	, "Namme"
+	, "%"
+	, "Prioriteit"
+	, "Grutte"
+	, "oerslaan"
+	, "leech"
+	, "normaal"
+	, "heech"
+	, "Ynladen:"
+	, "Utladen:"
+	, "Seeds:"
+	, "Oer:"
+	, "Ynlaad Faasje:"
+	, "Utlaad Faasje:"
+	, "Peers:"
+	, "Dielferhâlding:"
+	, "Hash:"
+	, "Oerdracht"
+	, "%d fan %d ferbûn (%d yn swerm)"
+	, "Y:%s U:%s - %s"
+	, "Lit Kategory List sjen"
+	, "Lit Detailleaerre Ynfo Sjen"
+	, "Reset"
+	, "Net Ynlade"
+	, "Hege Prioriteit"
+	, "Lege Prioriteit"
+	, "Normale Prioriteit"
+	, "Wis Data"
+	, "Forsear Her-Kontrôle"
+	, "Forsear Start"
+	, "Label"
+	, "Skoft"
+	, "Eigenskippen"
+	, "Ferwider"
+	, "Ferwider En"
+	, "Start"
+	, "Stop"
+	, "Aktyf"
+	, "Alle"
+	, "Net aktyf"
+	, "Oan't ynladen"
+	, "Net aktyf"
+	, "Gjin Label"
+	, "||Besk.||Beskikberens"
+	, "Dien"
+	, "Ynladen"
+	, "Yn Faasje"
+	, "ETA"
+	, "Label"
+	, "Namme"
+	, "#"
+	, "Peers"
+	, "Oerblieuwend"
+	, "Seeds"
+	, "Seeds/Peers"
+	, "Ratio"
+	, "Grutte"
+	, "Tastân"
+	, "Utladen"
+	, "Út Faasje"
+	, "Binne jo wis dat jo de %d sselekteare torrents ferwiderje wolle en alle assosjeare data?"
+	, "Binne jo wis dat jo de selekteare torrent ferwiderje wolle en alle assosjeare data?"
+	, "Binne jo wis dat jo de %d selekteare torrents ferwiderje wolle?"
+	, "Binne jo wis dat jo de selekteare torrent ferwiderje wolle?"
+	, "Kontrolearre %:.1d%%"
+	, "Ynladen"
+	, "Flater: %s"
+	, "Klear"
+	, "Pauseard"
+	, "Yn Wachtrige"
+	, "Seed yn Wachtrige"
+	, "Klear"
+	, "Stoppe"
+	, "Jou label yn"
+	, "Fier it nije label foar selektearre torrents yn:"
+	, "Nij Label..."
+	, "Ferwider label"
+	, "Algemien||Trackers||Peers||Parten||Triemen||Faasje||Logger||"
+	, "Torrent tafoechje"
+	, "Skoft"
+	, "Ynstellings"
+	, "Wis"
+	, "Start"
+	, "Stop"
+	, "GB"
+	, "kB"
+	, "MB"
+	, "Avansearre"
+	, "Bânbreedte"
+	, "Ferbining"
+	, "Skiif Cache"
+	, "Mappen"
+	, "Algemien"
+	, "Planner"
+	, "Yn wachtrige"
+	, "BitTorrent"
+	, "Web UI"
+	, "Transfer Cap"
+	, "Útskeakeld||Ynskeakeld||Forsearre||"
+	, "(gjin)||Socks4||Socks5||HTTPS||HTTP||"
+	, "Uploads||Downloads||Uploads + Downloads||"
+	, "MB||GB||"
+	, "1||2||5||7||10||14||15||20||21||28||30||31||"
+	, "Namme"
+	, "Wearde"
+	, "Mo||Ti||Wo||To||Fr||Sneon||Snein||"
+	, "Moandei||Tiisdei||Woansdei||Tongersdei||Freed||Sneon||Snein||"
+	, "Rap"
+	, "Rap - Brûkt normale globale bânbreedte limyt"
+	, "Limiteare"
+	, "Limiteare - Brûkt planner-spesifiseare bânbreedte limyt"
+	, "Allinne seed"
+	, "Allinne seed - Alinne útladings data (inclusief ynkomplete)"
+	, "Utsette"
+	, "Utsette - Stopt alletorrents dy't net forseard binne"
+	, "<= %d oeren"
+	, "(Negerje)"
+	, "<= %d minúten"
+	, "%dd %do"
+	, "%do %dm"
+	, "%dm %ds"
+	, "%ds"
+	, "%dw %dd"
+	, "%dj %dw"
+];

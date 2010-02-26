@@ -5,8 +5,8 @@
  *
 */
 
-var VERSION = "0.362";
 var BUILD_REQUIRED = -1; // the uT build that WebUI requires
+var LANGUAGES = LANGUAGES || {};
 var lang = lang || null;
 var urlBase = window.location.pathname.substr(0, window.location.pathname.indexOf("/gui")) + "/gui/";
 var isGuest = window.location.pathname.test(/.*guest.html$/);
@@ -39,51 +39,89 @@ var utWebUI = {
 		"minTrtH": 100,
 		"minTrtW": 150
 	},
+	"defConfig": {
+		"showDetails": true,
+		"showCategories": true,
+		"showToolbar": true,
+		"showTitleSpeed": false,
+		"updateInterval": 3000,
+		"alternateRows": false,
+		"maxRows": 50,
+		"confirmDelete": true,
+		"lang": "en",
+		"hSplit": -1,
+		"vSplit": -1,
+		"torrentTable": {
+			"rowsSelectable": !isGuest,
+			"colMask": 0x0000, // automatically calculated based on this.flsColDefs
+			"colOrder": [], // automatically calculated based on this.trtColDefs
+			"colWidth": [], // automatically calculated based on this.trtColDefs
+			"reverse": false,
+			"sIndex": -1
+		},
+		"fileTable": {
+			"colMask": 0x0000, // automatically calculated based on this.flsColDefs
+			"colOrder": [], // automatically calculated based on this.flsColDefs
+			"colWidth": [], // automatically calculated based on this.flsColDefs
+			"reverse": false,
+			"sIndex": -1
+		},
+		"activeLabel": "_all_"
+	},
 	"torrentID": "", // selected torrent
 	"propID": "", // selected torrent (single)
 	"trtTable": new dxSTable(),
 	"flsTable": new dxSTable(),
+	"trtColDefs": [
+		//[ colID, colWidth, colType, colDisabled = false, colAlign = ALIGN_AUTO, colText = "" ]
+		  ["name", 220, TYPE_STRING]
+		, ["order", 30, TYPE_NUM_ORDER]
+		, ["size", 90, TYPE_NUMBER]
+		, ["remaining", 90, TYPE_NUMBER, true]
+		, ["done", 80, TYPE_NUM_PROGRESS]
+		, ["status", 100, TYPE_CUSTOM]
+		, ["seeds", 60, TYPE_NUMBER]
+		, ["peers", 60, TYPE_NUMBER]
+		, ["seeds_peers", 80, TYPE_NUMBER, true]
+		, ["downspeed", 80, TYPE_NUMBER]
+		, ["upspeed", 80, TYPE_NUMBER]
+		, ["eta", 60, TYPE_NUM_ORDER]
+		, ["uploaded", 90, TYPE_NUMBER, true]
+		, ["downloaded", 90, TYPE_NUMBER, true]
+		, ["ratio", 60, TYPE_NUMBER]
+		, ["availability", 60, TYPE_NUMBER]
+		, ["label", 80, TYPE_STRING, true]
+	],
+	"flsColDefs": [
+		//[ colID, colWidth, colType, colDisabled = false, colAlign = ALIGN_AUTO, colText = "" ]
+		  ["name", 300, TYPE_STRING]
+		, ["size", 90, TYPE_NUMBER]
+		, ["done", 90, TYPE_NUMBER]
+		, ["pcnt", 80, TYPE_NUM_PROGRESS]
+		, ["prio", 80, TYPE_NUMBER]
+	],
+	"flsColPrioIdx": -1, // automatically calculated based on this.flsColDefs
 	"timer": 0,
 	"updateTimeout": null,
 	"interval": -1,
 	"totalDL": 0,
 	"totalUL": 0,
 	"loaded": false,
-	"langLoaded": false,
 	"TOKEN": "",
 	"delActions": ["remove", "removedata"],
 
 	"init": function() {
-		this.config = {
-			"showDetails": true,
-			"showCategories": true,
-			"showToolbar": true,
-			"showTitleSpeed": false,
-			"updateInterval": 3000,
-			"alternateRows": false,
-			"confirmDelete": true,
-			"lang": "en",
-			"hSplit": this.limits.defHSplit,
-			"vSplit": this.limits.defVSplit,
-			"trtCols": 0x0000,
-			"torrentTable": {
-				"reverse": false,
-				"maxRows": 50,
-				"colOrder": [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15],
-				"colWidth": [220,100,80,80,100,80,60,80,80,60,80,60,60,60,30,90],
-				"sIndex": -1,
-				"rowsSelectable": !isGuest
-			},
-			"flsCols": 0x0000,
-			"fileTable": {
-				"reverse": false,
-				"maxRows": 50,
-				"colOrder": [0,1,2,3,4],
-				"colWidth": [200,60,80,100,80],
-				"sIndex": -1
-			},
-			"activeLabel": "_all_"
-		};
+		this.config = $merge(this.defConfig, {"lang": ""}); // deep copy default config
+
+		// Calculate index of some columns for ease of reference elsewhere
+		this.trtColDoneIdx = this.trtColDefs.map(function(item) { return (item[0] == "done"); }).indexOf(true);
+		this.trtColStatusIdx = this.trtColDefs.map(function(item) { return (item[0] == "status"); }).indexOf(true);
+		this.flsColPrioIdx = this.flsColDefs.map(function(item) { return (item[0] == "prio"); }).indexOf(true);
+
+		// Set default colMask values based on colDefs
+		this.trtColDefs.each(function(item, index) { this.trtColToggle(index, item[3], true); }, this);
+		this.flsColDefs.each(function(item, index) { this.flsColToggle(index, item[3], true); }, this);
+
 		if (isGuest) {
 			this.addSettings();
 			return;
@@ -185,7 +223,7 @@ var utWebUI = {
 		var len = this.trtTable.selectedRows.length;
 		while (len--) {
 			var key = this.trtTable.selectedRows[len];
-			var stat = this.torrents[key][0];
+			var stat = this.torrents[key][CONST.TORRENT_STATUS];
 			switch (act) {
 				case "forcestart":
 					if ((stat & 1) && !(stat & 64) && !(stat & 32)) continue;
@@ -244,7 +282,7 @@ var utWebUI = {
 		if (count == 0) return;
 		mode = parseInt(mode);
 		if (isNaN(mode))
-			mode = (utWebUI.settings["gui.default_del_action"] <= 1) ? 0 : 1
+			mode = (this.settings["gui.default_del_action"] <= 1) ? 0 : 1
 		var ok = !this.config.confirmDelete;
 		if (!ok) {
 			var multiple = (count != 1);
@@ -273,20 +311,26 @@ var utWebUI = {
 
 		if (state & CONST.STATE_PAUSED) { // paused
 			res = ["Status_Paused", (state & CONST.STATE_CHECKING) ? lang[CONST.OV_FL_CHECKED].replace(/%:\.1d%/, (done / 10)) : lang[CONST.OV_FL_PAUSED]];
-		} else if (state & CONST.STATE_STARTED) { // started, seeding or leeching
-			res = [(done == 1000) ? "Status_Up" : "Status_Down", (done == 1000) ? lang[CONST.OV_FL_SEEDING] : lang[CONST.OV_FL_DOWNLOADING]];
+		}
+		else if (state & CONST.STATE_STARTED) { // started, seeding or leeching
+			res = (done == 1000) ? ["Status_Up", lang[CONST.OV_FL_SEEDING]] : ["Status_Down", lang[CONST.OV_FL_DOWNLOADING]];
 			if (!(state & CONST.STATE_QUEUED)) { // forced start
 				res[1] = "[F] " + res[1];
 			}
-		} else if (state & CONST.STATE_CHECKING) { // checking
+		}
+		else if (state & CONST.STATE_CHECKING) { // checking
 			res = ["Status_Checking", lang[CONST.OV_FL_CHECKED].replace(/%:\.1d%/, (done / 10))];
-		} else if (state & CONST.STATE_ERROR) { // error
+		}
+		else if (state & CONST.STATE_ERROR) { // error
 			res = ["Status_Error", lang[CONST.OV_FL_ERROR].replace(/%s/, "??")];
-		} else if (state & CONST.STATE_QUEUED) { // queued
-			res = [(done == 1000) ? "Status_Queued_Up" : "Status_Queued_Down", lang[CONST.OV_FL_QUEUED]];
-		} else if (done == 1000) { // finished
+		}
+		else if (state & CONST.STATE_QUEUED) { // queued
+			res = (done == 1000) ? ["Status_Queued_Up", lang[CONST.OV_FL_QUEUED_SEED]] : ["Status_Queued_Down", lang[CONST.OV_FL_QUEUED]];
+		}
+		else if (done == 1000) { // finished
 			res = ["Status_Completed", lang[CONST.OV_FL_FINISHED]];
-		} else { // stopped
+		}
+		else { // stopped
 			res = ["Status_Incompleted", lang[CONST.OV_FL_STOPPED]];
 		}
 
@@ -350,82 +394,52 @@ var utWebUI = {
 
 		var scroll = this.trtTable.dBody.getScroll(), sortedColChanged = false;
 		for (var i = 0, len = torrents.length; i < len; i++) {
-			var tor = torrents[i];
-			if (torrents[i][10] < -1)
-				console.log(torrents[i]);
+			var tor = torrents[i], row = this.trtDataToRow(tor);
+
+//			if (tor[CONST.TORRENT_ETA] < -1) console.log(tor);
+
 			var hash = tor[CONST.TORRENT_HASH];
 			var done = tor[CONST.TORRENT_PROGRESS];
-			var stat = this.getStatusInfo(tor[CONST.TORRENT_STATUS], done);
-			this.totalDL += tor[CONST.TORRENT_DOWNSPEED];
-			this.totalUL += tor[CONST.TORRENT_UPSPEED];
-			tor.swap(CONST.TORRENT_UPSPEED, CONST.TORRENT_DOWNSPEED);
-			tor.splice(3, 0, stat[1]);
+			var dlsp = tor[CONST.TORRENT_DOWNSPEED];
+			var ulsp = tor[CONST.TORRENT_UPSPEED];
+			var stat = tor[CONST.TORRENT_STATUS];
+			var statinfo = this.getStatusInfo(stat, done);
+
+			this.totalDL += dlsp;
+			this.totalUL += ulsp;
 
 			if (!has(this.labels, hash))
 				this.labels[hash] = "";
-			var labels = this.getLabels(hash, tor[12], done, tor[9], tor[10]), ret = false, activeChanged = false;
-			if (!has(this.torrents, hash)) {
-				this.torrents[hash] = tor.slice(1);
-				this.labels[hash] = labels;
-				tor.splice(0, 2); // remove the hash & status from the array
-				// Remove the SID from the list before it goes to
-				// the table for display.
-				tor.pop(); tor.pop();
-				tor[11] = tor[11] + " (" + tor[12] + ")";
-				tor[12] = tor[13] + " (" + tor[14] + ")";
-				tor[13] = tor[15];
-				tor.splice(13, 2);
-				this.trtTable.addRow(tor, hash, stat[0], (labels.indexOf(this.config.activeLabel) == -1), this.loaded || (this.trtTable.sIndex == -1));
-				ret = true;
-			} else {
-				if (labels != this.labels[hash]) {
-					this.labels[hash] = labels;
-					if (labels.indexOf(this.config.activeLabel) > -1) {
-						if (this.trtTable.rowData[hash].hidden) {
-							this.trtTable.rowData[hash].hidden = false;
-							activeChanged = true;
-						}
-					} else {
-						if (!this.trtTable.rowData[hash].hidden) {
-							this.trtTable.rowData[hash].hidden = true;
-							activeChanged = true;
-						}
+
+			var labels = this.labels[hash] = this.getLabels(hash, tor[CONST.TORRENT_LABEL], done, dlsp, ulsp);
+			var ret = false, activeChanged = false;
+
+			if (has(this.torrents, hash)) {
+				// Old torrent found... update list
+				var rdata = this.trtTable.rowData[hash];
+				activeChanged = (rdata.hidden != (labels.indexOf(this.config.activeLabel) < 0));
+				if (activeChanged) rdata.hidden = !rdata.hidden;
+
+				this.trtTable.setIcon(hash, statinfo[0]);
+
+				row.each(function(v, k) {
+					if (v != rdata.data[k]) {
+						ret = this.trtTable.updateCell(hash, k, row) || ret;
 					}
-				}
-				var ln = tor.length - 7;
-				var prevtor = this.torrents[hash];
-				if ((prevtor[0] != tor[1]) || (this.trtTable.rowData[hash].data[1] != stat[1])) { // status/done changed?
-					this.torrents[hash][0] = tor[1];
-					this.trtTable.setIcon(hash, stat[0]);
-					ret = this.trtTable.setValue(hash, 1, stat[1]);
-				}
-				if ((prevtor[12] != tor[13]) || (prevtor[13] != tor[14])) { // # of peers changed?
-					this.torrents[hash][12] = tor[13];
-					this.torrents[hash][13] = tor[14];
-					ret = this.trtTable.setValue(hash, 11, tor[13] + " (" + tor[14] + ")");
-				}
-				if ((prevtor[14] != tor[15]) || (prevtor[15] != tor[16])) { // # of seeds changed?
-					this.torrents[hash][14] = tor[15];
-					this.torrents[hash][15] = tor[16];
-					ret = this.trtTable.setValue(hash, 12, tor[15] + " (" + tor[16] + ")");
-				}
-				for (var j = 16; j < 20; j++) {
-					if (prevtor[j] != tor[j + 1]) {
-						this.torrents[hash][j] = tor[j + 1];
-						ret = this.trtTable.setValue(hash, j - 3, tor[j + 1]);
-					}
-				}
-				for (var j = 1; j < ln; j++) {
-					if (prevtor[j] != tor[j + 1]) {
-						this.torrents[hash][j] = tor[j + 1];
-						ret = this.trtTable.setValue(hash, j - 1, tor[j + 1]);
-					}
-				}
-				if (!ret && activeChanged)
+				}, this);
+
+				if (!ret && activeChanged) {
 					this.trtTable._insertRow(hash);
+				}
 			}
-			sortedColChanged = ret || sortedColChanged;
-			tor = null;
+			else {
+				// New torrent found... add to list
+				this.trtTable.addRow(row, hash, statinfo[0], (labels.indexOf(this.config.activeLabel) < 0), this.loaded || (this.trtTable.sIndex == -1));
+				ret = true;
+			}
+
+			this.torrents[hash] = tor;
+			sortedColChanged = sortedColChanged || ret;
 		}
 		torrents.length = 0;
 		if (has(json, "torrentm")) {
@@ -491,10 +505,10 @@ var utWebUI = {
 	},
 
 	"updateSpeed": function() {
-		var str = lang[CONST.MAIN_TITLEBAR_SPEED].replace(/%s/, this.totalDL.toFileSize() + perSec).replace(/%s/, this.totalUL.toFileSize() + perSec);
+		var str = lang[CONST.MAIN_TITLEBAR_SPEED].replace(/%s/, this.totalDL.toFileSize() + g_perSec).replace(/%s/, this.totalUL.toFileSize() + g_perSec);
 		window.status = window.defaultStatus = str.replace(/%s/, "");
 		if (this.config.showTitleSpeed)
-			document.title = str.replace(/%s/, "\u00B5Torrent WebUI v" + VERSION);
+			document.title = str.replace(/%s/, g_winTitle);
 	},
 
 	"update": function() {
@@ -595,7 +609,7 @@ var utWebUI = {
 		var hashes = [];
 		for (var i = 0, j = this.trtTable.selectedRows.length; i < j; i++) {
 			var key = this.trtTable.selectedRows[i];
-			if (this.torrents[key][11] != lbl)
+			if (this.torrents[key][CONST.TORRENT_LABEL] != lbl)
 				hashes.push(key);
 		}
 		if (hashes.length > 0) {
@@ -607,7 +621,7 @@ var utWebUI = {
 	"newLabel": function() {
 		var tmpl = "";
 		if (this.trtTable.selectedRows.length == 1)
-			tmpl = this.torrents[this.trtTable.selectedRows[0]][11];
+			tmpl = this.torrents[this.trtTable.selectedRows[0]][CONST.TORRENT_LABEL];
 		DialogManager.show("Label");
 		var ele = $("txtLabel");
 		ele.set("value", (tmpl == "") ? lang[CONST.OV_NEW_LABEL] : tmpl).focus();
@@ -752,17 +766,35 @@ var utWebUI = {
 						});
 					}
 
-					var oldcookie = this.config, newcookie = JSON.decode(val, true);
+					var cookie = this.config, newcookie = JSON.decode(val, true);
 
 					// Pull out only data from received cookie that we already know about.
 					// Next best thing short of sanity checking every single value.
-					safeCopy(oldcookie, newcookie);
+					safeCopy(cookie, newcookie);
 
-					this.config.torrentTable.alternateRows =
-					this.config.fileTable.alternateRows =
-						this.config.alternateRows;
+					this.trtTable.setConfig({
+						  "colSort": [cookie.torrentTable.sIndex, cookie.torrentTable.reverse]
+						, "colMask": cookie.torrentTable.colMask
+						, "colOrder": cookie.torrentTable.colOrder
+						, "colWidth": this.config.torrentTable.colWidth
+					});
+
+					this.flsTable.setConfig({
+						  "colSort": [cookie.fileTable.sIndex, cookie.fileTable.reverse]
+						, "colMask": cookie.fileTable.colMask
+						, "colOrder": cookie.fileTable.colOrder
+						, "colWidth": cookie.fileTable.colWidth
+					});
+
+					this.tableUseAltColor(cookie.alternateRows);
+					this.tableSetMaxRows(cookie.maxRows);
+
+					resizeUI();
 
 					continue;
+				}
+				if (key == "gui.graphic_progress") {
+					this.tableUseProgressBar(val == "true");
 				}
 				if ((key != "proxy.proxy") && (key != "webui.username") && (key != "webui.password")) {
 					if (typ == 0)
@@ -781,24 +813,40 @@ var utWebUI = {
 			// Insert custom keys...
 			this.settings["multi_day_transfer_mode"] = tcmode;
 
+{ // TODO: Remove this once backend support is stable
+	this.settings["sched_table"] = $pick(this.settings["sched_table"], "033000030000000000000000300300030111010010100101000300030101011010100111033000030101010110100001300000030111010010110111333303030000000000000000000000000000000000000000");
+	this.settings["search_list_sel"] = $pick(this.settings["search_list_sel"], 0);
+	this.settings["search_list"] = $pick(this.settings["search_list"], "Google|http://google.com/search?q=\r\nBitTorrent|http://www.bittorrent.com/search?client=%v&search=");
+}
+
 			// Cleanup
 			delete json.settings;
 			this.loadSettings();
 		}
 		if (!this.loaded) {
-			var detectLang = (navigator.language) ? navigator.language : navigator.userLanguage;
-			var matches;
-			if (matches = detectLang.match(/af|ar|az|be|ca|cs|de|en|eo|es|et|fr|it|ja|nl|pt|sv/i))
-				detectLang = matches[0];
-			if ((lang !== null) && ((lang_code == this.config.lang) || ((this.config.lang == "auto") && (lang_code == detectLang)))) {
-				setupUI();
-				if (isGuest)
-					this.update();
+			if (!(this.config.lang in LANGUAGES)) {
+				var langList = "";
+				for (var lang in LANGUAGES) {
+					langList += "|" + lang;
+				}
+
+				var useLang = (navigator.language ? navigator.language : navigator.userLanguage || "").replace("-", "");
+				if (useLang = useLang.match(new RegExp(langList.substr(1), "i")))
+					useLang = useLang[0];
+
+				if (useLang && (useLang in LANGUAGES))
+					this.config.lang = useLang;
 				else
-					this.loadTorrents(json);
-			} else {
-				Asset.javascript("lang/" + ((this.config.lang == "auto") ? detectLang : this.config.lang) + ".js", {"onload": isGuest ? setupUI : function() { setupUI(); utWebUI.loadTorrents(json); }});
+					this.config.lang = (this.defConfig.lang || "en");
 			}
+
+			loadLangStrings({
+				"lang": this.config.lang,
+				"onload": (function() {
+					if (isGuest) this.update();
+					else this.loadTorrents(json);
+				}).bind(this)
+			});
 		}
 	},
 
@@ -837,8 +885,8 @@ var utWebUI = {
 				ele.set("value", v);
 			}
 		}).bind(this));
-		this.config.torrentTable.maxRows = (this.config.fileTable.maxRows || 0).max(this.limits.minTableRows);
-		$("webui.maxRows").set("value", this.config.torrentTable.maxRows);
+		this.config.maxRows = this.config.maxRows.max(this.limits.minTableRows);
+		$("webui.maxRows").set("value", this.config.maxRows);
 		this.props.multi = {
 			"trackers": 0,
 			"ulrate": 0,
@@ -884,49 +932,50 @@ var utWebUI = {
 		if (this.config.showTitleSpeed != value) {
 			this.config.showTitleSpeed = value;
 			if (!this.config.showTitleSpeed)
-				document.title = "\u00B5Torrent WebUI v" + VERSION;
-			hasChanged = true;
-		}
-
-		value = $("webui.alternateRows").checked;
-		if (this.config.alternateRows != value) {
-			this.config.alternateRows = value;
-			this.trtTable.options.alternateRows = this.flsTable.options.alternateRows = this.config.alternateRows;
-			this.trtTable.refreshSelection();
-			this.flsTable.refreshSelection();
+				document.title = g_winTitle;
 			hasChanged = true;
 		}
 
 		value = $("webui.showCategories").checked;
 		if (this.config.showCategories != value) {
-			this.config.showCategories = (value) ? 1 : 0;
-			$("CatList")[(!this.config.showCategories) ? "hide" : "show"]();
+			this.toggleCatPanel(value, true);
 			resize = true;
 			hasChanged = true;
 		}
 
 		value = $("webui.showDetails").checked;
 		if (this.config.showDetails != value) {
-			this.config.showDetails = (value) ? 1 : 0;
-			$("tdetails")[(!this.config.showDetails) ? "hide" : "show"]();
+			this.toggleDetPanel(value, true);
 			resize = true;
-			hasChanged = true;
-		}
-
-		value = $("webui.maxRows").value.toInt();
-		if (this.config.torrentTable.maxRows != value) {
-			this.config.torrentTable.maxRows = this.config.fileTable.maxRows = value;
-			//this.trtTable.setMaxRows(this.config.maxRows);
-			//this.flsTable.setMaxRows(this.config.maxRows);
-			reload = true;
 			hasChanged = true;
 		}
 
 		value = $("webui.lang").get("value");
 		if (this.config.lang != value) {
 			this.config.lang = value;
-			reload = true;
+			loadLangStrings({"lang": value});
 			hasChanged = true;
+		}
+
+		value = ($("webui.maxRows").get("value").toInt() || 0);
+		if (value < this.limits.minTableRows) {
+			value = this.limits.minTableRows;
+			$("webui.maxRows").set("value", value);
+		}
+		if (this.config.maxRows != value) {
+			this.tableSetMaxRows(value);
+			hasChanged = true;
+		}
+
+		value = $("webui.alternateRows").checked;
+		if (this.config.alternateRows != value) {
+			this.tableUseAltColor(value);
+			hasChanged = true;
+		}
+
+		value = $("gui.graphic_progress").checked;
+		if (!!this.settings["gui.graphic_progress"] != value) {
+			this.tableUseProgressBar(value);
 		}
 
 		var str = "";
@@ -949,6 +998,10 @@ var utWebUI = {
 				nv *= 10;
 			else if (key == "seed_time")
 				nv *= 60;
+			else if (key == "search_list")
+				nv = nv.split("\n").map(function(item) {
+					return item.replace(/[\r\n]+/g, '');
+				}).join("\r\n");
 			if (v != nv) {
 				this.settings[key] = nv;
 				if (key == "multi_day_transfer_mode") {
@@ -988,9 +1041,217 @@ var utWebUI = {
 	},
 
 	"showSettings": function() {
-		if (!this.langLoaded && !isGuest)
-			loadSettingStrings();
 		DialogManager.show("Settings");
+	},
+
+	"searchExecute": function() {
+		var searchQuery = $("query").get("value");
+		var searchActive = (this.settings["search_list_sel"] || 0);
+		var searchURLs = (this.settings["search_list"] || "").split("\r\n");
+
+		searchURLs = searchURLs.map(function(item) {
+			if (item) {
+				item = (item.split("|")[1] || "");
+				if (!item.test(/%s/)) item += "%s";
+				return item.replace(/%v/, "utWebUI").replace(/%s/, searchQuery);
+			}
+		}).filter($chk);
+
+		if (searchURLs[searchActive])
+			window.open(searchURLs[searchActive], "_blank");
+	},
+
+	"searchMenuSet": function(index) {
+		this.request("action=setsetting&s=search_list_sel&v=" + index); // TODO: Generalize settings storage requests
+
+		this.settings["search_list_sel"] = index;
+		$("query").focus();
+	},
+
+	"searchMenuShow": function(ele) {
+		var searchActive = (this.settings["search_list_sel"] || 0);
+		var searchURLs = (this.settings["search_list"] || "").split("\r\n");
+
+		searchURLs = searchURLs.map(function(item) {
+			if (item)
+				return (item.split("|")[0] || "").replace(/ /g, "&nbsp;");
+			else
+				return "";
+		});
+
+		ContextMenu.clear();
+		var index = 0
+		$each(searchURLs, (function(item) {
+			if (!item) {
+				ContextMenu.add([CMENU_SEP]);
+			}
+			else {
+				if (index == searchActive)
+					ContextMenu.add([CMENU_SEL, item]);
+				else
+					ContextMenu.add([item, this.searchMenuSet.pass(index, this)]);
+
+				++index;
+			}
+		}).bind(this));
+		var pos = ele.getPosition(), size = ele.getSize();
+		pos.x += size.x / 2;
+		pos.y += size.y / 2;
+		ContextMenu.show(pos);
+	},
+
+	"trtDataToRow": function(data) {
+		return this.trtColDefs.map(function(item) {
+			switch (item[0]) {
+				case "availability":
+					return data[CONST.TORRENT_AVAILABILITY];
+
+				case "done":
+					return data[CONST.TORRENT_PROGRESS];
+
+				case "downloaded":
+					return data[CONST.TORRENT_DOWNLOADED];
+
+				case "downspeed":
+					return data[CONST.TORRENT_DOWNSPEED];
+
+				case "eta":
+					return data[CONST.TORRENT_ETA];
+
+				case "label":
+					return data[CONST.TORRENT_LABEL];
+
+				case "name":
+					return data[CONST.TORRENT_NAME];
+
+				case "order":
+					return data[CONST.TORRENT_QUEUE_POSITION];
+
+				case "peers":
+					return data[CONST.TORRENT_PEERS_CONNECTED] + " (" + data[CONST.TORRENT_PEERS_SWARM] + ")";
+
+				case "ratio":
+					return data[CONST.TORRENT_RATIO];
+
+				case "remaining":
+					return data[CONST.TORRENT_REMAINING];
+
+				case "seeds":
+					return data[CONST.TORRENT_SEEDS_CONNECTED] + " (" + data[CONST.TORRENT_SEEDS_SWARM] + ")";
+
+				case "seeds_peers":
+					return (data[CONST.TORRENT_PEERS_SWARM]) ? data[CONST.TORRENT_SEEDS_SWARM] / data[CONST.TORRENT_PEERS_SWARM] : Number.MAX_VALUE;
+
+				case "size":
+					return data[CONST.TORRENT_SIZE];
+
+				case "status":
+					return data[CONST.TORRENT_STATUS];
+
+				case "uploaded":
+					return data[CONST.TORRENT_UPLOADED];
+
+				case "upspeed":
+					return data[CONST.TORRENT_UPSPEED];
+			}
+		}, this);
+	},
+
+	"trtFormatRow": function(values, index) {
+		var useidx = $chk(index);
+		var len = (useidx ? (index + 1) : values.length);
+
+		var doneIdx = this.trtColDoneIdx, statIdx = this.trtColStatusIdx;
+		if (!useidx || index == statIdx) {
+			values[statIdx] = this.getStatusInfo(values[statIdx], values[doneIdx])[1]
+		}
+
+		for (var i = (index || 0); i < len; i++) {
+			switch (this.trtColDefs[i][0]) {
+				case "label":
+				case "name":
+				case "peers":
+				case "seeds":
+				case "status":
+					break;
+
+				case "availability":
+					values[i] = (values[i] / 65536).toFixed(3);
+					break;
+
+				case "done":
+					values[i] = (values[i] / 10).toFixed(1) + "%";
+					break;
+
+				case "downloaded":
+					values[i] = values[i].toFileSize();
+					break;
+
+				case "downspeed":
+					values[i] = (values[i] >= 103) ? (values[i].toFileSize() + g_perSec) : "";
+					break;
+
+				case "eta":
+					values[i] = (values[i] == 0) ? "" :
+								(values[i] == -1) ? "\u221E" : values[i].toTimeString();
+					break;
+
+				case "ratio":
+					values[i] = (values[i] == -1) ? "\u221E" : (values[i] / 1000).toFixed(3);
+					break;
+
+				case "order":
+					// NOTE: It is known that this displays "*" for all torrents that are finished
+					//       downloading, even those that have reached their seeding goal. This
+					//       cannot be fixed perfectly unless we always know a torrent's seeding
+					//       goal, which we might not if the torrent's goal overrides the global
+					//       defaults. We can't know for sure unless we request getprop for each
+					//       and every torrent job, which is expensive.
+					values[i] = (values[i] <= -1) ? "*" : values[i];
+					break;
+
+				case "remaining":
+					values[i] = values[i].toFileSize(2);
+					break;
+
+				case "seeds_peers":
+					values[i] = ($chk(values[i]) && (values[i] != Number.MAX_VALUE)) ? values[i].toFixed(3) : "\u221E";
+					break;
+
+				case "size":
+					values[i]  = values[i].toFileSize(2);
+					break;
+
+				case "uploaded":
+					values[i] = values[i].toFileSize();
+					break;
+
+				case "upspeed":
+					values[i] = (values[i] >= 103) ? (values[i].toFileSize() + g_perSec) : "";
+					break;
+			}
+		}
+
+		if (useidx)
+			return values[index];
+		else
+			return values;
+	},
+
+	"trtSortCustom": function(col, datax, datay) {
+		var ret = 0;
+
+		switch (this.trtColDefs[col][0]) {
+			case "status":
+				ret = datax[col] - datay[col];
+				if (!ret) {
+					var doneIdx = this.trtColDoneIdx;
+					ret = datax[doneIdx] - datay[doneIdx];
+				}
+				break;
+		}
+
+		return ret;
 	},
 
 	"trtSelect": function(ev, id) {
@@ -1013,11 +1274,11 @@ var utWebUI = {
 
 	"trtDblClk": function(id) {
 		if (this.trtTable.selectedRows.length == 1)
-			this.perform((this.torrents[id][0] & CONST.STATE_STARTED) ? "stop" : "start");
+			this.perform((this.torrents[id][CONST.TORRENT_STATUS] & (CONST.STATE_STARTED | CONST.STATE_QUEUED)) ? "stop" : "start");
 	},
 
 	"showMenu": function(e, id) {
-		var state = this.torrents[id][0];
+		var state = this.torrents[id][CONST.TORRENT_STATUS];
 		var fstart = [lang[CONST.ML_FORCE_START], this.forceStart.bind(this)];
 		var start = [lang[CONST.ML_START], this.start.bind(this)];
 		var pause = [lang[CONST.ML_PAUSE], this.pause.bind(this)];
@@ -1201,7 +1462,7 @@ var utWebUI = {
 			ele.checked = (props[k] == 1);
 			$("DLG_TORRENTPROP_1_GEN_" + ids[k])[dis ? "addClass" : "removeClass"]("disabled");
 		}
-		$("dlgProps-header").set("text", this.torrents[this.propID][1] + " - " + lang[CONST.DLG_TORRENTPROP_00]);
+		$("dlgProps-header").set("text", this.torrents[this.propID][CONST.TORRENT_NAME] + " - " + lang[CONST.DLG_TORRENTPROP_00]);
 		DialogManager.show("Props");
 	},
 
@@ -1263,16 +1524,16 @@ var utWebUI = {
 
 	"updateDetails": function() {
 		if (this.torrentID != "") {
-			var d = this.torrents[this.torrentID].slice(1);
-			$("hs").set("html", this.torrentID); // hash
-			$("dl").set("html", d[4].toFileSize()); // downloaded
-			$("ul").set("html", d[5].toFileSize()); // uploaded
-			$("ra").set("html", (d[6] == -1) ? "\u221E" : (d[6] / 1000).toFixed(3)); // ratio
-			$("us").set("html", d[8].toFileSize() + perSec); // upload speed
-			$("ds").set("html", d[7].toFileSize() + perSec); // download speed
-			$("rm").set("html", (d[9] == 0) ? "" : (d[9] <= -1) ? "\u221E" : d[9].toTimeString()); // ETA
-			$("se").set("html", lang[CONST.GN_XCONN].replace(/%d/, d[13]).replace(/%d/, d[14]).replace(/%d/, "\u00BF?")); // seeds
-			$("pe").set("html", lang[CONST.GN_XCONN].replace(/%d/, d[11]).replace(/%d/, d[12]).replace(/%d/, "\u00BF?")); // peers
+			var d = this.torrents[this.torrentID];
+			$("hs").set("html", this.torrentID);
+			$("dl").set("html", d[CONST.TORRENT_DOWNLOADED].toFileSize());
+			$("ul").set("html", d[CONST.TORRENT_UPLOADED].toFileSize());
+			$("ra").set("html", (d[CONST.TORRENT_RATIO] == -1) ? "\u221E" : (d[CONST.TORRENT_RATIO] / 1000).toFixed(3));
+			$("us").set("html", d[CONST.TORRENT_UPSPEED].toFileSize() + g_perSec);
+			$("ds").set("html", d[CONST.TORRENT_DOWNSPEED].toFileSize() + g_perSec);
+			$("rm").set("html", (d[CONST.TORRENT_ETA] == 0) ? "" : (d[CONST.TORRENT_ETA] <= -1) ? "\u221E" : d[CONST.TORRENT_ETA].toTimeString());
+			$("se").set("html", lang[CONST.GN_XCONN].replace(/%d/, d[CONST.TORRENT_SEEDS_CONNECTED]).replace(/%d/, d[CONST.TORRENT_SEEDS_SWARM]).replace(/%d/, "\u00BF?"));
+			$("pe").set("html", lang[CONST.GN_XCONN].replace(/%d/, d[CONST.TORRENT_PEERS_CONNECTED]).replace(/%d/, d[CONST.TORRENT_PEERS_SWARM]).replace(/%d/, "\u00BF?"));
 		}
 	},
 
@@ -1302,10 +1563,7 @@ var utWebUI = {
 				this.flsTable.dBody.scrollLeft = 0;
 				this.flsTable.dBody.scrollTop = 0;
 				this.files[id].each(function(file, i) {
-					var data = $A(file);
-					data.push(data[3].toInt());
-					data[3] = ((data[1] > 0) ? ((data[2] / data[1]) * 100).toFixed(1) : 100);
-					this.flsTable.addRow(data, id + "_" + i);
+					this.flsTable.addRow(this.flsDataToRow(file), id + "_" + i);
 				}, this);
 				this.flsTable.calcSize();
 				this.flsTable.refreshRows();
@@ -1338,77 +1596,150 @@ var utWebUI = {
 			this.loadFiles();
 	},
 
-	"flsSelect": function(ev, id) {
-		if (this.flsTable.selectedRows.length > 0)
-			this.showFileMenu(e, id.substr(41).toInt());
+	"flsDataToRow": function(data) {
+		return this.flsColDefs.map(function(item) {
+			switch (item[0]) {
+				case "done":
+					return data[CONST.FILE_DOWNLOADED];
+
+				case "name":
+					return data[CONST.FILE_NAME];
+
+				case "pcnt":
+					return data[CONST.FILE_DOWNLOADED] / data[CONST.FILE_SIZE] * 1000;
+
+				case "prio":
+					return data[CONST.FILE_PRIORITY];
+
+				case "size":
+					return data[CONST.FILE_SIZE];
+			}
+		}, this);
 	},
 
-	"showFileMenu": function(ev, ind) {
+	"flsFormatRow": function(values, index) {
+		var useidx = $chk(index);
+		var len = (useidx ? (index + 1) : values.length);
+
+		for (var i = (index || 0); i < len; i++) {
+			switch (this.flsColDefs[i][0]) {
+				case "name":
+					break;
+
+				case "done":
+				case "size":
+					values[i] = values[i].toFileSize(2);
+					break;
+
+				case "pcnt":
+					values[i] = (values[i] / 10).toFixed(1) + "%";
+					break;
+
+				case "prio":
+					values[i] = lang[CONST["FI_PRI" + values[i]]];
+			}
+		}
+
+
+		if (useidx)
+			return values[index];
+		else
+			return values;
+	},
+
+	"flsSelect": function(ev, id) {
+		if (this.flsTable.selectedRows.length > 0)
+			this.showFileMenu.delay(0, this, ev);
+	},
+
+	"showFileMenu": function(ev) {
 		if (!ev.isRightClick()) return;
 
 		var id = this.torrentID;
-		var p = this.files[id][ind][3];
+		var menuItems = [];
 
-		var high = [lang[CONST.MF_HIGH], this.setPriority.bind(this, [id, 3])];
-		var normal = [lang[CONST.MF_NORMAL], this.setPriority.bind(this, [id, 2])];
-		var low = [lang[CONST.MF_LOW], this.setPriority.bind(this, [id, 1])];
-		var skip = [lang[CONST.MF_DONT], this.setPriority.bind(this, [id, 0])];
+		//--------------------------------------------------
+		// Priority Selection
+		//--------------------------------------------------
+
+		var prioItems = [
+			  [lang[CONST.MF_DONT], this.setPriority.bind(this, [id, CONST.FILEPRIORITY_SKIP])]
+			, [CMENU_SEP]
+			, [lang[CONST.MF_LOW], this.setPriority.bind(this, [id, CONST.FILEPRIORITY_LOW])]
+			, [lang[CONST.MF_NORMAL], this.setPriority.bind(this, [id, CONST.FILEPRIORITY_NORMAL])]
+			, [lang[CONST.MF_HIGH], this.setPriority.bind(this, [id, CONST.FILEPRIORITY_HIGH])]
+		];
+
+		// Gray out items based on priorities of selected files
+		var fileIds = this.getSelFileIds(id, -1);
+		if (fileIds.length <= 0) return;
+
+		var p = this.files[id][fileIds[0]][CONST.FILE_PRIORITY];
+		for (var i = 1, l = fileIds.length; i < l; ++i) {
+			if (p != this.files[id][fileIds[i]][CONST.FILE_PRIORITY]) {
+				p = -1;
+				break;
+			}
+		}
+		if (p >= 0) {
+			if (p > 0) ++p;
+			delete prioItems[p][1];
+		}
+
+		menuItems = menuItems.concat(prioItems.reverse());
+
+		//--------------------------------------------------
+		// Draw Menu
+		//--------------------------------------------------
 
 		ContextMenu.clear();
-		if (this.flsTable.selectedRows.length > 1) {
-			ContextMenu.add(high);
-			ContextMenu.add(normal);
-			ContextMenu.add(low);
-			ContextMenu.add([CMENU_SEP]);
-			ContextMenu.add(skip);
-		} else if (p == 0) {
-			// skip
-			ContextMenu.add(high);
-			ContextMenu.add(normal);
-			ContextMenu.add(low);
-			ContextMenu.add([CMENU_SEP]);
-			ContextMenu.add([lang[CONST.MF_DONT]]);
-		} else if (p == 1) {
-			// low
-			ContextMenu.add(high);
-			ContextMenu.add(normal);
-			ContextMenu.add([lang[CONST.MF_LOW]]);
-			ContextMenu.add([CMENU_SEP]);
-			ContextMenu.add(skip);
-		} else if (p == 2) {
-			// normal
-			ContextMenu.add(high);
-			ContextMenu.add([lang[CONST.MF_NORMAL]]);
-			ContextMenu.add(low);
-			ContextMenu.add([CMENU_SEP]);
-			ContextMenu.add(skip);
-		} else if (p == 3) {
-			// high
-			ContextMenu.add([lang[CONST.MF_HIGH]]);
-			ContextMenu.add(normal);
-			ContextMenu.add(low);
-			ContextMenu.add([CMENU_SEP]);
-			ContextMenu.add(skip);
+		for (var i = 0, l = menuItems.length; i < l; ++i) {
+			ContextMenu.add(menuItems[i]);
 		}
 		ContextMenu.show(ev.page);
 	},
 
-	"getFileIds": function(id, p) {
+	"getSelFileIds": function(id, p) {
 		var ids = [];
 		var len = this.flsTable.selectedRows.length;
 		while (len--) {
-			var fileId = this.flsTable.selectedRows[len].substr(41).toInt();
-			if (this.files[id][fileId][3] != p) {
+			var rowId = this.flsTable.selectedRows[len]
+			var fileId = rowId.match(/.*_([0-9]+)$/)[1].toInt();
+			if (this.files[id][fileId][CONST.FILE_PRIORITY] != p) {
 				ids.push(fileId);
-				this.files[id][fileId][3] = p;
-				this.flsTable.setValue(this.flsTable.selectedRows[len], 4, p);
 			}
 		}
 		return ids;
 	},
 
 	"setPriority": function(id, p) {
-		this.request("action=setprio&hash=" + id + "&p=" + p + "&f=" + this.getFileIds(id, p).join("&f="));
+		var fileIds = this.getSelFileIds(id, p);
+		if (fileIds.length <= 0) return;
+
+		this.request("action=setprio&hash=" + id + "&p=" + p + "&f=" + fileIds.join("&f="), (function() {
+			$each(fileIds, function(v) {
+				var rowId = id + "_" + v;
+				this.files[id][v][CONST.FILE_PRIORITY] = p;
+
+				this.flsTable.rowData[rowId].data[this.flsColPrioIdx] = p;
+				this.flsTable.updateCell(rowId, this.flsColPrioIdx);
+			}, this);
+		}).bind(this));
+	},
+
+	"trtColReset": function() {
+		var config = {
+			  "colMask": 0
+			, "colOrder": this.trtColDefs.map(function(item, idx) { return idx; })
+			, "colWidth": this.trtColDefs.map(function(item, idx) { return item[1]; })
+		};
+
+		this.trtColDefs.each(function(item, idx) { if (!!item[3]) config.colMask |= (1 << idx); });
+
+		this.trtTable.setConfig(config);
+		$extend(this.config.torrentTable, config);
+		if (Browser.Engine.presto)
+			this.saveConfig(true);
 	},
 
 	"trtSort": function(index, reverse) {
@@ -1426,18 +1757,33 @@ var utWebUI = {
 	},
 
 	"trtColResize": function() {
-		this.config.torrentTable.colWidth = this.trtTable.colWidth;
+		this.config.torrentTable.colWidth = this.trtTable.getColumnWidths();
 		if (Browser.Engine.presto)
 			this.saveConfig(true);
 	},
 
-	"trtColToggle": function(index, enable) {
+	"trtColToggle": function(index, enable, nosave) {
 		var num = 1 << index;
 		if (enable) {
-			this.config.trtCols |= num;
+			this.config.torrentTable.colMask |= num;
 		} else {
-			this.config.trtCols &= ~num;
+			this.config.torrentTable.colMask &= ~num;
 		}
+		if (!nosave && Browser.Engine.presto)
+			this.saveConfig(true);
+	},
+
+	"flsColReset": function() {
+		var config = {
+			  "colMask": 0
+			, "colOrder": this.flsColDefs.map(function(item, idx) { return idx; })
+			, "colWidth": this.flsColDefs.map(function(item, idx) { return item[1]; })
+		};
+
+		this.flsColDefs.each(function(item, idx) { if (!!item[3]) config.colMask |= (1 << idx); });
+
+		this.flsTable.setConfig(config);
+		$extend(this.config.fileTable, config);
 		if (Browser.Engine.presto)
 			this.saveConfig(true);
 	},
@@ -1457,26 +1803,27 @@ var utWebUI = {
 	},
 
 	"flsColResize": function() {
-		this.config.fileTable.colWidth = this.flsTable.colWidth;
+		this.config.fileTable.colWidth = this.flsTable.getColumnWidths();
 		if (Browser.Engine.presto)
 			this.saveConfig(true);
 	},
 
-	"flsColToggle": function(index, enable) {
+	"flsColToggle": function(index, enable, nosave) {
 		var num = 1 << index;
 		if (enable) {
-			this.config.flsCols |= num;
+			this.config.fileTable.colMask |= num;
 		} else {
-			this.config.flsCols &= ~num;
+			this.config.fileTable.colMask &= ~num;
 		}
-		if (Browser.Engine.presto)
+		if (!nosave && Browser.Engine.presto)
 			this.saveConfig(true);
 	},
 
 	"flsDblClk": function(id) {
 		if (this.flsTable.selectedRows.length != 1) return;
-		var hash = id.substring(0, 40);
-		this.setPriority(hash, (this.files[hash][id.substr(41).toInt()][3] + 1) % 4);
+		var hash = id.match(/(.*)_[0-9]+$/)[1];
+		var fid = id.match(/.*_([0-9]+)$/)[1].toInt();
+		this.setPriority(hash, (this.files[hash][fid][CONST.FILE_PRIORITY] + 1) % 4);
 	},
 
 	"restoreUI" : function(bc) {
@@ -1493,25 +1840,64 @@ var utWebUI = {
 		this.request("action=setsetting&s=webui.cookie&v=" + JSON.encode(this.config), callback || null, async || false);
 	},
 
-	"toggleCatPanel": function() {
-		var show = !this.config.showCategories;
+	"toggleCatPanel": function(show, noresize) {
+		if (!$defined(show)) {
+			show = !this.config.showDetails;
+		}
+
 		$("CatList")[show ? "show" : "hide"]();
 		this.config.showCategories = show;
-		resizeUI.delay(0);
+
+		if (!noresize) {
+			resizeUI();
+		}
 	},
 
-	"toggleDetPanel": function() {
-		var show = !this.config.showDetails;
+	"toggleDetPanel": function(show, noresize) {
+		if (!$defined(show)) {
+			show = !this.config.showDetails;
+		}
+
 		$("tdetails")[show ? "show" : "hide"]();
 		this.config.showDetails = show;
-		resizeUI.delay(0);
+
+		if (!noresize) {
+			resizeUI();
+		}
 	},
 
-	"toggleToolbar": function() {
-		var show = !this.config.showToolbar;
+	"toggleToolbar": function(show, noresize) {
+		if (!$defined(show)) {
+			show = !this.config.showToolbar;
+		}
+
 		$("toolbar")[show ? "show" : "hide"]();
 		this.config.showToolbar = show;
-		resizeUI.delay(0);
+
+		if (!noresize) {
+			resizeUI();
+		}
+	},
+
+	"tableSetMaxRows": function(max) {
+		max = (max || 0).max(this.limits.minTableRows);
+		this.config.maxRows = max;
+		this.trtTable.setConfig({"rowMaxCount": max});
+		this.flsTable.setConfig({"rowMaxCount": max});
+	},
+
+	"tableUseAltColor": function(enable) {
+		this.config.alternateRows = enable;
+		this.trtTable.setConfig({"rowAlternate": enable});
+		this.flsTable.setConfig({"rowAlternate": enable});
+	},
+
+	"tableUseProgressBar": function(enable) {
+		var progFunc = $lambda(enable ? TYPE_NUM_PROGRESS : TYPE_NUMBER);
+		var trtProgCols = this.trtColDefs.filter(function(item) { return item[2] == TYPE_NUM_PROGRESS; }).map(function(item) { return item[0]; });
+		var flsProgCols = this.flsColDefs.filter(function(item) { return item[2] == TYPE_NUM_PROGRESS; }).map(function(item) { return item[0]; });
+		this.trtTable.setConfig({"colType": trtProgCols.map(progFunc).associate(trtProgCols)});
+		this.flsTable.setConfig({"colType": flsProgCols.map(progFunc).associate(flsProgCols)});
 	},
 
 	"tabChange": function(id) {

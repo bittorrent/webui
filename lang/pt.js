@@ -1,253 +1,255 @@
 var lang = [
-	"Ficheiros Torrent||*.torrent||Todos os ficheiros (*.*)||*.*||",
-	"Preferências",
-	"OK",
-	"Cancelar",
-	"Idioma:",
-	"Privacidade",
-	"Procurar actualizações automaticamente",
-	"Actualização para versões beta",
-	"Enviar informação anónima ao procurar actualizações",
-	"Ao Transferir",
-	"Adicionar .!ut aos ficheiros imcompletos",
-	"Pré-alocar todos os ficheiros",
-	"Prevenir suspensão se existirem torrents activos",
-	"Confirmar ao apagar torrents",
-	"Alternar a cor de fundo da lista",
-	"Mostrar vel. actual na barra de estado",
-	"Ao Adicionar Torrents",
-	"Não iniciar a transf. automaticamente",
-	"Localização dos Ficheiros Recebidos",
-	"Colocar novos downloads em:",
-	"Mostrar sempre diálogo ao adicionar manualmente",
-	"Mover downloads completos para:",
-	"Adicionar a descrição do torrent",
-	"Apenas mover do directório padrão de download",
-	"Localização dos .torrents",
-	"Guardar .torrents em:",
-	"Mover .torrents de tarefas terminadas para:",
-	"Carregar .torrents automat. de:",
-	"Apagar .torrents carregados",
-	"Porta de Escuta",
-	"Porta utilzada para ligações de entrada:",
-	"Porta ao acaso",
-	"Escolher porta ao acaso ao iniciar",
-	"Activar map. de portas UPnP",
-	"Activar map. de portas NAT-PMP",
-	"Servidor Proxy",
-	"Tipo:",
-	"Proxy:",
-	"Porta:",
-	"Autenticação",
-	"Nome de Utilizador:",
-	"Password:",
-	"Procurar nomes de host através de proxy",
-	"Utilizar servidor proxy para ligações peer-to-peer",
-	"Adic. excep. à Firewall do Windows",
-	"Limite Global de Velocidade de Envio",
-	"Vel. máxima de envio (kB/s): [0: ilimitado]",
-	"Automático",
-	"Vel. de envio altern. quando não há downloads (kB/s):",
-	"Limite Global de Velocidade de Recepção",
-	"Vel. máx. de recepção (kB/s): [0: ilimitado]",
-	"Número de Ligações",
-	"Número máximo global de ligações:",
-	"Número máximo de peers ligados por torrent:",
-	"Número de slots de envio por torrent:",
-	"Usar slots adicionais se a vel. de upload for < 90%",
-	"Características Básicas do BitTorrent",
-	"Activar Rede DHT",
-	"Pedir inf. de scrape ao tracker",
-	"Activar DHT para torrents novos",
-	"Activar Troca de Peers",
-	"Ligar Descoberta de Peers Locais",
-	"Limitar larg. de banda dos peers locais",
-	"IP/Nome de host a relatar ao tracker:",
-	"Encriptação de Protocolo",
-	"Envio:",
-	"Permitir ligações de entrada antigas",
-	"Ligar Limite de Transferência",
-	"Opções de Limite",
-	"Parar torrents quando:",
-	"alcance",
-	"nos últimos",
-	"dias",
-	"Definições de Fila",
-	"Número máximo de torrents activos (envio ou recepção):",
-	"Número máximo de downloads activos:",
-	"Enviar Enquanto [Valores padrão]",
-	"Rácio é:  <=",
-	"%   ou tempo de envio é:",
-	"Tarefas de envio têm prioridade mais alta que as tarefas de recepção",
-	"Quando o µTorrent Atingir o Objectivo de Envio",
-	"Limitar a vel. de envio a (kB/s): [0: parar]",
-	"Activar Agendador de Tarefas",
-	"Tabela do Agendador",
-	"Definições do Agendador de Tarefas",
-	"Vel.de envio limitada (kB/s):",
-	"Vel. de recepção limitada (kB/s):",
-	"Desactivar DHT ao desligar",
-	"Activar Web UI",
-	"Autenticação",
-	"Nome",
-	"Password",
-	"Activar Conta de convidado com nome:",
-	"Conectividade",
-	"Porta de escuta alternativa (padrão é a porta de ligação):",
-	"Restringir acesso aos seguintes IPs (Separar entradas com uma vírgula):",
-	"Opções avançadas [CUIDADO: Não modifique!]",
-	"Descrições Persistentes [Separe descrições com o caracter | ]",
-	"Definições Básicas da Cache",
-	"A cache do disco é usada para manter os dados acedidos mais frequentemente em memória para reduzir o número de acessos ao disco. O µTorrent normalmente gere a cache automaticamente, mas pode alterar isso modificando estas definições.",
-	"Ignorar o tam. autom. da cache e especificá-lo manualmente (MB):",
-	"Reduzir a utilização da memória quando a cache não é necessária",
-	"Definições Avançadas de Cache",
-	"Activar cache para escritas no disco",
-	"Escrever blocos não utilizados todos os 2 minutos",
-	"Escrever partes terminadas imediatamente",
-	"Ligar a cache para leituras do disco",
-	"Desl. a cache de leitura se a vel. de envio estiver lenta",
-	"Remover blocos antigos da cache",
-	"Aumentar o tamanho automático da cache quando esta está cheia",
-	"Desligar o caching do Windows para escritas",
-	"Desligar o caching do Windows para leituras",
-	"Propriedades do Torrent",
-	"OK",
-	"Cancelar",
-	"Trackers (separar filas com uma linha vazia)",
-	"Definições de Largura de Banda",
-	"Vel. máx. de envio (kB/s): [0: por defeito]",
-	"Vel. máx. de recepção (kB/s): [0: por defeito]",
-	"Número de slots de envio: [0: por defeito]",
-	"Enviar Enquanto",
-	"Ignorar definições padrão",
-	"Rácio is:  <=",
-	"%  ou tempo de envio é:",
-	"Outras Definições",
-	"Seeding Inicial",
-	"Activar DHT",
-	"Troca de Peers",
-	"Realizado",
-	"Nome",
-	"%",
-	"Prioridade",
-	"Tamanho",
-	"saltar",
-	"baixa",
-	"normal",
-	"alta",
-	"Recebido:",
-	"Enviado:",
-	"Seeds:",
-	"Restante:",
-	"Vel. Recepção:",
-	"Veloc. Envio:",
-	"Peers:",
-	"Rácio de Part.:",
-	"Hash:",
-	"Transferência",
-	"%d de %d ligados (%d no swarm)",
-	"R:%s E:%s - %s",
-	"Mostrar Lista de Categorias",
-	"Mostrar Informações Detalhadas",
-	"Não Transferir",
-	"Prioridade Alta",
-	"Prioridade Baixa",
-	"Prioridade Normal",
-	"Eliminar Dados",
-	"Forçar Verificação",
-	"Forçar Início",
-	"Descrição",
-	"Pausa",
-	"Propriedades",
-	"Remover",
-	"Remover E",
-	"Iniciar",
-	"Parar",
-	"Activo",
-	"Todos",
-	"Completo",
-	"A transferir",
-	"Inactivo",
-	"Sem Descrição",
-	"||Disp.||Disponibilidade",
-	"Realizado",
-	"Recebido",
-	"Veloc. de Recepção",
-	"Tempo Rest.",
-	"Descrição",
-	"Nome",
-	"#",
-	"Peers",
-	"Restante",
-	"Seeds",
-	"Seeds/Peers",
-	"Ratio",
-	"Tamanho",
-	"Estado",
-	"Enviado",
-	"Veloc. de Envio",
-	"Tem a certeza que deseja remover os %d torrents seleccionados e toda a informação associada?",
-	"Tem a certeza que deseja remover o torrent seleccionado e toda a informação associada?",
-	"Tem a certeza que deseja remover os %d torrents seleccionados?",
-	"Tem a certeza que deseja remover o torrent selccionado?",
-	"Verificado: %:.1d%%",
-	"A transferir",
-	"Erro: %s",
-	"Concluído",
-	"Pausado",
-	"Na fila",
-	"A enviar",
-	"Parado",
-	"Adicionar Descrição",
-	"Introduza a nova descrição para o torrent selecionado:",
-	"Nova descrição...",
-	"Remover Descrição",
-	"Geral||Trackers||Peers||Partes||Ficheiros||Velocidade||Registo||",
-	"Adicinar Torrent",
-	"Pausa",
-	"Preferências",
-	"Remover",
-	"Iniciar",
-	"Parar",
-	"GB",
-	"kB",
-	"MB",
-	"Avançado",
-	"Largura de Banda",
-	"Ligação",
-	"Cache do Disco",
-	"Directorias",
-	"Geral",
-	"Agendador de Tarefas",
-	"Fila de espera",
-	"BitTorrent",
-	"IU Web",
-	"Limite de Transferência",
-	"Desactivar||Activar||Forçar||",
-	"(nenhum)||Socks4||Socks5||HTTPS||HTTP||",
-	"Envios||Transferências||Envios + Transferências||",
-	"MB||GB||",
-	"1||2||5||7||10||14||15||20||21||28||30||31||",
-	"Nome",
-	"Valor",
-	"Seg||Ter||Qua||Qui||Sex||Sáb||Dom||",
-	"Segunda-feira||Terça-feira||Quarta-feira||Quinta-feira||Sexta-feira||Sábado||Domingo||",
-	"Vel. Máxima",
-	"Vel. Máxima - Usa limites de largura de banda normais globais",
-	"Limitado",
-	"Limitado - Utiliza limites de largura de banda especificados no agendador",
-	"Apenas Envio",
-	"Apenas Envio - Só envia informação (incluindo incompleto)",
-	"Desligar",
-	"Desligar - Para todos os torrents não forçados",
-	"<= %d horas",
-	"(Ignorar)",
-	"<= %d minutos",
-	"%dd %dh",
-	"%dh %dm",
-	"%dm %ds",
-	"%ds",
-	"%dsm %dd",
-	"%da %dsm"
-], lang_code = "pt";
+	  "Ficheiros Torrent||*.torrent||Todos os ficheiros (*.*)||*.*||"
+	, "OK"
+	, "Cancelar"
+	, "Aplicar"
+	, "Preferências"
+	, "Idioma:"
+	, "Privacidade"
+	, "Procurar actualizações automaticamente"
+	, "Actualização para versões beta"
+	, "Enviar informação anónima ao procurar actualizações"
+	, "Ao Transferir"
+	, "Adicionar .!ut aos ficheiros imcompletos"
+	, "Pré-alocar todos os ficheiros"
+	, "Prevenir suspensão se existirem torrents activos"
+	, "Confirmar ao apagar torrents"
+	, "Alternar a cor de fundo da lista"
+	, "Mostrar vel. actual na barra de estado"
+	, "Ao Adicionar Torrents"
+	, "Não iniciar a transf. automaticamente"
+	, "Localização dos Ficheiros Recebidos"
+	, "Colocar novos downloads em:"
+	, "Mostrar sempre diálogo ao adicionar manualmente"
+	, "Mover downloads completos para:"
+	, "Adicionar a descrição do torrent"
+	, "Apenas mover do directório padrão de download"
+	, "Localização dos .torrents"
+	, "Guardar .torrents em:"
+	, "Mover .torrents de tarefas terminadas para:"
+	, "Carregar .torrents automat. de:"
+	, "Apagar .torrents carregados"
+	, "Porta de Escuta"
+	, "Porta utilzada para ligações de entrada:"
+	, "Porta ao acaso"
+	, "Escolher porta ao acaso ao iniciar"
+	, "Activar map. de portas UPnP"
+	, "Activar map. de portas NAT-PMP"
+	, "Servidor Proxy"
+	, "Tipo:"
+	, "Proxy:"
+	, "Porta:"
+	, "Autenticação"
+	, "Nome de Utilizador:"
+	, "Password:"
+	, "Procurar nomes de host através de proxy"
+	, "Utilizar servidor proxy para ligações peer-to-peer"
+	, "Adic. excep. à Firewall do Windows"
+	, "Limite Global de Velocidade de Envio"
+	, "Vel. máxima de envio (kB/s): [0: ilimitado]"
+	, "Automático"
+	, "Vel. de envio altern. quando não há downloads (kB/s):"
+	, "Limite Global de Velocidade de Recepção"
+	, "Vel. máx. de recepção (kB/s): [0: ilimitado]"
+	, "Número de Ligações"
+	, "Número máximo global de ligações:"
+	, "Número máximo de peers ligados por torrent:"
+	, "Número de slots de envio por torrent:"
+	, "Usar slots adicionais se a vel. de upload for < 90%"
+	, "Características Básicas do BitTorrent"
+	, "Activar Rede DHT"
+	, "Pedir inf. de scrape ao tracker"
+	, "Activar DHT para torrents novos"
+	, "Activar Troca de Peers"
+	, "Ligar Descoberta de Peers Locais"
+	, "Limitar larg. de banda dos peers locais"
+	, "IP/Nome de host a relatar ao tracker:"
+	, "Encriptação de Protocolo"
+	, "Envio:"
+	, "Permitir ligações de entrada antigas"
+	, "Ligar Limite de Transferência"
+	, "Opções de Limite"
+	, "Parar torrents quando:"
+	, "alcance"
+	, "nos últimos"
+	, "dias"
+	, "Definições de Fila"
+	, "Número máximo de torrents activos (envio ou recepção):"
+	, "Número máximo de downloads activos:"
+	, "Enviar Enquanto [Valores padrão]"
+	, "Rácio é:  <="
+	, "%   ou tempo de envio é:"
+	, "Tarefas de envio têm prioridade mais alta que as tarefas de recepção"
+	, "Quando o µTorrent Atingir o Objectivo de Envio"
+	, "Limitar a vel. de envio a (kB/s): [0: parar]"
+	, "Activar Agendador de Tarefas"
+	, "Tabela do Agendador"
+	, "Definições do Agendador de Tarefas"
+	, "Vel.de envio limitada (kB/s):"
+	, "Vel. de recepção limitada (kB/s):"
+	, "Desactivar DHT ao desligar"
+	, "Activar Web UI"
+	, "Autenticação"
+	, "Nome"
+	, "Password"
+	, "Activar Conta de convidado com nome:"
+	, "Conectividade"
+	, "Porta de escuta alternativa (padrão é a porta de ligação):"
+	, "Restringir acesso aos seguintes IPs (Separar entradas com uma vírgula):"
+	, "Opções avançadas [CUIDADO: Não modifique!]"
+	, "Descrições Persistentes [Separe descrições com o caracter | ]"
+	, "Motores de Busca [Formato: nome|URL]"
+	, "Definições Básicas da Cache"
+	, "A cache do disco é usada para manter os dados acedidos mais frequentemente em memória para reduzir o número de acessos ao disco. O µTorrent normalmente gere a cache automaticamente, mas pode alterar isso modificando estas definições."
+	, "Ignorar o tam. autom. da cache e especificá-lo manualmente (MB):"
+	, "Reduzir a utilização da memória quando a cache não é necessária"
+	, "Definições Avançadas de Cache"
+	, "Activar cache para escritas no disco"
+	, "Escrever blocos não utilizados todos os 2 minutos"
+	, "Escrever partes terminadas imediatamente"
+	, "Ligar a cache para leituras do disco"
+	, "Desl. a cache de leitura se a vel. de envio estiver lenta"
+	, "Remover blocos antigos da cache"
+	, "Aumentar o tamanho automático da cache quando esta está cheia"
+	, "Desligar o caching do Windows para escritas"
+	, "Desligar o caching do Windows para leituras"
+	, "Propriedades do Torrent"
+	, "Trackers (separar filas com uma linha vazia)"
+	, "Definições de Largura de Banda"
+	, "Vel. máx. de envio (kB/s): [0: por defeito]"
+	, "Vel. máx. de recepção (kB/s): [0: por defeito]"
+	, "Número de slots de envio: [0: por defeito]"
+	, "Enviar Enquanto"
+	, "Ignorar definições padrão"
+	, "Rácio is:  <="
+	, "%  ou tempo de envio é:"
+	, "Outras Definições"
+	, "Seeding Inicial"
+	, "Activar DHT"
+	, "Troca de Peers"
+	, "Realizado"
+	, "Nome"
+	, "%"
+	, "Prioridade"
+	, "Tamanho"
+	, "saltar"
+	, "baixa"
+	, "normal"
+	, "alta"
+	, "Recebido:"
+	, "Enviado:"
+	, "Seeds:"
+	, "Restante:"
+	, "Vel. Recepção:"
+	, "Veloc. Envio:"
+	, "Peers:"
+	, "Rácio de Part.:"
+	, "Hash:"
+	, "Transferência"
+	, "%d de %d ligados (%d no swarm)"
+	, "R:%s E:%s - %s"
+	, "Mostrar Lista de Categorias"
+	, "Mostrar Informações Detalhadas"
+	, "Reset"
+	, "Não Transferir"
+	, "Prioridade Alta"
+	, "Prioridade Baixa"
+	, "Prioridade Normal"
+	, "Eliminar Dados"
+	, "Forçar Verificação"
+	, "Forçar Início"
+	, "Descrição"
+	, "Pausa"
+	, "Propriedades"
+	, "Remover"
+	, "Remover E"
+	, "Iniciar"
+	, "Parar"
+	, "Activo"
+	, "Todos"
+	, "Completo"
+	, "A transferir"
+	, "Inactivo"
+	, "Sem Descrição"
+	, "||Disp.||Disponibilidade"
+	, "Realizado"
+	, "Recebido"
+	, "Veloc. de Recepção"
+	, "Tempo Rest."
+	, "Descrição"
+	, "Nome"
+	, "#"
+	, "Peers"
+	, "Restante"
+	, "Seeds"
+	, "Seeds/Peers"
+	, "Ratio"
+	, "Tamanho"
+	, "Estado"
+	, "Enviado"
+	, "Veloc. de Envio"
+	, "Tem a certeza que deseja remover os %d torrents seleccionados e toda a informação associada?"
+	, "Tem a certeza que deseja remover o torrent seleccionado e toda a informação associada?"
+	, "Tem a certeza que deseja remover os %d torrents seleccionados?"
+	, "Tem a certeza que deseja remover o torrent selccionado?"
+	, "Verificado: %:.1d%%"
+	, "A transferir"
+	, "Erro: %s"
+	, "Concluído"
+	, "Pausado"
+	, "Na fila"
+	, "Seed na fila"
+	, "A enviar"
+	, "Parado"
+	, "Adicionar Descrição"
+	, "Introduza a nova descrição para o torrent selecionado:"
+	, "Nova descrição..."
+	, "Remover Descrição"
+	, "Geral||Trackers||Peers||Partes||Ficheiros||Velocidade||Registo||"
+	, "Adicinar Torrent"
+	, "Pausa"
+	, "Preferências"
+	, "Remover"
+	, "Iniciar"
+	, "Parar"
+	, "GB"
+	, "kB"
+	, "MB"
+	, "Avançado"
+	, "Largura de Banda"
+	, "Ligação"
+	, "Cache do Disco"
+	, "Directorias"
+	, "Geral"
+	, "Agendador de Tarefas"
+	, "Fila de espera"
+	, "BitTorrent"
+	, "IU Web"
+	, "Limite de Transferência"
+	, "Desactivar||Activar||Forçar||"
+	, "(nenhum)||Socks4||Socks5||HTTPS||HTTP||"
+	, "Envios||Transferências||Envios + Transferências||"
+	, "MB||GB||"
+	, "1||2||5||7||10||14||15||20||21||28||30||31||"
+	, "Nome"
+	, "Valor"
+	, "Seg||Ter||Qua||Qui||Sex||Sáb||Dom||"
+	, "Segunda-feira||Terça-feira||Quarta-feira||Quinta-feira||Sexta-feira||Sábado||Domingo||"
+	, "Vel. Máxima"
+	, "Vel. Máxima - Usa limites de largura de banda normais globais"
+	, "Limitado"
+	, "Limitado - Utiliza limites de largura de banda especificados no agendador"
+	, "Apenas Envio"
+	, "Apenas Envio - Só envia informação (incluindo incompleto)"
+	, "Desligar"
+	, "Desligar - Para todos os torrents não forçados"
+	, "<= %d horas"
+	, "(Ignorar)"
+	, "<= %d minutos"
+	, "%dd %dh"
+	, "%dh %dm"
+	, "%dm %ds"
+	, "%ds"
+	, "%dsm %dd"
+	, "%da %dsm"
+];

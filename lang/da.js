@@ -1,253 +1,255 @@
 var lang = [
-	"Torrent filer||*.torrent||Alle filer (*.*)||*.*||",
-	"Indstillinger",
-	"OK",
-	"Annullér",
-	"Sprog:",
-	"Privatliv",
-	"Check automatisk for updateringer",
-	"Updater til beta versioner",
-	"Send anonyme informationer, når der checkes for opdateringer",
-	"Ved downloading",
-	"Tilføj .!ut til ukomplette filer",
-	"Præ allokér alle filer",
-	"Undgå standby hvis der er aktive torrents",
-	"Bekræft sletning af torrents",
-	"Alternativ liste baggrundsfarve",
-	"Vis aktuel hastighed i titel baren",
-	"Når torrents tilføjes",
-	"Start ikke download automatisk",
-	"Lokation for downloadede filer",
-	"Gem nye downloads i:",
-	"Vis altid dialogboks v. manuel tilføjelse",
-	"Flyt færdige downloads til:",
-	"Tilføj etiket fra torrent",
-	"Flyt kun fra standard download mappe",
-	"Lokation af .torrents",
-	"Gem .torrents i:",
-	"Flyt færdige .torrents til:",
-	"Indlæs automatisk .torrents fra:",
-	"Slet indlæste .torrents",
-	"Port, der lyttes på",
-	"Port, der bruges til indkomne forbindelser:",
-	"Tilfældig port",
-	"Vælg en tilfældig port ved hver programstart",
-	"Aktivér UPnP kortlægning",
-	"Aktivér NAT-PMP port kortlægning",
-	"Proxy Server",
-	"Type:",
-	"Proxy:",
-	"Port:",
-	"Identifikation",
-	"Brugernavn:",
-	"Kodeord:",
-	"Oversæt værtsnavne via proxy",
-	"Brug proxy server ved peer-to-peer forbindelser",
-	"Tilføj Windows Firewall undtagelse",
-	"Global upload hastighedsbegrænsning",
-	"Maksimal upload hastighed (kB/s): [0: ubegrænset]",
-	"Automatisk",
-	"Særlig upload hastighed, når der ikke downloades (kB/s):",
-	"Global download hastighedsbegrænsning",
-	"Maksimal download hastighed (kB/s): [0: ubegrænset]",
-	"Antal forbindelser",
-	"Globalt maksimalt antal forbindelser:",
-	"Maksimale antal forbundne peers pr. torrent:",
-	"Antal upload slots pr. torrent:",
-	"Brug yderligere upload slots hvis upload hastighed < 90%",
-	"Grundlæggende BitTorrent egenskaber",
-	"Aktivér DHT netværk",
-	"Bed tracker om scrape information",
-	"Aktivér DHT for nye torrents",
-	"Aktivér peer udveksling",
-	"Aktivér %lokal peer opdagelse",
-	"Begræns lokal peer båndbredde",
-	"IP/værtsnavn rapporteret til tracker:",
-	"Protokol kryptering",
-	"Udgående:",
-	"Tillad ældre indkommende forbindelser",
-	"Aktivér overførselsgrænse",
-	"Grænseindstillinger",
-	"Stop torrents når:",
-	"når",
-	"i de sidste",
-	"dage",
-	"Kø indstillinger",
-	"Maksimale antal af aktive torrents (upload eller download):",
-	"Maksimale antal af aktive downloads:",
-	"Seed så længe [standard værdier]",
-	"Forhold er:  <=",
-	"%   eller seed tid er:",
-	"Uploads har højere prioritet end downloads",
-	"Når µTorrent når seeding målet",
-	"Begræns upload hastighed til (kB/s): [0: stop]",
-	"Aktivér planlægning",
-	"Planlægningsskema",
-	"Planlægingsindstillinger",
-	"Begrænset upload hastighed (kB/s):",
-	"Begrænset download hastighed (kB/s):",
-	"Deaktivér DHT ved afbrydelse",
-	"Aktivér Web UI",
-	"Identifikation",
-	"Brugernavn:",
-	"Kodeord:",
-	"Aktivér Gæst konto med brugernavn:",
-	"Forbindelse",
-	"Alternativ port, der lyttes på (standard er forbindelsesport):",
-	"Begræns adgang til følgende IP adresser (separer med komma):",
-	"Avancerede indstillinger [ADVARSEL: Bør ikke ændres!]",
-	"Vedvarende etiketter [separer med |]",
-	"Grundlæggende cache indstillinger",
-	"Disk cachen benyttes til at gemme data i hukommelsen, som ofte forespørges. Dette reducerer antallet af læse og skrive kommandoer til harddisken. Normalt håndterer µTorrent automatisk disk cachen, men du kan ændre disk cachens opførsel ved at ændre i indstillingerne herunder.",
-	"Tilsidesæt automatisk cache størrelse og angiv en manuel størrelse (MB):",
-	"Reducer hukommelsesforbrug når cachen ikke behøves",
-	"Avancerede cache indstillinger",
-	"Aktivér cache for disk skrivning",
-	"Skriv ubenyttede blokke hver 2 minutter",
-	"Skriv straks færdige dele",
-	"Aktivér cache for disk læsning",
-	"Deaktivér læse cache hvis upload hastigheden er lav",
-	"Fjern gamle blokke fra cachen",
-	"Forøg automatisk cache størrelsen hvis den fyldes op",
-	"Deaktivér Windows cache for disk skrivning",
-	"Deaktivér Windows cache for disk læsning",
-	"Torrent egenskaber",
-	"OK",
-	"Annullér",
-	"Trackere (separer med en tom linie)",
-	"Båndbredde indstilliner",
-	"Maksimal upload hastighed (kB/s): [0: standard]",
-	"Maksimal download hastighed (kB/s): [0: standard]",
-	"Antal upload slots: [0: standard]",
-	"Seed mens",
-	"Tilsidesæt standard indstillinger",
-	"Forhold er:  <=",
-	"%  eller seed tid er:",
-	"Andre indstillinger",
-	"Start seed",
-	"Aktivér DHT",
-	"Peer udveksling",
-	"Færdig",
-	"Navn",
-	"%",
-	"Prioritet",
-	"Størrelse",
-	"spring over",
-	"lav",
-	"normal",
-	"høj",
-	"Downloaded:",
-	"Uploaded:",
-	"Seeds:",
-	"Tid tilbage:",
-	"Kb/s ned:",
-	"Kb/s op:",
-	"Peers:",
-	"Dele forhold:",
-	"Hash:",
-	"Overfør",
-	"%d af %d forbundet (%d i sværm)",
-	"N:%s O:%s - %s",
-	"Vis kategori liste",
-	"Vis detaljeret info",
-	"Download ikke",
-	"Høj prioritet",
-	"Lav prioritet",
-	"Normal prioritet",
-	"Slet data",
-	"Gennemtving tjek",
-	"Tvunget start",
-	"Etiket",
-	"Pause",
-	"Indstillinger",
-	"Fjern",
-	"Fjern og",
-	"Start",
-	"Stop",
-	"Aktiv",
-	"Alle",
-	"Færdig",
-	"Downloader",
-	"Inaktiv",
-	"Ingen etiket",
-	"||Tilg.||Tilgængelighed",
-	"Færdig",
-	"Downloaded",
-	"DL hast.",
-	"ETA",
-	"Etiket",
-	"Navn",
-	"#",
-	"Peers",
-	"Tilbage",
-	"Seeds",
-	"Seeds/Peers",
-	"Deleforhold",
-	"Størrelse",
-	"Status",
-	"Uploaded",
-	"UL hast.",
-	"Er du sikker på at du vil fjerne de %d valgte torrents og alle tilhørende filer?",
-	"Er du sikker på at du vil fjerne den valgte torrent og alle tilhørende filer?",
-	"Er du sikker på at du vil fjerne de %d valgte torrents?",
-	"Er du sikker på at du vil fjerne den valgte torrent?",
-	"Tjekket %:.1d%%",
-	"Downloader",
-	"Fejl: %s",
-	"Færdig",
-	"Pause",
-	"I kø",
-	"Seeding",
-	"Stoppet",
-	"Skriv etiket",
-	"Skriv navnet på etiketten, for den valgte torrent:",
-	"Ny etiket...",
-	"Fjern etiket",
-	"Generelt||Trackers||Peers||Dele||Filer||Hastighed||Log||",
-	"Tilføj torrent",
-	"Pause",
-	"Indstillinger",
-	"Fjern",
-	"Start",
-	"Stop",
-	"GB",
-	"kB",
-	"MB",
-	"Avanceret",
-	"Båndbredde",
-	"Forbindelse",
-	"Disk cache",
-	"Mapper",
-	"Generelt",
-	"Planlægning",
-	"Kø",
-	"BitTorrent",
-	"Web UI",
-	"Overførselsgrænse",
-	"Deaktiveret||Aktiveret||Tvunget||",
-	"(ingen)||Socks4||Socks5||HTTPS||HTTP||",
-	"Sendt||Modtaget||Sendt + modtaget||",
-	"MB||GB||",
-	"1||2||5||7||10||14||15||20||21||28||30||31||",
-	"Navn",
-	"Værdi",
-	"Man||Tir||Ons||Tor||Fre||Lør||Søn||",
-	"Mandag||Tirsdag||Onsdag||Torsdag||Fredag||Lørdag||Søndag||",
-	"Fuld hastighed",
-	"Fuld hastighed - Bruger global standard båndbredde",
-	"Begrænset",
-	"Begrænset - Bruger planlægning båndbredde",
-	"Kun seed",
-	"Kun seed - Sender kun data (inklusive uafsluttede)",
-	"Afbryd",
-	"Afbryd - Stopper alle torrents, der ikke er tvunget",
-	"<= %d timer",
-	"(Ignorér)",
-	"<= %d minutter",
-	"%dd %dh",
-	"%dh %dm",
-	"%dm %ds",
-	"%ds",
-	"%dw %dd",
-	"%dy %dw"
-], lang_code = "dk";
+	  "Torrent filer||*.torrent||Alle filer (*.*)||*.*||"
+	, "OK"
+	, "Annullér"
+	, "Anvend"
+	, "Indstillinger"
+	, "Sprog:"
+	, "Privatliv"
+	, "Check automatisk for updateringer"
+	, "Updater til beta versioner"
+	, "Send anonyme informationer, når der checkes for opdateringer"
+	, "Ved downloading"
+	, "Tilføj .!ut til ukomplette filer"
+	, "Præ allokér alle filer"
+	, "Undgå standby hvis der er aktive torrents"
+	, "Bekræft sletning af torrents"
+	, "Alternativ liste baggrundsfarve"
+	, "Vis aktuel hastighed i titel baren"
+	, "Når torrents tilføjes"
+	, "Start ikke download automatisk"
+	, "Lokation for downloadede filer"
+	, "Gem nye downloads i:"
+	, "Vis altid dialogboks v. manuel tilføjelse"
+	, "Flyt færdige downloads til:"
+	, "Tilføj etiket fra torrent"
+	, "Flyt kun fra standard download mappe"
+	, "Lokation af .torrents"
+	, "Gem .torrents i:"
+	, "Flyt færdige .torrents til:"
+	, "Indlæs automatisk .torrents fra:"
+	, "Slet indlæste .torrents"
+	, "Port, der lyttes på"
+	, "Port, der bruges til indkomne forbindelser:"
+	, "Tilfældig port"
+	, "Vælg en tilfældig port ved hver programstart"
+	, "Aktivér UPnP kortlægning"
+	, "Aktivér NAT-PMP port kortlægning"
+	, "Proxy Server"
+	, "Type:"
+	, "Proxy:"
+	, "Port:"
+	, "Identifikation"
+	, "Brugernavn:"
+	, "Kodeord:"
+	, "Oversæt værtsnavne via proxy"
+	, "Brug proxy server ved peer-to-peer forbindelser"
+	, "Tilføj Windows Firewall undtagelse"
+	, "Global upload hastighedsbegrænsning"
+	, "Maksimal upload hastighed (kB/s): [0: ubegrænset]"
+	, "Automatisk"
+	, "Særlig upload hastighed, når der ikke downloades (kB/s):"
+	, "Global download hastighedsbegrænsning"
+	, "Maksimal download hastighed (kB/s): [0: ubegrænset]"
+	, "Antal forbindelser"
+	, "Globalt maksimalt antal forbindelser:"
+	, "Maksimale antal forbundne peers pr. torrent:"
+	, "Antal upload slots pr. torrent:"
+	, "Brug yderligere upload slots hvis upload hastighed < 90%"
+	, "Grundlæggende BitTorrent egenskaber"
+	, "Aktivér DHT netværk"
+	, "Bed tracker om scrape information"
+	, "Aktivér DHT for nye torrents"
+	, "Aktivér peer udveksling"
+	, "Aktivér %lokal peer opdagelse"
+	, "Begræns lokal peer båndbredde"
+	, "IP/værtsnavn rapporteret til tracker:"
+	, "Protokol kryptering"
+	, "Udgående:"
+	, "Tillad ældre indkommende forbindelser"
+	, "Aktivér overførselsgrænse"
+	, "Grænseindstillinger"
+	, "Stop torrents når:"
+	, "når"
+	, "i de sidste"
+	, "dage"
+	, "Kø indstillinger"
+	, "Maksimale antal af aktive torrents (upload eller download):"
+	, "Maksimale antal af aktive downloads:"
+	, "Seed så længe [standard værdier]"
+	, "Forhold er:  <="
+	, "%   eller seed tid er:"
+	, "Uploads har højere prioritet end downloads"
+	, "Når µTorrent når seeding målet"
+	, "Begræns upload hastighed til (kB/s): [0: stop]"
+	, "Aktivér planlægning"
+	, "Planlægningsskema"
+	, "Planlægingsindstillinger"
+	, "Begrænset upload hastighed (kB/s):"
+	, "Begrænset download hastighed (kB/s):"
+	, "Deaktivér DHT ved afbrydelse"
+	, "Aktivér Web UI"
+	, "Identifikation"
+	, "Brugernavn:"
+	, "Kodeord:"
+	, "Aktivér Gæst konto med brugernavn:"
+	, "Forbindelse"
+	, "Alternativ port, der lyttes på (standard er forbindelsesport):"
+	, "Begræns adgang til følgende IP adresser (separer med komma):"
+	, "Avancerede indstillinger [ADVARSEL: Bør ikke ændres!]"
+	, "Vedvarende etiketter [separer med |]"
+	, "Søgemaskiner [Format: navn|URL]"
+	, "Grundlæggende cache indstillinger"
+	, "Disk cachen benyttes til at gemme data i hukommelsen, som ofte forespørges. Dette reducerer antallet af læse og skrive kommandoer til harddisken. Normalt håndterer µTorrent automatisk disk cachen, men du kan ændre disk cachens opførsel ved at ændre i indstillingerne herunder."
+	, "Tilsidesæt automatisk cache størrelse og angiv en manuel størrelse (MB):"
+	, "Reducer hukommelsesforbrug når cachen ikke behøves"
+	, "Avancerede cache indstillinger"
+	, "Aktivér cache for disk skrivning"
+	, "Skriv ubenyttede blokke hver 2 minutter"
+	, "Skriv straks færdige dele"
+	, "Aktivér cache for disk læsning"
+	, "Deaktivér læse cache hvis upload hastigheden er lav"
+	, "Fjern gamle blokke fra cachen"
+	, "Forøg automatisk cache størrelsen hvis den fyldes op"
+	, "Deaktivér Windows cache for disk skrivning"
+	, "Deaktivér Windows cache for disk læsning"
+	, "Torrent egenskaber"
+	, "Trackere (separer med en tom linie)"
+	, "Båndbredde indstilliner"
+	, "Maksimal upload hastighed (kB/s): [0: standard]"
+	, "Maksimal download hastighed (kB/s): [0: standard]"
+	, "Antal upload slots: [0: standard]"
+	, "Seed mens"
+	, "Tilsidesæt standard indstillinger"
+	, "Forhold er:  <="
+	, "%  eller seed tid er:"
+	, "Andre indstillinger"
+	, "Start seed"
+	, "Aktivér DHT"
+	, "Peer udveksling"
+	, "Færdig"
+	, "Navn"
+	, "%"
+	, "Prioritet"
+	, "Størrelse"
+	, "spring over"
+	, "lav"
+	, "normal"
+	, "høj"
+	, "Downloaded:"
+	, "Uploaded:"
+	, "Seeds:"
+	, "Tid tilbage:"
+	, "Kb/s ned:"
+	, "Kb/s op:"
+	, "Peers:"
+	, "Dele forhold:"
+	, "Hash:"
+	, "Overfør"
+	, "%d af %d forbundet (%d i sværm)"
+	, "N:%s O:%s - %s"
+	, "Vis kategori liste"
+	, "Vis detaljeret info"
+	, "Nulstil"
+	, "Download ikke"
+	, "Høj prioritet"
+	, "Lav prioritet"
+	, "Normal prioritet"
+	, "Slet data"
+	, "Gennemtving tjek"
+	, "Tvunget start"
+	, "Etiket"
+	, "Pause"
+	, "Indstillinger"
+	, "Fjern"
+	, "Fjern og"
+	, "Start"
+	, "Stop"
+	, "Aktiv"
+	, "Alle"
+	, "Færdig"
+	, "Downloader"
+	, "Inaktiv"
+	, "Ingen etiket"
+	, "||Tilg.||Tilgængelighed"
+	, "Færdig"
+	, "Downloaded"
+	, "DL hast."
+	, "ETA"
+	, "Etiket"
+	, "Navn"
+	, "#"
+	, "Peers"
+	, "Tilbage"
+	, "Seeds"
+	, "Seeds/Peers"
+	, "Deleforhold"
+	, "Størrelse"
+	, "Status"
+	, "Uploaded"
+	, "UL hast."
+	, "Er du sikker på at du vil fjerne de %d valgte torrents og alle tilhørende filer?"
+	, "Er du sikker på at du vil fjerne den valgte torrent og alle tilhørende filer?"
+	, "Er du sikker på at du vil fjerne de %d valgte torrents?"
+	, "Er du sikker på at du vil fjerne den valgte torrent?"
+	, "Tjekket %:.1d%%"
+	, "Downloader"
+	, "Fejl: %s"
+	, "Færdig"
+	, "Pause"
+	, "I kø"
+	, "Seed i kø"
+	, "Seeding"
+	, "Stoppet"
+	, "Skriv etiket"
+	, "Skriv navnet på etiketten, for den valgte torrent:"
+	, "Ny etiket..."
+	, "Fjern etiket"
+	, "Generelt||Trackers||Peers||Dele||Filer||Hastighed||Log||"
+	, "Tilføj torrent"
+	, "Pause"
+	, "Indstillinger"
+	, "Fjern"
+	, "Start"
+	, "Stop"
+	, "GB"
+	, "kB"
+	, "MB"
+	, "Avanceret"
+	, "Båndbredde"
+	, "Forbindelse"
+	, "Disk cache"
+	, "Mapper"
+	, "Generelt"
+	, "Planlægning"
+	, "Kø"
+	, "BitTorrent"
+	, "Web UI"
+	, "Overførselsgrænse"
+	, "Deaktiveret||Aktiveret||Tvunget||"
+	, "(ingen)||Socks4||Socks5||HTTPS||HTTP||"
+	, "Sendt||Modtaget||Sendt + modtaget||"
+	, "MB||GB||"
+	, "1||2||5||7||10||14||15||20||21||28||30||31||"
+	, "Navn"
+	, "Værdi"
+	, "Man||Tir||Ons||Tor||Fre||Lør||Søn||"
+	, "Mandag||Tirsdag||Onsdag||Torsdag||Fredag||Lørdag||Søndag||"
+	, "Fuld hastighed"
+	, "Fuld hastighed - Bruger global standard båndbredde"
+	, "Begrænset"
+	, "Begrænset - Bruger planlægning båndbredde"
+	, "Kun seed"
+	, "Kun seed - Sender kun data (inklusive uafsluttede)"
+	, "Afbryd"
+	, "Afbryd - Stopper alle torrents, der ikke er tvunget"
+	, "<= %d timer"
+	, "(Ignorér)"
+	, "<= %d minutter"
+	, "%dd %dh"
+	, "%dh %dm"
+	, "%dm %ds"
+	, "%ds"
+	, "%dw %dd"
+	, "%dy %dw"
+];
