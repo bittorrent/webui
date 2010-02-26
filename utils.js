@@ -42,6 +42,20 @@ if (!console) {
 
 })();
 
+function log(text) {
+	if (!$("lcont")) return;
+
+	var dt = new Date();
+	var h = dt.getHours();
+	var m = dt.getMinutes();
+	var s = dt.getSeconds();
+	h = (h < 10) ? ("0" + h) : h;
+	m = (m < 10) ? ("0" + m) : m;
+	s = (s < 10) ? ("0" + s) : s;
+
+	$("lcont").grab(new Element("br"), "top").appendText("[" + h + ":" + m + ":" + s + "] " + text, "top");
+}
+
 function eventToKey(ev) {
 	return (
 		(ev.shift ? "shift " : "") +
@@ -191,12 +205,12 @@ Element.implement({
 		this.fireEvent("show");
 		return this.setStyle("display", nonblock ? "" : "block");
 	},
-	
+
 	hide: function(){
 		this.fireEvent("hide");
 		return this.setStyle("display", "none");
 	},
-	
+
 	centre: function(){
 		this.show();
 		var ws = window.getSize();
@@ -206,7 +220,7 @@ Element.implement({
 			"top": ((ws.y - es.y) / 2).max(0)
 		});
 	},
-	
+
 	addClasses: function(){
 		var l = arguments.length, clear = false, hasChanged = false;
 		if (typeof arguments[l - 1] == "boolean")

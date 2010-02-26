@@ -228,18 +228,6 @@ function Search() {
 	window.open(searchList[searchActive][1] + "" + $("query").get("value"), "_blank");
 }
 
-function log(text) {
-	if (!$("lcont")) return;
-	var dt = new Date();
-	var h = dt.getHours();
-	var m = dt.getMinutes();
-	var s = dt.getSeconds();
-	h = (h < 10) ? ("0" + h) : h;
-	m = (m < 10) ? ("0" + m) : m;
-	s = (s < 10) ? ("0" + s) : s;
-	$("lcont").grab(new Element("br"), "top").appendText("[" + h + ":" + m + ":" + s + "] " + text, "top");
-}
-
 var searchList = [
 	["Mininova", "http://www.mininova.org/search/?utorrent&search="],
 	["BitTorrent", "http://search.bittorrent.com/search.jsp?Submit2=Search&query="],

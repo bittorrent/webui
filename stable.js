@@ -41,6 +41,7 @@ var TD = new Element("td");
 var TR = new Element("tr");
 var DIV = new Element("div");
 var SPAN = new Element("span");
+
 function simpleClone(element, content) {
 	element = $(element.cloneNode(!!content));
 	element.uid = null;
@@ -101,8 +102,10 @@ var dxSTable = new Class({
 	"pageCount": 0,
 	"rowCache": [],
 	"rowCover" : null,
+	"rowModel" : null,
 
 	"create": function(id, columns, options) {
+		this.cols = columns.length;
 		this.colHeader = columns;
 		this.colWidth = options.colWidth || (new Array(columns.length));
 		this.colOrder = options.colOrder || (new Array(columns.length));
@@ -143,7 +146,8 @@ var dxSTable = new Class({
 				this.detach();
 				$me.cancelSort = false;
 				$me.rowCover.hide();
-				$me.sort(this.element, ev.shift);
+				if (!ev.isRightClick())
+					$me.sort(this.element, ev.shift, true);
 			}
 		}).detach();
 		tr.addEvent("mousemove", function(ev) {
@@ -170,12 +174,13 @@ var dxSTable = new Class({
 			}
 		});
 
-		var len = this.colHeader.length, ROW = simpleClone(TR, false);
+		var len = this.cols;
+		this.rowModel = simpleClone(TR, false);
+
 		for (var i = 0, j = 0; i < len; i++) {
 			this.colOrder[i] = (typeof this.colOrder[i] == "number") ? this.colOrder[i].limit(0, len - 1) : i;
-			this.cols++;
 			this.colData[i] = this.colHeader[this.colOrder[i]];
-			ROW.grab(
+			this.rowModel.grab(
 				simpleClone(TD, false).addClass(this.id + "-col-" + this.colOrder[i]).setStyle(isIE ? "visibility" : "display", this.colData[i].disabled ? (isIE ? "hidden" : "none") : (isIE ? "visible" : ""))
 			);
 			td = simpleClone(TD, false)
@@ -237,19 +242,23 @@ var dxSTable = new Class({
 				if (ele) {
 					$me.selectRow(ev, ele.parentNode);
 				}
+
+				ev.preventDefault();
 			}).addEvent("click", function(ev) {
-				if (ev.control || ev.shift) return;
+				if (ev.control || ev.shift || ev.meta) return;
 
 				var ele = ev.target;
 				if (!(ele.get("tag") == "td" || ele.getParent("td"))) {
 					var pos = this.getPosition();
 					if ((this.clientWidth > ev.page.x - pos.x - this.scrollLeft + 2) && (this.clientHeight > ev.page.y - pos.y - this.scrollTop + 2)) {
 						$me.clearSelection();
-						$me.fireEvent("onSelect", [ev, ""]);
+						$me.fireEvent.delay(0, $me, ["onSelect", [ev, ""]]);
 					}
 				}
+
+				ev.preventDefault();
 			}).addEvent("dblclick", function(ev) {
-				if (ev.control || ev.shift) return;
+				if (ev.control || ev.shift || ev.meta) return;
 
 				var ele = ev.target;
 				if (ele.get("tag") != "td")
@@ -258,11 +267,12 @@ var dxSTable = new Class({
 				if (ele) {
 					$me.fireEvent("onDblClick", ele.parentNode.id);
 				}
+
+				ev.preventDefault();
 			});
 		}
 		for (var i = 0; i < this.options.maxRows; i++)
-			this.tb.body.appendChild(simpleClone(ROW, true).hide());
-		ROW = null;
+			this.tb.body.appendChild(simpleClone(this.rowModel, true).hide());
 
 		this.tBody.grab(this.tb.body);
 		if (this.options.mode == MODE_PAGE) {
@@ -352,12 +362,14 @@ var dxSTable = new Class({
 		}).bind(this));
 		if (!this.options.rowsSelectable) return;
 		this.dCont.addEvent("keydown", (function(ev) {
+			var ctrl = ((Browser.Platform.mac && ev.meta) || (!Browser.Platform.mac && ev.control));
+
 			if (ev.key == "delete") { // DEL
 				this.fireEvent("onDelete");
-			} else if ((ev.key == "a") && ev.control) { // Ctrl + A
+			} else if (ctrl && (ev.key == "a")) { // Ctrl + A
 				this.fillSelection();
 				this.fireEvent("onSelect", ev);
-			} else if ((ev.key == "e") && ev.control) { // Ctrl + E
+			} else if (ctrl && (ev.key == "e")) { // Ctrl + E
 				this.clearSelection();
 				this.fireEvent("onSelect", ev);
 			}
@@ -386,6 +398,7 @@ var dxSTable = new Class({
 						case TYPE_NUM_PROGRESS: align = "center"; break;
 					}
 			}
+
 			this.tHeadCols[i].setStyle("textAlign", align);
 			if (Browser.Engine.trident) {
 				cols[i].setStyle("textAlign", align);
@@ -470,30 +483,29 @@ var dxSTable = new Class({
 		if (!simpleReverse) {
 			var $me = this, comp;
 			switch (this.colData[ind].type) {
-			case TYPE_STRING:
-				comp = function(x, y) {
-					return $me.sortAlphaNumeric(x, y);
-				};
-				break;
+				case TYPE_STRING:
+					comp = function(x, y) {
+						return $me.sortAlphaNumeric(x, y);
+					};
+					break;
 
-			case TYPE_NUMBER:
-			case TYPE_NUM_PROGRESS:
-				comp = function(x, y) {
-					return $me.sortNumeric(x, y);
-				};
-				break;
+				case TYPE_NUMBER:
+				case TYPE_NUM_PROGRESS:
+					comp = function(x, y) {
+						return $me.sortNumeric(x, y);
+					};
+					break;
 
-			case TYPE_NUM_ORDER:
-				comp = function(x, y) {
-					return $me.sortNumOrder(x, y);
-				};
-				break;
+				case TYPE_NUM_ORDER:
+					comp = function(x, y) {
+						return $me.sortNumOrder(x, y);
+					};
+					break;
 
-			default:
-				comp = function(x, y) {
-					return Comparator.compare(x.v, y.v);
-				};
-				break;
+				default:
+					comp = function(x, y) {
+						return Comparator.compare(x.v, y.v);
+					};
 			}
 			this.rowCache.sort(comp);
 		}
@@ -551,30 +563,29 @@ var dxSTable = new Class({
 		var index = this.colOrder[this.secIndex];
 		var m = this.rowData[x.key].data[index];
 		var n = this.rowData[y.key].data[index];
-		var type = this.colData[index].type;
 		var r = 0;
-		switch (type) {
-		case TYPE_STRING:
-			r = Comparator.compareAlphaNumeric(m, n);
-			break;
+		switch (this.colData[index].type) {
+			case TYPE_STRING:
+				r = Comparator.compareAlphaNumeric(m, n);
+				break;
 
-		case TYPE_NUMBER:
-		case TYPE_NUM_PROGRESS:
-			r = Comparator.compareNumeric(m, n);
-			break;
+			case TYPE_NUMBER:
+			case TYPE_NUM_PROGRESS:
+				r = Comparator.compareNumeric(m, n);
+				break;
 
-		case TYPE_NUM_ORDER:
-			r = Comparator.compareNumeric(m, n);
-			if (r != 0) {
-				if (m == -1)
-					r = 1;
-				else if (n == -1)
-					r = -1;
-			}
-			break;
+			case TYPE_NUM_ORDER:
+				r = Comparator.compareNumeric(m, n);
+				if (r != 0) {
+					if (m == -1)
+						r = 1;
+					else if (n == -1)
+						r = -1;
+				}
+				break;
 
-		default:
-			r = Comparator.compare(m, n);
+			default:
+				r = Comparator.compare(m, n);
 		}
 		if (r == 0)
 			r = this.rowData[x.key].index - this.rowData[y.key].index;
@@ -604,9 +615,9 @@ var dxSTable = new Class({
 		if (Browser.Engine.gecko || Browser.Engine.trident)
 			this.detachBody();
 		for (var i = range[0]; i <= range[1]; i++) {
-			var id = this.activeId[i], rdata = this.rowData[id];
-			if (!rdata) continue;
-			var row = tb.childNodes[count], data = this.options.format($A(rdata.data));
+			var id = this.activeId[i], rdata = this.rowData[id], row = tb.childNodes[count];
+			if (!(rdata && row)) continue;
+			var data = this.options.format($A(rdata.data));
 			var clsName = "", clsChanged = false;
 			if (has(this.rowSel, id))
 				clsName += "selected";
@@ -619,6 +630,9 @@ var dxSTable = new Class({
 					clsName += " even";
 					clsChanged = clsChanged || !row.hasClass("even");
 				}
+			}
+			else {
+				clsChanged = clsChanged || row.hasClass("odd") || row.hasClass("even");
 			}
 			if (clsChanged)
 				row.className = clsName.clean();
@@ -651,6 +665,8 @@ var dxSTable = new Class({
 	"selectRow": function(ev, row) {
 		var id = row.id;
 		if (!(ev.isRightClick() && has(this.rowSel, id))) {
+			var ctrl = ((Browser.Platform.mac && ev.meta) || (!Browser.Platform.mac && ev.control));
+
 			if (ev.shift) {
 				if (this.stSel === null) {
 					this.stSel = id;
@@ -670,7 +686,7 @@ var dxSTable = new Class({
 						this.selectedRows.push(key);
 					}
 				}
-			} else if (ev.control) {
+			} else if (ctrl) {
 				this.stSel = id;
 				if (has(this.rowSel, id)) {
 					this.selectedRows.splice(this.rowSel[id], 1);
@@ -696,7 +712,7 @@ var dxSTable = new Class({
 			this.refreshSelection();
 		}
 
-		this.fireEvent("onSelect", [ev, id]);
+		this.fireEvent.delay(0, this, ["onSelect", [ev, id]]);
 	},
 
 	"addRow": function(data, id, icon, hidden, sortin) {
@@ -726,30 +742,29 @@ var dxSTable = new Class({
 					"v": this.rowData[id].data[this.colOrder[sindex]]
 				};
 				switch (this.colData[sindex].type) {
-				case TYPE_STRING:
-					comp = function(x, y) {
-						return $me.sortAlphaNumeric(x, y);
-					};
-					break;
+					case TYPE_STRING:
+						comp = function(x, y) {
+							return $me.sortAlphaNumeric(x, y);
+						};
+						break;
 
-				case TYPE_NUMBER:
-				case TYPE_NUM_PROGRESS:
-					comp = function(x, y) {
-						return $me.sortNumeric(x, y);
-					};
-					break;
+					case TYPE_NUMBER:
+					case TYPE_NUM_PROGRESS:
+						comp = function(x, y) {
+							return $me.sortNumeric(x, y);
+						};
+						break;
 
-				case TYPE_NUM_ORDER:
-					comp = function(x, y) {
-						return $me.sortNumOrder(x, y);
-					};
-					break;
+					case TYPE_NUM_ORDER:
+						comp = function(x, y) {
+							return $me.sortNumOrder(x, y);
+						};
+						break;
 
-				default:
-					comp = function(x, y) {
-						return Comparator.compare(x.v, y.v);
-					};
-					break;
+					default:
+						comp = function(x, y) {
+							return Comparator.compare(x.v, y.v);
+						};
 				}
 				if (rIndex >= 0) {
 					if ((rIndex != 0) && (comp(item, this.rowCache[rIndex - 1]) < 0)) {
@@ -844,13 +859,17 @@ var dxSTable = new Class({
 				var prog = simpleClone(DIV, false).addClass("stable-progress").set("html", "&nbsp;").inject(cell.empty());
 				var pbar = simpleClone(SPAN, false).addClass("stable-progress-bar").set("html", "&nbsp;").setStyle("width", pcnt).inject(prog);
 				var ptxt = simpleClone(SPAN, false).addClass("stable-progress-text").set("text", pcnt).inject(prog);
-			} else if (cell.lastChild) {
+			}
+/*
+			else if (cell.lastChild) {
 				var toggle = ((cell.lastChild.nodeValue == "") && (data[v] != cell.lastChild.nodeValue));
 				cell.lastChild.nodeValue = data[v];
 				if (toggle && Browser.Engine.trident)
 					cell.toggleClass("stable-bogus");
-			} else {
-				cell.appendText(data[v]);
+			}
+*/
+			else {
+				cell.set("text", data[k]);
 			}
 		});
 	},
@@ -944,7 +963,7 @@ var dxSTable = new Class({
 			}
 		}
 		if (Browser.Engine.webkit)
-			this.tBody.setStyle("width", this.tHead.getSize().x);
+			this.tBody.setStyle("width", this.tHead.getWidth());
 	},
 
 	"hideRow": function(id) {
@@ -1023,13 +1042,17 @@ var dxSTable = new Class({
 			var prog = simpleClone(DIV, false).addClass("stable-progress").set("html", "&nbsp;").inject(cell.empty());
 			var pbar = simpleClone(SPAN, false).addClass("stable-progress-bar").set("html", "&nbsp;").setStyle("width", pcnt).inject(prog);
 			var ptxt = simpleClone(SPAN, false).addClass("stable-progress-text").set("text", pcnt).inject(prog);
-		} else if (cell.lastChild) {
+		}
+/*
+		else if (cell.lastChild) {
 			var toggle = ((cell.lastChild.nodeValue == "") && (fval != cell.lastChild.nodeValue));
 			cell.lastChild.nodeValue = fval;
 			if (toggle && Browser.Engine.trident)
 				cell.toggleClass("stable-bogus");
-		} else {
-			cell.appendText(fval);
+		}
+*/
+		else {
+			cell.set("text", fval);
 		}
 		return hasSortedChanged;
 	},
@@ -1099,6 +1122,8 @@ var dxSTable = new Class({
 
 	"updatePageMenu": function() {
 		if (this.options.mode != MODE_PAGE) return;
+		this.pageCount = Math.ceil(this.activeId.length / this.options.maxRows);
+
 		(this.curPage > 0) ?
 			this.pagePrev.addClass("prevlink")
 		:
@@ -1145,9 +1170,40 @@ var dxSTable = new Class({
 
 var ColumnHandler = {
 
+	"check": function(ev, cell) {
+		if (this.isResizing) return;
+		var x = ev.page.x - cell.getPosition().x;
+		var i = cell.retrieve("index");
+		if ((x <= 8) && (i > 0)) {
+			this.hotCell = i - 1;
+			cell.setStyle("cursor", "e-resize");
+		} else if (x >= cell.offsetWidth - 8) {
+			this.hotCell = i;
+			cell.setStyle("cursor", "e-resize");
+		} else { // reordering
+			this.hotCell = -1;
+			cell.setStyle("cursor", "default");
+		}
+	},
 	"start": function initColAct(st, drag) {
 		st.cancelSort = true; // just to be sure
-		if (st.hotCell == -1) {
+		if (st.hotCell != -1) { // resizing
+			var col = st.tHeadCols[st.hotCell];
+			var w = col.getWidth();
+			var left = col.getPosition(st.dCont).x + w - (Browser.Engine.gecko19 ? 4 : 0);
+			st.resizeCol = {"width": col.getStyle("width").toInt(), "left": left};
+			drag.value.now.x = left;
+			drag.mouse.pos.x = drag.mouse.start.x - left;
+			st.cancelMove = true;
+			st.isResizing = true;
+			st.colReszObj.setStyles({
+				"left": left,
+				"height": st.tBody.getHeight(), //st.dBody.getSize().y + 2,
+				"visibility": "visible"
+			});
+			st.colDragEle = drag.element;
+			drag.element = drag.handle = st.colReszObj;
+		} else { // reordering
 			var left = drag.element.getPosition(st.dCont).x + st.dBody.scrollLeft - (Browser.Engine.gecko19 ? 4 : 0);
 			drag.value.now.x = left;
 			drag.mouse.pos.x = drag.mouse.start.x - left;
@@ -1157,32 +1213,23 @@ var ColumnHandler = {
 				"width": drag.element.getStyle("width").toInt(),
 				"textAlign": drag.element.getStyle("textAlign")
 			});
+
 			st.colDragEle = drag.element;
 			drag.element = drag.handle = st.colDragObj;
 			st.cancelMove = false;
 			st.colMove = { "from": st.colDragEle.retrieve("index"), "to": -1 };
 			document.body.setStyle("cursor", "move");
-		} else {
-			var col = st.tHeadCols[st.hotCell];
-			var w = col.getSize().x;
-			var left = col.getPosition(st.dCont).x + w - (Browser.Engine.gecko19 ? 4 : 0);
-			st.resizeCol = {"width": col.getStyle("width").toInt(), "left": left};
-			drag.value.now.x = left;
-			drag.mouse.pos.x = drag.mouse.start.x - left;
-			st.cancelMove = true;
-			st.isResizing = true;
-			st.colReszObj.setStyles({
-				"left": left,
-				"height": st.dBody.getSize().y + 2,
-				"visibility": "visible"
-			});
-			st.colDragEle = drag.element;
-			drag.element = drag.handle = st.colReszObj;
 		}
 	},
 
 	"drag": function (st, drag) {
-		if (!st.cancelMove) {
+		if (st.cancelMove) { // resizing
+			var w = drag.value.now.x - st.resizeCol.left + st.resizeCol.width;
+			if (w < 14)
+				w = 14;
+			st.tHeadCols[st.hotCell].setStyle("width", w);
+			$(document.body).setStyle("cursor", "e-resize");
+		} else { // reordering
 			var offsetX = 0, i = 0;
 			var x = drag.value.now.x;
 			while ((offsetX < x) && (i <= st.cols)) {
@@ -1199,49 +1246,26 @@ var ColumnHandler = {
 			st.colMove.to = i;
 			if (i == st.colMove.from)
 				st.colMove.to++;
-		} else {
-			var w = drag.value.now.x - st.resizeCol.left + st.resizeCol.width;
-			if (w < 14)
-				w = 14;
-			st.tHeadCols[st.hotCell].setStyle("width", w);
-			$(document.body).setStyle("cursor", "e-resize");
 		}
 	},
 
 	"end": function (st, drag) {
 		drag.element = drag.handle = st.colDragEle;
 		st.colDragEle = null;
-		if (st.isResizing) {
+		if (st.isResizing) { // resizing
 			st.colReszObj.setStyles({"left": 0, "height": 0, "visibility": "hidden"});
 			st.isResizing = false;
 			resizeColumn.call(st, st.hotCell);
 			document.body.setStyle("cursor", "default");
 			st.rowCover.hide();
-		} else {
+		} else { // reordering
 			st.colDragObj.setStyles({"left": 0, "width": 0, "visibility": "hidden"});
 			st.colSep.setStyle("visibility", "hidden");
 			document.body.setStyle("cursor", "default");
 			moveColumn.call(st, st.colMove.from, st.colMove.to);
 		}
 		st.cancelSort = false;
-	},
-
-	"check": function(ev, cell) {
-		if (this.isResizing) return;
-		var x = ev.page.x - cell.getPosition().x;
-		var i = cell.retrieve("index");
-		if ((x <= 8) && (i > 0)) {
-			this.hotCell = i - 1;
-			cell.setStyle("cursor", "e-resize");
-		} else if (x >= cell.offsetWidth - 8) {
-			this.hotCell = i;
-			cell.setStyle("cursor", "e-resize");
-		} else {
-			this.hotCell = -1;
-			cell.setStyle("cursor", "default");
-		}
 	}
-
 };
 
 function resizeColumn(index) {

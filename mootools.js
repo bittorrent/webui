@@ -3480,8 +3480,8 @@ provides: [MooTools.More]
 */
 
 MooTools.More = {
-	'version': '1.2.4.2',
-	'build': 'bd5a93c0913cce25917c48cbdacde568e15e02ef'
+	'version': '1.2.4.4',
+	'build': '6f6057dc645fdb7547689183b2311063bd653ddf'
 };
 
 /*
@@ -3641,7 +3641,6 @@ var Drag = new Class({
 		if (event){
 			this.document.removeEvent(this.selection, this.bound.eventStop);
 // uTorrent WebUI Patch - BEGIN
-// NOTE: Patch used by stable.js, for column drag even cancellation (sorting)
 //			this.fireEvent('cancel', this.element);
 			this.fireEvent('cancel', [this.element, event]);
 // uTorrent WebUI Patch - END
@@ -3668,6 +3667,7 @@ Element.implement({
 	}
 
 });
+
 
 /*
 ---
@@ -3698,7 +3698,9 @@ var Asset = {
 			document: document,
 			check: $lambda(true)
 		}, properties);
-
+		
+		if (properties.onLoad) properties.onload = properties.onLoad;
+		
 		var script = new Element('script', {src: source, type: 'text/javascript'});
 
 		var load = properties.onload.bind(script), 
@@ -3743,6 +3745,8 @@ var Asset = {
 		var element = document.id(image) || new Element('img');
 		['load', 'abort', 'error'].each(function(name){
 			var type = 'on' + name;
+			var cap = name.capitalize();
+			if (properties['on' + cap]) properties[type] = properties['on' + cap];
 			var event = properties[type];
 			delete properties[type];
 			image[type] = function(){

@@ -1152,6 +1152,12 @@ var Flotr = (function(){
 		function insertLegend(){
 			if (!options.legend.show) return;
 
+// uTorrent WebUI Patch - BEGIN
+			// Allocate a unique legend for each plot. Otherwise, a new element is created on
+			// each refresh, but never destroyed (leading to wasted resources).
+			var lgndId = this.id + "-legend";
+// uTorrent WebUI Patch - END
+
 			var fragments = [];
 			var rowStarted = false;
 			for (var i = 0; i < series.length; ++i) {
@@ -1187,11 +1193,24 @@ var Flotr = (function(){
 						pos.right = (m + plotOffset.right) + 'px';
 					else if (p.charAt(1) == 'w')
 						pos.left = (m + plotOffset.bottom) + 'px';
-					var div = new Element('div').addClass('flotr-legend').setStyles($extend(pos, {
-						'position': 'absolute',
-						'z-index': 2
-					})).set("html", table);
-					target.adopt(div);
+// uTorrent WebUI Patch - BEGIN
+//					var div = new Element('div').addClass('flotr-legend').setStyles($extend(pos, {
+//						'position': 'absolute',
+//						'z-index': 2
+//					})).set("html", table);
+//					target.adopt(div);
+
+					var div = $(lgndId);
+					if (!div) {
+						div = new Element('div').set("id", lgndId).addClass('flotr-legend').setStyles($extend(pos, {
+							'position': 'absolute',
+							'z-index': 2
+						}));
+
+						target.adopt(div);
+					}
+					div.set("html", table);
+// uTorrent WebUI Patch - END
 
 					if (options.legend.backgroundOpacity != 0.0) {
 						/**
@@ -1207,15 +1226,30 @@ var Flotr = (function(){
 						}
 
 						var size = div.getSize();
-						var bgdiv = new Element('div').addClass('flotr-legend-bg').setStyles($extend(pos,{
+// uTorrent WebUI Patch - BEGIN
+//						var bgdiv = new Element('div').addClass('flotr-legend-bg').setStyles($extend(pos,{
+//							'position': 'absolute',
+//							'width': size.x,
+//							'height': size.y,
+//							'background-color': c,
+//							'opacity': options.legend.backgroundOpacity
+//						}));
+//
+//						bgdiv.injectBefore(div);
+
+						var bgdiv = $(lgndId + "-bg");
+						if (!bgdiv) {
+							bgdiv = new Element('div').set("id", lgndId + "-bg").addClass('flotr-legend-bg').injectBefore(div);
+						}
+
+						bgdiv.setStyles($extend(pos,{
 							'position': 'absolute',
 							'width': size.x,
 							'height': size.y,
 							'background-color': c,
 							'opacity': options.legend.backgroundOpacity
 						}));
-
-						bgdiv.injectBefore(div);
+// uTorrent WebUI Patch - END
 					}
 				}
 			}
