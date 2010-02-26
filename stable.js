@@ -1185,6 +1185,7 @@ var ColumnHandler = {
 			cell.setStyle("cursor", "default");
 		}
 	},
+
 	"start": function initColAct(st, drag) {
 		st.cancelSort = true; // just to be sure
 		if (st.hotCell != -1) { // resizing

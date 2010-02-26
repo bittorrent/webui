@@ -400,20 +400,6 @@ function loadLangStrings() {
 		$(k[0]).set("text", lang[k[1]]);
 	});
 
-	var timesList = $("seed_time");
-	timesList.options.length = 0;
-	[0, 5400, 7200, 10800, 14400, 18000, 21600, 25200, 28800, 32400, 36000, 43200, 57600, 72000, 86400, 108000, 129600, 172800, 216000, 259200, 345600].each(function(t) {
-		var text = "";
-		if (t == 0) {
-			text = lang[CONST.ST_SEEDTIMES_IGNORE];
-		} else if (t == 5400) {
-			text = lang[CONST.ST_SEEDTIMES_MINUTES].replace(/%d/, 90);
-		} else {
-			text = lang[CONST.ST_SEEDTIMES_HOURS].replace(/%d/, t / 3600);
-		}
-		timesList.options[timesList.options.length] = new Option(text, t, false, t == 0);
-	});
-	timesList.set("value", utWebUI.settings["seed_time"]);
 	$("DLG_TORRENTPROP_01").set("value", lang[CONST.DLG_TORRENTPROP_01]).addEvent("click", function() {
 		DialogManager.hide("Props");
 		utWebUI.setProperties();

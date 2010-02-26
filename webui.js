@@ -187,37 +187,36 @@ var utWebUI = {
 			var key = this.trtTable.selectedRows[len];
 			var stat = this.torrents[key][0];
 			switch (act) {
+				case "forcestart":
+					if ((stat & 1) && !(stat & 64) && !(stat & 32)) continue;
+					break;
 
-			case "forcestart":
-				if ((stat & 1) && !(stat & 64) && !(stat & 32)) continue;
-				break;
+				case "start":
+					if ((stat & 1) && !(stat & 32) && (stat & 64)) continue;
+					break;
 
-			case "start":
-				if ((stat & 1) && !(stat & 32) && (stat & 64)) continue;
-				break;
+				case "pause":
+					if (stat & 32) continue;
+					break;
 
-			case "pause":
-				if (stat & 32) continue;
-				break;
+				case "unpause":
+					if (!(stat & 32)) continue;
+					break;
 
-			case "unpause":
-				if (!(stat & 32)) continue;
-				break;
+				case "stop":
+					if (!(stat & 1) && !(stat & 2) && !(stat & 16) && !(stat & 64)) continue;
+					break;
 
-			case "stop":
-				if (!(stat & 1) && !(stat & 2) && !(stat & 16) && !(stat & 64)) continue;
-				break;
+				case "recheck":
+					if (stat & 2) continue;
+					break;
 
-			case "recheck":
-				if (stat & 2) continue;
-				break;
+				case "remove":
+				case "removedata":
+					break;
 
-			case "remove":
-			case "removedata":
-				break;
-
-			default:
-			    continue;
+				default:
+					continue;
 			}
 			hashes.push(key);
 		}
@@ -369,10 +368,10 @@ var utWebUI = {
 				this.torrents[hash] = tor.slice(1);
 				this.labels[hash] = labels;
 				tor.splice(0, 2); // remove the hash & status from the array
-	                        // Remove the SID from the list before it goes to
-                                // the table for display.
-                                tor.pop(); tor.pop();
-			        tor[11] = tor[11] + " (" + tor[12] + ")";
+				// Remove the SID from the list before it goes to
+				// the table for display.
+				tor.pop(); tor.pop();
+				tor[11] = tor[11] + " (" + tor[12] + ")";
 				tor[12] = tor[13] + " (" + tor[14] + ")";
 				tor[13] = tor[15];
 				tor.splice(13, 2);
@@ -462,6 +461,7 @@ var utWebUI = {
 				this.clearDetails();
 			}
 		}
+
 		if (!this.loaded && (this.trtTable.sIndex >= 0))
 			this.trtTable.sort();
 		else if (this.trtTable.requiresRefresh || sortedColChanged)
@@ -514,8 +514,9 @@ var utWebUI = {
 		for (var i = 0, len = labels.length; i < len; i++) {
 			var labeltxt = labels[i][0], label = "~" + labeltxt + "~", count = labels[i][1], li = null;
 			if (!(li = $(label))) {
+				$me = this;
 				li = new Element("li", {"id": label})
-					.addEvent("mousedown", function(){ utWebUI.switchLabel(this); })
+					.addEvent("mousedown", function(){ $me.switchLabel(this); })
 					.appendText(labeltxt + " (")
 					.grab(new Element("span", {"id": "_" + label + "_c"}).set("text", count))
 					.appendText(")");
@@ -788,12 +789,14 @@ var utWebUI = {
 	"loadSettings": function() {
 		for (var key in this.settings) {
 			var v = this.settings[key], ele = $(key);
-			if (!ele || key == "seed_time") continue;
+			if (!ele) continue;
 			if (ele.type == "checkbox") {
 				ele.checked = !!v;
 			} else {
 				if (key == "seed_ratio")
 					v /= 10;
+				else if (key == "seed_time")
+					v /= 60;
 				ele.set("value", v);
 			}
 			ele.fireEvent("change");
@@ -808,16 +811,16 @@ var utWebUI = {
 			"alternateRows",
 			"confirmDelete",
 			"lang"
-		].each(function(key) {
+		].each((function(key) {
 			var ele;
 			if (!(ele = $("webui." + key))) return;
-			var v = utWebUI.config[key];
+			var v = this.config[key];
 			if (ele.type == "checkbox") {
 				ele.checked = ((v == 1) || (v == true));
 			} else {
 				ele.set("value", v);
 			}
-		});
+		}).bind(this));
 		this.config.torrentTable.maxRows = (this.config.fileTable.maxRows || 0).max(this.limits.minTableRows);
 		$("webui.maxRows").set("value", this.config.torrentTable.maxRows);
 		this.props.multi = {
@@ -928,6 +931,8 @@ var utWebUI = {
 			}
 			if (key == "seed_ratio")
 				nv *= 10;
+			else if (key == "seed_time")
+				nv *= 60;
 			if (v != nv) {
 				this.settings[key] = nv;
 				if (key == "multi_day_transfer_mode") {
@@ -937,28 +942,30 @@ var utWebUI = {
 						"&s=multi_day_transfer_mode_uldl&v=" + (nv == 2 ? 1 : 0);
 					continue;
 				}
-				if (key == "gui.persistent_labels") {
-					nv = encodeURIComponent(nv);
-				}
-				str += "&s=" + key + "&v=" + nv;
+				str += "&s=" + key + "&v=" + encodeURIComponent(nv);
 			}
 		}
+
 		if (str != "")
 			this.request("action=setsetting" + str, $empty, !reload); // if the page is going to reload make it a synchronous request
+
 		if (this.settings["webui.enable"] == 0) {
 			$("msg").set("html", "Goodbye.");
 			$("cover").show();
 			return;
 		}
+
 		var port = (window.location.port ? window.location.port : (window.location.protocol == "http:" ? 80 : 443)),
 			new_port = (this.settings["webui.enable_listen"] ? this.settings["webui.port"] : this.settings["bind_port"]);
 		if (port != new_port) {
 			$("msg").set("html", "Redirecting...");
 			$("cover").show();
 			changePort.delay(500, null, new_port);
-		} else if (reload) {
+		}
+		else if (reload) {
 			window.location.reload();
-		} else if (resize) {
+		}
+		else if (resize) {
 			resizeUI();
 		}
 
@@ -972,10 +979,10 @@ var utWebUI = {
 
 	"trtSelect": function(ev, id) {
 		if (ev.isRightClick()) {
+			if (this.trtTable.selectedRows.length > 0)
+				this.showMenu.delay(0, this, [ev, id]);
 			if (this.config.showDetails && (this.trtTable.selectedRows.length == 1))
 				this.showDetails(id);
-			if (this.trtTable.selectedRows.length > 0)
-				this.showMenu(ev, id);
 		} else {
 			if (this.config.showDetails) {
 				if (this.trtTable.selectedRows.length == 0) {
@@ -1076,8 +1083,9 @@ var utWebUI = {
 			ContextMenu.add(recheck);
 		}
 		ContextMenu.add([CMENU_SEP]);
-		var lgroup = [], $me = this;
+		var lgroup = [], $me = this, labelcount = 0;
 		$each(this.customLabels, function(_, k) {
+			++labelcount;
 			k = k.substr(1, k.length - 2);
 			if ($me.trtTable.selectedRows.every(function(item){ return ($me.torrents[item][11] == k); })) {
 				lgroup.push([CMENU_SEL, k]);
@@ -1085,7 +1093,7 @@ var utWebUI = {
 				lgroup.push([k, $me.setLabel.bind($me, k)]);
 			}
 		});
-		lgroup.push([CMENU_SEP]);
+		if (labelcount) lgroup.push([CMENU_SEP]);
 		lgroup.push([lang[CONST.OV_NEW_LABEL], this.newLabel.bind(this)]);
 		lgroup.push([lang[CONST.OV_REMOVE_LABEL], this.setLabel.bind(this, "")]);
 		if (lgroup.length > 0) {
@@ -1203,13 +1211,9 @@ var utWebUI = {
 			else if (k == "ulrate")
 				nv *= 1024;
 			else if (k == "trackers") {
-				var a = nv.split("\n"), len = a.length;
-				nv = "";
-				for (var i = 0; i < len; i++) {
-					nv += a[i].replace(/\s+/, "") + "\r\n";
-				}
-				if (nv.substr(-4, 4) == "\r\n\r\n")
-					nv = nv.substr(0, nv.length - 2);
+				nv = nv.split("\n").map(function(item) {
+					return item.replace(/[\r\n]+/g, '');
+				}).join("\r\n");
 			}
 			if ((v != nv) || (this.propID == "multi")) {
 				str += "&s=" + k + "&v=" + encodeURIComponent(nv);
