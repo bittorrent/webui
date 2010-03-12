@@ -671,21 +671,18 @@ function setupUserInterface() {
 
 	var langArr = [];
 	$each(LANGUAGES, function(lang, code) {
-		langArr.push([lang, code]);
+		langArr.push({lang: lang, code: code});
 	});
-
-	var langSorted = {}
 	langArr.sort(function(x, y) {
-		return (x[0] < y[0] ? -1 : (x[0] > y[0] ? 1 : 0));
-	}).each(function(lang) {
-		langSorted[lang[1]] = lang[0];
+		return (x.lang < y.lang ? -1 : (x.lang > y.lang ? 1 : 0));
 	});
 
-	// Note: Yes, the above "sorting" is very dependent on browser implementation of
-	//       objects, but it's something of an unwritten standard behavior expected
-	//       of browsers anyway (not really a good excuse, but it won't make or break
-	//       anything in the code anyway).
-	_loadComboboxStrings("webui.lang", langSorted, utWebUI.defConfig.lang);
+	var langSelect = $("webui.lang");
+	langSelect.options.length = langArr.length;
+	$each(langArr, function(v, k) {
+		langSelect.options[k] = new Option(v.lang, v.code, false, false);
+	});
+	langSelect.set("value", utWebUI.defConfig.lang);
 
 	// -- Connection
 
