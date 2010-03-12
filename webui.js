@@ -1842,7 +1842,7 @@ var utWebUI = {
 
 	"toggleCatPanel": function(show, noresize) {
 		if (!$defined(show)) {
-			show = !this.config.showDetails;
+			show = !this.config.showCategories;
 		}
 
 		$("CatList")[show ? "show" : "hide"]();

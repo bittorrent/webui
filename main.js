@@ -213,7 +213,7 @@ function resizeUI(hDiv, vDiv) {
 		hDiv = 0;
 		if (showCat) {
 			hDiv = config.hSplit;
-			if ((typeof(hDiv) != "number") || (hDiv <= 0)) hDiv = uiLimits.defHSplit;
+			if ((typeof(hDiv) != "number") || (hDiv < minHSplit)) hDiv = uiLimits.defHSplit;
 		}
 	}
 
@@ -232,7 +232,7 @@ function resizeUI(hDiv, vDiv) {
 		vDiv = 0;
 		if (showDet) {
 			vDiv = config.vSplit;
-			if ((typeof(vDiv) != "number") || (vDiv <= 0)) vDiv = uiLimits.defVSplit;
+			if ((typeof(vDiv) != "number") || (vDiv < minVSplit)) vDiv = uiLimits.defVSplit;
 		}
 		vDiv = wh - vDiv;
 	}
@@ -241,33 +241,35 @@ function resizeUI(hDiv, vDiv) {
 	var trtw = ww - (hDiv + 2 + (showCat ? 7 : 0)) - (badIE ? 2 : 0),
 		trth = vDiv - (th + (showDet ? 0 : 2)) - (badIE ? 1 : 0);
 
-	if (trtw < minTrtW) {
-		// Gracefully degrade if torrent list too small
-		hDiv -= minTrtW - trtw;
-		if (showCat) {
+	if (showCat) {
+		$("CatList").show();
+
+		if (trtw < minTrtW) {
+			// Gracefully degrade if torrent list too small
+			hDiv -= minTrtW - trtw;
 			if (hDiv < minHSplit) {
 				$("CatList").hide();
 				showCat = false;
 				trtw = ww - 2;
 			}
 			else {
-				$("CatList").show();
 				trtw = minTrtW;
 			}
 		}
 	}
 
-	if (trth < minTrtH) {
-		// Gracefully degrade if torrent list too small
-		vDiv += minTrtH - trth;
-		if (showDet) {
+	if (showDet) {
+		$("tdetails").show();
+
+		if (trth < minTrtH) {
+			// Gracefully degrade if torrent list too small
+			vDiv += minTrtH - trth;
 			if (vDiv > wh - minVSplit) {
 				$("tdetails").hide();
 				showDet = false;
 				trth = wh - th - 2;
 			}
 			else {
-				$("tdetails").show();
 				trth = minTrtH;
 			}
 		}
