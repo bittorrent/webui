@@ -44,6 +44,9 @@ var ContextMenu = {
 		var args = $A(arguments);
 		var link, ul, li;
 		var ele = args[0];
+		var cancelEvent = function(ev) {
+			ev.stop();
+		}
 		var clickEvent = function(ev) {
 			ev.stop();
 			fn(ev);
@@ -79,7 +82,7 @@ var ContextMenu = {
 				link.setProperty("href", "#");
 				var fn = args[i][2];
 				link.addEvents({
-					  "click"   : clickEvent
+					  "click"   : cancelEvent
 					, "mouseup" : clickEvent
 				});
 				link.set("html", args[i][1]);
@@ -92,7 +95,7 @@ var ContextMenu = {
 				link.setProperty("href", "#");
 				var fn = args[i][1];
 				link.addEvents({
-					  "click"   : clickEvent
+					  "click"   : cancelEvent
 					, "mouseup" : clickEvent
 				});
 				link.set("html", args[i][0]);
