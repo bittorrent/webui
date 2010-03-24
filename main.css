@@ -289,28 +289,40 @@ div#toolbar div.TB_Separator {
 	float: left;
 }
 
+div#toolbar a span {
+	background: transparent url(./images/toolbar.png) no-repeat 0px 0px;
+}
+
 div#toolbar a#add span {
-	background: transparent url(./images/toolbar.png) no-repeat left center;
+	background-position: 0px;
 }
 
 div#toolbar a#remove span {
-	background: transparent url(./images/toolbar.png) no-repeat -72px center;
+	background-position: -72px;
 }
 
 div#toolbar a#start span {
-	background: transparent url(./images/toolbar.png) no-repeat -96px center;
+	background-position: -96px;
 }
 
 div#toolbar a#pause span {
-	background: transparent url(./images/toolbar.png) no-repeat -120px center;
+	background-position: -120px;
 }
 
 div#toolbar a#stop span {
-	background: transparent url(./images/toolbar.png) no-repeat -144px center;
+	background-position: -144px;
+}
+
+div#toolbar a#queueup span {
+	background-position: -168px;
+}
+
+div#toolbar a#queuedown span {
+	background-position: -192px;
 }
 
 div#toolbar a#setting span {
-	background: transparent url(./images/toolbar.png) no-repeat -264px center;
+	background-position: -264px;
 }
 
 div#toolbar a:hover span {

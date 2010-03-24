@@ -403,9 +403,16 @@ function setupUserInterface() {
 
 	// -- Buttons
 
-	["remove", "start", "pause", "stop"].each(function(act) {
+	["remove", "start", "pause", "stop", "queueup", "queuedown"].each(function(act) {
 		$(act).addEvent("click", function(ev) {
-			utWebUI[act]();
+			var arg;
+			switch (act) {
+				case "queueup":
+				case "queuedown":
+					arg = ev.shift;
+					break;
+			}
+			utWebUI[act](arg);
 			ev.stop();
 			return false;
 		});
@@ -716,35 +723,43 @@ function setupUserInterface() {
 						// receive references to a shared idx (a variable's scope is function-wide
 						// in JavaScript, not block-wide as in most other C-styled languages)
 						var idx = i*24+j-1;
-						td.set("class", "block mode" + sv.substr(idx, 1)).addEvent("mousedown", function() {
-							if (!active && $("sched_enable").checked) {
-								for (var k = 0; k <= 3; k++) {
-									if (this.hasClass("mode" + k)) {
-										mode = (k + 1) % 4;
-										this.set("class", "block mode" + mode);
-										sv = sv.substring(0, idx) + mode + sv.substring(idx+1);
-										break;
+						td.set("class", "block mode" + sv.substr(idx, 1)).addEvents({
+							"mousedown": function() {
+								if (!active && $("sched_enable").checked) {
+									for (var k = 0; k <= 3; k++) {
+										if (this.hasClass("mode" + k)) {
+											mode = (k + 1) % 4;
+											this.set("class", "block mode" + mode);
+											sv = sv.substring(0, idx) + mode + sv.substring(idx+1);
+											break;
+										}
 									}
+									active = true;
 								}
-								active = true;
-							}
 
-							return false;
-						}).addEvent("mouseup", function() {
-							if ($("sched_enable").checked) {
-								$("sched_table").set("value", sv);
-							}
-							active = false;
-						}).addEvent("mouseenter", function() {
-							var day = Math.floor(idx / 24), hour = (idx % 24);
-							$("sched_table_info").set("text", g_dayNames[day] + ", " + hour + ":00 - " + hour + ":59");
+								return false;
+							},
 
-							if ($("sched_enable").checked && active && !this.hasClass("mode" + mode)) {
-								this.set("class", "block mode" + mode);
-								sv = sv.substring(0, idx) + mode + sv.substring(idx+1);
+							"mouseup": function() {
+								if ($("sched_enable").checked) {
+									$("sched_table").set("value", sv);
+								}
+								active = false;
+							},
+
+							"mouseenter": function() {
+								var day = Math.floor(idx / 24), hour = (idx % 24);
+								$("sched_table_info").set("text", g_dayNames[day] + ", " + hour + ":00 - " + hour + ":59");
+
+								if ($("sched_enable").checked && active && !this.hasClass("mode" + mode)) {
+									this.set("class", "block mode" + mode);
+									sv = sv.substring(0, idx) + mode + sv.substring(idx+1);
+								}
+							},
+
+							"mouseleave": function() {
+								$("sched_table_info").empty();
 							}
-						}).addEvent("mouseleave", function() {
-							$("sched_table_info").empty();
 						});
 						if (Browser.Engine.trident) {
 							// Prevent text selection in IE
@@ -959,12 +974,14 @@ function loadLangStrings(reload) {
 	//--------------------------------------------------
 
 	_loadStrings("title", {
-		  "add"     : "OV_TB_ADDTORR"
-		, "remove"  : "OV_TB_REMOVE"
-		, "start"   : "OV_TB_START"
-		, "pause"   : "OV_TB_PAUSE"
-		, "stop"    : "OV_TB_STOP"
-		, "setting" : "OV_TB_PREF"
+		  "add"       : "OV_TB_ADDTORR"
+		, "remove"    : "OV_TB_REMOVE"
+		, "start"     : "OV_TB_START"
+		, "pause"     : "OV_TB_PAUSE"
+		, "stop"      : "OV_TB_STOP"
+		, "queueup"   : "OV_TB_QUEUEUP"
+		, "queuedown" : "OV_TB_QUEUEDOWN"
+		, "setting"   : "OV_TB_PREF"
 	});
 
 	//--------------------------------------------------

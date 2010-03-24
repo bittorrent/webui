@@ -22,17 +22,34 @@ var ContextMenu = {
 		this.obj = new Element("ul", {
 			"id": id,
 			"class": "CMenu"
-		}).addEvent("mouseenter", function() {
-			ContextMenu.focused = true;
-		}).addEvent("mouseleave", function() {
-			ContextMenu.focused = false;
+		}).addEvents({
+			"mousedown": function() {
+				return false;
+			},
+			"mouseenter": function() {
+				ContextMenu.focused = true;
+			},
+			"mouseleave": function() {
+				ContextMenu.focused = false;
+			}
 		}).inject(document.body);
+
+		if (Browser.Engine.trident) {
+			// Prevent text selection in IE
+			this.obj.addEvent("selectstart", $lambda(false));
+		}
 	},
 
 	"add": function() {
 		var args = $A(arguments);
 		var link, ul, li;
 		var ele = args[0];
+		var clickEvent = function(ev) {
+			ev.stop();
+			fn(ev);
+			if (ContextMenu.hideAfterClick)
+				ContextMenu.hide();
+		}
 		if ($type(ele) == "element") {
 			if (!ele.hasClass("CMenu")) return;
 			args.splice(0, 1);
@@ -61,11 +78,9 @@ var ContextMenu = {
 				link.addClass("check");
 				link.setProperty("href", "#");
 				var fn = args[i][2];
-				link.addEvent("click", function(ev) {
-					ev.stop();
-					fn();
-					if (ContextMenu.hideAfterClick)
-						ContextMenu.hide();
+				link.addEvents({
+					  "click"   : clickEvent
+					, "mouseup" : clickEvent
 				});
 				link.set("html", args[i][1]);
 				li.adopt(link);
@@ -76,11 +91,9 @@ var ContextMenu = {
 			} else {
 				link.setProperty("href", "#");
 				var fn = args[i][1];
-				link.addEvent("click", function(ev) {
-					ev.stop();
-					fn();
-					if (ContextMenu.hideAfterClick)
-						ContextMenu.hide();
+				link.addEvents({
+					  "click"   : clickEvent
+					, "mouseup" : clickEvent
 				});
 				link.set("html", args[i][0]);
 				li.adopt(link);

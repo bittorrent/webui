@@ -249,6 +249,13 @@ var utWebUI = {
 					if (stat & 2) continue;
 					break;
 
+				case "queueup":
+				case "queuedown":
+				case "queuetop":
+				case "queuebottom":
+					key = { qnum: this.torrents[key][CONST.TORRENT_QUEUE_POSITION], hash: key };
+					break;
+
 				case "remove":
 				case "removedata":
 					break;
@@ -256,12 +263,32 @@ var utWebUI = {
 				default:
 					continue;
 			}
+
 			hashes.push(key);
 		}
+
+		// Sort hash list for queue reordering, since the backend executes
+		// queue order changes serially in the order that the hashes are
+		// passed in the GET argument list.
+		var direction = 1;
+		switch (act) {
+			case "queuedown":
+			case "queuetop":
+				direction = -1;
+			case "queueup":
+			case "queuebottom":
+				hashes = hashes.sort(function(x, y) {
+					return direction * (x.qnum < y.qnum ? -1 : (x.qnum > y.qnum ? 1 : 0));
+				}).map(function(item) {
+					return item.hash;
+				});
+				break;
+		}
+
 		return hashes;
 	},
 
-	"forceStart": function() {
+	"forcestart": function() {
 		this.perform("forcestart");
 	},
 
@@ -275,6 +302,14 @@ var utWebUI = {
 
 	"stop": function() {
 		this.perform("stop");
+	},
+
+	"queueup": function(top) {
+		this.perform(!!top ? "queuetop" : "queueup");
+	},
+
+	"queuedown": function(bot) {
+		this.perform(!!bot ? "queuebottom" : "queuedown");
 	},
 
 	"remove": function(mode) {
@@ -1089,7 +1124,7 @@ var utWebUI = {
 				if (index == searchActive)
 					ContextMenu.add([CMENU_SEL, item]);
 				else
-					ContextMenu.add([item, this.searchMenuSet.pass(index, this)]);
+					ContextMenu.add([item, this.searchMenuSet.bind(this, index)]);
 
 				++index;
 			}
@@ -1277,111 +1312,101 @@ var utWebUI = {
 			this.perform((this.torrents[id][CONST.TORRENT_STATUS] & (CONST.STATE_STARTED | CONST.STATE_QUEUED)) ? "stop" : "start");
 	},
 
-	"showMenu": function(e, id) {
-		var state = this.torrents[id][CONST.TORRENT_STATUS];
-		var fstart = [lang[CONST.ML_FORCE_START], this.forceStart.bind(this)];
-		var start = [lang[CONST.ML_START], this.start.bind(this)];
-		var pause = [lang[CONST.ML_PAUSE], this.pause.bind(this)];
-		var stop = [lang[CONST.ML_STOP],  this.stop.bind(this)];
-		var recheck = [lang[CONST.ML_FORCE_RECHECK], this.recheck.bind(this)];
+	"showMenu": function(ev, id) {
+		if (!ev.isRightClick()) return;
+
+		var menuItems = []
+
+		//--------------------------------------------------
+		// Label Selection
+		//--------------------------------------------------
+
+		var labelIndex = CONST.TORRENT_LABEL;
+		var labelSubMenu = [];
+		$each(this.customLabels, function(_, label) {
+			label = label.substr(1, label.length - 2);
+			if (this.trtTable.selectedRows.every(function(item) { return (this.torrents[item][labelIndex] == label); }, this)) {
+				labelSubMenu.push([CMENU_SEL, label]);
+			}
+			else {
+				labelSubMenu.push([label, this.setLabel.bind(this, label)]);
+			}
+		}, this);
+		if (labelSubMenu.length > 0) labelSubMenu.push([CMENU_SEP]);
+		labelSubMenu.push([lang[CONST.OV_NEW_LABEL], this.newLabel.bind(this)]);
+		labelSubMenu.push([lang[CONST.OV_REMOVE_LABEL], this.setLabel.bind(this, "")]);
+
+		//--------------------------------------------------
+		// Build Menu
+		//--------------------------------------------------
+
+		var menuItemsMap = {
+			  "forcestart" : [lang[CONST.ML_FORCE_START], this.forcestart.bind(this, [])]
+			, "start"      : [lang[CONST.ML_START], this.start.bind(this, [])]
+			, "pause"      : [lang[CONST.ML_PAUSE], this.pause.bind(this, [])]
+			, "stop"       : [lang[CONST.ML_STOP],  this.stop.bind(this, [])]
+			, "queueup"    : [lang[CONST.ML_QUEUEUP], (function(ev) { this.queueup(ev.shift); }).bind(this)]
+			, "queuedown"  : [lang[CONST.ML_QUEUEDOWN], (function(ev) { this.queuedown(ev.shift); }).bind(this)]
+			, "label"      : [CMENU_CHILD, lang[CONST.ML_LABEL], labelSubMenu]
+			, "remove"     : [lang[CONST.ML_REMOVE], this.remove.bind(this, 0)]
+			, "removeand"  : [CMENU_CHILD, lang[CONST.ML_REMOVE_AND], [[lang[CONST.ML_DELETE_DATA], this.remove.bind(this, 1)]]]
+			, "recheck"    : [lang[CONST.ML_FORCE_RECHECK], this.recheck.bind(this, [])]
+			, "properties" : [lang[CONST.ML_PROPERTIES], this.showProperties.bind(this, [])]
+		};
+
+		// Gray out items based on status
+		if (this.trtTable.selectedRows.length <= 1) {
+			var state = this.torrents[id][CONST.TORRENT_STATUS];
+			var started = !!(state & CONST.STATE_STARTED),
+				checking = !!(state & CONST.STATE_CHECKING),
+				paused = !!(state & CONST.STATE_PAUSED),
+				queued = !!(state & CONST.STATE_QUEUED);
+
+			if ((started && !queued && !paused) || checking) {
+				delete menuItemsMap["forcestart"][1];
+			}
+			if ((queued || checking) && !paused) {
+				delete menuItemsMap["start"][1];
+			}
+			if (paused || !(checking || started || queued)) {
+				delete menuItemsMap["pause"][1];
+			}
+			if (!(checking || started || queued)) {
+				delete menuItemsMap["stop"][1];
+			}
+			if (started || checking || queued) {
+				delete menuItemsMap["recheck"][1];
+			}
+		}
+
+		// Create item array
+		menuItems = menuItems.concat([
+			  menuItemsMap["forcestart"]
+			, menuItemsMap["start"]
+			, menuItemsMap["pause"]
+			, menuItemsMap["stop"]
+			, [CMENU_SEP]
+			, menuItemsMap["queueup"]
+			, menuItemsMap["queuedown"]
+			, menuItemsMap["label"]
+			, [CMENU_SEP]
+			, menuItemsMap["remove"]
+			, menuItemsMap["removeand"]
+			, [CMENU_SEP]
+			, menuItemsMap["recheck"]
+			, [CMENU_SEP]
+			, menuItemsMap["properties"]
+		]);
+
+		//--------------------------------------------------
+		// Draw Menu
+		//--------------------------------------------------
+
 		ContextMenu.clear();
-		if (!(state & 64)) {
-			ContextMenu.add([lang[CONST.ML_FORCE_START]]);
-		} else {
-			ContextMenu.add(fstart);
+		for (var i = 0, l = menuItems.length; i < l; ++i) {
+			ContextMenu.add(menuItems[i]);
 		}
-		if (this.trtTable.selectedRows.length > 1) {
-			ContextMenu.clear();
-			ContextMenu.add(fstart);
-			ContextMenu.add(start);
-			ContextMenu.add(pause);
-			ContextMenu.add(stop);
-			ContextMenu.add([CMENU_SEP]);
-			ContextMenu.add(recheck);
-		} else if ((state & 1) && !(state & 2)) {
-			// started
-			if (state & 32) {
-				// paused
-				ContextMenu.clear();
-				ContextMenu.add(fstart);
-				ContextMenu.add(start);
-				ContextMenu.add(pause);
-			} else {
-				if (!(state & 64)) {
-					ContextMenu.add(start);
-				} else {
-					ContextMenu.add([lang[CONST.ML_START]]);
-				}
-				ContextMenu.add(pause);
-			}
-			ContextMenu.add(stop);
-			ContextMenu.add([CMENU_SEP]);
-			ContextMenu.add([lang[CONST.ML_FORCE_RECHECK]]);
-		} else if (state & 2) {
-			// checking
-			ContextMenu.clear();
-			if ((state & 4) || (state & 32)) {
-				ContextMenu.add([lang[CONST.ML_FORCE_START]]);
-			} else {
-				ContextMenu.add(fstart);
-			}
-			if (state & 64) {
-				ContextMenu.add([lang[CONST.ML_START]]);
-			} else {
-				ContextMenu.add(start);
-			}
-			ContextMenu.add(pause);
-			ContextMenu.add(stop);
-			ContextMenu.add([CMENU_SEP]);
-			ContextMenu.add([lang[CONST.ML_FORCE_RECHECK]]);
-		} else if (state & 16) {
-			// error
-			ContextMenu.clear();
-			ContextMenu.add(fstart);
-			ContextMenu.add([lang[CONST.ML_START]]);
-			ContextMenu.add([lang[CONST.ML_PAUSE]]);
-			ContextMenu.add(stop);
-			ContextMenu.add([CMENU_SEP]);
-			ContextMenu.add(recheck);
-		} else if (state & 64) {
-			// queued
-			ContextMenu.add([lang[CONST.ML_START]]);
-			ContextMenu.add(pause);
-			ContextMenu.add(stop);
-			ContextMenu.add([CMENU_SEP]);
-			ContextMenu.add(recheck);
-		} else {
-			ContextMenu.clear();
-			ContextMenu.add(fstart);
-			ContextMenu.add(start);
-			ContextMenu.add([lang[CONST.ML_PAUSE]]);
-			ContextMenu.add([lang[CONST.ML_STOP]]);
-			ContextMenu.add([CMENU_SEP]);
-			ContextMenu.add(recheck);
-		}
-		ContextMenu.add([CMENU_SEP]);
-		var lgroup = [], $me = this, labelcount = 0;
-		$each(this.customLabels, function(_, k) {
-			++labelcount;
-			k = k.substr(1, k.length - 2);
-			if ($me.trtTable.selectedRows.every(function(item){ return ($me.torrents[item][11] == k); })) {
-				lgroup.push([CMENU_SEL, k]);
-	 		} else {
-				lgroup.push([k, $me.setLabel.bind($me, k)]);
-			}
-		});
-		if (labelcount) lgroup.push([CMENU_SEP]);
-		lgroup.push([lang[CONST.OV_NEW_LABEL], this.newLabel.bind(this)]);
-		lgroup.push([lang[CONST.OV_REMOVE_LABEL], this.setLabel.bind(this, "")]);
-		if (lgroup.length > 0) {
-			ContextMenu.add([CMENU_CHILD, lang[CONST.ML_LABEL], lgroup]);
-			ContextMenu.add([CMENU_SEP]);
-		}
-		ContextMenu.add([lang[CONST.ML_REMOVE], this.remove.bind(this, 0)]);
-		ContextMenu.add([CMENU_CHILD, lang[CONST.ML_REMOVE_AND], [[lang[CONST.ML_DELETE_DATA], this.remove.bind(this, 1)]]]);
-		ContextMenu.add([CMENU_SEP]);
-		ContextMenu.add([lang[CONST.ML_PROPERTIES], this.showProperties.bind(this)]);
-		ContextMenu.show(e.page);
+		ContextMenu.show(ev.page);
 	},
 
 	"showProperties": function(k) {

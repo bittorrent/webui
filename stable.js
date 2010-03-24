@@ -1361,7 +1361,7 @@ var dxSTable = new Class({
 		}, this);
 		if (this.resetText) {
 			ContextMenu.add([CMENU_SEP]);
-			ContextMenu.add([this.resetText, (function() { this.fireEvent("onColReset"); }).bind(this)]);
+			ContextMenu.add([this.resetText, this.fireEvent.bind(this, "onColReset")]);
 		}
 		ContextMenu.show(coords);
 	},
