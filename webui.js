@@ -877,10 +877,7 @@ var utWebUI = {
 
 			loadLangStrings({
 				"lang": this.config.lang,
-				"onload": (function() {
-					if (isGuest) this.update();
-					else this.loadTorrents(json);
-				}).bind(this)
+				"onload": this.update.bind(this)
 			});
 		}
 	},
@@ -1223,6 +1220,7 @@ var utWebUI = {
 					break;
 
 				case "downspeed":
+				case "upspeed":
 					values[i] = (values[i] >= 103) ? (values[i].toFileSize() + g_perSec) : "";
 					break;
 
@@ -1246,7 +1244,7 @@ var utWebUI = {
 					break;
 
 				case "remaining":
-					values[i] = values[i].toFileSize(2);
+					values[i] = (values[i] >= 103) ? values[i].toFileSize(2) : "";
 					break;
 
 				case "seeds_peers":
@@ -1259,10 +1257,6 @@ var utWebUI = {
 
 				case "uploaded":
 					values[i] = values[i].toFileSize();
-					break;
-
-				case "upspeed":
-					values[i] = (values[i] >= 103) ? (values[i].toFileSize() + g_perSec) : "";
 					break;
 			}
 		}
