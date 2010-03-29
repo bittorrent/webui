@@ -937,6 +937,8 @@ var utWebUI = {
 			$("tdetails").hide();
 		if (!this.config.showToolbar && !isGuest)
 			$("toolbar").hide();
+
+		this.toggleSearchBar();
 	},
 
 	"setSettings": function() {
@@ -1069,6 +1071,8 @@ var utWebUI = {
 		else if (resize) {
 			resizeUI();
 		}
+
+		this.toggleSearchBar();
 
 	},
 
@@ -1883,6 +1887,14 @@ var utWebUI = {
 		if (!noresize) {
 			resizeUI();
 		}
+	},
+
+	"toggleSearchBar": function(show) {
+		if (!$defined(show)) {
+			show = !!(this.settings["search_list"] || "").trim();
+		}
+
+		$("sb")[show ? "show" : "hide"]();
 	},
 
 	"toggleToolbar": function(show, noresize) {
