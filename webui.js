@@ -1081,7 +1081,7 @@ var utWebUI = {
 	},
 
 	"searchExecute": function() {
-		var searchQuery = $("query").get("value");
+		var searchQuery = encodeURIComponent($("query").get("value"));
 		var searchActive = (this.settings["search_list_sel"] || 0);
 		var searchURLs = (this.settings["search_list"] || "").split("\r\n");
 
