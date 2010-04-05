@@ -60,6 +60,10 @@ textarea:focus {
 	border: 1px solid #0099FF;
 }
 
+input[type="checkbox"] {
+	margin-right: 3px;
+}
+
 input.btn, input.fbox, input.tbox, select {
 	background-color: #FFFFFF;
 	border: 1px solid #D0D0D0;
@@ -75,8 +79,8 @@ input.btn {
 
 input.tbox {
 	background-color: #FFFFFF;
-	margin: 1px 0 !important;
-	padding: 0 2px !important;
+	margin: 1px 0;
+	padding: 0 2px;
 	vertical-align: top;
 	height: 16px;
 }
@@ -797,10 +801,15 @@ li#tab_mainInfoPane-loggerTab span {
 	width: 370px;
 }
 
-#dlgProps #prop-trackers {
+#prop-trackers {
 	height: 100px;
 }
 
+#prop-seed_ratio,
+#prop-seed_time {
+	margin-left: 3px;
+	margin-right: 3px;
+}
 
 /**************************************************
  * DIALOG: Settings
@@ -851,8 +860,11 @@ li#tab_mainInfoPane-loggerTab span {
 
 /* General */
 
-#search_list {
-	height: 75px;
+#search_list { height: 75px; }
+
+input[id="webui.username"],
+input[id="webui.password"] {
+	margin-left: 3px;
 }
 
 /* Directories */
@@ -863,14 +875,17 @@ li#tab_mainInfoPane-loggerTab span {
 
 /* Connection */
 
-#DLG_SETTINGS_4_CONN_11, #DLG_SETTINGS_4_CONN_16 {
+#DLG_SETTINGS_4_CONN_11,
+#DLG_SETTINGS_4_CONN_16 {
 	margin-right: 5px;
 }
 
-#DLG_SETTINGS_4_CONN_13, #DLG_SETTINGS_4_CONN_18 {
+#DLG_SETTINGS_4_CONN_13,
+#DLG_SETTINGS_4_CONN_18 {
 	margin: 0 5px 0 25px;
 }
 
+select[id="proxy.type"] { margin-left: 3px; }
 input[id="proxy.proxy"] { width: 140px; }
 input[id="proxy.port"] { width: 45px; }
 input[id="proxy.username"] { width: 90px; }
@@ -878,8 +893,26 @@ input[id="proxy.password"] { width: 70px; }
 
 /* BitTorrent */
 
-#tracker_ip {
-	width: 220px;
+#tracker_ip { width: 220px; }
+#encryption_mode { margin-left: 3px; }
+
+/* Transfer Cap */
+
+#multi_day_transfer_mode,
+#multi_day_transfer_limit_value {
+	margin-left: 3px;
+}
+
+#multi_day_transfer_limit_span {
+	margin-left: 3px;
+	margin-right: 3px;
+}
+
+/* Queueing */
+
+#seed_ratio, #seed_time {
+	margin-left: 3px;
+	margin-right: 3px;
 }
 
 /* Scheduler */

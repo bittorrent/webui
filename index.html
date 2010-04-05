@@ -34,7 +34,7 @@
 			<div class="dlg-body">
 				<form id="dlgAdd-form" action="./?action=add-file" method="post" enctype="multipart/form-data">
 					<div class="line-cont">
-						<input id="dlgAdd-file" name="torrent_file" type="file" class="fbox flr" />
+						<input type="file" id="dlgAdd-file" name="torrent_file" class="fbox flr" />
 						<label for="dlgAdd-file">Torrent file:</label>
 					</div>
 				</form>
@@ -52,8 +52,8 @@
 				-->
 			</div>
 			<div class="dlg-foot">
-				<input id="ADD_FILE_OK" type="button" class="btn" />
-				<input id="ADD_FILE_CANCEL" type="button" class="btn" />
+				<input type="button" id="ADD_FILE_OK" class="btn" />
+				<input type="button" id="ADD_FILE_CANCEL" class="btn" />
 			</div>
 		</div>
 		<!-- Torrent Add Dialog */ -->
@@ -64,17 +64,17 @@
 			<div id="dlgAddURL-head" class="dlg-head"></div>
 			<div class="dlg-body">
 				<div class="line-cont">
-					<input id="dlgAdd-url" type="text" class="tbox flr" />
+					<input type="text" id="dlgAdd-url" class="tbox flr" />
 					<label for="dlgAdd-url">Torrent URL:</label>
 				</div>
 				<div class="line-cont">
-					<input id="dlgAdd-cookies" type="text" class="tbox flr" />
+					<input type="text" id="dlgAdd-cookies" class="tbox flr" />
 					<label for="dlgAdd-cookies">Cookies:</label>
 				</div>
 			</div>
 			<div class="dlg-foot">
-				<input id="ADD_URL_OK" type="button" class="btn" />
-				<input id="ADD_URL_CANCEL" type="button" class="btn" />
+				<input type="button" id="ADD_URL_OK" class="btn" />
+				<input type="button" id="ADD_URL_CANCEL" class="btn" />
 			</div>
 		</div>
 		<!-- Torrent Add URL Dialog */ -->
@@ -270,7 +270,7 @@
 						</div>
 						<div class="line-cont indent"><input type="text" id="dir_torrent_files" class="tbox" /></div>
 						<div class="line-cont">
-							<input id="dir_completed_torrents_flag" type="checkbox" />
+							<input type="checkbox" id="dir_completed_torrents_flag" />
 							<label for="dir_completed_torrents_flag" id="DLG_SETTINGS_3_PATHS_15"></label>
 						</div>
 						<div class="line-cont indent"><input type="text" id="dir_completed_torrents" class="tbox" /></div>
@@ -300,21 +300,21 @@
 						</div>
 						<div class="line-cont">
 							<div class="half flr">
-								<input id="rand_port_on_start" type="checkbox" />
+								<input type="checkbox" id="rand_port_on_start" />
 								<label for="rand_port_on_start" id="DLG_SETTINGS_4_CONN_05"></label>
 							</div>
 							<div>
-								<input id="upnp" type="checkbox" />
+								<input type="checkbox" id="upnp" />
 								<label for="upnp" id="DLG_SETTINGS_4_CONN_06"></label>
 							</div>
 						</div>
 						<div class="line-cont">
 							<div class="half flr">
-								<input id="disable_fw" type="checkbox" />
+								<input type="checkbox" id="disable_fw" />
 								<label for="disable_fw" id="DLG_SETTINGS_4_CONN_21"></label>
 							</div>
 							<div>
-								<input id="natpmp" type="checkbox" />
+								<input type="checkbox" id="natpmp" />
 								<label for="natpmp" id="DLG_SETTINGS_4_CONN_07"></label>
 							</div>
 						</div>
@@ -325,9 +325,9 @@
 						<div class="line-cont">
 							<div class="flr">
 								<label for="proxy.proxy" id="DLG_SETTINGS_4_CONN_11"></label>
-								<input id="proxy.proxy" type="text" class="tbox str" />
+								<input type="text" id="proxy.proxy" class="tbox str" />
 								<label for="proxy.port" id="DLG_SETTINGS_4_CONN_13"></label>
-								<input id="proxy.port" type="text" class="tbox num" />
+								<input type="text" id="proxy.port" class="tbox num" />
 							</div>
 							<div>
 								<label id="DLG_SETTINGS_4_CONN_09"></label>
@@ -337,21 +337,21 @@
 						<div class="line-cont">
 							<div class="flr">
 								<label for="proxy.username" id="DLG_SETTINGS_4_CONN_16"></label>
-								<input id="proxy.username" type="text" class="tbox str" />
+								<input type="text" id="proxy.username" class="tbox str" />
 								<label for="proxy.password" id="DLG_SETTINGS_4_CONN_18"></label>
-								<input id="proxy.password" type="password" class="tbox str" />
+								<input type="password" id="proxy.password" class="tbox str" />
 							</div>
 							<div>
-								<input id="proxy.auth" type="checkbox" />
+								<input type="checkbox" id="proxy.auth" />
 								<label for="proxy.auth" id="DLG_SETTINGS_4_CONN_15"></label>
 							</div>
 						</div>
 						<div class="line-cont">
-							<input id="proxy.resolve" type="checkbox" />
+							<input type="checkbox" id="proxy.resolve" />
 							<label for="proxy.resolve" id="DLG_SETTINGS_4_CONN_19"></label>
 						</div>
 						<div class="line-cont">
-							<input id="proxy.p2p" type="checkbox" />
+							<input type="checkbox" id="proxy.p2p" />
 							<label for="proxy.p2p" id="DLG_SETTINGS_4_CONN_20"></label>
 						</div>
 					</fieldset>
@@ -366,7 +366,7 @@
 						</div>
 						<div class="line-cont indent">
 							<input type="text" id="max_ul_rate_seed" class="tbox num flr" maxlength="6" />
-							<input id="max_ul_rate_seed_flag" type="checkbox" />
+							<input type="checkbox" id="max_ul_rate_seed_flag" />
 							<label for="max_ul_rate_seed_flag" id="DLG_SETTINGS_5_BANDWIDTH_05"></label>
 						</div>
 					</fieldset>
@@ -394,7 +394,7 @@
 							<label id="DLG_SETTINGS_5_BANDWIDTH_15" for="ul_slots_per_torrent"></label>
 						</div>
 						<div class="line-cont indent">
-							<input id="extra_ulslots" type="checkbox" />
+							<input type="checkbox" id="extra_ulslots" />
 							<label for="extra_ulslots" id="DLG_SETTINGS_5_BANDWIDTH_17"></label>
 						</div>
 					</fieldset>
@@ -405,31 +405,31 @@
 						<legend id="DLG_SETTINGS_6_BITTORRENT_01"></legend>
 						<div class="line-cont">
 							<div class="half flr">
-								<input id="enable_scrape" type="checkbox" />
+								<input type="checkbox" id="enable_scrape" />
 								<label for="enable_scrape" id="DLG_SETTINGS_6_BITTORRENT_03"></label>
 							</div>
 							<div>
-								<input id="dht" type="checkbox" />
+								<input type="checkbox" id="dht" />
 								<label for="dht" id="DLG_SETTINGS_6_BITTORRENT_02"></label>
 							</div>
 						</div>
 						<div class="line-cont">
 							<div class="half flr">
-								<input id="pex" type="checkbox" />
+								<input type="checkbox" id="pex" />
 								<label for="pex" id="DLG_SETTINGS_6_BITTORRENT_05"></label>
 							</div>
 							<div>
-								<input id="dht_per_torrent" type="checkbox" />
+								<input type="checkbox" id="dht_per_torrent" />
 								<label for="dht_per_torrent" id="DLG_SETTINGS_6_BITTORRENT_04"></label>
 							</div>
 						</div>
 						<div class="line-cont">
 							<div class="half flr">
-								<input id="rate_limit_local_peers" type="checkbox" />
+								<input type="checkbox" id="rate_limit_local_peers" />
 								<label for="rate_limit_local_peers" id="DLG_SETTINGS_6_BITTORRENT_07"></label>
 							</div>
 							<div>
-								<input id="lsd" type="checkbox" />
+								<input type="checkbox" id="lsd" />
 								<label for="lsd" id="DLG_SETTINGS_6_BITTORRENT_06"></label>
 							</div>
 						</div>
@@ -443,7 +443,7 @@
 						<legend id="DLG_SETTINGS_6_BITTORRENT_10"></legend>
 						<div class="line-cont">
 							<div class="half flr">
-								<input id="encryption_allow_legacy" type="checkbox" />
+								<input type="checkbox" id="encryption_allow_legacy" />
 								<label for="encryption_allow_legacy" id="DLG_SETTINGS_6_BITTORRENT_13"></label>
 							</div>
 							<div>
@@ -456,7 +456,7 @@
 
 				<div id="dlgSettings-TransferCap" class="settings-pane">
 					<div class="line-cont">
-						<input id="multi_day_transfer_limit_en" type="checkbox" />
+						<input type="checkbox" id="multi_day_transfer_limit_en" />
 						<label for="multi_day_transfer_limit_en" id="DLG_SETTINGS_7_TRANSFERCAP_01"></label>
 					</div>
 
@@ -495,10 +495,10 @@
 							<label for="seed_ratio" id="DLG_SETTINGS_8_QUEUEING_07"></label>
 							<input type="text" id="seed_ratio" class="tbox num" />
 							<label for="seed_time" id="DLG_SETTINGS_8_QUEUEING_09"></label>
-							<input type="text" class="tbox num" id="seed_time" />
+							<input type="text" id="seed_time" class="tbox num" />
 						</div>
 						<div class="line-cont">
-							<input id="seeds_prioritized" type="checkbox" />
+							<input type="checkbox" id="seeds_prioritized" />
 							<label for="seeds_prioritized" id="DLG_SETTINGS_8_QUEUEING_11"></label>
 						</div>
 					</fieldset>
@@ -507,7 +507,7 @@
 						<legend id="DLG_SETTINGS_8_QUEUEING_12"></legend>
 						<div class="line-cont">
 							<input type="text" id="seed_prio_limitul" class="tbox num flr" maxlength="6" />
-							<input id="seed_prio_limitul_flag" type="checkbox" />
+							<input type="checkbox" id="seed_prio_limitul_flag" />
 							<label for="seed_prio_limitul_flag" id="DLG_SETTINGS_8_QUEUEING_13"></label>
 						</div>
 					</fieldset>
@@ -515,7 +515,7 @@
 
 				<div id="dlgSettings-Scheduler" class="settings-pane">
 					<div class="line-cont">
-						<input id="sched_enable" type="checkbox" />
+						<input type="checkbox" id="sched_enable" />
 						<label for="sched_enable" id="DLG_SETTINGS_9_SCHEDULER_01"></label>
 					</div>
 
@@ -539,7 +539,7 @@
 						<legend id="DLG_SETTINGS_9_SCHEDULER_04"></legend>
 						<div class="line-cont">
 							<div class="half flr">
-								<input id="sched_dis_dht" type="checkbox" />
+								<input type="checkbox" id="sched_dis_dht" />
 								<label id="DLG_SETTINGS_9_SCHEDULER_09" for="sched_dis_dht"></label>
 							</div>
 							<div class="half">
@@ -858,11 +858,11 @@
 						<div id="DLG_SETTINGS_C_ADV_CACHE_02" style="margin-bottom: 5px;"></div>
 						<div class="line-cont">
 							<input type="text" id="cache.override_size" class="tbox num flr" maxlength="6" />
-							<input id="cache.override" type="checkbox" />
+							<input type="checkbox" id="cache.override" />
 							<label for="cache.override" id="DLG_SETTINGS_C_ADV_CACHE_03"></label>
 						</div>
 						<div class="line-cont">
-							<input id="cache.reduce" type="checkbox" />
+							<input type="checkbox" id="cache.reduce" />
 							<label for="cache.reduce" id="DLG_SETTINGS_C_ADV_CACHE_05"></label>
 						</div>
 					</fieldset>
@@ -870,39 +870,39 @@
 					<fieldset>
 						<legend id="DLG_SETTINGS_C_ADV_CACHE_06"></legend>
 						<div class="line-cont">
-							<input id="cache.write" type="checkbox" />
+							<input type="checkbox" id="cache.write" />
 							<label for="cache.write" id="DLG_SETTINGS_C_ADV_CACHE_07"></label>
 						</div>
 						<div class="line-cont indent">
-							<input id="cache.writeout" type="checkbox" />
+							<input type="checkbox" id="cache.writeout" />
 							<label for="cache.writeout" id="DLG_SETTINGS_C_ADV_CACHE_08"></label>
 						</div>
 						<div class="line-cont indent">
-							<input id="cache.writeimm" type="checkbox" />
+							<input type="checkbox" id="cache.writeimm" />
 							<label for="cache.writeimm" id="DLG_SETTINGS_C_ADV_CACHE_09"></label>
 						</div>
 						<div class="line-cont">
-							<input id="cache.read" type="checkbox" />
+							<input type="checkbox" id="cache.read" />
 							<label for="cache.read" id="DLG_SETTINGS_C_ADV_CACHE_10"></label>
 						</div>
 						<div class="line-cont indent">
-							<input id="cache.read_turnoff" type="checkbox" />
+							<input type="checkbox" id="cache.read_turnoff" />
 							<label for="cache.read_turnoff" id="DLG_SETTINGS_C_ADV_CACHE_11"></label>
 						</div>
 						<div class="line-cont indent">
-							<input id="cache.read_prune" type="checkbox" />
+							<input type="checkbox" id="cache.read_prune" />
 							<label for="cache.read_prune" id="DLG_SETTINGS_C_ADV_CACHE_12"></label>
 						</div>
 						<div class="line-cont indent">
-							<input id="cache.read_thrash" type="checkbox" />
+							<input type="checkbox" id="cache.read_thrash" />
 							<label for="cache.read_thrash" id="DLG_SETTINGS_C_ADV_CACHE_13"></label>
 						</div>
 						<div class="line-cont">
-							<input id="cache.disable_win_write" type="checkbox" />
+							<input type="checkbox" id="cache.disable_win_write" />
 							<label for="cache.disable_win_write" id="DLG_SETTINGS_C_ADV_CACHE_14"></label>
 						</div>
 						<div class="line-cont">
-							<input id="cache.disable_win_read" type="checkbox" />
+							<input type="checkbox" id="cache.disable_win_read" />
 							<label for="cache.disable_win_read" id="DLG_SETTINGS_C_ADV_CACHE_15"></label>
 						</div>
 					</fieldset>
@@ -979,8 +979,8 @@
 				</fieldset>
 			</div>
 			<div class="dlg-foot">
-				<input id="DLG_TORRENTPROP_01" type="button" class="btn" />
-				<input id="DLG_TORRENTPROP_02" type="button" class="btn" />
+				<input type="button" id="DLG_TORRENTPROP_01" class="btn" />
+				<input type="button" id="DLG_TORRENTPROP_02" class="btn" />
 			</div>
 		</div>
 		<!-- Torrent Properties Dialog */ -->
@@ -1007,11 +1007,11 @@
 			<div id="dlgLabel-head" class="dlg-head"></div>
 			<div class="dlg-body">
 				<div class="line-cont"><label for="dlgLabel-label" id="OV_NEWLABEL_TEXT"></label></div>
-				<div class="line-cont"><input id="dlgLabel-label" type="text" class="tbox" /><br /></div>
+				<div class="line-cont"><input type="text" id="dlgLabel-label" class="tbox" /><br /></div>
 			</div>
 			<div class="dlg-foot">
-				<input id="LBL_OK" type="button" class="btn" />
-				<input id="LBL_CANCEL" type="button" class="btn" />
+				<input type="button" id="LBL_OK" class="btn" />
+				<input type="button" id="LBL_CANCEL" class="btn" />
 			</div>
 		</div>
 		<!-- New Label Dialog */ -->
