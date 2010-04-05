@@ -20,7 +20,7 @@ var DialogManager = {
 		id = "dlg" + id;
 		$(id).addEvent("mousedown", function(ev) {
 			var cls = ev.target.className;
-			if (cls.contains("dlg-header", " ") || cls.contains("dlg-close", " ")) return;
+			if (cls.contains("dlg-head", " ") || cls.contains("dlg-close", " ")) return;
 			this.setStyle("zIndex", ++DialogManager.winZ);
 		}).getElement("a").addEvent("click", function(ev) {
 			ev.stop();
@@ -28,7 +28,7 @@ var DialogManager = {
 		});
 		var dragElement = null;
 		new Drag(id, {
-			"handle": id + "-header",
+			"handle": id + "-head",
 			"modifiers": {"x": "left", "y": "top"},
 			"snap": 2,
 			"onBeforeStart": function() {

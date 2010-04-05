@@ -1,10 +1,24 @@
-.stg_con select {
-	vertical-align: middle !important;
-}
-
 label {
 	vertical-align: baseline !important;
 }
+
+.clear, ul.CMenu li .hr {
+	zoom: 1;
+}
+
+.settings-pane select {
+	vertical-align: middle !important;
+}
+
+/*
+div#mainToolbar a span {
+	filter: alpha(opacity=70);
+}
+
+div#mainToolbar a:hover span {
+	filter: alpha(opacity=100);
+}
+*/
 
 .stable-pagemenu .prevlink-disabled, .stable-pagemenu .nextlink-disabled {
 	filter: alpha(opacity=50);

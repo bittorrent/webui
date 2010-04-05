@@ -12,7 +12,7 @@ var g_winTitle = "\u00B5Torrent WebUI v" + CONST.VERSION;
 var g_perSec; // string representing "/s"
 var g_dayCodes; // array of strings representing ["Mon", "Tue", ..., "Sun"]
 var g_dayNames; // array of strings representing ["Monday", "Tuesday", ... , "Sunday"]
-var g_schLgndEx; // object whose values are strings explanations of scheduler table colors
+var g_schLgndEx; // object whose values are string explanations of scheduler table colors
 
 
 //================================================================================
@@ -196,7 +196,7 @@ function resizeUI(hDiv, vDiv) {
 		tallCat = !!utWebUI.settings["gui.tall_category_list"];
 	}
 
-	var th = (showTB ? $("toolbar").getSize().y + 5 : 0);
+	var th = (showTB ? $("mainToolbar").getSize().y + 5 : 0);
 
 	if (manualH) {
 		hDiv -= 2;
@@ -242,13 +242,13 @@ function resizeUI(hDiv, vDiv) {
 		trth = vDiv - (th + (showDet ? 0 : 2)) - (badIE ? 1 : 0);
 
 	if (showCat) {
-		$("CatList").show();
+		$("mainCatList").show();
 
 		if (trtw < minTrtW) {
 			// Gracefully degrade if torrent list too small
 			hDiv -= minTrtW - trtw;
 			if (hDiv < minHSplit) {
-				$("CatList").hide();
+				$("mainCatList").hide();
 				showCat = false;
 				trtw = ww - 2;
 			}
@@ -259,13 +259,13 @@ function resizeUI(hDiv, vDiv) {
 	}
 
 	if (showDet) {
-		$("tdetails").show();
+		$("mainInfoPane").show();
 
 		if (trth < minTrtH) {
 			// Gracefully degrade if torrent list too small
 			vDiv += minTrtH - trth;
 			if (vDiv > wh - minVSplit) {
-				$("tdetails").hide();
+				$("mainInfoPane").hide();
 				showDet = false;
 				trth = wh - th - 2;
 			}
@@ -279,41 +279,41 @@ function resizeUI(hDiv, vDiv) {
 
 	// Resize category/label list
 	if (showCat) {
-		if (hDiv) $("CatList").setStyle("width", hDiv - (badIE ? 2 : 0));
+		if (hDiv) $("mainCatList").setStyle("width", hDiv - (badIE ? 2 : 0));
 
 		if (tallCat) {
-			$("CatList").setStyle("height", wh - th - 2);
+			$("mainCatList").setStyle("height", wh - th - 2);
 		}
 		else if (trth) {
-			$("CatList").setStyle("height", trth);
+			$("mainCatList").setStyle("height", trth);
 		}
 	}
 
 	// Resize detailed info pane
 	if (showDet) {
 		var dw = ww - (3 + (showCat && tallCat ? hDiv + 7 : 0)) - (badIE ? 2 : 0);
-		$("tdetails").setStyle("width", dw);
+		$("mainInfoPane").setStyle("width", dw);
 		if (vDiv) {
-			var dh = wh - vDiv - $("tabs").getSize().y - 16;
-			$("tdcont").setStyles({"width": dw - 5, "height": dh});
-			$("gcont").setStyles({"width": dw - 10, "height": dh - 5});
-			SpeedGraph.resize(dw - 5, dh - 12);
-			$("lcont").setStyles({"width": dw - 14, "height": dh - 9});
+			var dh = wh - vDiv - $("mainInfoPane-tabs").getSize().y - 16;
+			$("mainInfoPane-content").setStyles({"width": dw - 5, "height": dh});
+			$("mainInfoPane-generalTab").setStyles({"width": dw - 7, "height": dh - 2});
+			SpeedGraph.resize(dw - 5, dh);
+			$("mainInfoPane-loggerTab").setStyles({"width": dw - 11, "height": dh - 6});
 			utWebUI.flsTable.resizeTo(dw - 7, dh - 2);
 		}
 	}
 
 	// Reposition dividers
-	if ($("HDivider")) {
-		$("HDivider").setStyles({
+	if ($("mainHDivider")) {
+		$("mainHDivider").setStyles({
 			"height": tallCat ? wh - th : trth + 2,
 			"left": showCat ? hDiv + 2 : -10,
 			"top": th
 		});
 	}
 
-	if ($("VDivider")) {
-		$("VDivider").setStyles({
+	if ($("mainVDivider")) {
+		$("mainVDivider").setStyles({
 			"width": ww,
 			"left": tallCat ? hDiv + 7 : 0,
 			"top":  showDet ? vDiv + 2 : -10
@@ -357,7 +357,7 @@ function setupUserInterface() {
 	//--------------------------------------------------
 
 	var useProgress = (isGuest || utWebUI.settings["gui.graphic_progress"]);
-	utWebUI.trtTable.create("List", utWebUI.trtColDefs, $extend({
+	utWebUI.trtTable.create("mainTorList", utWebUI.trtColDefs, $extend({
 		"format": utWebUI.trtFormatRow.bind(utWebUI),
 		"sortCustom": utWebUI.trtSortCustom.bind(utWebUI),
 		"onDelete": utWebUI.remove.bind(utWebUI),
@@ -379,7 +379,7 @@ function setupUserInterface() {
 	// DIVIDERS
 	//--------------------------------------------------
 
-	new Drag("HDivider", {
+	new Drag("mainHDivider", {
 		"modifiers": {"x": "left", "y": ""},
 		"onComplete": function() {
 			resizeUI(this.value.now.x, null);
@@ -388,7 +388,7 @@ function setupUserInterface() {
 		}
 	});
 
-	new Drag("VDivider", {
+	new Drag("mainVDivider", {
 		"modifiers": {"x": "", "y": "top"},
 		"onComplete": function() {
 			resizeUI(null, this.value.now.y);
@@ -428,6 +428,11 @@ function setupUserInterface() {
 			ele.options[count++] = new Option(key, key, false, count == 0);
 		*/
 		DialogManager.show("Add");
+	});
+
+	$("addurl").addEvent("click", function(ev) {
+		ev.stop();
+		DialogManager.show("AddURL");
 	});
 
 	$("setting").addEvent("click", function(ev) {
@@ -474,19 +479,19 @@ function setupUserInterface() {
 
 	// -- Tabs
 
-	utWebUI.tabs = new Tabs("tabs", {
+	utWebUI.tabs = new Tabs("mainInfoPane-tabs", {
 		"tabs": {
-			  "gcont"    : ""
-			, "FileList" : ""
-			, "spgraph"  : ""
-			, "lcont"    : ""
+			  "mainInfoPane-generalTab" : ""
+			, "mainInfoPane-filesTab"   : ""
+			, "mainInfoPane-speedTab"   : ""
+			, "mainInfoPane-loggerTab"  : ""
 		},
 		"onChange": utWebUI.tabChange.bind(utWebUI)
-	}).draw().show("gcont");
+	}).draw().show("mainInfoPane-generalTab");
 
 	// -- Files Tab
 
-	utWebUI.flsTable.create("FileList", utWebUI.flsColDefs, $extend({
+	utWebUI.flsTable.create("mainInfoPane-filesTab", utWebUI.flsColDefs, $extend({
 		"format": utWebUI.flsFormatRow.bind(utWebUI),
 		"onColReset": utWebUI.flsColReset.bind(utWebUI),
 		"onColResize": utWebUI.flsColResize.bind(utWebUI),
@@ -501,7 +506,7 @@ function setupUserInterface() {
 
 	// -- Speed Tab
 
-	SpeedGraph.init("spgraph");
+	SpeedGraph.init("mainInfoPane-speedTab");
 
 	//--------------------------------------------------
 	// DIALOG MANAGER
@@ -509,7 +514,7 @@ function setupUserInterface() {
 
 	DialogManager.dragMask = $("dragmask");
 
-	["About", "Add", "Label", "Props", "Settings"].each(function(k) {
+	["About", "Add", "AddURL", "Label", "Props", "Settings"].each(function(k) {
 		var isModal = (["Label", "Props"].indexOf(k) >= 0);
 		DialogManager.add(k, isModal);
 	});
@@ -521,7 +526,7 @@ function setupUserInterface() {
 	// -- OK Button (File)
 
 	$("ADD_FILE_OK").addEvent("click", function() {
-		$("upfrm").set("action", urlBase + "?token=" + utWebUI.TOKEN + "&action=add-file");
+		$("dlgAdd-form").set("action", urlBase + "?token=" + utWebUI.TOKEN + "&action=add-file").submit();
 	});
 
 	// -- Cancel Button (File)
@@ -540,12 +545,12 @@ function setupUserInterface() {
 	// -- Cancel Button (URL)
 
 	$("ADD_URL_CANCEL").addEvent("click", function(ev) {
-		DialogManager.hide("Add");
+		DialogManager.hide("AddURL");
 	});
 
 	// -- Upload Frame
 
-	new IFrame({
+	var targfrm = new IFrame({
 		"id": "uploadfrm",
 		"src": "about:blank",
 		"styles": {
@@ -554,7 +559,7 @@ function setupUserInterface() {
 			, width: 0
 		},
 		"onload": function(doc) {
-			$("torrent_file").set("value", "");
+			$("dlgAdd-file").set("value", "");
 			$("ADD_FILE_OK").disabled = false;
 
 			var str = $(doc.body).get("text");
@@ -568,8 +573,8 @@ function setupUserInterface() {
 		}
 	}).inject(document.body);
 
-	$("upfrm").addEvent("submit", function() {
-		var filename = $("torrent_file").get("value");
+	$("dlgAdd-form").set("target", targfrm.get("id")).addEvent("submit", function() {
+		var filename = $("dlgAdd-file").get("value");
 		if (!filename.test(/\.torrent$/)) {
 			alert("The file has to be a torrent file.");
 			return false;
@@ -658,21 +663,21 @@ function setupUserInterface() {
 
 	// -- Pane Selector
 
-	utWebUI.stpanes = new Tabs("stgmenu", {
+	utWebUI.stpanes = new Tabs("dlgSettings-menu", {
 		"tabs": {
-			  "st_webui" : ""
-			, "st_gl"    : ""
-			, "st_dirs"  : ""
-			, "st_con"   : ""
-			, "st_bw"    : ""
-			, "st_bt"    : ""
-			, "st_tc"    : ""
-			, "st_que"   : ""
-			, "st_sch"   : ""
-			, "st_ao"    : ""
-			, "st_dc"    : ""
+			  "dlgSettings-WebUI"       : ""
+			, "dlgSettings-General"     : ""
+			, "dlgSettings-Directories" : ""
+			, "dlgSettings-Connection"  : ""
+			, "dlgSettings-Bandwidth"   : ""
+			, "dlgSettings-BitTorrent"  : ""
+			, "dlgSettings-TransferCap" : ""
+			, "dlgSettings-Queueing"    : ""
+			, "dlgSettings-Scheduler"   : ""
+			, "dlgSettings-Advanced"    : ""
+			, "dlgSettings-DiskCache"   : ""
 		}
-	}).draw().show("st_webui");
+	}).draw().show("dlgSettings-WebUI");
 
 	// -- Web UI
 
@@ -858,10 +863,6 @@ function setupUserInterface() {
 		_link(this, 0, ["dir_autoload_delete", "dir_autoload"]);
 	});
 
-	$("ul_auto_throttle").addEvent(linkedEvent, function() {
-		_link(this, 0, ["max_ul_rate", "max_ul_rate_seed_flag"], ["max_ul_rate"], true);
-	});
-
 	$("max_ul_rate_seed_flag").addEvent(linkedEvent, function() {
 		_link(this, 0, ["max_ul_rate_seed"]);
 	});
@@ -947,23 +948,23 @@ function loadLangStrings(reload) {
 	utWebUI.trtTable.setConfig({
 		"resetText": lang[CONST.MENU_RESET],
 		"colText": {
-			  "name": lang[CONST.OV_COL_NAME]
-			, "status": lang[CONST.OV_COL_STATUS]
-			, "size": lang[CONST.OV_COL_SIZE]
-			, "done": lang[CONST.OV_COL_DONE]
-			, "downloaded": lang[CONST.OV_COL_DOWNLOADED]
-			, "uploaded": lang[CONST.OV_COL_UPPED]
-			, "ratio": lang[CONST.OV_COL_SHARED]
-			, "downspeed": lang[CONST.OV_COL_DOWNSPD]
-			, "upspeed": lang[CONST.OV_COL_UPSPD]
-			, "eta": lang[CONST.OV_COL_ETA]
-			, "label": lang[CONST.OV_COL_LABEL]
-			, "peers": lang[CONST.OV_COL_PEERS]
-			, "seeds": lang[CONST.OV_COL_SEEDS]
-			, "seeds_peers": lang[CONST.OV_COL_SEEDS_PEERS]
-			, "availability": lang[CONST.OV_COL_AVAIL].split("||")[1]
-			, "order": lang[CONST.OV_COL_ORDER]
-			, "remaining": lang[CONST.OV_COL_REMAINING]
+			  "name"         : lang[CONST.OV_COL_NAME]
+			, "status"       : lang[CONST.OV_COL_STATUS]
+			, "size"         : lang[CONST.OV_COL_SIZE]
+			, "done"         : lang[CONST.OV_COL_DONE]
+			, "downloaded"   : lang[CONST.OV_COL_DOWNLOADED]
+			, "uploaded"     : lang[CONST.OV_COL_UPPED]
+			, "ratio"        : lang[CONST.OV_COL_SHARED]
+			, "downspeed"    : lang[CONST.OV_COL_DOWNSPD]
+			, "upspeed"      : lang[CONST.OV_COL_UPSPD]
+			, "eta"          : lang[CONST.OV_COL_ETA]
+			, "label"        : lang[CONST.OV_COL_LABEL]
+			, "peers"        : lang[CONST.OV_COL_PEERS]
+			, "seeds"        : lang[CONST.OV_COL_SEEDS]
+			, "seeds_peers"  : lang[CONST.OV_COL_SEEDS_PEERS]
+			, "availability" : lang[CONST.OV_COL_AVAIL].split("||")[1]
+			, "order"        : lang[CONST.OV_COL_ORDER]
+			, "remaining"    : lang[CONST.OV_COL_REMAINING]
 		}
 	});
 
@@ -975,6 +976,7 @@ function loadLangStrings(reload) {
 
 	_loadStrings("title", {
 		  "add"       : "OV_TB_ADDTORR"
+		, "addurl"    : "OV_TB_ADDURL"
 		, "remove"    : "OV_TB_REMOVE"
 		, "start"     : "OV_TB_START"
 		, "pause"     : "OV_TB_PAUSE"
@@ -992,10 +994,10 @@ function loadLangStrings(reload) {
 
 	var tstr = lang[CONST.OV_TABS].split("||");
 	utWebUI.tabs.setNames({
-		  "gcont"    : tstr[0]
-		, "FileList" : tstr[4]
-		, "spgraph"  : tstr[5]
-		, "lcont"    : tstr[6]
+		  "mainInfoPane-generalTab" : tstr[0]
+		, "mainInfoPane-filesTab"   : tstr[4]
+		, "mainInfoPane-speedTab"   : tstr[5]
+		, "mainInfoPane-loggerTab"  : tstr[6]
 	});
 
 	// -- General Tab
@@ -1019,11 +1021,11 @@ function loadLangStrings(reload) {
 	utWebUI.flsTable.setConfig({
 		"resetText": lang[CONST.MENU_RESET],
 		"colText": {
-			  "name": lang[CONST.FI_COL_NAME]
-			, "size": lang[CONST.FI_COL_SIZE]
-			, "done": lang[CONST.FI_COL_DONE]
-			, "pcnt": lang[CONST.FI_COL_PCNT]
-			, "prio": lang[CONST.FI_COL_PRIO]
+			  "name" : lang[CONST.FI_COL_NAME]
+			, "size" : lang[CONST.FI_COL_SIZE]
+			, "done" : lang[CONST.FI_COL_DONE]
+			, "pcnt" : lang[CONST.FI_COL_PCNT]
+			, "prio" : lang[CONST.FI_COL_PRIO]
 		}
 	});
 
@@ -1042,10 +1044,11 @@ function loadLangStrings(reload) {
 	// -- Titles
 
 	_loadStrings("text", {
-		  "dlgAdd-header"      : "OV_TB_ADDTORR"
-		, "dlgLabel-header"    : "OV_NEWLABEL_CAPTION"
-		, "dlgProps-header"    : "DLG_TORRENTPROP_00"
-		, "dlgSettings-header" : "DLG_SETTINGS_00"
+		  "dlgAdd-head"      : "OV_TB_ADDTORR"
+		, "dlgAddURL-head"   : "OV_TB_ADDURL"
+		, "dlgLabel-head"    : "OV_NEWLABEL_CAPTION"
+		, "dlgProps-head"    : "DLG_TORRENTPROP_00"
+		, "dlgSettings-head" : "DLG_SETTINGS_00"
 	});
 
 	// -- [ OK | Cancel | Apply ] Buttons
@@ -1054,6 +1057,8 @@ function loadLangStrings(reload) {
 		// Add
 		  "ADD_FILE_OK"     : "DLG_BTN_OK"
 		, "ADD_FILE_CANCEL" : "DLG_BTN_CANCEL"
+
+		// Add URL
 		, "ADD_URL_OK"      : "DLG_BTN_OK"
 		, "ADD_URL_CANCEL"  : "DLG_BTN_CANCEL"
 
@@ -1102,17 +1107,17 @@ function loadLangStrings(reload) {
 	//--------------------------------------------------
 
 	utWebUI.stpanes.setNames({
-		"st_webui" : lang[CONST.ST_CAPT_WEBUI],
-		"st_gl"    : lang[CONST.ST_CAPT_GENERAL],
-		"st_dirs"  : lang[CONST.ST_CAPT_FOLDER],
-		"st_con"   : lang[CONST.ST_CAPT_CONNECTION],
-		"st_bw"    : lang[CONST.ST_CAPT_BANDWIDTH],
-		"st_bt"    : lang[CONST.ST_CAPT_BITTORRENT],
-		"st_tc"    : lang[CONST.ST_CAPT_TRANSFER_CAP],
-		"st_que"   : lang[CONST.ST_CAPT_SEEDING],
-		"st_sch"   : lang[CONST.ST_CAPT_SCHEDULER],
-		"st_ao"    : lang[CONST.ST_CAPT_ADVANCED],
-		"st_dc"    : "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + lang[CONST.ST_CAPT_DISK_CACHE] // TODO: Use CSS to indent instead of modifying the string directly...
+		"dlgSettings-WebUI"       : lang[CONST.ST_CAPT_WEBUI],
+		"dlgSettings-General"     : lang[CONST.ST_CAPT_GENERAL],
+		"dlgSettings-Directories" : lang[CONST.ST_CAPT_FOLDER],
+		"dlgSettings-Connection"  : lang[CONST.ST_CAPT_CONNECTION],
+		"dlgSettings-Bandwidth"   : lang[CONST.ST_CAPT_BANDWIDTH],
+		"dlgSettings-BitTorrent"  : lang[CONST.ST_CAPT_BITTORRENT],
+		"dlgSettings-TransferCap" : lang[CONST.ST_CAPT_TRANSFER_CAP],
+		"dlgSettings-Queueing"    : lang[CONST.ST_CAPT_SEEDING],
+		"dlgSettings-Scheduler"   : lang[CONST.ST_CAPT_SCHEDULER],
+		"dlgSettings-Advanced"    : lang[CONST.ST_CAPT_ADVANCED],
+		"dlgSettings-DiskCache"   : "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + lang[CONST.ST_CAPT_DISK_CACHE] // TODO: Use CSS to indent instead of modifying the string directly...
 	});
 
 	_loadStrings("text", [
@@ -1177,7 +1182,6 @@ function loadLangStrings(reload) {
 		// Bandwidth
 		, "DLG_SETTINGS_5_BANDWIDTH_01"
 		, "DLG_SETTINGS_5_BANDWIDTH_02"
-		, "DLG_SETTINGS_5_BANDWIDTH_03"
 		, "DLG_SETTINGS_5_BANDWIDTH_05"
 		, "DLG_SETTINGS_5_BANDWIDTH_07"
 		, "DLG_SETTINGS_5_BANDWIDTH_08"

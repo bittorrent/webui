@@ -1,5 +1,5 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <!--
 /*
  *     Copyright 2007 BitTorrent, Inc. All rights reserved.
@@ -17,24 +17,27 @@
 		<!--[if IE]><style type="text/css">@import "./ie.css";</style><![endif]-->
 	</head>
 	<body>
-		<div id="preload"></div>
-		<div id="cover"><div id="msg"><img src="./images/snake.gif" alt="Loading..." />&nbsp;&nbsp;Loading...</div></div>
+		<div id="cover">
+			<div id="msg">
+				<img src="./images/snake.gif" alt="Loading..." />
+				Loading...
+			</div>
+		</div>
+
 		<div id="modalbg"></div>
 		<div id="dragmask"></div>
 
 		<!-- /* Torrent Add Dialog -->
 		<div id="dlgAdd" class="dlg-window">
 			<a href="#" class="dlg-close"></a>
-			<div id="dlgAdd-header" class="dlg-header"></div>
-			<div class="cont">
-				<form action="./?action=add-file" method="post" enctype="multipart/form-data" target="uploadfrm" id="upfrm">
-					<div class="hcont"><label for="torrent_file">Torrent file:</label><input type="file" name="torrent_file" id="torrent_file" class="tbox" /></div>
-					<div class="hcont"><label>&nbsp;</label><input type="submit" value="" id="ADD_FILE_OK" class="btn" />&nbsp;&nbsp;<input type="button" id="ADD_FILE_CANCEL" value="" class="btn" /></div>
+			<div id="dlgAdd-head" class="dlg-head"></div>
+			<div class="dlg-body">
+				<form id="dlgAdd-form" action="./?action=add-file" method="post" enctype="multipart/form-data">
+					<div class="line-cont">
+						<input id="dlgAdd-file" name="torrent_file" type="file" class="fbox flr" />
+						<label for="dlgAdd-file">Torrent file:</label>
+					</div>
 				</form>
-				<div class="hr"></div>
-				<div class="hcont"><label for="url">Torrent URL:</label><input type="text" id="url" class="tbox" /></div>
-				<div class="hcont"><label for="cookies">Cookies:</label><input type="text" id="cookies" class="tbox" /></div>
-				<div class="hcont"><label>&nbsp;</label><input type="button" id="ADD_URL_OK" value="" class="btn" />&nbsp;&nbsp;<input type="button" id="ADD_URL_CANCEL" value="" class="btn" /></div>
 				<!--
 				<fieldset>
 					<legend><a href="#" id="optadd">Options</a></legend>
@@ -48,646 +51,867 @@
 				</fieldset>
 				-->
 			</div>
+			<div class="dlg-foot">
+				<input id="ADD_FILE_OK" type="button" class="btn" />
+				<input id="ADD_FILE_CANCEL" type="button" class="btn" />
+			</div>
 		</div>
-		<!-- Torrent Add Dialog */  -->
+		<!-- Torrent Add Dialog */ -->
+
+		<!-- /* Torrent Add URL Dialog -->
+		<div id="dlgAddURL" class="dlg-window">
+			<a href="#" class="dlg-close"></a>
+			<div id="dlgAddURL-head" class="dlg-head"></div>
+			<div class="dlg-body">
+				<div class="line-cont">
+					<input id="dlgAdd-url" type="text" class="tbox flr" />
+					<label for="dlgAdd-url">Torrent URL:</label>
+				</div>
+				<div class="line-cont">
+					<input id="dlgAdd-cookies" type="text" class="tbox flr" />
+					<label for="dlgAdd-cookies">Cookies:</label>
+				</div>
+			</div>
+			<div class="dlg-foot">
+				<input id="ADD_URL_OK" type="button" class="btn" />
+				<input id="ADD_URL_CANCEL" type="button" class="btn" />
+			</div>
+		</div>
+		<!-- Torrent Add URL Dialog */ -->
 
 		<!-- /* Settings Dialog -->
 		<div id="dlgSettings" class="dlg-window">
 			<a href="#" class="dlg-close"></a>
-			<div id="dlgSettings-header" class="dlg-header"></div>
-			<div id="dlgSettings-cont">
-			<ul id="stgmenu" class="lm"></ul>
+			<div id="dlgSettings-head" class="dlg-head"></div>
+			<div class="dlg-body">
+				<ul id="dlgSettings-menu"></ul>
 
-			<div id="st_webui" class="stg_con">
-				<span class="hcont"><input type="checkbox" id="webui.enable" /><label for="webui.enable" id="DLG_SETTINGS_9_WEBUI_01"></label></span>
-				<fieldset>
-					<legend id="DLG_SETTINGS_9_WEBUI_02"></legend>
-					<span class="hcont">
-						<div class="ralign">
-							<input type="password" id="webui.password" class="tbox str flr" />
-							<label for="webui.password" id="DLG_SETTINGS_9_WEBUI_05"></label>
+				<div id="dlgSettings-WebUI" class="settings-pane">
+					<div class="line-cont">
+						<input type="checkbox" id="webui.enable" />
+						<label for="webui.enable" id="DLG_SETTINGS_9_WEBUI_01"></label>
+					</div>
+
+					<fieldset>
+						<legend id="DLG_SETTINGS_9_WEBUI_02"></legend>
+						<div class="line-cont">
+							<div class="flr">
+								<label for="webui.password" id="DLG_SETTINGS_9_WEBUI_05"></label>
+								<input type="password" id="webui.password" class="tbox str" />
+							</div>
+							<div>
+								<label for="webui.username" id="DLG_SETTINGS_9_WEBUI_03"></label>
+								<input type="text" id="webui.username" class="tbox str" />
+							</div>
 						</div>
-						<div style="clear: none; padding: 0">
-							<input type="text" id="webui.username" class="tbox str flr" />
-							<label for="webui.username" id="DLG_SETTINGS_9_WEBUI_03"></label>
+						<div class="line-cont">
+							<div class="flr">
+								<input type="text" id="webui.guest" class="tbox str" />
+							</div>
+							<div>
+								<input type="checkbox" id="webui.enable_guest" />
+								<label for="webui.enable_guest" id="DLG_SETTINGS_9_WEBUI_07"></label>
+							</div>
 						</div>
-					</span>
-					<span class="hcont">
-						<div class="ralign"><input type="text" id="webui.guest" class="tbox str flr" /></div>
-						<input type="checkbox" id="webui.enable_guest" /><label for="webui.enable_guest" id="DLG_SETTINGS_9_WEBUI_07"></label>
-					</span>
-				</fieldset>
-				<fieldset>
-					<legend id="DLG_SETTINGS_9_WEBUI_09"></legend>
-					<span class="hcont">
-						<input type="text" id="webui.port" class="tbox num flr" />
-						<input type="checkbox" id="webui.enable_listen" /><label for="webui.enable_listen" id="DLG_SETTINGS_9_WEBUI_10"></label>
-					</span>
-					<div id="DLG_SETTINGS_9_WEBUI_12"></div>
-					<span class="hcont"><input type="text" id="webui.restrict" class="tbox fullwidth" /></span>
-				</fieldset>
-				<fieldset>
-					<legend>User Interface</legend>
-					<div class="hcont">
-						<div class="ralign"><input type="text" id="webui.updateInterval" class="tbox num flr" value="3000" /><label for="webui.updateInterval">Update GUI every (ms):</label>&nbsp;</div>
-						<span><input type="checkbox" id="webui.confirmDelete" checked="checked" /><label for="webui.confirmDelete" id="DLG_SETTINGS_2_UI_02"></label></span>
-					</div>
+					</fieldset>
 
-					<div class="hcont">
-						<div class="ralign"><label for="webui.maxRows"><input type="text" id="webui.maxRows" class="tbox num flr" value="50" />Max. rows per page:</label>&nbsp;</div>
-						<input type="checkbox" id="webui.alternateRows" /><label for="webui.alternateRows" id="DLG_SETTINGS_2_UI_05"></label>
-					</div>
-					<div class="hcont">
-						<div class="ralign"><input type="checkbox" id="webui.showDetails" checked="checked" /><label for="webui.showDetails" id="MENU_SHOW_DETAIL"></label></div>
-						<input type="checkbox" id="webui.showCategories" checked="checked" /><label for="webui.showCategories" id="MENU_SHOW_CATEGORY"></label>
-					</div>
-					<div class="hcont">
-						<div class="ralign"><input type="checkbox" id="webui.showTitleSpeed" /><label for="webui.showTitleSpeed" id="DLG_SETTINGS_2_UI_06"></label></div>
-						<label for="webui.lang" id="DLG_SETTINGS_1_GENERAL_02"></label>
-						<select id="webui.lang">--------------------</select>
-					</div>
-				</fieldset>
-			</div>
-
-			<div id="st_gl" class="stg_con">
-				<fieldset>
-					<legend id="DLG_SETTINGS_1_GENERAL_10"></legend>
-					<div class="hcont">
-						<div class="ralign"><input type="checkbox" id="check_update_beta" /><label for="check_update_beta" id="DLG_SETTINGS_1_GENERAL_12"></label></div>
-						<input type="checkbox" id="check_update" /><label for="check_update" id="DLG_SETTINGS_1_GENERAL_11"></label>
-					</div>
-					<div class="hcont"><input type="checkbox" id="anoninfo" /><label for="anoninfo" id="DLG_SETTINGS_1_GENERAL_13"></label></div>
-				</fieldset>
-				<fieldset>
-					<legend id="DLG_SETTINGS_1_GENERAL_17"></legend>
-					<div class="hcont">
-						<div class="ralign"><input type="checkbox" id="prealloc_space" /><label for="prealloc_space" id="DLG_SETTINGS_1_GENERAL_19"></label></div>
-						<input type="checkbox" id="append_incomplete" /><label for="append_incomplete" id="DLG_SETTINGS_1_GENERAL_18"></label>
-					</div>
-					<div class="hcont"><input type="checkbox" id="sys.prevent_standby" /><label for="sys.prevent_standby" id="DLG_SETTINGS_1_GENERAL_20"></label></div>
-				</fieldset>
-				<fieldset>
-					<legend id="DLG_SETTINGS_2_UI_15"></legend>
-					<div class="hcont"><input type="checkbox" id="torrents_start_stopped" /><label for="torrents_start_stopped" id="DLG_SETTINGS_2_UI_16"></label></div>
-				</fieldset>
-				<fieldset>
-					<legend id="DLG_SETTINGS_B_ADV_UI_07"></legend>
-					<div class="hcont"><input type="text" id="gui.persistent_labels" class="tbox fullwidth" /></div>
-				</fieldset>
-				<fieldset>
-					<legend id="DLG_SETTINGS_B_ADV_UI_08"></legend>
-					<textarea id="search_list" rows="0" cols="" wrap="off"></textarea>
-				</fieldset>
-			</div>
-
-			<div id="st_dirs" class="stg_con">
-				<fieldset>
-					<legend id="DLG_SETTINGS_3_PATHS_01"></legend>
-					<div class="hcont">
-						<div class="ralign"><input type="checkbox" id="always_show_add_dialog" /><label for="always_show_add_dialog" id="DLG_SETTINGS_3_PATHS_03"></label></div>
-						<input type="checkbox" id="dir_active_download_flag" /><label for="dir_active_download_flag" id="DLG_SETTINGS_3_PATHS_02"></label>
-					</div>
-					<div class="hcont indent"><input type="text" id="dir_active_download" class="tbox" /></div>
-					<div class="hcont">
-						<div class="ralign"><input type="checkbox" id="dir_add_label" /><label for="dir_add_label" id="DLG_SETTINGS_3_PATHS_07"></label></div>
-						<input type="checkbox" id="dir_completed_download_flag" /><label for="dir_completed_download_flag" id="DLG_SETTINGS_3_PATHS_06"></label>
-					</div>
-					<div class="hcont indent"><input type="text" id="dir_completed_download" class="tbox" /></div>
-					<div class="hcont indent"><input type="checkbox" id="move_if_defdir" /><label for="move_if_defdir" id="DLG_SETTINGS_3_PATHS_10"></label></div>
-				</fieldset>
-				<fieldset>
-					<legend id="DLG_SETTINGS_3_PATHS_11"></legend>
-					<div class="hcont"><input type="checkbox" id="dir_torrent_files_flag" /><label for="dir_torrent_files_flag" id="DLG_SETTINGS_3_PATHS_12"></label></div>
-					<div class="hcont indent"><input type="text" id="dir_torrent_files" class="tbox" /></div>
-					<div class="hcont"><input id="dir_completed_torrents_flag" type="checkbox" /><label for="dir_completed_torrents_flag" id="DLG_SETTINGS_3_PATHS_15"></label></div>
-					<div class="hcont indent"><input type="text" id="dir_completed_torrents" class="tbox" /></div>
-					<div class="hcont">
-						<div class="ralign"><input type="checkbox" id="dir_autoload_delete" /><label for="dir_autoload_delete" id="DLG_SETTINGS_3_PATHS_19"></label></div>
-						<input type="checkbox" id="dir_autoload_flag" /><label for="dir_autoload_flag" id="DLG_SETTINGS_3_PATHS_18"></label>
-					</div>
-					<div class="hcont indent"><input type="text" id="dir_autoload" class="tbox" /></div>
-				</fieldset>
-			</div>
-
-			<div id="st_con" class="stg_con">
-				<fieldset>
-					<legend id="DLG_SETTINGS_4_CONN_01"></legend>
-					<div class="hcont">
-						<div class="ralign" style="text-align: right"><input type="text" id="bind_port" class="tbox num" maxlength="6" />&nbsp;<input type="button" id="DLG_SETTINGS_4_CONN_04" class="btn" /></div>
-						<label for="bind_port" id="DLG_SETTINGS_4_CONN_02"></label>
-					</div>
-					<div class="hcont">
-						<div class="ralign"><input id="rand_port_on_start" type="checkbox" /><label for="rand_port_on_start" id="DLG_SETTINGS_4_CONN_05"></label></div>
-						<input id="upnp" type="checkbox" /><label for="upnp" id="DLG_SETTINGS_4_CONN_06"></label>
-					</div>
-					<div class="hcont">
-						<div class="ralign"><input id="disable_fw" type="checkbox" /><label for="disable_fw" id="DLG_SETTINGS_4_CONN_21"></label></div>
-						<input id="natpmp" type="checkbox" /><label for="natpmp" id="DLG_SETTINGS_4_CONN_07"></label>
-					</div>
-				</fieldset>
-				<fieldset>
-					<legend id="DLG_SETTINGS_4_CONN_08"></legend>
-					<div class="hcont">
-						<label id="DLG_SETTINGS_4_CONN_09"></label>
-						<select id="proxy.type"><option value="0">----------</option></select>
-						<label for="proxy.proxy" id="DLG_SETTINGS_4_CONN_11"></label>
-						<input id="proxy.proxy" type="text" class="tbox str" />
-						<label for="proxy.port" id="DLG_SETTINGS_4_CONN_13"></label>
-						<input id="proxy.port" type="text" class="tbox num" />
-					</div>
-					<div class="hcont">
-						<input id="proxy.auth" type="checkbox" /><label for="proxy.auth" id="DLG_SETTINGS_4_CONN_15"></label>
-						<label for="proxy.username" id="DLG_SETTINGS_4_CONN_16"></label>
-						<input id="proxy.username" type="text" class="tbox str" />
-						<label for="proxy.password" id="DLG_SETTINGS_4_CONN_18"></label>
-						<input id="proxy.password" type="password" class="tbox str" />
-					</div>
-					<div class="hcont">
-						<input id="proxy.resolve" type="checkbox" />
-						<label for="proxy.resolve" id="DLG_SETTINGS_4_CONN_19"></label>
-					</div>
-					<div class="hcont">
-						<input id="proxy.p2p" type="checkbox" />
-						<label for="proxy.p2p" id="DLG_SETTINGS_4_CONN_20"></label>
-					</div>
-				</fieldset>
-			</div>
-
-			<div id="st_bw" class="stg_con">
-				<fieldset>
-					<legend id="DLG_SETTINGS_5_BANDWIDTH_01"></legend>
-					<div class="hcont">
-						<input type="text" id="max_ul_rate" class="tbox num flr" maxlength="6" />
-						<label for="max_ul_rate" id="DLG_SETTINGS_5_BANDWIDTH_02"></label>
-						<input type="checkbox" id="ul_auto_throttle" /><label for="ul_auto_throttle" id="DLG_SETTINGS_5_BANDWIDTH_03"></label>
-					</div>
-					<div class="hcont indent">
-						<input type="text" id="max_ul_rate_seed" class="tbox num flr" maxlength="6" />
-						<input id="max_ul_rate_seed_flag" type="checkbox" /><label for="max_ul_rate_seed_flag" id="DLG_SETTINGS_5_BANDWIDTH_05"></label>
-					</div>
-				</fieldset>
-				<fieldset>
-					<legend id="DLG_SETTINGS_5_BANDWIDTH_07"></legend>
-					<div class="hcont">
-						<input type="text" id="max_dl_rate" class="tbox num flr" maxlength="6" />
-						<label for="max_dl_rate" id="DLG_SETTINGS_5_BANDWIDTH_08"></label>
-					</div>
-				</fieldset>
-				<fieldset>
-					<legend id="DLG_SETTINGS_5_BANDWIDTH_10"></legend>
-					<div class="hcont">
-						<input type="text" id="conns_globally" class="tbox num flr" maxlength="6" />
-						<label id="DLG_SETTINGS_5_BANDWIDTH_11" for="conns_globally"></label>
-					</div>
-					<div class="hcont">
-						<input type="text" id="conns_per_torrent" class="tbox num flr" maxlength="6" />
-						<label id="DLG_SETTINGS_5_BANDWIDTH_14" for="conns_per_torrent"></label>
-					</div>
-					<div class="hcont">
-						<input type="text" id="ul_slots_per_torrent" class="tbox num flr" maxlength="6" />
-						<label id="DLG_SETTINGS_5_BANDWIDTH_15" for="ul_slots_per_torrent"></label>
-					</div>
-					<div class="hcont indent">
-						<input id="extra_ulslots" type="checkbox" /><label for="extra_ulslots" id="DLG_SETTINGS_5_BANDWIDTH_17"></label>
-					</div>
-				</fieldset>
-			</div>
-
-			<div id="st_bt" class="stg_con">
-				<fieldset>
-					<legend id="DLG_SETTINGS_6_BITTORRENT_01"></legend>
-					<div class="hcont">
-						<div class="ralign"><input id="enable_scrape" type="checkbox" /><label for="enable_scrape" id="DLG_SETTINGS_6_BITTORRENT_03"></label></div>
-						<input id="dht" type="checkbox" /><label for="dht" id="DLG_SETTINGS_6_BITTORRENT_02"></label>
-					</div>
-					<div class="hcont">
-						<div class="ralign"><input id="pex" type="checkbox" /><label for="pex" id="DLG_SETTINGS_6_BITTORRENT_05"></label></div>
-						<input id="dht_per_torrent" type="checkbox" /><label for="dht_per_torrent" id="DLG_SETTINGS_6_BITTORRENT_04"></label>
-					</div>
-					<div class="hcont">
-						<div class="ralign"><input id="rate_limit_local_peers" type="checkbox" /><label for="rate_limit_local_peers" id="DLG_SETTINGS_6_BITTORRENT_07"></label></div>
-						<input id="lsd" type="checkbox" /><label for="lsd" id="DLG_SETTINGS_6_BITTORRENT_06"></label>
-					</div>
-					<div class="hcont">
-						<div class="ralign"><input type="text" id="tracker_ip" class="tbox str" maxlength="50" /></div>
-						<label id="DLG_SETTINGS_6_BITTORRENT_08"></label>
-					</div>
-				</fieldset>
-				<fieldset>
-					<legend id="DLG_SETTINGS_6_BITTORRENT_10"></legend>
-					<div class="hcont">
-						<div class="ralign"><input id="encryption_allow_legacy" type="checkbox" /><label for="encryption_allow_legacy" id="DLG_SETTINGS_6_BITTORRENT_13"></label></div>
-						<label id="DLG_SETTINGS_6_BITTORRENT_11"></label>
-						<select id="encryption_mode"><option>---------------</option></select>
-					</div>
-				</fieldset>
-			</div>
-
-			<div id="st_tc" class="stg_con">
-				<div class="hcont"><input id="multi_day_transfer_limit_en" type="checkbox" /><label for="multi_day_transfer_limit_en" id="DLG_SETTINGS_7_TRANSFERCAP_01"></label></div>
-				<fieldset>
-					<legend id="DLG_SETTINGS_7_TRANSFERCAP_02"></legend>
-					<div class="hcont">
-						<label for="multi_day_transfer_mode" id="DLG_SETTINGS_7_TRANSFERCAP_03"></label>
-						<select id="multi_day_transfer_mode"><option>--------------------</option></select>
-					</div>
-					<div class="hcont indent">
-						<label for="multi_day_transfer_limit_value" id="DLG_SETTINGS_7_TRANSFERCAP_04"></label>
-						<input type="text" id="multi_day_transfer_limit_value" class="tbox num" /> <select id="multi_day_transfer_limit_unit"><option>-----</option></select>
-						<label for="multi_day_transfer_limit_span" id="DLG_SETTINGS_7_TRANSFERCAP_05"></label>
-						<select id="multi_day_transfer_limit_span"><option>-----</option></select>
-						<span id="DLG_SETTINGS_7_TRANSFERCAP_06"></span>
-					</div>
-				</fieldset>
-			</div>
-
-			<div id="st_que" class="stg_con">
-				<fieldset>
-					<legend id="DLG_SETTINGS_8_QUEUEING_01"></legend>
-					<div class="hcont">
-						<input type="text" id="max_active_torrent" class="tbox num flr" maxlength="6" />
-						<label for="max_active_torrent" id="DLG_SETTINGS_8_QUEUEING_02"></label>
-					</div>
-					<div class="hcont">
-						<input type="text" id="max_active_downloads" class="tbox num flr" maxlength="6" />
-						<label for="max_active_downloads" id="DLG_SETTINGS_8_QUEUEING_04"></label>
-					</div>
-				</fieldset>
-				<fieldset>
-					<legend id="DLG_SETTINGS_8_QUEUEING_06"></legend>
-					<div class="hcont">
-						<label for="seed_ratio" id="DLG_SETTINGS_8_QUEUEING_07"></label>
-						<input type="text" id="seed_ratio" class="tbox num" /><label for="seed_time" id="DLG_SETTINGS_8_QUEUEING_09"></label><input type="text" class="tbox num" id="seed_time" />
-					</div>
-					<div class="hcont"><input id="seeds_prioritized" type="checkbox" /><label for="seeds_prioritized" id="DLG_SETTINGS_8_QUEUEING_11"></label></div>
-				</fieldset>
-				<fieldset>
-					<legend id="DLG_SETTINGS_8_QUEUEING_12"></legend>
-					<div class="hcont">
-						<input type="text" id="seed_prio_limitul" class="tbox num flr" maxlength="6" />
-						<input id="seed_prio_limitul_flag" type="checkbox" /><label for="seed_prio_limitul_flag" id="DLG_SETTINGS_8_QUEUEING_13"></label>
-					</div>
-				</fieldset>
-			</div>
-
-			<div id="st_sch" class="stg_con">
-				<div class="hcont"><input id="sched_enable" type="checkbox" /><label for="sched_enable" id="DLG_SETTINGS_9_SCHEDULER_01"></label></div>
-				<fieldset>
-					<legend id="DLG_SETTINGS_9_SCHEDULER_02"></legend>
-					<table id="sched_table" cellpadding="0" cellspacing="0"></table>
-					<div id="sched_table_lgnd">
-						<ul>
-							<li id="sched_table_lgnd_off"><span class="block mode2">&nbsp;</span> <span id="ST_SCH_LGND_OFF"></span></li>
-							<li id="sched_table_lgnd_seeding"><span class="block mode3">&nbsp;</span> <span id="ST_SCH_LGND_SEEDING"></span></li>
-						</ul>
-						<ul>
-							<li id="sched_table_lgnd_full"><span class="block mode0">&nbsp;</span> <span id="ST_SCH_LGND_FULL"></span></li>
-							<li id="sched_table_lgnd_limited"><span class="block mode1">&nbsp;</span> <span id="ST_SCH_LGND_LIMITED"></span></li>
-						</ul>
-					</div>
-					<div id="sched_table_info"></div>
-				</fieldset>
-				<fieldset>
-					<legend id="DLG_SETTINGS_9_SCHEDULER_04"></legend>
-					<div class="hcont">
-						<div class="ralign"><input id="sched_dis_dht" type="checkbox" /><label id="DLG_SETTINGS_9_SCHEDULER_09" for="sched_dis_dht"></label></div>
-						<div style="clear: none; padding: 0">
-							<input type="text" id="sched_ul_rate" class="tbox num flr" maxlength="6" />
-							<label for="sched_ul_rate" id="DLG_SETTINGS_9_SCHEDULER_05"></label>
+					<fieldset>
+						<legend id="DLG_SETTINGS_9_WEBUI_09"></legend>
+						<div class="line-cont">
+							<div class="flr">
+								<input type="text" id="webui.port" class="tbox num" />
+							</div>
+							<div>
+								<input type="checkbox" id="webui.enable_listen" />
+								<label for="webui.enable_listen" id="DLG_SETTINGS_9_WEBUI_10"></label>
+							</div>
 						</div>
-					</div>
-					<div class="hcont" style="width: 230px">
-						<input type="text" id="sched_dl_rate" class="tbox num flr" maxlength="6" />
-						<label for="sched_dl_rate" id="DLG_SETTINGS_9_SCHEDULER_07"></label>
-					</div>
-				</fieldset>
-			</div>
+						<div class="line-cont"><label for="webui.restrict" id="DLG_SETTINGS_9_WEBUI_12"></label></div>
+						<div class="line-cont"><input type="text" id="webui.restrict" class="tbox wide" /></div>
+					</fieldset>
 
-			<div id="st_dc" class="stg_con">
-				<fieldset>
-					<legend id="DLG_SETTINGS_C_ADV_CACHE_01"></legend>
-					<div id="DLG_SETTINGS_C_ADV_CACHE_02"></div>
-					<div>
-						<input id="cache.override" type="checkbox" /><label for="cache.override" id="DLG_SETTINGS_C_ADV_CACHE_03"></label>
-						<input type="text" id="cache.override_size" class="tbox num" maxlength="6" />
-					</div>
-					<div><input id="cache.reduce" type="checkbox" /><label for="cache.reduce" id="DLG_SETTINGS_C_ADV_CACHE_05"></label></div>
-				</fieldset>
-				<fieldset>
-					<legend id="DLG_SETTINGS_C_ADV_CACHE_06"></legend>
-					<div class="hcont"><input id="cache.write" type="checkbox" /><label for="cache.write" id="DLG_SETTINGS_C_ADV_CACHE_07"></label></div>
-					<div class="hcont indent"><input id="cache.writeout" type="checkbox" /><label for="cache.writeout" id="DLG_SETTINGS_C_ADV_CACHE_08"></label></div>
-					<div class="hcont indent"><input id="cache.writeimm" type="checkbox" /><label for="cache.writeimm" id="DLG_SETTINGS_C_ADV_CACHE_09"></label></div>
-					<div class="hcont"><input id="cache.read" type="checkbox" /><label for="cache.read" id="DLG_SETTINGS_C_ADV_CACHE_10"></label></div>
-					<div class="hcont indent"><input id="cache.read_turnoff" type="checkbox" /><label for="cache.read_turnoff" id="DLG_SETTINGS_C_ADV_CACHE_11"></label></div>
-					<div class="hcont indent"><input id="cache.read_prune" type="checkbox" /><label for="cache.read_prune" id="DLG_SETTINGS_C_ADV_CACHE_12"></label></div>
-					<div class="hcont indent"><input id="cache.read_thrash" type="checkbox" /><label for="cache.read_thrash" id="DLG_SETTINGS_C_ADV_CACHE_13"></label></div>
-					<div class="hcont"><input id="cache.disable_win_write" type="checkbox" /><label for="cache.disable_win_write" id="DLG_SETTINGS_C_ADV_CACHE_14"></label></div>
-					<div class="hcont"><input id="cache.disable_win_read" type="checkbox" /><label for="cache.disable_win_read" id="DLG_SETTINGS_C_ADV_CACHE_15"></label></div>
-				</fieldset>
-			</div>
-
-			<div id="st_ao" class="stg_con">
-				<fieldset>
-				<legend id="DLG_SETTINGS_A_ADVANCED_01"></legend>
-				<div id="ST_COL_NAME"></div>
-				<div id="ST_COL_VALUE"></div>
-				<div style="clear: both; padding: 0; margin: 0; font-size: 0"></div>
-				<div id="st_ao_h">
-					<table cellpadding="0" cellspacing="0">
-						<tbody>
-							<tr>
-								<td><label for="bt.allow_same_ip">bt.allow_same_ip</label></td>
-								<td><input type="checkbox" id="bt.allow_same_ip" /></td>
-							</tr>
-							<tr>
-								<td><label for="bt.ban_ratio">bt.ban_ratio</label></td>
-								<td><input type="text" id="bt.ban_ratio" class="tbox num" maxlength="5" /></td>
-							</tr>
-							<tr>
-								<td><label for="bt.ban_threshold">bt.ban_threshold</label></td>
-								<td><input type="text" id="bt.ban_threshold" class="tbox num" maxlength="5" /></td>
-							</tr>
-							<tr>
-								<td><label for="bt.compact_allocation">bt.compact_allocation</label></td>
-								<td><input type="checkbox" id="bt.compact_allocation" /></td>
-							</tr>
-							<tr>
-								<td><label for="bt.connect_speed">bt.connect_speed</label></td>
-								<td><input type="text" id="bt.connect_speed" class="tbox num" maxlength="5" /></td>
-							</tr>
-							<tr>
-								<td><label for="bt.enable_tracker">bt.enable_tracker</label></td>
-								<td><input type="checkbox" id="bt.enable_tracker" /></td>
-							</tr>
-							<tr>
-								<td><label for="bt.graceful_shutdown">bt.graceful_shutdown</label></td>
-								<td><input type="checkbox" id="bt.graceful_shutdown" /></td>
-							</tr>
-							<tr>
-								<td><label for="bt.multiscrape">bt.multiscrape</label></td>
-								<td><input type="checkbox" id="bt.multiscrape" /></td>
-							</tr>
-							<tr>
-								<td><label for="bt.no_connect_to_services">bt.no_connect_to_services</label></td>
-								<td><input type="checkbox" id="bt.no_connect_to_services" /></td>
-							</tr>
-							<tr>
-								<td><label for="bt.no_connect_to_services_list">bt.no_connect_to_services_list</label></td>
-								<td><input type="text" id="bt.no_connect_to_services_list" class="tbox" /></td>
-							</tr>
-							<tr>
-								<td><label for="bt.prio_first_last_piece">bt.prio_first_last_piece</label></td>
-								<td><input type="checkbox" id="bt.prio_first_last_piece" /></td>
-							</tr>
-							<tr>
-								<td><label for="bt.ratelimit_tcp_only">bt.ratelimit_tcp_only</label></td>
-								<td><input type="checkbox" id="bt.ratelimit_tcp_only" /></td>
-							</tr>
-							<tr>
-								<td><label for="bt.scrape_stopped">bt.scrape_stopped</label></td>
-								<td><input type="checkbox" id="bt.scrape_stopped" /></td>
-							</tr>
-							<tr>
-								<td><label for="bt.send_have_to_seed">bt.send_have_to_seed</label></td>
-								<td><input type="checkbox" id="bt.send_have_to_seed" /></td>
-							</tr>
-							<tr>
-								<td><label for="bt.set_sockbuf">bt.set_sockbuf</label></td>
-								<td><input type="checkbox" id="bt.set_sockbuf" /></td>
-							</tr>
-							<tr>
-								<td><label for="bt.shutdown_tracker_timeout">bt.shutdown_tracker_timeout</label></td>
-								<td><input type="text" id="bt.shutdown_tracker_timeout" class="tbox num" maxlength="6" /></td>
-							</tr>
-							<tr>
-								<td><label for="bt.shutdown_upnp_timeout">bt.shutdown_upnp_timeout</label></td>
-								<td><input type="text" id="bt.shutdown_upnp_timeout" class="tbox num" maxlength="6" /></td>
-							</tr>
-							<tr>
-								<td><label for="bt.tcp_rate_control">bt.tcp_rate_control</label></td>
-								<td><input type="checkbox" id="bt.tcp_rate_control" /></td>
-							</tr>
-							<tr>
-								<td><label for="bt.transp_disposition">bt.transp_disposition</label></td>
-								<td><input type="text" id="bt.transp_disposition" class="tbox num" maxlength="5" /></td>
-							</tr>
-							<tr>
-								<td><label for="bt.use_ban_ratio">bt.use_ban_ratio</label></td>
-								<td><input type="checkbox" id="bt.use_ban_ratio" /></td>
-							</tr>
-							<tr>
-								<td><label for="bt.use_rangeblock">bt.use_rangeblock</label></td>
-								<td><input type="checkbox" id="bt.use_rangeblock" /></td>
-							</tr>
-							<tr>
-								<td><label for="dht.rate">dht.rate</label></td>
-								<td><input type="text" id="dht.rate" class="tbox num" maxlength="10" /></td>
-							</tr>
-							<tr>
-								<td><label for="diskio.coalesce_write_size">diskio.coalesce_write_size</label></td>
-								<td><input type="text" id="diskio.coalesce_write_size" class="tbox num" maxlength="20" /></td>
-							</tr>
-							<tr>
-								<td><label for="diskio.coalesce_writes">diskio.coalesce_writes</label></td>
-								<td><input type="checkbox" id="diskio.coalesce_writes" /></td>
-							</tr>
-							<tr>
-								<td><label for="diskio.flush_files">diskio.flush_files</label></td>
-								<td><input type="checkbox" id="diskio.flush_files" /></td>
-							</tr>
-							<tr>
-								<td><label for="diskio.no_zero">diskio.no_zero</label></td>
-								<td><input type="checkbox" id="diskio.no_zero" /></td>
-							</tr>
-							<tr>
-								<td><label for="diskio.smart_hash">diskio.smart_hash</label></td>
-								<td><input type="checkbox" id="diskio.smart_hash" /></td>
-							</tr>
-							<tr>
-								<td><label for="diskio.smart_sparse_hash">diskio.smart_sparse_hash</label></td>
-								<td><input type="checkbox" id="diskio.smart_sparse_hash" /></td>
-							</tr>
-							<tr>
-								<td><label for="diskio.sparse_files">diskio.sparse_files</label></td>
-								<td><input type="checkbox" id="diskio.sparse_files" /></td>
-							</tr>
-							<tr>
-								<td><label for="diskio.use_partfile">diskio.use_partfile</label></td>
-								<td><input type="checkbox" id="diskio.use_partfile" /></td>
-							</tr>
-							<tr>
-								<td><label for="gui.auto_restart">gui.auto_restart</label></td>
-								<td><input type="checkbox" id="gui.auto_restart" /></td>
-							</tr>
-							<tr>
-								<td><label for="gui.bypass_search_redirect">gui.bypass_search_redirect</label></td>
-								<td><input type="checkbox" id="gui.bypass_search_redirect" /></td>
-							</tr>
-							<tr>
-								<td><label for="gui.compat_diropen">gui.compat_diropen</label></td>
-								<td><input type="checkbox" id="gui.compat_diropen" /></td>
-							</tr>
-							<tr>
-								<td><label for="gui.default_del_action">gui.default_del_action</label></td>
-								<td><input type="text" id="gui.default_del_action" class="tbox num" maxlength="1" /></td>
-							</tr>
-							<tr>
-								<td><label for="gui.delete_to_trash">gui.delete_to_trash</label></td>
-								<td><input type="checkbox" id="gui.delete_to_trash" /></td>
-							</tr>
-							<tr>
-								<td><label for="gui.graphic_progress">gui.graphic_progress</label></td>
-								<td><input type="checkbox" id="gui.graphic_progress" /></td>
-							</tr>
-							<tr>
-								<td><label for="gui.log_date">gui.log_date</label></td>
-								<td><input type="checkbox" id="gui.log_date" /></td>
-							</tr>
-							<tr>
-								<td><label for="gui.piecebar_progress">gui.piecebar_progress</label></td>
-								<td><input type="checkbox" id="gui.piecebar_progress" /></td>
-							</tr>
-							<tr>
-								<td><label for="gui.tall_category_list">gui.tall_category_list</label></td>
-								<td><input type="checkbox" id="gui.tall_category_list" /></td>
-							</tr>
-							<tr>
-								<td><label for="gui.update_rate">gui.update_rate</label></td>
-								<td><input type="text" id="gui.update_rate" class="tbox num" maxlength="20" /></td>
-							</tr>
-							<tr>
-								<td><label for="ipfilter.enable">ipfilter.enable</label></td>
-								<td><input type="checkbox" id="ipfilter.enable" /></td>
-							</tr>
-							<tr>
-								<td><label for="isp.bep22">isp.bep22</label></td>
-								<td><input type="checkbox" id="isp.bep22" /></td>
-							</tr>
-							<tr>
-								<td><label for="net.bind_ip">net.bind_ip</label></td>
-								<td><input type="text" id="net.bind_ip" class="tbox" maxlength="40" /></td>
-							</tr>
-							<tr>
-								<td><label for="net.calc_overhead">net.calc_overhead</label></td>
-								<td><input type="checkbox" id="net.calc_overhead" /></td>
-							</tr>
-							<tr>
-								<td><label for="net.limit_excludeslocal">net.limit_excludeslocal</label></td>
-								<td><input type="checkbox" id="net.limit_excludeslocal" /></td>
-							</tr>
-							<tr>
-								<td><label for="net.low_cpu">net.low_cpu</label></td>
-								<td><input type="checkbox" id="net.low_cpu" /></td>
-							</tr>
-							<tr>
-								<td><label for="net.max_halfopen">net.max_halfopen</label></td>
-								<td><input type="text" id="net.max_halfopen" class="tbox num" maxlength="6" /></td>
-							</tr>
-							<tr>
-								<td><label for="net.outgoing_ip">net.outgoing_ip</label></td>
-								<td><input type="text" id="net.outgoing_ip" class="tbox" maxlength="40" /></td>
-							</tr>
-							<tr>
-								<td><label for="net.outgoing_max_port">net.outgoing_max_port</label></td>
-								<td><input type="text" id="net.outgoing_max_port" class="tbox num" maxlength="5" /></td>
-							</tr>
-							<tr>
-								<td><label for="net.outgoing_port">net.outgoing_port</label></td>
-								<td><input type="text" id="net.outgoing_port" class="tbox num" maxlength="5" /></td>
-							</tr>
-							<tr>
-								<td><label for="net.upnp_tcp_only">net.upnp_tcp_only</label></td>
-								<td><input type="checkbox" id="net.upnp_tcp_only" /></td>
-							</tr>
-							<tr>
-								<td><label for="net.utp_receive_target_delay">net.utp_receive_target_delay</label></td>
-								<td><input type="text" id="net.utp_receive_target_delay" class="tbox num" maxlength="20" /></td>
-							</tr>
-							<tr>
-								<td><label for="net.utp_target_delay">net.utp_target_delay</label></td>
-								<td><input type="text" id="net.utp_target_delay" class="tbox num" maxlength="20" /></td>
-							</tr>
-							<tr>
-								<td><label for="net.wsaevents">net.wsaevents</label></td>
-								<td><input type="text" id="net.wsaevents" class="tbox num" maxlength="2" /></td>
-							</tr>
-							<tr>
-								<td><label for="peer.disconnect_inactive">peer.disconnect_inactive</label></td>
-								<td><input type="checkbox" id="peer.disconnect_inactive" /></td>
-							</tr>
-							<tr>
-								<td><label for="peer.disconnect_inactive_interval">peer.disconnect_inactive_interval</label></td>
-								<td><input type="text" id="peer.disconnect_inactive_interval" class="tbox num" maxlength="20" /></td>
-							</tr>
-							<tr>
-								<td><label for="peer.lazy_bitfield">peer.lazy_bitfield</label></td>
-								<td><input type="checkbox" id="peer.lazy_bitfield" /></td>
-							</tr>
-							<tr>
-								<td><label for="peer.resolve_country">peer.resolve_country</label></td>
-								<td><input type="checkbox" id="peer.resolve_country" /></td>
-							</tr>
-							<tr>
-								<td><label for="queue.dont_count_slow_dl">queue.dont_count_slow_dl</label></td>
-								<td><input type="checkbox" id="queue.dont_count_slow_dl" /></td>
-							</tr>
-							<tr>
-								<td><label for="queue.dont_count_slow_ul">queue.dont_count_slow_ul</label></td>
-								<td><input type="checkbox" id="queue.dont_count_slow_ul" /></td>
-							</tr>
-							<tr>
-								<td><label for="queue.prio_no_seeds">queue.prio_no_seeds</label></td>
-								<td><input type="checkbox" id="queue.prio_no_seeds" /></td>
-							</tr>
-							<tr>
-								<td><label for="queue.slow_dl_threshold">queue.slow_dl_threshold</label></td>
-								<td><input type="text" id="queue.slow_dl_threshold" class="tbox num" /></td>
-							</tr>
-							<tr>
-								<td><label for="queue.slow_ul_threshold">queue.slow_ul_threshold</label></td>
-								<td><input type="text" id="queue.slow_ul_threshold" class="tbox num" /></td>
-							</tr>
-							<tr>
-								<td><label for="queue.use_seed_peer_ratio">queue.use_seed_peer_ratio</label></td>
-								<td><input type="checkbox" id="queue.use_seed_peer_ratio" /></td>
-							</tr>
-							<tr>
-								<td><label for="rss.feed_as_default_label">rss.feed_as_default_label</label></td>
-								<td><input type="checkbox" id="rss.feed_as_default_label" /></td>
-							</tr>
-							<tr>
-								<td><label for="rss.smart_repack_filter">rss.smart_repack_filter</label></td>
-								<td><input type="checkbox" id="rss.smart_repack_filter" /></td>
-							</tr>
-							<tr>
-								<td><label for="rss.update_interval">rss.update_interval</label></td>
-								<td><input type="text" id="rss.update_interval" class="tbox num" maxlength="4" /></td>
-							</tr>
-							<tr>
-								<td><label for="sys.enable_wine_hacks">sys.enable_wine_hacks</label></td>
-								<td><input type="checkbox" id="sys.enable_wine_hacks" /></td>
-							</tr>
-<!--
-							<tr>
-								<td><label for="webui.allow_pairing">webui.allow_pairing</label></td>
-								<td><input type="checkbox" id="webui.allow_pairing" /></td>
-							</tr>
--->
-							<tr>
-								<td><label for="webui.token_auth">webui.token_auth</label></td>
-								<td><input type="checkbox" id="webui.token_auth" /></td>
-							</tr>
-						</tbody>
-					</table>
+					<fieldset>
+						<legend>User Interface</legend>
+						<div class="line-cont">
+							<div class="half flr">
+								<input type="text" id="webui.updateInterval" class="tbox num flr" value="3000" />
+								<label for="webui.updateInterval">Update GUI every (ms):</label>&nbsp;
+							</div>
+							<div>
+								<input type="checkbox" id="webui.confirmDelete" checked="checked" />
+								<label for="webui.confirmDelete" id="DLG_SETTINGS_2_UI_02"></label>
+							</div>
+						</div>
+						<div class="line-cont">
+							<div class="half flr">
+								<input type="text" id="webui.maxRows" class="tbox num flr" value="50" />
+								<label for="webui.maxRows">Max. rows per page:</label>
+							</div>
+							<div>
+								<input type="checkbox" id="webui.alternateRows" />
+								<label for="webui.alternateRows" id="DLG_SETTINGS_2_UI_05"></label>
+							</div>
+						</div>
+						<div class="line-cont">
+							<div class="half flr">
+								<input type="checkbox" id="webui.showDetails" checked="checked" />
+								<label for="webui.showDetails" id="MENU_SHOW_DETAIL"></label>
+							</div>
+							<div>
+								<input type="checkbox" id="webui.showCategories" checked="checked" />
+								<label for="webui.showCategories" id="MENU_SHOW_CATEGORY"></label>
+							</div>
+						</div>
+						<div class="line-cont">
+							<div class="half flr">
+								<input type="checkbox" id="webui.showTitleSpeed" />
+								<label for="webui.showTitleSpeed" id="DLG_SETTINGS_2_UI_06"></label>
+							</div>
+							<div>
+								<label for="webui.lang" id="DLG_SETTINGS_1_GENERAL_02"></label>
+								<select id="webui.lang"><option>--------------------</option></select>
+							</div>
+						</div>
+					</fieldset>
 				</div>
-				</fieldset>
+
+				<div id="dlgSettings-General" class="settings-pane">
+					<fieldset>
+						<legend id="DLG_SETTINGS_1_GENERAL_10"></legend>
+						<div class="line-cont">
+							<div class="half flr">
+								<input type="checkbox" id="check_update_beta" />
+								<label for="check_update_beta" id="DLG_SETTINGS_1_GENERAL_12"></label>
+							</div>
+							<div>
+								<input type="checkbox" id="check_update" />
+								<label for="check_update" id="DLG_SETTINGS_1_GENERAL_11"></label>
+							</div>
+						</div>
+						<div class="line-cont">
+							<input type="checkbox" id="anoninfo" />
+							<label for="anoninfo" id="DLG_SETTINGS_1_GENERAL_13"></label>
+						</div>
+					</fieldset>
+
+					<fieldset>
+						<legend id="DLG_SETTINGS_1_GENERAL_17"></legend>
+						<div class="line-cont">
+							<div class="half flr">
+								<input type="checkbox" id="prealloc_space" />
+								<label for="prealloc_space" id="DLG_SETTINGS_1_GENERAL_19"></label>
+							</div>
+							<div>
+								<input type="checkbox" id="append_incomplete" />
+								<label for="append_incomplete" id="DLG_SETTINGS_1_GENERAL_18"></label>
+							</div>
+						</div>
+						<div class="line-cont">
+							<input type="checkbox" id="sys.prevent_standby" />
+							<label for="sys.prevent_standby" id="DLG_SETTINGS_1_GENERAL_20"></label>
+						</div>
+					</fieldset>
+
+					<fieldset>
+						<legend id="DLG_SETTINGS_2_UI_15"></legend>
+						<div class="line-cont">
+							<input type="checkbox" id="torrents_start_stopped" />
+							<label for="torrents_start_stopped" id="DLG_SETTINGS_2_UI_16"></label>
+						</div>
+					</fieldset>
+
+					<fieldset>
+						<legend id="DLG_SETTINGS_B_ADV_UI_07"></legend>
+						<div class="line-cont"><input type="text" id="gui.persistent_labels" class="tbox wide" /></div>
+					</fieldset>
+
+					<fieldset>
+						<legend id="DLG_SETTINGS_B_ADV_UI_08"></legend>
+						<textarea id="search_list" rows="" cols="" wrap="off" class="wide"></textarea>
+					</fieldset>
+				</div>
+
+				<div id="dlgSettings-Directories" class="settings-pane">
+					<fieldset>
+						<legend id="DLG_SETTINGS_3_PATHS_01"></legend>
+						<div class="line-cont">
+							<div class="half flr">
+								<input type="checkbox" id="always_show_add_dialog" />
+								<label for="always_show_add_dialog" id="DLG_SETTINGS_3_PATHS_03"></label>
+							</div>
+							<div>
+								<input type="checkbox" id="dir_active_download_flag" />
+								<label for="dir_active_download_flag" id="DLG_SETTINGS_3_PATHS_02"></label>
+							</div>
+						</div>
+						<div class="line-cont indent"><input type="text" id="dir_active_download" class="tbox" /></div>
+						<div class="line-cont">
+							<div class="half flr">
+								<input type="checkbox" id="dir_add_label" />
+								<label for="dir_add_label" id="DLG_SETTINGS_3_PATHS_07"></label>
+							</div>
+							<div>
+								<input type="checkbox" id="dir_completed_download_flag" />
+								<label for="dir_completed_download_flag" id="DLG_SETTINGS_3_PATHS_06"></label>
+							</div>
+						</div>
+						<div class="line-cont indent"><input type="text" id="dir_completed_download" class="tbox" /></div>
+						<div class="line-cont indent">
+							<input type="checkbox" id="move_if_defdir" />
+							<label for="move_if_defdir" id="DLG_SETTINGS_3_PATHS_10"></label>
+						</div>
+					</fieldset>
+
+					<fieldset>
+						<legend id="DLG_SETTINGS_3_PATHS_11"></legend>
+						<div class="line-cont">
+							<input type="checkbox" id="dir_torrent_files_flag" />
+							<label for="dir_torrent_files_flag" id="DLG_SETTINGS_3_PATHS_12"></label>
+						</div>
+						<div class="line-cont indent"><input type="text" id="dir_torrent_files" class="tbox" /></div>
+						<div class="line-cont">
+							<input id="dir_completed_torrents_flag" type="checkbox" />
+							<label for="dir_completed_torrents_flag" id="DLG_SETTINGS_3_PATHS_15"></label>
+						</div>
+						<div class="line-cont indent"><input type="text" id="dir_completed_torrents" class="tbox" /></div>
+						<div class="line-cont">
+							<div class="half flr">
+								<input type="checkbox" id="dir_autoload_delete" />
+								<label for="dir_autoload_delete" id="DLG_SETTINGS_3_PATHS_19"></label>
+							</div>
+							<div>
+								<input type="checkbox" id="dir_autoload_flag" />
+								<label for="dir_autoload_flag" id="DLG_SETTINGS_3_PATHS_18"></label>
+							</div>
+						</div>
+						<div class="line-cont indent"><input type="text" id="dir_autoload" class="tbox" /></div>
+					</fieldset>
+				</div>
+
+				<div id="dlgSettings-Connection" class="settings-pane">
+					<fieldset>
+						<legend id="DLG_SETTINGS_4_CONN_01"></legend>
+						<div class="line-cont">
+							<div class="flr">
+								<input type="text" id="bind_port" class="tbox num" maxlength="6" />
+								<input type="button" id="DLG_SETTINGS_4_CONN_04" class="btn" />
+							</div>
+							<label for="bind_port" id="DLG_SETTINGS_4_CONN_02"></label>
+						</div>
+						<div class="line-cont">
+							<div class="half flr">
+								<input id="rand_port_on_start" type="checkbox" />
+								<label for="rand_port_on_start" id="DLG_SETTINGS_4_CONN_05"></label>
+							</div>
+							<div>
+								<input id="upnp" type="checkbox" />
+								<label for="upnp" id="DLG_SETTINGS_4_CONN_06"></label>
+							</div>
+						</div>
+						<div class="line-cont">
+							<div class="half flr">
+								<input id="disable_fw" type="checkbox" />
+								<label for="disable_fw" id="DLG_SETTINGS_4_CONN_21"></label>
+							</div>
+							<div>
+								<input id="natpmp" type="checkbox" />
+								<label for="natpmp" id="DLG_SETTINGS_4_CONN_07"></label>
+							</div>
+						</div>
+					</fieldset>
+
+					<fieldset>
+						<legend id="DLG_SETTINGS_4_CONN_08"></legend>
+						<div class="line-cont">
+							<div class="flr">
+								<label for="proxy.proxy" id="DLG_SETTINGS_4_CONN_11"></label>
+								<input id="proxy.proxy" type="text" class="tbox str" />
+								<label for="proxy.port" id="DLG_SETTINGS_4_CONN_13"></label>
+								<input id="proxy.port" type="text" class="tbox num" />
+							</div>
+							<div>
+								<label id="DLG_SETTINGS_4_CONN_09"></label>
+								<select id="proxy.type"><option value="0">----------</option></select>
+							</div>
+						</div>
+						<div class="line-cont">
+							<div class="flr">
+								<label for="proxy.username" id="DLG_SETTINGS_4_CONN_16"></label>
+								<input id="proxy.username" type="text" class="tbox str" />
+								<label for="proxy.password" id="DLG_SETTINGS_4_CONN_18"></label>
+								<input id="proxy.password" type="password" class="tbox str" />
+							</div>
+							<div>
+								<input id="proxy.auth" type="checkbox" />
+								<label for="proxy.auth" id="DLG_SETTINGS_4_CONN_15"></label>
+							</div>
+						</div>
+						<div class="line-cont">
+							<input id="proxy.resolve" type="checkbox" />
+							<label for="proxy.resolve" id="DLG_SETTINGS_4_CONN_19"></label>
+						</div>
+						<div class="line-cont">
+							<input id="proxy.p2p" type="checkbox" />
+							<label for="proxy.p2p" id="DLG_SETTINGS_4_CONN_20"></label>
+						</div>
+					</fieldset>
+				</div>
+
+				<div id="dlgSettings-Bandwidth" class="settings-pane">
+					<fieldset>
+						<legend id="DLG_SETTINGS_5_BANDWIDTH_01"></legend>
+						<div class="line-cont">
+							<input type="text" id="max_ul_rate" class="tbox num flr" maxlength="6" />
+							<label for="max_ul_rate" id="DLG_SETTINGS_5_BANDWIDTH_02"></label>
+						</div>
+						<div class="line-cont indent">
+							<input type="text" id="max_ul_rate_seed" class="tbox num flr" maxlength="6" />
+							<input id="max_ul_rate_seed_flag" type="checkbox" />
+							<label for="max_ul_rate_seed_flag" id="DLG_SETTINGS_5_BANDWIDTH_05"></label>
+						</div>
+					</fieldset>
+
+					<fieldset>
+						<legend id="DLG_SETTINGS_5_BANDWIDTH_07"></legend>
+						<div class="line-cont">
+							<input type="text" id="max_dl_rate" class="tbox num flr" maxlength="6" />
+							<label for="max_dl_rate" id="DLG_SETTINGS_5_BANDWIDTH_08"></label>
+						</div>
+					</fieldset>
+
+					<fieldset>
+						<legend id="DLG_SETTINGS_5_BANDWIDTH_10"></legend>
+						<div class="line-cont">
+							<input type="text" id="conns_globally" class="tbox num flr" maxlength="6" />
+							<label id="DLG_SETTINGS_5_BANDWIDTH_11" for="conns_globally"></label>
+						</div>
+						<div class="line-cont">
+							<input type="text" id="conns_per_torrent" class="tbox num flr" maxlength="6" />
+							<label id="DLG_SETTINGS_5_BANDWIDTH_14" for="conns_per_torrent"></label>
+						</div>
+						<div class="line-cont">
+							<input type="text" id="ul_slots_per_torrent" class="tbox num flr" maxlength="6" />
+							<label id="DLG_SETTINGS_5_BANDWIDTH_15" for="ul_slots_per_torrent"></label>
+						</div>
+						<div class="line-cont indent">
+							<input id="extra_ulslots" type="checkbox" />
+							<label for="extra_ulslots" id="DLG_SETTINGS_5_BANDWIDTH_17"></label>
+						</div>
+					</fieldset>
+				</div>
+
+				<div id="dlgSettings-BitTorrent" class="settings-pane">
+					<fieldset>
+						<legend id="DLG_SETTINGS_6_BITTORRENT_01"></legend>
+						<div class="line-cont">
+							<div class="half flr">
+								<input id="enable_scrape" type="checkbox" />
+								<label for="enable_scrape" id="DLG_SETTINGS_6_BITTORRENT_03"></label>
+							</div>
+							<div>
+								<input id="dht" type="checkbox" />
+								<label for="dht" id="DLG_SETTINGS_6_BITTORRENT_02"></label>
+							</div>
+						</div>
+						<div class="line-cont">
+							<div class="half flr">
+								<input id="pex" type="checkbox" />
+								<label for="pex" id="DLG_SETTINGS_6_BITTORRENT_05"></label>
+							</div>
+							<div>
+								<input id="dht_per_torrent" type="checkbox" />
+								<label for="dht_per_torrent" id="DLG_SETTINGS_6_BITTORRENT_04"></label>
+							</div>
+						</div>
+						<div class="line-cont">
+							<div class="half flr">
+								<input id="rate_limit_local_peers" type="checkbox" />
+								<label for="rate_limit_local_peers" id="DLG_SETTINGS_6_BITTORRENT_07"></label>
+							</div>
+							<div>
+								<input id="lsd" type="checkbox" />
+								<label for="lsd" id="DLG_SETTINGS_6_BITTORRENT_06"></label>
+							</div>
+						</div>
+						<div class="line-cont">
+							<div class="half flr"><input type="text" id="tracker_ip" class="tbox str" maxlength="50" /></div>
+							<div><label id="DLG_SETTINGS_6_BITTORRENT_08"></label></div>
+						</div>
+					</fieldset>
+
+					<fieldset>
+						<legend id="DLG_SETTINGS_6_BITTORRENT_10"></legend>
+						<div class="line-cont">
+							<div class="half flr">
+								<input id="encryption_allow_legacy" type="checkbox" />
+								<label for="encryption_allow_legacy" id="DLG_SETTINGS_6_BITTORRENT_13"></label>
+							</div>
+							<div>
+								<label id="DLG_SETTINGS_6_BITTORRENT_11"></label>
+								<select id="encryption_mode"><option>---------------</option></select>
+							</div>
+						</div>
+					</fieldset>
+				</div>
+
+				<div id="dlgSettings-TransferCap" class="settings-pane">
+					<div class="line-cont">
+						<input id="multi_day_transfer_limit_en" type="checkbox" />
+						<label for="multi_day_transfer_limit_en" id="DLG_SETTINGS_7_TRANSFERCAP_01"></label>
+					</div>
+
+					<fieldset>
+						<legend id="DLG_SETTINGS_7_TRANSFERCAP_02"></legend>
+						<div class="line-cont">
+							<label for="multi_day_transfer_mode" id="DLG_SETTINGS_7_TRANSFERCAP_03"></label>
+							<select id="multi_day_transfer_mode"><option>--------------------</option></select>
+						</div>
+						<div class="line-cont indent">
+							<label for="multi_day_transfer_limit_value" id="DLG_SETTINGS_7_TRANSFERCAP_04"></label>
+							<input type="text" id="multi_day_transfer_limit_value" class="tbox num" /> <select id="multi_day_transfer_limit_unit"><option>-----</option></select>
+							<label for="multi_day_transfer_limit_span" id="DLG_SETTINGS_7_TRANSFERCAP_05"></label>
+							<select id="multi_day_transfer_limit_span"><option>-----</option></select>
+							<span id="DLG_SETTINGS_7_TRANSFERCAP_06"></span>
+						</div>
+					</fieldset>
+				</div>
+
+				<div id="dlgSettings-Queueing" class="settings-pane">
+					<fieldset>
+						<legend id="DLG_SETTINGS_8_QUEUEING_01"></legend>
+						<div class="line-cont">
+							<input type="text" id="max_active_torrent" class="tbox num flr" maxlength="6" />
+							<label for="max_active_torrent" id="DLG_SETTINGS_8_QUEUEING_02"></label>
+						</div>
+						<div class="line-cont">
+							<input type="text" id="max_active_downloads" class="tbox num flr" maxlength="6" />
+							<label for="max_active_downloads" id="DLG_SETTINGS_8_QUEUEING_04"></label>
+						</div>
+					</fieldset>
+
+					<fieldset>
+						<legend id="DLG_SETTINGS_8_QUEUEING_06"></legend>
+						<div class="line-cont">
+							<label for="seed_ratio" id="DLG_SETTINGS_8_QUEUEING_07"></label>
+							<input type="text" id="seed_ratio" class="tbox num" />
+							<label for="seed_time" id="DLG_SETTINGS_8_QUEUEING_09"></label>
+							<input type="text" class="tbox num" id="seed_time" />
+						</div>
+						<div class="line-cont">
+							<input id="seeds_prioritized" type="checkbox" />
+							<label for="seeds_prioritized" id="DLG_SETTINGS_8_QUEUEING_11"></label>
+						</div>
+					</fieldset>
+
+					<fieldset>
+						<legend id="DLG_SETTINGS_8_QUEUEING_12"></legend>
+						<div class="line-cont">
+							<input type="text" id="seed_prio_limitul" class="tbox num flr" maxlength="6" />
+							<input id="seed_prio_limitul_flag" type="checkbox" />
+							<label for="seed_prio_limitul_flag" id="DLG_SETTINGS_8_QUEUEING_13"></label>
+						</div>
+					</fieldset>
+				</div>
+
+				<div id="dlgSettings-Scheduler" class="settings-pane">
+					<div class="line-cont">
+						<input id="sched_enable" type="checkbox" />
+						<label for="sched_enable" id="DLG_SETTINGS_9_SCHEDULER_01"></label>
+					</div>
+
+					<fieldset>
+						<legend id="DLG_SETTINGS_9_SCHEDULER_02"></legend>
+						<table id="sched_table" cellpadding="0" cellspacing="0"></table>
+						<div id="sched_table_lgnd">
+							<ul>
+								<li id="sched_table_lgnd_off"><span class="block mode2">&nbsp;</span> <span id="ST_SCH_LGND_OFF"></span></li>
+								<li id="sched_table_lgnd_seeding"><span class="block mode3">&nbsp;</span> <span id="ST_SCH_LGND_SEEDING"></span></li>
+							</ul>
+							<ul>
+								<li id="sched_table_lgnd_full"><span class="block mode0">&nbsp;</span> <span id="ST_SCH_LGND_FULL"></span></li>
+								<li id="sched_table_lgnd_limited"><span class="block mode1">&nbsp;</span> <span id="ST_SCH_LGND_LIMITED"></span></li>
+							</ul>
+						</div>
+						<div id="sched_table_info"></div>
+					</fieldset>
+
+					<fieldset>
+						<legend id="DLG_SETTINGS_9_SCHEDULER_04"></legend>
+						<div class="line-cont">
+							<div class="half flr">
+								<input id="sched_dis_dht" type="checkbox" />
+								<label id="DLG_SETTINGS_9_SCHEDULER_09" for="sched_dis_dht"></label>
+							</div>
+							<div class="half">
+								<input type="text" id="sched_ul_rate" class="tbox num flr" maxlength="6" />
+								<label for="sched_ul_rate" id="DLG_SETTINGS_9_SCHEDULER_05"></label>
+							</div>
+						</div>
+						<div class="line-cont half">
+							<input type="text" id="sched_dl_rate" class="tbox num flr" maxlength="6" />
+							<label for="sched_dl_rate" id="DLG_SETTINGS_9_SCHEDULER_07"></label>
+						</div>
+					</fieldset>
+				</div>
+
+				<div id="dlgSettings-Advanced" class="settings-pane">
+					<fieldset>
+					<legend id="DLG_SETTINGS_A_ADVANCED_01"></legend>
+					<div id="clear">
+						<div id="ST_COL_NAME"></div>
+						<div id="ST_COL_VALUE"></div>
+					</div>
+					<div id="st_ao_h">
+						<table cellpadding="0" cellspacing="0">
+							<tbody>
+								<tr>
+									<td><label for="bt.allow_same_ip">bt.allow_same_ip</label></td>
+									<td><input type="checkbox" id="bt.allow_same_ip" /></td>
+								</tr>
+								<tr>
+									<td><label for="bt.ban_ratio">bt.ban_ratio</label></td>
+									<td><input type="text" id="bt.ban_ratio" class="tbox num" maxlength="5" /></td>
+								</tr>
+								<tr>
+									<td><label for="bt.ban_threshold">bt.ban_threshold</label></td>
+									<td><input type="text" id="bt.ban_threshold" class="tbox num" maxlength="5" /></td>
+								</tr>
+								<tr>
+									<td><label for="bt.compact_allocation">bt.compact_allocation</label></td>
+									<td><input type="checkbox" id="bt.compact_allocation" /></td>
+								</tr>
+								<tr>
+									<td><label for="bt.connect_speed">bt.connect_speed</label></td>
+									<td><input type="text" id="bt.connect_speed" class="tbox num" maxlength="5" /></td>
+								</tr>
+								<tr>
+									<td><label for="bt.enable_tracker">bt.enable_tracker</label></td>
+									<td><input type="checkbox" id="bt.enable_tracker" /></td>
+								</tr>
+								<tr>
+									<td><label for="bt.graceful_shutdown">bt.graceful_shutdown</label></td>
+									<td><input type="checkbox" id="bt.graceful_shutdown" /></td>
+								</tr>
+								<tr>
+									<td><label for="bt.multiscrape">bt.multiscrape</label></td>
+									<td><input type="checkbox" id="bt.multiscrape" /></td>
+								</tr>
+								<tr>
+									<td><label for="bt.no_connect_to_services">bt.no_connect_to_services</label></td>
+									<td><input type="checkbox" id="bt.no_connect_to_services" /></td>
+								</tr>
+								<tr>
+									<td><label for="bt.no_connect_to_services_list">bt.no_connect_to_services_list</label></td>
+									<td><input type="text" id="bt.no_connect_to_services_list" class="tbox" /></td>
+								</tr>
+								<tr>
+									<td><label for="bt.prio_first_last_piece">bt.prio_first_last_piece</label></td>
+									<td><input type="checkbox" id="bt.prio_first_last_piece" /></td>
+								</tr>
+								<tr>
+									<td><label for="bt.ratelimit_tcp_only">bt.ratelimit_tcp_only</label></td>
+									<td><input type="checkbox" id="bt.ratelimit_tcp_only" /></td>
+								</tr>
+								<tr>
+									<td><label for="bt.scrape_stopped">bt.scrape_stopped</label></td>
+									<td><input type="checkbox" id="bt.scrape_stopped" /></td>
+								</tr>
+								<tr>
+									<td><label for="bt.send_have_to_seed">bt.send_have_to_seed</label></td>
+									<td><input type="checkbox" id="bt.send_have_to_seed" /></td>
+								</tr>
+								<tr>
+									<td><label for="bt.set_sockbuf">bt.set_sockbuf</label></td>
+									<td><input type="checkbox" id="bt.set_sockbuf" /></td>
+								</tr>
+								<tr>
+									<td><label for="bt.shutdown_tracker_timeout">bt.shutdown_tracker_timeout</label></td>
+									<td><input type="text" id="bt.shutdown_tracker_timeout" class="tbox num" maxlength="6" /></td>
+								</tr>
+								<tr>
+									<td><label for="bt.shutdown_upnp_timeout">bt.shutdown_upnp_timeout</label></td>
+									<td><input type="text" id="bt.shutdown_upnp_timeout" class="tbox num" maxlength="6" /></td>
+								</tr>
+								<tr>
+									<td><label for="bt.tcp_rate_control">bt.tcp_rate_control</label></td>
+									<td><input type="checkbox" id="bt.tcp_rate_control" /></td>
+								</tr>
+								<tr>
+									<td><label for="bt.transp_disposition">bt.transp_disposition</label></td>
+									<td><input type="text" id="bt.transp_disposition" class="tbox num" maxlength="5" /></td>
+								</tr>
+								<tr>
+									<td><label for="bt.use_ban_ratio">bt.use_ban_ratio</label></td>
+									<td><input type="checkbox" id="bt.use_ban_ratio" /></td>
+								</tr>
+								<tr>
+									<td><label for="bt.use_rangeblock">bt.use_rangeblock</label></td>
+									<td><input type="checkbox" id="bt.use_rangeblock" /></td>
+								</tr>
+								<tr>
+									<td><label for="dht.rate">dht.rate</label></td>
+									<td><input type="text" id="dht.rate" class="tbox num" maxlength="10" /></td>
+								</tr>
+								<tr>
+									<td><label for="diskio.coalesce_write_size">diskio.coalesce_write_size</label></td>
+									<td><input type="text" id="diskio.coalesce_write_size" class="tbox num" maxlength="20" /></td>
+								</tr>
+								<tr>
+									<td><label for="diskio.coalesce_writes">diskio.coalesce_writes</label></td>
+									<td><input type="checkbox" id="diskio.coalesce_writes" /></td>
+								</tr>
+								<tr>
+									<td><label for="diskio.flush_files">diskio.flush_files</label></td>
+									<td><input type="checkbox" id="diskio.flush_files" /></td>
+								</tr>
+								<tr>
+									<td><label for="diskio.no_zero">diskio.no_zero</label></td>
+									<td><input type="checkbox" id="diskio.no_zero" /></td>
+								</tr>
+								<tr>
+									<td><label for="diskio.smart_hash">diskio.smart_hash</label></td>
+									<td><input type="checkbox" id="diskio.smart_hash" /></td>
+								</tr>
+								<tr>
+									<td><label for="diskio.smart_sparse_hash">diskio.smart_sparse_hash</label></td>
+									<td><input type="checkbox" id="diskio.smart_sparse_hash" /></td>
+								</tr>
+								<tr>
+									<td><label for="diskio.sparse_files">diskio.sparse_files</label></td>
+									<td><input type="checkbox" id="diskio.sparse_files" /></td>
+								</tr>
+								<tr>
+									<td><label for="diskio.use_partfile">diskio.use_partfile</label></td>
+									<td><input type="checkbox" id="diskio.use_partfile" /></td>
+								</tr>
+								<tr>
+									<td><label for="gui.auto_restart">gui.auto_restart</label></td>
+									<td><input type="checkbox" id="gui.auto_restart" /></td>
+								</tr>
+								<tr>
+									<td><label for="gui.bypass_search_redirect">gui.bypass_search_redirect</label></td>
+									<td><input type="checkbox" id="gui.bypass_search_redirect" /></td>
+								</tr>
+								<tr>
+									<td><label for="gui.compat_diropen">gui.compat_diropen</label></td>
+									<td><input type="checkbox" id="gui.compat_diropen" /></td>
+								</tr>
+								<tr>
+									<td><label for="gui.default_del_action">gui.default_del_action</label></td>
+									<td><input type="text" id="gui.default_del_action" class="tbox num" maxlength="1" /></td>
+								</tr>
+								<tr>
+									<td><label for="gui.delete_to_trash">gui.delete_to_trash</label></td>
+									<td><input type="checkbox" id="gui.delete_to_trash" /></td>
+								</tr>
+								<tr>
+									<td><label for="gui.graphic_progress">gui.graphic_progress</label></td>
+									<td><input type="checkbox" id="gui.graphic_progress" /></td>
+								</tr>
+								<tr>
+									<td><label for="gui.log_date">gui.log_date</label></td>
+									<td><input type="checkbox" id="gui.log_date" /></td>
+								</tr>
+								<tr>
+									<td><label for="gui.piecebar_progress">gui.piecebar_progress</label></td>
+									<td><input type="checkbox" id="gui.piecebar_progress" /></td>
+								</tr>
+								<tr>
+									<td><label for="gui.tall_category_list">gui.tall_category_list</label></td>
+									<td><input type="checkbox" id="gui.tall_category_list" /></td>
+								</tr>
+								<tr>
+									<td><label for="gui.update_rate">gui.update_rate</label></td>
+									<td><input type="text" id="gui.update_rate" class="tbox num" maxlength="20" /></td>
+								</tr>
+								<tr>
+									<td><label for="ipfilter.enable">ipfilter.enable</label></td>
+									<td><input type="checkbox" id="ipfilter.enable" /></td>
+								</tr>
+								<tr>
+									<td><label for="isp.bep22">isp.bep22</label></td>
+									<td><input type="checkbox" id="isp.bep22" /></td>
+								</tr>
+								<tr>
+									<td><label for="net.bind_ip">net.bind_ip</label></td>
+									<td><input type="text" id="net.bind_ip" class="tbox" maxlength="40" /></td>
+								</tr>
+								<tr>
+									<td><label for="net.calc_overhead">net.calc_overhead</label></td>
+									<td><input type="checkbox" id="net.calc_overhead" /></td>
+								</tr>
+								<tr>
+									<td><label for="net.limit_excludeslocal">net.limit_excludeslocal</label></td>
+									<td><input type="checkbox" id="net.limit_excludeslocal" /></td>
+								</tr>
+								<tr>
+									<td><label for="net.low_cpu">net.low_cpu</label></td>
+									<td><input type="checkbox" id="net.low_cpu" /></td>
+								</tr>
+								<tr>
+									<td><label for="net.max_halfopen">net.max_halfopen</label></td>
+									<td><input type="text" id="net.max_halfopen" class="tbox num" maxlength="6" /></td>
+								</tr>
+								<tr>
+									<td><label for="net.outgoing_ip">net.outgoing_ip</label></td>
+									<td><input type="text" id="net.outgoing_ip" class="tbox" maxlength="40" /></td>
+								</tr>
+								<tr>
+									<td><label for="net.outgoing_max_port">net.outgoing_max_port</label></td>
+									<td><input type="text" id="net.outgoing_max_port" class="tbox num" maxlength="5" /></td>
+								</tr>
+								<tr>
+									<td><label for="net.outgoing_port">net.outgoing_port</label></td>
+									<td><input type="text" id="net.outgoing_port" class="tbox num" maxlength="5" /></td>
+								</tr>
+								<tr>
+									<td><label for="net.upnp_tcp_only">net.upnp_tcp_only</label></td>
+									<td><input type="checkbox" id="net.upnp_tcp_only" /></td>
+								</tr>
+								<tr>
+									<td><label for="net.utp_receive_target_delay">net.utp_receive_target_delay</label></td>
+									<td><input type="text" id="net.utp_receive_target_delay" class="tbox num" maxlength="20" /></td>
+								</tr>
+								<tr>
+									<td><label for="net.utp_target_delay">net.utp_target_delay</label></td>
+									<td><input type="text" id="net.utp_target_delay" class="tbox num" maxlength="20" /></td>
+								</tr>
+								<tr>
+									<td><label for="net.wsaevents">net.wsaevents</label></td>
+									<td><input type="text" id="net.wsaevents" class="tbox num" maxlength="2" /></td>
+								</tr>
+								<tr>
+									<td><label for="peer.disconnect_inactive">peer.disconnect_inactive</label></td>
+									<td><input type="checkbox" id="peer.disconnect_inactive" /></td>
+								</tr>
+								<tr>
+									<td><label for="peer.disconnect_inactive_interval">peer.disconnect_inactive_interval</label></td>
+									<td><input type="text" id="peer.disconnect_inactive_interval" class="tbox num" maxlength="20" /></td>
+								</tr>
+								<tr>
+									<td><label for="peer.lazy_bitfield">peer.lazy_bitfield</label></td>
+									<td><input type="checkbox" id="peer.lazy_bitfield" /></td>
+								</tr>
+								<tr>
+									<td><label for="peer.resolve_country">peer.resolve_country</label></td>
+									<td><input type="checkbox" id="peer.resolve_country" /></td>
+								</tr>
+								<tr>
+									<td><label for="queue.dont_count_slow_dl">queue.dont_count_slow_dl</label></td>
+									<td><input type="checkbox" id="queue.dont_count_slow_dl" /></td>
+								</tr>
+								<tr>
+									<td><label for="queue.dont_count_slow_ul">queue.dont_count_slow_ul</label></td>
+									<td><input type="checkbox" id="queue.dont_count_slow_ul" /></td>
+								</tr>
+								<tr>
+									<td><label for="queue.prio_no_seeds">queue.prio_no_seeds</label></td>
+									<td><input type="checkbox" id="queue.prio_no_seeds" /></td>
+								</tr>
+								<tr>
+									<td><label for="queue.slow_dl_threshold">queue.slow_dl_threshold</label></td>
+									<td><input type="text" id="queue.slow_dl_threshold" class="tbox num" /></td>
+								</tr>
+								<tr>
+									<td><label for="queue.slow_ul_threshold">queue.slow_ul_threshold</label></td>
+									<td><input type="text" id="queue.slow_ul_threshold" class="tbox num" /></td>
+								</tr>
+								<tr>
+									<td><label for="queue.use_seed_peer_ratio">queue.use_seed_peer_ratio</label></td>
+									<td><input type="checkbox" id="queue.use_seed_peer_ratio" /></td>
+								</tr>
+								<tr>
+									<td><label for="rss.feed_as_default_label">rss.feed_as_default_label</label></td>
+									<td><input type="checkbox" id="rss.feed_as_default_label" /></td>
+								</tr>
+								<tr>
+									<td><label for="rss.smart_repack_filter">rss.smart_repack_filter</label></td>
+									<td><input type="checkbox" id="rss.smart_repack_filter" /></td>
+								</tr>
+								<tr>
+									<td><label for="rss.update_interval">rss.update_interval</label></td>
+									<td><input type="text" id="rss.update_interval" class="tbox num" maxlength="4" /></td>
+								</tr>
+								<tr>
+									<td><label for="sys.enable_wine_hacks">sys.enable_wine_hacks</label></td>
+									<td><input type="checkbox" id="sys.enable_wine_hacks" /></td>
+								</tr>
+<!--
+								<tr>
+									<td><label for="webui.allow_pairing">webui.allow_pairing</label></td>
+									<td><input type="checkbox" id="webui.allow_pairing" /></td>
+								</tr>
+-->
+								<tr>
+									<td><label for="webui.token_auth">webui.token_auth</label></td>
+									<td><input type="checkbox" id="webui.token_auth" /></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					</fieldset>
+				</div>
+
+				<div id="dlgSettings-DiskCache" class="settings-pane">
+					<fieldset>
+						<legend id="DLG_SETTINGS_C_ADV_CACHE_01"></legend>
+						<div id="DLG_SETTINGS_C_ADV_CACHE_02" style="margin-bottom: 5px;"></div>
+						<div class="line-cont">
+							<input type="text" id="cache.override_size" class="tbox num flr" maxlength="6" />
+							<input id="cache.override" type="checkbox" />
+							<label for="cache.override" id="DLG_SETTINGS_C_ADV_CACHE_03"></label>
+						</div>
+						<div class="line-cont">
+							<input id="cache.reduce" type="checkbox" />
+							<label for="cache.reduce" id="DLG_SETTINGS_C_ADV_CACHE_05"></label>
+						</div>
+					</fieldset>
+
+					<fieldset>
+						<legend id="DLG_SETTINGS_C_ADV_CACHE_06"></legend>
+						<div class="line-cont">
+							<input id="cache.write" type="checkbox" />
+							<label for="cache.write" id="DLG_SETTINGS_C_ADV_CACHE_07"></label>
+						</div>
+						<div class="line-cont indent">
+							<input id="cache.writeout" type="checkbox" />
+							<label for="cache.writeout" id="DLG_SETTINGS_C_ADV_CACHE_08"></label>
+						</div>
+						<div class="line-cont indent">
+							<input id="cache.writeimm" type="checkbox" />
+							<label for="cache.writeimm" id="DLG_SETTINGS_C_ADV_CACHE_09"></label>
+						</div>
+						<div class="line-cont">
+							<input id="cache.read" type="checkbox" />
+							<label for="cache.read" id="DLG_SETTINGS_C_ADV_CACHE_10"></label>
+						</div>
+						<div class="line-cont indent">
+							<input id="cache.read_turnoff" type="checkbox" />
+							<label for="cache.read_turnoff" id="DLG_SETTINGS_C_ADV_CACHE_11"></label>
+						</div>
+						<div class="line-cont indent">
+							<input id="cache.read_prune" type="checkbox" />
+							<label for="cache.read_prune" id="DLG_SETTINGS_C_ADV_CACHE_12"></label>
+						</div>
+						<div class="line-cont indent">
+							<input id="cache.read_thrash" type="checkbox" />
+							<label for="cache.read_thrash" id="DLG_SETTINGS_C_ADV_CACHE_13"></label>
+						</div>
+						<div class="line-cont">
+							<input id="cache.disable_win_write" type="checkbox" />
+							<label for="cache.disable_win_write" id="DLG_SETTINGS_C_ADV_CACHE_14"></label>
+						</div>
+						<div class="line-cont">
+							<input id="cache.disable_win_read" type="checkbox" />
+							<label for="cache.disable_win_read" id="DLG_SETTINGS_C_ADV_CACHE_15"></label>
+						</div>
+					</fieldset>
+				</div>
 			</div>
-			<div id="st_btns">
+			<div class="dlg-foot">
 				<input type="button" id="DLG_SETTINGS_03" class="btn" />
 				<input type="button" id="DLG_SETTINGS_04" class="btn" />
 				<input type="button" id="DLG_SETTINGS_05" class="btn" />
-			</div>
 			</div>
 		</div>
 		<!-- Settings Dialog */ -->
@@ -695,33 +919,68 @@
 		<!-- /* Torrent Properties Dialog -->
 		<div id="dlgProps" class="dlg-window">
 			<a href="#" class="dlg-close"></a>
-			<div id="dlgProps-header" class="dlg-header"></div>
-			<div class="content">
+			<div id="dlgProps-head" class="dlg-head"></div>
+			<div class="dlg-body">
 				<fieldset>
 					<legend id="DLG_TORRENTPROP_1_GEN_01"></legend>
-					<textarea id="prop-trackers" rows="0" cols="" wrap="off"></textarea>
+					<textarea id="prop-trackers" rows="" cols="" wrap="off" class="wide"></textarea>
 				</fieldset>
+
 				<fieldset>
 					<legend id="DLG_TORRENTPROP_1_GEN_03"></legend>
-					<div><input type="text" class="tbox num" id="prop-ulrate" /><label for="prop-ulrate" id="DLG_TORRENTPROP_1_GEN_04"></label></div>
-					<div><input type="text" class="tbox num" id="prop-dlrate" /><label for="prop-dlrate" id="DLG_TORRENTPROP_1_GEN_06"></label></div>
-					<div><input type="text" class="tbox num" id="prop-ulslots" /><label for="prop-ulslots" id="DLG_TORRENTPROP_1_GEN_08"></label></div>
+					<div class="line-cont">
+						<input type="text" class="tbox num flr" id="prop-ulrate" />
+						<label for="prop-ulrate" id="DLG_TORRENTPROP_1_GEN_04"></label>
+					</div>
+					<div class="line-cont">
+						<input type="text" class="tbox num flr" id="prop-dlrate" />
+						<label for="prop-dlrate" id="DLG_TORRENTPROP_1_GEN_06"></label>
+					</div>
+					<div class="line-cont">
+						<input type="text" class="tbox num flr" id="prop-ulslots" />
+						<label for="prop-ulslots" id="DLG_TORRENTPROP_1_GEN_08"></label>
+					</div>
 				</fieldset>
+
 				<fieldset>
 					<legend id="DLG_TORRENTPROP_1_GEN_10"></legend>
-					<div><input type="checkbox" id="prop-seed_override" /><label id="DLG_TORRENTPROP_1_GEN_11" for="prop-seed_override"></label></div>
-					<div><label for="prop-seed_ratio" id="DLG_TORRENTPROP_1_GEN_12"></label><input type="text" id="prop-seed_ratio" class="tbox" /><label for="prop-seed_time" id="DLG_TORRENTPROP_1_GEN_14"></label><input type="text" class="tbox num" id="prop-seed_time" /></div>
+					<div class="line-cont">
+						<input type="checkbox" id="prop-seed_override" />
+						<label id="DLG_TORRENTPROP_1_GEN_11" for="prop-seed_override"></label>
+					</div>
+					<div class="line-cont">
+						<label for="prop-seed_ratio" id="DLG_TORRENTPROP_1_GEN_12"></label>
+						<input type="text" id="prop-seed_ratio" class="tbox num" />
+						<label for="prop-seed_time" id="DLG_TORRENTPROP_1_GEN_14"></label>
+						<input type="text" class="tbox num" id="prop-seed_time" />
+					</div>
 				</fieldset>
+
 				<fieldset>
 					<legend id="DLG_TORRENTPROP_1_GEN_16"></legend>
-					<div class="props-spacer"><input type="checkbox" id="prop-superseed" /><label for="prop-superseed" id="DLG_TORRENTPROP_1_GEN_17"></label></div>
-					<div class="props-spacer"><input type="checkbox" id="prop-dht" /><label for="prop-dht" id="DLG_TORRENTPROP_1_GEN_18"></label></div>
-					<div class="props-spacer"><input type="checkbox" id="prop-pex" /><label for="prop-pex" id="DLG_TORRENTPROP_1_GEN_19"></label></div>
+					<div class="line-cont">
+						<div class="half flr">
+							<input type="checkbox" id="prop-pex" />
+							<label for="prop-pex" id="DLG_TORRENTPROP_1_GEN_19"></label>
+						</div>
+						<div>
+							<input type="checkbox" id="prop-superseed" />
+							<label for="prop-superseed" id="DLG_TORRENTPROP_1_GEN_17"></label>
+						</div>
+					</div>
+					<div class="line-cont">
+						<div class="half flr">
+						</div>
+						<div>
+							<input type="checkbox" id="prop-dht" />
+							<label for="prop-dht" id="DLG_TORRENTPROP_1_GEN_18"></label>
+						</div>
+					</div>
 				</fieldset>
 			</div>
-			<div style="padding: 5px; text-align: right; background: #F0F0F0; border-top: 1px solid #D0D0D0;">
-				<input type="button" value="" class="btn" id="DLG_TORRENTPROP_01" />
-				<input type="button" value="" class="btn" id="DLG_TORRENTPROP_02" />
+			<div class="dlg-foot">
+				<input id="DLG_TORRENTPROP_01" type="button" class="btn" />
+				<input id="DLG_TORRENTPROP_02" type="button" class="btn" />
 			</div>
 		</div>
 		<!-- Torrent Properties Dialog */ -->
@@ -729,8 +988,8 @@
 		<!-- /* About Dialog -->
 		<div id="dlgAbout" class="dlg-window">
 			<a href="#" class="dlg-close"></a>
-			<div id="dlgAbout-header" class="dlg-header">About</div>
-			<div class="content">
+			<div id="dlgAbout-head" class="dlg-head">About</div>
+			<div class="dlg-body">
 				<img style="float: right" src="./images/ut.png" alt="uTorrent" />
 				<b>Developer</b>:&nbsp;Carsten Niebuhr (Directrix)<br /><br />
 				<b>Contributors</b>:<br />&nbsp;&nbsp;&nbsp;Firon,&nbsp;icleolion,&nbsp;<a href="http://www.ignorantcow.net/" target="_blank">Ignorantcow</a>,&nbsp;shawnz,&nbsp;Ultima<br /><br />
@@ -745,12 +1004,14 @@
 		<!-- /* New Label Dialog -->
  		<div id="dlgLabel" class="dlg-window">
 			<a href="#" class="dlg-close"></a>
-			<div id="dlgLabel-header" class="dlg-header"></div>
-			<div class="content fxcaret">
-				<label for="txtLabel" id="OV_NEWLABEL_TEXT"></label><br />
-				<input type="text" id="txtLabel" class="tbox" /><br />
-				<input type="button" class="btn" id="LBL_OK" value="" />&nbsp;&nbsp;
-				<input type="button" class="btn" id="LBL_CANCEL" value="" />
+			<div id="dlgLabel-head" class="dlg-head"></div>
+			<div class="dlg-body">
+				<div class="line-cont"><label for="dlgLabel-label" id="OV_NEWLABEL_TEXT"></label></div>
+				<div class="line-cont"><input id="dlgLabel-label" type="text" class="tbox" /><br /></div>
+			</div>
+			<div class="dlg-foot">
+				<input id="LBL_OK" type="button" class="btn" />
+				<input id="LBL_CANCEL" type="button" class="btn" />
 			</div>
 		</div>
 		<!-- New Label Dialog */ -->
@@ -758,8 +1019,8 @@
 		<!-- /* Delete Confirmation Dialog
  		<div id="dlgDelTor" class="dlg-window">
 			<a href="#" class="dlg-close"></a>
-			<div id="dlgDelTor-header" class="dlg-header">Remove Torrent(s)</div>
-			<div class="content">
+			<div id="dlgDelTor-head" class="dlg-head">Remove Torrent(s)</div>
+			<div class="dlg-body">
 				<span id="OV_CONFIRM_DELETE"></span><br />
 				<input type="button" class="btn" value="   OK   " />&nbsp;&nbsp;
 				<input type="button" class="btn" value="   No   " />
@@ -770,10 +1031,10 @@
 		<!-- /* Folders Dialog
  		<div id="dlgFolders" class="dlg-window">
 			<a href="#" class="dlg-close"></a>
-			<div id="dlgFolders-header" class="dlg-header">Browse For Folder</div>
-			<div class="content">
+			<div id="dlgFolders-head" class="dlg-head">Browse For Folder</div>
+			<div class="dlg-body">
 				<div id="fl-cont"></div>
-				<div id="hcont"><label for="brwpath">Folder: </label><input type="text" id="brwpath" class="tbox" /></div>
+				<div id="line-cont"><label for="brwpath">Folder: </label><input type="text" id="brwpath" class="tbox" /></div>
 				<div>
 					<input type="button" class="btn" value="New Folder" />
 					<input type="button" class="btn" value="OK" />
@@ -784,26 +1045,37 @@
 		Folders Dialog */ -->
 
 		<!-- /* Toolbar -->
-		<div id="toolbar">
-			<div id="sb">
+		<div id="mainToolbar">
+			<div id="mainToolbar-searchbar">
 				<input type="text" id="query" /><a href="#" id="search"></a><a href="#" id="searchsel"></a>
 			</div>
-			<a id="add" href="#"><span></span></a>
-			<div class="TB_Separator"></div>
-			<a id="remove" href="#"><span></span></a>
-			<div class="TB_Separator"></div>
-			<a id="start" href="#"><span></span></a>
-			<a id="pause" href="#"><span></span></a>
-			<a id="stop" href="#"><span></span></a>
-			<div class="TB_Separator"></div>
-			<a id="queueup" href="#"><span></span></a>
-			<a id="queuedown" href="#"><span></span></a>
-			<div class="TB_Separator"></div>
-			<a id="setting" href="#"><span></span></a>
+
+			<a id="add" href="#"></a>
+			<a id="addurl" href="#"></a>
+
+			<div class="separator"></div>
+
+			<a id="remove" href="#"></a>
+
+			<div class="separator"></div>
+
+			<a id="start" href="#"></a>
+			<a id="pause" href="#"></a>
+			<a id="stop" href="#"></a>
+
+			<div class="separator"></div>
+
+			<a id="queueup" href="#"></a>
+			<a id="queuedown" href="#"></a>
+
+			<div class="separator"></div>
+
+			<a id="setting" href="#"></a>
 		</div>
 		<!-- Toolbar */ -->
 
-		<div id="CatList">
+		<!-- /* Category/Label List -->
+		<div id="mainCatList">
 			<ul>
 				<li id="_all_" class="sel"><span id="OV_CAT_ALL"></span>&nbsp;(<span id="_all_c">0</span>)</li>
 				<li id="_dls_"><span id="OV_CAT_DL"></span>&nbsp;(<span id="_dls_c">0</span>)</li>
@@ -813,14 +1085,20 @@
 				<li class="hr"><hr /></li>
 				<li id="_nlb_"><span id="OV_CAT_NOLABEL"></span>&nbsp;(<span id="_nlb_c">0</span>)</li>
 			</ul>
-			<ul id="lbll"></ul>
+			<ul id="mainCatList-labels"></ul>
 		</div>
-		<div id="List"></div>
-		<div id="tdetails">
-			<ul id="tabs"></ul>
-			<div id="tdcont">
-				<div id="gcont">
-					<table id="dettable" cellpadding="5" cellspacing="2" style="width: 100%">
+		<!-- Category/Label List */ -->
+
+		<!-- /* Main List -->
+		<div id="mainTorList"></div>
+		<!-- Main List */ -->
+
+		<!-- /* Detailed Info Pane -->
+		<div id="mainInfoPane">
+			<ul id="mainInfoPane-tabs"></ul>
+			<div id="mainInfoPane-content">
+				<div id="mainInfoPane-generalTab">
+					<table cellpadding="5" cellspacing="2">
 						<tbody>
 							<tr>
 								<td colspan="3" class="Header" id="GN_TRANSFER"></td>
@@ -846,13 +1124,16 @@
 						</tbody>
 					</table>
 				</div>
-				<div id="FileList"></div>
-				<div id="spgraph"></div>
-				<div id="lcont"></div>
+				<div id="mainInfoPane-filesTab"></div>
+				<div id="mainInfoPane-speedTab"></div>
+				<div id="mainInfoPane-loggerTab"></div>
 			</div>
 		</div>
-		<div id="VDivider"></div>
-		<div id="HDivider"></div>
+		<!-- Detailed Info Pane */ -->
+
+		<div id="mainVDivider"></div>
+		<div id="mainHDivider"></div>
+
 		<!--[if IE]>
 		<script type="text/javascript" src="./excanvas.js"></script>
 		<![endif]-->

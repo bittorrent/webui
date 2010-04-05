@@ -1,5 +1,5 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "XHTML1-s.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <!--
 /*
  *     Copyright 2007 BitTorrent, Inc. All rights reserved.
@@ -17,9 +17,15 @@
 		<!--[if IE]><style type="text/css">@import "./ie.css";</style><![endif]-->
 	</head>
 	<body>
-		<div id="preload"></div>
-		<div id="cover"><div id="msg"><img src="./images/snake.gif" alt="Loading..." />&nbsp;&nbsp;Loading...</div></div>
-		<div id="CatList">
+		<div id="cover">
+			<div id="msg">
+				<img src="./images/snake.gif" alt="Loading..." />
+				Loading...
+			</div>
+		</div>
+
+		<!-- /* Category/Label List -->
+		<div id="mainCatList">
 			<ul>
 				<li id="_all_" class="sel"><span id="OV_CAT_ALL"></span>&nbsp;(<span id="_all_c">0</span>)</li>
 				<li id="_dls_"><span id="OV_CAT_DL"></span>&nbsp;(<span id="_dls_c">0</span>)</li>
@@ -29,9 +35,14 @@
 				<li class="hr"><hr /></li>
 				<li id="_nlb_"><span id="OV_CAT_NOLABEL"></span>&nbsp;(<span id="_nlb_c">0</span>)</li>
 			</ul>
-			<ul id="lbll"></ul>
+			<ul id="mainCatList-labels"></ul>
 		</div>
-		<div id="List"></div>
+		<!-- Category/Label List */ -->
+
+		<!-- /* Torrent Jobs List -->
+		<div id="mainTorList"></div>
+		<!-- Torrent Jobs List */ -->
+
 		<!-- [/jscompact] -->
 		<script type="text/javascript" src="./mootools.js"></script>
 

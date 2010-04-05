@@ -45,7 +45,7 @@ var SpeedGraph = {
 	},
 
 	"draw": function() {
-		if ((utWebUI.tabs.active != "spgraph") || Browser.Engine.trident6) return;
+		if ((utWebUI.tabs.active != "mainInfoPane-speedTab") || Browser.Engine.trident6) return;
 		this.plot.repaint();
 	},
 

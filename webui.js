@@ -75,7 +75,7 @@ var utWebUI = {
 	"trtColDefs": [
 		//[ colID, colWidth, colType, colDisabled = false, colAlign = ALIGN_AUTO, colText = "" ]
 		  ["name", 220, TYPE_STRING]
-		, ["order", 30, TYPE_NUM_ORDER]
+		, ["order", 35, TYPE_NUM_ORDER]
 		, ["size", 90, TYPE_NUMBER]
 		, ["remaining", 90, TYPE_NUMBER, true]
 		, ["done", 80, TYPE_NUM_PROGRESS]
@@ -559,7 +559,7 @@ var utWebUI = {
 	},
 
 	"loadLabels": function(labels) {
-		var labelList = $("lbll"), temp = {};
+		var labelList = $("mainCatList-labels"), temp = {};
 		for (var i = 0, len = labels.length; i < len; i++) {
 			var labeltxt = labels[i][0], label = "~" + labeltxt + "~", count = labels[i][1], li = null;
 			if (!(li = $(label))) {
@@ -658,13 +658,13 @@ var utWebUI = {
 		if (this.trtTable.selectedRows.length == 1)
 			tmpl = this.torrents[this.trtTable.selectedRows[0]][CONST.TORRENT_LABEL];
 		DialogManager.show("Label");
-		var ele = $("txtLabel");
+		var ele = $("dlgLabel-label");
 		ele.set("value", (tmpl == "") ? lang[CONST.OV_NEW_LABEL] : tmpl).focus();
 		ele.select();
 	},
 
 	"createLabel": function() {
-		this.setLabel($("txtLabel").get("value"));
+		this.setLabel($("dlgLabel-label").get("value"));
 	},
 
 	"updateLabels": function() {
@@ -889,10 +889,12 @@ var utWebUI = {
 			if (ele.type == "checkbox") {
 				ele.checked = !!v;
 			} else {
-				if (key == "seed_ratio")
-					v /= 10;
-				else if (key == "seed_time")
-					v /= 60;
+				switch (key) {
+					case "seed_ratio":
+						v /= 10; break;
+					case "seed_time":
+						v /= 60; break;
+				}
 				ele.set("value", v);
 			}
 			ele.fireEvent("change");
@@ -932,11 +934,11 @@ var utWebUI = {
 			"ulslots": 0
 		};
 		if (!this.config.showCategories)
-			$("CatList").hide();
+			$("mainCatList").hide();
 		if (!this.config.showDetails && !isGuest)
-			$("tdetails").hide();
+			$("mainInfoPane").hide();
 		if (!this.config.showToolbar && !isGuest)
-			$("toolbar").hide();
+			$("mainToolbar").hide();
 
 		this.toggleSearchBar();
 	},
@@ -1028,14 +1030,17 @@ var utWebUI = {
 			} else {
 				nv = ele.get("value");
 			}
-			if (key == "seed_ratio")
-				nv *= 10;
-			else if (key == "seed_time")
-				nv *= 60;
-			else if (key == "search_list")
-				nv = nv.split("\n").map(function(item) {
-					return item.replace(/[\r\n]+/g, '');
-				}).join("\r\n");
+			switch (key) {
+				case "seed_ratio":
+					nv *= 10; break;
+				case "seed_time":
+					nv *= 60; break;
+				case "search_list":
+					nv = nv.split('\n').map(function(item) {
+						return item.replace(/[\r\n]+/g, '');
+					}).join('\r\n');
+					break;
+			}
 			if (v != nv) {
 				this.settings[key] = nv;
 				if (key == "multi_day_transfer_mode") {
@@ -1086,8 +1091,7 @@ var utWebUI = {
 		var searchURLs = (this.settings["search_list"] || "").split("\r\n");
 
 		searchURLs = searchURLs.map(function(item) {
-			if (item) {
-				item = (item.split("|")[1] || "");
+			if (item && (item = item.split("|")[1])) {
 				if (!item.test(/%s/)) item += "%s";
 				return item.replace(/%v/, "utWebUI").replace(/%s/, searchQuery);
 			}
@@ -1454,7 +1458,7 @@ var utWebUI = {
 				e.disabled = !e.disabled;
 			});
 		});
-		$("dlgProps-header").set("text", "|[" + this.trtTable.selectedRows.length + " Torrents]| - " + lang[CONST.DLG_TORRENTPROP_00]);
+		$("dlgProps-head").set("text", "|[" + this.trtTable.selectedRows.length + " Torrents]| - " + lang[CONST.DLG_TORRENTPROP_00]);
 		DialogManager.show("Props");
 	},
 
@@ -1485,7 +1489,7 @@ var utWebUI = {
 			ele.checked = (props[k] == 1);
 			$("DLG_TORRENTPROP_1_GEN_" + ids[k])[dis ? "addClass" : "removeClass"]("disabled");
 		}
-		$("dlgProps-header").set("text", this.torrents[this.propID][CONST.TORRENT_NAME] + " - " + lang[CONST.DLG_TORRENTPROP_00]);
+		$("dlgProps-head").set("text", this.torrents[this.propID][CONST.TORRENT_NAME] + " - " + lang[CONST.DLG_TORRENTPROP_00]);
 		DialogManager.show("Props");
 	},
 
@@ -1502,18 +1506,19 @@ var utWebUI = {
 				if ((this.propID == "multi") && (nv == "")) continue;
 			}
 			if ((this.propID != "multi") && (((k == "dht") && (v == -1)) || ((k == "pex") && (v == -1)))) continue;
-			if (k == "seed_ratio")
-				nv *= 10;
-			else if (k == "seed_time")
-				nv *= 60;
-			else if (k == "dlrate")
-				nv *= 1024;
-			else if (k == "ulrate")
-				nv *= 1024;
-			else if (k == "trackers") {
-				nv = nv.split("\n").map(function(item) {
-					return item.replace(/[\r\n]+/g, '');
-				}).join("\r\n");
+			switch (k) {
+				case "seed_ratio":
+					nv *= 10; break;
+				case "seed_time":
+					nv *= 60; break;
+				case "dlrate":
+				case "ulrate":
+					nv *= 1024; break;
+				case "trackers":
+					nv = nv.split('\n').map(function(item) {
+						return item.replace(/[\r\n]+/g, '');
+					}).join('\r\n');
+					break
 			}
 			if ((v != nv) || (this.propID == "multi")) {
 				str += "&s=" + k + "&v=" + encodeURIComponent(nv);
@@ -1561,11 +1566,11 @@ var utWebUI = {
 	},
 
 	"addURL": function() {
-		var url = escape($("url").get("value"));
-		$("url").set("value", "");
+		var url = encodeURIComponent($("dlgAdd-url").get("value"));
+		$("dlgAdd-url").set("value", "");
 		if (url != "") {
-			var cookie = $("cookies").get("value");
-			$("cookies").set("value", "");
+			var cookie = $("dlgAdd-cookies").get("value");
+			$("dlgAdd-cookies").set("value", "");
 			if (cookie != "")
 				url += ":COOKIE:" + cookie;
 			this.request("action=add-url&s=" + url, $empty);
@@ -1600,11 +1605,11 @@ var utWebUI = {
 			this.files[id] = [];
 			if (update)
 				this.flsTable.clearRows();
-			if (this.tabs.active == "FileList")
+			if (this.tabs.active == "mainInfoPane-filesTab")
 				this.flsTable.loadObj.show();
 			this.request("action=getfiles&hash=" + id, this.addFiles);
 		} else {
-			if (this.tabs.active == "FileList") {
+			if (this.tabs.active == "mainInfoPane-filesTab") {
 				this.flsTable.loadObj.show();
 				this.loadFiles.delay(20, this);
 			}
@@ -1615,7 +1620,7 @@ var utWebUI = {
 		var files = json.files;
 		if (files == undefined) return;
 		this.files[files[0]] = files[1];
-		if (this.tabs.active == "FileList")
+		if (this.tabs.active == "mainInfoPane-filesTab")
 			this.loadFiles();
 	},
 
@@ -1868,7 +1873,7 @@ var utWebUI = {
 			show = !this.config.showCategories;
 		}
 
-		$("CatList")[show ? "show" : "hide"]();
+		$("mainCatList")[show ? "show" : "hide"]();
 		this.config.showCategories = show;
 
 		if (!noresize) {
@@ -1881,7 +1886,7 @@ var utWebUI = {
 			show = !this.config.showDetails;
 		}
 
-		$("tdetails")[show ? "show" : "hide"]();
+		$("mainInfoPane")[show ? "show" : "hide"]();
 		this.config.showDetails = show;
 
 		if (!noresize) {
@@ -1894,7 +1899,7 @@ var utWebUI = {
 			show = !!(this.settings["search_list"] || "").trim();
 		}
 
-		$("sb")[show ? "show" : "hide"]();
+		$("mainToolbar-searchbar")[show ? "show" : "hide"]();
 	},
 
 	"toggleToolbar": function(show, noresize) {
@@ -1902,7 +1907,7 @@ var utWebUI = {
 			show = !this.config.showToolbar;
 		}
 
-		$("toolbar")[show ? "show" : "hide"]();
+		$("mainToolbar")[show ? "show" : "hide"]();
 		this.config.showToolbar = show;
 
 		if (!noresize) {
@@ -1932,7 +1937,7 @@ var utWebUI = {
 	},
 
 	"tabChange": function(id) {
-		if (id == "FileList") {
+		if (id == "mainInfoPane-filesTab") {
 			if (this.torrentID == "") {
 				this.flsTable.calcSize();
 				return;
@@ -1940,7 +1945,7 @@ var utWebUI = {
 			if (has(this.flsTable.rowData, this.torrentID + "_0")) return;
 			this.flsTable.loadObj.show();
 			this.loadFiles.delay(20, this);
-		} else if (id == "spgraph") {
+		} else if (id == "mainInfoPane-speedTab") {
 			SpeedGraph.draw();
 		}
 	}/*,

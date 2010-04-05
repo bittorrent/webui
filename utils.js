@@ -43,7 +43,7 @@ if (!console) {
 })();
 
 function log(text) {
-	if (!$("lcont")) return;
+	if (!$("mainInfoPane-loggerTab")) return;
 
 	var dt = new Date();
 	var h = dt.getHours();
@@ -53,7 +53,7 @@ function log(text) {
 	m = (m < 10) ? ("0" + m) : m;
 	s = (s < 10) ? ("0" + s) : s;
 
-	$("lcont").grab(new Element("br"), "top").appendText("[" + h + ":" + m + ":" + s + "] " + text, "top");
+	$("mainInfoPane-loggerTab").grab(new Element("br"), "top").appendText("[" + h + ":" + m + ":" + s + "] " + text, "top");
 }
 
 function eventToKey(ev) {
@@ -155,16 +155,19 @@ String.implement({
 Number.implement({
 
 	"toFileSize": function(precision) {
-		precision = precision || 1;
-		var sz = [lang[CONST.SIZE_KB], lang[CONST.SIZE_MB], lang[CONST.SIZE_GB]];
+		var sz = [lang[CONST.SIZE_B], lang[CONST.SIZE_KB], lang[CONST.SIZE_MB], lang[CONST.SIZE_GB], lang[CONST.SIZE_TB], lang[CONST.SIZE_PB], lang[CONST.SIZE_EB]];
+		var szmax = sz.length-1;
 		var size = this;
-		var pos = 0;
+
+		// Force units to be at least kB
+		var unit = 1;
 		size /= 1024;
-		while ((size >= 1024) && (pos < 2)) {
+
+		while ((size >= 1024) && (unit < szmax)) {
 			size /= 1024;
-			pos++;
+			unit++;
 		}
-		return (size.toFixed(precision) + " " + sz[pos]);
+		return (size.toFixed(precision || 1) + " " + sz[unit]);
 	},
 
 	"toTimeString": function() {
