@@ -31,30 +31,30 @@
 		<div id="dlgAdd" class="dlg-window">
 			<a href="#" class="dlg-close"></a>
 			<div id="dlgAdd-head" class="dlg-head"></div>
-			<div class="dlg-body">
-				<form id="dlgAdd-form" action="./?action=add-file" method="post" enctype="multipart/form-data">
-					<div class="line-cont">
-						<input type="file" id="dlgAdd-file" name="torrent_file" class="fbox flr" />
-						<label for="dlgAdd-file">Torrent file:</label>
-					</div>
-				</form>
-				<!--
-				<fieldset>
-					<legend><a href="#" id="optadd">Options</a></legend>
-					<div id="optadd-cont">
-							<div><input type="text" id="dlpath" class="tbox" /><input type="button" id="DLG_PRE_ADD_03" class="btn" /></div>
-							<div class="fifpcw"><input type="checkbox" /><label id="DLG_PRE_ADD_04"></label></div>
-							<div class="fifpcw"><select id="addlab"></select><label id="DLG_PRE_ADD_06"></label></div>
-							<div class="fifpcw"><input type="checkbox" /><label id="DLG_PRE_ADD_05"></label></div>
-							<div class="fifpcw"><input type="checkbox" /><label id="DLG_PRE_ADD_08"></label></div>
-					</div>
-				</fieldset>
-				-->
-			</div>
-			<div class="dlg-foot">
-				<input type="button" id="ADD_FILE_OK" class="btn" />
-				<input type="button" id="ADD_FILE_CANCEL" class="btn" />
-			</div>
+			<form id="dlgAdd-form" action="./?action=add-file" method="post" enctype="multipart/form-data">
+				<div class="dlg-body">
+						<div class="line-cont">
+							<input type="file" id="dlgAdd-file" name="torrent_file" class="fbox flr" />
+							<label for="dlgAdd-file">Torrent file:</label>
+						</div>
+					<!--
+					<fieldset>
+						<legend><a href="#" id="optadd">Options</a></legend>
+						<div id="optadd-cont">
+								<div><input type="text" id="dlpath" class="tbox" /><input type="button" id="DLG_PRE_ADD_03" class="btn" /></div>
+								<div class="fifpcw"><input type="checkbox" /><label id="DLG_PRE_ADD_04"></label></div>
+								<div class="fifpcw"><select id="addlab"></select><label id="DLG_PRE_ADD_06"></label></div>
+								<div class="fifpcw"><input type="checkbox" /><label id="DLG_PRE_ADD_05"></label></div>
+								<div class="fifpcw"><input type="checkbox" /><label id="DLG_PRE_ADD_08"></label></div>
+						</div>
+					</fieldset>
+					-->
+				</div>
+				<div class="dlg-foot">
+					<input type="submit" id="ADD_FILE_OK" class="btn" />
+					<input type="button" id="ADD_FILE_CANCEL" class="btn" />
+				</div>
+			</form>
 		</div>
 		<!-- Torrent Add Dialog */ -->
 
@@ -62,20 +62,22 @@
 		<div id="dlgAddURL" class="dlg-window">
 			<a href="#" class="dlg-close"></a>
 			<div id="dlgAddURL-head" class="dlg-head"></div>
-			<div class="dlg-body">
-				<div class="line-cont">
-					<input type="text" id="dlgAdd-url" class="tbox flr" />
-					<label for="dlgAdd-url">Torrent URL:</label>
+			<form id="dlgAddURL-form" action="">
+				<div class="dlg-body">
+					<div class="line-cont">
+						<input type="text" id="dlgAdd-url" class="tbox flr" />
+						<label for="dlgAdd-url">Torrent URL:</label>
+					</div>
+					<div class="line-cont">
+						<input type="text" id="dlgAdd-cookies" class="tbox flr" />
+						<label for="dlgAdd-cookies">Cookies:</label>
+					</div>
 				</div>
-				<div class="line-cont">
-					<input type="text" id="dlgAdd-cookies" class="tbox flr" />
-					<label for="dlgAdd-cookies">Cookies:</label>
+				<div class="dlg-foot">
+					<input type="submit" id="ADD_URL_OK" class="btn" />
+					<input type="button" id="ADD_URL_CANCEL" class="btn" />
 				</div>
-			</div>
-			<div class="dlg-foot">
-				<input type="button" id="ADD_URL_OK" class="btn" />
-				<input type="button" id="ADD_URL_CANCEL" class="btn" />
-			</div>
+			</form>
 		</div>
 		<!-- Torrent Add URL Dialog */ -->
 

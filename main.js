@@ -526,6 +526,7 @@ function setupUserInterface() {
 	// -- OK Button (File)
 
 	$("ADD_FILE_OK").addEvent("click", function() {
+		this.disabled = true;
 		$("dlgAdd-form").set("action", urlBase + "?token=" + utWebUI.TOKEN + "&action=add-file").submit();
 	});
 
@@ -533,19 +534,6 @@ function setupUserInterface() {
 
 	$("ADD_FILE_CANCEL").addEvent("click", function(ev) {
 		DialogManager.hide("Add");
-	});
-
-	// -- OK Button (URL)
-
-	$("ADD_URL_OK").addEvent("click", function() {
-		DialogManager.hide("Add");
-		utWebUI.addURL();
-	});
-
-	// -- Cancel Button (URL)
-
-	$("ADD_URL_CANCEL").addEvent("click", function(ev) {
-		DialogManager.hide("AddURL");
 	});
 
 	// -- Upload Frame
@@ -573,15 +561,28 @@ function setupUserInterface() {
 		}
 	}).inject(document.body);
 
-	$("dlgAdd-form").set("target", targfrm.get("id")).addEvent("submit", function() {
-		var filename = $("dlgAdd-file").get("value");
-		if (!filename.test(/\.torrent$/)) {
-			alert("The file has to be a torrent file.");
-			return false;
-		}
-		$("ADD_FILE_OK").disabled = true;
-		return true;
+	$("dlgAdd-form").set("target", targfrm.get("id"));
+
+	//--------------------------------------------------
+	// ADD URL DIALOG
+	//--------------------------------------------------
+
+	// -- OK Button (URL)
+
+	$("ADD_URL_OK").addEvent("click", function() {
+		DialogManager.hide("AddURL");
+		utWebUI.addURL();
 	});
+
+	// -- Cancel Button (URL)
+
+	$("ADD_URL_CANCEL").addEvent("click", function(ev) {
+		DialogManager.hide("AddURL");
+	});
+
+	// -- Form Submission
+
+	$("dlgAddURL-form").addEvent("submit", $lambda(false));
 
 	//--------------------------------------------------
 	// LABEL DIALOG
