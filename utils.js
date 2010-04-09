@@ -248,3 +248,12 @@ Event.implement({
 		return !!(this.rightClick || (this.control && (this.event.button === 0) && Browser.Platform.mac));
 	}
 });
+
+Native.implement([Document, Window], {
+	"getZoomSize": function() {
+		if (Browser.Engine.presto && Browser.Engine.version >= 960) {
+			return {x: document.body.clientWidth, y: document.body.clientHeight};
+		}
+		return this.getSize();
+	}
+});

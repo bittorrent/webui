@@ -177,7 +177,7 @@ function resizeUI(hDiv, vDiv) {
 	var manualH = (typeof(hDiv) == "number"),
 		manualV = (typeof(vDiv) == "number");
 
-	var size = window.getSize(), ww = size.x, wh = size.y;
+	var size = window.getZoomSize(), ww = size.x, wh = size.y;
 
 	var config = utWebUI.config || utWebUI.defConfig,
 		uiLimits = utWebUI.limits,
@@ -275,7 +275,16 @@ function resizeUI(hDiv, vDiv) {
 		}
 	}
 
-	utWebUI.trtTable.resizeTo(trtw, trth);
+	if (badIE) {
+		utWebUI.trtTable.resizeTo(trtw, trth);
+	}
+	else {
+		// NOTE: This hack fixes poor reflow on browser zoom change. It seems
+		//       to work across all modern browsers with full page zooming, but
+		//       crashes IE6, which is why it's special cased.
+
+		utWebUI.trtTable.resizeTo(undefined, trth);
+	}
 
 	// Resize category/label list
 	if (showCat) {
