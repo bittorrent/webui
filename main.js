@@ -275,16 +275,16 @@ function resizeUI(hDiv, vDiv) {
 		}
 	}
 
-	if (badIE) {
-		utWebUI.trtTable.resizeTo(trtw, trth);
-	}
-	else {
-		// NOTE: This hack fixes poor reflow on browser zoom change. It seems
-		//       to work across all modern browsers with full page zooming, but
-		//       crashes IE6, which is why it's special cased.
+	// NOTE: We need to explicitly set a width for the torrent jobs list only
+	//       for IE6 because that browser crashes otherwise. We don't set the
+	//       width explicitly for modern browsers because modern browsers have
+	//       full page zoom, so if we specify an exact pixel width, the browser
+	//       may not map the "virtual" pixels (the number of pixels the web
+	//       application thinks it has due to zooming) to "physical" pixels in
+	//       a manner such that the torrent jobs list would fit perfectly side
+	//       by side with the category list.
 
-		utWebUI.trtTable.resizeTo(undefined, trth);
-	}
+	utWebUI.trtTable.resizeTo((badIE ? trtw : undefined), trth);
 
 	// Resize category/label list
 	if (showCat) {

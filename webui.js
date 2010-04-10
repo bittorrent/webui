@@ -205,16 +205,21 @@ var utWebUI = {
 
 	"perform": function(action) {
 		var hashes = this.getHashes(action);
-		if (action == "pause") {
-			var temp = this.getHashes("unpause");
-			if (temp.length)
-				this.request("action=unpause&hash=" + temp.join("&hash="));
+
+		if (hashes.length == 0) {
+			if (action == "pause") {
+				action = "unpause";
+				hashes = this.getHashes("unpause");
+			}
 		}
+
 		if (hashes.length == 0) return;
+
 		if (action.test(/^remove/) && (hashes.indexOf(this.torrentID) > -1)) {
 			this.torrentID = "";
 			this.clearDetails();
 		}
+
 		this.getTorrents("action=" + action + "&hash=" + hashes.join("&hash="));
 	},
 
@@ -234,7 +239,7 @@ var utWebUI = {
 					break;
 
 				case "pause":
-					if (stat & 32) continue;
+					if ((stat & 32) || (!(stat & 64) && !(stat & 1))) continue;
 					break;
 
 				case "unpause":
