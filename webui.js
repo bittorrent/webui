@@ -320,17 +320,32 @@ var utWebUI = {
 	"remove": function(mode) {
 		var count = this.trtTable.selectedRows.length;
 		if (count == 0) return;
+
 		mode = parseInt(mode);
 		if (isNaN(mode))
 			mode = (this.settings["gui.default_del_action"] <= 1) ? 0 : 1
-		var ok = !this.config.confirmDelete;
-		if (!ok) {
+
+		var act = (function() {
+			this.perform(this.delActions[mode]);
+		}).bind(this);
+
+		if (this.config.confirmDelete) {
 			var multiple = (count != 1);
 			var ask = (mode == 0) ? ((multiple) ? CONST.OV_CONFIRM_DELETE_MULTIPLE : CONST.OV_CONFIRM_DELETE_ONE) : ((multiple) ? CONST.OV_CONFIRM_DELETEDATA_MULTIPLE : CONST.OV_CONFIRM_DELETEDATA_ONE);
-			ok = confirm(lang[ask].replace(/%d/, count));
+//			ok = confirm(lang[ask].replace(/%d/, count));
+
+			$("dlgDelTor-message").set("text", lang[ask].replace(/%d/, count));
+			$("DELTOR_YES").addEvent("click", function(ev) {
+				$("DELTOR_NO").fireEvent("click", ev);
+				act.apply();
+			});
+
+			DialogManager.show("DelTor");
+			$("DELTOR_YES").focus();
 		}
-		if (!ok) return;
-		this.perform(this.delActions[mode]);
+		else {
+			act();
+		}
 	},
 
 	"recheck": function() {

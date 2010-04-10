@@ -382,7 +382,7 @@ var dxSTable = new Class({
 			var ctrl = ((Browser.Platform.mac && ev.meta) || (!Browser.Platform.mac && ev.control));
 
 			if (ev.key == "delete") { // DEL
-				this.fireEvent("onDelete");
+				this.fireEvent("onDelete", ev);
 			} else if (ctrl && (ev.key == "a")) { // Ctrl + A
 				this.fillSelection();
 				this.fireEvent("onSelect", ev);

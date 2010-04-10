@@ -369,7 +369,7 @@ function setupUserInterface() {
 	utWebUI.trtTable.create("mainTorList", utWebUI.trtColDefs, $extend({
 		"format": utWebUI.trtFormatRow.bind(utWebUI),
 		"sortCustom": utWebUI.trtSortCustom.bind(utWebUI),
-		"onDelete": utWebUI.remove.bind(utWebUI),
+		"onDelete": function(ev) { utWebUI.remove(ev.shift ? 1 : 0); },
 		"onColReset": utWebUI.trtColReset.bind(utWebUI),
 		"onColResize": utWebUI.trtColResize.bind(utWebUI),
 		"onColMove": utWebUI.trtColMove.bind(utWebUI),
@@ -523,13 +523,13 @@ function setupUserInterface() {
 
 	DialogManager.dragMask = $("dragmask");
 
-	["About", "Add", "AddURL", "Label", "Props", "Settings"].each(function(k) {
-		var isModal = (["Label", "Props"].indexOf(k) >= 0);
+	["About", "Add", "AddURL", "DelTor", "Label", "Props", "Settings"].each(function(k) {
+		var isModal = (["DelTor", "Label", "Props"].indexOf(k) >= 0);
 		DialogManager.add(k, isModal);
 	});
 
 	//--------------------------------------------------
-	// ADD DIALOG
+	// ADD TORRENT DIALOG
 	//--------------------------------------------------
 
 	// -- OK Button (File)
@@ -594,6 +594,22 @@ function setupUserInterface() {
 	// -- Form Submission
 
 	$("dlgAddURL-form").addEvent("submit", $lambda(false));
+
+	//--------------------------------------------------
+	// DELETE TORRENT DIALOG
+	//--------------------------------------------------
+
+	// -- No Button
+
+	$("DELTOR_NO").addEvent("click", function(ev) {
+		$("dlgDelTor").getElement("a").fireEvent("click", ev);
+	});
+
+	// -- Close Button
+
+	$("dlgDelTor").getElement("a").addEvent("click", function(ev) {
+		$("DELTOR_YES").removeEvents("click");
+	});
 
 	//--------------------------------------------------
 	// LABEL DIALOG

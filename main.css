@@ -698,15 +698,13 @@ li#tab_mainInfoPane-loggerTab span {
  * DIALOG: Delete
  **************************************************/
 
-/* TODO: Finish implementing or remove
-	#dlgDelTor {
-		width: 280px; height: 100px;
-	}
+#dlgDelTor {
+	width: 280px;
+}
 
-	#dlgDelTor-head {
-		background-image: url(./images/delete.png);
-	}
-*/
+#dlgDelTor-head {
+	background-image: url(./images/delete.png);
+}
 
 
 /**************************************************
