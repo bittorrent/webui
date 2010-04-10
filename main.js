@@ -579,8 +579,10 @@ function setupUserInterface() {
 	// -- OK Button (URL)
 
 	$("ADD_URL_OK").addEvent("click", function() {
-		DialogManager.hide("AddURL");
-		utWebUI.addURL();
+		if ($("dlgAdd-url").get("value").trim().length > 0) {
+			DialogManager.hide("AddURL");
+			utWebUI.addURL();
+		}
 	});
 
 	// -- Cancel Button (URL)
