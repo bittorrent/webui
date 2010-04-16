@@ -149,7 +149,7 @@ td.disabled, label.disabled, span.disabled, div.disabled {
 
 #modalbg {
 	display: none;
-	opacity: 0.70;
+	opacity: 0.60;
 }
 
 #msg {
@@ -972,40 +972,32 @@ input[id="proxy.password"] { width: 70px; }
 
 /* Advanced */
 
-#ST_COL_NAME, #ST_COL_VALUE {
-	background: #FFFFFF;
-	border: 1px solid #D0D0D0;
-	float: left;
-	padding: 2px;
-	width: 215px;
+#dlgSettings-advOptList {
+	-moz-user-focus: normal;
+	-moz-user-input: enabled;
+	-moz-user-select: none;
+	background-color: #FFFFFF;
+	display: block;
+	overflow: hidden;
 }
 
-#ST_COL_VALUE {
-	width: 235px;
+#dlgSettings-Advanced .tall {
+	padding-top: 5px;
 }
 
-#st_ao_h {
-	background: #FFFFFF;
-	border: 1px solid #D0D0D0;
-	height: 262px;
-	overflow-x: hidden;
-	overflow: auto;
-	padding: 2px 0;
-	width: 460px;
+#dlgSettings-advBool-cont,
+#dlgSettings-advText-cont {
+	display: none;
+	padding-left: 5px;
 }
 
-
-#st_ao_h table {
-	width: 100%;
+#dlgSettings-advBool-cont span {
+	padding: 0 3px;
 }
 
-#st_ao_h td {
-	border-bottom: 1px solid #F5F5F5;
-	height: 19px;
-	padding: 1px 2px;
-	width: 50%;
+#dlgSettings-advText {
+	width: 340px;
 }
-
 
 /**************************************************
  * MENU

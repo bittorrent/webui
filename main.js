@@ -495,7 +495,7 @@ function setupUserInterface() {
 			, "mainInfoPane-speedTab"   : ""
 			, "mainInfoPane-loggerTab"  : ""
 		},
-		"onChange": utWebUI.tabChange.bind(utWebUI)
+		"onChange": utWebUI.detPanelTabChange.bind(utWebUI)
 	}).draw().show("mainInfoPane-generalTab");
 
 	// -- Files Tab
@@ -704,7 +704,8 @@ function setupUserInterface() {
 			, "dlgSettings-Scheduler"   : ""
 			, "dlgSettings-Advanced"    : ""
 			, "dlgSettings-DiskCache"   : ""
-		}
+		},
+		"onChange": utWebUI.settingsPaneChange.bind(utWebUI)
 	}).draw().show("dlgSettings-WebUI");
 
 	// -- Web UI
@@ -815,6 +816,22 @@ function setupUserInterface() {
 			$("sched_table_info").empty();
 		}
 	});
+
+	// -- Advanced Options
+
+	utWebUI.advOptTable.create("dlgSettings-advOptList", utWebUI.advOptColDefs, $extend({
+		"format": utWebUI.advOptFormatRow.bind(utWebUI),
+		"onColReset": utWebUI.advOptColReset.bind(utWebUI),
+		"onSelect": utWebUI.advOptSelect.bind(utWebUI),
+		"onDblClick": utWebUI.advOptDblClk.bind(utWebUI),
+		"rowMultiSelect": false
+	}));
+
+	$("DLG_SETTINGS_A_ADVANCED_05").addEvent("click", utWebUI.advOptChanged.bind(utWebUI));
+	$("dlgSettings-advTrue").addEvent("click", utWebUI.advOptChanged.bind(utWebUI));
+	$("dlgSettings-advFalse").addEvent("click", utWebUI.advOptChanged.bind(utWebUI));
+
+	utWebUI.advOptTable.resizeTo(465, 300); // TODO: CLEANUP
 
 	// -- Linked Controls
 
@@ -1261,6 +1278,9 @@ function loadLangStrings(reload) {
 
 		// Advanced
 		, "DLG_SETTINGS_A_ADVANCED_01"
+		, "DLG_SETTINGS_A_ADVANCED_02"
+		, "DLG_SETTINGS_A_ADVANCED_03"
+		, "DLG_SETTINGS_A_ADVANCED_04"
 
 		// Disk Cache
 		, "DLG_SETTINGS_C_ADV_CACHE_01"
@@ -1279,15 +1299,28 @@ function loadLangStrings(reload) {
 		, "DLG_SETTINGS_C_ADV_CACHE_15"
 		, "MENU_SHOW_CATEGORY"
 		, "MENU_SHOW_DETAIL"
-		, "ST_COL_NAME"
-		, "ST_COL_VALUE"
 		, "ST_SCH_LGND_FULL"
 		, "ST_SCH_LGND_LIMITED"
 		, "ST_SCH_LGND_OFF"
 		, "ST_SCH_LGND_SEEDING"
 	]);
 
+	// -- Advanced Options
+
+	utWebUI.advOptTable.refreshRows();
+	utWebUI.advOptTable.setConfig({
+		"resetText": lang[CONST.MENU_RESET],
+		"colText": {
+			  "name"  : lang[CONST.ST_COL_NAME]
+			, "value" : lang[CONST.ST_COL_VALUE]
+		}
+	});
+
+	// Buttons
 	_loadStrings("value", "DLG_SETTINGS_4_CONN_04");
+	_loadStrings("value", "DLG_SETTINGS_A_ADVANCED_05");
+
+	// -- Comboboxes
 	_loadComboboxStrings("encryption_mode", lang[CONST.ST_CBO_ENCRYPTIONS].split("||"), utWebUI.settings["encryption_mode"]);
 	_loadComboboxStrings("proxy.type", lang[CONST.ST_CBO_PROXY].split("||"), utWebUI.settings["proxy.type"]);
 	_loadComboboxStrings("multi_day_transfer_mode", lang[CONST.ST_CBO_TCAP_MODES].split("||"), utWebUI.settings["multi_day_transfer_mode"]);

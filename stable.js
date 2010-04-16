@@ -1,5 +1,3 @@
-// TODO: Stop letting code outside stable.js reference internal data structures directly!
-
 /*
 
 	Copyright Emil A Eklund - Column List Widget 1.03
@@ -88,6 +86,7 @@ var dxSTable = new Class({
 		"alternateRows": false,
 		"mode": MODE_PAGE,
 		"rowsSelectable": true,
+		"rowMultiSelect": true,
 		"refreshable": false
 	},
 	"tHeadCols": [],
@@ -120,7 +119,7 @@ var dxSTable = new Class({
 				, "text": item[5] || item[0] || ""
 			};
 		});
-		this.colOrder = (options.colOrder.length == this.cols) ? options.colOrder : columns.map(function(item, i) { return i; });
+		this.colOrder = (options.colOrder && (options.colOrder.length == this.cols)) ? options.colOrder : columns.map(function(item, i) { return i; });
 		this.sIndex = isNaN(options.sIndex) ? -1 : options.sIndex.toInt().limit(-1, this.cols - 1);
 		delete options.colOrder;
 		delete options.sIndex;
@@ -282,7 +281,8 @@ var dxSTable = new Class({
 					ele = ele.getParent("td");
 
 				if (ele) {
-					$me.fireEvent("onDblClick", ele.parentNode.id);
+					var idprefix = new RegExp("^" + $me.id + "-row-", "");
+					$me.fireEvent("onDblClick", ele.parentNode.id.replace(idprefix, ""));
 				}
 
 				ev.preventDefault();
@@ -294,7 +294,7 @@ var dxSTable = new Class({
 		this.tBody.grab(this.tb.body);
 		if (this.options.mode == MODE_PAGE) {
 			this.pageMenu = simpleClone(DIV, false).addClass("stable-pagemenu").inject(this.dCont);
-			if (this.options.rowsSelectable)
+			if (this.options.rowsSelectable && this.options.rowMultiSelect)
 				this.pageInfo = new Element("span", {"class": "pageinfo", "text": "0 row(s) selected."}).inject(this.pageMenu);
 			this.pageNext = simpleClone(DIV, false)
 				.addClass("nextlink-disabled")
@@ -907,7 +907,7 @@ var dxSTable = new Class({
 			this.fillRow(row, data, rdata.icon);
 			row.setProperties({
 				"title": data[0],
-				"id": id
+				"id": this.id + "-row-" + id
 			}).show(true);
 			rdata.rowIndex = count++;
 		}
@@ -931,11 +931,12 @@ var dxSTable = new Class({
 	},
 
 	"selectRow": function(ev, row) {
-		var id = row.id;
+		var id = row.id.replace(new RegExp("^" + this.id + "-row-", ""), "");
 		if (!(ev.isRightClick() && has(this.rowSel, id))) {
+			var multi = !!this.options.rowMultiSelect;
 			var ctrl = ((Browser.Platform.mac && ev.meta) || (!Browser.Platform.mac && ev.control));
 
-			if (ev.shift) {
+			if (multi && ev.shift) {
 				if (this.stSel === null) {
 					this.stSel = id;
 					this.rowSel[id] = 0;
@@ -954,7 +955,7 @@ var dxSTable = new Class({
 						this.selectedRows.push(key);
 					}
 				}
-			} else if (ctrl) {
+			} else if (multi && ctrl) {
 				this.stSel = id;
 				if (has(this.rowSel, id)) {
 					this.selectedRows.splice(this.rowSel[id], 1);
@@ -985,7 +986,7 @@ var dxSTable = new Class({
 
 	"addRow": function(data, id, icon, hidden, sortin) {
 		if (data.length != this.cols) return;
-		id = id || (this.id + "-row-" + (1000 + this.rows));
+		id = id || (1000 + this.rows);
 		this.rowData[id] = {
 			"data": data,
 			"icon": icon || "",
@@ -1254,18 +1255,19 @@ var dxSTable = new Class({
 	},
 
 	"refreshPageInfo": function() {
-		if (this.pageInfo) {
+		if (this.pageInfo && this.options.rowMultiSelect) {
 			this.pageInfo.set("text", this.selectedRows.length + " row(s) selected.");
 		}
 	},
 
 	"refreshSelection": function() {
 		if (!this.options.rowsSelectable) return;
+		var idprefix = new RegExp("^" + this.id + "-row-", "");
 		var len = this.tb.body.childNodes.length, i = 0;
 		while (i < len) {
 			var row = this.tb.body.childNodes[i];
 			var clsName = "", clsChanged = row.hasClass("selected");
-			if (has(this.rowSel, row.id)) {
+			if (has(this.rowSel, row.id.replace(idprefix, ""))) {
 				clsName += "selected";
 				clsChanged = !clsChanged;
 			}

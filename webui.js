@@ -72,6 +72,7 @@ var utWebUI = {
 	"propID": "", // selected torrent (single)
 	"trtTable": new dxSTable(),
 	"flsTable": new dxSTable(),
+	"advOptTable": new dxSTable(),
 	"trtColDefs": [
 		//[ colID, colWidth, colType, colDisabled = false, colAlign = ALIGN_AUTO, colText = "" ]
 		  ["name", 220, TYPE_STRING]
@@ -100,6 +101,11 @@ var utWebUI = {
 		, ["pcnt", 80, TYPE_NUM_PROGRESS]
 		, ["prio", 80, TYPE_NUMBER]
 	],
+	"advOptColDefs": [
+		//[ colID, colWidth, colType, colDisabled = false, colAlign = ALIGN_AUTO, colText = "" ]
+		  ["name", 225, TYPE_STRING]
+		, ["value", 220, TYPE_STRING]
+	],
 	"flsColPrioIdx": -1, // automatically calculated based on this.flsColDefs
 	"timer": 0,
 	"updateTimeout": null,
@@ -109,6 +115,79 @@ var utWebUI = {
 	"loaded": false,
 	"TOKEN": "",
 	"delActions": ["remove", "removedata"],
+
+	"advSettings": {
+		  "bt.allow_same_ip": ""
+		, "bt.ban_ratio": ""
+		, "bt.ban_threshold": ""
+		, "bt.compact_allocation": ""
+		, "bt.connect_speed": ""
+		, "bt.enable_tracker": ""
+		, "bt.graceful_shutdown": ""
+		, "bt.multiscrape": ""
+		, "bt.no_connect_to_services": ""
+		, "bt.no_connect_to_services_list": ""
+		, "bt.prio_first_last_piece": ""
+		, "bt.ratelimit_tcp_only": ""
+		, "bt.scrape_stopped": ""
+		, "bt.send_have_to_seed": ""
+		, "bt.set_sockbuf": ""
+		, "bt.shutdown_tracker_timeout": ""
+		, "bt.shutdown_upnp_timeout": ""
+		, "bt.tcp_rate_control": ""
+		, "bt.transp_disposition": ""
+		, "bt.use_ban_ratio": ""
+		, "bt.use_rangeblock": ""
+		, "dht.rate": ""
+		, "diskio.coalesce_write_size": ""
+		, "diskio.coalesce_writes": ""
+		, "diskio.flush_files": ""
+		, "diskio.no_zero": ""
+		, "diskio.smart_hash": ""
+		, "diskio.smart_sparse_hash": ""
+		, "diskio.sparse_files": ""
+		, "diskio.use_partfile": ""
+		, "gui.auto_restart": ""
+		, "gui.bypass_search_redirect": ""
+		, "gui.compat_diropen": ""
+		, "gui.default_del_action": ""
+		, "gui.delete_to_trash": ""
+		, "gui.graphic_progress": ""
+		, "gui.log_date": ""
+		, "gui.piecebar_progress": ""
+		, "gui.tall_category_list": ""
+		, "gui.update_rate": ""
+		, "ipfilter.enable": ""
+		, "isp.bep22": ""
+		, "net.bind_ip": ""
+		, "net.calc_overhead": ""
+		, "net.limit_excludeslocal": ""
+		, "net.low_cpu": ""
+		, "net.max_halfopen": ""
+		, "net.outgoing_ip": ""
+		, "net.outgoing_max_port": ""
+		, "net.outgoing_port": ""
+		, "net.upnp_tcp_only": ""
+		, "net.utp_receive_target_delay": ""
+		, "net.utp_target_delay": ""
+		, "net.wsaevents": ""
+		, "peer.disconnect_inactive": ""
+		, "peer.disconnect_inactive_interval": ""
+		, "peer.lazy_bitfield": ""
+		, "peer.resolve_country": ""
+		, "queue.dont_count_slow_dl": ""
+		, "queue.dont_count_slow_ul": ""
+		, "queue.prio_no_seeds": ""
+		, "queue.slow_dl_threshold": ""
+		, "queue.slow_ul_threshold": ""
+		, "queue.use_seed_peer_ratio": ""
+		, "rss.feed_as_default_label": ""
+		, "rss.smart_repack_filter": ""
+		, "rss.update_interval": ""
+		, "sys.enable_wine_hacks": ""
+		, "webui.allow_pairing": ""
+		, "webui.token_auth": ""
+	},
 
 	"init": function() {
 		this.config = $merge(this.defConfig, {"lang": ""}); // deep copy default config
@@ -746,64 +825,10 @@ var utWebUI = {
 					return;
 				}
 			}
-			var ignored = {
-				"activate_on_file": 1,
-				"ascon": 1,
-				"asdl": 1,
-				"asdns": 1,
-				"asip": 1,
-				"autostart": 1,
-				"boss_key": 1,
-				"check_assoc_on_start": 1,
-				"close_to_tray": 1,
-				"confirm_exit": 1,
-				"confirm_remove_tracker": 1,
-				"confirm_when_deleting": 1,
-				"ct_hist_comm": 1,
-				"ct_hist_flags": 1,
-				"ct_hist_skip": 1,
-				"extras": 1,
-				"gui.alternate_color": 1,
-				"gui.dblclick_dl": 1,
-				"gui.dblclick_seed": 1,
-				"gui.dlrate_menu": 1,
-				"gui.last_overview_tab-1.8": 1,
-				"gui.last_preference_tab-1.8": 1,
-				"gui.limits_in_statusbar": 1,
-				"gui.manual_ratemenu": 1,
-				"gui.sg_mode": 1,
-				"gui.speed_in_title": 1,
-				"gui.ulrate_menu": 1,
-				"gui.update_rate": 1,
-				"k": 1,
-				"language": 1,
-				"logger_mask": 1,
-				"mainwnd_split": 1,
-				"mainwnd_split_x": 1,
-				"minimize_to_tray": 1,
-				"notify_complete": 1,
-				"pd": 1,
-				"peer.resolve_country": 1,
-				"pu": 1,
-				"reload_freq": 1,
-				"resolve_peerips": 1,
-				"score": 1,
-				"show_add_dialog": 1,
-				"show_category": 1,
-				"show_details": 1,
-				"show_status": 1,
-				"show_tabicons": 1,
-				"show_toolbar": 1,
-				"tray.show": 1,
-				"tray.single_click": 1,
-				"tray_activate": 1,
-				"v": 1
-			};
 
 			var tcmode = 0;
 			for (var i = 0, j = json.settings.length; i < j; i++) {
 				var key = json.settings[i][0], typ = json.settings[i][1], val = json.settings[i][2];
-				if (key in ignored) continue;
 				if ((key == "webui.cookie") && !this.loaded) { // only load webui.cookie on startup
 					function safeCopy(objOrig, objNew) {
 						$each(objOrig, function (v, k) {
@@ -902,7 +927,42 @@ var utWebUI = {
 		}
 	},
 
+	"getAdvSetting": function(name) {
+		if (name in this.advOptTable.rowData) {
+			// TODO: Will need to rewrite bits of stable.js so that
+			//       there is a clean API for obtaining values...
+
+			return this.advOptTable.rowData[name].data[1]; // TODO: Remove hard-coded index...
+		}
+	},
+
+	"setAdvSetting": function(name, val) {
+		if ($defined(val) && (name in this.advOptTable.rowData)) {
+			// TODO: Will need to rewrite bits of stable.js so that
+			//       there is a clean API for setting values...
+
+			this.advOptTable.rowData[name].data[1] = val;
+			this.advOptTable.updateCell(name, 1); // TODO: Remove hard-coded index...
+		}
+	},
+
 	"loadSettings": function() {
+		// Advanced settings
+		this.advOptTable.clearSelection();
+		this.advOptSelect();
+
+		$each(this.advSettings, function(val, key) {
+			if ($defined(this.settings[key])) {
+				if ($defined(this.getAdvSetting(key))) {
+					this.setAdvSetting(key, this.settings[key]);
+				}
+				else {
+					this.advOptTable.addRow([key, this.settings[key]], key);
+				}
+			}
+		}, this);
+
+		// Other settings
 		for (var key in this.settings) {
 			var v = this.settings[key], ele = $(key);
 			if (!ele) continue;
@@ -920,6 +980,8 @@ var utWebUI = {
 			ele.fireEvent("change");
 			if (Browser.Engine.trident) ele.fireEvent("click");
 		}
+
+		// WebUI configuration
 		[
 			"showDetails",
 			"showCategories",
@@ -1029,8 +1091,8 @@ var utWebUI = {
 			hasChanged = true;
 		}
 
-		value = $("gui.graphic_progress").checked;
-		if (!!this.settings["gui.graphic_progress"] != value) {
+		value = this.getAdvSetting("gui.graphic_progress");
+		if ($defined(value) && !!this.settings["gui.graphic_progress"] != value) {
 			this.tableUseProgressBar(value);
 		}
 
@@ -1039,12 +1101,13 @@ var utWebUI = {
 		if (Browser.Engine.presto && hasChanged)
 			str = "&s=webui.cookie&v=" + JSON.encode(this.config);
 
-		resize = resize || (!!this.settings["gui.tall_category_list"] != $("gui.tall_category_list").checked);
+		value = this.getAdvSetting("gui.tall_category_list")
+		resize = resize || ($defined(value) && !!this.settings["gui.tall_category_list"] != value);
 
 		for (var key in this.settings) {
 			var ele = $(key);
 			if (!ele) continue;
-			v = this.settings[key];
+			var v = this.settings[key];
 			if (ele.type && (ele.type == "checkbox")) {
 				nv = ele.checked ? 1 : 0;
 			} else {
@@ -1069,6 +1132,21 @@ var utWebUI = {
 						"&s=multi_day_transfer_mode_dl&v=" + (nv == 1 ? 1 : 0) +
 						"&s=multi_day_transfer_mode_uldl&v=" + (nv == 2 ? 1 : 0);
 					continue;
+				}
+				str += "&s=" + key + "&v=" + encodeURIComponent(nv);
+			}
+		}
+
+		for (var key in this.advSettings) {
+			var nv = this.getAdvSetting(key);
+			if (!$defined(nv)) continue;
+			var v = this.settings[key];
+
+			if (v != nv) {
+				this.settings[key] = nv;
+
+				if ($type(nv) == "boolean") {
+					nv = nv ? 1 : 0;
 				}
 				str += "&s=" + key + "&v=" + encodeURIComponent(nv);
 			}
@@ -1874,7 +1952,108 @@ var utWebUI = {
 		this.setPriority(hash, (this.files[hash][fid][CONST.FILE_PRIORITY] + 1) % 4);
 	},
 
-	"restoreUI" : function(bc) {
+	"advOptDataToRow": function(data) {
+		return this.advOptColDefs.map(function(item) {
+			switch (item[0]) {
+				case "name":
+					return data[0];
+
+				case "value":
+					return data[2];
+			}
+		}, this);
+	},
+
+	"advOptFormatRow": function(values, index) {
+		var useidx = $chk(index);
+		var len = (useidx ? (index + 1) : values.length);
+
+/*
+		for (var i = (index || 0); i < len; i++) {
+			switch (this.advOptColDefs[i][0]) {
+				case "name":
+				case "value":
+					break;
+			}
+		}
+*/
+
+		if (useidx)
+			return values[index];
+		else
+			return values;
+	},
+
+	"advOptColReset": function() {
+		var config = {
+			  "colMask": 0
+			, "colOrder": this.advOptColDefs.map(function(item, idx) { return idx; })
+			, "colWidth": this.advOptColDefs.map(function(item, idx) { return item[1]; })
+		};
+
+		this.advOptColDefs.each(function(item, idx) { if (!!item[3]) config.colMask |= (1 << idx); });
+
+		this.advOptTable.setConfig(config);
+	},
+
+	"advOptSelect": function(ev, id) {
+		var val = this.getAdvSetting(id);
+		var contBool = $("dlgSettings-advBool-cont");
+		var contText = $("dlgSettings-advText-cont")
+
+		if ($defined(val)) {
+			// Item clicked
+			if ($type(val) == "boolean") {
+				contBool.setStyle("display", "inline");
+				contText.setStyle("display", "none");
+
+				$("dlgSettings-adv" + (val ? "True" : "False")).checked = true;
+			}
+			else {
+				contBool.setStyle("display", "none");
+				contText.setStyle("display", "inline");
+
+				$("dlgSettings-advText").value = val;
+			}
+		}
+		else {
+			// Item unclicked
+			contBool.setStyle("display", "none");
+			contText.setStyle("display", "none");
+		}
+	},
+
+	"advOptDblClk": function(id) {
+		var val = this.getAdvSetting(id);
+		if ($defined(val)) {
+			if ($type(val) == "boolean") {
+				val = !val;
+				this.setAdvSetting(id, val);
+				$("dlgSettings-adv" + (val ? "True" : "False")).checked = true;
+			}
+		}
+	},
+
+	"advOptChanged": function() {
+		var optIds = this.advOptTable.selectedRows;
+		if (optIds.length > 0) {
+			switch ($type(this.getAdvSetting(optIds[0]))) {
+				case "boolean":
+					this.setAdvSetting(optIds[0], $("dlgSettings-advTrue").checked);
+					break;
+
+				case "number":
+					this.setAdvSetting(optIds[0], parseInt($("dlgSettings-advText").value, 10));
+					break;
+
+				case "string":
+					this.setAdvSetting(optIds[0], $("dlgSettings-advText").value);
+					break;
+			}
+		}
+	},
+
+	"restoreUI": function(bc) {
 		if ((bc != false) && !confirm("Are you sure that you want to restore the interface?")) return;
 		//$("stg").hide();
 		$("msg").set("html", "Reloading...");
@@ -1940,12 +2119,14 @@ var utWebUI = {
 		this.config.maxRows = max;
 		this.trtTable.setConfig({"rowMaxCount": max});
 		this.flsTable.setConfig({"rowMaxCount": max});
+		this.advOptTable.setConfig({"rowMaxCount": max});
 	},
 
 	"tableUseAltColor": function(enable) {
 		this.config.alternateRows = enable;
 		this.trtTable.setConfig({"rowAlternate": enable});
 		this.flsTable.setConfig({"rowAlternate": enable});
+		this.advOptTable.setConfig({"rowAlternate": enable});
 	},
 
 	"tableUseProgressBar": function(enable) {
@@ -1956,7 +2137,7 @@ var utWebUI = {
 		this.flsTable.setConfig({"colType": flsProgCols.map(progFunc).associate(flsProgCols)});
 	},
 
-	"tabChange": function(id) {
+	"detPanelTabChange": function(id) {
 		if (id == "mainInfoPane-filesTab") {
 			if (this.torrentID == "") {
 				this.flsTable.calcSize();
@@ -1967,6 +2148,12 @@ var utWebUI = {
 			this.loadFiles.delay(20, this);
 		} else if (id == "mainInfoPane-speedTab") {
 			SpeedGraph.draw();
+		}
+	},
+	
+	"settingsPaneChange": function(id) {
+		if (id == "dlgSettings-Advanced") {
+			this.advOptTable.calcSize();
 		}
 	}/*,
 

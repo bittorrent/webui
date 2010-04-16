@@ -29,5 +29,5 @@ div#mainToolbar a:hover span {
 }
 
 #modalbg {
-	filter: alpha(opacity=70);
+	filter: alpha(opacity=60);
 }
