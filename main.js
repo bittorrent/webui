@@ -119,6 +119,7 @@ function setupGlobalEvents() {
 
 			"ctrl o": function() { DialogManager.show("Add"); },
 			"ctrl p": function() { utWebUI.showSettings(); },
+			"ctrl u": function() { DialogManager.show("AddURL"); },
 			"f2": function() { DialogManager.show("About"); },
 			"f4": function() { utWebUI.toggleToolbar(); },
 			"f6": function() { utWebUI.toggleDetPanel(); },
@@ -138,11 +139,13 @@ function setupGlobalEvents() {
 			keyBindings["meta e"] = keyBindings["ctrl e"];
 			keyBindings["meta o"] = keyBindings["ctrl o"];
 			keyBindings["meta p"] = keyBindings["ctrl p"];
+			keyBindings["meta u"] = keyBindings["ctrl u"];
 
 			delete keyBindings["ctrl a"];
 			delete keyBindings["ctrl e"];
 			delete keyBindings["ctrl o"];
 			delete keyBindings["ctrl p"];
+			delete keyBindings["ctrl u"];
 		}
 
 		document.addEvent("keydown", function(ev) {
