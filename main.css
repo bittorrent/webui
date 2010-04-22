@@ -376,6 +376,7 @@ td.disabled, label.disabled, span.disabled, div.disabled {
 	background-color: #D0D0D0;
 	float: left;
 	margin: 6px 0 0 0;
+	width: 0; /* NOTE: This fixes poor reflow under FF/IE when zooming out */
 }
 
 ul#mainInfoPane-tabs {

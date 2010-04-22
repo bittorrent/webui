@@ -1056,14 +1056,14 @@ var utWebUI = {
 
 		value = $("webui.showCategories").checked;
 		if (this.config.showCategories != value) {
-			this.toggleCatPanel(value, true);
+			this.toggleCatPanel(value);
 			resize = true;
 			hasChanged = true;
 		}
 
 		value = $("webui.showDetails").checked;
 		if (this.config.showDetails != value) {
-			this.toggleDetPanel(value, true);
+			this.toggleDetPanel(value);
 			resize = true;
 			hasChanged = true;
 		}
@@ -2067,30 +2067,22 @@ var utWebUI = {
 		this.request("action=setsetting&s=webui.cookie&v=" + JSON.encode(this.config), callback || null, async || false);
 	},
 
-	"toggleCatPanel": function(show, noresize) {
+	"toggleCatPanel": function(show) {
 		if (!$defined(show)) {
 			show = !this.config.showCategories;
 		}
 
 		$("mainCatList")[show ? "show" : "hide"]();
 		this.config.showCategories = show;
-
-		if (!noresize) {
-			resizeUI();
-		}
 	},
 
-	"toggleDetPanel": function(show, noresize) {
+	"toggleDetPanel": function(show) {
 		if (!$defined(show)) {
 			show = !this.config.showDetails;
 		}
 
 		$("mainInfoPane")[show ? "show" : "hide"]();
 		this.config.showDetails = show;
-
-		if (!noresize) {
-			resizeUI();
-		}
 	},
 
 	"toggleSearchBar": function(show) {
@@ -2101,17 +2093,13 @@ var utWebUI = {
 		$("mainToolbar-searchbar")[show ? "show" : "hide"]();
 	},
 
-	"toggleToolbar": function(show, noresize) {
+	"toggleToolbar": function(show) {
 		if (!$defined(show)) {
 			show = !this.config.showToolbar;
 		}
 
 		$("mainToolbar")[show ? "show" : "hide"]();
 		this.config.showToolbar = show;
-
-		if (!noresize) {
-			resizeUI();
-		}
 	},
 
 	"tableSetMaxRows": function(max) {

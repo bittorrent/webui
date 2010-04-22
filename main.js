@@ -121,9 +121,30 @@ function setupGlobalEvents() {
 			"ctrl p": function() { utWebUI.showSettings(); },
 			"ctrl u": function() { DialogManager.show("AddURL"); },
 			"f2": function() { DialogManager.show("About"); },
-			"f4": function() { utWebUI.toggleToolbar(); },
-			"f6": function() { utWebUI.toggleDetPanel(); },
-			"f7": function() { utWebUI.toggleCatPanel(); },
+
+			"f4": function() {
+				utWebUI.toggleToolbar();
+
+				resizeUI();
+				if (Browser.Engine.presto)
+					utWebUI.saveConfig(true);
+			},
+
+			"f6": function() {
+				utWebUI.toggleDetPanel();
+
+				resizeUI();
+				if (Browser.Engine.presto)
+					utWebUI.saveConfig(true);
+			},
+
+			"f7": function() {
+				utWebUI.toggleCatPanel();
+
+				resizeUI();
+				if (Browser.Engine.presto)
+					utWebUI.saveConfig(true);
+			},
 
 			"esc": function() {
 				if (DialogManager.showing.length > 0) {
@@ -303,15 +324,14 @@ function resizeUI(hDiv, vDiv) {
 
 	// Resize detailed info pane
 	if (showDet) {
-		var dw = ww - (3 + (showCat && tallCat ? hDiv + 7 : 0)) - (badIE ? 2 : 0);
-		$("mainInfoPane").setStyle("width", dw);
+		var dw = ww - (showCat && tallCat ? hDiv + 7 : 0) - (badIE ? 2 : 0);
 		if (vDiv) {
 			var dh = wh - vDiv - $("mainInfoPane-tabs").getSize().y - 16;
-			$("mainInfoPane-content").setStyles({"width": dw - 5, "height": dh});
-			$("mainInfoPane-generalTab").setStyles({"width": dw - 7, "height": dh - 2});
-			SpeedGraph.resize(dw - 5, dh);
-			$("mainInfoPane-loggerTab").setStyles({"width": dw - 11, "height": dh - 6});
-			utWebUI.flsTable.resizeTo(dw - 7, dh - 2);
+			$("mainInfoPane-content").setStyles({"width": dw - 8, "height": dh});
+			$("mainInfoPane-generalTab").setStyles({"width": dw - 10, "height": dh - 2});
+			SpeedGraph.resize(dw - 8, dh);
+			$("mainInfoPane-loggerTab").setStyles({"width": dw - 14, "height": dh - 6});
+			utWebUI.flsTable.resizeTo(dw - 10, dh - 2);
 		}
 	}
 
@@ -326,8 +346,8 @@ function resizeUI(hDiv, vDiv) {
 
 	if ($("mainVDivider")) {
 		$("mainVDivider").setStyles({
-			"width": ww,
-			"left": tallCat ? hDiv + 7 : 0,
+			"width": tallCat && showCat ? ww - (hDiv + 7) : ww,
+			"left": tallCat && showCat ? hDiv + 7 : 0,
 			"top":  showDet ? vDiv + 2 : -10
 		});
 	}
