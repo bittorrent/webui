@@ -1030,7 +1030,7 @@ var utWebUI = {
 
 		value = $("webui.confirmDelete").checked;
 		if (this.config.confirmDelete != value) {
-			this.config.confirmDelete = value & 1;
+			this.config.confirmDelete = value;
 			hasChanged = true;
 		}
 
