@@ -1,5 +1,6 @@
 var CONST = {
 	VERSION: "0.371"
+	, BUILD: ""
 
 	//----------------------------------------
 	// TORRENT DATA CONSTANTS
