@@ -20,25 +20,16 @@ var DialogManager = {
 		$(id).addEvent("mousedown", function(ev) {
 			var cls = ev.target.className;
 			if (cls.contains("dlg-head", " ") || cls.contains("dlg-close", " ")) return;
-			this.setStyle("zIndex", ++DialogManager.winZ);
+			$me.bringToFront(oid);
 		}).getElement("a").addEvent("click", function(ev) {
 			ev.stop();
 			$me.hide(oid);
 		});
-		var dragElement = null;
 		new Drag(id, {
 			"handle": id + "-head",
 			"modifiers": {"x": "left", "y": "top"},
 			"snap": 2,
 			"onBeforeStart": function() {
-			},
-			"onStart": function() {
-				this.element.show();
-			},
-			"onCancel": function() {
-				$me.bringToFront(oid);
-			},
-			"onComplete": function() {
 				$me.bringToFront(oid);
 			}
 		});
@@ -48,7 +39,8 @@ var DialogManager = {
 		this.bringToFront(id);
 		if (this.items[id].modal)
 			$("modalbg").show();
-		$("dlg" + id).setStyle("zIndex", ++this.winZ).centre();
+		if (this.isOffScreen(id))
+			$("dlg" + id).centre();
 	},
 
 	"hide": function(id) {
@@ -56,6 +48,8 @@ var DialogManager = {
 		$("dlg" + id).hide();
 		if (this.items[id].modal)
 			$("modalbg").hide();
+		if (this.showing[0])
+			this.bringToFront(this.showing[0]);
 	},
 
 	"hideTopMost": function(fireClose) {
@@ -66,10 +60,25 @@ var DialogManager = {
 			$("dlg" + id).getElement("a").fireEvent("click", { stop: $empty });
 	},
 
+	"isOffScreen": function(id) {
+		var threshX = 150, threshY = 50,
+			doc = document.getSize(),
+			head = $("dlg" + id + "-head").getCoordinates();
+
+		return (
+			(head.left > doc.x - threshX)
+		 || (head.right < threshX)
+		 || (head.top > doc.y - threshY)
+		 || (head.bottom < threshY)
+		);
+	},
+
 	"bringToFront": function(id) {
 		if (this.showing.contains(id))
 			this.showing = this.showing.erase(id);
+		if (this.showing[0])
+			$("dlg" + this.showing[0]).removeClass("dlg-top");
 		this.showing.unshift(id);
-		$("dlg" + id).setStyle("zIndex", ++this.winZ);
+		$("dlg" + id).setStyle("zIndex", ++this.winZ).addClass("dlg-top");
 	}
 };

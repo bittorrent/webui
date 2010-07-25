@@ -529,8 +529,11 @@ li#tab_mainInfoPane-loggerTab span {
  **************************************************/
 
 .dlg-window {
+	-moz-border-radius: 5px 5px 0 0;
+	-webkit-border-radius: 5px 5px 0 0;
 	background-color: #FFFFFF;
-	border: 2px solid #909090;
+	border: 2px solid #C0C0C0;
+	border-radius: 5px 5px 0 0;
 	color: #000000;
 	display: none;
 	left: 0px;
@@ -541,25 +544,28 @@ li#tab_mainInfoPane-loggerTab span {
 }
 
 .dlg-head {
-	background: #F5F5F5 url(./images/blank.gif) no-repeat 4px 4px;
-	border-bottom: 1px solid #909090;
-	color: #000000;
+	-moz-border-radius: 4px 4px 0 0;
+	-webkit-border-radius: 4px 4px 0 0;
+	background: #F5F5F5 url(./images/blank.gif) no-repeat 3px 3px;
+	border-bottom: 1px solid #C0C0C0;
+	border-radius: 4px 4px 0 0;
+	color: #A0A0A0;
 	font-weight: bold;
-	height: 20px;
+	height: 19px;
 	left: 0;
-	line-height: 20px;
+	line-height: 19px;
 	overflow: hidden;
-	padding: 2px 24px;
+	padding: 2px 22px;
 	position: absolute;
 	right: 0;
 	top: 0;
 /*	white-space: nowrap;*/
-	width: 100%;
+/*	width: 100%; */
 	z-index: 1;
 }
 
 .dlg-body {
-	margin: 25px 0 30px 0;
+	margin: 24px 0 28px 0;
 	padding: 5px;
 	position: relative;
 }
@@ -575,8 +581,8 @@ li#tab_mainInfoPane-loggerTab span {
 .dlg-close {
 	z-index: 2;
 	position: absolute;
-	top: 5px;
-	right: 5px;
+	top: 4px;
+	right: 4px;
 	border: 1px solid #FF0000;
 	width: 14px; height: 14px;
 	border: 0;
@@ -593,12 +599,22 @@ li#tab_mainInfoPane-loggerTab span {
 	background: #F0F0F0;
 	border-top: 1px solid #D0D0D0;
 	bottom: 0;
-	height: 20px;
-	padding: 5px;
+	height: 19px;
+	padding: 4px;
 	position: absolute;
 	right: 0;
 	text-align: right;
 	width: 100%;
+}
+
+.dlg-top {
+	border-color: #909090;
+}
+
+.dlg-top .dlg-head {
+	background-color: #E0E0E0;
+	border-color: #909090;
+	color: #202020;
 }
 
 
@@ -651,7 +667,7 @@ li#tab_mainInfoPane-loggerTab span {
 }
 
 #dlgAdd-head {
-	background-image: url(./images/world.png);
+	background-image: url(./images/add.png);
 }
 
 #dlgAdd .dlg-body .fbox {
@@ -1013,6 +1029,7 @@ input[id="proxy.password"] { width: 70px; }
 #dlgSettings-advText {
 	width: 340px;
 }
+
 
 /**************************************************
  * MENU
