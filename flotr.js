@@ -636,7 +636,10 @@ var Flotr = (function(){
 		 */
 		function calculateRange(axis, axisOptions) {
 			var min = axisOptions.min != null ? axisOptions.min : axis.datamin;
-			var max = axisOptions.max != null ? axisOptions.max : axis.datamax;
+// uTorrent WebUI Patch - BEGIN
+//			var max = axisOptions.max != null ? axisOptions.max : axis.datamax;
+			var max = axisOptions.max != null ? axisOptions.max : Math.max(min + (axisOptions.minMaxTickSize || 0), axis.datamax);
+// uTorrent WebUI Patch - END
 			if(max - min == 0.0){
 				var widen = (max == 0.0) ? 1.0 : 0.01;
 				min -= widen;

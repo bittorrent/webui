@@ -640,7 +640,7 @@ li#tab_mainInfoPane-loggerTab span {
 }
 
 #dlgAbout-credits div {
-	margin-bottom: 5px;
+	margin: 2px 5px 5px 5px;
 }
 
 #dlgAbout #mootools {

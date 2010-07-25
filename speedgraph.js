@@ -34,7 +34,7 @@ var SpeedGraph = {
 			},
 			"yaxis" : {
 				"min": 0,
-				"minTickSize": 5 * 1024,
+				"minMaxTickSize": 512,
 				"tickFormatter": function(n) { return (parseInt(n).toFileSize() + g_perSec); }
 			},
 			"grid": {
