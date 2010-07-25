@@ -7,7 +7,6 @@
 
 var DialogManager = {
 
-	"dragMask": null,
 	"winZ": 500,
 	"items": {},
 	"showing": [],
@@ -32,34 +31,14 @@ var DialogManager = {
 			"modifiers": {"x": "left", "y": "top"},
 			"snap": 2,
 			"onBeforeStart": function() {
-				var size = this.element.getSize(), pos = this.element.getPosition();
-				$me.dragMask.setStyles({
-					"width": size.x - 4,
-					"height": size.y - 4,
-					"left": pos.x,
-					"top": pos.y,
-					"zIndex": ++DialogManager.winZ
-				});
-				dragElement = this.element;
-				this.element = $me.dragMask;
 			},
 			"onStart": function() {
 				this.element.show();
 			},
 			"onCancel": function() {
-				this.element = dragElement;
 				$me.bringToFront(oid);
-				$me.dragMask.setStyle("display", "none");
 			},
 			"onComplete": function() {
-				this.element = dragElement;
-				dragElement = null;
-				var pos = $me.dragMask.getPosition();
-				$me.dragMask.setStyle("display", "none");
-				this.element.setStyles({
-					"left": pos.x,
-					"top": pos.y
-				});
 				$me.bringToFront(oid);
 			}
 		});

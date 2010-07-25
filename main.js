@@ -544,8 +544,6 @@ function setupUserInterface() {
 	// DIALOG MANAGER
 	//--------------------------------------------------
 
-	DialogManager.dragMask = $("dragmask");
-
 	["About", "Add", "AddURL", "DelTor", "Label", "Props", "Settings"].each(function(k) {
 		var isModal = (["DelTor", "Label", "Props"].indexOf(k) >= 0);
 		DialogManager.add(k, isModal);
