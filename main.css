@@ -530,10 +530,15 @@ li#tab_mainInfoPane-loggerTab span {
 
 .dlg-window {
 	-moz-border-radius: 5px 5px 0 0;
+	-moz-box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.15);
 	-webkit-border-radius: 5px 5px 0 0;
+	-webkit-box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.15);
 	background-color: #FFFFFF;
 	border: 2px solid #C0C0C0;
+	border-bottom-color: #A0A0A0 !important;
 	border-radius: 5px 5px 0 0;
+	border-right-color: #A0A0A0 !important;
+	box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.15);
 	color: #000000;
 	display: none;
 	left: 0px;
@@ -608,12 +613,17 @@ li#tab_mainInfoPane-loggerTab span {
 }
 
 .dlg-top {
-	border-color: #909090;
+	-moz-box-shadow: 5px 3px 5px rgba(0, 0, 0, 0.25);
+	-webkit-box-shadow: 5px 3px 5px rgba(0, 0, 0, 0.25);
+	border-color: #989898;
+	border-bottom-color: #707070 !important;
+	border-right-color: #707070 !important;
+	box-shadow: 5px 3px 5px rgba(0, 0, 0, 0.25);
 }
 
 .dlg-top .dlg-head {
 	background-color: #E0E0E0;
-	border-color: #909090;
+	border-color: #989898;
 	color: #202020;
 }
 

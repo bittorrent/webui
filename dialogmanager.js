@@ -11,10 +11,10 @@ var DialogManager = {
 	"items": {},
 	"showing": [],
 
-	"add": function(id, isModal) {
+	"add": function(id, isModal, showCB) {
 		if (has(this.items, id)) return;
 		isModal = !!isModal;
-		this.items[id] = {"modal": isModal};
+		this.items[id] = {"modal": isModal, "onShow": showCB};
 		var oid = id, $me = this;
 		id = "dlg" + id;
 		$(id).addEvent("mousedown", function(ev) {
@@ -41,6 +41,8 @@ var DialogManager = {
 			$("modalbg").show();
 		if (this.isOffScreen(id))
 			$("dlg" + id).centre();
+		if (this.items[id].onShow)
+			this.items[id].onShow();
 	},
 
 	"hide": function(id) {
