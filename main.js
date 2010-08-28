@@ -211,9 +211,8 @@ function resizeUI(hDiv, vDiv) {
 		minTrtW = uiLimits.minTrtW;
 
 	var badIE = (Browser.Engine.trident && Browser.Engine.version <= 4);
-	var showCat = true, showDet = false, showTB = false, tallCat = false;
+	var showCat = true, showDet = true, showTB = false, tallCat = false;
 	if (!isGuest) {
-		var confi
 		showCat = config.showCategories;
 		showDet = config.showDetails;
 		showTB = config.showToolbar;
@@ -299,16 +298,20 @@ function resizeUI(hDiv, vDiv) {
 		}
 	}
 
-	// NOTE: We need to explicitly set a width for the torrent jobs list only
-	//       for IE6 because that browser crashes otherwise. We don't set the
-	//       width explicitly for modern browsers because modern browsers have
-	//       full page zoom, so if we specify an exact pixel width, the browser
-	//       may not map the "virtual" pixels (the number of pixels the web
-	//       application thinks it has due to zooming) to "physical" pixels in
-	//       a manner such that the torrent jobs list would fit perfectly side
-	//       by side with the category list.
+	utWebUI.trtTable.resizeTo(trtw, trth);
+	if (!badIE) {
+		// NOTE: We undefine the explicitly set width for modern browsers that have
+		//       full page zoom, because if we specify an exact pixel width, the
+		//       browser may not map the "virtual" pixels (the number of pixels the
+		//       web application thinks it has due to zooming) to "physical" pixels
+		//       in a manner such that the torrent jobs list would fit perfectly
+		//       side by side with the category list.
+		//
+		//       An actual size is specified above in order to force the torrent
+		//       list to resize when the horizontal divider is resized.
 
-	utWebUI.trtTable.resizeTo((badIE ? trtw : undefined), trth);
+		utWebUI.trtTable.resizeTo(undefined, trth);
+	}
 
 	// Resize category/label list
 	if (showCat) {
@@ -402,10 +405,40 @@ function setupUserInterface() {
 		"onDblClick": utWebUI.trtDblClk.bind(utWebUI)
 	}, utWebUI.defConfig.torrentTable));
 
-	if (isGuest) {
-		resizeUI();
-		return;
-	}
+	//--------------------------------------------------
+	// DETAILED INFO PANE
+	//--------------------------------------------------
+
+	// -- Tabs
+
+	utWebUI.tabs = new Tabs("mainInfoPane-tabs", {
+		"tabs": {
+			  "mainInfoPane-generalTab" : ""
+			, "mainInfoPane-filesTab"   : ""
+			, "mainInfoPane-speedTab"   : ""
+			, "mainInfoPane-loggerTab"  : ""
+		},
+		"onChange": utWebUI.detPanelTabChange.bind(utWebUI)
+	}).draw().show("mainInfoPane-generalTab");
+
+	// -- Files Tab
+
+	utWebUI.flsTable.create("mainInfoPane-filesTab", utWebUI.flsColDefs, $extend({
+		"format": utWebUI.flsFormatRow.bind(utWebUI),
+		"onColReset": utWebUI.flsColReset.bind(utWebUI),
+		"onColResize": utWebUI.flsColResize.bind(utWebUI),
+		"onColMove": utWebUI.flsColMove.bind(utWebUI),
+		"onColToggle": utWebUI.flsColToggle.bind(utWebUI),
+		"onSort": utWebUI.flsSort.bind(utWebUI),
+		"onSelect": utWebUI.flsSelect.bind(utWebUI),
+		"onRefresh": function() { if (this.torrentID != "") utWebUI.getFiles(utWebUI.torrentID, true); },
+		"onDblClick": utWebUI.flsDblClk.bind(utWebUI),
+		"refreshable": true
+	}, utWebUI.defConfig.fileTable));
+
+	// -- Speed Tab
+
+	SpeedGraph.init("mainInfoPane-speedTab");
 
 	//--------------------------------------------------
 	// DIVIDERS
@@ -428,6 +461,15 @@ function setupUserInterface() {
 				utWebUI.saveConfig(true);
 		}
 	});
+
+	//--------------------------------------------------
+	// NON-GUEST SETUP
+	//--------------------------------------------------
+
+	if (isGuest) {
+		resizeUI();
+		return;
+	}
 
 	//--------------------------------------------------
 	// TOOLBAR
@@ -504,41 +546,6 @@ function setupUserInterface() {
 			return false;
 		}
 	});
-
-	//--------------------------------------------------
-	// DETAILED INFO PANE
-	//--------------------------------------------------
-
-	// -- Tabs
-
-	utWebUI.tabs = new Tabs("mainInfoPane-tabs", {
-		"tabs": {
-			  "mainInfoPane-generalTab" : ""
-			, "mainInfoPane-filesTab"   : ""
-			, "mainInfoPane-speedTab"   : ""
-			, "mainInfoPane-loggerTab"  : ""
-		},
-		"onChange": utWebUI.detPanelTabChange.bind(utWebUI)
-	}).draw().show("mainInfoPane-generalTab");
-
-	// -- Files Tab
-
-	utWebUI.flsTable.create("mainInfoPane-filesTab", utWebUI.flsColDefs, $extend({
-		"format": utWebUI.flsFormatRow.bind(utWebUI),
-		"onColReset": utWebUI.flsColReset.bind(utWebUI),
-		"onColResize": utWebUI.flsColResize.bind(utWebUI),
-		"onColMove": utWebUI.flsColMove.bind(utWebUI),
-		"onColToggle": utWebUI.flsColToggle.bind(utWebUI),
-		"onSort": utWebUI.flsSort.bind(utWebUI),
-		"onSelect": utWebUI.flsSelect.bind(utWebUI),
-		"onRefresh": function() { if (this.torrentID != "") utWebUI.getFiles(utWebUI.torrentID, true); },
-		"onDblClick": utWebUI.flsDblClk.bind(utWebUI),
-		"refreshable": true
-	}, utWebUI.defConfig.fileTable));
-
-	// -- Speed Tab
-
-	SpeedGraph.init("mainInfoPane-speedTab");
 
 	//--------------------------------------------------
 	// DIALOG MANAGER
@@ -1034,24 +1041,6 @@ function loadLangStrings(reload) {
 		}
 	});
 
-	if (isGuest) return;
-
-	//--------------------------------------------------
-	// TOOLBAR
-	//--------------------------------------------------
-
-	_loadStrings("title", {
-		  "add"       : "OV_TB_ADDTORR"
-		, "addurl"    : "OV_TB_ADDURL"
-		, "remove"    : "OV_TB_REMOVE"
-		, "start"     : "OV_TB_START"
-		, "pause"     : "OV_TB_PAUSE"
-		, "stop"      : "OV_TB_STOP"
-		, "queueup"   : "OV_TB_QUEUEUP"
-		, "queuedown" : "OV_TB_QUEUEDOWN"
-		, "setting"   : "OV_TB_PREF"
-	});
-
 	//--------------------------------------------------
 	// DETAILED INFO PANE
 	//--------------------------------------------------
@@ -1102,6 +1091,28 @@ function loadLangStrings(reload) {
 		, lang[CONST.OV_COL_DOWNSPD]
 	);
 	SpeedGraph.draw();
+
+	//--------------------------------------------------
+	// NON-GUEST SETUP
+	//--------------------------------------------------
+
+	if (isGuest) return;
+
+	//--------------------------------------------------
+	// TOOLBAR
+	//--------------------------------------------------
+
+	_loadStrings("title", {
+		  "add"       : "OV_TB_ADDTORR"
+		, "addurl"    : "OV_TB_ADDURL"
+		, "remove"    : "OV_TB_REMOVE"
+		, "start"     : "OV_TB_START"
+		, "pause"     : "OV_TB_PAUSE"
+		, "stop"      : "OV_TB_STOP"
+		, "queueup"   : "OV_TB_QUEUEUP"
+		, "queuedown" : "OV_TB_QUEUEDOWN"
+		, "setting"   : "OV_TB_PREF"
+	});
 
 	//--------------------------------------------------
 	// ALL DIALOGS

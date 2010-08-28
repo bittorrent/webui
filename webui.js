@@ -52,7 +52,6 @@ var utWebUI = {
 		"hSplit": -1,
 		"vSplit": -1,
 		"torrentTable": {
-			"rowsSelectable": !isGuest,
 			"colMask": 0x0000, // automatically calculated based on this.flsColDefs
 			"colOrder": [], // automatically calculated based on this.trtColDefs
 			"colWidth": [], // automatically calculated based on this.trtColDefs
@@ -631,9 +630,7 @@ var utWebUI = {
 
 		this.updateTimeout = this.update.delay(this.getInterval(), this);
 		this.updateDetails();
-		if (!isGuest) {
-			SpeedGraph.addData(this.totalUL, this.totalDL);
-		}
+		SpeedGraph.addData(this.totalUL, this.totalDL);
 
 		this.updateSpeed();
 	},
@@ -1390,7 +1387,7 @@ var utWebUI = {
 	},
 
 	"trtSelect": function(ev, id) {
-		if (ev.isRightClick()) {
+		if (!isGuest && ev.isRightClick()) {
 			if (this.trtTable.selectedRows.length > 0)
 				this.showMenu.delay(0, this, [ev, id]);
 			if (this.config.showDetails && (this.trtTable.selectedRows.length == 1))
@@ -1779,7 +1776,7 @@ var utWebUI = {
 	},
 
 	"showFileMenu": function(ev) {
-		if (!ev.isRightClick()) return;
+		if (isGuest || !ev.isRightClick()) return;
 
 		var id = this.torrentID;
 		var menuItems = [];
@@ -2064,6 +2061,7 @@ var utWebUI = {
 	},
 
 	"saveConfig": function(async, callback) {
+		if (isGuest) return;
 		this.request("action=setsetting&s=webui.cookie&v=" + JSON.encode(this.config), callback || null, async || false);
 	},
 
