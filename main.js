@@ -219,7 +219,7 @@ function resizeUI(hDiv, vDiv) {
 		tallCat = !!utWebUI.settings["gui.tall_category_list"];
 	}
 
-	var th = (showTB ? $("mainToolbar").getSize().y + 5 : 0);
+	var th = (showTB ? $("mainToolbar").getSize().y : 0);
 
 	if (manualH) {
 		hDiv -= 2;
@@ -261,7 +261,7 @@ function resizeUI(hDiv, vDiv) {
 	}
 
 	// Resize torrent list
-	var trtw = ww - (hDiv + 2 + (showCat ? 7 : 0)) - (badIE ? 2 : 0),
+	var trtw = ww - (hDiv + 2 + (showCat ? 5 : 0)) - (badIE ? 2 : 0),
 		trth = vDiv - (th + (showDet ? 0 : 2)) - (badIE ? 1 : 0);
 
 	if (showCat) {
@@ -327,9 +327,9 @@ function resizeUI(hDiv, vDiv) {
 
 	// Resize detailed info pane
 	if (showDet) {
-		var dw = ww - (showCat && tallCat ? hDiv + 7 : 0) - (badIE ? 2 : 0);
+		var dw = ww - (showCat && tallCat ? hDiv + 5 : 0) - (badIE ? 2 : 0);
 		if (vDiv) {
-			var dh = wh - vDiv - $("mainInfoPane-tabs").getSize().y - 16;
+			var dh = wh - vDiv - $("mainInfoPane-tabs").getSize().y - 14;
 			$("mainInfoPane-content").setStyles({"width": dw - 8, "height": dh});
 			$("mainInfoPane-generalTab").setStyles({"width": dw - 10, "height": dh - 2});
 			SpeedGraph.resize(dw - 8, dh);
@@ -349,8 +349,8 @@ function resizeUI(hDiv, vDiv) {
 
 	if ($("mainVDivider")) {
 		$("mainVDivider").setStyles({
-			"width": tallCat && showCat ? ww - (hDiv + 7) : ww,
-			"left": tallCat && showCat ? hDiv + 7 : 0,
+			"width": tallCat && showCat ? ww - (hDiv + 5) : ww,
+			"left": tallCat && showCat ? hDiv + 5 : 0,
 			"top":  showDet ? vDiv + 2 : -10
 		});
 	}
@@ -524,6 +524,13 @@ function setupUserInterface() {
 	});
 
 	$("search").addEvents({
+		"mousedown": function(ev) {
+			if (ev.isRightClick()) {
+				utWebUI.searchMenuShow(this);
+			}
+			ev.stop();
+			return false;
+		},
 		"click": function(ev) {
 			utWebUI.searchExecute();
 			ev.stop();
@@ -536,8 +543,12 @@ function setupUserInterface() {
 	});
 
 	$("searchsel").addEvents({
-		"click": function(ev) {
+		"mousedown": function(ev) {
 			utWebUI.searchMenuShow(this);
+			ev.stop();
+			return false;
+		},
+		"click": function(ev) {
 			ev.stop();
 			return false;
 		},
