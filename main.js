@@ -409,9 +409,9 @@ function setupUserInterface() {
 	// DETAILED INFO PANE
 	//--------------------------------------------------
 
-	// -- Tabs
+	// -- Main Tabs
 
-	utWebUI.tabs = new Tabs("mainInfoPane-tabs", {
+	utWebUI.mainTabs = new Tabs("mainInfoPane-tabs", {
 		"tabs": {
 			  "mainInfoPane-generalTab" : ""
 			, "mainInfoPane-filesTab"   : ""
@@ -586,7 +586,7 @@ function setupUserInterface() {
 
 	// -- Upload Frame
 
-	var targfrm = new IFrame({
+	var uploadfrm = new IFrame({
 		"id": "uploadfrm",
 		"src": "about:blank",
 		"styles": {
@@ -609,7 +609,7 @@ function setupUserInterface() {
 		}
 	}).inject(document.body);
 
-	$("dlgAdd-form").set("target", targfrm.get("id"));
+	$("dlgAdd-form").set("target", uploadfrm.get("id"));
 
 	//--------------------------------------------------
 	// ADD URL DIALOG
@@ -870,7 +870,7 @@ function setupUserInterface() {
 	$("dlgSettings-advTrue").addEvent("click", utWebUI.advOptChanged.bind(utWebUI));
 	$("dlgSettings-advFalse").addEvent("click", utWebUI.advOptChanged.bind(utWebUI));
 
-	utWebUI.advOptTable.resizeTo(465, 300); // TODO: CLEANUP
+	utWebUI.advOptTable.resizeTo(445, 300); // TODO: CLEANUP
 
 	// -- Linked Controls
 
@@ -1059,7 +1059,7 @@ function loadLangStrings(reload) {
 	// -- Tab Titles
 
 	var tstr = lang[CONST.OV_TABS].split("||");
-	utWebUI.tabs.setNames({
+	utWebUI.mainTabs.setNames({
 		  "mainInfoPane-generalTab" : tstr[0]
 		, "mainInfoPane-filesTab"   : tstr[4]
 		, "mainInfoPane-speedTab"   : tstr[5]

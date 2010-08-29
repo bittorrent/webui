@@ -102,8 +102,8 @@ var utWebUI = {
 	],
 	"advOptColDefs": [
 		//[ colID, colWidth, colType, colDisabled = false, colAlign = ALIGN_AUTO, colText = "" ]
-		  ["name", 225, TYPE_STRING]
-		, ["value", 220, TYPE_STRING]
+		  ["name", 215, TYPE_STRING]
+		, ["value", 210, TYPE_STRING]
 	],
 	"flsColPrioIdx": -1, // automatically calculated based on this.flsColDefs
 	"timer": 0,
@@ -298,7 +298,7 @@ var utWebUI = {
 			this.clearDetails();
 		}
 
-		this.getTorrents("action=" + action + "&hash=" + hashes.join("&hash="));
+		this.getList("action=" + action + "&hash=" + hashes.join("&hash="));
 	},
 
 	"getHashes": function(act) {
@@ -430,13 +430,13 @@ var utWebUI = {
 		this.perform("recheck");
 	},
 
-	"getTorrents": function(qs) {
+	"getList": function(qs) {
 		$clear(this.updateTimeout);
 		this.timer = $time();
 		qs = qs || "";
 		if (qs != "")
 			qs += "&";
-		this.request(qs + "list=1&cid=" + this.cacheID + "&getmsg=1", this.loadTorrents);
+		this.request(qs + "list=1&cid=" + this.cacheID + "&getmsg=1", this.loadList);
 	},
 
 	"getStatusInfo": function(state, done) {
@@ -470,48 +470,65 @@ var utWebUI = {
 		return res;
 	},
 
-	"loadTorrents": function(json) {
-		var torrents = [];
-		if (!has(json, "torrents")) {
-			torrents = json.torrentp;
-			delete json.torrentp;
-		} else {
-			torrents = json.torrents;
-			delete json.torrents;
+	"loadList": function(json) {
+		function extractLists(fullListName, changedListName, removedListName, key, exList) {
+			var extracted = {};
 
-			// What:
-			//   Remove torrents that no longer exist, for the situation in which
-			//   the backend sends 'torrents' even though a cid was sent with the
-			//   list=1 request.
-			// When:
-			//   This happens when the sent cid is not valid, which happens when
-			//   multiple sessions of WebUI are sending interleaved list=1&cid=...
-			//   requests.
-			// Why:
-			//   When this happens, WebUI no longer has a proper 'torrentm' list
-			//   by which it can remove torrents that have been removed.
-			// How:
-			//   This fixes it by comparing the received 'torrents' list with the
-			//   list of existing torrents to see which hashes no longer exist,
-			//   and manually generating a 'torrentm' list from that.
-			// Note:
-			//   The alternative, instead of comparing, would be to clear the
-			//   list completely and replace it with this list instead, but that
-			//   is likely to be slower because DOM manipulations are slow.
+			if (!has(json, fullListName)) {
+				extracted[fullListName] = json[changedListName];
+				delete json[changedListName];
 
-			json.torrentm = [];
-			var exhashes = {};
-			for (var k in this.torrents) {
-				exhashes[k] = 1;
+				extracted[removedListName] = json[removedListName];
+				delete json[removedListName];
 			}
-			for (var i = 0, len = torrents.length; i < len; i++) {
-				if (has(exhashes, torrents[i][CONST.TORRENT_HASH]))
-					delete exhashes[torrents[i][CONST.TORRENT_HASH]];
+			else {
+				var list = extracted[fullListName] = json[fullListName];
+				delete json[fullListName];
+
+				// What:
+				//   Remove items that no longer exist, for the situation in which
+				//   the backend sends the full items list ('torrents', for example)
+				//   even though a cid was sent with the list=1 request.
+				// When:
+				//   This happens when the sent cid is not valid, which happens when
+				//   multiple sessions of WebUI are sending interleaved list=1&cid=...
+				//   requests.
+				// Why:
+				//   When this happens, WebUI no longer has a proper removed items
+				//   list ('torrentm', for example) by which it can actually remove
+				//   those items that have been removed from the backend.
+				// How:
+				//   This fixes it by comparing the received full items list with the
+				//   list of existing items to see which keys no longer exist, and
+				//   manually generating a removed items list from that.
+				// Note:
+				//   The alternative, instead of comparing, would be to clear the
+				//   list completely and replace it with this list instead, but that
+				//   is likely to be less efficient when taking into account the fact
+				//   that more DOM manipulations would have to be used to repopulate
+				//   any UI elements dependent on the list.
+
+				var removed = extracted[removedListName] = [];
+
+				var exKeys = {};
+				for (var k in exList) {
+					exKeys[k] = 1;
+				}
+				for (var i = 0, len = list.length; i < len; i++) {
+					if (has(exKeys, list[i][key]))
+						delete exKeys[list[i][key]];
+				}
+				for (var k in exKeys) {
+					removed.push(k);
+				}
 			}
-			for (var k in exhashes) {
-				json.torrentm.push(k);
-			}
+
+			return extracted;
 		}
+
+		var torrentLists = extractLists("torrents", "torrentp", "torrentm", CONST.TORRENT_HASH, this.torrents);
+		var torrents = torrentLists.torrents;
+
 		this.loadLabels($A(json.label));
 		delete json.label;
 		if (!this.loaded) {
@@ -575,10 +592,10 @@ var utWebUI = {
 			sortedColChanged = sortedColChanged || ret;
 		}
 		torrents.length = 0;
-		if (has(json, "torrentm")) {
+		if (has(torrentLists, "torrentm")) {
 			var clear = false;
-			for (var i = 0, j = json.torrentm.length; i < j; i++) {
-				var k = json.torrentm[i];
+			for (var i = 0, j = torrentLists.torrentm.length; i < j; i++) {
+				var k = torrentLists.torrentm[i];
 				delete this.torrents[k];
 
 				if (this.labels[k].indexOf("_nlb_") > -1)
@@ -602,7 +619,7 @@ var utWebUI = {
 				if (this.torrentID == k)
 					clear = true;
 			}
-			delete json.torrentm;
+			delete torrentLists.torrentm;
 			if (clear) {
 				this.torrentID = "";
 				this.clearDetails();
@@ -645,7 +662,7 @@ var utWebUI = {
 	"update": function() {
 		this.totalDL = 0;
 		this.totalUL = 0;
-		this.getTorrents();
+		this.getList();
 	},
 
 	"getInterval": function() {
@@ -1700,11 +1717,11 @@ var utWebUI = {
 			this.files[id] = [];
 			if (update)
 				this.flsTable.clearRows();
-			if (this.tabs.active == "mainInfoPane-filesTab")
+			if (this.mainTabs.active == "mainInfoPane-filesTab")
 				this.flsTable.loadObj.show();
 			this.request("action=getfiles&hash=" + id, this.addFiles);
 		} else {
-			if (this.tabs.active == "mainInfoPane-filesTab") {
+			if (this.mainTabs.active == "mainInfoPane-filesTab") {
 				this.flsTable.loadObj.show();
 				this.loadFiles.delay(20, this);
 			}
@@ -1715,7 +1732,7 @@ var utWebUI = {
 		var files = json.files;
 		if (files == undefined) return;
 		this.files[files[0]] = files[1];
-		if (this.tabs.active == "mainInfoPane-filesTab")
+		if (this.mainTabs.active == "mainInfoPane-filesTab")
 			this.loadFiles();
 	},
 

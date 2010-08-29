@@ -13,7 +13,7 @@
 }
 
 html, body {
-	background-color: #D0D0D0;
+	background-color: #DDDDDD;
 	border: 0;
 	cursor: default;
 	height: 100%;
@@ -173,8 +173,8 @@ td.disabled, label.disabled, span.disabled, div.disabled {
  **************************************************/
 
 #mainToolbar {
-	background: #D0D0D0 url(./images/tbar.png) repeat-x 1px -2px;
-	border: 0 solid #A6A6A6;
+	background: #EEEEEE;
+	border: 0 solid #AAAAAA;
 	border-bottom-width: 1px;
 	height: 30px;
 	line-height: 30px;
@@ -183,7 +183,7 @@ td.disabled, label.disabled, span.disabled, div.disabled {
 }
 
 #mainToolbar .separator {
-	background-color: #808080;
+	background-color: #A0A0A0;
 	border: 0;
 	float: left;
 	height: 24px;
@@ -205,7 +205,7 @@ td.disabled, label.disabled, span.disabled, div.disabled {
 }
 
 #mainToolbar a {
-	opacity: 0.70;
+	opacity: 0.80;
 }
 
 #mainToolbar a:hover {
@@ -293,8 +293,9 @@ td.disabled, label.disabled, span.disabled, div.disabled {
 }
 
 #mainCatList ul li.sel {
-	background-color: #D0E1F2;
-	border: 1px solid #D0E1F2;
+	background-color: #C0C0C0;
+	border: 1px solid #C0C0C0;
+	color: #FFFFFF;
 }
 
 #mainCatList ul li.hr {
@@ -379,6 +380,7 @@ ul#mainInfoPane-tabs {
 	padding: 3px 0 0 0;
 	position: relative;
 	text-align: left;
+	white-space: nowrap;
 	z-index: 50;
 }
 
@@ -504,13 +506,12 @@ li#tab_mainInfoPane-loggerTab span {
  **************************************************/
 
 #mainHDivider, #mainVDivider {
-	background: #D0D0D0;
 	position: absolute;
 	z-index: 200;
 }
 
 #mainHDivider:hover, #mainVDivider:hover {
-	background: #A0A0A0;
+	background: #CCCCCC;
 }
 
 #mainHDivider {
@@ -856,7 +857,7 @@ li#tab_mainInfoPane-loggerTab span {
  **************************************************/
 
 #dlgSettings {
-	width: 600px;
+	width: 580px;
 }
 
 #dlgSettings-head {
@@ -891,11 +892,11 @@ li#tab_mainInfoPane-loggerTab span {
 	left: 100px;
 	padding: 0 5px;
 	position: relative;
-	width: 480px;
+	width: 460px;
 }
 
 #dlgSettings .settings-pane fieldset .wide {
-	width: 460px;
+	width: 440px;
 }
 
 /* General */
@@ -910,7 +911,7 @@ input[id="webui.password"] {
 /* Directories */
 
 #dir_active_download, #dir_completed_download, #dir_torrent_files, #dir_completed_torrents, #dir_autoload {
-	width: 440px;
+	width: 420px;
 }
 
 /* Connection */
@@ -933,7 +934,7 @@ input[id="proxy.password"] { width: 70px; }
 
 /* BitTorrent */
 
-#tracker_ip { width: 220px; }
+#tracker_ip { width: 210px; }
 #encryption_mode { margin-left: 3px; }
 
 /* Transfer Cap */
@@ -1038,7 +1039,7 @@ input[id="proxy.password"] { width: 70px; }
 }
 
 #dlgSettings-advText {
-	width: 340px;
+	width: 320px;
 }
 
 
