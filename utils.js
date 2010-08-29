@@ -154,7 +154,12 @@ String.implement({
 
 Number.implement({
 
-	"toFileSize": function(precision) {
+	"toFixedNR": function(numdec) {
+		var res = this.toFixed(numdec+1);
+		return res.substring(0, res.length-1);
+	},
+
+	"toFileSize": function(numdec) {
 		var sz = [lang[CONST.SIZE_B], lang[CONST.SIZE_KB], lang[CONST.SIZE_MB], lang[CONST.SIZE_GB], lang[CONST.SIZE_TB], lang[CONST.SIZE_PB], lang[CONST.SIZE_EB]];
 		var szmax = sz.length-1;
 		var size = this;
@@ -167,7 +172,7 @@ Number.implement({
 			size /= 1024;
 			unit++;
 		}
-		return (size.toFixed(precision || 1) + " " + sz[unit]);
+		return (size.toFixedNR(numdec || 1) + " " + sz[unit]);
 	},
 
 	"toTimeString": function() {

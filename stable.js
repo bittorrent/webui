@@ -1132,7 +1132,7 @@ var dxSTable = new Class({
 			if ((k == 0) && (icon != "") && !cell.hasClass(icon))
 				cell.className = "stable-icon " + icon;
 			if ($me.colHeader[k].type == TYPE_NUM_PROGRESS) {
-				var pcnt = (parseFloat(data[k]) || 0).toFixed(1) + "%";
+				var pcnt = (parseFloat(data[k]) || 0).toFixedNR(1) + "%";
 				var prog = simpleClone(DIV, false).addClass("stable-progress").set("html", "&nbsp;").inject(cell.empty());
 				var pbar = simpleClone(SPAN, false).addClass("stable-progress-bar").set("html", "&nbsp;").setStyle("width", pcnt).inject(prog);
 				var ptxt = simpleClone(SPAN, false).addClass("stable-progress-text").set("text", pcnt).inject(prog);
@@ -1317,7 +1317,7 @@ var dxSTable = new Class({
 		if (this.requiresRefresh || row.hidden || (row.rowIndex == -1)) return hasSortedChanged;
 		var r = this.tb.body.childNodes[row.rowIndex], cell = r.childNodes[this.colOrder[col]], fval = this.options.format($A(data), col);
 		if (this.colHeader[col].type == TYPE_NUM_PROGRESS) {
-			var pcnt = (parseFloat(fval) || 0).toFixed(1) + "%";
+			var pcnt = (parseFloat(fval) || 0).toFixedNR(1) + "%";
 			var prog = simpleClone(DIV, false).addClass("stable-progress").set("html", "&nbsp;").inject(cell.empty());
 			var pbar = simpleClone(SPAN, false).addClass("stable-progress-bar").set("html", "&nbsp;").setStyle("width", pcnt).inject(prog);
 			var ptxt = simpleClone(SPAN, false).addClass("stable-progress-text").set("text", pcnt).inject(prog);

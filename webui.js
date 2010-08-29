@@ -1328,11 +1328,11 @@ var utWebUI = {
 					break;
 
 				case "availability":
-					values[i] = (values[i] / 65536).toFixed(3);
+					values[i] = (values[i] / 65536).toFixedNR(3);
 					break;
 
 				case "done":
-					values[i] = (values[i] / 10).toFixed(1) + "%";
+					values[i] = (values[i] / 10).toFixedNR(1) + "%";
 					break;
 
 				case "downloaded":
@@ -1350,7 +1350,7 @@ var utWebUI = {
 					break;
 
 				case "ratio":
-					values[i] = (values[i] == -1) ? "\u221E" : (values[i] / 1000).toFixed(3);
+					values[i] = (values[i] == -1) ? "\u221E" : (values[i] / 1000).toFixedNR(3);
 					break;
 
 				case "order":
@@ -1368,7 +1368,7 @@ var utWebUI = {
 					break;
 
 				case "seeds_peers":
-					values[i] = ($chk(values[i]) && (values[i] != Number.MAX_VALUE)) ? values[i].toFixed(3) : "\u221E";
+					values[i] = ($chk(values[i]) && (values[i] != Number.MAX_VALUE)) ? values[i].toFixedNR(3) : "\u221E";
 					break;
 
 				case "size":
@@ -1668,7 +1668,7 @@ var utWebUI = {
 			$("hs").set("html", this.torrentID);
 			$("dl").set("html", d[CONST.TORRENT_DOWNLOADED].toFileSize());
 			$("ul").set("html", d[CONST.TORRENT_UPLOADED].toFileSize());
-			$("ra").set("html", (d[CONST.TORRENT_RATIO] == -1) ? "\u221E" : (d[CONST.TORRENT_RATIO] / 1000).toFixed(3));
+			$("ra").set("html", (d[CONST.TORRENT_RATIO] == -1) ? "\u221E" : (d[CONST.TORRENT_RATIO] / 1000).toFixedNR(3));
 			$("us").set("html", d[CONST.TORRENT_UPSPEED].toFileSize() + g_perSec);
 			$("ds").set("html", d[CONST.TORRENT_DOWNSPEED].toFileSize() + g_perSec);
 			$("rm").set("html", (d[CONST.TORRENT_ETA] == 0) ? "" : (d[CONST.TORRENT_ETA] <= -1) ? "\u221E" : d[CONST.TORRENT_ETA].toTimeString());
@@ -1772,7 +1772,7 @@ var utWebUI = {
 					break;
 
 				case "pcnt":
-					values[i] = (values[i] / 10).toFixed(1) + "%";
+					values[i] = (values[i] / 10).toFixedNR(1) + "%";
 					break;
 
 				case "prio":
@@ -1843,7 +1843,7 @@ var utWebUI = {
 		var ids = [];
 		var len = this.flsTable.selectedRows.length;
 		while (len--) {
-			var rowId = this.flsTable.selectedRows[len]
+			var rowId = this.flsTable.selectedRows[len];
 			var fileId = rowId.match(/.*_([0-9]+)$/)[1].toInt();
 			if (this.files[id][fileId][CONST.FILE_PRIORITY] != p) {
 				ids.push(fileId);
