@@ -732,8 +732,8 @@ function setupUserInterface() {
 
 	utWebUI.stpanes = new Tabs("dlgSettings-menu", {
 		"tabs": {
-			  "dlgSettings-WebUI"       : ""
-			, "dlgSettings-General"     : ""
+			  "dlgSettings-General"     : ""
+			, "dlgSettings-UISettings"  : ""
 			, "dlgSettings-Directories" : ""
 			, "dlgSettings-Connection"  : ""
 			, "dlgSettings-Bandwidth"   : ""
@@ -741,13 +741,15 @@ function setupUserInterface() {
 			, "dlgSettings-TransferCap" : ""
 			, "dlgSettings-Queueing"    : ""
 			, "dlgSettings-Scheduler"   : ""
+			, "dlgSettings-WebUI"       : ""
 			, "dlgSettings-Advanced"    : ""
+			, "dlgSettings-UIExtras"    : ""
 			, "dlgSettings-DiskCache"   : ""
 		},
 		"onChange": utWebUI.settingsPaneChange.bind(utWebUI)
 	}).draw().show("dlgSettings-WebUI");
 
-	// -- Web UI
+	// -- General
 
 	var langArr = [];
 	$each(LANGUAGES, function(lang, code) {
@@ -772,6 +774,15 @@ function setupUserInterface() {
 			rnd = parseInt(Math.random() * 50000) + 15000;
 		} while (v == rnd);
 		$("bind_port").set("value", rnd);
+	});
+
+	// -- BitTorrent
+
+	$("enable_bw_management").addEvent("click", function() {
+		utWebUI.setAdvSetting("bt.transp_disposition", (
+			this.checked ? utWebUI.settings["bt.transp_disposition"] | CONST.TRANSDISP_UTP
+			             : utWebUI.settings["bt.transp_disposition"] & ~CONST.TRANSDISP_UTP
+		));
 	});
 
 	// -- Scheduler
@@ -870,7 +881,8 @@ function setupUserInterface() {
 	$("dlgSettings-advTrue").addEvent("click", utWebUI.advOptChanged.bind(utWebUI));
 	$("dlgSettings-advFalse").addEvent("click", utWebUI.advOptChanged.bind(utWebUI));
 
-	utWebUI.advOptTable.resizeTo(445, 300); // TODO: CLEANUP
+	var advSize = $("dlgSettings-Advanced").getDimensions({computeSize: true});
+	utWebUI.advOptTable.resizeTo(advSize.x - 15, advSize.y - 60);
 
 	// -- Linked Controls
 
@@ -923,7 +935,7 @@ function setupUserInterface() {
 		// Manually disable, because we don't want to fire sched_table's "change" event, which _link() does
 		["sched_table", "sched_table_lgnd", "sched_table_info"].each(
 			this.checked ? function(k) { $(k).removeClass("disabled"); }
-						 : function(k) { $(k).addClass("disabled"); }
+			             : function(k) { $(k).addClass("disabled"); }
 		);
 	});
 
@@ -949,6 +961,11 @@ function setupUserInterface() {
 
 	$("max_ul_rate_seed_flag").addEvent(linkedEvent, function() {
 		_link(this, 0, ["max_ul_rate_seed"]);
+	});
+
+	$("gui.manual_ratemenu").addEvent(linkedEvent, function() {
+		_link(this, 0, ["gui.ulrate_menu"]);
+		_link(this, 0, ["gui.dlrate_menu"]);
 	});
 
 	resizeUI();
@@ -1201,36 +1218,24 @@ function loadLangStrings(reload) {
 	//--------------------------------------------------
 
 	utWebUI.stpanes.setNames({
-		"dlgSettings-WebUI"       : lang[CONST.ST_CAPT_WEBUI],
-		"dlgSettings-General"     : lang[CONST.ST_CAPT_GENERAL],
-		"dlgSettings-Directories" : lang[CONST.ST_CAPT_FOLDER],
-		"dlgSettings-Connection"  : lang[CONST.ST_CAPT_CONNECTION],
-		"dlgSettings-Bandwidth"   : lang[CONST.ST_CAPT_BANDWIDTH],
-		"dlgSettings-BitTorrent"  : lang[CONST.ST_CAPT_BITTORRENT],
-		"dlgSettings-TransferCap" : lang[CONST.ST_CAPT_TRANSFER_CAP],
-		"dlgSettings-Queueing"    : lang[CONST.ST_CAPT_SEEDING],
-		"dlgSettings-Scheduler"   : lang[CONST.ST_CAPT_SCHEDULER],
-		"dlgSettings-Advanced"    : lang[CONST.ST_CAPT_ADVANCED],
-		"dlgSettings-DiskCache"   : "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + lang[CONST.ST_CAPT_DISK_CACHE] // TODO: Use CSS to indent instead of modifying the string directly...
+		  "dlgSettings-General"     : lang[CONST.ST_CAPT_GENERAL]
+		, "dlgSettings-UISettings"  : lang[CONST.ST_CAPT_UI_SETTINGS]
+		, "dlgSettings-Directories" : lang[CONST.ST_CAPT_FOLDER]
+		, "dlgSettings-Connection"  : lang[CONST.ST_CAPT_CONNECTION]
+		, "dlgSettings-Bandwidth"   : lang[CONST.ST_CAPT_BANDWIDTH]
+		, "dlgSettings-BitTorrent"  : lang[CONST.ST_CAPT_BITTORRENT]
+		, "dlgSettings-TransferCap" : lang[CONST.ST_CAPT_TRANSFER_CAP]
+		, "dlgSettings-Queueing"    : lang[CONST.ST_CAPT_QUEUEING]
+		, "dlgSettings-WebUI"       : lang[CONST.ST_CAPT_WEBUI]
+		, "dlgSettings-Scheduler"   : lang[CONST.ST_CAPT_SCHEDULER]
+		, "dlgSettings-Advanced"    : lang[CONST.ST_CAPT_ADVANCED]
+		, "dlgSettings-UIExtras"    : "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + lang[CONST.ST_CAPT_UI_EXTRAS] // TODO: Use CSS to indent instead of modifying the string directly...
+		, "dlgSettings-DiskCache"   : "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + lang[CONST.ST_CAPT_DISK_CACHE] // TODO: Use CSS to indent instead of modifying the string directly...
 	});
 
 	_loadStrings("text", [
-		// Web UI / User Interface
-		  "DLG_SETTINGS_2_UI_02"
-		, "DLG_SETTINGS_2_UI_05"
-		, "DLG_SETTINGS_2_UI_06"
-		, "DLG_SETTINGS_2_UI_15"
-		, "DLG_SETTINGS_2_UI_16"
-		, "DLG_SETTINGS_9_WEBUI_01"
-		, "DLG_SETTINGS_9_WEBUI_02"
-		, "DLG_SETTINGS_9_WEBUI_03"
-		, "DLG_SETTINGS_9_WEBUI_05"
-		, "DLG_SETTINGS_9_WEBUI_07"
-		, "DLG_SETTINGS_9_WEBUI_09"
-		, "DLG_SETTINGS_9_WEBUI_10"
-		, "DLG_SETTINGS_9_WEBUI_12"
-
 		// General
+		  "DLG_SETTINGS_1_GENERAL_01"
 		, "DLG_SETTINGS_1_GENERAL_02"
 		, "DLG_SETTINGS_1_GENERAL_10"
 		, "DLG_SETTINGS_1_GENERAL_11"
@@ -1240,8 +1245,22 @@ function loadLangStrings(reload) {
 		, "DLG_SETTINGS_1_GENERAL_18"
 		, "DLG_SETTINGS_1_GENERAL_19"
 		, "DLG_SETTINGS_1_GENERAL_20"
-		, "DLG_SETTINGS_B_ADV_UI_07"
-		, "DLG_SETTINGS_B_ADV_UI_08"
+
+		// UI Settings
+		, "DLG_SETTINGS_2_UI_01"
+		, "DLG_SETTINGS_2_UI_02"
+		, "DLG_SETTINGS_2_UI_03"
+		, "DLG_SETTINGS_2_UI_04"
+		, "DLG_SETTINGS_2_UI_05"
+		, "DLG_SETTINGS_2_UI_06"
+		, "DLG_SETTINGS_2_UI_07"
+		, "DLG_SETTINGS_2_UI_15"
+		, "DLG_SETTINGS_2_UI_16"
+		, "DLG_SETTINGS_2_UI_17"
+		, "DLG_SETTINGS_2_UI_18"
+		, "DLG_SETTINGS_2_UI_19"
+		, "DLG_SETTINGS_2_UI_20"
+		, "DLG_SETTINGS_2_UI_22"
 
 		// Directories
 		, "DLG_SETTINGS_3_PATHS_01"
@@ -1284,6 +1303,9 @@ function loadLangStrings(reload) {
 		, "DLG_SETTINGS_5_BANDWIDTH_14"
 		, "DLG_SETTINGS_5_BANDWIDTH_15"
 		, "DLG_SETTINGS_5_BANDWIDTH_17"
+		, "DLG_SETTINGS_5_BANDWIDTH_18"
+		, "DLG_SETTINGS_5_BANDWIDTH_19"
+		, "DLG_SETTINGS_5_BANDWIDTH_20"
 
 		// BitTorrent
 		, "DLG_SETTINGS_6_BITTORRENT_01"
@@ -1297,6 +1319,8 @@ function loadLangStrings(reload) {
 		, "DLG_SETTINGS_6_BITTORRENT_10"
 		, "DLG_SETTINGS_6_BITTORRENT_11"
 		, "DLG_SETTINGS_6_BITTORRENT_13"
+		, "DLG_SETTINGS_6_BITTORRENT_14"
+		, "DLG_SETTINGS_6_BITTORRENT_15"
 
 		// Transfer Cap
 		, "DLG_SETTINGS_7_TRANSFERCAP_01"
@@ -1325,11 +1349,29 @@ function loadLangStrings(reload) {
 		, "DLG_SETTINGS_9_SCHEDULER_07"
 		, "DLG_SETTINGS_9_SCHEDULER_09"
 
+		// Web UI
+		, "DLG_SETTINGS_9_WEBUI_01"
+		, "DLG_SETTINGS_9_WEBUI_02"
+		, "DLG_SETTINGS_9_WEBUI_03"
+		, "DLG_SETTINGS_9_WEBUI_05"
+		, "DLG_SETTINGS_9_WEBUI_07"
+		, "DLG_SETTINGS_9_WEBUI_09"
+		, "DLG_SETTINGS_9_WEBUI_10"
+		, "DLG_SETTINGS_9_WEBUI_12"
+
 		// Advanced
 		, "DLG_SETTINGS_A_ADVANCED_01"
 		, "DLG_SETTINGS_A_ADVANCED_02"
 		, "DLG_SETTINGS_A_ADVANCED_03"
 		, "DLG_SETTINGS_A_ADVANCED_04"
+
+		// UI Extras
+		, "DLG_SETTINGS_B_ADV_UI_01"
+		, "DLG_SETTINGS_B_ADV_UI_02"
+		, "DLG_SETTINGS_B_ADV_UI_03"
+		, "DLG_SETTINGS_B_ADV_UI_05"
+		, "DLG_SETTINGS_B_ADV_UI_07"
+		, "DLG_SETTINGS_B_ADV_UI_08"
 
 		// Disk Cache
 		, "DLG_SETTINGS_C_ADV_CACHE_01"
@@ -1365,11 +1407,15 @@ function loadLangStrings(reload) {
 		}
 	});
 
-	// Buttons
-	_loadStrings("value", "DLG_SETTINGS_4_CONN_04");
-	_loadStrings("value", "DLG_SETTINGS_A_ADVANCED_05");
+	// -- Buttons
+	_loadStrings("value", [
+		  "DLG_SETTINGS_4_CONN_04" // "Random"
+		, "DLG_SETTINGS_A_ADVANCED_05" // "Set"
+	]);
 
 	// -- Comboboxes
+	_loadComboboxStrings("gui.dblclick_seed", lang[CONST.ST_CBO_UI_DBLCLK_TOR].split("||"), utWebUI.settings["gui.dblclick_seed"]);
+	_loadComboboxStrings("gui.dblclick_dl", lang[CONST.ST_CBO_UI_DBLCLK_TOR].split("||"), utWebUI.settings["gui.dblclick_dl"]);
 	_loadComboboxStrings("encryption_mode", lang[CONST.ST_CBO_ENCRYPTIONS].split("||"), utWebUI.settings["encryption_mode"]);
 	_loadComboboxStrings("proxy.type", lang[CONST.ST_CBO_PROXY].split("||"), utWebUI.settings["proxy.type"]);
 	_loadComboboxStrings("multi_day_transfer_mode", lang[CONST.ST_CBO_TCAP_MODES].split("||"), utWebUI.settings["multi_day_transfer_mode"]);

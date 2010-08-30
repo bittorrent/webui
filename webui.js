@@ -43,11 +43,8 @@ var utWebUI = {
 		"showDetails": true,
 		"showCategories": true,
 		"showToolbar": true,
-		"showTitleSpeed": false,
 		"updateInterval": 3000,
-		"alternateRows": false,
 		"maxRows": 50,
-		"confirmDelete": true,
 		"lang": "en",
 		"hSplit": -1,
 		"vSplit": -1,
@@ -117,16 +114,25 @@ var utWebUI = {
 
 	"advSettings": {
 		  "bt.allow_same_ip": ""
+		, "bt.auto_dl_enable": ""
+		, "bt.auto_dl_factor": ""
+		, "bt.auto_dl_interval": ""
+		, "bt.auto_dl_qos_min": ""
+		, "bt.auto_dl_sample_average": ""
+		, "bt.auto_dl_sample_window": ""
 		, "bt.ban_ratio": ""
 		, "bt.ban_threshold": ""
 		, "bt.compact_allocation": ""
 		, "bt.connect_speed": ""
+		, "bt.determine_encoded_rate_for_streamables": ""
 		, "bt.enable_tracker": ""
+		, "bt.failover_peer_speed_threshold": ""
 		, "bt.graceful_shutdown": ""
 		, "bt.multiscrape": ""
 		, "bt.no_connect_to_services": ""
 		, "bt.no_connect_to_services_list": ""
 		, "bt.prio_first_last_piece": ""
+		, "bt.prioritize_partial_pieces": ""
 		, "bt.ratelimit_tcp_only": ""
 		, "bt.scrape_stopped": ""
 		, "bt.send_have_to_seed": ""
@@ -137,29 +143,49 @@ var utWebUI = {
 		, "bt.transp_disposition": ""
 		, "bt.use_ban_ratio": ""
 		, "bt.use_rangeblock": ""
+		, "btapps.auto_update_btapps": ""
+		, "btapps.auto_update_btinstalls": ""
+		, "btapps.install_unsigned_apps": ""
 		, "dht.rate": ""
 		, "diskio.coalesce_write_size": ""
 		, "diskio.coalesce_writes": ""
 		, "diskio.flush_files": ""
 		, "diskio.no_zero": ""
+		, "diskio.resume_min": ""
 		, "diskio.smart_hash": ""
 		, "diskio.smart_sparse_hash": ""
 		, "diskio.sparse_files": ""
 		, "diskio.use_partfile": ""
 		, "gui.auto_restart": ""
 		, "gui.bypass_search_redirect": ""
+		, "gui.color_progress_bars": ""
 		, "gui.compat_diropen": ""
 		, "gui.default_del_action": ""
 		, "gui.delete_to_trash": ""
+		, "gui.graph_legend": ""
+		, "gui.graph_overhead": ""
+		, "gui.graph_tcp_rate_control": ""
 		, "gui.graphic_progress": ""
 		, "gui.log_date": ""
 		, "gui.piecebar_progress": ""
+		, "gui.report_problems": ""
+		, "gui.show_av_icon": ""
+		, "gui.show_dropzone": ""
+		, "gui.show_rss_favicons": ""
 		, "gui.tall_category_list": ""
+		, "gui.toolbar_labels": ""
+		, "gui.transparent_graph_legend": ""
 		, "gui.update_rate": ""
 		, "ipfilter.enable": ""
 		, "isp.bep22": ""
+		, "isp.fqdn": ""
+		, "isp.primary_dns": ""
+		, "isp.secondary_dns": ""
 		, "net.bind_ip": ""
-		, "net.calc_overhead": ""
+		, "net.calc_rss_overhead": ""
+		, "net.calc_tracker_overhead": ""
+		, "net.disable_ipv6": ""
+		, "net.discoverable": ""
 		, "net.limit_excludeslocal": ""
 		, "net.low_cpu": ""
 		, "net.max_halfopen": ""
@@ -167,6 +193,9 @@ var utWebUI = {
 		, "net.outgoing_max_port": ""
 		, "net.outgoing_port": ""
 		, "net.upnp_tcp_only": ""
+		, "net.utp_dynamic_packet_size": ""
+		, "net.utp_initial_packet_size": ""
+		, "net.utp_packet_size_interval": ""
 		, "net.utp_receive_target_delay": ""
 		, "net.utp_target_delay": ""
 		, "net.wsaevents": ""
@@ -183,6 +212,11 @@ var utWebUI = {
 		, "rss.feed_as_default_label": ""
 		, "rss.smart_repack_filter": ""
 		, "rss.update_interval": ""
+		, "streaming.failover_rate_factor": ""
+		, "streaming.failover_rate_factor": ""
+		, "streaming.failover_set_percentage": ""
+		, "streaming.min_buffer_piece": ""
+		, "streaming.safety_factor": ""
 		, "sys.enable_wine_hacks": ""
 		, "webui.allow_pairing": ""
 		, "webui.token_auth": ""
@@ -407,7 +441,7 @@ var utWebUI = {
 			this.perform(this.delActions[mode]);
 		}).bind(this);
 
-		if (this.config.confirmDelete) {
+		if (this.settings["confirm_when_deleting"]) {
 			var multiple = (count != 1);
 			var ask = (mode == 0) ? ((multiple) ? CONST.OV_CONFIRM_DELETE_MULTIPLE : CONST.OV_CONFIRM_DELETE_ONE) : ((multiple) ? CONST.OV_CONFIRM_DELETEDATA_MULTIPLE : CONST.OV_CONFIRM_DELETEDATA_ONE);
 //			ok = confirm(lang[ask].replace(/%d/, count));
@@ -655,7 +689,7 @@ var utWebUI = {
 	"updateSpeed": function() {
 		var str = lang[CONST.MAIN_TITLEBAR_SPEED].replace(/%s/, this.totalDL.toFileSize() + g_perSec).replace(/%s/, this.totalUL.toFileSize() + g_perSec);
 		window.status = window.defaultStatus = str.replace(/%s/, "");
-		if (this.config.showTitleSpeed)
+		if (this.settings["gui.speed_in_title"])
 			document.title = str.replace(/%s/, g_winTitle);
 	},
 
@@ -880,15 +914,11 @@ var utWebUI = {
 						, "colWidth": cookie.fileTable.colWidth
 					});
 
-					this.tableUseAltColor(cookie.alternateRows);
 					this.tableSetMaxRows(cookie.maxRows);
 
 					resizeUI();
 
 					continue;
-				}
-				if (key == "gui.graphic_progress") {
-					this.tableUseProgressBar(val == "true");
 				}
 				if ((key != "proxy.proxy") && (key != "webui.username") && (key != "webui.password")) {
 					if (typ == 0)
@@ -900,6 +930,11 @@ var utWebUI = {
 					case "multi_day_transfer_mode_ul": if (val) tcmode = 0; break;
 					case "multi_day_transfer_mode_dl": if (val) tcmode = 1; break;
 					case "multi_day_transfer_mode_uldl": if (val) tcmode = 2; break;
+
+					case "gui.alternate_color": this.tableUseAltColor(val); break;
+					case "gui.graphic_progress": this.tableUseProgressBar(val); break;
+
+					case "bt.transp_disposition": $("enable_bw_management").checked = !!(val & CONST.TRANSDISP_UTP); break;
 				}
 				this.settings[key] = val;
 			}
@@ -1000,10 +1035,7 @@ var utWebUI = {
 			"showDetails",
 			"showCategories",
 			"showToolbar",
-			"showTitleSpeed",
 			"updateInterval",
-			"alternateRows",
-			"confirmDelete",
 			"lang"
 		].each((function(key) {
 			var ele;
@@ -1042,12 +1074,6 @@ var utWebUI = {
 	"setSettings": function() {
 		var value = null, resize = false, reload = false, hasChanged = false;
 
-		value = $("webui.confirmDelete").checked;
-		if (this.config.confirmDelete != value) {
-			this.config.confirmDelete = value;
-			hasChanged = true;
-		}
-
 		value = ($("webui.updateInterval").get("value").toInt() || 0);
 		if (value < this.limits.minUpdateInterval) {
 			value = this.limits.minUpdateInterval;
@@ -1057,14 +1083,6 @@ var utWebUI = {
 			this.config.updateInterval = value;
 			$clear(this.updateTimeout);
 			this.updateTimeout = this.update.delay(value, this);
-			hasChanged = true;
-		}
-
-		value = $("webui.showTitleSpeed").checked;
-		if (this.config.showTitleSpeed != value) {
-			this.config.showTitleSpeed = value;
-			if (!this.config.showTitleSpeed)
-				document.title = g_winTitle;
 			hasChanged = true;
 		}
 
@@ -1099,21 +1117,25 @@ var utWebUI = {
 			hasChanged = true;
 		}
 
-		value = $("webui.alternateRows").checked;
-		if (this.config.alternateRows != value) {
+		var str = "";
+
+		if (hasChanged && Browser.Engine.presto)
+			str = "&s=webui.cookie&v=" + JSON.encode(this.config);
+
+		value = $("gui.speed_in_title").checked;
+		if (!value && !!this.settings["gui.speed_in_title"] != value) {
+			document.title = g_winTitle;
+		}
+
+		value = $("gui.alternate_color").checked;
+		if (!!this.settings["gui.alternate_color"] != value) {
 			this.tableUseAltColor(value);
-			hasChanged = true;
 		}
 
 		value = this.getAdvSetting("gui.graphic_progress");
 		if ($defined(value) && !!this.settings["gui.graphic_progress"] != value) {
 			this.tableUseProgressBar(value);
 		}
-
-		var str = "";
-
-		if (Browser.Engine.presto && hasChanged)
-			str = "&s=webui.cookie&v=" + JSON.encode(this.config);
 
 		value = this.getAdvSetting("gui.tall_category_list")
 		resize = resize || ($defined(value) && !!this.settings["gui.tall_category_list"] != value);
@@ -1422,8 +1444,23 @@ var utWebUI = {
 	},
 
 	"trtDblClk": function(id) {
-		if (this.trtTable.selectedRows.length == 1)
-			this.perform((this.torrents[id][CONST.TORRENT_STATUS] & (CONST.STATE_STARTED | CONST.STATE_QUEUED)) ? "stop" : "start");
+		if (!isGuest && this.trtTable.selectedRows.length == 1) {
+			var tor = this.torrents[id];
+			var action = parseInt((
+				tor[CONST.TORRENT_PROGRESS] == 1000
+					? this.settings["gui.dblclick_seed"]
+					: this.settings["gui.dblclick_dl"]
+			), 10) || CONST.TOR_DBLCLK_SHOW_PROPS;
+
+			switch (action) {
+				case CONST.TOR_DBLCLK_SHOW_PROPS:
+					this.showProperties();
+					break;
+
+				default:
+					this.perform((tor[CONST.TORRENT_STATUS] & (CONST.STATE_STARTED | CONST.STATE_QUEUED)) ? "stop" : "start");
+			}
+		}
 	},
 
 	"showMenu": function(ev, id) {
@@ -1455,17 +1492,17 @@ var utWebUI = {
 		//--------------------------------------------------
 
 		var menuItemsMap = {
-			  "forcestart" : [lang[CONST.ML_FORCE_START], this.forcestart.bind(this, [])]
-			, "start"      : [lang[CONST.ML_START], this.start.bind(this, [])]
-			, "pause"      : [lang[CONST.ML_PAUSE], this.pause.bind(this, [])]
-			, "stop"       : [lang[CONST.ML_STOP],  this.stop.bind(this, [])]
+			  "forcestart" : [lang[CONST.ML_FORCE_START], this.forcestart.bind(this)]
+			, "start"      : [lang[CONST.ML_START], this.start.bind(this)]
+			, "pause"      : [lang[CONST.ML_PAUSE], this.pause.bind(this)]
+			, "stop"       : [lang[CONST.ML_STOP],  this.stop.bind(this)]
 			, "queueup"    : [lang[CONST.ML_QUEUEUP], (function(ev) { this.queueup(ev.shift); }).bind(this)]
 			, "queuedown"  : [lang[CONST.ML_QUEUEDOWN], (function(ev) { this.queuedown(ev.shift); }).bind(this)]
 			, "label"      : [CMENU_CHILD, lang[CONST.ML_LABEL], labelSubMenu]
 			, "remove"     : [lang[CONST.ML_REMOVE], this.remove.bind(this, 0)]
 			, "removeand"  : [CMENU_CHILD, lang[CONST.ML_REMOVE_AND], [[lang[CONST.ML_DELETE_DATA], this.remove.bind(this, 1)]]]
-			, "recheck"    : [lang[CONST.ML_FORCE_RECHECK], this.recheck.bind(this, [])]
-			, "properties" : [lang[CONST.ML_PROPERTIES], this.showProperties.bind(this, [])]
+			, "recheck"    : [lang[CONST.ML_FORCE_RECHECK], this.recheck.bind(this)]
+			, "properties" : [lang[CONST.ML_PROPERTIES], this.showProperties.bind(this)]
 		};
 
 		// Gray out items based on status
@@ -1705,7 +1742,6 @@ var utWebUI = {
 				this.files[id].each(function(file, i) {
 					this.flsTable.addRow(this.flsDataToRow(file), id + "_" + i);
 				}, this);
-				this.flsTable.calcSize();
 				this.flsTable.refreshRows();
 			}
 			this.flsTable.loadObj.hide.delay(200, this.flsTable.loadObj);
@@ -2041,9 +2077,8 @@ var utWebUI = {
 		var val = this.getAdvSetting(id);
 		if ($defined(val)) {
 			if ($type(val) == "boolean") {
-				val = !val;
-				this.setAdvSetting(id, val);
-				$("dlgSettings-adv" + (val ? "True" : "False")).checked = true;
+				$("dlgSettings-adv" + (val ? "False" : "True")).checked = true;
+				this.advOptChanged();
 			}
 		}
 	},
@@ -2051,18 +2086,24 @@ var utWebUI = {
 	"advOptChanged": function() {
 		var optIds = this.advOptTable.selectedRows;
 		if (optIds.length > 0) {
-			switch ($type(this.getAdvSetting(optIds[0]))) {
+			var id = optIds[0];
+
+			switch ($type(this.getAdvSetting(id))) {
 				case "boolean":
-					this.setAdvSetting(optIds[0], $("dlgSettings-advTrue").checked);
+					this.setAdvSetting(id, $("dlgSettings-advTrue").checked);
 					break;
 
 				case "number":
-					this.setAdvSetting(optIds[0], parseInt($("dlgSettings-advText").value, 10));
+					this.setAdvSetting(id, parseInt($("dlgSettings-advText").value, 10) || 0);
 					break;
 
 				case "string":
-					this.setAdvSetting(optIds[0], $("dlgSettings-advText").value);
+					this.setAdvSetting(id, $("dlgSettings-advText").value);
 					break;
+			}
+
+			if (id == "bt.transp_disposition") {
+				$("enable_bw_management").checked = !!(this.getAdvSetting("bt.transp_disposition") & CONST.TRANSDISP_UTP);
 			}
 		}
 	},
@@ -2126,7 +2167,6 @@ var utWebUI = {
 	},
 
 	"tableUseAltColor": function(enable) {
-		this.config.alternateRows = enable;
 		this.trtTable.setConfig({"rowAlternate": enable});
 		this.flsTable.setConfig({"rowAlternate": enable});
 		this.advOptTable.setConfig({"rowAlternate": enable});
@@ -2142,14 +2182,15 @@ var utWebUI = {
 
 	"detPanelTabChange": function(id) {
 		if (id == "mainInfoPane-filesTab") {
-			if (this.torrentID == "") {
-				this.flsTable.calcSize();
-				return;
-			}
+			this.flsTable.calcSize();
+
+			if (this.torrentID == "") return;
 			if (has(this.flsTable.rowData, this.torrentID + "_0")) return;
+
 			this.flsTable.loadObj.show();
 			this.loadFiles.delay(20, this);
-		} else if (id == "mainInfoPane-speedTab") {
+		}
+		else if (id == "mainInfoPane-speedTab") {
 			SpeedGraph.draw();
 		}
 	},

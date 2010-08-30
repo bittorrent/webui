@@ -273,7 +273,7 @@ td.disabled, label.disabled, span.disabled, div.disabled {
  **************************************************/
 
 #mainCatList {
-	background-color: #FCFCFC;
+	background-color: #FFFFFF;
 	border: 1px solid #868686;
 	float: left;
 	margin: 0 3px 0 0;
@@ -375,7 +375,7 @@ td.disabled, label.disabled, span.disabled, div.disabled {
 }
 
 ul#mainInfoPane-tabs {
-	height: 17px;
+	height: 18px;
 	list-style: none;
 	padding: 3px 0 0 0;
 	position: relative;
@@ -398,7 +398,7 @@ ul#mainInfoPane-tabs li a {
 	border-bottom: 1px solid #868686;
 	border-radius: 5px 5px 0 0;
 	color: #3B3B3B;
-	padding: 2px 0 4px 0;
+	padding: 2px 0 5px 0;
 	position: relative;
 	top: 4px;
 	vertical-align: top;
@@ -433,17 +433,20 @@ li#tab_mainInfoPane-filesTab span,
 li#tab_mainInfoPane-speedTab span,
 li#tab_mainInfoPane-loggerTab span {
 	background: transparent url(./images/tabs.png) no-repeat 4px top;
+	opacity: 0.50;
 }
 
-	li.selected#tab_mainInfoPane-generalTab span { background-position: 4px -16px; }
-	li.selected#tab_mainInfoPane-filesTab span { background-position: 4px -80px; }
-	li.selected#tab_mainInfoPane-speedTab span { background-position: 4px -96px; }
-	li.selected#tab_mainInfoPane-loggerTab span { background-position: 4px -112px; }
+li.selected#tab_mainInfoPane-generalTab span,
+li.selected#tab_mainInfoPane-filesTab span,
+li.selected#tab_mainInfoPane-speedTab span,
+li.selected#tab_mainInfoPane-loggerTab span {
+	opacity: 1.0;
+}
 
-	li#tab_mainInfoPane-generalTab span { background-position: 4px -144px; }
-	li#tab_mainInfoPane-filesTab span { background-position: 4px -208px; }
-	li#tab_mainInfoPane-speedTab span { background-position: 4px -224px; }
-	li#tab_mainInfoPane-loggerTab span { background-position: 4px -240px; }
+	li#tab_mainInfoPane-generalTab span { background-position: 4px 0px; }
+	li#tab_mainInfoPane-filesTab span { background-position: 4px -64px; }
+	li#tab_mainInfoPane-speedTab span { background-position: 4px -80px; }
+	li#tab_mainInfoPane-loggerTab span { background-position: 4px -96px; }
 
 #mainInfoPane-content {
 	background: #FFFFFF;
@@ -888,7 +891,7 @@ li#tab_mainInfoPane-loggerTab span {
 }
 
 #dlgSettings .settings-pane {
-	height: 360px;
+	height: 340px;
 	left: 100px;
 	padding: 0 5px;
 	position: relative;
@@ -901,11 +904,13 @@ li#tab_mainInfoPane-loggerTab span {
 
 /* General */
 
-#search_list { height: 75px; }
+select[id="webui.lang"] { width: 360px; }
 
-input[id="webui.username"],
-input[id="webui.password"] {
-	margin-left: 3px;
+/* UI Settings */
+
+select[id="gui.dblclick_seed"],
+select[id="gui.dblclick_dl"] {
+	width: 290px;
 }
 
 /* Directories */
@@ -1013,6 +1018,13 @@ input[id="proxy.password"] { width: 70px; }
 #dlgSettings-Scheduler .mode3:hover { background-color: #DFA8A8; }
 #dlgSettings-Scheduler .disabled .mode3 { background-color: #D0D0D0; }
 
+/* Web UI */
+
+input[id="webui.username"],
+input[id="webui.password"] {
+	margin-left: 3px;
+}
+
 /* Advanced */
 
 #dlgSettings-advOptList {
@@ -1041,6 +1053,15 @@ input[id="proxy.password"] { width: 70px; }
 #dlgSettings-advText {
 	width: 320px;
 }
+
+/* UI Extras */
+
+input[id="gui.ulrate_menu"],
+input[id="gui.dlrate_menu"] {
+	width: 260px;
+}
+
+#search_list { height: 75px; }
 
 
 /**************************************************
