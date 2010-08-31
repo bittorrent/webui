@@ -174,6 +174,7 @@ var lang = [
 	, "Mostra elenco categorie"
 	, "Mostra informazioni dettagliate"
 	, "Colonne Predefinite"
+	, "Get File(s)"
 	, "Non scaricare"
 	, "Priorità alta"
 	, "Priorità bassa"

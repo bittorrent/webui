@@ -174,6 +174,7 @@ var lang = [
 	, "Trego Listë e Kategorive"
 	, "Trego Info me Detaje"
 	, "Rivendose"
+	, "Get File(s)"
 	, "Mos Shkarko"
 	, "Përparësi e Lartë"
 	, "Përparësi e Ulët"

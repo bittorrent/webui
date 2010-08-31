@@ -174,6 +174,7 @@ var lang = [
 	, "Rādīt kategoriju sarakstu"
 	, "Rādīt detalizētu info"
 	, "Nodzēst"
+	, "Get File(s)"
 	, "Nevilkt"
 	, "Augsta prioritāte"
 	, "Zema prioritāte"

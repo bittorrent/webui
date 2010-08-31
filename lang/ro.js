@@ -174,6 +174,7 @@ var lang = [
 	, "Arată Lista de Categorii"
 	, "Arată Informații Detaliate"
 	, "Resetează"
+	, "Get File(s)"
 	, "Nu Descărca"
 	, "Prioritate Înaltă"
 	, "Prioritate Scăzută"

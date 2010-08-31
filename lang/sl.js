@@ -174,6 +174,7 @@ var lang = [
 	, "Pokaži seznam kategorij"
 	, "Pokaži podrobnosti"
 	, "Ponastavi"
+	, "Get File(s)"
 	, "Ne prenesi"
 	, "Visoka prednost"
 	, "Nizka prednost"

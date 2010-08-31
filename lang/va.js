@@ -174,6 +174,7 @@ var lang = [
 	, "Mostrar Llista de Categories"
 	, "Mostrar Llista Detallada"
 	, "Reset"
+	, "Get File(s)"
 	, "No Descarregar"
 	, "Prioritat Alta"
 	, "Prioritat Baixa"

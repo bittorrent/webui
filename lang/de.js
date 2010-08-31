@@ -174,6 +174,7 @@ var lang = [
 	, "Gruppen-Liste zeigen"
 	, "Ausführliche Infos zeigen"
 	, "Reset"
+	, "Get File(s)"
 	, "Nicht Laden"
 	, "Hohe Priorität"
 	, "Niedrige Priorität"

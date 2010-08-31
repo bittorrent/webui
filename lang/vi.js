@@ -174,6 +174,7 @@ var lang = [
 	, "Hiện các nhóm"
 	, "Hiện thông tin chi tiết"
 	, "Xác lập lại"
+	, "Get File(s)"
 	, "Không Tải Về"
 	, "Ưu Tiên"
 	, "Hạn Chế"

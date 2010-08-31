@@ -174,6 +174,7 @@ var lang = [
 	, "Kategória lista mutatása"
 	, "Részletes infók"
 	, "Nulláz"
+	, "Get File(s)"
 	, "Kihagyás"
 	, "Magas prioritás"
 	, "Alacsony prioritás"

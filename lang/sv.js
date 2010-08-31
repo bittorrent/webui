@@ -174,6 +174,7 @@ var lang = [
 	, "Visa kategorilista"
 	, "Visa detaljerad info"
 	, "Återställ"
+	, "Get File(s)"
 	, "Ladda inte ned"
 	, "Hög prioritet"
 	, "Låg prioritet"

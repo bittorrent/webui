@@ -174,6 +174,7 @@ var lang = [
 	, "Näytä kategoriat"
 	, "Näytä yksityiskohtaiset tiedot"
 	, "Nollaa"
+	, "Get File(s)"
 	, "Älä lataa"
 	, "Korkea tärkeysaste"
 	, "Alhainen tärkeysaste"

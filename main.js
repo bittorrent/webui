@@ -575,7 +575,7 @@ function setupUserInterface() {
 
 	$("ADD_FILE_OK").addEvent("click", function() {
 		this.disabled = true;
-		$("dlgAdd-form").set("action", urlBase + "?token=" + utWebUI.TOKEN + "&action=add-file").submit();
+		$("dlgAdd-form").set("action", guiBase + "?token=" + utWebUI.TOKEN + "&action=add-file").submit();
 	});
 
 	// -- Cancel Button (File)
@@ -913,6 +913,12 @@ function setupUserInterface() {
 		_link(this, 0, ["prop-seed_ratio", "prop-seed_time"]);
 	});
 
+	$("webui.enable").addEvent(linkedEvent, function() {
+		_link(this, 0, ["webui.username", "webui.password", "webui.enable_guest", "webui.enable_listen", "webui.restrict"]);
+		_link(this, 0, ["webui.guest"], null, (this.checked && !$("webui.enable_guest").checked));
+		_link(this, 0, ["webui.port"], null, (this.checked && !$("webui.enable_listen").checked));
+	});
+
 	$("webui.enable_guest").addEvent(linkedEvent, function() {
 		_link(this, 0, ["webui.guest"]);
 	});
@@ -964,8 +970,7 @@ function setupUserInterface() {
 	});
 
 	$("gui.manual_ratemenu").addEvent(linkedEvent, function() {
-		_link(this, 0, ["gui.ulrate_menu"]);
-		_link(this, 0, ["gui.dlrate_menu"]);
+		_link(this, 0, ["gui.ulrate_menu", "gui.dlrate_menu"]);
 	});
 
 	resizeUI();

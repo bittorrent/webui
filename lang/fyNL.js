@@ -174,6 +174,7 @@ var lang = [
 	, "Lit Kategory List sjen"
 	, "Lit Detailleaerre Ynfo Sjen"
 	, "Reset"
+	, "Get File(s)"
 	, "Net Ynlade"
 	, "Hege Prioriteit"
 	, "Lege Prioriteit"

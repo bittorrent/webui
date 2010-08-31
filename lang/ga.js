@@ -174,6 +174,7 @@ var lang = [
 	, "Taispeáin Réim na nAicmí"
 	, "Taispeáin Faisnéis Sonraithe"
 	, "Athshocraigh"
+	, "Get File(s)"
 	, "Ná Íosluchtaigh"
 	, "Tosaíocht Ard"
 	, "Tosaíocht Íseal"

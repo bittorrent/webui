@@ -174,6 +174,7 @@ var lang = [
 	, "Rodyti kategorijų sąrašą"
 	, "Rodyti išsamią informaciją"
 	, "Naujinti"
+	, "Get File(s)"
 	, "Nesiųsti"
 	, "Aukšta svarba"
 	, "Žema svarba"

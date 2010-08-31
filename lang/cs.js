@@ -174,6 +174,7 @@ var lang = [
 	, "Zobrazit Seznam kategorií"
 	, "Zobrazit Detailní informace"
 	, "Reset"
+	, "Get File(s)"
 	, "Nestahovat"
 	, "Vysoká priorita"
 	, "Nízká priorita"

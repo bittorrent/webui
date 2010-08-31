@@ -174,6 +174,7 @@ var lang = [
 	, "Pokaži listu kategorija"
 	, "Pokaži detaljni info"
 	, "Resetuj"
+	, "Get File(s)"
 	, "Ne preuzimaj"
 	, "Najveći prioritet"
 	, "Najmanji prioritet"

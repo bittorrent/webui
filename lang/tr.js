@@ -174,6 +174,7 @@ var lang = [
 	, "Kategori Listesini Göster"
 	, "Detaylı Bilgi Göster"
 	, "Sıfırla"
+	, "Get File(s)"
 	, "İndirme"
 	, "Yüksek Öncelik"
 	, "Düşük Öncelik"

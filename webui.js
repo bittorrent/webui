@@ -8,7 +8,9 @@
 var BUILD_REQUIRED = -1; // the uT build that WebUI requires
 var LANGUAGES = LANGUAGES || {};
 var lang = lang || null;
-var urlBase = window.location.pathname.substr(0, window.location.pathname.indexOf("/gui")) + "/gui/";
+var urlBase = window.location.pathname.substr(0, window.location.pathname.indexOf("/gui"));
+var guiBase = urlBase + "/gui/";
+var proxyBase = urlBase + "/proxy";
 var isGuest = window.location.pathname.test(/.*guest.html$/);
 
 var utWebUI = {
@@ -241,6 +243,24 @@ var utWebUI = {
 		this.getSettings();
 	},
 
+	"proxyFiles": function(sid, fids, streaming) {
+		$each($$(".downloadfrm"), function(frm) {
+			frm.dispose().destroy();
+		}, this);
+
+		$each(fids, function(fid) {
+			new IFrame({
+				"class": "downloadfrm",
+				"src": proxyBase + "?sid=" + sid + "&file=" + fid + "&disposition=" + (streaming ? "INLINE" : "ATTACHMENT") + "&service=DOWNLOAD&qos=0",
+				"styles": {
+					  display: "none"
+					, height: 0
+					, width: 0
+				}
+			}).inject(document.body);
+		}, this);
+	},
+
 	"request": function(qs, fn, async, fails) {
 		if ($type(fails) != "array") fails = [0]; // array so to pass by reference
 
@@ -249,7 +269,7 @@ var utWebUI = {
 		var req = function() {
 			try {
 				new Request.JSON({
-					"url": urlBase + "?token=" + self.TOKEN + "&" + qs + "&t=" + $time(),
+					"url": guiBase + "?token=" + self.TOKEN + "&" + qs + "&t=" + $time(),
 					"method": "get",
 					"async": !!async,
 					"onFailure": function() {
@@ -303,7 +323,7 @@ var utWebUI = {
 		var self = this;
 		try {
 			new Request({
-				"url": urlBase + "token.html?t=" + $time(),
+				"url": guiBase + "token.html?t=" + $time(),
 				"method": "get",
 				"async": !!async,
 				"onFailure": (fn) ? fn.bind(self) : $empty,
@@ -1832,6 +1852,10 @@ var utWebUI = {
 		if (isGuest || !ev.isRightClick()) return;
 
 		var id = this.torrentID;
+
+		var fileIds = this.getSelFileIds(id, -1);
+		if (fileIds.length <= 0) return;
+
 		var menuItems = [];
 
 		//--------------------------------------------------
@@ -1846,10 +1870,7 @@ var utWebUI = {
 			, [lang[CONST.MF_HIGH], this.setPriority.bind(this, [id, CONST.FILEPRIORITY_HIGH])]
 		];
 
-		// Gray out items based on priorities of selected files
-		var fileIds = this.getSelFileIds(id, -1);
-		if (fileIds.length <= 0) return;
-
+		// Gray out priority items based on priorities of selected files
 		var p = this.files[id][fileIds[0]][CONST.FILE_PRIORITY];
 		for (var i = 1, l = fileIds.length; i < l; ++i) {
 			if (p != this.files[id][fileIds[i]][CONST.FILE_PRIORITY]) {
@@ -1863,6 +1884,34 @@ var utWebUI = {
 		}
 
 		menuItems = menuItems.concat(prioItems.reverse());
+
+		//--------------------------------------------------
+		// File Download
+		//--------------------------------------------------
+
+		var fileDownloadItems = [
+			  [CMENU_SEP]
+			, [lang[CONST.MF_GETFILE], this.downloadFiles.bind(this, [id])]
+		];
+
+		// Gray out download item if no selected file is complete
+		var goodFile = false;
+		for (var i = 0, l = fileIds.length; i < l; ++i) {
+			var data = this.files[id][fileIds[i]];
+			if (data[CONST.FILE_DOWNLOADED] == data[CONST.FILE_SIZE]) {
+				goodFile = true;
+				break;
+			}
+		}
+		if (!goodFile) {
+			delete fileDownloadItems[1][1];
+		}
+
+		var fdata = this.files[id][fileIds[0]];
+		if (fileIds.length > 1 || fdata[CONST.FILE_DOWNLOADED] != fdata[CONST.FILE_SIZE]) {
+		}
+
+		menuItems = menuItems.concat(fileDownloadItems);
 
 		//--------------------------------------------------
 		// Draw Menu
@@ -1886,6 +1935,22 @@ var utWebUI = {
 			}
 		}
 		return ids;
+	},
+
+	"downloadFiles": function(id) {
+		var selIds = this.getSelFileIds(id, -1);
+
+		var fileIds = [];
+		$each(selIds, function(fid) {
+			var data = this.files[id][fid];
+			if (data[CONST.FILE_DOWNLOADED] == data[CONST.FILE_SIZE]) {
+				fileIds.push(fid);
+			}
+		}, this);
+		
+		if (fileIds.length <= 0) return;
+
+		this.proxyFiles(this.torrents[id][CONST.TORRENT_STREAM_ID], fileIds, false);
 	},
 
 	"setPriority": function(id, p) {

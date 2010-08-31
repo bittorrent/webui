@@ -174,6 +174,7 @@ var lang = [
 	, "Toon categorielijst"
 	, "Toon gedetailleerde info"
 	, "Herstel"
+	, "Get File(s)"
 	, "Niet downloaden"
 	, "Hoge prioriteit"
 	, "Lage prioriteit"

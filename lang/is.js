@@ -174,6 +174,7 @@ var lang = [
 	, "Listi Yfir Flokka"
 	, "Nákvæmar Upplýsingar"
 	, "Endurstilla"
+	, "Get File(s)"
 	, "Ekki Sækja"
 	, "Há Forgangsröðun"
 	, "Lág Forgangsröðun"

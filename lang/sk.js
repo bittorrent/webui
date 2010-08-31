@@ -174,6 +174,7 @@ var lang = [
 	, "Zobraziť zoznam kategórií"
 	, "Zobraziť podrobnosti"
 	, "Reset"
+	, "Get File(s)"
 	, "Nesťahovať"
 	, "Vysoká priorita"
 	, "Nízka priorita"

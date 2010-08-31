@@ -174,6 +174,7 @@ var lang = [
 	, "Kategooriate nimekiri"
 	, "Näita detailset infot"
 	, "Taasta"
+	, "Get File(s)"
 	, "Ära lae alla"
 	, "Kõrge prioriteet"
 	, "Madal prioriteet"
