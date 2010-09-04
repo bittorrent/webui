@@ -98,19 +98,19 @@ Array.implement({
 			};
 		}
 		first = first || 0;
-	    upto = upto || this.length;
-	    while (first < upto) {
-	        var mid = parseInt((first + upto) / 2);
+		upto = upto || this.length;
+		while (first < upto) {
+			var mid = parseInt((first + upto) / 2);
 			var cv = comparator(value, this[mid]);
-	        if (cv < 0) {
-	            upto = mid;
-	        } else if (cv > 0) {
-	            first = mid + 1;
-	        } else {
-	            return mid;
-	        }
-	    }
-	    return -(first + 1);
+			if (cv < 0) {
+				upto = mid;
+			} else if (cv > 0) {
+				first = mid + 1;
+			} else {
+				return mid;
+			}
+		}
+		return -(first + 1);
 	},
 
 
@@ -155,8 +155,8 @@ String.implement({
 Number.implement({
 
 	"toFixedNR": function(numdec) {
-		var res = this.toFixed(numdec+1);
-		return res.substring(0, res.length-1);
+		var res = this.toFixed(20);
+		return res.substring(0, res.length-(20-numdec));
 	},
 
 	"toFileSize": function(numdec) {

@@ -16,6 +16,7 @@ var isGuest = window.location.pathname.test(/.*guest.html$/);
 var utWebUI = {
 
 	"torrents": {},
+	"peers": {},
 	"files": {},
 	"settings": {},
 	"props": {},
@@ -51,9 +52,16 @@ var utWebUI = {
 		"hSplit": -1,
 		"vSplit": -1,
 		"torrentTable": {
-			"colMask": 0x0000, // automatically calculated based on this.flsColDefs
+			"colMask": 0x0000, // automatically calculated based on this.trtColDefs
 			"colOrder": [], // automatically calculated based on this.trtColDefs
 			"colWidth": [], // automatically calculated based on this.trtColDefs
+			"reverse": false,
+			"sIndex": -1
+		},
+		"peerTable": {
+			"colMask": 0x0000, // automatically calculated based on this.prsColDefs
+			"colOrder": [], // automatically calculated based on this.prsColDefs
+			"colWidth": [], // automatically calculated based on this.prsColDefs
 			"reverse": false,
 			"sIndex": -1
 		},
@@ -69,6 +77,7 @@ var utWebUI = {
 	"torrentID": "", // selected torrent
 	"propID": "", // selected torrent (single)
 	"trtTable": new dxSTable(),
+	"prsTable": new dxSTable(),
 	"flsTable": new dxSTable(),
 	"advOptTable": new dxSTable(),
 	"trtColDefs": [
@@ -90,6 +99,27 @@ var utWebUI = {
 		, ["ratio", 60, TYPE_NUMBER]
 		, ["availability", 60, TYPE_NUMBER]
 		, ["label", 80, TYPE_STRING, true]
+	],
+	"prsColDefs": [
+		//[ colID, colWidth, colType, colDisabled = false, colAlign = ALIGN_AUTO, colText = "" ]
+		  ["ip", 200, TYPE_STRING] // TODO: See if this should use TYPE_CUSTOM
+		, ["port", 60, TYPE_NUMBER, true]
+		, ["client", 125, TYPE_STRING]
+		, ["flags", 60, TYPE_STRING]
+		, ["pcnt", 80, TYPE_NUM_PROGRESS]
+		, ["relevance", 70, TYPE_NUMBER, true]
+		, ["downspeed", 80, TYPE_NUMBER]
+		, ["upspeed", 80, TYPE_NUMBER]
+		, ["reqs", 40, TYPE_STRING]
+		, ["waited", 60, TYPE_NUMBER, true]
+		, ["uploaded", 70, TYPE_NUMBER]
+		, ["downloaded", 70, TYPE_NUMBER]
+		, ["hasherr", 70, TYPE_NUMBER, true]
+		, ["peerdl", 70, TYPE_NUMBER]
+		, ["maxup", 70, TYPE_NUMBER, true]
+		, ["maxdown", 70, TYPE_NUMBER, true]
+		, ["queued", 70, TYPE_NUMBER, true]
+		, ["inactive", 60, TYPE_NUMBER, true]
 	],
 	"flsColDefs": [
 		//[ colID, colWidth, colType, colDisabled = false, colAlign = ALIGN_AUTO, colText = "" ]
@@ -234,6 +264,7 @@ var utWebUI = {
 
 		// Set default colMask values based on colDefs
 		this.trtColDefs.each(function(item, index) { this.trtColToggle(index, item[3], true); }, this);
+		this.prsColDefs.each(function(item, index) { this.prsColToggle(index, item[3], true); }, this);
 		this.flsColDefs.each(function(item, index) { this.flsColToggle(index, item[3], true); }, this);
 
 		if (isGuest) {
@@ -464,7 +495,6 @@ var utWebUI = {
 		if (this.settings["confirm_when_deleting"]) {
 			var multiple = (count != 1);
 			var ask = (mode == 0) ? ((multiple) ? CONST.OV_CONFIRM_DELETE_MULTIPLE : CONST.OV_CONFIRM_DELETE_ONE) : ((multiple) ? CONST.OV_CONFIRM_DELETEDATA_MULTIPLE : CONST.OV_CONFIRM_DELETEDATA_ONE);
-//			ok = confirm(lang[ask].replace(/%d/, count));
 
 			$("dlgDelTor-message").set("text", lang[ask].replace(/%d/, count));
 			$("DELTOR_YES").addEvent("click", function(ev) {
@@ -518,7 +548,7 @@ var utWebUI = {
 			res = ["Status_Completed", lang[CONST.OV_FL_FINISHED]];
 		}
 		else { // stopped
-			res = ["Status_Incompleted", lang[CONST.OV_FL_STOPPED]];
+			res = ["Status_Incomplete", lang[CONST.OV_FL_STOPPED]];
 		}
 
 		return res;
@@ -927,6 +957,13 @@ var utWebUI = {
 						, "colWidth": this.config.torrentTable.colWidth
 					});
 
+					this.prsTable.setConfig({
+						  "colSort": [cookie.peerTable.sIndex, cookie.peerTable.reverse]
+						, "colMask": cookie.peerTable.colMask
+						, "colOrder": cookie.peerTable.colOrder
+						, "colWidth": cookie.peerTable.colWidth
+					});
+
 					this.flsTable.setConfig({
 						  "colSort": [cookie.fileTable.sIndex, cookie.fileTable.reverse]
 						, "colMask": cookie.fileTable.colMask
@@ -1256,7 +1293,8 @@ var utWebUI = {
 	},
 
 	"searchMenuSet": function(index) {
-		this.request("action=setsetting&s=search_list_sel&v=" + index); // TODO: Generalize settings storage requests
+		// TODO: Generalize settings storage requests
+		this.request("action=setsetting&s=search_list_sel&v=" + index);
 
 		this.settings["search_list_sel"] = index;
 		$("query").focus();
@@ -1334,7 +1372,7 @@ var utWebUI = {
 					return data[CONST.TORRENT_SEEDS_CONNECTED] + " (" + data[CONST.TORRENT_SEEDS_SWARM] + ")";
 
 				case "seeds_peers":
-					return (data[CONST.TORRENT_PEERS_SWARM]) ? data[CONST.TORRENT_SEEDS_SWARM] / data[CONST.TORRENT_PEERS_SWARM] : Number.MAX_VALUE;
+					return (data[CONST.TORRENT_PEERS_SWARM]) ? (data[CONST.TORRENT_SEEDS_SWARM] / data[CONST.TORRENT_PEERS_SWARM]) : Number.MAX_VALUE;
 
 				case "size":
 					return data[CONST.TORRENT_SIZE];
@@ -1708,11 +1746,13 @@ var utWebUI = {
 	"showDetails": function(id) {
 		this.flsTable.clearRows();
 		this.torrentID = id;
+		this.getPeers(id, true);
 		this.getFiles(id);
 		this.updateDetails();
 	},
 
 	"clearDetails": function() {
+		this.prsTable.clearRows();
 		this.flsTable.clearRows();
 		["rm", "dl", "ul", "ra", "us", "ds", "se", "pe", "hs"].each(function(id) {
 			$(id).set("html", "");
@@ -1746,12 +1786,55 @@ var utWebUI = {
 		}
 	},
 
+	"loadPeers": function() {
+		var id = this.torrentID;
+		if (id != "") {
+			this.prsTable.dBody.scrollLeft = 0;
+			this.prsTable.dBody.scrollTop = 0;
+			this.peers[id].each(function(peer, i) {
+				var key = id + "_" + peer[CONST.PEER_IP] + "_" + peer[CONST.PEER_PORT]; // TODO: Handle bt.allow_same_ip
+				this.prsTable.addRow(this.prsDataToRow(peer), key);
+				this.prsTable.setIcon(key, "country_" + peer[CONST.PEER_COUNTRY]);
+			}, this);
+			this.prsTable.calcSize();
+			this.prsTable.refreshRows();
+
+			this.prsTable.loadObj.hide.delay(200, this.prsTable.loadObj);
+		}
+	},
+
+	"getPeers": function(id, update) {
+		if (!has(this.peers, id) || update) {
+			this.peers[id] = [];
+			if (update)
+				this.prsTable.clearRows();
+			if (this.mainTabs.active == "mainInfoPane-peersTab")
+				this.prsTable.loadObj.show();
+			this.request("action=getpeers&hash=" + id, this.addPeers);
+		} else {
+			if (this.mainTabs.active == "mainInfoPane-peersTab") {
+				this.prsTable.loadObj.show();
+				this.loadPeers.delay(20, this);
+			}
+		}
+	},
+
+	"addPeers": function(json) {
+		var peers = json.peers;
+		if (peers == undefined) return;
+		this.peers[peers[0]] = peers[1];
+		if (this.mainTabs.active == "mainInfoPane-peersTab")
+			this.loadPeers();
+	},
+
+/*
 	"updateFiles": function(hash) {
 		if ((this.torrentID == hash) && has(this.files, hash)) {
 			this.getFiles(hash, true);
 			this.updateDetails();
 		}
 	},
+*/
 
 	"loadFiles": function() {
 		var id = this.torrentID;
@@ -1844,7 +1927,7 @@ var utWebUI = {
 	},
 
 	"flsSelect": function(ev, id) {
-		if (this.flsTable.selectedRows.length > 0)
+		if (ev.isRightClick() && this.flsTable.selectedRows.length > 0)
 			this.showFileMenu.delay(0, this, ev);
 	},
 
@@ -2011,6 +2094,200 @@ var utWebUI = {
 			this.config.torrentTable.colMask &= ~num;
 		}
 		if (!nosave && Browser.Engine.presto)
+			this.saveConfig(true);
+	},
+
+	"prsColMove": function() {
+		this.config.peerTable.colOrder = this.prsTable.colOrder;
+		this.config.peerTable.sIndex = this.prsTable.sIndex;
+		if (Browser.Engine.presto)
+			this.saveConfig(true);
+	},
+
+	"prsColReset": function() {
+		var config = {
+			  "colMask": 0
+			, "colOrder": this.prsColDefs.map(function(item, idx) { return idx; })
+			, "colWidth": this.prsColDefs.map(function(item, idx) { return item[1]; })
+		};
+
+		this.prsColDefs.each(function(item, idx) { if (!!item[3]) config.colMask |= (1 << idx); });
+
+		this.prsTable.setConfig(config);
+		$extend(this.config.peerTable, config);
+		if (Browser.Engine.presto)
+			this.saveConfig(true);
+	},
+
+	"prsColResize": function() {
+		this.config.peerTable.colWidth = this.prsTable.getColumnWidths();
+		if (Browser.Engine.presto)
+			this.saveConfig(true);
+	},
+
+	"prsColToggle": function(index, enable, nosave) {
+		var num = 1 << index;
+		if (enable) {
+			this.config.peerTable.colMask |= num;
+		} else {
+			this.config.peerTable.colMask &= ~num;
+		}
+		if (!nosave && Browser.Engine.presto)
+			this.saveConfig(true);
+	},
+
+	"prsDataToRow": function(data) {
+		return this.prsColDefs.map(function(item) {
+			switch (item[0]) {
+				case "ip":
+					return (
+						  ((this.settings["resolve_peerips"] && data[CONST.PEER_REVDNS]) || data[CONST.PEER_IP])
+						+ (data[CONST.PEER_UTP] ? " [uTP]" : "")
+					);
+
+				case "port":
+					return data[CONST.PEER_PORT];
+
+				case "client":
+					return data[CONST.PEER_CLIENT];
+
+				case "flags":
+					return data[CONST.PEER_FLAGS];
+
+				case "pcnt":
+					return data[CONST.PEER_PROGRESS];
+
+				case "relevance":
+					return data[CONST.PEER_RELEVANCE];
+
+				case "downspeed":
+					return data[CONST.PEER_DOWNSPEED];
+
+				case "upspeed":
+					return data[CONST.PEER_UPSPEED];
+
+				case "reqs":
+					return data[CONST.PEER_REQS_OUT] + "|" + data[CONST.PEER_REQS_IN];
+
+				case "waited":
+					return data[CONST.PEER_WAITED];
+
+				case "uploaded":
+					return data[CONST.PEER_UPLOADED];
+
+				case "downloaded":
+					return data[CONST.PEER_DOWNLOADED];
+
+				case "hasherr":
+					return data[CONST.PEER_HASHERR];
+
+				case "peerdl":
+					return data[CONST.PEER_PEERDL];
+
+				case "maxup":
+					return data[CONST.PEER_MAXUP];
+
+				case "maxdown":
+					return data[CONST.PEER_MAXDOWN];
+
+				case "queued":
+					return data[CONST.PEER_QUEUED];
+
+				case "inactive":
+					return data[CONST.PEER_INACTIVE];
+			}
+		}, this);
+	},
+
+	"prsFormatRow": function(values, index) {
+		var useidx = $chk(index);
+		var len = (useidx ? (index + 1) : values.length);
+
+		for (var i = (index || 0); i < len; i++) {
+			switch (this.prsColDefs[i][0]) {
+				case "ip":
+				case "port":
+				case "client":
+				case "flags":
+				case "reqs":
+					break;
+
+				case "pcnt":
+				case "relevance":
+					values[i] = (values[i] / 10).toFixedNR(1) + "%";
+					break;
+
+				case "uploaded":
+				case "downloaded":
+				case "hasherr":
+				case "queued":
+					values[i] = (values[i] > 103) ? values[i].toFileSize() : "";
+					break;
+
+				case "downspeed":
+				case "upspeed":
+				case "peerdl":
+				case "maxup":
+				case "maxdown":
+					values[i] = (values[i] > 103) ? (values[i].toFileSize() + g_perSec) : "";
+					break;
+
+				case "waited":
+				case "inactive":
+					values[i] = (values[i] == 0) ? "" :
+								(values[i] == -1) ? "\u221E" : values[i].toTimeString();
+					break;
+			}
+		}
+
+		if (useidx)
+			return values[index];
+		else
+			return values;
+	},
+
+	"toggleResolveIP": function() {
+		this.settings["resolve_peerips"] = !this.settings["resolve_peerips"];
+
+		// TODO: Generalize settings storage requests
+		this.request("action=setsetting&s=resolve_peerips&v=" + (this.settings["resolve_peerips"] ? 1 : 0), (function () {
+			if (this.torrentID != "")
+				this.getPeers(this.torrentID, true);
+		}).bind(this));
+	},
+
+	"prsSelect": function(ev, id) {
+		if (ev.isRightClick())
+			this.showPeerMenu.delay(0, this, ev);
+	},
+
+	"showPeerMenu": function(ev) {
+		if (isGuest || !ev.isRightClick()) return;
+
+		var menuItems = [
+			[lang[CONST.MP_RESOLVE_IPS], this.toggleResolveIP.bind(this)]
+		];
+
+		if (this.settings["resolve_peerips"]) {
+			menuItems[0].splice(0, 0, CMENU_CHECK);
+		}
+
+		//--------------------------------------------------
+		// Draw Menu
+		//--------------------------------------------------
+
+		ContextMenu.clear();
+		for (var i = 0, l = menuItems.length; i < l; ++i) {
+			ContextMenu.add(menuItems[i]);
+		}
+		ContextMenu.show(ev.page);
+	},
+
+
+	"prsSort": function(index, reverse) {
+		this.config.peerTable.sIndex = index;
+		this.config.peerTable.reverse = reverse;
+		if (Browser.Engine.presto)
 			this.saveConfig(true);
 	},
 
@@ -2227,12 +2504,14 @@ var utWebUI = {
 		max = (max || 0).max(this.limits.minTableRows);
 		this.config.maxRows = max;
 		this.trtTable.setConfig({"rowMaxCount": max});
+		this.prsTable.setConfig({"rowMaxCount": max});
 		this.flsTable.setConfig({"rowMaxCount": max});
 		this.advOptTable.setConfig({"rowMaxCount": max});
 	},
 
 	"tableUseAltColor": function(enable) {
 		this.trtTable.setConfig({"rowAlternate": enable});
+		this.prsTable.setConfig({"rowAlternate": enable});
 		this.flsTable.setConfig({"rowAlternate": enable});
 		this.advOptTable.setConfig({"rowAlternate": enable});
 	},
@@ -2240,13 +2519,23 @@ var utWebUI = {
 	"tableUseProgressBar": function(enable) {
 		var progFunc = $lambda(enable ? TYPE_NUM_PROGRESS : TYPE_NUMBER);
 		var trtProgCols = this.trtColDefs.filter(function(item) { return item[2] == TYPE_NUM_PROGRESS; }).map(function(item) { return item[0]; });
+		var prsProgCols = this.prsColDefs.filter(function(item) { return item[2] == TYPE_NUM_PROGRESS; }).map(function(item) { return item[0]; });
 		var flsProgCols = this.flsColDefs.filter(function(item) { return item[2] == TYPE_NUM_PROGRESS; }).map(function(item) { return item[0]; });
 		this.trtTable.setConfig({"colType": trtProgCols.map(progFunc).associate(trtProgCols)});
+		this.prsTable.setConfig({"colType": trtProgCols.map(progFunc).associate(prsProgCols)});
 		this.flsTable.setConfig({"colType": flsProgCols.map(progFunc).associate(flsProgCols)});
 	},
 
 	"detPanelTabChange": function(id) {
-		if (id == "mainInfoPane-filesTab") {
+		if (id == "mainInfoPane-peersTab") {
+			this.prsTable.calcSize();
+
+			if (this.torrentID == "") return;
+
+			this.prsTable.loadObj.show();
+			this.loadPeers.delay(20, this);
+		}
+		else if (id == "mainInfoPane-filesTab") {
 			this.flsTable.calcSize();
 
 			if (this.torrentID == "") return;

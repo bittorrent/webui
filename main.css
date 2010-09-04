@@ -338,29 +338,17 @@ td.disabled, label.disabled, span.disabled, div.disabled {
 	overflow: hidden;
 }
 
-.Status_Down,
-.Status_Up,
+.Status_Down        { background: transparent url(./images/tstatus.png) no-repeat 5px 0px; }
+.Status_Up          { background: transparent url(./images/tstatus.png) no-repeat 5px -16px; }
 .Status_Checking,
-.Status_Incompleted,
-.Status_Paused,
-.Status_Error_Down,
-.Status_Error_Up,
-.Status_Error,
-.Status_Completed,
-.Status_Queued_Down,
-.Status_Queued_Up {
-	background: transparent url(./images/tstatus.png) no-repeat 5px top;
-}
-
-	.Status_Up { background-position: 5px -16px; }
-	.Status_Checking, .Status_Incompleted { background-position: 5px -32px; }
-	.Status_Paused { background-position: 5px -48px; }
-	.Status_Error_Down { background-position: 5px -64px; }
-	.Status_Error_Up { background-position: 5px -80px; }
-	.Status_Error { background-position: 5px -96px; }
-	.Status_Completed { background-position: 5px -112px; }
-	.Status_Queued_Down { background-position: 5px -128px; }
-	.Status_Queued_Up { background-position: 5px -144px; }
+.Status_Incomplete  { background: transparent url(./images/tstatus.png) no-repeat 5px -32px; }
+.Status_Paused      { background: transparent url(./images/tstatus.png) no-repeat 5px -48px; }
+.Status_Error_Down  { background: transparent url(./images/tstatus.png) no-repeat 5px -64px; }
+.Status_Error_Up    { background: transparent url(./images/tstatus.png) no-repeat 5px -80px; }
+.Status_Error       { background: transparent url(./images/tstatus.png) no-repeat 5px -96px; }
+.Status_Completed   { background: transparent url(./images/tstatus.png) no-repeat 5px -112px; }
+.Status_Queued_Down { background: transparent url(./images/tstatus.png) no-repeat 5px -128px; }
+.Status_Queued_Up   { background: transparent url(./images/tstatus.png) no-repeat 5px -144px; }
 
 
 /**************************************************
@@ -429,6 +417,7 @@ ul#mainInfoPane-tabs li a span {
 }
 
 li#tab_mainInfoPane-generalTab span,
+li#tab_mainInfoPane-peersTab span,
 li#tab_mainInfoPane-filesTab span,
 li#tab_mainInfoPane-speedTab span,
 li#tab_mainInfoPane-loggerTab span {
@@ -437,6 +426,7 @@ li#tab_mainInfoPane-loggerTab span {
 }
 
 li.selected#tab_mainInfoPane-generalTab span,
+li.selected#tab_mainInfoPane-peersTab span,
 li.selected#tab_mainInfoPane-filesTab span,
 li.selected#tab_mainInfoPane-speedTab span,
 li.selected#tab_mainInfoPane-loggerTab span {
@@ -444,6 +434,7 @@ li.selected#tab_mainInfoPane-loggerTab span {
 }
 
 	li#tab_mainInfoPane-generalTab span { background-position: 4px 0px; }
+	li#tab_mainInfoPane-peersTab span { background-position: 4px -32px; }
 	li#tab_mainInfoPane-filesTab span { background-position: 4px -64px; }
 	li#tab_mainInfoPane-speedTab span { background-position: 4px -80px; }
 	li#tab_mainInfoPane-loggerTab span { background-position: 4px -96px; }
@@ -481,6 +472,257 @@ li.selected#tab_mainInfoPane-loggerTab span {
 	width: 100px;
 	float: left;
 }
+
+.country_00 { background: transparent url(./images/flags.png) no-repeat 5px 0px; }
+.country_AC { background: transparent url(./images/flags.png) no-repeat 5px -16px; }
+.country_AD { background: transparent url(./images/flags.png) no-repeat 5px -32px; }
+.country_AE { background: transparent url(./images/flags.png) no-repeat 5px -48px; }
+.country_AF { background: transparent url(./images/flags.png) no-repeat 5px -64px; }
+.country_AG { background: transparent url(./images/flags.png) no-repeat 5px -80px; }
+.country_AI { background: transparent url(./images/flags.png) no-repeat 5px -96px; }
+.country_AL { background: transparent url(./images/flags.png) no-repeat 5px -112px; }
+.country_AM { background: transparent url(./images/flags.png) no-repeat 5px -128px; }
+.country_AN { background: transparent url(./images/flags.png) no-repeat 5px -144px; }
+.country_AO { background: transparent url(./images/flags.png) no-repeat 5px -160px; }
+.country_AQ { background: transparent url(./images/flags.png) no-repeat 5px -176px; }
+.country_AR { background: transparent url(./images/flags.png) no-repeat 5px -192px; }
+.country_AS { background: transparent url(./images/flags.png) no-repeat 5px -208px; }
+.country_AT { background: transparent url(./images/flags.png) no-repeat 5px -224px; }
+.country_AU { background: transparent url(./images/flags.png) no-repeat 5px -240px; }
+.country_AW { background: transparent url(./images/flags.png) no-repeat 5px -256px; }
+.country_AX { background: transparent url(./images/flags.png) no-repeat 5px -272px; }
+.country_AZ { background: transparent url(./images/flags.png) no-repeat 5px -288px; }
+.country_BA { background: transparent url(./images/flags.png) no-repeat 5px -304px; }
+.country_BB { background: transparent url(./images/flags.png) no-repeat 5px -320px; }
+.country_BD { background: transparent url(./images/flags.png) no-repeat 5px -336px; }
+.country_BE { background: transparent url(./images/flags.png) no-repeat 5px -352px; }
+.country_BF { background: transparent url(./images/flags.png) no-repeat 5px -368px; }
+.country_BG { background: transparent url(./images/flags.png) no-repeat 5px -384px; }
+.country_BH { background: transparent url(./images/flags.png) no-repeat 5px -400px; }
+.country_BI { background: transparent url(./images/flags.png) no-repeat 5px -416px; }
+.country_BJ { background: transparent url(./images/flags.png) no-repeat 5px -432px; }
+.country_BM { background: transparent url(./images/flags.png) no-repeat 5px -448px; }
+.country_BN { background: transparent url(./images/flags.png) no-repeat 5px -464px; }
+.country_BO { background: transparent url(./images/flags.png) no-repeat 5px -480px; }
+.country_BR { background: transparent url(./images/flags.png) no-repeat 5px -496px; }
+.country_BS { background: transparent url(./images/flags.png) no-repeat 5px -512px; }
+.country_BT { background: transparent url(./images/flags.png) no-repeat 5px -528px; }
+.country_BV { background: transparent url(./images/flags.png) no-repeat 5px -544px; }
+.country_BW { background: transparent url(./images/flags.png) no-repeat 5px -560px; }
+.country_BY { background: transparent url(./images/flags.png) no-repeat 5px -576px; }
+.country_BZ { background: transparent url(./images/flags.png) no-repeat 5px -592px; }
+.country_CA { background: transparent url(./images/flags.png) no-repeat 5px -608px; }
+.country_CC { background: transparent url(./images/flags.png) no-repeat 5px -624px; }
+.country_CD { background: transparent url(./images/flags.png) no-repeat 5px -640px; }
+.country_CF { background: transparent url(./images/flags.png) no-repeat 5px -656px; }
+.country_CG { background: transparent url(./images/flags.png) no-repeat 5px -672px; }
+.country_CH { background: transparent url(./images/flags.png) no-repeat 5px -688px; }
+.country_CI { background: transparent url(./images/flags.png) no-repeat 5px -704px; }
+.country_CK { background: transparent url(./images/flags.png) no-repeat 5px -720px; }
+.country_CL { background: transparent url(./images/flags.png) no-repeat 5px -736px; }
+.country_CM { background: transparent url(./images/flags.png) no-repeat 5px -752px; }
+.country_CN { background: transparent url(./images/flags.png) no-repeat 5px -768px; }
+.country_CO { background: transparent url(./images/flags.png) no-repeat 5px -784px; }
+.country_CR { background: transparent url(./images/flags.png) no-repeat 5px -800px; }
+.country_CU { background: transparent url(./images/flags.png) no-repeat 5px -816px; }
+.country_CV { background: transparent url(./images/flags.png) no-repeat 5px -832px; }
+.country_CX { background: transparent url(./images/flags.png) no-repeat 5px -848px; }
+.country_CY { background: transparent url(./images/flags.png) no-repeat 5px -864px; }
+.country_CZ { background: transparent url(./images/flags.png) no-repeat 5px -880px; }
+.country_DE { background: transparent url(./images/flags.png) no-repeat 5px -896px; }
+.country_DJ { background: transparent url(./images/flags.png) no-repeat 5px -912px; }
+.country_DK { background: transparent url(./images/flags.png) no-repeat 5px -928px; }
+.country_DM { background: transparent url(./images/flags.png) no-repeat 5px -944px; }
+.country_DO { background: transparent url(./images/flags.png) no-repeat 5px -960px; }
+.country_DZ { background: transparent url(./images/flags.png) no-repeat 5px -976px; }
+.country_EC { background: transparent url(./images/flags.png) no-repeat 5px -992px; }
+.country_EE { background: transparent url(./images/flags.png) no-repeat 5px -1008px; }
+.country_EG { background: transparent url(./images/flags.png) no-repeat 5px -1024px; }
+.country_EH { background: transparent url(./images/flags.png) no-repeat 5px -1040px; }
+.country_ER { background: transparent url(./images/flags.png) no-repeat 5px -1056px; }
+.country_ES { background: transparent url(./images/flags.png) no-repeat 5px -1072px; }
+.country_ET { background: transparent url(./images/flags.png) no-repeat 5px -1088px; }
+.country_EU { background: transparent url(./images/flags.png) no-repeat 5px -1104px; }
+.country_FI { background: transparent url(./images/flags.png) no-repeat 5px -1120px; }
+.country_FJ { background: transparent url(./images/flags.png) no-repeat 5px -1136px; }
+.country_FK { background: transparent url(./images/flags.png) no-repeat 5px -1152px; }
+.country_FM { background: transparent url(./images/flags.png) no-repeat 5px -1168px; }
+.country_FO { background: transparent url(./images/flags.png) no-repeat 5px -1184px; }
+.country_FR { background: transparent url(./images/flags.png) no-repeat 5px -1200px; }
+.country_GA { background: transparent url(./images/flags.png) no-repeat 5px -1216px; }
+.country_GB { background: transparent url(./images/flags.png) no-repeat 5px -1232px; }
+.country_GD { background: transparent url(./images/flags.png) no-repeat 5px -1248px; }
+.country_GE { background: transparent url(./images/flags.png) no-repeat 5px -1264px; }
+.country_GF { background: transparent url(./images/flags.png) no-repeat 5px -1280px; }
+.country_GG { background: transparent url(./images/flags.png) no-repeat 5px -1296px; }
+.country_GH { background: transparent url(./images/flags.png) no-repeat 5px -1312px; }
+.country_GI { background: transparent url(./images/flags.png) no-repeat 5px -1328px; }
+.country_GL { background: transparent url(./images/flags.png) no-repeat 5px -1344px; }
+.country_GM { background: transparent url(./images/flags.png) no-repeat 5px -1360px; }
+.country_GN { background: transparent url(./images/flags.png) no-repeat 5px -1376px; }
+.country_GP { background: transparent url(./images/flags.png) no-repeat 5px -1392px; }
+.country_GQ { background: transparent url(./images/flags.png) no-repeat 5px -1408px; }
+.country_GR { background: transparent url(./images/flags.png) no-repeat 5px -1424px; }
+.country_GS { background: transparent url(./images/flags.png) no-repeat 5px -1440px; }
+.country_GT { background: transparent url(./images/flags.png) no-repeat 5px -1456px; }
+.country_GU { background: transparent url(./images/flags.png) no-repeat 5px -1472px; }
+.country_GW { background: transparent url(./images/flags.png) no-repeat 5px -1488px; }
+.country_GY { background: transparent url(./images/flags.png) no-repeat 5px -1504px; }
+.country_HK { background: transparent url(./images/flags.png) no-repeat 5px -1520px; }
+.country_HM { background: transparent url(./images/flags.png) no-repeat 5px -1536px; }
+.country_HN { background: transparent url(./images/flags.png) no-repeat 5px -1552px; }
+.country_HR { background: transparent url(./images/flags.png) no-repeat 5px -1568px; }
+.country_HT { background: transparent url(./images/flags.png) no-repeat 5px -1584px; }
+.country_HU { background: transparent url(./images/flags.png) no-repeat 5px -1600px; }
+.country_ID { background: transparent url(./images/flags.png) no-repeat 5px -1616px; }
+.country_IE { background: transparent url(./images/flags.png) no-repeat 5px -1632px; }
+.country_IL { background: transparent url(./images/flags.png) no-repeat 5px -1648px; }
+.country_IM { background: transparent url(./images/flags.png) no-repeat 5px -1664px; }
+.country_IN { background: transparent url(./images/flags.png) no-repeat 5px -1680px; }
+.country_IO { background: transparent url(./images/flags.png) no-repeat 5px -1696px; }
+.country_IQ { background: transparent url(./images/flags.png) no-repeat 5px -1712px; }
+.country_IR { background: transparent url(./images/flags.png) no-repeat 5px -1728px; }
+.country_IS { background: transparent url(./images/flags.png) no-repeat 5px -1744px; }
+.country_IT { background: transparent url(./images/flags.png) no-repeat 5px -1760px; }
+.country_JE { background: transparent url(./images/flags.png) no-repeat 5px -1776px; }
+.country_JM { background: transparent url(./images/flags.png) no-repeat 5px -1792px; }
+.country_JO { background: transparent url(./images/flags.png) no-repeat 5px -1808px; }
+.country_JP { background: transparent url(./images/flags.png) no-repeat 5px -1824px; }
+.country_KE { background: transparent url(./images/flags.png) no-repeat 5px -1840px; }
+.country_KG { background: transparent url(./images/flags.png) no-repeat 5px -1856px; }
+.country_KH { background: transparent url(./images/flags.png) no-repeat 5px -1872px; }
+.country_KI { background: transparent url(./images/flags.png) no-repeat 5px -1888px; }
+.country_KM { background: transparent url(./images/flags.png) no-repeat 5px -1904px; }
+.country_KN { background: transparent url(./images/flags.png) no-repeat 5px -1920px; }
+.country_KP { background: transparent url(./images/flags.png) no-repeat 5px -1936px; }
+.country_KR { background: transparent url(./images/flags.png) no-repeat 5px -1952px; }
+.country_KW { background: transparent url(./images/flags.png) no-repeat 5px -1968px; }
+.country_KY { background: transparent url(./images/flags.png) no-repeat 5px -1984px; }
+.country_KZ { background: transparent url(./images/flags.png) no-repeat 5px -2000px; }
+.country_LA { background: transparent url(./images/flags.png) no-repeat 5px -2016px; }
+.country_LB { background: transparent url(./images/flags.png) no-repeat 5px -2032px; }
+.country_LC { background: transparent url(./images/flags.png) no-repeat 5px -2048px; }
+.country_LI { background: transparent url(./images/flags.png) no-repeat 5px -2064px; }
+.country_LK { background: transparent url(./images/flags.png) no-repeat 5px -2080px; }
+.country_LR { background: transparent url(./images/flags.png) no-repeat 5px -2096px; }
+.country_LS { background: transparent url(./images/flags.png) no-repeat 5px -2112px; }
+.country_LT { background: transparent url(./images/flags.png) no-repeat 5px -2128px; }
+.country_LU { background: transparent url(./images/flags.png) no-repeat 5px -2144px; }
+.country_LV { background: transparent url(./images/flags.png) no-repeat 5px -2160px; }
+.country_LY { background: transparent url(./images/flags.png) no-repeat 5px -2176px; }
+.country_MA { background: transparent url(./images/flags.png) no-repeat 5px -2192px; }
+.country_MC { background: transparent url(./images/flags.png) no-repeat 5px -2208px; }
+.country_MD { background: transparent url(./images/flags.png) no-repeat 5px -2224px; }
+.country_ME { background: transparent url(./images/flags.png) no-repeat 5px -2240px; }
+.country_MG { background: transparent url(./images/flags.png) no-repeat 5px -2256px; }
+.country_MH { background: transparent url(./images/flags.png) no-repeat 5px -2272px; }
+.country_MK { background: transparent url(./images/flags.png) no-repeat 5px -2288px; }
+.country_ML { background: transparent url(./images/flags.png) no-repeat 5px -2304px; }
+.country_MM { background: transparent url(./images/flags.png) no-repeat 5px -2320px; }
+.country_MN { background: transparent url(./images/flags.png) no-repeat 5px -2336px; }
+.country_MO { background: transparent url(./images/flags.png) no-repeat 5px -2352px; }
+.country_MP { background: transparent url(./images/flags.png) no-repeat 5px -2368px; }
+.country_MQ { background: transparent url(./images/flags.png) no-repeat 5px -2384px; }
+.country_MR { background: transparent url(./images/flags.png) no-repeat 5px -2400px; }
+.country_MS { background: transparent url(./images/flags.png) no-repeat 5px -2416px; }
+.country_MT { background: transparent url(./images/flags.png) no-repeat 5px -2432px; }
+.country_MU { background: transparent url(./images/flags.png) no-repeat 5px -2448px; }
+.country_MV { background: transparent url(./images/flags.png) no-repeat 5px -2464px; }
+.country_MW { background: transparent url(./images/flags.png) no-repeat 5px -2480px; }
+.country_MX { background: transparent url(./images/flags.png) no-repeat 5px -2496px; }
+.country_MY { background: transparent url(./images/flags.png) no-repeat 5px -2512px; }
+.country_MZ { background: transparent url(./images/flags.png) no-repeat 5px -2528px; }
+.country_NA { background: transparent url(./images/flags.png) no-repeat 5px -2544px; }
+.country_NC { background: transparent url(./images/flags.png) no-repeat 5px -2560px; }
+.country_NE { background: transparent url(./images/flags.png) no-repeat 5px -2576px; }
+.country_NF { background: transparent url(./images/flags.png) no-repeat 5px -2592px; }
+.country_NG { background: transparent url(./images/flags.png) no-repeat 5px -2608px; }
+.country_NI { background: transparent url(./images/flags.png) no-repeat 5px -2624px; }
+.country_NL { background: transparent url(./images/flags.png) no-repeat 5px -2640px; }
+.country_NO { background: transparent url(./images/flags.png) no-repeat 5px -2656px; }
+.country_NP { background: transparent url(./images/flags.png) no-repeat 5px -2672px; }
+.country_NR { background: transparent url(./images/flags.png) no-repeat 5px -2688px; }
+.country_NU { background: transparent url(./images/flags.png) no-repeat 5px -2704px; }
+.country_NZ { background: transparent url(./images/flags.png) no-repeat 5px -2720px; }
+.country_OM { background: transparent url(./images/flags.png) no-repeat 5px -2736px; }
+.country_PA { background: transparent url(./images/flags.png) no-repeat 5px -2752px; }
+.country_PE { background: transparent url(./images/flags.png) no-repeat 5px -2768px; }
+.country_PF { background: transparent url(./images/flags.png) no-repeat 5px -2784px; }
+.country_PG { background: transparent url(./images/flags.png) no-repeat 5px -2800px; }
+.country_PH { background: transparent url(./images/flags.png) no-repeat 5px -2816px; }
+.country_PK { background: transparent url(./images/flags.png) no-repeat 5px -2832px; }
+.country_PL { background: transparent url(./images/flags.png) no-repeat 5px -2848px; }
+.country_PM { background: transparent url(./images/flags.png) no-repeat 5px -2864px; }
+.country_PN { background: transparent url(./images/flags.png) no-repeat 5px -2880px; }
+.country_PR { background: transparent url(./images/flags.png) no-repeat 5px -2896px; }
+.country_PS { background: transparent url(./images/flags.png) no-repeat 5px -2912px; }
+.country_PT { background: transparent url(./images/flags.png) no-repeat 5px -2928px; }
+.country_PW { background: transparent url(./images/flags.png) no-repeat 5px -2944px; }
+.country_PY { background: transparent url(./images/flags.png) no-repeat 5px -2960px; }
+.country_QA { background: transparent url(./images/flags.png) no-repeat 5px -2976px; }
+.country_RE { background: transparent url(./images/flags.png) no-repeat 5px -2992px; }
+.country_RO { background: transparent url(./images/flags.png) no-repeat 5px -3008px; }
+.country_RS { background: transparent url(./images/flags.png) no-repeat 5px -3024px; }
+.country_RU { background: transparent url(./images/flags.png) no-repeat 5px -3040px; }
+.country_RW { background: transparent url(./images/flags.png) no-repeat 5px -3056px; }
+.country_SA { background: transparent url(./images/flags.png) no-repeat 5px -3072px; }
+.country_SB { background: transparent url(./images/flags.png) no-repeat 5px -3088px; }
+.country_SC { background: transparent url(./images/flags.png) no-repeat 5px -3104px; }
+.country_SD { background: transparent url(./images/flags.png) no-repeat 5px -3120px; }
+.country_SE { background: transparent url(./images/flags.png) no-repeat 5px -3136px; }
+.country_SG { background: transparent url(./images/flags.png) no-repeat 5px -3152px; }
+.country_SH { background: transparent url(./images/flags.png) no-repeat 5px -3168px; }
+.country_SI { background: transparent url(./images/flags.png) no-repeat 5px -3184px; }
+.country_SJ { background: transparent url(./images/flags.png) no-repeat 5px -3200px; }
+.country_SK { background: transparent url(./images/flags.png) no-repeat 5px -3216px; }
+.country_SL { background: transparent url(./images/flags.png) no-repeat 5px -3232px; }
+.country_SM { background: transparent url(./images/flags.png) no-repeat 5px -3248px; }
+.country_SN { background: transparent url(./images/flags.png) no-repeat 5px -3264px; }
+.country_SO { background: transparent url(./images/flags.png) no-repeat 5px -3280px; }
+.country_SR { background: transparent url(./images/flags.png) no-repeat 5px -3296px; }
+.country_ST { background: transparent url(./images/flags.png) no-repeat 5px -3312px; }
+.country_SU { background: transparent url(./images/flags.png) no-repeat 5px -3328px; }
+.country_SV { background: transparent url(./images/flags.png) no-repeat 5px -3344px; }
+.country_SY { background: transparent url(./images/flags.png) no-repeat 5px -3360px; }
+.country_SZ { background: transparent url(./images/flags.png) no-repeat 5px -3376px; }
+.country_TC { background: transparent url(./images/flags.png) no-repeat 5px -3392px; }
+.country_TD { background: transparent url(./images/flags.png) no-repeat 5px -3408px; }
+.country_TF { background: transparent url(./images/flags.png) no-repeat 5px -3424px; }
+.country_TG { background: transparent url(./images/flags.png) no-repeat 5px -3440px; }
+.country_TH { background: transparent url(./images/flags.png) no-repeat 5px -3456px; }
+.country_TJ { background: transparent url(./images/flags.png) no-repeat 5px -3472px; }
+.country_TK { background: transparent url(./images/flags.png) no-repeat 5px -3488px; }
+.country_TL { background: transparent url(./images/flags.png) no-repeat 5px -3504px; }
+.country_TM { background: transparent url(./images/flags.png) no-repeat 5px -3520px; }
+.country_TN { background: transparent url(./images/flags.png) no-repeat 5px -3536px; }
+.country_TO { background: transparent url(./images/flags.png) no-repeat 5px -3552px; }
+.country_TP { background: transparent url(./images/flags.png) no-repeat 5px -3568px; }
+.country_TR { background: transparent url(./images/flags.png) no-repeat 5px -3584px; }
+.country_TT { background: transparent url(./images/flags.png) no-repeat 5px -3600px; }
+.country_TV { background: transparent url(./images/flags.png) no-repeat 5px -3616px; }
+.country_TW { background: transparent url(./images/flags.png) no-repeat 5px -3632px; }
+.country_TZ { background: transparent url(./images/flags.png) no-repeat 5px -3648px; }
+.country_UA { background: transparent url(./images/flags.png) no-repeat 5px -3664px; }
+.country_UG { background: transparent url(./images/flags.png) no-repeat 5px -3680px; }
+.country_UK { background: transparent url(./images/flags.png) no-repeat 5px -3696px; }
+.country_UM { background: transparent url(./images/flags.png) no-repeat 5px -3712px; }
+.country_US { background: transparent url(./images/flags.png) no-repeat 5px -3728px; }
+.country_UY { background: transparent url(./images/flags.png) no-repeat 5px -3744px; }
+.country_UZ { background: transparent url(./images/flags.png) no-repeat 5px -3760px; }
+.country_VA { background: transparent url(./images/flags.png) no-repeat 5px -3776px; }
+.country_VC { background: transparent url(./images/flags.png) no-repeat 5px -3792px; }
+.country_VE { background: transparent url(./images/flags.png) no-repeat 5px -3808px; }
+.country_VG { background: transparent url(./images/flags.png) no-repeat 5px -3824px; }
+.country_VI { background: transparent url(./images/flags.png) no-repeat 5px -3840px; }
+.country_VN { background: transparent url(./images/flags.png) no-repeat 5px -3856px; }
+.country_VU { background: transparent url(./images/flags.png) no-repeat 5px -3872px; }
+.country_WF { background: transparent url(./images/flags.png) no-repeat 5px -3888px; }
+.country_WS { background: transparent url(./images/flags.png) no-repeat 5px -3904px; }
+.country_YE { background: transparent url(./images/flags.png) no-repeat 5px -3920px; }
+.country_YT { background: transparent url(./images/flags.png) no-repeat 5px -3936px; }
+.country_ZA { background: transparent url(./images/flags.png) no-repeat 5px -3952px; }
+.country_ZM { background: transparent url(./images/flags.png) no-repeat 5px -3968px; }
+.country_ZW { background: transparent url(./images/flags.png) no-repeat 5px -3984px; }
 
 #mainInfoPane-filesTab {
 	-moz-user-focus: normal;

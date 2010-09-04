@@ -73,7 +73,7 @@ function setupGlobalEvents() {
 		"mousedown": function(ev) {
 			if ((ev.isRightClick() && !ContextMenu.launched) || (!ev.isRightClick() && !ContextMenu.hidden && !ContextMenu.focused))
 				ContextMenu.hide();
-			ContextMenu.launched = false;
+//			ContextMenu.launched = false;
 
 			return cancelRCWrap(ev);
 		},
@@ -147,7 +147,9 @@ function setupGlobalEvents() {
 			},
 
 			"esc": function() {
-				if (DialogManager.showing.length > 0) {
+				if (ContextMenu.launched) {
+					ContextMenu.hide();
+				} else if (DialogManager.showing.length > 0) {
 					DialogManager.hideTopMost(true);
 				} else {
 					utWebUI.restoreUI();
@@ -197,6 +199,9 @@ function resizeUI(hDiv, vDiv) {
 
 	if (resizing) return;
 	resizing = true;
+
+	if (ContextMenu.launched)
+		ContextMenu.hide();
 
 	var manualH = (typeof(hDiv) == "number"),
 		manualV = (typeof(vDiv) == "number");
@@ -334,6 +339,7 @@ function resizeUI(hDiv, vDiv) {
 			$("mainInfoPane-generalTab").setStyles({"width": dw - 10, "height": dh - 2});
 			SpeedGraph.resize(dw - 8, dh);
 			$("mainInfoPane-loggerTab").setStyles({"width": dw - 14, "height": dh - 6});
+			utWebUI.prsTable.resizeTo(dw - 10, dh - 2);
 			utWebUI.flsTable.resizeTo(dw - 10, dh - 2);
 		}
 	}
@@ -414,12 +420,33 @@ function setupUserInterface() {
 	utWebUI.mainTabs = new Tabs("mainInfoPane-tabs", {
 		"tabs": {
 			  "mainInfoPane-generalTab" : ""
+			, "mainInfoPane-peersTab"   : ""
 			, "mainInfoPane-filesTab"   : ""
 			, "mainInfoPane-speedTab"   : ""
 			, "mainInfoPane-loggerTab"  : ""
 		},
 		"onChange": utWebUI.detPanelTabChange.bind(utWebUI)
 	}).draw().show("mainInfoPane-generalTab");
+
+	// -- Peers Tab
+
+	utWebUI.prsTable.create("mainInfoPane-peersTab", utWebUI.prsColDefs, $extend({
+		"format": utWebUI.prsFormatRow.bind(utWebUI),
+		"onColReset": utWebUI.prsColReset.bind(utWebUI),
+		"onColResize": utWebUI.prsColResize.bind(utWebUI),
+		"onColMove": utWebUI.prsColMove.bind(utWebUI),
+		"onColToggle": utWebUI.prsColToggle.bind(utWebUI),
+		"onSort": utWebUI.prsSort.bind(utWebUI),
+		"onSelect": utWebUI.prsSelect.bind(utWebUI),
+		"onRefresh": function() { if (this.torrentID != "") utWebUI.getPeers(utWebUI.torrentID, true); },
+		"refreshable": true
+	}, utWebUI.defConfig.fileTable));
+
+	$("mainInfoPane-peersTab").addEvent("mousedown", function(ev) {
+		if (ev.isRightClick() && ev.target.hasClass("stable-body")) {
+			utWebUI.showPeerMenu(ev);
+		}
+	});
 
 	// -- Files Tab
 
@@ -1083,6 +1110,7 @@ function loadLangStrings(reload) {
 	var tstr = lang[CONST.OV_TABS].split("||");
 	utWebUI.mainTabs.setNames({
 		  "mainInfoPane-generalTab" : tstr[0]
+		, "mainInfoPane-peersTab"   : tstr[2]
 		, "mainInfoPane-filesTab"   : tstr[4]
 		, "mainInfoPane-speedTab"   : tstr[5]
 		, "mainInfoPane-loggerTab"  : tstr[6]
@@ -1102,6 +1130,33 @@ function loadLangStrings(reload) {
 		, "GN_TP_08"
 		, "GN_TP_09"
 	]);
+
+	// -- Peers Tab
+
+	utWebUI.prsTable.refreshRows();
+	utWebUI.prsTable.setConfig({
+		"resetText": lang[CONST.MENU_RESET],
+		"colText": {
+ 			  "ip"         : lang[CONST.PRS_COL_IP]
+			, "port"       : lang[CONST.PRS_COL_PORT]
+			, "client"     : lang[CONST.PRS_COL_CLIENT]
+			, "flags"      : lang[CONST.PRS_COL_FLAGS]
+			, "pcnt"       : lang[CONST.PRS_COL_PCNT]
+			, "relevance"  : lang[CONST.PRS_COL_RELEVANCE]
+			, "downspeed"  : lang[CONST.PRS_COL_DOWNSPEED]
+			, "upspeed"    : lang[CONST.PRS_COL_UPSPEED]
+			, "reqs"       : lang[CONST.PRS_COL_REQS]
+			, "waited"     : lang[CONST.PRS_COL_WAITED]
+			, "uploaded"   : lang[CONST.PRS_COL_UPLOADED]
+			, "downloaded" : lang[CONST.PRS_COL_DOWNLOADED]
+			, "hasherr"    : lang[CONST.PRS_COL_HASHERR]
+			, "peerdl"     : lang[CONST.PRS_COL_PEERDL]
+			, "maxup"      : lang[CONST.PRS_COL_MAXUP]
+			, "maxdown"    : lang[CONST.PRS_COL_MAXDOWN]
+			, "queued"     : lang[CONST.PRS_COL_QUEUED]
+			, "inactive"   : lang[CONST.PRS_COL_INACTIVE]
+		}
+	});
 
 	// -- Files Tab
 

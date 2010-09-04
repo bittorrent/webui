@@ -121,7 +121,7 @@ var ContextMenu = {
 		var y = p.y + 1;
 		if (y + size.y > winSize.y)
 			y -= size.y;
-		this.obj.setStyles({"left": x, "top": y, "visibility": "visible"});
+		this.obj.setStyles({"left": x.max(0), "top": y.max(0), "visibility": "visible"});
 		this.hidden = false;
 		this.focused = false;
 		this.launched = true;
