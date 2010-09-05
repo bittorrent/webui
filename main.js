@@ -812,6 +812,16 @@ function setupUserInterface() {
 		));
 	});
 
+	// -- Transfer Cap
+
+	$("multi_day_transfer_limit_span").addEvent("change", function() {
+		utWebUI.getTransferHistory();
+	});
+
+	$("DLG_SETTINGS_7_TRANSFERCAP_13").addEvent("click", function() {
+		utWebUI.resetTransferHistory();
+	});
+
 	// -- Scheduler
 
 	$("sched_table").addEvent("change", function() {
@@ -1389,6 +1399,11 @@ function loadLangStrings(reload) {
 		, "DLG_SETTINGS_7_TRANSFERCAP_04"
 		, "DLG_SETTINGS_7_TRANSFERCAP_05"
 		, "DLG_SETTINGS_7_TRANSFERCAP_06"
+		, "DLG_SETTINGS_7_TRANSFERCAP_07"
+		, "DLG_SETTINGS_7_TRANSFERCAP_08"
+		, "DLG_SETTINGS_7_TRANSFERCAP_09"
+		, "DLG_SETTINGS_7_TRANSFERCAP_10"
+		, "DLG_SETTINGS_7_TRANSFERCAP_11"
 
 		// Queueing
 		, "DLG_SETTINGS_8_QUEUEING_01"
@@ -1470,6 +1485,7 @@ function loadLangStrings(reload) {
 	// -- Buttons
 	_loadStrings("value", [
 		  "DLG_SETTINGS_4_CONN_04" // "Random"
+		, "DLG_SETTINGS_7_TRANSFERCAP_13" // "Reset History"
 		, "DLG_SETTINGS_A_ADVANCED_05" // "Set"
 	]);
 

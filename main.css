@@ -1236,6 +1236,7 @@ input[id="proxy.password"] { width: 70px; }
 #dlgSettings-Scheduler .daycode {
 	padding-right: 3px;
 	text-align: right;
+	white-space: nowrap;
 }
 
 #dlgSettings-Scheduler .block {

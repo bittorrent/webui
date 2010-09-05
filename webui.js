@@ -20,6 +20,7 @@ var utWebUI = {
 	"files": {},
 	"settings": {},
 	"props": {},
+	"xferhist": {},
 	"labels": {
 		"_all_": 0, // all
 		"_dls_": 0, // downloading
@@ -35,6 +36,7 @@ var utWebUI = {
 		"reqRetryMaxAttempts": 5,
 		"minTableRows": 5,
 		"minUpdateInterval": 500,
+		"minXferHistCache": 60, // seconds
 		"defHSplit": 125,
 		"defVSplit": 225,
 		"minHSplit": 25,
@@ -747,6 +749,9 @@ var utWebUI = {
 		this.totalDL = 0;
 		this.totalUL = 0;
 		this.getList();
+		if (DialogManager.showing.contains("Settings") && ("dlgSettings-TransferCap" == this.stpanes.active)) {
+			this.getTransferHistory();
+		}
 	},
 
 	"getInterval": function() {
@@ -905,6 +910,64 @@ var utWebUI = {
 			this.trtTable.refreshRows();
 	},
 
+	"getTransferHistory": function(forceload) {
+
+{ // TODO: Remove this once backend support is stable (requires 3.0+)
+	if (!$chk(this.settings["webui.uconnect_enable"])) return;
+}
+
+		var now = $time();
+		if (forceload || !this.xferhist._TIME_ || (now - this.xferhist._TIME_) > (this.limits.minXferHistCache * 1000)) {
+			this.request("action=getxferhist", (function (json) {
+				this.xferhist = json.transfer_history;
+				this.xferhist._TIME_ = now;
+
+				this.loadTransferHistory();
+			}).bind(this));
+		}
+		else {
+			this.loadTransferHistory();
+		}
+	},
+
+	"loadTransferHistory": function() {
+		var history = this.xferhist;
+
+		// Obtain number of days to consider
+		if (!lang) return;
+		var periodList = lang[CONST.ST_CBO_TCAP_PERIODS].split("||");
+		var periodIdx = ($("multi_day_transfer_limit_span").get("value").toInt() || 0).max(0).min(periodList.length-2);
+		var period = periodList[periodIdx].toInt();
+
+		// Calculate uploads/downloads applicable to transfer cap
+		var nolocal = this.getAdvSetting("net.limit_excludeslocal");
+
+		var tu = 0, td = 0;
+		for (var day = 0; day < period; day++) {
+			tu += history["daily_upload"][day];
+			td += history["daily_download"][day];
+			if (nolocal) {
+				tu -= history["daily_local_upload"][day];
+				tu -= history["daily_local_download"][day];
+			}
+		}
+
+		// Reduce precision for readability
+		$("total_uploaded_history").set("text", tu.toFileSize(1));
+		$("total_downloaded_history").set("text", td.toFileSize(1));
+		$("total_updown_history").set("text", (tu + td).toFileSize(1));
+		$("history_period").set("text", lang[CONST.DLG_SETTINGS_7_TRANSFERCAP_12].replace(/%d/, period));
+	},
+
+	"resetTransferHistory": function() {
+
+{ // TODO: Remove this once backend support is stable (requires 3.0+)
+	if (!$chk(this.settings["webui.uconnect_enable"])) return;
+}
+
+		this.request("action=resetxferhist");
+	},
+
 	"getSettings": function() {
 		var qs = "action=getsettings";
 		if (!this.loaded) {
@@ -999,10 +1062,10 @@ var utWebUI = {
 			// Insert custom keys...
 			this.settings["multi_day_transfer_mode"] = tcmode;
 
-{ // TODO: Remove this once backend support is stable
+{ // TODO: Remove this once backend support is stable (requires 2.2+)
 	this.settings["sched_table"] = $pick(this.settings["sched_table"], "033000030000000000000000300300030111010010100101000300030101011010100111033000030101010110100001300000030111010010110111333303030000000000000000000000000000000000000000");
 	this.settings["search_list_sel"] = $pick(this.settings["search_list_sel"], 0);
-	this.settings["search_list"] = $pick(this.settings["search_list"], "Google|http://google.com/search?q=\r\nBitTorrent|http://www.bittorrent.com/search?client=%v&search=");
+	this.settings["search_list"] = $pick(this.settings["search_list"], "Google|http://google.com/search?q=\r\nBitTorrent|http://www.bittorrent.com/search?client=%v&q=");
 }
 
 			// Cleanup
@@ -1804,6 +1867,11 @@ var utWebUI = {
 	},
 
 	"getPeers": function(id, update) {
+
+{ // TODO: Remove this once backend support is stable (requires 3.0+)
+	if (!$chk(this.settings["webui.uconnect_enable"])) return;
+}
+
 		if (!has(this.peers, id) || update) {
 			this.peers[id] = [];
 			if (update)
@@ -2436,7 +2504,7 @@ var utWebUI = {
 					break;
 
 				case "number":
-					this.setAdvSetting(id, parseInt($("dlgSettings-advText").value, 10) || 0);
+					this.setAdvSetting(id, $("dlgSettings-advText").value.toInt() || 0);
 					break;
 
 				case "string":
@@ -2550,8 +2618,9 @@ var utWebUI = {
 	},
 	
 	"settingsPaneChange": function(id) {
-		if (id == "dlgSettings-Advanced") {
-			this.advOptTable.calcSize();
+		switch (id) {
+			case "dlgSettings-TransferCap": this.getTransferHistory(); break;
+			case "dlgSettings-Advanced": this.advOptTable.calcSize(); break;
 		}
 	}/*,
 

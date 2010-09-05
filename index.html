@@ -46,8 +46,8 @@
 						<div>Firon, icleolion, <a href="http://www.ignorantcow.net/" target="_blank">Ignorantcow</a>, Novik, <a href="http://outfitfox.blogspot.com/" target="_blank">savaden</a>, shawnz</div>
 					</div>
 					<div><strong>Artwork:</strong>
-						<div>(Icons) <a href="http://www.famfamfam.com/lab/icons/silk/" target="_blank">Silk</a> by Mark James</div>
 						<div>(Flags) <a href="http://forum.utorrent.com/viewtopic.php?id=2070" target="_blank">Flags</a> by eng</div>
+						<div>(Icons) <a href="http://www.famfamfam.com/lab/icons/silk/" target="_blank">Silk</a> by Mark James</div>
 					</div>
 					<div id="mootools"><a href="http://www.mootools.net/" target="_blank"><img src="./images/mootools.png" alt="MooTools" /></a></div>
 				</div>
@@ -593,6 +593,29 @@
 							<span id="DLG_SETTINGS_7_TRANSFERCAP_06"></span>
 						</div>
 					</fieldset>
+
+					<fieldset>
+						<legend id="DLG_SETTINGS_7_TRANSFERCAP_07"></legend>
+						<div class="line-cont">
+							<div class="half flr" id="total_uploaded_history"></div>
+							<div id="DLG_SETTINGS_7_TRANSFERCAP_08"></div>
+						</div>
+						<div class="line-cont">
+							<div class="half flr" id="total_downloaded_history"></div>
+							<div id="DLG_SETTINGS_7_TRANSFERCAP_09"></div>
+						</div>
+						<div class="line-cont">
+							<div class="half flr" id="total_updown_history"></div>
+							<div id="DLG_SETTINGS_7_TRANSFERCAP_10"></div>
+						</div>
+						<div class="line-cont">
+							<div class="half flr" id="history_period"></div>
+							<div id="DLG_SETTINGS_7_TRANSFERCAP_11"></div>
+						</div>
+						<div class="line-cont">
+							<input type="button" id="DLG_SETTINGS_7_TRANSFERCAP_13" class="btn" />
+						</div>
+					</fieldset>
 				</div>
 
 				<div id="dlgSettings-Queueing" class="settings-pane">
@@ -666,9 +689,11 @@
 								<label for="sched_ul_rate" id="DLG_SETTINGS_9_SCHEDULER_05"></label>
 							</div>
 						</div>
-						<div class="line-cont half">
-							<input type="text" id="sched_dl_rate" class="tbox num flr" maxlength="6" />
-							<label for="sched_dl_rate" id="DLG_SETTINGS_9_SCHEDULER_07"></label>
+						<div class="line-cont">
+							<div class="half">
+								<input type="text" id="sched_dl_rate" class="tbox num flr" maxlength="6" />
+								<label for="sched_dl_rate" id="DLG_SETTINGS_9_SCHEDULER_07"></label>
+							</div>
 						</div>
 					</fieldset>
 				</div>
