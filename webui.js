@@ -35,6 +35,7 @@ var utWebUI = {
 		"reqRetryDelayBase": 2, // seconds
 		"reqRetryMaxAttempts": 5,
 		"minTableRows": 5,
+		"maxVirtTableRows": 100,
 		"minUpdateInterval": 500,
 		"minXferHistCache": 60, // seconds
 		"defHSplit": 125,
@@ -57,6 +58,7 @@ var utWebUI = {
 			"colMask": 0x0000, // automatically calculated based on this.trtColDefs
 			"colOrder": [], // automatically calculated based on this.trtColDefs
 			"colWidth": [], // automatically calculated based on this.trtColDefs
+//			"mode": MODE_VIRTUAL,
 			"reverse": false,
 			"sIndex": -1
 		},
@@ -64,6 +66,7 @@ var utWebUI = {
 			"colMask": 0x0000, // automatically calculated based on this.prsColDefs
 			"colOrder": [], // automatically calculated based on this.prsColDefs
 			"colWidth": [], // automatically calculated based on this.prsColDefs
+//			"mode": MODE_VIRTUAL,
 			"reverse": false,
 			"sIndex": -1
 		},
@@ -71,8 +74,13 @@ var utWebUI = {
 			"colMask": 0x0000, // automatically calculated based on this.flsColDefs
 			"colOrder": [], // automatically calculated based on this.flsColDefs
 			"colWidth": [], // automatically calculated based on this.flsColDefs
+//			"mode": MODE_VIRTUAL,
 			"reverse": false,
 			"sIndex": -1
+		},
+		"advOptTable": {
+//			"mode": MODE_VIRTUAL,
+			"rowMultiSelect": false
 		},
 		"activeLabel": "_all_"
 	},
@@ -1167,7 +1175,9 @@ var utWebUI = {
 				ele.set("value", v);
 			}
 		}).bind(this));
-		this.config.maxRows = this.config.maxRows.max(this.limits.minTableRows);
+		if (this.config.maxRows < this.limits.minTableRows) {
+			value = (this.config.maxRows <= 0 ? 0 : this.limits.minTableRows);
+		}
 		$("webui.maxRows").set("value", this.config.maxRows);
 		this.props.multi = {
 			"trackers": 0,
@@ -1229,7 +1239,7 @@ var utWebUI = {
 
 		value = ($("webui.maxRows").get("value").toInt() || 0);
 		if (value < this.limits.minTableRows) {
-			value = this.limits.minTableRows;
+			value = (value <= 0 ? 0 : this.limits.minTableRows);
 			$("webui.maxRows").set("value", value);
 		}
 		if (this.config.maxRows != value) {
@@ -1860,7 +1870,6 @@ var utWebUI = {
 				this.prsTable.setIcon(key, "country_" + peer[CONST.PEER_COUNTRY]);
 			}, this);
 			this.prsTable.calcSize();
-			this.prsTable.refreshRows();
 
 			this.prsTable.loadObj.hide.delay(200, this.prsTable.loadObj);
 		}
@@ -1913,7 +1922,7 @@ var utWebUI = {
 				this.files[id].each(function(file, i) {
 					this.flsTable.addRow(this.flsDataToRow(file), id + "_" + i);
 				}, this);
-				this.flsTable.refreshRows();
+				this.flsTable.calcSize();
 			}
 			this.flsTable.loadObj.hide.delay(200, this.flsTable.loadObj);
 		}
@@ -2569,12 +2578,24 @@ var utWebUI = {
 	},
 
 	"tableSetMaxRows": function(max) {
-		max = (max || 0).max(this.limits.minTableRows);
+		var virtRows = this.limits.maxVirtTableRows;
+
+		var mode = MODE_PAGE;
+		max = max || 0;
+
+		if (max <= 0) {
+			mode = MODE_VIRTUAL;
+			max = 0;
+		}
+		else if (max < this.limits.minTableRows) {
+			max = this.limits.minTableRows;
+		}
+
 		this.config.maxRows = max;
-		this.trtTable.setConfig({"rowMaxCount": max});
-		this.prsTable.setConfig({"rowMaxCount": max});
-		this.flsTable.setConfig({"rowMaxCount": max});
-		this.advOptTable.setConfig({"rowMaxCount": max});
+		this.trtTable.setConfig({"rowMaxCount": max || virtRows, "rowMode": mode});
+		this.prsTable.setConfig({"rowMaxCount": max || virtRows, "rowMode": mode});
+		this.flsTable.setConfig({"rowMaxCount": max || virtRows, "rowMode": mode});
+		this.advOptTable.setConfig({"rowMaxCount": max || virtRows, "rowMode": mode});
 	},
 
 	"tableUseAltColor": function(enable) {

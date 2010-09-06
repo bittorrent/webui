@@ -288,59 +288,58 @@ var dxSTable = new Class({
 			this.tb.body.appendChild(simpleClone(this.rowModel, true).hide());
 
 		this.tBody.grab(this.tb.body);
-		if (this.options.mode == MODE_PAGE) {
-			this.pageMenu = simpleClone(DIV, false).addClass("stable-pagemenu").inject(this.dCont);
-			if (this.options.rowsSelectable && this.options.rowMultiSelect)
-				this.pageInfo = new Element("span", {"class": "pageinfo", "text": "0 row(s) selected."}).inject(this.pageMenu);
-			this.pageNext = simpleClone(DIV, false)
-				.addClass("nextlink-disabled")
-				.addEvent("click", this.nextPage.bind(this))
-				.addEvent("mouseenter", function() {
-					if (this.hasClass("nextlink"))
-						this.addClass("nextlink-hover");
-				})
-				.addEvent("mouseleave", function() {
-					if (this.hasClass("nextlink"))
-						this.removeClass("nextlink-hover");
-				})
-				.inject(this.pageMenu);
-			this.pagePrev = simpleClone(DIV, false)
-				.addClass("prevlink-disabled")
-				.addEvent("click", this.prevPage.bind(this))
-				.addEvent("mouseenter", function() {
-					if (this.hasClass("prevlink"))
-						this.addClass("prevlink-hover");
-				})
-				.addEvent("mouseleave", function() {
-					if (this.hasClass("prevlink"))
-						this.removeClass("prevlink-hover");
-				})
-				.inject(this.pageMenu);
 
-			this.pageStat = new Element("span").addClass("pagestat").inject(this.pageMenu);
+		this.pageMenu = simpleClone(DIV, false).addClass("stable-pagemenu").inject(this.dCont);
+		if (this.options.rowsSelectable && this.options.rowMultiSelect)
+			this.pageInfo = new Element("span", {"class": "pageinfo", "text": "0 row(s) selected."}).inject(this.pageMenu);
+		this.pageNext = simpleClone(DIV, false)
+			.addClass("nextlink-disabled")
+			.addEvent("click", this.nextPage.bind(this))
+			.addEvent("mouseenter", function() {
+				if (this.hasClass("nextlink"))
+					this.addClass("nextlink-hover");
+			})
+			.addEvent("mouseleave", function() {
+				if (this.hasClass("nextlink"))
+					this.removeClass("nextlink-hover");
+			})
+			.inject(this.pageMenu);
+		this.pagePrev = simpleClone(DIV, false)
+			.addClass("prevlink-disabled")
+			.addEvent("click", this.prevPage.bind(this))
+			.addEvent("mouseenter", function() {
+				if (this.hasClass("prevlink"))
+					this.addClass("prevlink-hover");
+			})
+			.addEvent("mouseleave", function() {
+				if (this.hasClass("prevlink"))
+					this.removeClass("prevlink-hover");
+			})
+			.inject(this.pageMenu);
 
-			this.pageSelect = new Element("select", {
+		this.pageStat = new Element("span").addClass("pagestat").inject(this.pageMenu);
+
+		this.pageSelect = new Element("select", {
+			"events": {
+				"change": function() {
+					$me.gotoPage(this.get("value").toInt());
+				}
+			}
+		}).inject(this.pageStat);
+		this.pageSelect.disabled = true;
+
+		if (this.options.refreshable) {
+			this.pageStat.grab(new Element("a", {
+				"class": "refreshBtn",
+				"href": "#",
 				"events": {
-					"change": function() {
-						$me.gotoPage(this.get("value").toInt());
+					"click": function(ev) {
+						ev.stop();
+						if ($me.rows)
+							$me.fireEvent("onRefresh");
 					}
 				}
-			}).inject(this.pageStat);
-			this.pageSelect.disabled = true;
-
-			if (this.options.refreshable) {
-				this.pageStat.grab(new Element("a", {
-					"class": "refreshBtn",
-					"href": "#",
-					"events": {
-						"click": function(ev) {
-							ev.stop();
-							if ($me.rows)
-								$me.fireEvent("onRefresh");
-						}
-					}
-				}).grab(new Element("div")));
-			}
+			}).grab(new Element("div")));
 		}
 
 		this.assignEvents();
@@ -640,6 +639,12 @@ var dxSTable = new Class({
 		if ($defined(val) && (val != this.options.alternateRows)) {
 			this.options.alternateRows = !!val;
 			refresh = true;
+		}
+
+		val = options.rowMode; // integer
+		if ($defined(val) && (val != this.options.mode)) {
+			this.options.mode = val;
+			this.calcSize();
 		}
 
 		//--------------------------------------------------
@@ -1214,7 +1219,7 @@ var dxSTable = new Class({
 	},
 
 	"calcSize": function() {
-		this.dBody.setStyle("height", (this.dCont.clientHeight - this.dHead.offsetHeight - ((this.options.mode == MODE_PAGE) ? 26 : 0)).max(52));
+		this.dBody.setStyle("height", (this.dCont.clientHeight - this.dHead.offsetHeight - ((this.options.refreshable || this.options.mode == MODE_PAGE) ? 26 : 0)).max(52));
 		this.dBody.setStyle("width", (this.dCont.offsetWidth - 2).max(0));
 		this.dHead.setStyle("width", (this.dCont.offsetWidth + (((this.dBody.offsetWidth - this.dBody.clientWidth) == 0) ? -4 : -1)).max(0));
 		if (!this.isResizing) {
@@ -1369,17 +1374,26 @@ var dxSTable = new Class({
 	},
 
 	"resizePads": function() {
-		if (this.options.mode != MODE_VIRTUAL) return;
+		switch (this.options.mode) {
+			case MODE_PAGE:
+				this.dPad.setStyle("height", 0);
+				this.tBody.setStyle("top", 0);
 
-		this.dPad.setStyle("height", this.activeId.length * this.tb.body.children[0].offsetHeight);
+				break;
 
-		var st = this.dBody.scrollTop;
-		var diff = this.dPad.offsetHeight - (st + this.tBody.offsetHeight);
-		this.tBody.setStyle("top", st + diff.min(0));
+			case MODE_VIRTUAL:
+				this.dPad.setStyle("height", this.activeId.length * this.tb.body.children[0].offsetHeight);
+
+				var st = this.dBody.scrollTop;
+				var diff = this.dPad.offsetHeight - (st + this.tBody.offsetHeight);
+				this.tBody.setStyle("top", st + diff.min(0));
+
+				break;
+		}
 	},
 
 	"restoreScroll": function() {
-		if (this.options.mode != MODE_VIRTUAL) return;
+//		if (this.options.mode != MODE_VIRTUAL) return;
 		this.dBody.scrollTop = this.lastScroll || 0;
 		if (this.activeId.length > 0) {
 			this.resizePads();
@@ -1388,8 +1402,12 @@ var dxSTable = new Class({
 	},
 
 	"updatePageMenu": function() {
-		if (this.options.mode != MODE_PAGE) return;
-		this.pageCount = Math.ceil(this.activeId.length / this.options.maxRows);
+		if (this.options.mode != MODE_PAGE) {
+			this.pageCount = 0;
+		}
+		else {
+			this.pageCount = Math.ceil(this.activeId.length / this.options.maxRows);
+		}
 
 		(this.curPage > 0) ?
 			this.pagePrev.addClass("prevlink")

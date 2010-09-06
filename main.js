@@ -46,6 +46,12 @@ function setupGlobalEvents() {
 
 	window.addEvent("resize", function() { resizeUI(); });
 
+	if (Browser.Engine.presto && Browser.Engine.version >= 960) {
+		window.addEvent("scroll", function() {
+			document.documentElement.scrollTop = 0;
+		});
+	}
+
 	if (!isGuest) {
 		window.addEvent("unload", function() {
 			utWebUI.saveConfig(false);
@@ -440,7 +446,7 @@ function setupUserInterface() {
 		"onSelect": utWebUI.prsSelect.bind(utWebUI),
 		"onRefresh": function() { if (this.torrentID != "") utWebUI.getPeers(utWebUI.torrentID, true); },
 		"refreshable": true
-	}, utWebUI.defConfig.fileTable));
+	}, utWebUI.defConfig.peerTable));
 
 	$("mainInfoPane-peersTab").addEvent("mousedown", function(ev) {
 		if (ev.isRightClick() && ev.target.hasClass("stable-body")) {
@@ -910,9 +916,8 @@ function setupUserInterface() {
 		"format": utWebUI.advOptFormatRow.bind(utWebUI),
 		"onColReset": utWebUI.advOptColReset.bind(utWebUI),
 		"onSelect": utWebUI.advOptSelect.bind(utWebUI),
-		"onDblClick": utWebUI.advOptDblClk.bind(utWebUI),
-		"rowMultiSelect": false
-	}));
+		"onDblClick": utWebUI.advOptDblClk.bind(utWebUI)
+	}, utWebUI.defConfig.advOptTable));
 
 	$("DLG_SETTINGS_A_ADVANCED_05").addEvent("click", utWebUI.advOptChanged.bind(utWebUI));
 	$("dlgSettings-advTrue").addEvent("click", utWebUI.advOptChanged.bind(utWebUI));
