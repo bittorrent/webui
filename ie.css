@@ -1,3 +1,7 @@
+select {
+	vertical-align: top !important;
+}
+
 label {
 	vertical-align: baseline !important;
 }
@@ -8,6 +12,14 @@ label {
 
 .settings-pane select {
 	vertical-align: middle !important;
+}
+
+ul#mainInfoPane-tabs li, ul#mainInfoPane-tabs li a span {
+	zoom: 1;
+}
+
+ul#mainInfoPane-tabs li a {
+	padding-bottom: 2px !important;
 }
 
 /*

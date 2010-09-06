@@ -1512,7 +1512,7 @@ function _loadComboboxStrings(id, vals, def) {
 			ele.options[ele.options.length] = new Option(v, k, false, false);
 		});
 
-		ele.set("value", def);
+		ele.set("value", def || 0);
 	}
 	catch(e) {
 		console.log("Error attempting to assign values to combobox with id='" + id + "'... ");
