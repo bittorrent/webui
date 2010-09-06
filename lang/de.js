@@ -123,7 +123,7 @@ var lang = [
 	, "Ja"
 	, "Nein"
 	, "Setzen"
-	, "Speed-Liste [Einzelne Werte durch "," trennen]"
+	, "Speed-Liste [Einzelne Werte durch \",\" trennen]"
 	, "Automatische Speed-Liste abändern"
 	, "für Uploads:"
 	, "für Downloads:"
