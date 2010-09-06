@@ -213,16 +213,12 @@ var dxSTable = new Class({
 			"class": "rowcover"
 		}).inject(this.dHead);
 
-		if (this.options.mode == MODE_VIRTUAL)
-			this.topPad = simpleClone(DIV, false).addClass("stable-pad").inject(this.dBody);
+		this.dPad = simpleClone(DIV, false).addClass("stable-pad").inject(this.dBody);
 
 		this.tBody = new Element("table", {
 			"cellpadding": 0,
 			"cellspacing": 0
-		}).inject(this.dBody);
-
-		if (this.options.mode == MODE_VIRTUAL)
-			this.bottomPad = simpleClone(DIV, false).addClass("stable-pad").inject(this.dBody);
+		}).inject(this.dPad);
 
 		var cg = new Element("colgroup").inject(this.tBody);
 		for (var i = 0; i < len; i++) {
@@ -352,32 +348,27 @@ var dxSTable = new Class({
 	},
 
 	"assignEvents": function() {
-		var scrollDiff = 0, scrollTimer = null;
+		this.lastScroll = 0;
 		this.dBody.addEvent("scroll", (function() {
 			this.dHead.scrollLeft = this.dBody.scrollLeft;
 			if (this.options.mode == MODE_PAGE) return;
-			if (scrollDiff === 0) {
-				scrollDiff = this.dBody.scrollTop;
-			} else {
-				var diff = Math.abs(scrollDiff - this.dBody.scrollTop);
-				if (diff > 0) {
-					this.isScrolling = true;
-					$clear(scrollTimer);
-					this.scrollTimer = (function() {
-						scrollDiff = 0;
-						$clear(scrollTimer);
-						this.isScrolling = false;
-						this.resizePads();
-						this.loadObj.show();
-						this.refreshRows();
-					}).bind(this).delay(300);
-				} else {
-					$clear(scrollTimer);
-				}
+
+			if (this.isScrolling) return;
+			this.isScrolling = true;
+
+			if (this.lastScroll != this.dBody.scrollTop) {
+				this.resizePads();
+				this.refreshRows();
+
+				this.lastScroll = this.dBody.scrollTop;
 			}
+
+			this.isScrolling = false;
 			return false;
 		}).bind(this));
+
 		if (!this.options.rowsSelectable) return;
+
 		this.dCont.addEvent("keydown", (function(ev) {
 			var ctrl = ((Browser.Platform.mac && ev.meta) || (!Browser.Platform.mac && ev.control));
 
@@ -391,6 +382,7 @@ var dxSTable = new Class({
 				this.fireEvent("onSelect", ev);
 			}
 		}).bind(this));
+
 //		if (Browser.Engine.gecko) {
 			// http://n2.nabble.com/key-events-not-firing-on-div-in-FF--td663136.html
 			this.dBody.addEvent("mousedown", function(ev) {
@@ -867,15 +859,13 @@ var dxSTable = new Class({
 	"getActiveRange": function() {
 		var max = this.options.maxRows, mni = 0, mxi = 0;
 		if (this.options.mode == MODE_VIRTUAL) {
-			var rt = (this.dBody.scrollHeight == 0) ? 0.0 : (this.dBody.scrollTop / this.dBody.scrollHeight);
-			if (rt > 1.0)
-				rt = 1.0;
-			mni = Math.floor(rt * this.activeId.length);
+			mni = (this.activeId.length > 0 ? Math.floor((this.dBody.scrollTop / this.tb.body.children[0].offsetHeight) || 0) : 0);
 		} else {
 			mni = max * this.curPage;
 		}
 		mxi = (mni + max - 1).min(this.activeId.length - 1);
-		return [(mni < 0 ? 0 : mni), (mxi < 0 ? 0 : mxi)];
+		mni = (mxi - max + 1).max(0);
+		return [mni.max(0), mxi.max(0)];
 	},
 
 	"refreshRows": function() {
@@ -891,7 +881,7 @@ var dxSTable = new Class({
 				clsName += "selected";
 			clsChanged = (clsName.test("selected") != row.hasClass("selected"));
 			if (this.options.alternateRows) {
-				if (count & 1) {
+				if (i & 1) {
 					clsName += " odd";
 					clsChanged = clsChanged || !row.hasClass("odd");
 				} else {
@@ -1219,6 +1209,7 @@ var dxSTable = new Class({
 			this.updatePageMenu();
 			this.stSel = null;
 			this.refreshPageInfo();
+			this.lastScroll = 0;
 		}
 	},
 
@@ -1241,6 +1232,8 @@ var dxSTable = new Class({
 		}
 		if (Browser.Engine.webkit)
 			this.tBody.setStyle("width", this.tHead.getWidth());
+
+		this.restoreScroll();
 	},
 
 	"hideRow": function(id) {
@@ -1377,21 +1370,20 @@ var dxSTable = new Class({
 
 	"resizePads": function() {
 		if (this.options.mode != MODE_VIRTUAL) return;
-		var mr = this.options.maxRows;
-		if (this.activeId.length <= mr) {
-			this.topPad.setStyle("height", 0);
-			this.bottomPad.setStyle("height", 0);
-		} else {
-			var bh = this.dBody.clientHeight;
-			var vh = this.activeId.length * 17;
-			var st = this.dBody.scrollTop, sh = this.dBody.scrollHeight;
-			var rt = ((sh - bh) <= 0) ? 0.0 : (st / (sh - bh));
-			if (rt > 1.0)
-				rt = 1.0;
-			var mh = this.tBody.tBodies[0].offsetHeight;
-			var th = (st + bh >= vh - mh) ? (vh - mh) : (st - (mh - bh) * rt);
-			this.topPad.setStyle("height", th);
-			this.bottomPad.setStyle("height", vh - mh - th);
+
+		this.dPad.setStyle("height", this.activeId.length * this.tb.body.children[0].offsetHeight);
+
+		var st = this.dBody.scrollTop;
+		var diff = this.dPad.offsetHeight - (st + this.tBody.offsetHeight);
+		this.tBody.setStyle("top", st + diff.min(0));
+	},
+
+	"restoreScroll": function() {
+		if (this.options.mode != MODE_VIRTUAL) return;
+		this.dBody.scrollTop = this.lastScroll || 0;
+		if (this.activeId.length > 0) {
+			this.resizePads();
+			this.refreshRows();
 		}
 	},
 

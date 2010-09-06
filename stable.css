@@ -103,6 +103,7 @@ limitations under the License.
 
 .stable-body table {
 	table-layout: fixed;
+	position: relative;
 	width: 0;
 }
 
@@ -277,6 +278,7 @@ limitations under the License.
 	padding: 0px;
 	margin: 0px;
 	font-size: 0px;
+	position: relative;
 }
 
 .stable-loading {
