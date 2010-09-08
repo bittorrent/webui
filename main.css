@@ -6,8 +6,6 @@
  */
 
 * {
-	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
-	font-size: 11px;
 	margin: 0;
 	padding: 0;
 }
@@ -16,6 +14,8 @@ html, body {
 	background-color: #DDDDDD;
 	border: 0;
 	cursor: default;
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
 	height: 100%;
 	overflow: hidden;
 }
@@ -58,6 +58,11 @@ textarea {
 
 textarea:focus {
 	border: 1px solid #0099FF;
+}
+
+input, select {
+	font-family: inherit;
+	font-size: inherit;
 }
 
 input[type="checkbox"] {
@@ -389,7 +394,6 @@ ul#mainInfoPane-tabs li a {
 	padding: 2px 0 5px 0;
 	position: relative;
 	top: 4px;
-	vertical-align: top;
 	vertical-align: top;
 }
 
@@ -739,10 +743,20 @@ li.selected#tab_mainInfoPane-loggerTab span {
 }
 
 #mainInfoPane-loggerTab {
+	padding: 2px;
+}
+
+#mainInfoPane-loggerTab p {
 	font-family: monospace;
 	font-size: 12px;
-	line-height: 14px;
-	padding: 2px;
+	line-height: 12px;
+	padding: 3px;
+}
+
+#mainInfoPane-loggerTab .timestamp {
+	color: #999999;
+	font-weight: bold;
+	padding-right: 5px;
 }
 
 

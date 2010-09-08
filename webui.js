@@ -761,7 +761,9 @@ var utWebUI = {
 	"update": function() {
 		this.totalDL = 0;
 		this.totalUL = 0;
+
 		this.getList();
+
 		if (DialogManager.showing.contains("Settings") && ("dlgSettings-TransferCap" == this.stpanes.active)) {
 			this.getTransferHistory();
 		}
@@ -1066,6 +1068,7 @@ var utWebUI = {
 
 					case "gui.alternate_color": this.tableUseAltColor(val); break;
 					case "gui.graphic_progress": this.tableUseProgressBar(val); break;
+					case "gui.log_date": Logger.setLogDate(val); break;
 
 					case "bt.transp_disposition": $("enable_bw_management").checked = !!(val & CONST.TRANSDISP_UTP); break;
 				}
@@ -1209,6 +1212,8 @@ var utWebUI = {
 	"setSettings": function() {
 		var value = null, resize = false, reload = false, hasChanged = false;
 
+		Logger.setLogDate(this.getAdvSetting("gui.log_date"));
+
 		value = ($("webui.updateInterval").get("value").toInt() || 0);
 		if (value < this.limits.minUpdateInterval) {
 			value = this.limits.minUpdateInterval;
@@ -1272,7 +1277,7 @@ var utWebUI = {
 			this.tableUseProgressBar(value);
 		}
 
-		value = this.getAdvSetting("gui.tall_category_list")
+		value = this.getAdvSetting("gui.tall_category_list");
 		resize = resize || ($defined(value) && !!this.settings["gui.tall_category_list"] != value);
 
 		for (var key in this.settings) {
@@ -2621,25 +2626,35 @@ var utWebUI = {
 	},
 
 	"detPanelTabChange": function(id) {
-		if (id == "mainInfoPane-peersTab") {
-			this.prsTable.calcSize();
+		switch (id) {
+			case "mainInfoPane-peersTab":
+				this.prsTable.calcSize();
 
-			if (this.torrentID == "") return;
+				if (this.torrentID == "") return;
 
-			this.prsTable.loadObj.show();
-			this.loadPeers.delay(20, this);
-		}
-		else if (id == "mainInfoPane-filesTab") {
-			this.flsTable.calcSize();
+				this.prsTable.loadObj.show();
+				this.loadPeers.delay(20, this);
 
-			if (this.torrentID == "") return;
-			if (has(this.flsTable.rowData, this.torrentID + "_0")) return;
+				break;
 
-			this.flsTable.loadObj.show();
-			this.loadFiles.delay(20, this);
-		}
-		else if (id == "mainInfoPane-speedTab") {
-			SpeedGraph.draw();
+			case "mainInfoPane-filesTab":
+				this.flsTable.calcSize();
+
+				if (this.torrentID == "") return;
+				if (has(this.flsTable.rowData, this.torrentID + "_0")) return;
+
+				this.flsTable.loadObj.show();
+				this.loadFiles.delay(20, this);
+
+				break;
+
+			case "mainInfoPane-speedTab":
+				SpeedGraph.draw();
+				break;
+
+			case "mainInfoPane-loggerTab":
+				Logger.scrollBottom();
+				break;
 		}
 	},
 	

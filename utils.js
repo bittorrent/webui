@@ -2,60 +2,6 @@
  * @author Directrix
  */
 
-window.onerror = function(msg, url, linenumber) {
-	log("JS error: [" + linenumber + "] " + msg);
-	return true;
-};
-
-if (!console) {
-	var console = {};
-}
-
-(function() {
-
-	console.log = console.log || function(str) {
-		if (window.opera) {
-			opera.postError(str);
-		} else {
-			log(str);
-		}
-	};
-
-	var timers = {};
-	console.time = console.time || function(name) {
-		if (name == "") return;
-		timers[name] = $time();
-	};
-
-	console.timeEnd = console.timeEnd || function(name) {
-		if (name == "" || !timers.hasOwnProperty(name)) return;
-		console.log(name + ": " + ($time() - timers[name]) + "ms");
-		delete timers[name];
-	};
-
-	console.assert = console.assert || function() {
-		var args = $A(arguments), expr = args.shift();
-		if (!expr) {
-			throw new Error(false);
-		}
-	};
-
-})();
-
-function log(text) {
-	if (!$("mainInfoPane-loggerTab")) return;
-
-	var dt = new Date();
-	var h = dt.getHours();
-	var m = dt.getMinutes();
-	var s = dt.getSeconds();
-	h = (h < 10) ? ("0" + h) : h;
-	m = (m < 10) ? ("0" + m) : m;
-	s = (s < 10) ? ("0" + s) : s;
-
-	$("mainInfoPane-loggerTab").grab(new Element("br"), "top").appendText("[" + h + ":" + m + ":" + s + "] " + text, "top");
-}
-
 function eventToKey(ev) {
 	return (
 		(ev.shift ? "shift " : "") +

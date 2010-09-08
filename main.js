@@ -473,6 +473,10 @@ function setupUserInterface() {
 
 	SpeedGraph.init("mainInfoPane-speedTab");
 
+	// -- Logger Tab
+
+	Logger.init("mainInfoPane-loggerTab");
+
 	//--------------------------------------------------
 	// DIVIDERS
 	//--------------------------------------------------
