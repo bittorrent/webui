@@ -537,7 +537,7 @@ var utWebUI = {
 		var res = ["", ""];
 
 		if (state & CONST.STATE_PAUSED) { // paused
-			res = ["Status_Paused", (state & CONST.STATE_CHECKING) ? lang[CONST.OV_FL_CHECKED].replace(/%:\.1d%/, (done / 10)) : lang[CONST.OV_FL_PAUSED]];
+			res = ["Status_Paused", (state & CONST.STATE_CHECKING) ? lang[CONST.OV_FL_CHECKED].replace(/%:\.1d%/, (done / 10).toFixedNR(1)) : lang[CONST.OV_FL_PAUSED]];
 		}
 		else if (state & CONST.STATE_STARTED) { // started, seeding or leeching
 			res = (done == 1000) ? ["Status_Up", lang[CONST.OV_FL_SEEDING]] : ["Status_Down", lang[CONST.OV_FL_DOWNLOADING]];
@@ -546,7 +546,7 @@ var utWebUI = {
 			}
 		}
 		else if (state & CONST.STATE_CHECKING) { // checking
-			res = ["Status_Checking", lang[CONST.OV_FL_CHECKED].replace(/%:\.1d%/, (done / 10))];
+			res = ["Status_Checking", lang[CONST.OV_FL_CHECKED].replace(/%:\.1d%/, (done / 10).toFixedNR(1))];
 		}
 		else if (state & CONST.STATE_ERROR) { // error
 			res = ["Status_Error", lang[CONST.OV_FL_ERROR].replace(/%s/, "??")];
@@ -669,6 +669,11 @@ var utWebUI = {
 				row.each(function(v, k) {
 					if (v != rdata.data[k]) {
 						ret = this.trtTable.updateCell(hash, k, row) || ret;
+
+						if ("done" == this.trtColDefs[k][0]) {
+							// Update the "Status" column if "Done" column changed (in case "Checking" percentage needs updating)
+							ret = this.trtTable.updateCell(hash, this.trtColStatusIdx, row) || ret;
+						}
 					}
 				}, this);
 
