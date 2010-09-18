@@ -129,7 +129,8 @@ var dxSTable = new Class({
 		}
 		this.setOptions(options);
 
-		var tr, td, div, $me = this, isIE = Browser.Engine.trident;
+		var badIE = (Browser.Engine.trident && Browser.Engine.version <= 5);
+		var tr, td, div, $me = this;
 
 		this.id = "stable-" + id;
 		this.dCont = $(id).addClass("stable");
@@ -197,7 +198,7 @@ var dxSTable = new Class({
 			this.colOrder[i] = (typeof this.colOrder[i] == "number") ? this.colOrder[i].limit(0, len - 1) : i;
 			this.colData[i] = this.colHeader[this.colOrder[i]];
 			this.rowModel.grab(
-				simpleClone(TD, false).addClass(this.id + "-col-" + this.colOrder[i]).setStyle(isIE ? "visibility" : "display", this.colData[i].disabled ? (isIE ? "hidden" : "none") : (isIE ? "visible" : ""))
+				simpleClone(TD, false).addClass(this.id + "-col-" + this.colOrder[i]).setStyle(badIE ? "visibility" : "display", badIE ? (this.colData[i].disabled ? "hidden" : "visible") : (this.colData[i].disabled ? "none" : ""))
 			);
 			td = simpleClone(TD, false)
 				.grab(new Element("span", {"id": this.id + "-head-" + this.colData[i].id, "text": this.colData[i].text}))
@@ -255,7 +256,9 @@ var dxSTable = new Class({
 					$me.selectRow(ev, ele.parentNode);
 				}
 
-				ev.preventDefault();
+				if (!(Browser.Engine.trident6 && document.documentMode >= 9)) { // allow scrollbars to work on IE9
+					ev.preventDefault();
+				}
 			}).addEvent("click", function(ev) {
 				if (ev.control || ev.shift || ev.meta) return;
 
@@ -408,14 +411,8 @@ var dxSTable = new Class({
 			}
 
 			this.tHeadCols[i].setStyle("textAlign", align);
-			if (Browser.Engine.trident) {
-				cols[i].setStyle("textAlign", align);
-			} else {
-				sb += "." + this.id + "-col-" + this.colOrder.indexOf(i) + " { text-align: " + align + " }";
-			}
+			$$("." + this.id + "-col-" + this.colOrder.indexOf(i)).setStyle("textAlign", align);
 		}
-		if (!Browser.Engine.trident)
-			$("colrules").appendText(sb);
 	},
 
 	"isValidCol": function(iCol, allowUpEdge) {
@@ -425,15 +422,17 @@ var dxSTable = new Class({
 	"setColumnDisabled": function(iCol, disabled) {
 		if (!this.isValidCol(iCol)) return;
 
-		var isIE = Browser.Engine.trident;
+		var badIE = (Browser.Engine.trident && Browser.Engine.version <= 5);
 		this.colData[iCol].disabled = disabled;
 		this.tHeadCols[iCol].setStyle("display", disabled ? "none" : "");
 		this.tBodyCols[iCol].setStyle("display", disabled ? "none" : "");
-		var sname = isIE ? "visibility" : "display", svalue = disabled ? (isIE ? "hidden" : "none") : (isIE ? "visible" : "");
+		var sname = badIE ? "visibility" : "display";
+		var svalue = badIE ? (disabled ? "hidden" : "visible") : (disabled ? "none" : "");
 		this.rowModel.childNodes[iCol].setStyle(sname, svalue); // update "model" row in case it's needed again (adding more rows)
 		for (var i = 0, j = this.tb.body.childNodes.length; i < j; i++)
 			this.tb.body.childNodes[i].childNodes[iCol].setStyle(sname, svalue);
 		this.calcSize();
+		this.tBodyCols[iCol].replaces(this.tBodyCols[iCol]);
 		this.dHead.setStyle("width", this.dBody.clientWidth);
 		this.dHead.scrollLeft = this.dBody.scrollLeft;
 	},
@@ -462,7 +461,7 @@ var dxSTable = new Class({
 			var cellTarg = this.rowModel.childNodes[iNew];
 			this.rowModel.childNodes[iCol].dispose().inject(cellTarg, "before"); // update "model" row in case it's needed again (adding more rows)
 			$each(this.tb.body.childNodes, function(row) {
-				cellTarg= row.childNodes[iNew];
+				cellTarg = row.childNodes[iNew];
 				row.childNodes[iCol].dispose().inject(cellTarg, "before");
 			});
 		}
@@ -488,27 +487,25 @@ var dxSTable = new Class({
 	"setColumnWidth": function(iCol, iWidth) {
 		if (!this.isValidCol(iCol)) return;
 
+		var badIE = (Browser.Engine.trident && Browser.Engine.version <= 5);
 		this.colData[iCol].width = iWidth;
 
 		var safetyX = (this.tb.body.childNodes[0].childNodes[iCol].hasClass("stable-icon") ? 30 : 10);
 
 		// Set column header width
-		var offset = this.tHeadCols[iCol].getWidth();
-		if (offset <= 0 && !!this.colData[iCol].disabled) {
-			this.tHeadCols[iCol].setStyle("display", "");
-			offset = this.tHeadCols[iCol].getWidth();
-			this.tHeadCols[iCol].setStyle("display", "none");
-		}
-		offset -= this.tHeadCols[iCol].getStyle("width").toInt();
+		var offset = this.tHeadCols[iCol].getDimensions().x - this.tHeadCols[iCol].getStyle("width").toInt();
 		if (iWidth - safetyX < offset)
 			iWidth = offset + safetyX + 5;
 
 		this.tHeadCols[iCol].setStyle("width", iWidth - offset).setProperty("width", iWidth - offset);
 
 		// Set column body width
-		if (Browser.Engine.trident && !Browser.Engine.trident6)
+		if (badIE)
 			iWidth -= safetyX; // substract the left & right padding
+
 		this.tBodyCols[iCol].setStyle("width", iWidth).setProperty("width", iWidth);
+
+		// Set column header row width
 		iWidth = this.tHead.getWidth();
 		if (Browser.Engine.webkit)
 			this.tBody.setStyle("width", iWidth);
@@ -1219,6 +1216,7 @@ var dxSTable = new Class({
 	},
 
 	"calcSize": function() {
+		var badIE = (Browser.Engine.trident && Browser.Engine.version <= 5);
 		this.dBody.setStyle("height", (this.dCont.clientHeight - this.dHead.offsetHeight - ((this.options.refreshable || this.options.mode == MODE_PAGE) ? 26 : 0)).max(52));
 		this.dBody.setStyle("width", (this.dCont.offsetWidth - 2).max(0));
 		this.dHead.setStyle("width", (this.dCont.offsetWidth + (((this.dBody.offsetWidth - this.dBody.clientWidth) == 0) ? -4 : -1)).max(0));
@@ -1227,7 +1225,7 @@ var dxSTable = new Class({
 				if (this.colData[i].disabled) continue;
 				var w = 0;
 				// padding width + border width = 19
-				if (Browser.Engine.trident && (Browser.Engine.version < 6)) {
+				if (badIE) {
 					w = this.tBodyCols[i].offsetWidth - 19;
 				} else {
 					w = parseInt(this.tBodyCols[i].width) - (Browser.Engine.webkit ? 0 : 19);
@@ -1344,9 +1342,9 @@ var dxSTable = new Class({
 	},
 
 	"resizeTo": function(w, h) {
-		if (typeof w == "number")
+//		if (typeof w == "number")
 			this.dCont.setStyle("width", w);
-		if (typeof h == "number")
+//		if (typeof h == "number")
 			this.dCont.setStyle("height", h);
 		this.calcSize();
 	},

@@ -208,11 +208,3 @@ Native.implement([Document, Window], {
 		return this.getSize();
 	}
 });
-
-// uTorrent WebUI Hack - BEGIN
-
-// NOTE: This hack works around the ECMAScript 5 conflict with mootools
-// https://mootools.lighthouseapp.com/projects/2706-mootools/tickets/963
-Function.prototype.bind = function(bind, args) { return this.create({bind: bind, arguments: args}); }
-
-// uTorrent WebUI Hack - END

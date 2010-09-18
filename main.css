@@ -36,14 +36,14 @@ fieldset {
 	border-radius: 5px;
 	margin-bottom: 6px;
 	overflow: hidden;
-	padding: 5px;
+	padding: 0 5px 5px 5px;
 	position: relative;
 }
 
-legend {
+fieldset legend {
 	color: #000000;
 	font-weight: bold;
-	padding: 0 3px;
+	padding: 0 3px 3px 3px;
 }
 
 label {
@@ -52,6 +52,7 @@ label {
 
 textarea {
 	border: 1px solid #D0D0D0;
+	font-size: 11px;
 	overflow: auto;
 	padding: 2px;
 }
@@ -62,7 +63,7 @@ textarea:focus {
 
 input, select {
 	font-family: inherit;
-	font-size: inherit;
+	font-size: 11px;
 }
 
 input[type="checkbox"] {
@@ -114,14 +115,6 @@ td.disabled, label.disabled, span.disabled, div.disabled {
 	cursor: default;
 }
 
-.clear:after {
-	clear: both;
-	content: ".";
-	display: block;
-	height: 0;
-	visibility: hidden;
-}
-
 .flr {
 	float: right;
 	text-align: left;
@@ -137,9 +130,12 @@ td.disabled, label.disabled, span.disabled, div.disabled {
 
 .line-cont {
 	clear: both;
-	height: 21px;
-	line-height: 21px;
 	overflow: hidden;
+	height: 20px;
+}
+
+.line-cont * {
+	vertical-align: middle;
 }
 
 #cover, #modalbg {
@@ -361,27 +357,20 @@ td.disabled, label.disabled, span.disabled, div.disabled {
  **************************************************/
 
 #mainInfoPane {
-	background-color: #D0D0D0;
 	float: left;
-	margin: 4px 0 0 0;
 	width: 0; /* NOTE: This fixes poor reflow under FF/IE when zooming out */
 }
 
 ul#mainInfoPane-tabs {
 	height: 18px;
 	list-style: none;
-	padding: 3px 0 0 0;
-	position: relative;
+	margin: 7px 0 0 0;
 	text-align: left;
 	white-space: nowrap;
-	z-index: 50;
 }
 
 ul#mainInfoPane-tabs li {
 	display: inline;
-	padding: 0 0 10px 0;
-	position: relative;
-	top: -4px;
 }
 
 ul#mainInfoPane-tabs li a {
@@ -393,31 +382,23 @@ ul#mainInfoPane-tabs li a {
 	color: #3B3B3B;
 	padding: 2px 0 5px 0;
 	position: relative;
-	top: 4px;
-	vertical-align: top;
 }
 
 ul#mainInfoPane-tabs li a:hover {
-	background-color: #E0E0E0;
+	background-color: #E5E5E5;
 	border-top: 2px solid #0099FF;
 }
 
 ul#mainInfoPane-tabs li.selected a {
-	-moz-border-radius: 5px 5px 0 0;
-	-webkit-border-radius: 5px 5px 0 0;
-	background-color: #FFFFFF;
+	background-color: #FFFFFF !important;
 	border: 1px solid #868686;
 	border-bottom: 1px solid #FFFFFF;
 	border-top: 2px solid #0099FF;
-	border-radius: 5px 5px 0 0;
 	color: #000000;
-	position: relative;
-	vertical-align: top;
 }
 
 ul#mainInfoPane-tabs li a span {
 	padding: 0 10px 3px 24px;
-	vertical-align: top;
 }
 
 li#tab_mainInfoPane-generalTab span,
@@ -457,16 +438,15 @@ li.selected#tab_mainInfoPane-loggerTab span {
 }
 
 #mainInfoPane-generalTab table {
-	line-height: 10px;
 	width: 100%;
 }
 
 #mainInfoPane-generalTab table td {
 	empty-cells: show;
-	padding: 3px;
+	padding: 1px 3px;
 }
 
-#mainInfoPane-generalTab table td.Header {
+#mainInfoPane-generalTab table td.header {
 	background: #F6F6F6;
 	border: 1px solid #D0D0D0;
 	font-weight: bold;
@@ -747,6 +727,7 @@ li.selected#tab_mainInfoPane-loggerTab span {
 }
 
 #mainInfoPane-loggerTab p {
+	border-bottom: 1px solid #f0f0f0;
 	font-family: monospace;
 	font-size: 12px;
 	line-height: 12px;
@@ -756,7 +737,6 @@ li.selected#tab_mainInfoPane-loggerTab span {
 #mainInfoPane-loggerTab .timestamp {
 	color: #999999;
 	font-weight: bold;
-	padding-right: 5px;
 }
 
 
@@ -1326,23 +1306,16 @@ input[id="gui.dlrate_menu"] {
  **************************************************/
 
 ul.CMenu {
-	background: #FFFFFF;
+	background: #F8F8F8;
 	border: 1px solid #A7A6AA;
 	display: none;
-	left: 0px;
 	list-style: none;
 	padding: 2px;
 	position: absolute;
-	text-decoration: none;
-	top: 0px;
-	width: 150px;
 	z-index: 1000;
 }
 
 ul.CMenu li {
-	background: #F8F8F8;
-	float: left;
-	margin-right: 1px;
 	position: relative;
 	width: 150px;
 }
@@ -1350,41 +1323,29 @@ ul.CMenu li {
 ul.CMenu li a {
 	display: block;
 	font-weight: normal;
-	line-height: 18px;
-	padding: 0 4px 0 16px;
+	padding: 2px 4px 2px 16px;
 }
 
 ul.CMenu li a.dis {
-	color: #C0C0C0;
+	background-color: #F8F8F8 !important;
+	color: #C0C0C0 !important;
 }
 
-ul.CMenu li a.dis:hover {
-	background-color: #F8F8F8;
-	color: #C0C0C0;
-}
-
-ul.CMenu li .hr {
-	border: none;
+ul.CMenu li.sep {
 	border-top: 1px solid #D0D0D0;
-	font-size: 1px;
-	margin: 2px auto;
-	width: 90%;
+	font-size: 0;
+	height: 0;
+	line-height: 0;
+	margin: 2px 5px;
+	width: 140px;
 }
 
-ul.CMenu li a.exp {
-	background: transparent url(./images/menuexp.png) no-repeat scroll 140px center;
-}
-
-ul.CMenu li a.sel {
-	background: transparent url(./images/menusel.png) no-repeat scroll 4px center;
-}
-
-ul.CMenu li a.check {
-	background: transparent url(./images/menucheck.png) no-repeat scroll 4px center;
-}
+ul.CMenu li a.exp { background: transparent url(./images/menuexp.png) no-repeat scroll 140px center; }
+ul.CMenu li a.sel { background: transparent url(./images/menusel.png) no-repeat scroll 4px center; }
+ul.CMenu li a.check { background: transparent url(./images/menucheck.png) no-repeat scroll 4px center; }
 
 ul.CMenu li:hover a { background-color: #0099FF; color: #FFFFFF; }
-ul.CMenu li:hover ul { display: block; position: absolute; top: 0; left: 150px; width: 150px; }
+ul.CMenu li:hover ul { display: block; position: absolute; top: 0; left: 150px; }
 ul.CMenu li:hover ul li ul { display: none; z-index: 1002; }
 ul.CMenu li:hover ul li a { display: block; background-color: #F6F6F6; color: #000000; }
 ul.CMenu li:hover ul li a:hover { background-color: #0099FF; color: #FFFFFF; }

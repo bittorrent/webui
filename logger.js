@@ -11,9 +11,9 @@ var Logger = {
 		this.element = $(element);
 	},
 
-	"log": function(text) {
+	"log": function() {
 		if (!this.element) return;
-
+		var text = Array.prototype.slice.call(arguments).join(" ");
 		var dt = new Date();
 
 		var YYYY = dt.getFullYear();
@@ -30,7 +30,7 @@ var Logger = {
 		);
 
 		this.element.grab(new Element("p")
-			.grab(new Element("span", {"text": "[" + time + "]", "class": "timestamp"}))
+			.grab(new Element("span", {"text": "[" + time + "] ", "class": "timestamp"}))
 			.appendText(text)
 		);
 
@@ -47,8 +47,8 @@ var Logger = {
 	}
 };
 
-function log(text) {
-	Logger.log(text);
+function log() {
+	Logger.log.apply(Logger, arguments);
 }
 
 //================================================================================

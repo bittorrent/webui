@@ -1,45 +1,67 @@
-select {
-	vertical-align: top !important;
+#modalbg {
+	-ms-filter:"progid:DxImageTransform.Microsoft.Alpha(opacity=60)";
+	filter: alpha(opacity=60);
 }
 
-label {
-	vertical-align: baseline !important;
+
+/**************************************************
+ * MAIN TOOLBAR
+ **************************************************/
+
+#mainToolbar a {
+	-ms-filter:"progid:DxImageTransform.Microsoft.Alpha(opacity=80)";
+	filter: alpha(opacity=80);
 }
 
-.clear, ul.CMenu li .hr {
-	zoom: 1;
-}
-
-.settings-pane select {
-	vertical-align: middle !important;
-}
-
-ul#mainInfoPane-tabs li, ul#mainInfoPane-tabs li a span {
-	zoom: 1;
-}
-
-ul#mainInfoPane-tabs li a {
-	padding-bottom: 2px !important;
-}
-
-/*
-div#mainToolbar a span {
-	filter: alpha(opacity=70);
-}
-
-div#mainToolbar a:hover span {
+#mainToolbar a:hover {
+	-ms-filter:"progid:DxImageTransform.Microsoft.Alpha(opacity=100)";
 	filter: alpha(opacity=100);
 }
-*/
+
+#mainToolbar-searchbar input {
+	-ms-filter:"progid:DxImageTransform.Microsoft.Alpha(opacity=80)";
+	filter: alpha(opacity=80);
+}
+
+#mainToolbar-searchbar input:hover, #mainToolbar-searchbar input:focus {
+	-ms-filter:"progid:DxImageTransform.Microsoft.Alpha(opacity=100)";
+	filter: alpha(opacity=100);
+}
+
+
+/**************************************************
+ * MAIN DETAILED INFO PANE
+ **************************************************/
+
+li#tab_mainInfoPane-generalTab span,
+li#tab_mainInfoPane-peersTab span,
+li#tab_mainInfoPane-filesTab span,
+li#tab_mainInfoPane-speedTab span,
+li#tab_mainInfoPane-loggerTab span {
+	-ms-filter:"progid:DxImageTransform.Microsoft.Alpha(opacity=50)";
+	filter: alpha(opacity=50);
+}
+
+li.selected#tab_mainInfoPane-generalTab span,
+li.selected#tab_mainInfoPane-peersTab span,
+li.selected#tab_mainInfoPane-filesTab span,
+li.selected#tab_mainInfoPane-speedTab span,
+li.selected#tab_mainInfoPane-loggerTab span {
+	-ms-filter:"progid:DxImageTransform.Microsoft.Alpha(opacity=100)";
+	filter: alpha(opacity=100);
+}
+
+
+/**************************************************
+ * SORTABLE TABLE
+ **************************************************/
 
 .stable-pagemenu .prevlink-disabled, .stable-pagemenu .nextlink-disabled {
+	-ms-filter:"progid:DxImageTransform.Microsoft.Alpha(opacity=50)";
 	filter: alpha(opacity=50);
 }
 
 .stable-pagemenu .prevlink, .stable-pagemenu .nextlink {
+	-ms-filter:"progid:DxImageTransform.Microsoft.Alpha(opacity=100)";
 	filter: alpha(opacity=100);
-}
-
-#modalbg {
-	filter: alpha(opacity=60);
 }

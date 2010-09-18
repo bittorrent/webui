@@ -272,7 +272,7 @@ function resizeUI(hDiv, vDiv) {
 	}
 
 	// Resize torrent list
-	var trtw = ww - (hDiv + 2 + (showCat ? 5 : 0)) - (badIE ? 2 : 0),
+	var trtw = ww - (hDiv + 2 + (showCat ? 5 : 0)) - (badIE ? 1 : 0),
 		trth = vDiv - (th + (showDet ? 0 : 2)) - (badIE ? 1 : 0);
 
 	if (showCat) {
@@ -338,9 +338,9 @@ function resizeUI(hDiv, vDiv) {
 
 	// Resize detailed info pane
 	if (showDet) {
-		var dw = ww - (showCat && tallCat ? hDiv + 5 : 0) - (badIE ? 2 : 0);
+		var dw = ww - (showCat && tallCat ? hDiv + 5 : 0);
 		if (vDiv) {
-			var dh = wh - vDiv - $("mainInfoPane-tabs").getSize().y - 14;
+			var dh = wh - vDiv - $("mainInfoPane-tabs").getSize().y - 16;
 			$("mainInfoPane-content").setStyles({"width": dw - 8, "height": dh});
 			$("mainInfoPane-generalTab").setStyles({"width": dw - 10, "height": dh - 2});
 			SpeedGraph.resize(dw - 8, dh);

@@ -1875,7 +1875,7 @@ var utWebUI = {
 			this.prsTable.dBody.scrollLeft = 0;
 			this.prsTable.dBody.scrollTop = 0;
 			this.peers[id].each(function(peer, i) {
-				var key = id + "_" + peer[CONST.PEER_IP] + "_" + peer[CONST.PEER_PORT]; // TODO: Handle bt.allow_same_ip
+				var key = id + "_" + peer[CONST.PEER_IP].replace(/\./g, "_") + "_" + peer[CONST.PEER_PORT]; // TODO: Handle bt.allow_same_ip
 				this.prsTable.addRow(this.prsDataToRow(peer), key);
 				this.prsTable.setIcon(key, "country_" + peer[CONST.PEER_COUNTRY]);
 			}, this);

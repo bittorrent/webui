@@ -518,13 +518,19 @@ var Flotr = (function(){
 			 * Insert main canvas.
 			 */
 			if (canvas == null) {
-				canvas = $(document.createElement('canvas')).setProperties({
-					"width": canvasWidth,
-					"height": canvasHeight,
-					"id": id
-				});
+// uTorrent WebUI Patch - BEGIN
+//				canvas = $(document.createElement('canvas')).setProperties({
+//					"width": canvasWidth,
+//					"height": canvasHeight,
+//					"id": id
+//				});
+				canvas = $(document.createElement('canvas')).setProperty("id", id);
+// uTorrent WebUI Patch - END
 				target.appendChild(canvas);
-				if (Browser.Engine.trident && !Browser.Engine.trident6) {
+// uTorrent WebUI Patch - BEGIN
+//				if (Browser.Engine.trident && !Browser.Engine.trident6) {
+				if (window.G_vmlCanvasManager) {
+// uTorrent WebUI Patch - END
 					canvas = $(window.G_vmlCanvasManager.initElement(canvas));
 				}
 				ctx = canvas.getContext('2d');
@@ -538,16 +544,22 @@ var Flotr = (function(){
 			 * Insert overlay canvas for interactive features.
 			 */
 			if (overlay == null) {
-				overlay = $(document.createElement('canvas')).setProperties({
-					width: canvasWidth,
-					height: canvasHeight
-				}).setStyles({
+// uTorrent WebUI Patch - BEGIN
+//				overlay = $(document.createElement('canvas')).setProperties({
+//					width: canvasWidth,
+//					height: canvasHeight
+//				}).setStyles({
+				overlay = $(document.createElement('canvas')).setStyles({
+// uTorrent WebUI Patch - END
 					position: 'absolute',
 					left: '0px',
 					top: '0px'
 				});
 				overlay.injectAfter(canvas);
-				if (Browser.Engine.trident && !Browser.Engine.trident6) {
+// uTorrent WebUI Patch - BEGIN
+//				if (Browser.Engine.trident && !Browser.Engine.trident6) {
+				if (window.G_vmlCanvasManager) {
+// uTorrent WebUI Patch - END
 					overlay = $(window.G_vmlCanvasManager.initElement(overlay));
 				}
 				octx = overlay.getContext('2d');

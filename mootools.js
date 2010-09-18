@@ -21,8 +21,8 @@ provides: [Mootools, Native, Hash.base, Array.each, $util]
 */
 
 var MooTools = {
-	'version': '1.2.4',
-	'build': '0d9113241a90b9cd5643b926795852a2026710d4'
+	'version': '1.2.5',
+	'build': '008d8f0f2fcc2044e54fdd3635341aaab274e757'
 };
 
 var Native = function(options){
@@ -630,6 +630,10 @@ provides: [Function]
 
 ...
 */
+
+try {
+	delete Function.prototype.bind;
+} catch(e){}
 
 Function.implement({
 
@@ -1516,18 +1520,35 @@ Elements.implement({
 
 });
 
+(function(){
+
+/*<ltIE8>*/
+var createElementAcceptsHTML;
+try {
+	var x = document.createElement('<input name=x>');
+	createElementAcceptsHTML = (x.name == 'x');
+} catch(e){}
+
+var escapeQuotes = function(html){
+	return ('' + html).replace(/&/g,'&amp;').replace(/"/g,'&quot;');
+};
+/*</ltIE8>*/
+
 Document.implement({
 
 	newElement: function(tag, props){
-		if (Browser.Engine.trident && props){
-			['name', 'type', 'checked'].each(function(attribute){
-				if (!props[attribute]) return;
-				tag += ' ' + attribute + '="' + props[attribute] + '"';
-				if (attribute != 'checked') delete props[attribute];
-			});
-			tag = '<' + tag + '>';
+		if (props && props.checked != null) props.defaultChecked = props.checked;
+		/*<ltIE8>*/// Fix for readonly name and type properties in IE < 8
+		if (createElementAcceptsHTML && props){
+			tag = '<' + tag;
+			if (props.name) tag += ' name="' + escapeQuotes(props.name) + '"';
+			if (props.type) tag += ' type="' + escapeQuotes(props.type) + '"';
+			tag += '>';
+			delete props.name;
+			delete props.type;
 		}
-		return document.id(this.createElement(tag)).set(props);
+		/*</ltIE8>*/
+		return this.id(this.createElement(tag)).set(props);
 	},
 
 	newTextNode: function(text){
@@ -1578,6 +1599,8 @@ Document.implement({
 	})()
 
 });
+
+})();
 
 if (window.$ == null) Window.implement({
 	$: function(el, nc){
@@ -2223,6 +2246,12 @@ Native.implement([Element, Window, Document], {
 	}
 
 });
+
+// IE9
+try {
+	if (typeof HTMLElement != 'undefined')
+		HTMLElement.prototype.fireEvent = Element.prototype.fireEvent;
+} catch(e){}
 
 Element.NativeEvents = {
 	click: 2, dblclick: 2, mouseup: 2, mousedown: 2, contextmenu: 2, //mouse buttons

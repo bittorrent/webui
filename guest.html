@@ -9,12 +9,13 @@
 	<head>
 		<title></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
 		<link href="./favicon.ico" rel="SHORTCUT ICON" type="image/x-icon" />
-		<link href="./stable.css" rel="stylesheet" type="text/css" />
+		<style type="text/css">@import "./stable.css";</style>
 		<style type="text/css">@import "./main.css";</style>
-		<style type="text/css" id="colrules"></style>
-		<!--[if IE]><style type="text/css">@import "./ie.css";</style><![endif]-->
+		<!--[if IE]>
+		<script type="text/javascript" src="./ie.js"></script>
+		<script type="text/javascript" src="./excanvas.js"></script>
+		<![endif]-->
 	</head>
 	<body>
 		<div id="cover">
@@ -51,7 +52,7 @@
 					<table cellpadding="5" cellspacing="2">
 						<tbody>
 							<tr>
-								<td colspan="3" class="Header" id="GN_TRANSFER"></td>
+								<td colspan="3" class="header" id="GN_TRANSFER"></td>
 							</tr>
 							<tr>
 								<td style="width: 34%"><label id="GN_TP_04"></label><span id="rm"></span></td>
@@ -85,8 +86,7 @@
 		<div id="mainVDivider"></div>
 		<div id="mainHDivider"></div>
 
-
-		<!-- [/jscompact] -->
+		<!-- [jscompact] -->
 		<script type="text/javascript" src="./mootools.js"></script>
 		<script type="text/javascript" src="./flotr.js"></script>
 

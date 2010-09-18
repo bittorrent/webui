@@ -7,16 +7,16 @@ var SpeedGraph = {
 	"plot": null,
 
 	"init": function(element) {
-		if (Browser.Engine.trident6) return;
 		this.element = $(element);
 		this.maxSeconds = 600;
 		this.seconds = -1;
 		this.startSeconds = $time() / 1000;
 
 		this.plot = new Flotr.Plot(this.element, [{ data: [] }, { data: [] }], {
-			"colors" : ["#009900", "#1C8DFF"],
+			"colors" : ["#EE0000", "#00AA00"],
 			"lines" : {
-				show: true
+				show: true,
+				lineWidth: 1
 			},
 			"xaxis" : {
 				"max" : (this.seconds - this.startSeconds >= this.maxSeconds) ? null : this.maxSeconds + this.startSeconds,
@@ -45,7 +45,7 @@ var SpeedGraph = {
 	},
 
 	"draw": function() {
-		if ((utWebUI.mainTabs.active != "mainInfoPane-speedTab") || Browser.Engine.trident6) return;
+		if (utWebUI.mainTabs.active != "mainInfoPane-speedTab") return;
 		this.plot.repaint();
 	},
 
@@ -66,7 +66,6 @@ var SpeedGraph = {
 	},
 
 	"addData": function(upSpeed, downSpeed) {
-		if (Browser.Engine.trident6) return;
 		this.seconds = $time() / 1000;
 		this.plot.series[0].data.push([this.seconds, upSpeed]);
 		this.plot.series[1].data.push([this.seconds, downSpeed]);
