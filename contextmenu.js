@@ -137,7 +137,7 @@ var ContextMenu = {
 		this.hidden = true;
 		this.focused = false;
 		this.launched = false;
-		this.clear.delay(20, this);
+		this.clear();
 	}
 
 };
