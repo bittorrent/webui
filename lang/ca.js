@@ -206,6 +206,8 @@ var lang = [
 	, "Prioritat baixa"
 	, "Prioritat normal"
 	, "Suprimeix les dades"
+	, "Suprimeix el .torrent"
+	, "Suprimeix el .torrent i les dades"
 	, "Forçar Recomprobació"
 	, "Força l'inici"
 	, "Etiqueta"

@@ -206,6 +206,8 @@ var lang = [
 	, "Žema svarba"
 	, "Normali svarba"
 	, "Ištrinti duomenis"
+	, "Ištrinti .torrent"
+	, "Ištrinti .torrent ir duomenis"
 	, "Priverstinai pertikrinti"
 	, "Priverstinai pradėti"
 	, "Etiketė"

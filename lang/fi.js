@@ -206,6 +206,8 @@ var lang = [
 	, "Alhainen tärkeysaste"
 	, "Normaali tärkeysaste"
 	, "Poista tiedosto(t)"
+	, "Poista .torrent"
+	, "Poista .torrent ja tiedosto(t)"
 	, "Pakota uudelleentarkistus"
 	, "Pakota aloitus"
 	, "Nimike"

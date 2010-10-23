@@ -206,6 +206,8 @@ var lang = [
 	, "Hạn Chế"
 	, "Bình Thường"
 	, "Xóa Dữ Liệu"
+	, "Xóa .torrent"
+	, "Xóa .torrent + Dữ Liệu"
 	, "Kiểm tra lỗi [Bắt buộc]"
 	, "Bắt đầu [Bắt buộc]"
 	, "Nhãn"

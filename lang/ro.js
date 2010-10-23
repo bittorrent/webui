@@ -206,6 +206,8 @@ var lang = [
 	, "Prioritate Scăzută"
 	, "Prioritate Normală"
 	, "Șterge Datele Descărcate"
+	, "Șterge Torentul"
+	, "Șterge Torentul și Filele Descărcate"
 	, "Forțează Reverificarea"
 	, "Forțează Pornirea"
 	, "Etichetă"

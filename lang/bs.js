@@ -206,6 +206,8 @@ var lang = [
 	, "Najmanji prioritet"
 	, "Normalni prioritet"
 	, "Obriši podatke"
+	, "Obriši torrent"
+	, "Obriši .torrent i podatke"
 	, "Isforsiraj provjeru"
 	, "Forsiraj start"
 	, "Oznaka"

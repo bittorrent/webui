@@ -206,6 +206,8 @@ var lang = [
 	, "Lage prioriteit"
 	, "Normale prioriteit"
 	, "Verwijder gegevens"
+	, "Verwijder .torrent"
+	, "Verwijder .torrent + gegevens"
 	, "Forceer hercontrole"
 	, "Forceer start"
 	, "Etiket"

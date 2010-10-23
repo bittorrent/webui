@@ -206,6 +206,8 @@ var lang = [
 	, "Düşük Öncelik"
 	, "Normal Öncelik"
 	, "Veriyi Sil"
+	, "Torrenti Sil"
+	, "Torrent ve Veriyi Sil"
 	, "Tekrar Kontrol Et"
 	, "Zorlu Başlat"
 	, "Etiket"

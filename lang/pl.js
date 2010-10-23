@@ -206,6 +206,8 @@ var lang = [
 	, "Niski priorytet"
 	, "Normalny priorytet"
 	, "Usuń dane"
+	, "Usuń plik .torrent"
+	, "Usuń plik .torrent i dane"
 	, "Ponowne sprawdzenie"
 	, "Wymuś start"
 	, "Etykieta"

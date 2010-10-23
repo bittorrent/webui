@@ -206,6 +206,8 @@ var lang = [
 	, "Nízká priorita"
 	, "Normální priorita"
 	, "vymazat data"
+	, "vymazat torrent"
+	, "vymazat torrent + data"
 	, "Zkontrolovat soubory"
 	, "Vynucený Start"
 	, "Kategorie"

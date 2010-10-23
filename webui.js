@@ -152,7 +152,7 @@ var utWebUI = {
 	"totalUL": 0,
 	"loaded": false,
 	"TOKEN": "",
-	"delActions": ["remove", "removedata"],
+	"delActions": ["remove", "removetorrent", "removedata", "removedatatorrent"],
 
 	"advSettings": {
 		  "bt.allow_same_ip": ""
@@ -167,6 +167,7 @@ var utWebUI = {
 		, "bt.compact_allocation": ""
 		, "bt.connect_speed": ""
 		, "bt.determine_encoded_rate_for_streamables": ""
+		, "bt.enable_pulse": ""
 		, "bt.enable_tracker": ""
 		, "bt.failover_peer_speed_threshold": ""
 		, "bt.graceful_shutdown": ""
@@ -175,6 +176,8 @@ var utWebUI = {
 		, "bt.no_connect_to_services_list": ""
 		, "bt.prio_first_last_piece": ""
 		, "bt.prioritize_partial_pieces": ""
+		, "bt.pulse_interval": ""
+		, "bt.pulse_weight": ""
 		, "bt.ratelimit_tcp_only": ""
 		, "bt.scrape_stopped": ""
 		, "bt.send_have_to_seed": ""
@@ -201,6 +204,7 @@ var utWebUI = {
 		, "gui.auto_restart": ""
 		, "gui.bypass_search_redirect": ""
 		, "gui.color_progress_bars": ""
+		, "gui.combine_listview_status_done": ""
 		, "gui.compat_diropen": ""
 		, "gui.default_del_action": ""
 		, "gui.delete_to_trash": ""
@@ -221,12 +225,15 @@ var utWebUI = {
 		, "ipfilter.enable": ""
 		, "isp.bep22": ""
 		, "isp.fqdn": ""
+		, "isp.peer_policy_enable": ""
+		, "isp.peer_policy_url": ""
 		, "isp.primary_dns": ""
 		, "isp.secondary_dns": ""
 		, "net.bind_ip": ""
 		, "net.calc_rss_overhead": ""
 		, "net.calc_tracker_overhead": ""
 		, "net.disable_ipv6": ""
+		, "net.disable_incoming_ipv6": ""
 		, "net.discoverable": ""
 		, "net.limit_excludeslocal": ""
 		, "net.low_cpu": ""
@@ -349,7 +356,7 @@ var utWebUI = {
 							}
 						}, async, fails]);
 					},
-					"onSuccess": (fn) ? fn.bind(self) : $empty
+					"onSuccess": (fn) ? fn.bind(self) : Function.from()
 				}).send();
 			} catch(e){}
 		};
@@ -367,7 +374,7 @@ var utWebUI = {
 				"url": guiBase + "token.html?t=" + Date.now(),
 				"method": "get",
 				"async": !!async,
-				"onFailure": (fn) ? fn.bind(self) : $empty,
+				"onFailure": (fn) ? fn.bind(self) : Function.from(),
 				"onSuccess": function(str) {
 					self.TOKEN = str.substring(str.indexOf("none;'>") + 7, str.indexOf("</div>"));
 					if (fn) fn.delay(0);
@@ -435,7 +442,9 @@ var utWebUI = {
 					break;
 
 				case "remove":
+				case "removetorrent":
 				case "removedata":
+				case "removedatatorrent":
 					break;
 
 				default:
@@ -495,16 +504,24 @@ var utWebUI = {
 		if (count == 0) return;
 
 		mode = parseInt(mode);
-		if (isNaN(mode))
-			mode = (this.settings["gui.default_del_action"] <= 1) ? 0 : 1
+		if (isNaN(mode) || mode < 0 || this.delActions.length <= mode)
+			mode = this.settings["gui.default_del_action"] || 0;
 
 		var act = (function() {
 			this.perform(this.delActions[mode]);
 		}).bind(this);
 
 		if (this.settings["confirm_when_deleting"]) {
-			var multiple = (count != 1);
-			var ask = (mode == 0) ? ((multiple) ? CONST.OV_CONFIRM_DELETE_MULTIPLE : CONST.OV_CONFIRM_DELETE_ONE) : ((multiple) ? CONST.OV_CONFIRM_DELETEDATA_MULTIPLE : CONST.OV_CONFIRM_DELETEDATA_ONE);
+			var ask;
+			switch (mode) {
+				case CONST.TOR_REMOVE:
+				case CONST.TOR_REMOVE_TORRENT:
+					ask = ((count == 1) ? CONST.OV_CONFIRM_DELETE_ONE : CONST.OV_CONFIRM_DELETE_MULTIPLE);
+					break;
+				case CONST.TOR_REMOVE_DATA:
+				case CONST.TOR_REMOVE_DATATORRENT:
+					ask = ((count == 1) ? CONST.OV_CONFIRM_DELETEDATA_ONE : CONST.OV_CONFIRM_DELETEDATA_MULTIPLE);
+			}
 
 			$("dlgDelTor-message").set("text", lang[ask].replace(/%d/, count));
 			$("DELTOR_YES").addEvent("click", function(ev) {
@@ -1329,7 +1346,7 @@ var utWebUI = {
 		}
 
 		if (str != "")
-			this.request("action=setsetting" + str, $empty, !reload); // if the page is going to reload make it a synchronous request
+			this.request("action=setsetting" + str, Function.from(), !reload); // if the page is going to reload make it a synchronous request
 
 		if (this.settings["webui.enable"] == 0) {
 			$("msg").set("html", "Goodbye.");
@@ -1640,8 +1657,12 @@ var utWebUI = {
 			, "queueup"    : [lang[CONST.ML_QUEUEUP], (function(ev) { this.queueup(ev.shift); }).bind(this)]
 			, "queuedown"  : [lang[CONST.ML_QUEUEDOWN], (function(ev) { this.queuedown(ev.shift); }).bind(this)]
 			, "label"      : [CMENU_CHILD, lang[CONST.ML_LABEL], labelSubMenu]
-			, "remove"     : [lang[CONST.ML_REMOVE], this.remove.bind(this, 0)]
-			, "removeand"  : [CMENU_CHILD, lang[CONST.ML_REMOVE_AND], [[lang[CONST.ML_DELETE_DATA], this.remove.bind(this, 1)]]]
+			, "remove"     : [lang[CONST.ML_REMOVE], this.remove.bind(this, CONST.TOR_REMOVE)]
+			, "removeand"  : [CMENU_CHILD, lang[CONST.ML_REMOVE_AND], [
+				  [lang[CONST.ML_DELETE_TORRENT], this.remove.bind(this, CONST.TOR_REMOVE_TORRENT)]
+				, [lang[CONST.ML_DELETE_DATATORRENT], this.remove.bind(this, CONST.TOR_REMOVE_DATATORRENT)]
+				, [lang[CONST.ML_DELETE_DATA], this.remove.bind(this, CONST.TOR_REMOVE_DATA)]
+			]]
 			, "recheck"    : [lang[CONST.ML_FORCE_RECHECK], this.recheck.bind(this)]
 			, "properties" : [lang[CONST.ML_PROPERTIES], this.showProperties.bind(this)]
 		};
@@ -1865,7 +1886,7 @@ var utWebUI = {
 			$("dlgAdd-cookies").set("value", "");
 			if (cookie != "")
 				url += ":COOKIE:" + cookie;
-			this.request("action=add-url&s=" + url, $empty);
+			this.request("action=add-url&s=" + url, Function.from());
 		}
 	},
 
@@ -2625,7 +2646,8 @@ var utWebUI = {
 		this.flsTable.setConfig({"colType": flsProgCols.map(progFunc).associate(flsProgCols)});
 	},
 
-	"detPanelTabChange": function(id) {
+	"detPanelTabChange": function(args) {
+		var id = args[0];
 		switch (id) {
 			case "mainInfoPane-peersTab":
 				this.prsTable.calcSize();
@@ -2658,7 +2680,8 @@ var utWebUI = {
 		}
 	},
 	
-	"settingsPaneChange": function(id) {
+	"settingsPaneChange": function(args) {
+		var id = args[0];
 		switch (id) {
 			case "dlgSettings-TransferCap": this.getTransferHistory(); break;
 			case "dlgSettings-Advanced": this.advOptTable.calcSize(); break;

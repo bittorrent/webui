@@ -206,6 +206,8 @@ var lang = [
 	, "Prioridad Baja"
 	, "Prioridad Normal"
 	, "Eliminar datos"
+	, "Eliminar .torrent"
+	, "Eliminar .torrent + Datos"
 	, "Forzar comprobación"
 	, "Forzar inicio"
 	, "Etiqueta"

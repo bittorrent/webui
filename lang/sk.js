@@ -206,6 +206,8 @@ var lang = [
 	, "Nízka priorita"
 	, "Normálna priorita"
 	, "Vymazať data"
+	, "Vymazať torrent"
+	, "Vymazať torrent + dáta"
 	, "Hash kontrola"
 	, "Vynútený štart"
 	, "Kategória"

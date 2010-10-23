@@ -206,6 +206,8 @@ var lang = [
 	, "Prioritat Baixa"
 	, "Prioritat Normal"
 	, "Eliminar Senyes"
+	, "Borrar .torrent"
+	, "Eliminar .torrent + Senyes"
 	, "Forçar Comprovació"
 	, "Forçar Inici"
 	, "Etiqueta"

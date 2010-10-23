@@ -206,6 +206,8 @@ var lang = [
 	, "Lág Forgangsröðun"
 	, "Eðlileg Forgangsröðun"
 	, "...eyða gögnum"
+	, "...eyða deiliskrá"
+	, "...eyða deiliskrá + gögnum"
 	, "Endurskoða"
 	, "Þrýsta á"
 	, "Merki"

@@ -206,6 +206,8 @@ var lang = [
 	, "Nizka prednost"
 	, "Običajna prednost"
 	, "Zbriši podatke"
+	, "Zbriši .torrent"
+	, "Zbriši .torrent + podatke"
 	, "Vsili preverbo"
 	, "Vsili začetek"
 	, "Oznaka"

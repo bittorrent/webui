@@ -601,7 +601,9 @@ function setupUserInterface() {
 
 	["About", "Add", "AddURL", "DelTor", "Label", "Props", "Settings"].each(function(k) {
 		var isModal = (["DelTor", "Label", "Props"].indexOf(k) >= 0);
-		DialogManager.add(k, isModal);
+		DialogManager.add(k, isModal, {
+			"Settings": function () { utWebUI.stpanes.onChange(); }
+		}[k]);
 	});
 
 	//--------------------------------------------------

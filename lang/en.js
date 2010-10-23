@@ -206,6 +206,8 @@ var lang = [
 	, "Low Priority"
 	, "Normal Priority"
 	, "Delete Data"
+	, "Delete .torrent"
+	, "Delete .torrent + Data"
 	, "Force Re-Check"
 	, "Force Start"
 	, "Label"

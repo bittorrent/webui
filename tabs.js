@@ -9,11 +9,14 @@ var Tabs = new Class({
 
 	"active": "",
 	"tabs": {},
+	"tabchange": Function.from(),
 
 	"initialize": function(ele, options) {
 		this.element = $(ele);
 		this.tabs = options.tabs;
-		this.onChange = options.onChange || $empty;
+		if (typeOf(options.onChange) == 'function') {
+			this.tabchange = options.onChange;
+		}
 		var $me = this;
 		this.element.addEvent("click", function(ev) {
 			ev.stop();
@@ -36,6 +39,11 @@ var Tabs = new Class({
 			}))));
 		};
 		return this;
+	},
+
+	"onChange": function() {
+		var args = arguments.length > 0 ? Array.from(arguments) : [this.active];
+		this.tabchange(args);
 	},
 
 	"setNames": function(names) {

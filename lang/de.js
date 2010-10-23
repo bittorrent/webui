@@ -206,6 +206,8 @@ var lang = [
 	, "Niedrige Priorität"
 	, "Normale Priorität / wieder laden"
 	, "nur Daten löschen"
+	, "nur .torrent löschen"
+	, ".torrent + Daten löschen"
 	, "Erzwinge neuerliche Überprüfung"
 	, "Erzwinge Start"
 	, "Gruppe"

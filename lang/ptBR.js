@@ -206,6 +206,8 @@ var lang = [
 	, "Prioride Baixa"
 	, "Prioridade Normal"
 	, "Excluir Dados"
+	, "Excluir .torrent"
+	, "Excluir .torrent + Dados"
 	, "Forçar Re-checagem"
 	, "Forçar Ínicio"
 	, "Categoria"

@@ -206,6 +206,8 @@ var lang = [
 	, "Låg prioritet"
 	, "Normal prioritet"
 	, "Slett data"
+	, "Slett .torrent"
+	, "Slett .torrent + data"
 	, "Tving re-sjekk"
 	, "Tving start"
 	, "Merkelapp"

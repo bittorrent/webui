@@ -206,6 +206,8 @@ var lang = [
 	, "Madal prioriteet"
 	, "Normaalne prioriteet"
 	, "Kustuta andmed"
+	, "Kustuta .torrent"
+	, "Kustuta .torrent + andmed"
 	, "Sunni uuestikontrolli"
 	, "Sunni käivituma"
 	, "Silt"

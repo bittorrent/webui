@@ -206,6 +206,8 @@ var lang = [
 	, "Përparësi e Ulët"
 	, "Përparësi Normale"
 	, "Fshiji të Dhënat"
+	, "Fshij .torrent-in"
+	, "Fshij .torrent-in + të Dhënat"
 	, "Detyro RiVerifikimin"
 	, "Detyro"
 	, "Etiketë"

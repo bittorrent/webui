@@ -206,6 +206,8 @@ var lang = [
 	, "Alacsony prioritás"
 	, "Normál prioritás"
 	, "Adat törlése"
+	, ".torrent törlése"
+	, "Adat ÉS .torrent törlése"
 	, "Kényszerített újraellenőrzés"
 	, "Kényszerített indítás"
 	, "Címke"

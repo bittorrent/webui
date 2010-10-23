@@ -206,6 +206,8 @@ var lang = [
 	, "Zema prioritāte"
 	, "Normāla prioritāte"
 	, "Dzēst datus"
+	, "Dzēst .torrent failu"
+	, "Dzēst .torrent un datus"
 	, "Piespiedu pārbaude"
 	, "Piespiedu sākšana"
 	, "Grupa"

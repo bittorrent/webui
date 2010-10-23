@@ -206,6 +206,8 @@ var lang = [
 	, "Tosaíocht Íseal"
 	, "Gnáth Tosaíocht"
 	, "Scrios na Sonraí"
+	, "Scrios an .torrent"
+	, "Scrios an .torrent + Sonraí"
 	, "Éignigh Athdhearbhú"
 	, "Éignigh Tosú"
 	, "Lipéid"

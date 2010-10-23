@@ -206,6 +206,8 @@ var lang = [
 	, "Priorité Basse"
 	, "Priorité Normale"
 	, "Supprimer fichiers"
+	, "Supprimer .torrent"
+	, "Supprimer .torrent et fichiers"
 	, "Vérification forcée"
 	, "Démarrage forcé"
 	, "Étiquette"

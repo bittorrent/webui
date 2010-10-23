@@ -206,6 +206,8 @@ var lang = [
 	, "Lav prioritet"
 	, "Normal prioritet"
 	, "Slet data"
+	, "Slet .torrent"
+	, "Slet .torrent + data"
 	, "Gennemtving tjek"
 	, "Tvunget start"
 	, "Etiket"

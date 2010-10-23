@@ -206,6 +206,8 @@ var lang = [
 	, "Lege Prioriteit"
 	, "Normale Prioriteit"
 	, "Wis Data"
+	, "Wis .torrent"
+	, "Wis .torrent + Data"
 	, "Forsear Her-Kontrôle"
 	, "Forsear Start"
 	, "Label"

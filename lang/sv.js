@@ -206,6 +206,8 @@ var lang = [
 	, "Låg prioritet"
 	, "Normal prioritet"
 	, "Ta bort data"
+	, "Ta bort .torrent"
+	, "Ta bort .torrent + data"
 	, "Tvinga återkoll"
 	, "Tvångsstart"
 	, "Etikett"
