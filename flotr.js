@@ -14,7 +14,10 @@ var Flotr = (function(){
 	 */
 	function getSeries(data){
 		return data.map(function(serie){
-			return (serie.data) ? $extend(serie,{}) : {'data': serie};
+// uTorrent WebUI Patch - BEGIN
+//			return (serie.data) ? $extend(serie,{}) : {'data': serie};
+			return (serie.data) ? Object.append(serie,{}) : {'data': serie};
+// uTorrent WebUI Patch - END
 		});
 	}
 	/**
@@ -317,7 +320,10 @@ var Flotr = (function(){
 		 */
 		function setOptions(o){
 
-			options = $merge({
+// uTorrent WebUI Patch - BEGIN
+//			options = $merge({
+			options = Object.merge({
+// uTorrent WebUI Patch - END
 				colors: ['#00A8F0', '#C0D800', '#cb4b4b', '#4da74d', '#9440ed'], //=> The default colorscheme. When there are > 5 series, additional colors are generated.
 				legend: {
 					show: true,				// => setting to true will show the legend, hide otherwise
@@ -408,7 +414,10 @@ var Flotr = (function(){
 				var sc = series[i].color;
 				if(sc != null){
 					--neededColors;
-					if($type(sc) == 'number') assignedColors.push(sc);
+// uTorrent WebUI Patch - BEGIN
+//					if($type(sc) == 'number') assignedColors.push(sc);
+					if(typeOf(sc) == 'number') assignedColors.push(sc);
+// uTorrent WebUI Patch - END
 					else usedColors.push(parseColor(series[i].color));
 				}
 			}
@@ -455,14 +464,23 @@ var Flotr = (function(){
 				 */
 				if(s.color == null){
 					s.color = colors[n++].toString();
-	            }else if($type(s.color) == 'number'){
+// uTorrent WebUI Patch - BEGIN
+//	            }else if($type(s.color) == 'number'){
+	            }else if(typeOf(s.color) == 'number'){
+// uTorrent WebUI Patch - END
 					s.color = colors[s.color].toString();
 				}
 
-				s.lines = $extend($extend({}, options.lines), s.lines||{});
-				s.points = $extend($extend({}, options.points), s.points||{});
-				s.bars = $extend($extend({}, options.bars), s.bars||{});
-				s.mouse = $extend($extend({}, options.mouse), s.mouse||{});
+// uTorrent WebUI Patch - BEGIN
+//				s.lines = $extend($extend({}, options.lines), s.lines||{});
+//				s.points = $extend($extend({}, options.points), s.points||{});
+//				s.bars = $extend($extend({}, options.bars), s.bars||{});
+//				s.mouse = $extend($extend({}, options.mouse), s.mouse||{});
+				s.lines = Object.append(Object.append({}, options.lines), s.lines||{});
+				s.points = Object.append(Object.append({}, options.points), s.points||{});
+				s.bars = Object.append(Object.append({}, options.bars), s.bars||{});
+				s.mouse = Object.append(Object.append({}, options.mouse), s.mouse||{});
+// uTorrent WebUI Patch - END
 
 				if(s.shadowSize == null) s.shadowSize = options.shadowSize;
 			}
@@ -555,9 +573,10 @@ var Flotr = (function(){
 					left: '0px',
 					top: '0px'
 				});
-				overlay.injectAfter(canvas);
 // uTorrent WebUI Patch - BEGIN
+//				overlay.injectAfter(canvas);
 //				if (Browser.Engine.trident && !Browser.Engine.trident6) {
+				overlay.inject(canvas, 'after');
 				if (window.G_vmlCanvasManager) {
 // uTorrent WebUI Patch - END
 					overlay = $(window.G_vmlCanvasManager.initElement(overlay));
@@ -757,7 +776,10 @@ var Flotr = (function(){
 			if (axisOptions.ticks) {
 				var ticks = axisOptions.ticks;
 
-	            if ($type(ticks) == 'function') {
+// uTorrent WebUI Patch - BEGIN
+//	            if ($type(ticks) == 'function') {
+	            if (typeOf(ticks) == 'function') {
+// uTorrent WebUI Patch - END
 					ticks = ticks({ min: axis.min, max: axis.max });
 				}
 
@@ -826,7 +848,10 @@ var Flotr = (function(){
 				},
 				"html": max_label,
 				"class": "gridLabel"
-			}).injectInside(target);
+// uTorrent WebUI Patch - BEGIN
+//			}).injectInside(target);
+			}).inject(target);
+// uTorrent WebUI Patch - END
 			var size = dummyDiv.getSize();
 	        labelMaxWidth = size.x;
 	        labelMaxHeight = size.y;
@@ -1217,7 +1242,7 @@ var Flotr = (function(){
 
 					var div = $(lgndId);
 					if (!div) {
-						div = new Element('div').set("id", lgndId).addClass('flotr-legend').setStyles($extend(pos, {
+						div = new Element('div').set("id", lgndId).addClass('flotr-legend').setStyles(Object.append(pos, {
 							'position': 'absolute',
 							'z-index': 2
 						}));
@@ -1254,10 +1279,10 @@ var Flotr = (function(){
 
 						var bgdiv = $(lgndId + "-bg");
 						if (!bgdiv) {
-							bgdiv = new Element('div').set("id", lgndId + "-bg").addClass('flotr-legend-bg').injectBefore(div);
+							bgdiv = new Element('div').set("id", lgndId + "-bg").addClass('flotr-legend-bg').inject(div, 'before');
 						}
 
-						bgdiv.setStyles($extend(pos,{
+						bgdiv.setStyles(Object.append(pos,{
 							'position': 'absolute',
 							'width': size.x,
 							'height': size.y,

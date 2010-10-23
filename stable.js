@@ -81,7 +81,7 @@ var dxSTable = new Class({
 	"colOrder": [],
 	"colHeader": [],
 	"options": {
-		"format": $arguments(0),
+		"format": function () { return arguments[0]; },
 		"maxRows": 25,
 		"alternateRows": false,
 		"mode": MODE_PAGE,
@@ -114,7 +114,7 @@ var dxSTable = new Class({
 				  "id": item[0]
 				, "width": item[1]
 				, "type": item[2]
-				, "disabled": !!$pick(item[3], !item[1])
+				, "disabled": !![item[3], !item[1]].pick()
 				, "align": item[4] || ALIGN_AUTO
 				, "text": item[5] || item[0] || ""
 			};
@@ -129,7 +129,7 @@ var dxSTable = new Class({
 		}
 		this.setOptions(options);
 
-		var badIE = (Browser.Engine.trident && Browser.Engine.version <= 5);
+		var badIE = (Browser.ie && Browser.version <= 7);
 		var tr, td, div, $me = this;
 
 		this.id = "stable-" + id;
@@ -195,7 +195,7 @@ var dxSTable = new Class({
 		this.rowModel = simpleClone(TR, false);
 
 		for (var i = 0, j = 0; i < len; i++) {
-			this.colOrder[i] = (typeof this.colOrder[i] == "number") ? this.colOrder[i].limit(0, len - 1) : i;
+			this.colOrder[i] = (typeOf(this.colOrder[i]) == 'number') ? this.colOrder[i].limit(0, len - 1) : i;
 			this.colData[i] = this.colHeader[this.colOrder[i]];
 			this.rowModel.grab(
 				simpleClone(TD, false).addClass(this.id + "-col-" + this.colOrder[i]).setStyle(badIE ? "visibility" : "display", badIE ? (this.colData[i].disabled ? "hidden" : "visible") : (this.colData[i].disabled ? "none" : ""))
@@ -233,7 +233,7 @@ var dxSTable = new Class({
 			}).inject(cg);
 		}
 		this.tb.body = new Element("tbody");
-		if (Browser.Engine.trident) {
+		if (Browser.ie) {
 			this.tb.body.addEvent("selectstart", function() {
 				return false;
 			});
@@ -256,7 +256,7 @@ var dxSTable = new Class({
 					$me.selectRow(ev, ele.parentNode);
 				}
 
-				if (!(Browser.Engine.trident6 && document.documentMode >= 9)) { // allow scrollbars to work on IE9
+				if (!(Browser.ie9 && document.documentMode >= 9)) { // allow scrollbars to work on IE9
 					ev.preventDefault();
 				}
 			}).addEvent("click", function(ev) {
@@ -385,7 +385,7 @@ var dxSTable = new Class({
 			}
 		}).bind(this));
 
-//		if (Browser.Engine.gecko) {
+//		if (Browser.firefox) {
 			// http://n2.nabble.com/key-events-not-firing-on-div-in-FF--td663136.html
 			this.dBody.addEvent("mousedown", function(ev) {
 				this.focus();
@@ -422,7 +422,7 @@ var dxSTable = new Class({
 	"setColumnDisabled": function(iCol, disabled) {
 		if (!this.isValidCol(iCol)) return;
 
-		var badIE = (Browser.Engine.trident && Browser.Engine.version <= 5);
+		var badIE = (Browser.ie && Browser.version <= 7);
 		this.colData[iCol].disabled = disabled;
 		this.tHeadCols[iCol].setStyle("display", disabled ? "none" : "");
 		this.tBodyCols[iCol].setStyle("display", disabled ? "none" : "");
@@ -487,7 +487,7 @@ var dxSTable = new Class({
 	"setColumnWidth": function(iCol, iWidth) {
 		if (!this.isValidCol(iCol)) return;
 
-		var badIE = (Browser.Engine.trident && Browser.Engine.version <= 5);
+		var badIE = (Browser.ie && Browser.version <= 7);
 		this.colData[iCol].width = iWidth;
 
 		var safetyX = (this.tb.body.childNodes[0].childNodes[iCol].hasClass("stable-icon") ? 30 : 10);
@@ -507,7 +507,7 @@ var dxSTable = new Class({
 
 		// Set column header row width
 		iWidth = this.tHead.getWidth();
-		if (Browser.Engine.webkit)
+		if (Browser.chrome || Browser.safari)
 			this.tBody.setStyle("width", iWidth);
 		else
 			this.tb.body.setStyle("width", iWidth);
@@ -532,19 +532,19 @@ var dxSTable = new Class({
 		//--------------------------------------------------
 
 		val = options.colMask; // bitfield
-		if ($defined(val)) {
+		if (undefined != val) {
 			for (var i = 0, bit = 1, len = this.cols; i < len; ++i, bit <<= 1) {
 				this.setColumnDisabled(this.colOrder[i], !!(options.colMask & bit));
 			}
 		}
 
 		val = options.resetText; // string
-		if ($defined(val)) {
+		if (undefined != val) {
 			this.resetText = val;
 		}
 
 		val = options.colText; // { colID : colText, ... }
-		if ($defined(val)) {
+		if (undefined != val) {
 			$each(val, function(v, k) {
 				ind = colHdrIdx[k];
 				if ($chk(colHdr[ind])) {
@@ -555,7 +555,7 @@ var dxSTable = new Class({
 		}
 
 		val = options.colType; // { colID : colType, ... }
-		if ($defined(val)) {
+		if (undefined != val) {
 			var changedCols = [];
 			$each(val, function(v, k) {
 				ind = colHdrIdx[k];
@@ -569,7 +569,7 @@ var dxSTable = new Class({
 		}
 
 		val = options.colAlign; // { colID : colAlign, ... }
-		if ($defined(val)) {
+		if (undefined != val) {
 			$each(val, function(v, k) {
 				ind = colHdrIdx[k];
 				if ($chk(colHdr[ind])) {
@@ -581,9 +581,9 @@ var dxSTable = new Class({
 		}
 
 		val = options.colOrder; // [ colMIdx, colNIdx, ... ]
-		if ($defined(val)) {
+		if (undefined != val) {
 			if (val.length == this.cols) {
-				var orderOK = true, orderT = $A(val).sort(function(a, b) { return (a-b); });
+				var orderOK = true, orderT = Array.clone(val).sort(function(a, b) { return (a-b); });
 				for (var i = 0, l = orderT.length; i < l; ++i) {
 					if (i != orderT[i]) {
 						orderOK = false;
@@ -602,7 +602,7 @@ var dxSTable = new Class({
 		}
 
 		val = options.colWidth; // [ col1Width, col2Width, ... ]
-		if ($defined(val)) {
+		if (undefined != val) {
 			if (val.length == this.cols) {
 				$each(val, function(v, k) {
 					this.setColumnWidth(this.colOrder[k], v);
@@ -611,7 +611,7 @@ var dxSTable = new Class({
 		}
 
 		val = options.colSort; // [colIdx, reverse]
-		if ($defined(val)) {
+		if (undefined != val) {
 			if ($chk(val[1])) this.options.reverse = !!val[1];
 			this.sort(val[0]);
 		}
@@ -621,25 +621,26 @@ var dxSTable = new Class({
 		//--------------------------------------------------
 
 		val = options.rowMaxCount; // integer
-		if ($defined(val) && (val >= 1)) {
+		if (undefined != val && (val >= 1)) {
 			var tbBody = this.tb.body;
 			while (tbBody.childNodes.length < val)
 				tbBody.appendChild(simpleClone(this.rowModel, true).hide());
 
 			this.options.maxRows = val;
 			this.curPage = 0;
+			this.setAlignment();
 			this.updatePageMenu();
 			refresh = true;
 		}
 
 		val = options.rowAlternate; // boolean
-		if ($defined(val) && (val != this.options.alternateRows)) {
+		if (undefined != val && (val != this.options.alternateRows)) {
 			this.options.alternateRows = !!val;
 			refresh = true;
 		}
 
 		val = options.rowMode; // integer
-		if ($defined(val) && (val != this.options.mode)) {
+		if (undefined != val && (val != this.options.mode)) {
 			this.options.mode = val;
 			this.calcSize();
 		}
@@ -683,7 +684,7 @@ var dxSTable = new Class({
 		if (!$chk(col))
 			col = this.sIndex;
 
-		if ($type(col) == "number") {
+		if (typeOf(col) == 'number') {
 			if (!this.isValidCol(col)) return;
 
 			col = this.tHeadCols[this.colOrder[col]];
@@ -872,12 +873,12 @@ var dxSTable = new Class({
 
 	"refreshRows": function() {
 		var range = this.getActiveRange(), count = 0, tb = this.tb.body;
-		if (Browser.Engine.gecko || Browser.Engine.trident)
+		if (Browser.firefox || Browser.ie)
 			this.detachBody();
 		for (var i = range[0]; i <= range[1]; i++) {
 			var id = this.activeId[i], rdata = this.rowData[id], row = tb.childNodes[count];
 			if (!(rdata && row)) continue;
-			var data = this.options.format($A(rdata.data));
+			var data = this.options.format(Array.clone(rdata.data));
 			var clsName = "", clsChanged = false;
 			if (has(this.rowSel, id))
 				clsName += "selected";
@@ -905,7 +906,7 @@ var dxSTable = new Class({
 		}
 		for (var i = count, j = tb.childNodes.length; i < j; i++)
 			tb.childNodes[i].setProperty("id", "").hide();
-		if (Browser.Engine.gecko || Browser.Engine.trident)
+		if (Browser.firefox || Browser.ie)
 			this.attachBody();
 		this.loadObj.hide();
 		this.refresh();
@@ -987,7 +988,7 @@ var dxSTable = new Class({
 			"rowIndex": -1,
 			"activeIndex": -1
 		};
-		if ($pick(sortin, true))
+		if ([sortin, true].pick())
 			this._insertRow(id);
 		this.rows++;
 	},
@@ -1133,7 +1134,7 @@ var dxSTable = new Class({
 			else if (cell.lastChild) {
 				var toggle = ((cell.lastChild.nodeValue == "") && (data[v] != cell.lastChild.nodeValue));
 				cell.lastChild.nodeValue = data[v];
-				if (toggle && Browser.Engine.trident)
+				if (toggle && Browser.ie)
 					cell.toggleClass("stable-bogus");
 			}
 */
@@ -1216,7 +1217,7 @@ var dxSTable = new Class({
 	},
 
 	"calcSize": function() {
-		var badIE = (Browser.Engine.trident && Browser.Engine.version <= 5);
+		var badIE = (Browser.ie && Browser.version <= 7);
 		this.dBody.setStyle("height", (this.dCont.clientHeight - this.dHead.offsetHeight - ((this.options.refreshable || this.options.mode == MODE_PAGE) ? 26 : 0)).max(52));
 		this.dBody.setStyle("width", (this.dCont.offsetWidth - 2).max(0));
 		this.dHead.setStyle("width", (this.dCont.offsetWidth + (((this.dBody.offsetWidth - this.dBody.clientWidth) == 0) ? -4 : -1)).max(0));
@@ -1228,12 +1229,12 @@ var dxSTable = new Class({
 				if (badIE) {
 					w = this.tBodyCols[i].offsetWidth - 19;
 				} else {
-					w = parseInt(this.tBodyCols[i].width) - (Browser.Engine.webkit ? 0 : 19);
+					w = parseInt(this.tBodyCols[i].width) - ((Browser.chrome || Browser.safari) ? 0 : 19);
 				}
 				this.tHeadCols[i].setStyle("width", w.max(14));
 			}
 		}
-		if (Browser.Engine.webkit)
+		if (Browser.chrome || Browser.safari)
 			this.tBody.setStyle("width", this.tHead.getWidth());
 
 		this.restoreScroll();
@@ -1294,7 +1295,7 @@ var dxSTable = new Class({
 	},
 
 	"fillSelection": function(noRefresh) {
-		this.selectedRows = $A(this.activeId);
+		this.selectedRows = Array.clone(this.activeId);
 		for (var i = 0, j = this.selectedRows.length; i < j; i++)
 			this.rowSel[this.selectedRows[i]] = i;
 		if (!noRefresh)
@@ -1311,7 +1312,7 @@ var dxSTable = new Class({
 		if (isSortedCol)
 			this._insertRow(id);
 		if (this.requiresRefresh || row.hidden || (row.rowIndex == -1)) return hasSortedChanged;
-		var r = this.tb.body.childNodes[row.rowIndex], cell = r.childNodes[this.colOrder[col]], fval = this.options.format($A(data), col);
+		var r = this.tb.body.childNodes[row.rowIndex], cell = r.childNodes[this.colOrder[col]], fval = this.options.format(Array.clone(data), col);
 		if (this.colHeader[col].type == TYPE_NUM_PROGRESS) {
 			var pcnt = (parseFloat(fval) || 0).toFixedNR(1) + "%";
 			var prog = simpleClone(DIV, false).addClass("stable-progress").set("html", "&nbsp;").inject(cell.empty());
@@ -1322,7 +1323,7 @@ var dxSTable = new Class({
 		else if (cell.lastChild) {
 			var toggle = ((cell.lastChild.nodeValue == "") && (fval != cell.lastChild.nodeValue));
 			cell.lastChild.nodeValue = fval;
-			if (toggle && Browser.Engine.trident)
+			if (toggle && Browser.ie)
 				cell.toggleClass("stable-bogus");
 		}
 */
@@ -1342,9 +1343,9 @@ var dxSTable = new Class({
 	},
 
 	"resizeTo": function(w, h) {
-//		if (typeof w == "number")
+//		if (typeOf(w) == 'number')
 			this.dCont.setStyle("width", w);
-//		if (typeof h == "number")
+//		if (typeOf(h) == 'number')
 			this.dCont.setStyle("height", h);
 		this.calcSize();
 	},
@@ -1498,13 +1499,13 @@ var ColumnHandler = {
 			drag.limit.x = [];
 			drag.options.limit = true;
 		} else { // reordering
-			var left = drag.element.getPosition(st.dCont).x + st.dBody.scrollLeft - (Browser.Engine.gecko19 ? 4 : 0);
+			var left = drag.element.getPosition(st.dCont).x + st.dBody.scrollLeft - ((Browser.firefox && Browser.version >= 3) ? 4 : 0);
 			drag.value.now.x = left;
 			drag.mouse.pos.x = drag.mouse.start.x - left;
 			st.colDragObj.set("html", drag.element.get("text")).setStyles({
 				"visibility": "visible",
 				"left": left,
-				"width": drag.element.getStyle("width").toInt() - (Browser.Engine.webkit ? 19 : 0),
+				"width": drag.element.getStyle("width").toInt() - ((Browser.chrome || Browser.safari) ? 19 : 0),
 				"textAlign": drag.element.getStyle("textAlign")
 			});
 

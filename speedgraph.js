@@ -10,7 +10,7 @@ var SpeedGraph = {
 		this.element = $(element);
 		this.maxSeconds = 600;
 		this.seconds = -1;
-		this.startSeconds = $time() / 1000;
+		this.startSeconds = Date.now() / 1000;
 
 		this.plot = new Flotr.Plot(this.element, [{ data: [] }, { data: [] }], {
 			"colors" : ["#EE0000", "#00AA00"],
@@ -66,7 +66,7 @@ var SpeedGraph = {
 	},
 
 	"addData": function(upSpeed, downSpeed) {
-		this.seconds = $time() / 1000;
+		this.seconds = Date.now() / 1000;
 		this.plot.series[0].data.push([this.seconds, upSpeed]);
 		this.plot.series[1].data.push([this.seconds, downSpeed]);
 		var data = this.plot.series[0].data;

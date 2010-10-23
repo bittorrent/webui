@@ -59,7 +59,7 @@ var DialogManager = {
 		var id = this.showing.shift();
 		this.hide(id);
 		if (fireClose)
-			$("dlg" + id).getElement("a").fireEvent("click", { stop: $empty });
+			$("dlg" + id).getElement("a").fireEvent("click", { stop: Function.from() });
 	},
 
 	"isOffScreen": function(id) {

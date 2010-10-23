@@ -46,7 +46,7 @@ function setupGlobalEvents() {
 
 	window.addEvent("resize", function() { resizeUI(); });
 
-	if (Browser.Engine.presto && Browser.Engine.version >= 960) {
+	if (Browser.opera && Browser.version >= 9.6) {
 		window.addEvent("scroll", function() {
 			document.documentElement.scrollTop = 0;
 		});
@@ -88,7 +88,7 @@ function setupGlobalEvents() {
 		"click": cancelRCWrap
 	});
 
-	if (Browser.Engine.presto && !("oncontextmenu" in document.createElement("foo"))) {
+	if (Browser.opera && !("oncontextmenu" in document.createElement("foo"))) {
 
 		// Prevent Opera context menu from showing
 		// - http://my.opera.com/community/forums/findpost.pl?id=2112305
@@ -120,8 +120,8 @@ function setupGlobalEvents() {
 
 	if (!isGuest) {
 		var keyBindings = {
-			"ctrl a": $empty,
-			"ctrl e": $empty,
+			"ctrl a": Function.from(),
+			"ctrl e": Function.from(),
 
 			"ctrl o": function() { DialogManager.show("Add"); },
 			"ctrl p": function() { utWebUI.showSettings(); },
@@ -132,7 +132,7 @@ function setupGlobalEvents() {
 				utWebUI.toggleToolbar();
 
 				resizeUI();
-				if (Browser.Engine.presto)
+				if (Browser.opera)
 					utWebUI.saveConfig(true);
 			},
 
@@ -140,7 +140,7 @@ function setupGlobalEvents() {
 				utWebUI.toggleDetPanel();
 
 				resizeUI();
-				if (Browser.Engine.presto)
+				if (Browser.opera)
 					utWebUI.saveConfig(true);
 			},
 
@@ -148,7 +148,7 @@ function setupGlobalEvents() {
 				utWebUI.toggleCatPanel();
 
 				resizeUI();
-				if (Browser.Engine.presto)
+				if (Browser.opera)
 					utWebUI.saveConfig(true);
 			},
 
@@ -186,7 +186,7 @@ function setupGlobalEvents() {
 			}
 		});
 
-		if (Browser.Engine.presto) {
+		if (Browser.opera) {
 			document.addEvent("keypress", function(ev) {
 				var key = eventToKey(ev);
 				if (keyBindings[key]) {
@@ -209,8 +209,8 @@ function resizeUI(hDiv, vDiv) {
 	if (ContextMenu.launched)
 		ContextMenu.hide();
 
-	var manualH = (typeof(hDiv) == "number"),
-		manualV = (typeof(vDiv) == "number");
+	var manualH = (typeOf(hDiv) == 'number'),
+		manualV = (typeOf(vDiv) == 'number');
 
 	var size = window.getZoomSize(), ww = size.x, wh = size.y;
 
@@ -221,7 +221,7 @@ function resizeUI(hDiv, vDiv) {
 		minTrtH = uiLimits.minTrtH,
 		minTrtW = uiLimits.minTrtW;
 
-	var badIE = (Browser.Engine.trident && Browser.Engine.version <= 4);
+	var badIE = (Browser.ie && Browser.version <= 6);
 	var showCat = true, showDet = true, showTB = false, tallCat = false;
 	if (!isGuest) {
 		showCat = config.showCategories;
@@ -247,7 +247,7 @@ function resizeUI(hDiv, vDiv) {
 		hDiv = 0;
 		if (showCat) {
 			hDiv = config.hSplit;
-			if ((typeof(hDiv) != "number") || (hDiv < minHSplit)) hDiv = uiLimits.defHSplit;
+			if ((typeOf(hDiv) != 'number') || (hDiv < minHSplit)) hDiv = uiLimits.defHSplit;
 		}
 	}
 
@@ -266,7 +266,7 @@ function resizeUI(hDiv, vDiv) {
 		vDiv = 0;
 		if (showDet) {
 			vDiv = config.vSplit;
-			if ((typeof(vDiv) != "number") || (vDiv < minVSplit)) vDiv = uiLimits.defVSplit;
+			if ((typeOf(vDiv) != 'number') || (vDiv < minVSplit)) vDiv = uiLimits.defVSplit;
 		}
 		vDiv = wh - vDiv;
 	}
@@ -404,7 +404,7 @@ function setupUserInterface() {
 	//--------------------------------------------------
 
 	var useProgress = (isGuest || utWebUI.settings["gui.graphic_progress"]);
-	utWebUI.trtTable.create("mainTorList", utWebUI.trtColDefs, $extend({
+	utWebUI.trtTable.create("mainTorList", utWebUI.trtColDefs, Object.append({
 		"format": utWebUI.trtFormatRow.bind(utWebUI),
 		"sortCustom": utWebUI.trtSortCustom.bind(utWebUI),
 		"onDelete": function(ev) { utWebUI.remove(ev.shift ? 1 : 0); },
@@ -436,7 +436,7 @@ function setupUserInterface() {
 
 	// -- Peers Tab
 
-	utWebUI.prsTable.create("mainInfoPane-peersTab", utWebUI.prsColDefs, $extend({
+	utWebUI.prsTable.create("mainInfoPane-peersTab", utWebUI.prsColDefs, Object.append({
 		"format": utWebUI.prsFormatRow.bind(utWebUI),
 		"onColReset": utWebUI.prsColReset.bind(utWebUI),
 		"onColResize": utWebUI.prsColResize.bind(utWebUI),
@@ -456,7 +456,7 @@ function setupUserInterface() {
 
 	// -- Files Tab
 
-	utWebUI.flsTable.create("mainInfoPane-filesTab", utWebUI.flsColDefs, $extend({
+	utWebUI.flsTable.create("mainInfoPane-filesTab", utWebUI.flsColDefs, Object.append({
 		"format": utWebUI.flsFormatRow.bind(utWebUI),
 		"onColReset": utWebUI.flsColReset.bind(utWebUI),
 		"onColResize": utWebUI.flsColResize.bind(utWebUI),
@@ -485,7 +485,7 @@ function setupUserInterface() {
 		"modifiers": {"x": "left", "y": ""},
 		"onComplete": function() {
 			resizeUI(this.value.now.x, null);
-			if (Browser.Engine.presto)
+			if (Browser.opera)
 				utWebUI.saveConfig(true);
 		}
 	});
@@ -494,7 +494,7 @@ function setupUserInterface() {
 		"modifiers": {"x": "", "y": "top"},
 		"onComplete": function() {
 			resizeUI(null, this.value.now.y);
-			if (Browser.Engine.presto)
+			if (Browser.opera)
 				utWebUI.saveConfig(true);
 		}
 	});
@@ -635,6 +635,8 @@ function setupUserInterface() {
 			$("dlgAdd-file").set("value", "");
 			$("ADD_FILE_OK").disabled = false;
 
+			if (!doc) return;
+
 			var str = $(doc.body).get("text");
 			if (str) {
 				var data = JSON.decode(str);
@@ -669,7 +671,7 @@ function setupUserInterface() {
 
 	// -- Form Submission
 
-	$("dlgAddURL-form").addEvent("submit", $lambda(false));
+	$("dlgAddURL-form").addEvent("submit", Function.from(false));
 
 	//--------------------------------------------------
 	// DELETE TORRENT DIALOG
@@ -892,9 +894,9 @@ function setupUserInterface() {
 								$("sched_table_info").empty();
 							}
 						});
-						if (Browser.Engine.trident) {
+						if (Browser.ie) {
 							// Prevent text selection in IE
-							td.addEvent("selectstart", $lambda(false));
+							td.addEvent("selectstart", Function.from(false));
 						}
 					})();
 				}
@@ -916,7 +918,7 @@ function setupUserInterface() {
 
 	// -- Advanced Options
 
-	utWebUI.advOptTable.create("dlgSettings-advOptList", utWebUI.advOptColDefs, $extend({
+	utWebUI.advOptTable.create("dlgSettings-advOptList", utWebUI.advOptColDefs, Object.append({
 		"format": utWebUI.advOptFormatRow.bind(utWebUI),
 		"onColReset": utWebUI.advOptColReset.bind(utWebUI),
 		"onSelect": utWebUI.advOptSelect.bind(utWebUI),
@@ -932,7 +934,7 @@ function setupUserInterface() {
 
 	// -- Linked Controls
 
-	var linkedEvent = Browser.Engine.trident ? "click" : "change";
+	var linkedEvent = Browser.ie ? "click" : "change";
 
 	$("proxy.type").addEvent("change", function() { // onchange fires in IE on <select>s
 		_link(this, 0, ["proxy.proxy", "proxy.port", "proxy.auth", "proxy.resolve", "proxy.p2p"]);
@@ -1042,7 +1044,7 @@ function _link(obj, defstate, list, ignoreLabels, reverse) {
 		if (element.type != "checkbox")
 			element[(disabled ? "add" : "remove") + "Class"]("disabled");
 		element.disabled = disabled;
-		element.fireEvent(((tag == "input") && Browser.Engine.trident) ? "click" : "change");
+		element.fireEvent(((tag == "input") && Browser.ie) ? "click" : "change");
 		if (ignoreLabels.contains(list[i])) continue;
 		var label = element.getPrevious();
 		if (!label || (label.get("tag") != "label")) {
@@ -1531,14 +1533,14 @@ function _loadComboboxStrings(id, vals, def) {
 
 function _loadStrings(prop, strings) {
 	var fnload;
-	switch ($type(strings)) {
+	switch (typeOf(strings)) {
 		case 'object':
 			fnload = function(val, key) {
 				$(key).set(prop, lang[CONST[val]]);
 			};
 			break;
 		default:
-			strings = $splat(strings);
+			strings = Array.from(strings);
 			fnload = function(val) {
 				$(val).set(prop, lang[CONST[val]]);
 			};

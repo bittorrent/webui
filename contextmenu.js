@@ -34,14 +34,14 @@ var ContextMenu = {
 			}
 		}).inject(document.body);
 
-		if (Browser.Engine.trident) {
+		if (Browser.ie) {
 			// Prevent text selection in IE
-			this.obj.addEvent("selectstart", $lambda(false));
+			this.obj.addEvent("selectstart", Function.from(false));
 		}
 	},
 
 	"add": function() {
-		var args = $A(arguments);
+		var args = Array.from(arguments);
 		var link, ul, li;
 		var ele = args[0];
 		var cancelEvent = function(ev) {
@@ -53,7 +53,7 @@ var ContextMenu = {
 			if (ContextMenu.hideAfterClick)
 				ContextMenu.hide();
 		}
-		if ($type(ele) == "element") {
+		if (typeOf(ele) == 'element') {
 			if (!ele.hasClass("CMenu")) return;
 			args.splice(0, 1);
 		} else {
@@ -87,7 +87,7 @@ var ContextMenu = {
 				});
 				link.set("html", args[i][1]);
 				li.adopt(link);
-			} else if (!$defined(args[i][1])) {
+			} else if (undefined == args[i][1]) {
 				link.addClass("dis");
 				link.set("html", args[i][0]);
 				li.adopt(link);

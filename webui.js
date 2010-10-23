@@ -35,7 +35,7 @@ var utWebUI = {
 		"reqRetryDelayBase": 2, // seconds
 		"reqRetryMaxAttempts": 5,
 		"minTableRows": 5,
-		"maxVirtTableRows": 100,
+		"maxVirtTableRows": Math.ceil(screen.height / 16) || 100,
 		"minUpdateInterval": 500,
 		"minXferHistCache": 60, // seconds
 		"defHSplit": 125,
@@ -50,7 +50,7 @@ var utWebUI = {
 		"showCategories": true,
 		"showToolbar": true,
 		"updateInterval": 3000,
-		"maxRows": 50,
+		"maxRows": 0,
 		"lang": "en",
 		"hSplit": -1,
 		"vSplit": -1,
@@ -265,7 +265,7 @@ var utWebUI = {
 	},
 
 	"init": function() {
-		this.config = $merge(this.defConfig, {"lang": ""}); // deep copy default config
+		this.config = Object.merge(this.defConfig, {"lang": ""}); // deep copy default config
 
 		// Calculate index of some columns for ease of reference elsewhere
 		this.trtColDoneIdx = this.trtColDefs.map(function(item) { return (item[0] == "done"); }).indexOf(true);
@@ -303,14 +303,14 @@ var utWebUI = {
 	},
 
 	"request": function(qs, fn, async, fails) {
-		if ($type(fails) != "array") fails = [0]; // array so to pass by reference
+		if (typeOf(fails) != 'array') fails = [0]; // array so to pass by reference
 
 		var self = this;
 
 		var req = function() {
 			try {
 				new Request.JSON({
-					"url": guiBase + "?token=" + self.TOKEN + "&" + qs + "&t=" + $time(),
+					"url": guiBase + "?token=" + self.TOKEN + "&" + qs + "&t=" + Date.now(),
 					"method": "get",
 					"async": !!async,
 					"onFailure": function() {
@@ -364,7 +364,7 @@ var utWebUI = {
 		var self = this;
 		try {
 			new Request({
-				"url": guiBase + "token.html?t=" + $time(),
+				"url": guiBase + "token.html?t=" + Date.now(),
 				"method": "get",
 				"async": !!async,
 				"onFailure": (fn) ? fn.bind(self) : $empty,
@@ -526,7 +526,7 @@ var utWebUI = {
 
 	"getList": function(qs) {
 		$clear(this.updateTimeout);
-		this.timer = $time();
+		this.timer = Date.now();
 		qs = qs || "";
 		if (qs != "")
 			qs += "&";
@@ -623,7 +623,7 @@ var utWebUI = {
 		var torrentLists = extractLists("torrents", "torrentp", "torrentm", CONST.TORRENT_HASH, this.torrents);
 		var torrents = torrentLists.torrents;
 
-		this.loadLabels($A(json.label));
+		this.loadLabels(Array.clone(json.label));
 		delete json.label;
 		if (!this.loaded) {
 			if (!has(this.labels, this.config.activeLabel) && !has(this.customLabels, this.config.activeLabel)) {
@@ -770,7 +770,7 @@ var utWebUI = {
 	},
 
 	"getInterval": function() {
-		var t = $time() - this.timer;
+		var t = Date.now() - this.timer;
 		this.interval = (this.interval == -1) ? (this.config.updateInterval + t * 4) : ((this.interval + this.config.updateInterval + t * 4) / 2).toInt();
 		return this.interval;
 	},
@@ -931,7 +931,7 @@ var utWebUI = {
 	if (!$chk(this.settings["webui.uconnect_enable"])) return;
 }
 
-		var now = $time();
+		var now = Date.now();
 		if (forceload || !this.xferhist._TIME_ || (now - this.xferhist._TIME_) > (this.limits.minXferHistCache * 1000)) {
 			this.request("action=getxferhist", (function (json) {
 				this.xferhist = json.transfer_history;
@@ -988,7 +988,7 @@ var utWebUI = {
 		if (!this.loaded) {
 			qs += "&list=1";
 			$clear(this.updateTimeout);
-			this.timer = $time();
+			this.timer = Date.now();
 		}
 		this.request(qs, this.addSettings);
 	},
@@ -1008,8 +1008,8 @@ var utWebUI = {
 				if ((key == "webui.cookie") && !this.loaded) { // only load webui.cookie on startup
 					function safeCopy(objOrig, objNew) {
 						$each(objOrig, function (v, k) {
-							var tOrig = $type(objOrig[k]),
-								tNew = $type(objNew[k]);
+							var tOrig = typeOf(objOrig[k]),
+								tNew = typeOf(objNew[k]);
 
 							if (tOrig == tNew) {
 								if (tOrig == "object") {
@@ -1079,9 +1079,9 @@ var utWebUI = {
 			this.settings["multi_day_transfer_mode"] = tcmode;
 
 { // TODO: Remove this once backend support is stable (requires 2.2+)
-	this.settings["sched_table"] = $pick(this.settings["sched_table"], "033000030000000000000000300300030111010010100101000300030101011010100111033000030101010110100001300000030111010010110111333303030000000000000000000000000000000000000000");
-	this.settings["search_list_sel"] = $pick(this.settings["search_list_sel"], 0);
-	this.settings["search_list"] = $pick(this.settings["search_list"], "Google|http://google.com/search?q=\r\nBitTorrent|http://www.bittorrent.com/search?client=%v&q=");
+	this.settings["sched_table"] = [this.settings["sched_table"], "033000030000000000000000300300030111010010100101000300030101011010100111033000030101010110100001300000030111010010110111333303030000000000000000000000000000000000000000"].pick();
+	this.settings["search_list_sel"] = [this.settings["search_list_sel"], 0].pick();
+	this.settings["search_list"] = [this.settings["search_list"], "Google|http://google.com/search?q=\r\nBitTorrent|http://www.bittorrent.com/search?client=%v&q="].pick();
 }
 
 			// Cleanup
@@ -1122,7 +1122,7 @@ var utWebUI = {
 	},
 
 	"setAdvSetting": function(name, val) {
-		if ($defined(val) && (name in this.advOptTable.rowData)) {
+		if (undefined != val && (name in this.advOptTable.rowData)) {
 			// TODO: Will need to rewrite bits of stable.js so that
 			//       there is a clean API for setting values...
 
@@ -1137,8 +1137,8 @@ var utWebUI = {
 		this.advOptSelect();
 
 		$each(this.advSettings, function(val, key) {
-			if ($defined(this.settings[key])) {
-				if ($defined(this.getAdvSetting(key))) {
+			if (undefined != this.settings[key]) {
+				if (undefined != this.getAdvSetting(key)) {
 					this.setAdvSetting(key, this.settings[key]);
 				}
 				else {
@@ -1163,7 +1163,7 @@ var utWebUI = {
 				ele.set("value", v);
 			}
 			ele.fireEvent("change");
-			if (Browser.Engine.trident) ele.fireEvent("click");
+			if (Browser.ie) ele.fireEvent("click");
 		}
 
 		// WebUI configuration
@@ -1259,7 +1259,7 @@ var utWebUI = {
 
 		var str = "";
 
-		if (hasChanged && Browser.Engine.presto)
+		if (hasChanged && Browser.opera)
 			str = "&s=webui.cookie&v=" + JSON.encode(this.config);
 
 		value = $("gui.speed_in_title").checked;
@@ -1273,12 +1273,12 @@ var utWebUI = {
 		}
 
 		value = this.getAdvSetting("gui.graphic_progress");
-		if ($defined(value) && !!this.settings["gui.graphic_progress"] != value) {
+		if (undefined != value && !!this.settings["gui.graphic_progress"] != value) {
 			this.tableUseProgressBar(value);
 		}
 
 		value = this.getAdvSetting("gui.tall_category_list");
-		resize = resize || ($defined(value) && !!this.settings["gui.tall_category_list"] != value);
+		resize = resize || (undefined != value && !!this.settings["gui.tall_category_list"] != value);
 
 		for (var key in this.settings) {
 			var ele = $(key);
@@ -1315,13 +1315,13 @@ var utWebUI = {
 
 		for (var key in this.advSettings) {
 			var nv = this.getAdvSetting(key);
-			if (!$defined(nv)) continue;
+			if (undefined == nv) continue;
 			var v = this.settings[key];
 
 			if (v != nv) {
 				this.settings[key] = nv;
 
-				if ($type(nv) == "boolean") {
+				if (typeOf(nv) == 'boolean') {
 					nv = nv ? 1 : 0;
 				}
 				str += "&s=" + key + "&v=" + encodeURIComponent(nv);
@@ -1729,7 +1729,7 @@ var utWebUI = {
 		var ele = $("prop-seed_override");
 		ele.checked = false;
 		ele.disabled = true;
-		ele.fireEvent(Browser.Engine.trident ? "click" : "change");
+		ele.fireEvent(Browser.ie ? "click" : "change");
 		$("DLG_TORRENTPROP_1_GEN_11").addEvent("click", function(ev) {
 			ev.stop();
 			ele.disabled = !ele.disabled;
@@ -1761,7 +1761,7 @@ var utWebUI = {
 		var ele = $("prop-seed_override");
 		ele.disabled = false;
 		ele.checked = !!props.seed_override;
-		ele.fireEvent(Browser.Engine.trident ? "click" : "change");
+		ele.fireEvent(Browser.ie ? "click" : "change");
 		$("prop-seed_ratio").value = props.seed_ratio / 10;
 		$("prop-seed_time").value = props.seed_time / 60;
 		$("prop-superseed").checked = props.superseed;
@@ -2148,28 +2148,28 @@ var utWebUI = {
 		this.trtColDefs.each(function(item, idx) { if (!!item[3]) config.colMask |= (1 << idx); });
 
 		this.trtTable.setConfig(config);
-		$extend(this.config.torrentTable, config);
-		if (Browser.Engine.presto)
+		Object.append(this.config.torrentTable, config);
+		if (Browser.opera)
 			this.saveConfig(true);
 	},
 
 	"trtSort": function(index, reverse) {
 		this.config.torrentTable.sIndex = index;
 		this.config.torrentTable.reverse = reverse;
-		if (Browser.Engine.presto)
+		if (Browser.opera)
 			this.saveConfig(true);
 	},
 
 	"trtColMove": function() {
 		this.config.torrentTable.colOrder = this.trtTable.colOrder;
 		this.config.torrentTable.sIndex = this.trtTable.sIndex;
-		if (Browser.Engine.presto)
+		if (Browser.opera)
 			this.saveConfig(true);
 	},
 
 	"trtColResize": function() {
 		this.config.torrentTable.colWidth = this.trtTable.getColumnWidths();
-		if (Browser.Engine.presto)
+		if (Browser.opera)
 			this.saveConfig(true);
 	},
 
@@ -2180,14 +2180,14 @@ var utWebUI = {
 		} else {
 			this.config.torrentTable.colMask &= ~num;
 		}
-		if (!nosave && Browser.Engine.presto)
+		if (!nosave && Browser.opera)
 			this.saveConfig(true);
 	},
 
 	"prsColMove": function() {
 		this.config.peerTable.colOrder = this.prsTable.colOrder;
 		this.config.peerTable.sIndex = this.prsTable.sIndex;
-		if (Browser.Engine.presto)
+		if (Browser.opera)
 			this.saveConfig(true);
 	},
 
@@ -2201,14 +2201,14 @@ var utWebUI = {
 		this.prsColDefs.each(function(item, idx) { if (!!item[3]) config.colMask |= (1 << idx); });
 
 		this.prsTable.setConfig(config);
-		$extend(this.config.peerTable, config);
-		if (Browser.Engine.presto)
+		Object.append(this.config.peerTable, config);
+		if (Browser.opera)
 			this.saveConfig(true);
 	},
 
 	"prsColResize": function() {
 		this.config.peerTable.colWidth = this.prsTable.getColumnWidths();
-		if (Browser.Engine.presto)
+		if (Browser.opera)
 			this.saveConfig(true);
 	},
 
@@ -2219,7 +2219,7 @@ var utWebUI = {
 		} else {
 			this.config.peerTable.colMask &= ~num;
 		}
-		if (!nosave && Browser.Engine.presto)
+		if (!nosave && Browser.opera)
 			this.saveConfig(true);
 	},
 
@@ -2374,7 +2374,7 @@ var utWebUI = {
 	"prsSort": function(index, reverse) {
 		this.config.peerTable.sIndex = index;
 		this.config.peerTable.reverse = reverse;
-		if (Browser.Engine.presto)
+		if (Browser.opera)
 			this.saveConfig(true);
 	},
 
@@ -2388,28 +2388,28 @@ var utWebUI = {
 		this.flsColDefs.each(function(item, idx) { if (!!item[3]) config.colMask |= (1 << idx); });
 
 		this.flsTable.setConfig(config);
-		$extend(this.config.fileTable, config);
-		if (Browser.Engine.presto)
+		Object.append(this.config.fileTable, config);
+		if (Browser.opera)
 			this.saveConfig(true);
 	},
 
 	"flsSort": function(index, reverse) {
 		this.config.fileTable.sIndex = index;
 		this.config.fileTable.reverse = reverse;
-		if (Browser.Engine.presto)
+		if (Browser.opera)
 			this.saveConfig(true);
 	},
 
 	"flsColMove": function() {
 		this.config.fileTable.colOrder = this.flsTable.colOrder;
 		this.config.fileTable.sIndex = this.flsTable.sIndex;
-		if (Browser.Engine.presto)
+		if (Browser.opera)
 			this.saveConfig(true);
 	},
 
 	"flsColResize": function() {
 		this.config.fileTable.colWidth = this.flsTable.getColumnWidths();
-		if (Browser.Engine.presto)
+		if (Browser.opera)
 			this.saveConfig(true);
 	},
 
@@ -2420,7 +2420,7 @@ var utWebUI = {
 		} else {
 			this.config.fileTable.colMask &= ~num;
 		}
-		if (!nosave && Browser.Engine.presto)
+		if (!nosave && Browser.opera)
 			this.saveConfig(true);
 	},
 
@@ -2480,9 +2480,9 @@ var utWebUI = {
 		var contBool = $("dlgSettings-advBool-cont");
 		var contText = $("dlgSettings-advText-cont")
 
-		if ($defined(val)) {
+		if (undefined != val) {
 			// Item clicked
-			if ($type(val) == "boolean") {
+			if (typeOf(val) == 'boolean') {
 				contBool.setStyle("display", "inline");
 				contText.setStyle("display", "none");
 
@@ -2504,8 +2504,8 @@ var utWebUI = {
 
 	"advOptDblClk": function(id) {
 		var val = this.getAdvSetting(id);
-		if ($defined(val)) {
-			if ($type(val) == "boolean") {
+		if (undefined != val) {
+			if (typeOf(val) == 'boolean') {
 				$("dlgSettings-adv" + (val ? "False" : "True")).checked = true;
 				this.advOptChanged();
 			}
@@ -2517,16 +2517,16 @@ var utWebUI = {
 		if (optIds.length > 0) {
 			var id = optIds[0];
 
-			switch ($type(this.getAdvSetting(id))) {
-				case "boolean":
+			switch (typeOf(this.getAdvSetting(id))) {
+				case 'boolean':
 					this.setAdvSetting(id, $("dlgSettings-advTrue").checked);
 					break;
 
-				case "number":
+				case 'number':
 					this.setAdvSetting(id, $("dlgSettings-advText").value.toInt() || 0);
 					break;
 
-				case "string":
+				case 'string':
 					this.setAdvSetting(id, $("dlgSettings-advText").value);
 					break;
 			}
@@ -2553,7 +2553,7 @@ var utWebUI = {
 	},
 
 	"toggleCatPanel": function(show) {
-		if (!$defined(show)) {
+		if (undefined == show) {
 			show = !this.config.showCategories;
 		}
 
@@ -2562,7 +2562,7 @@ var utWebUI = {
 	},
 
 	"toggleDetPanel": function(show) {
-		if (!$defined(show)) {
+		if (undefined == show) {
 			show = !this.config.showDetails;
 		}
 
@@ -2571,7 +2571,7 @@ var utWebUI = {
 	},
 
 	"toggleSearchBar": function(show) {
-		if (!$defined(show)) {
+		if (undefined == show) {
 			show = !!(this.settings["search_list"] || "").trim();
 		}
 
@@ -2579,7 +2579,7 @@ var utWebUI = {
 	},
 
 	"toggleToolbar": function(show) {
-		if (!$defined(show)) {
+		if (undefined == show) {
 			show = !this.config.showToolbar;
 		}
 
@@ -2616,7 +2616,7 @@ var utWebUI = {
 	},
 
 	"tableUseProgressBar": function(enable) {
-		var progFunc = $lambda(enable ? TYPE_NUM_PROGRESS : TYPE_NUMBER);
+		var progFunc = Function.from(enable ? TYPE_NUM_PROGRESS : TYPE_NUMBER);
 		var trtProgCols = this.trtColDefs.filter(function(item) { return item[2] == TYPE_NUM_PROGRESS; }).map(function(item) { return item[0]; });
 		var prsProgCols = this.prsColDefs.filter(function(item) { return item[2] == TYPE_NUM_PROGRESS; }).map(function(item) { return item[0]; });
 		var flsProgCols = this.flsColDefs.filter(function(item) { return item[2] == TYPE_NUM_PROGRESS; }).map(function(item) { return item[0]; });

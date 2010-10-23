@@ -36,7 +36,7 @@ Array.implement({
 
 	// http://www.leepoint.net/notes-java/algorithms/searching/binarysearch.html
 	"binarySearch": function(value, comparator, first, upto) {
-		if (typeof comparator != "function") {
+		if (typeOf(comparator) != 'function') {
 			comparator = function(a, b) {
 				if (a === b) return 0;
 				if (a < b) return -1;
@@ -177,7 +177,7 @@ Element.implement({
 
 	addClasses: function(){
 		var l = arguments.length, clear = false, hasChanged = false;
-		if (typeof arguments[l - 1] == "boolean")
+		if (typeOf(arguments[l - 1]) == 'boolean')
 			clear = arguments[--l];
 		var cls = clear ? "" : this.className;
 		while (l--) {
@@ -200,11 +200,32 @@ Event.implement({
 	}
 });
 
-Native.implement([Document, Window], {
-	"getZoomSize": function() {
-		if (Browser.Engine.presto && Browser.Engine.version >= 960) {
-			return {x: document.body.clientWidth, y: document.body.clientHeight};
+[Document, Window].each(function (item) {
+	item.implement({
+		"getZoomSize": function() {
+			if (Browser.opera && Browser.version >= 9.6) {
+				return {x: document.body.clientWidth, y: document.body.clientHeight};
+			}
+			return this.getSize();
 		}
-		return this.getSize();
-	}
+	});
 });
+
+function $chk(obj) {
+	return !!(obj || obj === 0);
+}
+
+function $clear(timer){
+	clearTimeout(timer);
+	clearInterval(timer);
+	return null;
+};
+
+function $each(obj, fn, bind) {
+	if (typeOf(obj) == 'array') {
+		return obj.each(fn, bind);
+	}
+	else {
+		return Object.each(obj, fn, bind);
+	}
+}

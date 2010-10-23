@@ -71,20 +71,20 @@ console.log = console.log || function(str) {
 };
 
 console.assert = console.assert || function() {
-	var args = $A(arguments), expr = args.shift();
+	var args = Array.from(arguments), expr = args.shift();
 	if (!expr) {
 		throw new Error(false);
 	}
 };
 
-var timers = {};
+var __console_timers__ = {};
 console.time = console.time || function(name) {
 	if (name == "") return;
-	timers[name] = $time();
+	__console_timers__[name] = Date.now();
 };
 
 console.timeEnd = console.timeEnd || function(name) {
-	if (name == "" || !timers.hasOwnProperty(name)) return;
-	console.log(name + ": " + ($time() - timers[name]) + "ms");
-	delete timers[name];
+	if (name == "" || !__console_timers__.hasOwnProperty(name)) return;
+	console.log(name + ": " + (Date.now() - __console_timers__[name]) + "ms");
+	delete __console_timers__[name];
 };
