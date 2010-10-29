@@ -32,6 +32,14 @@ function changePort(port) {
 	}
 }
 
+function decodeID(str) {
+	return unescape(str.replace(/_/g, '%'));
+}
+
+function encodeID(str) {
+	return escape(str.replace(/[A-Za-z0-9\*\@\-\_\+\.\/]/g, function(c) { return "_" + c.charCodeAt(0).toString(16); })).replace(/%/g, '_');
+}
+
 Array.implement({
 
 	// http://www.leepoint.net/notes-java/algorithms/searching/binarysearch.html

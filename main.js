@@ -393,7 +393,7 @@ function setupUserInterface() {
 	// CATEGORY LIST
 	//--------------------------------------------------
 
-	["_all_", "_dls_", "_com_", "_act_", "_iac_", "_nlb_"].each(function(k) {
+	["cat_all", "cat_dls", "cat_com", "cat_act", "cat_iac", "cat_nlb"].each(function(k) {
 		$(k).addEvent("click", function() {
 			utWebUI.switchLabel(this);
 		});
@@ -403,7 +403,6 @@ function setupUserInterface() {
 	// TORRENT JOBS LIST
 	//--------------------------------------------------
 
-	var useProgress = (isGuest || utWebUI.settings["gui.graphic_progress"]);
 	utWebUI.trtTable.create("mainTorList", utWebUI.trtColDefs, Object.append({
 		"format": utWebUI.trtFormatRow.bind(utWebUI),
 		"sortCustom": utWebUI.trtSortCustom.bind(utWebUI),
@@ -531,13 +530,6 @@ function setupUserInterface() {
 
 	$("add").addEvent("click", function(ev) {
 		ev.stop();
-		/*
-		var ele = $("addlab");
-		ele.options.length = 0;
-		var count = 0;
-		for (var key in utWebUI.customLabels)
-			ele.options[count++] = new Option(key, key, false, count == 0);
-		*/
 		DialogManager.show("Add");
 	});
 

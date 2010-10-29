@@ -5,7 +5,6 @@
  *
 */
 
-var BUILD_REQUIRED = -1; // the uT build that WebUI requires
 var LANGUAGES = LANGUAGES || {};
 var lang = lang || null;
 var urlBase = window.location.pathname.substr(0, window.location.pathname.indexOf("/gui"));
@@ -22,12 +21,12 @@ var utWebUI = {
 	"props": {},
 	"xferhist": {},
 	"labels": {
-		"_all_": 0, // all
-		"_dls_": 0, // downloading
-		"_com_": 0, // completed
-		"_act_": 0, // active
-		"_iac_": 0, // inactive
-		"_nlb_": 0  // no-label
+		"cat_all": 0, // all
+		"cat_dls": 0, // downloading
+		"cat_com": 0, // completed
+		"cat_act": 0, // active
+		"cat_iac": 0, // inactive
+		"cat_nlb": 0  // no-label
 	},
 	"customLabels": {},
 	"cacheID": 0,
@@ -82,7 +81,7 @@ var utWebUI = {
 //			"mode": MODE_VIRTUAL,
 			"rowMultiSelect": false
 		},
-		"activeLabel": "_all_"
+		"activeLabelID": "cat_all"
 	},
 	"torrentID": "", // selected torrent
 	"propID": "", // selected torrent (single)
@@ -284,10 +283,6 @@ var utWebUI = {
 		this.prsColDefs.each(function(item, index) { this.prsColToggle(index, item[3], true); }, this);
 		this.flsColDefs.each(function(item, index) { this.flsColToggle(index, item[3], true); }, this);
 
-		if (isGuest) {
-			this.addSettings();
-			return;
-		}
 		this.getSettings();
 	},
 
@@ -643,13 +638,12 @@ var utWebUI = {
 		this.loadLabels(Array.clone(json.label));
 		delete json.label;
 		if (!this.loaded) {
-			if (!has(this.labels, this.config.activeLabel) && !has(this.customLabels, this.config.activeLabel)) {
-				this.config.activeLabel = "_all_";
-				$("_all_").addClass("sel");
-				$(this.config.activeLabel).removeClass("sel");
+			if (!has(this.labels, this.config.activeLabelID) && !has(this.customLabels, decodeID(this.config.activeLabelID.replace(/^lbl_/, '')))) {
+				this.config.activeLabelID = "cat_all";
+				$("cat_all").addClass("sel");
 			} else {
-				$("_all_").removeClass("sel");
-				$(this.config.activeLabel).addClass("sel");
+				$("cat_all").removeClass("sel");
+				$(this.config.activeLabelID).addClass("sel");
 			}
 		}
 
@@ -678,7 +672,7 @@ var utWebUI = {
 			if (has(this.torrents, hash)) {
 				// Old torrent found... update list
 				var rdata = this.trtTable.rowData[hash];
-				activeChanged = (rdata.hidden != (labels.indexOf(this.config.activeLabel) < 0));
+				activeChanged = (rdata.hidden != (labels.indexOf(this.config.activeLabelID) < 0));
 				if (activeChanged) rdata.hidden = !rdata.hidden;
 
 				this.trtTable.setIcon(hash, statinfo[0]);
@@ -700,7 +694,7 @@ var utWebUI = {
 			}
 			else {
 				// New torrent found... add to list
-				this.trtTable.addRow(row, hash, statinfo[0], (labels.indexOf(this.config.activeLabel) < 0), this.loaded || (this.trtTable.sIndex == -1));
+				this.trtTable.addRow(row, hash, statinfo[0], (labels.indexOf(this.config.activeLabelID) < 0), this.loaded || (this.trtTable.sIndex == -1));
 				ret = true;
 			}
 
@@ -714,22 +708,22 @@ var utWebUI = {
 				var k = torrentLists.torrentm[i];
 				delete this.torrents[k];
 
-				if (this.labels[k].indexOf("_nlb_") > -1)
-					this.labels["_nlb_"]--;
+				if (this.labels[k].indexOf("cat_nlb") > -1)
+					this.labels["cat_nlb"]--;
 
-				if (this.labels[k].indexOf("_com_") > -1)
-					this.labels["_com_"]--;
+				if (this.labels[k].indexOf("cat_com") > -1)
+					this.labels["cat_com"]--;
 
-				if (this.labels[k].indexOf("_dls_") > -1)
-					this.labels["_dls_"]--;
+				if (this.labels[k].indexOf("cat_dls") > -1)
+					this.labels["cat_dls"]--;
 
-				if (this.labels[k].indexOf("_act_") > -1)
-					this.labels["_act_"]--;
+				if (this.labels[k].indexOf("cat_act") > -1)
+					this.labels["cat_act"]--;
 
-				if (this.labels[k].indexOf("_iac_") > -1)
-					this.labels["_iac_"]--;
+				if (this.labels[k].indexOf("cat_iac") > -1)
+					this.labels["cat_iac"]--;
 
-				this.labels["_all_"]--;
+				this.labels["cat_all"]--;
 				delete this.labels[k];
 				this.trtTable.removeRow(k);
 				if (this.torrentID == k)
@@ -781,8 +775,10 @@ var utWebUI = {
 
 		this.getList();
 
-		if (DialogManager.showing.contains("Settings") && ("dlgSettings-TransferCap" == this.stpanes.active)) {
-			this.getTransferHistory();
+		if ("undefined" != typeof(DialogManager)) {
+			if (DialogManager.showing.contains("Settings") && ("dlgSettings-TransferCap" == this.stpanes.active)) {
+				this.getTransferHistory();
+			}
 		}
 	},
 
@@ -794,82 +790,83 @@ var utWebUI = {
 
 	"loadLabels": function(labels) {
 		var labelList = $("mainCatList-labels"), temp = {};
-		for (var i = 0, len = labels.length; i < len; i++) {
-			var labeltxt = labels[i][0], label = "~" + labeltxt + "~", count = labels[i][1], li = null;
-			if (!(li = $(label))) {
-				$me = this;
-				li = new Element("li", {"id": label})
-					.addEvent("mousedown", function(){ $me.switchLabel(this); })
-					.appendText(labeltxt + " (")
-					.grab(new Element("span", {"id": "_" + label + "_c"}).set("text", count))
-					.appendText(")");
-				if (i == 0) {
-					labelList.grab(li);
-				} else {
-					li.inject("~" + labels[i - 1][0] + "~", "after");
-				}
-			} else {
-				li.getFirst().set("text", count);
+		labels.each(function (lbl, idx) {
+			var label = lbl[0], labelId = "lbl_" + encodeID(label), count = lbl[1], li = null;
+			if ((li = $(labelId + "_c"))) {
+				li.set("text", count);
 			}
-			if (has(this.customLabels, label))
+			else {
+				$me = this;
+				(new Element("li", {"id": labelId})
+					.addEvent("mousedown", function() { $me.switchLabel(this); })
+					.appendText(label + " (")
+					.grab(new Element("span", {"id": labelId + "_c"}).set("text", count))
+					.appendText(")")
+				.inject(labelList));
+			}
+			if (has(this.customLabels, label)) {
 				delete this.customLabels[label];
+			}
 			temp[label] = count;
-		}
+		}, this);
+
 		var resetLabel = false;
 		for (var k in this.customLabels) {
-			$(k).destroy();
-			if (this.config.activeLabel == k)
+			var id = "lbl_" + encodeID(k);
+			$(id).destroy();
+			if (this.config.activeLabelID == id) {
 				resetLabel = true;
+			}
 		}
-		this.customLabels = temp;
 
+		this.customLabels = temp;
 		if (resetLabel) {
-			this.config.activeLabel = "";
-			this.switchLabel($("_all_"));
+			this.config.activeLabelID = "";
+			this.switchLabel($("cat_all"));
 		}
 	},
 
 	"getLabels": function(id, label, done, dls, uls) {
 		var labels = [];
 		if (label == "") {
-			labels.push("_nlb_");
-			if (this.labels[id].indexOf("_nlb_") == -1)
-				this.labels["_nlb_"]++;
+			labels.push("cat_nlb");
+			if (this.labels[id].indexOf("cat_nlb") == -1)
+				this.labels["cat_nlb"]++;
 		} else {
-			labels.push("~" + label + "~");
-			if (this.labels[id].indexOf("_nlb_") > -1)
-				this.labels["_nlb_"]--;
+			labels.push("lbl_" + encodeID(label));
+			if (this.labels[id].indexOf("cat_nlb") > -1)
+				this.labels["cat_nlb"]--;
 		}
 		if (done < 1000) {
-			labels.push("_dls_");
-			if (this.labels[id].indexOf("_dls_") == -1)
-				this.labels["_dls_"]++;
-			if (this.labels[id].indexOf("_com_") > -1)
-				this.labels["_com_"]--;
+			labels.push("cat_dls");
+			if (this.labels[id].indexOf("cat_dls") == -1)
+				this.labels["cat_dls"]++;
+			if (this.labels[id].indexOf("cat_com") > -1)
+				this.labels["cat_com"]--;
 		} else {
-			labels.push("_com_");
-			if (this.labels[id].indexOf("_com_") == -1)
-				this.labels["_com_"]++;
-			if (this.labels[id].indexOf("_dls_") > -1)
-				this.labels["_dls_"]--;
+			labels.push("cat_com");
+			if (this.labels[id].indexOf("cat_com") == -1)
+				this.labels["cat_com"]++;
+			if (this.labels[id].indexOf("cat_dls") > -1)
+				this.labels["cat_dls"]--;
 		}
 		if ((dls > 103) || (uls > 103)) {
-			labels.push("_act_");
-			if (this.labels[id].indexOf("_act_") == -1)
-				this.labels["_act_"]++;
-			if (this.labels[id].indexOf("_iac_") > -1)
-				this.labels["_iac_"]--;
+			labels.push("cat_act");
+			if (this.labels[id].indexOf("cat_act") == -1)
+				this.labels["cat_act"]++;
+			if (this.labels[id].indexOf("cat_iac") > -1)
+				this.labels["cat_iac"]--;
 		} else {
-			labels.push("_iac_");
-			if (this.labels[id].indexOf("_iac_") == -1)
-				this.labels["_iac_"]++;
-			if (this.labels[id].indexOf("_act_") > -1)
-				this.labels["_act_"]--;
+			labels.push("cat_iac");
+			if (this.labels[id].indexOf("cat_iac") == -1)
+				this.labels["cat_iac"]++;
+			if (this.labels[id].indexOf("cat_act") > -1)
+				this.labels["cat_act"]--;
 		}
-		labels.push("_all_");
+		labels.push("cat_all");
 
 		if (this.labels[id] == "")
-			this.labels["_all_"]++;
+			this.labels["cat_all"]++;
 
 		return labels;
 	},
@@ -903,17 +900,17 @@ var utWebUI = {
 
 	"updateLabels": function() {
 		var $me = this;
-		["_all_", "_dls_", "_com_", "_act_", "_iac_", "_nlb_"].each(function(key) {
-				$(key + "c").set("text", $me.labels[key]);
+		["cat_all", "cat_dls", "cat_com", "cat_act", "cat_iac", "cat_nlb"].each(function(key) {
+			$(key + "_c").set("text", $me.labels[key]);
 		});
 	},
 
 	"switchLabel": function(element) {
-		if (element.id == this.config.activeLabel) return;
-		if (this.config.activeLabel != "")
-			$(this.config.activeLabel).removeClass("sel");
+		if (element.id == this.config.activeLabelID) return;
+		if (this.config.activeLabelID != "")
+			$(this.config.activeLabelID).removeClass("sel");
 		element.addClass("sel");
-		this.config.activeLabel = element.id;
+		this.config.activeLabelID = element.id;
 
 		if (this.torrentID != "") {
 			this.torrentID = "";
@@ -922,7 +919,7 @@ var utWebUI = {
 
 		var activeChanged = false;
 		for (var k in this.torrents) {
-			if (this.labels[k].indexOf(this.config.activeLabel) > -1) {
+			if (this.labels[k].indexOf(this.config.activeLabelID) > -1) {
 				if (this.trtTable.rowData[k].hidden) {
 					this.trtTable.unhideRow(k);
 					activeChanged = true;
@@ -938,8 +935,10 @@ var utWebUI = {
 		this.trtTable.clearSelection(activeChanged);
 		this.trtTable.curPage = 0;
 
-		if (activeChanged)
+		if (activeChanged) {
 			this.trtTable.refreshRows();
+			this.trtTable.calcSize();
+		}
 	},
 
 	"getTransferHistory": function(forceload) {
@@ -1001,75 +1000,80 @@ var utWebUI = {
 	},
 
 	"getSettings": function() {
-		var qs = "action=getsettings";
-		if (!this.loaded) {
-			qs += "&list=1";
-			$clear(this.updateTimeout);
-			this.timer = Date.now();
+		if (isGuest) {
+			this.addSettings();
+			return;
 		}
-		this.request(qs, this.addSettings);
+		else {
+			var qs = "action=getsettings";
+			if (!this.loaded) {
+				qs += "&list=1";
+				$clear(this.updateTimeout);
+				this.timer = Date.now();
+			}
+			this.request(qs, this.addSettings);
+		}
 	},
 
 	"addSettings": function(json) {
-		if (!isGuest) {
-			if (BUILD_REQUIRED > -1) {
-				if (!has(json.settings, "build") || (json.settings.build < BUILD_REQUIRED)) {
-					alert("The WebUI requires atleast \u00B5Torrent (build " + BUILD_REQUIRED + ")");
-					return;
-				}
+		var loadCookie = (function (newcookie) {
+			function safeCopy(objOrig, objNew) {
+				$each(objOrig, function (v, k) {
+					var tOrig = typeOf(objOrig[k]),
+						tNew = typeOf(objNew[k]);
+
+					if (tOrig == tNew) {
+						if (tOrig == "object") {
+							safeCopy(objOrig[k], objNew[k]);
+						}
+						else {
+							objOrig[k] = objNew[k];
+						}
+					}
+				});
 			}
 
+			var cookie = this.config;
+
+			// Pull out only data from received cookie that we already know about.
+			// Next best thing short of sanity checking every single value.
+			safeCopy(cookie, newcookie || {});
+
+			this.trtTable.setConfig({
+				  "colSort": [cookie.torrentTable.sIndex, cookie.torrentTable.reverse]
+				, "colMask": cookie.torrentTable.colMask
+				, "colOrder": cookie.torrentTable.colOrder
+				, "colWidth": this.config.torrentTable.colWidth
+			});
+
+			this.prsTable.setConfig({
+				  "colSort": [cookie.peerTable.sIndex, cookie.peerTable.reverse]
+				, "colMask": cookie.peerTable.colMask
+				, "colOrder": cookie.peerTable.colOrder
+				, "colWidth": cookie.peerTable.colWidth
+			});
+
+			this.flsTable.setConfig({
+				  "colSort": [cookie.fileTable.sIndex, cookie.fileTable.reverse]
+				, "colMask": cookie.fileTable.colMask
+				, "colOrder": cookie.fileTable.colOrder
+				, "colWidth": cookie.fileTable.colWidth
+			});
+
+			this.tableSetMaxRows(cookie.maxRows);
+
+			resizeUI();
+		}).bind(this);
+
+		if (isGuest) {
+			loadCookie();
+		}
+		else {
 			var tcmode = 0;
 			for (var i = 0, j = json.settings.length; i < j; i++) {
 				var key = json.settings[i][0], typ = json.settings[i][1], val = json.settings[i][2];
 				if ((key == "webui.cookie") && !this.loaded) { // only load webui.cookie on startup
-					function safeCopy(objOrig, objNew) {
-						$each(objOrig, function (v, k) {
-							var tOrig = typeOf(objOrig[k]),
-								tNew = typeOf(objNew[k]);
-
-							if (tOrig == tNew) {
-								if (tOrig == "object") {
-									safeCopy(objOrig[k], objNew[k]);
-								}
-								else {
-									objOrig[k] = objNew[k];
-								}
-							}
-						});
-					}
-
-					var cookie = this.config, newcookie = JSON.decode(val, true);
-
-					// Pull out only data from received cookie that we already know about.
-					// Next best thing short of sanity checking every single value.
-					safeCopy(cookie, newcookie);
-
-					this.trtTable.setConfig({
-						  "colSort": [cookie.torrentTable.sIndex, cookie.torrentTable.reverse]
-						, "colMask": cookie.torrentTable.colMask
-						, "colOrder": cookie.torrentTable.colOrder
-						, "colWidth": this.config.torrentTable.colWidth
-					});
-
-					this.prsTable.setConfig({
-						  "colSort": [cookie.peerTable.sIndex, cookie.peerTable.reverse]
-						, "colMask": cookie.peerTable.colMask
-						, "colOrder": cookie.peerTable.colOrder
-						, "colWidth": cookie.peerTable.colWidth
-					});
-
-					this.flsTable.setConfig({
-						  "colSort": [cookie.fileTable.sIndex, cookie.fileTable.reverse]
-						, "colMask": cookie.fileTable.colMask
-						, "colOrder": cookie.fileTable.colOrder
-						, "colWidth": cookie.fileTable.colWidth
-					});
-
-					this.tableSetMaxRows(cookie.maxRows);
-
-					resizeUI();
-
+					loadCookie(JSON.decode(val, true));
 					continue;
 				}
 				if ((key != "proxy.proxy") && (key != "webui.username") && (key != "webui.password")) {
@@ -1633,7 +1637,6 @@ var utWebUI = {
 		var labelIndex = CONST.TORRENT_LABEL;
 		var labelSubMenu = [];
 		$each(this.customLabels, function(_, label) {
-			label = label.substr(1, label.length - 2);
 			if (this.trtTable.selectedRows.every(function(item) { return (this.torrents[item][labelIndex] == label); }, this)) {
 				labelSubMenu.push([CMENU_SEL, label]);
 			}
@@ -2626,14 +2629,18 @@ var utWebUI = {
 		this.trtTable.setConfig({"rowMaxCount": max || virtRows, "rowMode": mode});
 		this.prsTable.setConfig({"rowMaxCount": max || virtRows, "rowMode": mode});
 		this.flsTable.setConfig({"rowMaxCount": max || virtRows, "rowMode": mode});
-		this.advOptTable.setConfig({"rowMaxCount": max || virtRows, "rowMode": mode});
+		if (!isGuest) {
+			this.advOptTable.setConfig({"rowMaxCount": max || virtRows, "rowMode": mode});
+		}
 	},
 
 	"tableUseAltColor": function(enable) {
 		this.trtTable.setConfig({"rowAlternate": enable});
 		this.prsTable.setConfig({"rowAlternate": enable});
 		this.flsTable.setConfig({"rowAlternate": enable});
-		this.advOptTable.setConfig({"rowAlternate": enable});
+		if (!isGuest) {
+			this.advOptTable.setConfig({"rowAlternate": enable});
+		}
 	},
 
 	"tableUseProgressBar": function(enable) {

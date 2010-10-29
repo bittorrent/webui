@@ -309,20 +309,14 @@ td.disabled, label.disabled, span.disabled, div.disabled {
 	height: 1px;
 }
 
-/*
-   IE6's CSS handler seems to get confused by selectors referencing elements whose
-   IDs start with underscores, and the selector's first underscore is unescaped.
-   (https://developer.mozilla.org/en/underscores_in_class_and_id_names)
-*/
-
-#\_all_, #\_dls_, #\_com_, #\_act_, #\_iac_ {
+#cat_all, #cat_dls, #cat_com, #cat_act, #cat_iac {
 	background: transparent url(./images/tstatus.png) no-repeat 2px 0px;
 }
 
-	#\_all_ { background-position: 2px -176px; }
-	#\_com_ { background-position: 2px -16px; }
-	#\_act_ { background-position: 2px -160px; }
-	#\_iac_ { background-position: 2px -192px; }
+	#cat_all { background-position: 2px -176px; }
+	#cat_com { background-position: 2px -16px; }
+	#cat_act { background-position: 2px -160px; }
+	#cat_iac { background-position: 2px -192px; }
 
 
 /**************************************************
@@ -1318,6 +1312,7 @@ ul.CMenu {
 ul.CMenu li {
 	position: relative;
 	width: 150px;
+	word-wrap: break-word;
 }
 
 ul.CMenu li a {
