@@ -271,7 +271,7 @@ function resizeUI(hDiv, vDiv) {
 		vDiv = wh - vDiv;
 	}
 
-	// Resize torrent list
+	// Calculate torrent list size
 	var trtw = ww - (hDiv + 2 + (showCat ? 5 : 0)) - (badIE ? 1 : 0),
 		trth = vDiv - (th + (showDet ? 0 : 2)) - (badIE ? 1 : 0);
 
@@ -307,21 +307,6 @@ function resizeUI(hDiv, vDiv) {
 				trth = minTrtH;
 			}
 		}
-	}
-
-	utWebUI.trtTable.resizeTo(trtw, trth);
-	if (!badIE) {
-		// NOTE: We undefine the explicitly set width for modern browsers that have
-		//       full page zoom, because if we specify an exact pixel width, the
-		//       browser may not map the "virtual" pixels (the number of pixels the
-		//       web application thinks it has due to zooming) to "physical" pixels
-		//       in a manner such that the torrent jobs list would fit perfectly
-		//       side by side with the category list.
-		//
-		//       An actual size is specified above in order to force the torrent
-		//       list to resize when the horizontal divider is resized.
-
-		utWebUI.trtTable.resizeTo(undefined, trth);
 	}
 
 	// Resize category/label list
@@ -370,6 +355,22 @@ function resizeUI(hDiv, vDiv) {
 	// Store new divider position(s)
 	if (hDiv && showCat && manualH) config.hSplit = hDiv;
 	if (vDiv && showDet && manualV) config.vSplit = (wh - vDiv);
+
+	// Resize torrent list
+	utWebUI.trtTable.resizeTo(trtw, trth);
+	if (!badIE) {
+		// NOTE: We undefine the explicitly set width for modern browsers that have
+		//       full page zoom, because if we specify an exact pixel width, the
+		//       browser may not map the "virtual" pixels (the number of pixels the
+		//       web application thinks it has due to zooming) to "physical" pixels
+		//       in a manner such that the torrent jobs list would fit perfectly
+		//       side by side with the category list.
+		//
+		//       An actual size is specified above in order to force the torrent
+		//       list to resize when the horizontal divider is resized.
+
+		utWebUI.trtTable.resizeTo(undefined, trth);
+	}
 
 	resizing = false;
 
