@@ -113,20 +113,23 @@ Number.implement({
 		return res.substring(0, res.length-(20-numdec));
 	},
 
-	"toFileSize": function(numdec) {
+	"toFileSize": function(numdec, unit) {
 		var sz = [lang[CONST.SIZE_B], lang[CONST.SIZE_KB], lang[CONST.SIZE_MB], lang[CONST.SIZE_GB], lang[CONST.SIZE_TB], lang[CONST.SIZE_PB], lang[CONST.SIZE_EB]];
 		var szmax = sz.length-1;
 		var size = this;
 
 		// Force units to be at least kB
-		var unit = 1;
-		size /= 1024;
+		unit = parseInt(unit, 10);
+		if (isNaN(unit) || unit < 1) {
+			unit = 1;
+			size /= 1024;
+		}
 
 		while ((size >= 1024) && (unit < szmax)) {
 			size /= 1024;
 			unit++;
 		}
-		return (size.toFixedNR(numdec || 1) + " " + sz[unit]);
+		return (size.toFixedNR(typeOf(numdec) == 'number' ? numdec : 1) + " " + sz[unit]);
 	},
 
 	"toTimeString": function() {
@@ -230,10 +233,11 @@ function $clear(timer){
 };
 
 function $each(obj, fn, bind) {
-	if (typeOf(obj) == 'array') {
-		return obj.each(fn, bind);
-	}
-	else {
-		return Object.each(obj, fn, bind);
+	switch (typeOf(obj)) {
+		case 'array':
+		case 'collection':
+			return Array.each(obj, fn, bind);
+		default:
+			return Object.each(obj, fn, bind);
 	}
 }

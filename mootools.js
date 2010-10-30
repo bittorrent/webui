@@ -4479,7 +4479,7 @@ window.addEvent('load', function(){
 })(window, document);
 
 // MooTools: the javascript framework.
-// Load this file's selection again by visiting: http://mootools.net/more-rc/b4e50ecb9f757ac1b814a55b8bd07f77 
+// Load this file's selection again by visiting: http://mootools.net/more/b4e50ecb9f757ac1b814a55b8bd07f77 
 // Or build this file again with packager using: packager build More/More More/Element.Measure More/Drag More/Assets
 /*
 ---
@@ -4510,8 +4510,8 @@ provides: [MooTools.More]
 */
 
 MooTools.More = {
-	'version': '1.3.0.1rc1',
-	'build': '361dd6c3755b66898e9e0ee5d55c343188b619b7'
+	'version': '1.3.0.1',
+	'build': '6dce99bed2792dffcbbbb4ddc15a1fb9a41994b5'
 };
 
 
@@ -4701,6 +4701,7 @@ requires:
   - Core/Options
   - Core/Element.Event
   - Core/Element.Style
+  - Core/Element.Dimensions
   - /MooTools.More
 
 provides: [Drag]
@@ -4785,14 +4786,12 @@ var Drag = new Class({
 
 		if (options.preventDefault) event.preventDefault();
 		if (options.stopPropagation) event.stopPropagation();
-
 // uTorrent WebUI Patch - BEGIN
 		if (event.rightClick) {
 			this.fireEvent("onRightClick", event.page);
 			return;
 		}
 // uTorrent WebUI Patch - END
-
 		this.mouse.start = event.page;
 
 		this.fireEvent('beforeStart', this.element);
@@ -4806,10 +4805,19 @@ var Drag = new Class({
 			y: options.modifiers.y == 'top' && styles.top == 'auto' && !isNaN(styles.bottom.toInt()) && (options.modifiers.y = 'bottom')
 		};
 
-		for (var z in options.modifiers){
+		var z, coordinates;
+		for (z in options.modifiers){
 			if (!options.modifiers[z]) continue;
 
-			if (options.style) this.value.now[z] = (this.element.getStyle(options.modifiers[z]) || 0).toInt();
+			var style = this.element.getStyle(options.modifiers[z]);
+
+			// Some browsers (IE and Opera) don't always return pixels.
+			if (style && !style.match(/px$/)){
+				if (!coordinates) coordinates = this.element.getCoordinates(this.element.getOffsetParent());
+				style = coordinates[options.modifiers[z]];
+			}
+
+			if (options.style) this.value.now[z] = (style || 0).toInt();
 			else this.value.now[z] = this.element[options.modifiers[z]];
 
 			if (options.invert) this.value.now[z] *= -1;
