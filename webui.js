@@ -502,6 +502,10 @@ var utWebUI = {
 		if (isNaN(mode) || mode < 0 || this.delActions.length <= mode)
 			mode = this.settings["gui.default_del_action"] || 0;
 
+{ // TODO: Remove this once backend support is stable (requires 3.0+)
+	if (!$chk(this.settings["webui.uconnect_enable"])) mode &= ~1; // force non-.torrent removal mode
+}
+
 		var act = (function() {
 			this.perform(this.delActions[mode]);
 		}).bind(this);
@@ -804,9 +808,8 @@ var utWebUI = {
 					.appendText(")")
 				.inject(labelList));
 			}
-			if (has(this.customLabels, label)) {
+			if (has(this.customLabels, label))
 				delete this.customLabels[label];
-			}
 			temp[label] = count;
 		}, this);
 
@@ -818,8 +821,8 @@ var utWebUI = {
 				resetLabel = true;
 			}
 		}
-
 		this.customLabels = temp;
+
 		if (resetLabel) {
 			this.config.activeLabelID = "";
 			this.switchLabel($("cat_all"));
@@ -984,9 +987,9 @@ var utWebUI = {
 		}
 
 		// Reduce precision for readability
-		$("total_uploaded_history").set("text", tu.toFileSize(1));
-		$("total_downloaded_history").set("text", td.toFileSize(1));
-		$("total_updown_history").set("text", (tu + td).toFileSize(1));
+		$("total_uploaded_history").set("text", tu.toFileSize());
+		$("total_downloaded_history").set("text", td.toFileSize());
+		$("total_updown_history").set("text", (tu + td).toFileSize());
 		$("history_period").set("text", lang[CONST.DLG_SETTINGS_7_TRANSFERCAP_12].replace(/%d/, period));
 	},
 
@@ -1002,7 +1005,6 @@ var utWebUI = {
 	"getSettings": function() {
 		if (isGuest) {
 			this.addSettings();
-			return;
 		}
 		else {
 			var qs = "action=getsettings";
@@ -1072,7 +1074,7 @@ var utWebUI = {
 			var tcmode = 0;
 			for (var i = 0, j = json.settings.length; i < j; i++) {
 				var key = json.settings[i][0], typ = json.settings[i][1], val = json.settings[i][2];
-				if ((key == "webui.cookie") && !this.loaded) { // only load webui.cookie on startup
+				if ((key == "webui.cookie") && !this.loaded) { // only load cookie on startup
 					loadCookie(JSON.decode(val, true));
 					continue;
 				}
@@ -1895,7 +1897,7 @@ var utWebUI = {
 
 	"loadPeers": function() {
 		var id = this.torrentID;
-		if (id != "") {
+		if (id != "" && this.peers[id]) {
 			this.prsTable.dBody.scrollLeft = 0;
 			this.prsTable.dBody.scrollTop = 0;
 			this.peers[id].each(function(peer, i) {
@@ -1903,10 +1905,9 @@ var utWebUI = {
 				this.prsTable.addRow(this.prsDataToRow(peer), key);
 				this.prsTable.setIcon(key, "country_" + peer[CONST.PEER_COUNTRY]);
 			}, this);
-			this.prsTable.calcSize();
-
-			this.prsTable.loadObj.hide.delay(200, this.prsTable.loadObj);
 		}
+		this.prsTable.loadObj.hide.delay(200, this.prsTable.loadObj);
+		this.prsTable.calcSize();
 	},
 
 	"getPeers": function(id, update) {
@@ -1949,17 +1950,17 @@ var utWebUI = {
 
 	"loadFiles": function() {
 		var id = this.torrentID;
-		if (id != "") {
+		if (id != "" && this.files[id]) {
 			if (!has(this.flsTable.rowData, id + "_0")) { // don't unnecessarily reload the table
 				this.flsTable.dBody.scrollLeft = 0;
 				this.flsTable.dBody.scrollTop = 0;
 				this.files[id].each(function(file, i) {
 					this.flsTable.addRow(this.flsDataToRow(file), id + "_" + i);
 				}, this);
-				this.flsTable.calcSize();
 			}
-			this.flsTable.loadObj.hide.delay(200, this.flsTable.loadObj);
 		}
+		this.flsTable.loadObj.hide.delay(200, this.flsTable.loadObj);
+		this.flsTable.calcSize();
 	},
 
 	"getFiles": function(id, update) {

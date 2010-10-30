@@ -872,11 +872,11 @@ var dxSTable = new Class({
 	},
 
 	"refreshRows": function() {
-		var range = this.getActiveRange(), count = 0, tb = this.tb.body;
+		var range = this.getActiveRange(), count = 0, tbc = this.tb.body.childNodes;
 		if (Browser.firefox || Browser.ie)
 			this.detachBody();
 		for (var i = range[0]; i <= range[1]; i++) {
-			var id = this.activeId[i], rdata = this.rowData[id], row = tb.childNodes[count];
+			var id = this.activeId[i], rdata = this.rowData[id], row = tbc[count];
 			if (!(rdata && row)) continue;
 			var data = this.options.format(Array.clone(rdata.data));
 			var clsName = "", clsChanged = false;
@@ -904,8 +904,8 @@ var dxSTable = new Class({
 			}).show(true);
 			rdata.rowIndex = count++;
 		}
-		for (var i = count, j = tb.childNodes.length; i < j; i++)
-			tb.childNodes[i].setProperty("id", "").hide();
+		for (var i = count, j = tbc.length; i < j; i++)
+			tbc[i].setProperty("id", "").hide();
 		if (Browser.firefox || Browser.ie)
 			this.attachBody();
 		this.loadObj.hide();
@@ -1260,26 +1260,14 @@ var dxSTable = new Class({
 	"refreshSelection": function() {
 		if (!this.options.rowsSelectable) return;
 		var idprefix = new RegExp("^" + this.id + "-row-", "");
-		var len = this.tb.body.childNodes.length, i = 0;
-		while (i < len) {
-			var row = this.tb.body.childNodes[i];
-			var clsName = "", clsChanged = row.hasClass("selected");
-			if (has(this.rowSel, row.id.replace(idprefix, ""))) {
-				clsName += "selected";
-				clsChanged = !clsChanged;
+		var tbc = this.tb.body.childNodes;
+		for (var i = 0, il = tbc.length; i < il; ++i) {
+			if (has(this.rowSel, tbc[i].id.replace(idprefix, ""))) {
+				tbc[i].addClass("selected");
 			}
-			if (this.options.alternateRows) {
-				if (i & 1) {
-					clsName += " odd";
-					clsChanged = clsChanged || !row.hasClass("odd");
-				} else {
-					clsName += " even";
-					clsChanged = clsChanged || !row.hasClass("even");
-				}
+			else {
+				tbc[i].removeClass("selected");
 			}
-			if (clsChanged)
-				row.className = clsName.clean();
-			i++;
 		}
 		this.refreshPageInfo();
 	},

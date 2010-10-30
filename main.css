@@ -726,6 +726,7 @@ li.selected#tab_mainInfoPane-loggerTab span {
 	font-size: 12px;
 	line-height: 12px;
 	padding: 3px;
+	word-wrap: break-word;
 }
 
 #mainInfoPane-loggerTab .timestamp {
@@ -915,42 +916,10 @@ li.selected#tab_mainInfoPane-loggerTab span {
 	background-image: url(./images/add.png);
 }
 
-#dlgAdd .dlg-body .fbox {
+#dlgAdd .dlg-body .fbox,
+#dlgAdd .dlg-body .tbox {
 	width: 250px;
 }
-
-/* TODO: Finish implementing or remove
-	div.fifpcw {
-		width: 150px; height: 19px;
-		line-height: 19px;
-		margin: 0 0 5px 0;
-		float: left;
-	}
-
-	#dlgAdd fieldset {
-		border: 0;
-		border-top: 1px solid #D0D0D0;
-	}
-
-	#dlgAdd legend a {
-		padding: 0 0 0 20px;
-		background: transparent url(./images/arrow.gif) no-repeat scroll 2px top;
-	}
-
-	#optadd-cont {
-		height: 98px;
-		display: none;
-	}
-
-	#dlpath {
-		width: 250px;
-		margin: 0 10px 0 0;
-	}
-
-	#DLG_PRE_ADD_03 {
-		width: 30px;
-	}
-*/
 
 
 /**************************************************
@@ -958,7 +927,7 @@ li.selected#tab_mainInfoPane-loggerTab span {
  **************************************************/
 
 #dlgAddURL {
-	width: 325px;
+	width: 375px;
 }
 
 #dlgAddURL-head {
@@ -966,7 +935,7 @@ li.selected#tab_mainInfoPane-loggerTab span {
 }
 
 #dlgAddURL .dlg-body .tbox {
-	width: 225px;
+	width: 275px;
 }
 
 

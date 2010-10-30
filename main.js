@@ -804,7 +804,7 @@ function setupUserInterface() {
 	$("DLG_SETTINGS_4_CONN_04").addEvent("click", function() {
 		var v = utWebUI.settings["bind_port"], rnd = 0;
 		do {
-			rnd = parseInt(Math.random() * 50000) + 15000;
+			rnd = parseInt(Math.random() * 50000, 10) + 15000;
 		} while (v == rnd);
 		$("bind_port").set("value", rnd);
 	});
