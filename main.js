@@ -340,7 +340,7 @@ function resizeUI(hDiv, vDiv) {
 	if (showDet) {
 		var dw = ww - (showCat && tallCat ? hDiv + 5 : 0);
 		if (vDiv) {
-			var dh = wh - vDiv - $("mainInfoPane-tabs").getSize().y - 16;
+			var dh = wh - vDiv - $("mainInfoPane-tabs").getSize().y - 17;
 			$("mainInfoPane-content").setStyles({"width": dw - 8, "height": dh});
 			$("mainInfoPane-generalTab").setStyles({"width": dw - 10, "height": dh - 2});
 			SpeedGraph.resize(dw - 8, dh);

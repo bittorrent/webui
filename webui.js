@@ -796,15 +796,15 @@ var utWebUI = {
 		var labelList = $("mainCatList-labels"), temp = {};
 		labels.each(function (lbl, idx) {
 			var label = lbl[0], labelId = "lbl_" + encodeID(label), count = lbl[1], li = null;
-			if ((li = $(labelId + "_c"))) {
-				li.set("text", count);
+			if ((li = $(labelId))) {
+				li.getElement("span").set("text", count);
 			}
 			else {
 				$me = this;
 				(new Element("li", {"id": labelId})
 					.addEvent("mousedown", function() { $me.switchLabel(this); })
 					.appendText(label + " (")
-					.grab(new Element("span", {"id": labelId + "_c"}).set("text", count))
+					.grab(new Element("span").set("text", count))
 					.appendText(")")
 				.inject(labelList));
 			}
@@ -1637,18 +1637,21 @@ var utWebUI = {
 		//--------------------------------------------------
 
 		var labelIndex = CONST.TORRENT_LABEL;
-		var labelSubMenu = [];
-		$each(this.customLabels, function(_, label) {
-			if (this.trtTable.selectedRows.every(function(item) { return (this.torrents[item][labelIndex] == label); }, this)) {
-				labelSubMenu.push([CMENU_SEL, label]);
-			}
-			else {
-				labelSubMenu.push([label, this.setLabel.bind(this, label)]);
-			}
-		}, this);
-		if (labelSubMenu.length > 0) labelSubMenu.push([CMENU_SEP]);
-		labelSubMenu.push([lang[CONST.OV_NEW_LABEL], this.newLabel.bind(this)]);
-		labelSubMenu.push([lang[CONST.OV_REMOVE_LABEL], this.setLabel.bind(this, "")]);
+		var labelSubMenu = [[lang[CONST.OV_NEW_LABEL], this.newLabel.bind(this)]];
+		if (!this.trtTable.selectedRows.every(function(item) { return (this.torrents[item][labelIndex] == ""); }, this)) {
+			labelSubMenu.push([lang[CONST.OV_REMOVE_LABEL], this.setLabel.bind(this, "")]);
+		}
+		if (this.trtTable.selectedRows.length > 0) {
+			labelSubMenu.push([CMENU_SEP]);
+			$each(this.customLabels, function(_, label) {
+				if (this.trtTable.selectedRows.every(function(item) { return (this.torrents[item][labelIndex] == label); }, this)) {
+					labelSubMenu.push([CMENU_SEL, label]);
+				}
+				else {
+					labelSubMenu.push([label, this.setLabel.bind(this, label)]);
+				}
+			}, this);
+		}
 
 		//--------------------------------------------------
 		// Build Menu
