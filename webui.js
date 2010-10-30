@@ -20,6 +20,7 @@ var utWebUI = {
 	"settings": {},
 	"props": {},
 	"xferhist": {},
+	"dirlist": [],
 	"labels": {
 		"cat_all": 0, // all
 		"cat_dls": 0, // downloading
@@ -36,6 +37,7 @@ var utWebUI = {
 		"minTableRows": 5,
 		"maxVirtTableRows": Math.ceil(screen.height / 16) || 100,
 		"minUpdateInterval": 500,
+		"minDirListCache": 30, // seconds
 		"minXferHistCache": 60, // seconds
 		"defHSplit": 125,
 		"defVSplit": 225,
@@ -287,6 +289,11 @@ var utWebUI = {
 	},
 
 	"proxyFiles": function(sid, fids, streaming) {
+
+{ // TODO: Remove this once backend support is stable (requires 3.0+)
+	if (!$chk(this.settings["webui.uconnect_enable"])) return;
+}
+
 		$each($$(".downloadfrm"), function(frm) {
 			frm.dispose().destroy();
 		}, this);
@@ -942,6 +949,39 @@ var utWebUI = {
 			this.trtTable.refreshRows();
 			this.trtTable.calcSize();
 		}
+	},
+
+	"getDirectoryList": function(forceload) {
+
+{ // TODO: Remove this once backend support is stable (requires 3.0+)
+	if (!$chk(this.settings["webui.uconnect_enable"])) return;
+}
+
+		var now = Date.now();
+		if (forceload || !this.dirlist._TIME_ || (now - this.dirlist._TIME_) > (this.limits.minDirListCache * 1000)) {
+			this.request("action=list-dirs", (function (json) {
+				this.dirlist = json["download-dirs"];
+				this.dirlist._TIME_ = now;
+
+				this.loadDirectoryList();
+			}).bind(this));
+		}
+		else {
+			this.loadDirectoryList();
+		}
+	},
+
+	"loadDirectoryList": function() {
+		var list = this.dirlist;
+
+		// Throw data into frontend
+		list[0].path = "Default download directory";
+		var items = list.map(function (dir) {
+			return '[' + parseInt(dir.available, 10).toFileSize(2, 2) + ' free] '+ dir.path;
+		});
+
+		_loadComboboxStrings("dlgAdd-basePath", items, $("dlgAdd-basePath").value);
+		_loadComboboxStrings("dlgAddURL-basePath", items, $("dlgAddURL-basePath").value);
 	},
 
 	"getTransferHistory": function(forceload) {
@@ -1887,14 +1927,21 @@ var utWebUI = {
 	},
 
 	"addURL": function() {
-		var url = encodeURIComponent($("dlgAdd-url").get("value"));
-		$("dlgAdd-url").set("value", "");
-		if (url != "") {
-			var cookie = $("dlgAdd-cookies").get("value");
-			$("dlgAdd-cookies").set("value", "");
-			if (cookie != "")
-				url += ":COOKIE:" + cookie;
-			this.request("action=add-url&s=" + url, Function.from());
+		var url = encodeURIComponent($("dlgAddURL-url").get("value"));
+		var dir = $("dlgAddURL-basePath").value || 0;
+		var sub = encodeURIComponent($("dlgAddURL-subPath").get("value")); // TODO: Sanitize!
+		var cookie = encodeURIComponent($("dlgAddURL-cookie").get("value"));
+
+		$("dlgAddURL-url").set("value", "");
+		$("dlgAddURL-cookie").set("value", "");
+
+		if (url) {
+			if (cookie) url += ":COOKIE:" + cookie;
+			this.request(
+				  "action=add-url&s=" + url
+				+ "&download_dir=" + dir
+				+ "&path=" + sub
+			);
 		}
 	},
 

@@ -62,22 +62,24 @@
 			<div id="dlgAdd-head" class="dlg-head"></div>
 			<form id="dlgAdd-form" action="./?action=add-file" method="post" enctype="multipart/form-data">
 				<div class="dlg-body">
-						<div class="line-cont">
-							<input type="file" id="dlgAdd-file" name="torrent_file" class="fbox flr" />
-							<label for="dlgAdd-file">Torrent file:</label>
-						</div>
-					<!--
+					<div class="line-cont">
+						<input type="file" id="dlgAdd-file" name="torrent_file" class="fbox flr" />
+						<label for="dlgAdd-file">Torrent file:</label>
+					</div>
+
 					<fieldset>
-						<legend><a href="#" id="optadd">Options</a></legend>
-						<div id="optadd-cont">
-								<div><input type="text" id="dlpath" class="tbox" /><input type="button" id="DLG_PRE_ADD_03" class="btn" /></div>
-								<div class="fifpcw"><input type="checkbox" /><label id="DLG_PRE_ADD_04"></label></div>
-								<div class="fifpcw"><select id="addlab"></select><label id="DLG_PRE_ADD_06"></label></div>
-								<div class="fifpcw"><input type="checkbox" /><label id="DLG_PRE_ADD_05"></label></div>
-								<div class="fifpcw"><input type="checkbox" /><label id="DLG_PRE_ADD_08"></label></div>
+						<legend>Options</legend> <!-- TODO: Localize -->
+						<div class="line-cont">
+							<select id="dlgAdd-basePath" class="tbox flr">
+								<option value="0">Default download directory</option>
+							</select>
+							<label for="dlgAdd-basePath">Path:</label>
+						</div>
+						<div class="line-cont">
+							<input type="text" id="dlgAdd-subPath" class="tbox flr" />
+							<label for="dlgAdd-subPath">Sub-path:</label>
 						</div>
 					</fieldset>
-					-->
 				</div>
 				<div class="dlg-foot">
 					<input type="submit" id="ADD_FILE_OK" class="btn" />
@@ -94,13 +96,27 @@
 			<form id="dlgAddURL-form" action="">
 				<div class="dlg-body">
 					<div class="line-cont">
-						<input type="text" id="dlgAdd-url" class="tbox flr" />
-						<label for="dlgAdd-url">Torrent URL:</label>
+						<input type="text" id="dlgAddURL-url" class="tbox flr" />
+						<label for="dlgAddURL-url">Torrent URL:</label>
 					</div>
 					<div class="line-cont">
-						<input type="text" id="dlgAdd-cookies" class="tbox flr" />
-						<label for="dlgAdd-cookies">Cookies:</label>
+						<input type="text" id="dlgAddURL-cookie" class="tbox flr" />
+						<label for="dlgAddURL-cookie">Cookies:</label>
 					</div>
+
+					<fieldset>
+						<legend>Options</legend> <!-- TODO: Localize -->
+						<div class="line-cont">
+							<select id="dlgAddURL-basePath" class="tbox flr">
+								<option value="0">Default download directory</option>
+							</select>
+							<label for="dlgAddURL-basePath">Path:</label>
+						</div>
+						<div class="line-cont">
+							<input type="text" id="dlgAddURL-subPath" class="tbox flr" />
+							<label for="dlgAddURL-subPath">Sub-path:</label>
+						</div>
+					</fieldset>
 				</div>
 				<div class="dlg-foot">
 					<input type="submit" id="ADD_URL_OK" class="btn" />

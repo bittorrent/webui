@@ -595,7 +595,8 @@ function setupUserInterface() {
 	["About", "Add", "AddURL", "DelTor", "Label", "Props", "Settings"].each(function(k) {
 		var isModal = (["DelTor", "Label", "Props"].indexOf(k) >= 0);
 		DialogManager.add(k, isModal, {
-			"Settings": function () { utWebUI.stpanes.onChange(); }
+			  "Add": function () { utWebUI.getDirectoryList(); }
+			, "Settings": function () { utWebUI.stpanes.onChange(); }
 		}[k]);
 	});
 
@@ -607,7 +608,16 @@ function setupUserInterface() {
 
 	$("ADD_FILE_OK").addEvent("click", function() {
 		this.disabled = true;
-		$("dlgAdd-form").set("action", guiBase + "?token=" + utWebUI.TOKEN + "&action=add-file").submit();
+
+		var dir = $("dlgAdd-basePath").value || 0;
+		var sub = encodeURIComponent($("dlgAdd-subPath").get("value")); // TODO: Sanitize!
+
+		$("dlgAdd-form").set("action", guiBase
+			+ "?token=" + utWebUI.TOKEN
+			+ "&action=add-file"
+			+ "&download_dir=" + dir
+			+ "&path=" + sub
+		).submit();
 	});
 
 	// -- Cancel Button (File)
@@ -652,7 +662,7 @@ function setupUserInterface() {
 	// -- OK Button (URL)
 
 	$("ADD_URL_OK").addEvent("click", function() {
-		if ($("dlgAdd-url").get("value").trim().length > 0) {
+		if ($("dlgAddURL-url").get("value").trim().length > 0) {
 			DialogManager.hide("AddURL");
 			utWebUI.addURL();
 		}
