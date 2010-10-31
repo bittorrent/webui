@@ -1799,8 +1799,7 @@ var utWebUI = {
 		ele.checked = false;
 		ele.disabled = true;
 		ele.fireEvent(Browser.ie ? "click" : "change");
-		$("DLG_TORRENTPROP_1_GEN_11").addEvent("click", function(ev) {
-			ev.stop();
+		$("DLG_TORRENTPROP_1_GEN_11").addStopEvent("click", function(ev) {
 			ele.disabled = !ele.disabled;
 		});
 		var ids = {
@@ -1812,8 +1811,7 @@ var utWebUI = {
 			var e = $("prop-" + k);
 			e.disabled = true;
 			e.checked = false;
-			$("DLG_TORRENTPROP_1_GEN_" + v).removeClass("disabled").addEvent("click", function(ev) {
-				ev.stop();
+			$("DLG_TORRENTPROP_1_GEN_" + v).removeClass("disabled").addStopEvent("click", function(ev) {
 				e.disabled = !e.disabled;
 			});
 		});
@@ -2704,8 +2702,7 @@ var utWebUI = {
 		this.flsTable.setConfig({"colType": flsProgCols.map(progFunc).associate(flsProgCols)});
 	},
 
-	"detPanelTabChange": function(args) {
-		var id = args[0];
+	"detPanelTabChange": function(id) {
 		switch (id) {
 			case "mainInfoPane-peersTab":
 				this.prsTable.calcSize();
@@ -2738,8 +2735,7 @@ var utWebUI = {
 		}
 	},
 	
-	"settingsPaneChange": function(args) {
-		var id = args[0];
+	"settingsPaneChange": function(id) {
 		switch (id) {
 			case "dlgSettings-TransferCap": this.getTransferHistory(); break;
 			case "dlgSettings-Advanced": this.advOptTable.calcSize(); break;

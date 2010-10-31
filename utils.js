@@ -211,15 +211,36 @@ Event.implement({
 	}
 });
 
-[Document, Window].each(function (item) {
-	item.implement({
-		"getZoomSize": function() {
-			if (Browser.opera && Browser.version >= 9.6) {
-				return {x: document.body.clientWidth, y: document.body.clientHeight};
-			}
-			return this.getSize();
+[Document, Window].invoke("implement", {
+	"getZoomSize": function() {
+		if (Browser.opera && Browser.version >= 9.6) {
+			return {x: document.body.clientWidth, y: document.body.clientHeight};
 		}
-	});
+		return this.getSize();
+	}
+});
+
+[Element, Window, Document].invoke('implement', {
+	"addStopEvent": function(type, fn) {
+		return this.addEvent(type, function(ev) {
+			var ret;
+			if (typeOf(fn) == "function")
+				ret = fn.apply(this, arguments);
+
+			if (!ret) {
+				ev.stop();
+				return false;
+			}
+		});
+	},
+
+	"addStopEvents": function(events) {
+		Object.each(events, function(fn, type) {
+			this.addStopEvent(type, fn);
+		}, this);
+
+		return this;
+	}
 });
 
 function $chk(obj) {

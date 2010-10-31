@@ -19,39 +19,21 @@ var ContextMenu = {
 	"launched": false,
 
 	"init": function(id) {
-		this.obj = new Element("ul", {
-			"id": id,
-			"class": "CMenu"
-		}).addEvents({
-			"mousedown": function() {
-				return false;
-			},
-			"mouseenter": function() {
-				ContextMenu.focused = true;
-			},
-			"mouseleave": function() {
-				ContextMenu.focused = false;
-			}
-		}).inject(document.body);
-
-		if (Browser.ie) {
-			// Prevent text selection in IE
-			this.obj.addEvent("selectstart", Function.from(false));
-		}
+		this.obj = new Element("ul", { "id": id, "class": "CMenu" })
+			.addStopEvent("mousedown", Function.from(false))
+			.inject(document.body);
 	},
 
 	"add": function() {
 		var args = Array.from(arguments);
-		var link, ul, li;
+		var link, ul, li, fn;
 		var ele = args[0];
-		var cancelEvent = function(ev) {
-			ev.stop();
-		}
 		var clickEvent = function(ev) {
-			ev.stop();
-			fn(ev);
 			if (ContextMenu.hideAfterClick)
 				ContextMenu.hide();
+
+			if (typeOf(fn) == "function")
+				return fn(ev);
 		}
 		if (typeOf(ele) == 'element') {
 			if (!ele.hasClass("CMenu")) return;
@@ -80,11 +62,8 @@ var ContextMenu = {
 			} else if (args[i][0] === CMENU_CHECK) {
 				link.addClass("check");
 				link.setProperty("href", "#");
-				var fn = args[i][2];
-				link.addEvents({
-					  "click"   : cancelEvent
-					, "mouseup" : clickEvent
-				});
+				fn = args[i][2];
+				link.addStopEvent("mouseup", clickEvent);
 				link.set("html", args[i][1]);
 				li.adopt(link);
 			} else if (undefined == args[i][1]) {
@@ -93,11 +72,8 @@ var ContextMenu = {
 				li.adopt(link);
 			} else {
 				link.setProperty("href", "#");
-				var fn = args[i][1];
-				link.addEvents({
-					  "click"   : cancelEvent
-					, "mouseup" : clickEvent
-				});
+				fn = args[i][1];
+				link.addStopEvent("mouseup", clickEvent);
 				link.set("html", args[i][0]);
 				li.adopt(link);
 			}

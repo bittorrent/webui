@@ -21,8 +21,7 @@ var DialogManager = {
 			var cls = ev.target.className;
 			if (cls.contains("dlg-head", " ") || cls.contains("dlg-close", " ")) return;
 			$me.bringToFront(oid);
-		}).getElement("a").addEvent("click", function(ev) {
-			ev.stop();
+		}).getElement("a").addStopEvent("click", function(ev) {
 			$me.hide(oid);
 		});
 		new Drag(id, {

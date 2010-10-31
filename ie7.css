@@ -1,3 +1,7 @@
+/**************************************************
+ * MAIN DETAILED INFO PANE
+ **************************************************/
+
 ul#mainInfoPane-tabs li,
 ul#mainInfoPane-tabs li a span {
 	zoom: 1;
@@ -15,4 +19,14 @@ ul#mainInfoPane-tabs li a {
 
 #mainInfoPane-generalTab table {
 	font-size: 100%;
+}
+
+/**************************************************
+ * SORTABLE TABLE
+ **************************************************/
+
+.stable-infobar .refreshBtn span,
+.stable-infobar .pageChanger .prevlink,
+.stable-infobar .pageChanger .nextlink {
+	zoom: 1;
 }

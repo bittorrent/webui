@@ -40,11 +40,13 @@ function setupGlobalEvents() {
 	if (__executed_setupGlobalEvents__) return;
 	__executed_setupGlobalEvents__ = true;
 
+	ContextMenu.init("ContextMenu");
+
 	//--------------------------------------------------
 	// WINDOW EVENTS
 	//--------------------------------------------------
 
-	window.addEvent("resize", function() { resizeUI(); });
+	window.addEvent("resize", resizeUI);
 
 	if (Browser.opera && Browser.version >= 9.6) {
 		window.addEvent("scroll", function() {
@@ -62,30 +64,33 @@ function setupGlobalEvents() {
 	// MOUSE EVENTS
 	//--------------------------------------------------
 
-	var cancelRC = function(ev) {
-		if (!(/^input|textarea|a$/i).test(ev.target.tagName)) {
-			ev.stop();
-			return false;
-		}
+	var mouseWhitelist = function(ev) {
+		return (
+			ev.target.retrieve("mousewhitelist") ||
+			(
+				["INPUT", "TEXTAREA"].indexOf(ev.target.tagName) >= 0 &&
+				["button", "checkbox", "file"].indexOf(ev.target.type) < 0
+			)
+		);
 	};
-	var cancelRCWrap = function(ev) {
-		if (ev.isRightClick())
-			return cancelRC(ev);
+	var mouseWhitelistWrap = function(ev) {
+		return !ev.isRightClick() || mouseWhitelist(ev);
 	};
 
-	ContextMenu.init("ContextMenu");
+	// -- Select
 
-	document.addEvents({
+	window.addStopEvent("mousedown", mouseWhitelist);
+
+	// -- Right-click
+
+	document.addStopEvents({
 		"mousedown": function(ev) {
-			if ((ev.isRightClick() && !ContextMenu.launched) || (!ev.isRightClick() && !ContextMenu.hidden && !ContextMenu.focused))
-				ContextMenu.hide();
-//			ContextMenu.launched = false;
-
-			return cancelRCWrap(ev);
+			ContextMenu.hide();
+			return mouseWhitelistWrap(ev);
 		},
-		"contextmenu": cancelRC, // IE does not send right-click info for onContextMenu
-		"mouseup": cancelRCWrap,
-		"click": cancelRCWrap
+		"contextmenu": mouseWhitelist, // IE does not send right-click info for onContextMenu
+		"mouseup": mouseWhitelistWrap,
+		"click": mouseWhitelistWrap
 	});
 
 	if (Browser.opera && !("oncontextmenu" in document.createElement("foo"))) {
@@ -177,22 +182,17 @@ function setupGlobalEvents() {
 			delete keyBindings["ctrl u"];
 		}
 
-		document.addEvent("keydown", function(ev) {
+		document.addStopEvent("keydown", function(ev) {
 			var key = eventToKey(ev);
-			if (keyBindings[key]) {
+			if (keyBindings[key])
 				keyBindings[key]();
-				ev.stop();
-				return false;
-			}
+			else
+				return true;
 		});
 
 		if (Browser.opera) {
 			document.addEvent("keypress", function(ev) {
-				var key = eventToKey(ev);
-				if (keyBindings[key]) {
-					ev.stop();
-					return false;
-				}
+				return !keyBindings[eventToKey(ev)];
 			});
 		}
 	}
@@ -434,6 +434,12 @@ function setupUserInterface() {
 		"onChange": utWebUI.detPanelTabChange.bind(utWebUI)
 	}).draw().show("mainInfoPane-generalTab");
 
+	// -- General Tab
+
+	$$("#mainInfoPane-generalTab td span").addEvent("mousedown", function(ev) {
+		ev.target.store("mousewhitelist", true);
+	});
+
 	// -- Peers Tab
 
 	utWebUI.prsTable.create("mainInfoPane-peersTab", utWebUI.prsColDefs, Object.append({
@@ -476,6 +482,9 @@ function setupUserInterface() {
 	// -- Logger Tab
 
 	Logger.init("mainInfoPane-loggerTab");
+	$("mainInfoPane-loggerTab").addEvent("mousedown", function(ev) {
+		ev.target.store("mousewhitelist", true);
+	});
 
 	//--------------------------------------------------
 	// DIVIDERS
@@ -514,35 +523,21 @@ function setupUserInterface() {
 
 	// -- Buttons
 
-	["remove", "start", "pause", "stop", "queueup", "queuedown"].each(function(act) {
-		$(act).addEvent("click", function(ev) {
+	["add", "addurl", "remove", "start", "pause", "stop", "queueup", "queuedown", "setting"].each(function(act) {
+		$(act).addStopEvent("click", function(ev) {
 			var arg;
 			switch (act) {
+				case "add": DialogManager.show("Add"); break;
+				case "addurl": DialogManager.show("AddURL"); break;
+				case "setting": utWebUI.showSettings(); break;
+
 				case "queueup":
 				case "queuedown":
 					arg = ev.shift;
-					break;
+				default:
+					utWebUI[act](arg);
 			}
-			utWebUI[act](arg);
-			ev.stop();
-			return false;
 		});
-	});
-
-	$("add").addEvent("click", function(ev) {
-		ev.stop();
-		DialogManager.show("Add");
-	});
-
-	$("addurl").addEvent("click", function(ev) {
-		ev.stop();
-		DialogManager.show("AddURL");
-	});
-
-	$("setting").addEvent("click", function(ev) {
-		utWebUI.showSettings();
-		ev.stop();
-		return false;
 	});
 
 	// -- Search Field
@@ -553,38 +548,20 @@ function setupUserInterface() {
 		}
 	});
 
-	$("search").addEvents({
+	$("search").addStopEvents({
 		"mousedown": function(ev) {
 			if (ev.isRightClick()) {
 				utWebUI.searchMenuShow(this);
 			}
-			ev.stop();
-			return false;
 		},
 		"click": function(ev) {
 			utWebUI.searchExecute();
-			ev.stop();
-			return false;
-		},
-		"contextmenu": function(ev) {
-			ev.stop();
-			return false;
 		}
 	});
 
-	$("searchsel").addEvents({
+	$("searchsel").addStopEvents({
 		"mousedown": function(ev) {
 			utWebUI.searchMenuShow(this);
-			ev.stop();
-			return false;
-		},
-		"click": function(ev) {
-			ev.stop();
-			return false;
-		},
-		"contextmenu": function(ev) {
-			ev.stop();
-			return false;
 		}
 	});
 

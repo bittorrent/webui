@@ -56,12 +56,6 @@ li.selected#tab_mainInfoPane-loggerTab span {
  * SORTABLE TABLE
  **************************************************/
 
-.stable-infobar .refreshBtn span,
-.stable-infobar .pageChanger .prevlink,
-.stable-infobar .pageChanger .nextlink {
-	zoom: 1;
-}
-
 .stable-infobar .pageChanger .disabled {
 	-ms-filter: "progid:DxImageTransform.Microsoft.Alpha(opacity=25)";
 	filter: alpha(opacity=25);

@@ -18,8 +18,7 @@ var Tabs = new Class({
 			this.tabchange = options.onChange;
 		}
 		var $me = this;
-		this.element.addEvent("click", function(ev) {
-			ev.stop();
+		this.element.addStopEvent("click", function(ev) {
 			if (ev.target && (ev.target.get("tag") == "span"))
 				ev.target = ev.target.parentNode;
 			if (ev.target && (ev.target.get("tag") == "a"))
@@ -43,7 +42,7 @@ var Tabs = new Class({
 
 	"onChange": function() {
 		var args = arguments.length > 0 ? Array.from(arguments) : [this.active];
-		this.tabchange(args);
+		this.tabchange.apply(this, args);
 	},
 
 	"setNames": function(names) {
