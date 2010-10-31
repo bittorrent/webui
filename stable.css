@@ -192,85 +192,69 @@ limitations under the License.
 	z-index: 100;
 }
 
-.stable-pagemenu {
-	height: 25px;
-	line-height: 25px;
+.stable-infobar {
+	height: 24px;
 	background: #FFFFFF;
 	border-top: 1px solid #868686;
 }
 
-.stable-pagemenu .prevlink-disabled, .stable-pagemenu .nextlink-disabled {
-	width: 16px; height: 25px;
-	margin: 0 5px;
-	background: transparent url(./images/blank.gif) no-repeat scroll center center;
-	cursor: default;
-	position: relative;
-}
-
-.stable-pagemenu .pageinfo {
-	padding: 0 6px;
+.stable-infobar .pageInfo {
+	padding: 4px;
 	float: left;
 	font-size: 11px;
 	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
 }
 
-.stable-pagemenu .pagestat {
-	width: 130px; height: 17px;
-	margin: auto 0;
-	padding: 5px 0 4px;
+.stable-infobar .refreshBtn {
+	height: 16px;
+	padding: 6px 4px 2px 4px;
 	float: right;
-	line-height: 20px;
-	text-align: right;
 }
 
-.stable-pagemenu .pagestat select {
-	width: 100px; height: 16px;
-	margin: 0;
-	padding: 0;
-	font-size: 11px;
+.stable-infobar .refreshBtn span {
+	padding: 1px 8px 2px;
+	background: transparent url(./images/table_refresh.png) no-repeat scroll center center;
+	cursor: pointer;
+}
+
+.stable-infobar .pageChanger {
+	height: 16px;
+	padding: 4px;
 	float: right;
+}
+
+.stable-infobar .pageChanger select {
+	min-width: 40px;
+	height: 16px;
+	font-size: 11px;
 	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
 }
 
-.stable-pagemenu .pagestat a.refreshBtn div {
-	width: 16px; height: 16px;
-	margin: 0 4px 0 0;
-	float: right;
-	background: transparent url(./images/table_refresh.png) no-repeat scroll center center;
-}
-
-.stable-pagemenu .prevlink-disabled {
-	float: right;
-	background-image: url(./images/nextprev.png);
-	background-position: -16px center;
-	opacity: 0.50;
-}
-
-.stable-pagemenu .nextlink-disabled {
-	float: right;
-	background-image: url(./images/nextprev.png);
-	background-position: -32px center;
-	opacity: 0.50;
-}
-
-.stable-pagemenu .prevlink {
-	background-position: -16px center;
-	opacity: 1.00;
+.stable-infobar .pageChanger .prevlink, .stable-infobar .pageChanger .nextlink {
+	padding: 2px 8px 1px;
+	margin: 0 2px;
+	background: url(./images/nextprev.png) no-repeat;
 	cursor: pointer;
 }
 
-.stable-pagemenu .nextlink {
-	background-position: -32px center;
-	opacity: 1.00;
-	cursor: pointer;
+.stable-infobar .pageChanger .prevlink {
+	background-position: -16px center;
 }
 
-.stable-pagemenu .prevlink-hover {
+.stable-infobar .pageChanger .nextlink {
+	background-position: -32px center;
+}
+
+.stable-infobar .pageChanger .prevlink:hover {
 	background-position: 0px center;
 }
 
-.stable-pagemenu .nextlink-hover {
+.stable-infobar .pageChanger .nextlink:hover {
 	background-position: -48px center;
+}
+
+.stable-infobar .pageChanger .disabled {
+	opacity: 0.25;
 }
 
 .stable-pad {

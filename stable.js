@@ -292,58 +292,38 @@ var dxSTable = new Class({
 
 		this.tBody.grab(this.tb.body);
 
-		this.pageMenu = simpleClone(DIV, false).addClass("stable-pagemenu").inject(this.dCont);
-		if (this.options.rowsSelectable && this.options.rowMultiSelect)
-			this.pageInfo = new Element("span", {"class": "pageinfo", "text": "0 row(s) selected."}).inject(this.pageMenu);
-		this.pageNext = simpleClone(DIV, false)
-			.addClass("nextlink-disabled")
-			.addEvent("click", this.nextPage.bind(this))
-			.addEvent("mouseenter", function() {
-				if (this.hasClass("nextlink"))
-					this.addClass("nextlink-hover");
-			})
-			.addEvent("mouseleave", function() {
-				if (this.hasClass("nextlink"))
-					this.removeClass("nextlink-hover");
-			})
-			.inject(this.pageMenu);
-		this.pagePrev = simpleClone(DIV, false)
-			.addClass("prevlink-disabled")
-			.addEvent("click", this.prevPage.bind(this))
-			.addEvent("mouseenter", function() {
-				if (this.hasClass("prevlink"))
-					this.addClass("prevlink-hover");
-			})
-			.addEvent("mouseleave", function() {
-				if (this.hasClass("prevlink"))
-					this.removeClass("prevlink-hover");
-			})
-			.inject(this.pageMenu);
+		this.infoBar = simpleClone(DIV, false).addClass("stable-infobar").inject(this.dCont);
 
-		this.pageStat = new Element("span").addClass("pagestat").inject(this.pageMenu);
-
-		this.pageSelect = new Element("select", {
-			"events": {
-				"change": function() {
-					$me.gotoPage(this.get("value").toInt());
-				}
-			}
-		}).inject(this.pageStat);
-		this.pageSelect.disabled = true;
+		if (this.options.rowsSelectable && this.options.rowMultiSelect) {
+			this.pageInfo = new Element("span", {"class": "pageInfo", "text": "0 row(s) selected."}).inject(this.infoBar);
+		}
 
 		if (this.options.refreshable) {
-			this.pageStat.grab(new Element("a", {
-				"class": "refreshBtn",
-				"href": "#",
-				"events": {
-					"click": function(ev) {
-						ev.stop();
+			this.infoBar.grab(new Element("div", {"class": "refreshBtn"})
+				.grab(new Element("span")
+					.addEvent("click", function(ev) {
 						if ($me.rows)
 							$me.fireEvent("onRefresh");
-					}
-				}
-			}).grab(new Element("div")));
+					})
+				)
+			);
 		}
+
+		this.pageChanger = new Element("div", {"class": "pageChanger"}).inject(this.infoBar);
+
+		this.pagePrev = new Element("span", {"class": "prevlink disabled"})
+			.addEvent("click", this.prevPage.bind(this))
+			.inject(this.pageChanger);
+
+		this.pageSelect = new Element("select")
+			.addEvent("change", function() {
+				$me.gotoPage(this.get("value").toInt());
+			})
+			.inject(this.pageChanger);
+
+		this.pageNext = new Element("span", {"class": "nextlink disabled"})
+			.addEvent("click", this.nextPage.bind(this))
+			.inject(this.pageChanger);
 
 		this.assignEvents();
 		this.setAlignment();
@@ -532,19 +512,19 @@ var dxSTable = new Class({
 		//--------------------------------------------------
 
 		val = options.colMask; // bitfield
-		if (undefined != val) {
+		if ('number' == typeOf(val)) {
 			for (var i = 0, bit = 1, len = this.cols; i < len; ++i, bit <<= 1) {
 				this.setColumnDisabled(this.colOrder[i], !!(options.colMask & bit));
 			}
 		}
 
 		val = options.resetText; // string
-		if (undefined != val) {
+		if ('string' == typeOf(val)) {
 			this.resetText = val;
 		}
 
 		val = options.colText; // { colID : colText, ... }
-		if (undefined != val) {
+		if ('object' == typeOf(val)) {
 			$each(val, function(v, k) {
 				ind = colHdrIdx[k];
 				if ($chk(colHdr[ind])) {
@@ -555,7 +535,7 @@ var dxSTable = new Class({
 		}
 
 		val = options.colType; // { colID : colType, ... }
-		if (undefined != val) {
+		if ('object' == typeOf(val)) {
 			var changedCols = [];
 			$each(val, function(v, k) {
 				ind = colHdrIdx[k];
@@ -569,7 +549,7 @@ var dxSTable = new Class({
 		}
 
 		val = options.colAlign; // { colID : colAlign, ... }
-		if (undefined != val) {
+		if ('object' == typeOf(val)) {
 			$each(val, function(v, k) {
 				ind = colHdrIdx[k];
 				if ($chk(colHdr[ind])) {
@@ -581,7 +561,7 @@ var dxSTable = new Class({
 		}
 
 		val = options.colOrder; // [ colMIdx, colNIdx, ... ]
-		if (undefined != val) {
+		if ('array' == typeOf(val)) {
 			if (val.length == this.cols) {
 				var orderOK = true, orderT = Array.clone(val).sort(function(a, b) { return (a-b); });
 				for (var i = 0, l = orderT.length; i < l; ++i) {
@@ -602,7 +582,7 @@ var dxSTable = new Class({
 		}
 
 		val = options.colWidth; // [ col1Width, col2Width, ... ]
-		if (undefined != val) {
+		if ('array' == typeOf(val)) {
 			if (val.length == this.cols) {
 				$each(val, function(v, k) {
 					this.setColumnWidth(this.colOrder[k], v);
@@ -611,7 +591,7 @@ var dxSTable = new Class({
 		}
 
 		val = options.colSort; // [colIdx, reverse]
-		if (undefined != val) {
+		if ('array' == typeOf(val)) {
 			if ($chk(val[1])) this.options.reverse = !!val[1];
 			this.sort(val[0]);
 		}
@@ -620,8 +600,8 @@ var dxSTable = new Class({
 		// ROW OPTIONS
 		//--------------------------------------------------
 
-		val = options.rowMaxCount; // integer
-		if (undefined != val && (val >= 1)) {
+		val = parseInt(options.rowMaxCount, 10); // integer
+		if (!isNaN(val) && (val >= 1)) {
 			var tbBody = this.tb.body;
 			while (tbBody.childNodes.length < val)
 				tbBody.appendChild(simpleClone(this.rowModel, true).hide());
@@ -634,13 +614,15 @@ var dxSTable = new Class({
 		}
 
 		val = options.rowAlternate; // boolean
-		if (undefined != val && (val != this.options.alternateRows)) {
+		if ('boolean' == typeOf(val) && (val != this.options.alternateRows)) {
 			this.options.alternateRows = !!val;
 			refresh = true;
 		}
 
-		val = options.rowMode; // integer
-		if (undefined != val && (val != this.options.mode)) {
+		val = parseInt(options.rowMode, 10); // integer
+		if (!isNaN(val) && (val != this.options.mode)) {
+			this.pageChanger.setStyle("display", (val == MODE_VIRTUAL ? "none" : "block"));
+
 			this.options.mode = val;
 			this.calcSize();
 		}
@@ -862,12 +844,11 @@ var dxSTable = new Class({
 	"getActiveRange": function() {
 		var max = this.options.maxRows, mni = 0, mxi = 0;
 		if (this.options.mode == MODE_VIRTUAL) {
-			mni = (this.activeId.length > 0 ? Math.floor((this.dBody.scrollTop / this.tb.body.children[0].offsetHeight) || 0) : 0);
+			mni = (this.activeId.length > 0 ? Math.floor((this.dBody.scrollTop / this.tb.body.children[0].offsetHeight) || 0) : 0).min(this.activeId.length - max).max(0);
 		} else {
 			mni = max * this.curPage;
 		}
 		mxi = (mni + max - 1).min(this.activeId.length - 1);
-		mni = (mxi - max + 1).max(0);
 		return [mni.max(0), mxi.max(0)];
 	},
 
@@ -1299,7 +1280,7 @@ var dxSTable = new Class({
 		row.data[col] = data[col];
 		if (isSortedCol)
 			this._insertRow(id);
-		if (this.requiresRefresh || row.hidden || (row.rowIndex == -1)) return hasSortedChanged;
+		if (this.requiresRefresh || row.hidden || (row.rowIndex == -1) || !$(this.id + "-row-" + id)) return hasSortedChanged;
 		var r = this.tb.body.childNodes[row.rowIndex], cell = r.childNodes[this.colOrder[col]], fval = this.options.format(Array.clone(data), col);
 		if (this.colHeader[col].type == TYPE_NUM_PROGRESS) {
 			var pcnt = (parseFloat(fval) || 0).toFixedNR(1) + "%";
@@ -1324,7 +1305,7 @@ var dxSTable = new Class({
 	"setIcon": function(id, icon) {
 		var row = this.rowData[id];
 		row.icon = icon;
-		if (row.rowIndex == -1) return;
+		if ((row.rowIndex == -1) || !$(this.id + "-row-" + id)) return;
 		var r = this.tb.body.childNodes[row.rowIndex], i = this.colOrder[0];
 		if (r.childNodes[i].hasClass(icon)) return;
 		r.childNodes[i].className = "stable-icon " + icon;
@@ -1396,14 +1377,16 @@ var dxSTable = new Class({
 			this.pageCount = Math.ceil(this.activeId.length / this.options.maxRows);
 		}
 
-		(this.curPage > 0) ?
-			this.pagePrev.addClass("prevlink")
-		:
-			this.pagePrev.removeClass("prevlink").removeClass("prevlink-hover");
-		(this.curPage < this.pageCount - 1) ?
-			this.pageNext.addClass("nextlink")
-		:
-			this.pageNext.removeClass("nextlink").removeClass("nextlink-hover");
+		if (this.curPage > 0)
+			this.pagePrev.removeClass("disabled");
+		else
+			this.pagePrev.addClass("disabled");
+
+		if (this.curPage < this.pageCount - 1)
+			this.pageNext.removeClass("disabled");
+		else
+			this.pageNext.addClass("disabled");
+
 		this.pageSelect.options.length = 0;
 		this.pageSelect.empty();
 		if (this.pageCount <= 1) {
@@ -1420,10 +1403,10 @@ var dxSTable = new Class({
 
 	"gotoPage": function(i) {
 		if (this.curPage == i) return;
+		this.curPage = i;
 		var range = this.getActiveRange();
 		for (var j = range[0]; j <= range[1]; j++)
 			this.rowData[this.activeId[j]].rowIndex = -1;
-		this.curPage = i;
 		this.updatePageMenu();
 		this.refreshRows();
 	},
