@@ -1807,7 +1807,7 @@ var utWebUI = {
 			"dht": 18,
 			"pex": 19
 		};
-		Hash.each(ids, function(v, k) {
+		Object.each(ids, function(v, k) {
 			var e = $("prop-" + k);
 			e.disabled = true;
 			e.checked = false;
