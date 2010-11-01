@@ -2106,11 +2106,11 @@ var utWebUI = {
 		//--------------------------------------------------
 
 		var prioItems = [
-			  [lang[CONST.MF_DONT], this.setPriority.bind(this, [id, CONST.FILEPRIORITY_SKIP])]
+			  [lang[CONST.MF_DONT], this.setPriority.pass([id, CONST.FILEPRIORITY_SKIP], this)]
 			, [CMENU_SEP]
-			, [lang[CONST.MF_LOW], this.setPriority.bind(this, [id, CONST.FILEPRIORITY_LOW])]
-			, [lang[CONST.MF_NORMAL], this.setPriority.bind(this, [id, CONST.FILEPRIORITY_NORMAL])]
-			, [lang[CONST.MF_HIGH], this.setPriority.bind(this, [id, CONST.FILEPRIORITY_HIGH])]
+			, [lang[CONST.MF_LOW], this.setPriority.pass([id, CONST.FILEPRIORITY_LOW], this)]
+			, [lang[CONST.MF_NORMAL], this.setPriority.pass([id, CONST.FILEPRIORITY_NORMAL], this)]
+			, [lang[CONST.MF_HIGH], this.setPriority.pass([id, CONST.FILEPRIORITY_HIGH], this)]
 		];
 
 		// Gray out priority items based on priorities of selected files
@@ -2134,7 +2134,7 @@ var utWebUI = {
 
 		var fileDownloadItems = [
 			  [CMENU_SEP]
-			, [lang[CONST.MF_GETFILE], this.downloadFiles.bind(this, [id])]
+			, [lang[CONST.MF_GETFILE], this.downloadFiles.bind(this, id)]
 		];
 
 		// Gray out download item if no selected file is complete
