@@ -1,9 +1,7 @@
-/*
- *
- *     Copyright 2007 BitTorrent, Inc. All rights reserved.
- *     Copyright 2008 Carsten Niebuhr
- *
-*/
+/**
+ * Copyright 2007 BitTorrent, Inc. All rights reserved.
+ * Copyright 2008 Carsten Niebuhr
+ */
 
 var LANGUAGES = LANGUAGES || {};
 var lang = lang || null;
@@ -378,7 +376,8 @@ var utWebUI = {
 				"async": !!async,
 				"onFailure": (fn) ? fn.bind(self) : Function.from(),
 				"onSuccess": function(str) {
-					self.TOKEN = str.substring(str.indexOf("none;'>") + 7, str.indexOf("</div>"));
+					var match = str.match(/>([^<]+)</);
+					if (match) self.TOKEN = match[match.length - 1];
 					if (fn) fn.delay(0);
 				}
 			}).send();
@@ -397,7 +396,7 @@ var utWebUI = {
 
 		if (hashes.length == 0) return;
 
-		if (action.test(/^remove/) && (hashes.indexOf(this.torrentID) > -1)) {
+		if (action.test(/^remove/) && hashes.contains(this.torrentID)) {
 			this.torrentID = "";
 			this.clearDetails();
 		}
@@ -502,6 +501,8 @@ var utWebUI = {
 	},
 
 	"remove": function(mode) {
+		if (DialogManager.modalIsVisible()) return;
+
 		var count = this.trtTable.selectedRows.length;
 		if (count == 0) return;
 
@@ -532,7 +533,7 @@ var utWebUI = {
 			$("dlgDelTor-message").set("text", lang[ask].replace(/%d/, count));
 			$("DELTOR_YES").addEvent("click", function(ev) {
 				$("DELTOR_NO").fireEvent("click", ev);
-				act.apply();
+				act();
 			});
 
 			DialogManager.show("DelTor");
@@ -683,7 +684,7 @@ var utWebUI = {
 			if (has(this.torrents, hash)) {
 				// Old torrent found... update list
 				var rdata = this.trtTable.rowData[hash];
-				activeChanged = (rdata.hidden != (labels.indexOf(this.config.activeLabelID) < 0));
+				activeChanged = (rdata.hidden == labels.contains(this.config.activeLabelID));
 				if (activeChanged) rdata.hidden = !rdata.hidden;
 
 				this.trtTable.setIcon(hash, statinfo[0]);
@@ -705,7 +706,7 @@ var utWebUI = {
 			}
 			else {
 				// New torrent found... add to list
-				this.trtTable.addRow(row, hash, statinfo[0], (labels.indexOf(this.config.activeLabelID) < 0), this.loaded || (this.trtTable.sIndex == -1));
+				this.trtTable.addRow(row, hash, statinfo[0], (!labels.contains(this.config.activeLabelID)), this.loaded || (this.trtTable.sIndex == -1));
 				ret = true;
 			}
 
@@ -719,19 +720,19 @@ var utWebUI = {
 				var k = torrentLists.torrentm[i];
 				delete this.torrents[k];
 
-				if (this.labels[k].indexOf("cat_nlb") > -1)
+				if (this.labels[k].contains("cat_nlb"))
 					this.labels["cat_nlb"]--;
 
-				if (this.labels[k].indexOf("cat_com") > -1)
+				if (this.labels[k].contains("cat_com"))
 					this.labels["cat_com"]--;
 
-				if (this.labels[k].indexOf("cat_dls") > -1)
+				if (this.labels[k].contains("cat_dls"))
 					this.labels["cat_dls"]--;
 
-				if (this.labels[k].indexOf("cat_act") > -1)
+				if (this.labels[k].contains("cat_act"))
 					this.labels["cat_act"]--;
 
-				if (this.labels[k].indexOf("cat_iac") > -1)
+				if (this.labels[k].contains("cat_iac"))
 					this.labels["cat_iac"]--;
 
 				this.labels["cat_all"]--;
@@ -786,7 +787,7 @@ var utWebUI = {
 
 		this.getList();
 
-		if ("undefined" != typeof(DialogManager)) {
+		if (typeof(DialogManager) !== 'undefined') {
 			if (DialogManager.showing.contains("Settings") && ("dlgSettings-TransferCap" == this.stpanes.active)) {
 				this.getTransferHistory();
 			}
@@ -840,37 +841,37 @@ var utWebUI = {
 		var labels = [];
 		if (label == "") {
 			labels.push("cat_nlb");
-			if (this.labels[id].indexOf("cat_nlb") == -1)
+			if (!this.labels[id].contains("cat_nlb"))
 				this.labels["cat_nlb"]++;
 		} else {
 			labels.push("lbl_" + encodeID(label));
-			if (this.labels[id].indexOf("cat_nlb") > -1)
+			if (this.labels[id].contains("cat_nlb"))
 				this.labels["cat_nlb"]--;
 		}
 		if (done < 1000) {
 			labels.push("cat_dls");
-			if (this.labels[id].indexOf("cat_dls") == -1)
+			if (!this.labels[id].contains("cat_dls"))
 				this.labels["cat_dls"]++;
-			if (this.labels[id].indexOf("cat_com") > -1)
+			if (this.labels[id].contains("cat_com"))
 				this.labels["cat_com"]--;
 		} else {
 			labels.push("cat_com");
-			if (this.labels[id].indexOf("cat_com") == -1)
+			if (!this.labels[id].contains("cat_com"))
 				this.labels["cat_com"]++;
-			if (this.labels[id].indexOf("cat_dls") > -1)
+			if (this.labels[id].contains("cat_dls"))
 				this.labels["cat_dls"]--;
 		}
 		if ((dls > 103) || (uls > 103)) {
 			labels.push("cat_act");
-			if (this.labels[id].indexOf("cat_act") == -1)
+			if (!this.labels[id].contains("cat_act"))
 				this.labels["cat_act"]++;
-			if (this.labels[id].indexOf("cat_iac") > -1)
+			if (this.labels[id].contains("cat_iac"))
 				this.labels["cat_iac"]--;
 		} else {
 			labels.push("cat_iac");
-			if (this.labels[id].indexOf("cat_iac") == -1)
+			if (!this.labels[id].contains("cat_iac"))
 				this.labels["cat_iac"]++;
-			if (this.labels[id].indexOf("cat_act") > -1)
+			if (this.labels[id].contains("cat_act"))
 				this.labels["cat_act"]--;
 		}
 		labels.push("cat_all");
@@ -929,7 +930,7 @@ var utWebUI = {
 
 		var activeChanged = false;
 		for (var k in this.torrents) {
-			if (this.labels[k].indexOf(this.config.activeLabelID) > -1) {
+			if (this.labels[k].contains(this.config.activeLabelID)) {
 				if (this.trtTable.rowData[k].hidden) {
 					this.trtTable.unhideRow(k);
 					activeChanged = true;
@@ -1141,8 +1142,8 @@ var utWebUI = {
 			// Insert custom keys...
 			this.settings["multi_day_transfer_mode"] = tcmode;
 
-{ // TODO: Remove this once backend support is stable (requires 2.2+)
-	this.settings["sched_table"] = [this.settings["sched_table"], "033000030000000000000000300300030111010010100101000300030101011010100111033000030101010110100001300000030111010010110111333303030000000000000000000000000000000000000000"].pick();
+{ // TODO: Remove this once backend support is stable (requires 3.0+)
+	this.settings["sched_table"] = [this.settings["sched_table"], "033000330020000000000000300303003222000000000000000303003020000000000000033003003111010010100101000303003101011010100111300303003101010110100001033020330111010010110111"].pick();
 	this.settings["search_list_sel"] = [this.settings["search_list_sel"], 0].pick();
 	this.settings["search_list"] = [this.settings["search_list"], "Google|http://google.com/search?q=\r\nBitTorrent|http://www.bittorrent.com/search?client=%v&q="].pick();
 }
@@ -1378,7 +1379,7 @@ var utWebUI = {
 
 		for (var key in this.advSettings) {
 			var nv = this.getAdvSetting(key);
-			if (undefined == nv) continue;
+			if (nv === undefined) continue;
 			var v = this.settings[key];
 
 			if (v != nv) {
@@ -1764,9 +1765,7 @@ var utWebUI = {
 		//--------------------------------------------------
 
 		ContextMenu.clear();
-		for (var i = 0, l = menuItems.length; i < l; ++i) {
-			ContextMenu.add(menuItems[i]);
-		}
+		ContextMenu.add.apply(ContextMenu, menuItems);
 		ContextMenu.show(ev.page);
 	},
 
@@ -2161,9 +2160,7 @@ var utWebUI = {
 		//--------------------------------------------------
 
 		ContextMenu.clear();
-		for (var i = 0, l = menuItems.length; i < l; ++i) {
-			ContextMenu.add(menuItems[i]);
-		}
+		ContextMenu.add.apply(ContextMenu, menuItems);
 		ContextMenu.show(ev.page);
 	},
 
@@ -2437,9 +2434,7 @@ var utWebUI = {
 		//--------------------------------------------------
 
 		ContextMenu.clear();
-		for (var i = 0, l = menuItems.length; i < l; ++i) {
-			ContextMenu.add(menuItems[i]);
-		}
+		ContextMenu.add.apply(ContextMenu, menuItems);
 		ContextMenu.show(ev.page);
 	},
 
@@ -2626,7 +2621,7 @@ var utWebUI = {
 	},
 
 	"toggleCatPanel": function(show) {
-		if (undefined == show) {
+		if (show === undefined) {
 			show = !this.config.showCategories;
 		}
 
@@ -2635,7 +2630,7 @@ var utWebUI = {
 	},
 
 	"toggleDetPanel": function(show) {
-		if (undefined == show) {
+		if (show === undefined) {
 			show = !this.config.showDetails;
 		}
 
@@ -2644,7 +2639,7 @@ var utWebUI = {
 	},
 
 	"toggleSearchBar": function(show) {
-		if (undefined == show) {
+		if (show === undefined) {
 			show = !!(this.settings["search_list"] || "").trim();
 		}
 
@@ -2652,7 +2647,7 @@ var utWebUI = {
 	},
 
 	"toggleToolbar": function(show) {
-		if (undefined == show) {
+		if (show === undefined) {
 			show = !this.config.showToolbar;
 		}
 

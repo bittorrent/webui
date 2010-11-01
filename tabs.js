@@ -1,9 +1,11 @@
-/*
- *
- *     Copyright 2007 BitTorrent, Inc. All rights reserved.
- *     Copyright 2008 Carsten Niebuhr
- *
-*/
+/**
+ * Copyright 2007 BitTorrent, Inc. All rights reserved.
+ * Copyright 2008 Carsten Niebuhr
+ */
+
+var ELE_A = new Element("a");
+var ELE_LI = new Element("li");
+var ELE_SPAN = new Element("span");
 
 var Tabs = new Class({
 
@@ -19,45 +21,64 @@ var Tabs = new Class({
 		}
 		var $me = this;
 		this.element.addStopEvent("click", function(ev) {
-			if (ev.target && (ev.target.get("tag") == "span"))
-				ev.target = ev.target.parentNode;
-			if (ev.target && (ev.target.get("tag") == "a"))
-				$me.show(ev.target.retrieve("showId"));
+			var targ = ev.target;
+
+			if (targ && (targ.get("tag") == "span"))
+				targ = targ.parentNode;
+
+			if (targ && (targ.get("tag") == "a"))
+				$me.show(targ.retrieve("showId"));
 		});
 	},
 
 	"draw": function() {
 		this.element.empty();
-		for (var k in this.tabs) {
-			this.element.adopt(new Element("li", {
-				"id": "tab_" + k
-			}).adopt(new Element("a", {
-				"href": "#"
-			}).store("showId", k).adopt(new Element("span", {
-				"html": this.tabs[k]
-			}))));
-		};
+
+		Object.each(this.tabs, function(text, id) {
+			this.element.adopt(ELE_LI.clone(false)
+				.set("id", "tab_" + id)
+				.adopt(ELE_A.clone(false)
+					.setProperty("href", "#")
+					.store("showId", id)
+					.adopt(ELE_SPAN.clone(false)
+						.set("html", text)
+					)
+				)
+			);
+		}, this);
+
 		return this;
 	},
 
 	"onChange": function() {
-		var args = arguments.length > 0 ? Array.from(arguments) : [this.active];
-		this.tabchange.apply(this, args);
+		if (arguments.length > 0)
+			this.tabchange.apply(this, arguments);
+		else
+			this.tabchange.call(this, this.active);
 	},
 
 	"setNames": function(names) {
-		for (var k in names) {
-			$("tab_" + k).getElement("span").set("html", names[k]);
-		}
+		Object.each(names, function(name, id) {
+			$("tab_" + id).getElement("span").set("html", name);
+		});
+
 		return this;
 	},
 
 	"show": function(id) {
 		if (!has(this.tabs, id)) return;
-		for (var k in this.tabs) {
-			$(k)[(k == id) ? "show" : "hide"]();
-			$("tab_" + k)[((k == id) ? "add" : "remove") + "Class"]("selected");
-		};
+
+		Object.each(this.tabs, function(_, tab) {
+			if (tab == id) {
+				$(tab).show();
+				$("tab_" + tab).addClass("selected");
+			}
+			else {
+				$(tab).hide();
+				$("tab_" + tab).removeClass("selected");
+			}
+		});
+
 		this.active = id;
 		this.onChange(id);
 		return this;

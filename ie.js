@@ -1,3 +1,8 @@
+/**
+ * Copyright 2007 BitTorrent, Inc. All rights reserved.
+ * Copyright 2008 Carsten Niebuhr
+ */
+
 (function () {
 	// We need this because conditional HTML comments cannot detect IE compatibility modes
 	var ieVersion = (document.documentMode !== 'undefined' && document.documentMode) || 6;

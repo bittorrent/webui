@@ -1,3 +1,8 @@
+/**
+ * Copyright 2007 BitTorrent, Inc. All rights reserved.
+ * Copyright 2008 Carsten Niebuhr
+ */
+
 #modalbg {
 	-ms-filter: "progid:DxImageTransform.Microsoft.Alpha(opacity=60)";
 	filter: alpha(opacity=60);

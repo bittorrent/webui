@@ -1,9 +1,7 @@
-/*
- *
- *     Copyright 2007 BitTorrent, Inc. All rights reserved.
- *     Copyright 2008 Carsten Niebuhr
- *
-*/
+/**
+ * Copyright 2007 BitTorrent, Inc. All rights reserved.
+ * Copyright 2008 Carsten Niebuhr
+ */
 
 var DialogManager = {
 
@@ -13,33 +11,29 @@ var DialogManager = {
 
 	"add": function(id, isModal, showCB) {
 		if (has(this.items, id)) return;
-		isModal = !!isModal;
-		this.items[id] = {"modal": isModal, "onShow": showCB};
-		var oid = id, $me = this;
-		id = "dlg" + id;
-		$(id).addEvent("mousedown", function(ev) {
-			var cls = ev.target.className;
-			if (cls.contains("dlg-head", " ") || cls.contains("dlg-close", " ")) return;
-			$me.bringToFront(oid);
-		}).getElement("a").addStopEvent("click", function(ev) {
-			$me.hide(oid);
-		});
-		new Drag(id, {
-			"handle": id + "-head",
-			"modifiers": {"x": "left", "y": "top"},
-			"snap": 2,
-			"onBeforeStart": function() {
-				$me.bringToFront(oid);
-			}
+
+		this.items[id] = {"modal": !!isModal, "onShow": showCB};
+
+		var dlgId = "dlg" + id;
+		$(dlgId)
+			.addEvent("mousedown", this.bringToFront.bind(this, id))
+			.getElement(".dlg-close").addStopEvent("click", this.hide.bind(this, id));
+
+		new Drag(dlgId, {
+			"handle": dlgId + "-head",
+			"snap": 1
 		});
 	},
 
 	"show": function(id) {
 		this.bringToFront(id);
+
 		if (this.items[id].modal)
 			$("modalbg").show();
+
 		if (this.isOffScreen(id))
 			$("dlg" + id).centre();
+
 		if (this.items[id].onShow)
 			this.items[id].onShow();
 	},
@@ -47,39 +41,51 @@ var DialogManager = {
 	"hide": function(id) {
 		this.showing = this.showing.erase(id);
 		$("dlg" + id).hide();
-		if (this.items[id].modal)
+
+		if (this.items[id].modal && !this.modalIsVisible())
 			$("modalbg").hide();
+
 		if (this.showing[0])
 			this.bringToFront(this.showing[0]);
 	},
 
 	"hideTopMost": function(fireClose) {
 		if (this.showing.length == 0) return;
+
 		var id = this.showing.shift();
 		this.hide(id);
+
 		if (fireClose)
-			$("dlg" + id).getElement("a").fireEvent("click", { stop: Function.from() });
+			$("dlg" + id).getElement(".dlg-close").fireEvent("click", { stop: Function.from() });
 	},
 
 	"isOffScreen": function(id) {
-		var threshX = 150, threshY = 50,
-			doc = document.getSize(),
-			head = $("dlg" + id + "-head").getCoordinates();
+		var threshX = 150, threshY = 50;
+		var winSize = window.getSize();
+		var head = $("dlg" + id + "-head").getCoordinates();
 
 		return (
-			(head.left > doc.x - threshX)
-		 || (head.right < threshX)
-		 || (head.top > doc.y - threshY)
-		 || (head.bottom < threshY)
+			(head.left > winSize.x - threshX) ||
+			(head.right < threshX) ||
+			(head.top > winSize.y - threshY) ||
+			(head.bottom < threshY)
 		);
 	},
 
 	"bringToFront": function(id) {
 		if (this.showing.contains(id))
 			this.showing = this.showing.erase(id);
+
 		if (this.showing[0])
 			$("dlg" + this.showing[0]).removeClass("dlg-top");
+
 		this.showing.unshift(id);
-		$("dlg" + id).setStyle("zIndex", ++this.winZ).addClass("dlg-top");
+		$("dlg" + id).addClass("dlg-top").setStyle("zIndex", ++this.winZ);
+	},
+
+	"modalIsVisible": function() {
+		return this.showing.some(function(id) {
+			return this.items[id].modal;
+		}, this);
 	}
 };

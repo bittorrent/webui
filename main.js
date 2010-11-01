@@ -1,9 +1,7 @@
-/*
- *
- *     Copyright 2007 BitTorrent, Inc. All rights reserved.
- *     Copyright 2008 Carsten Niebuhr
- *
-*/
+/**
+ * Copyright 2007 BitTorrent, Inc. All rights reserved.
+ * Copyright 2008 Carsten Niebuhr
+ */
 
 var g_winTitle = "\u00B5Torrent WebUI v" + CONST.VERSION;
 
@@ -13,6 +11,11 @@ var g_perSec; // string representing "/s"
 var g_dayCodes; // array of strings representing ["Mon", "Tue", ..., "Sun"]
 var g_dayNames; // array of strings representing ["Monday", "Tuesday", ... , "Sunday"]
 var g_schLgndEx; // object whose values are string explanations of scheduler table colors
+
+// Pre-generated elements
+
+var ELE_TD = new Element("td");
+var ELE_TR = new Element("tr");
 
 
 //================================================================================
@@ -68,8 +71,8 @@ function setupGlobalEvents() {
 		return (
 			ev.target.retrieve("mousewhitelist") ||
 			(
-				["INPUT", "TEXTAREA"].indexOf(ev.target.tagName) >= 0 &&
-				["button", "checkbox", "file"].indexOf(ev.target.type) < 0
+				["INPUT", "TEXTAREA"].contains(ev.target.tagName) &&
+				!["button", "checkbox", "file"].contains(ev.target.type)
 			)
 		);
 	};
@@ -158,7 +161,7 @@ function setupGlobalEvents() {
 			},
 
 			"esc": function() {
-				if (ContextMenu.launched) {
+				if (!ContextMenu.hidden) {
 					ContextMenu.hide();
 				} else if (DialogManager.showing.length > 0) {
 					DialogManager.hideTopMost(true);
@@ -184,10 +187,13 @@ function setupGlobalEvents() {
 
 		document.addStopEvent("keydown", function(ev) {
 			var key = eventToKey(ev);
-			if (keyBindings[key])
-				keyBindings[key]();
-			else
+			if (keyBindings[key]) {
+				if (!DialogManager.modalIsVisible())
+					keyBindings[key]();
+			}
+			else {
 				return true;
+			}
 		});
 
 		if (Browser.opera) {
@@ -206,7 +212,7 @@ function resizeUI(hDiv, vDiv) {
 	if (resizing) return;
 	resizing = true;
 
-	if (ContextMenu.launched)
+	if (!ContextMenu.hidden)
 		ContextMenu.hide();
 
 	var manualH = (typeOf(hDiv) == 'number'),
@@ -395,7 +401,7 @@ function setupUserInterface() {
 	//--------------------------------------------------
 
 	["cat_all", "cat_dls", "cat_com", "cat_act", "cat_iac", "cat_nlb"].each(function(k) {
-		$(k).addEvent("click", function() {
+		$(k).addEvent("mousedown", function() {
 			utWebUI.switchLabel(this);
 		});
 	});
@@ -570,7 +576,7 @@ function setupUserInterface() {
 	//--------------------------------------------------
 
 	["About", "Add", "AddURL", "DelTor", "Label", "Props", "Settings"].each(function(k) {
-		var isModal = (["DelTor", "Label", "Props"].indexOf(k) >= 0);
+		var isModal = ["DelTor", "Label", "Props"].contains(k);
 		DialogManager.add(k, isModal, {
 			  "Add": function () { utWebUI.getDirectoryList(); }
 			, "Settings": function () { utWebUI.stpanes.onChange(); }
@@ -662,12 +668,12 @@ function setupUserInterface() {
 	// -- No Button
 
 	$("DELTOR_NO").addEvent("click", function(ev) {
-		$("dlgDelTor").getElement("a").fireEvent("click", ev);
+		$("dlgDelTor").getElement(".dlg-close").fireEvent("click", ev);
 	});
 
 	// -- Close Button
 
-	$("dlgDelTor").getElement("a").addEvent("click", function(ev) {
+	$("dlgDelTor").getElement(".dlg-close").addEvent("click", function(ev) {
 		$("DELTOR_YES").removeEvents("click");
 	});
 
@@ -702,14 +708,14 @@ function setupUserInterface() {
 	// -- Cancel Button
 
 	$("DLG_TORRENTPROP_02").addEvent("click", function(ev) {
-		$("dlgProps").getElement("a").fireEvent("click", ev);
+		$("dlgProps").getElement(".dlg-close").fireEvent("click", ev);
 			// Fire the "Close" button's click handler to make sure
 			// controls are restored if necessary
 	});
 
 	// -- Close Button
 
-	$("dlgProps").getElement("a").addEvent("click", function(ev) {
+	$("dlgProps").getElement(".dlg-close").addEvent("click", function(ev) {
 		if (utWebUI.propID == "multi") {
 			[11, 17, 18, 19].each(function(v) {
 				$("DLG_TORRENTPROP_1_GEN_" + v).removeEvents("click");
@@ -732,7 +738,7 @@ function setupUserInterface() {
 	// -- Cancel Button
 
 	$("DLG_SETTINGS_04").addEvent("click", function(ev) {
-		$("dlgSettings").getElement("a").fireEvent("click", ev);
+		$("dlgSettings").getElement(".dlg-close").fireEvent("click", ev);
 			// Fire the "Close" button's click handler to make sure
 			// controls are restored if necessary
 	});
@@ -745,7 +751,7 @@ function setupUserInterface() {
 
 	// -- Close Button
 
-	$("dlgSettings").getElement("a").addEvent("click", function(ev) {
+	$("dlgSettings").getElement(".dlg-close").addEvent("click", function(ev) {
 		utWebUI.loadSettings();
 	});
 
@@ -825,9 +831,9 @@ function setupUserInterface() {
 		var mode = 0;
 
 		for (var i = 0; i < 7; i++) {
-			var tr = simpleClone(TR, false);
+			var tr = ELE_TR.clone(false);
 			for (var j = 0; j < 25; j++) {
-				var td = simpleClone(TD, false);
+				var td = ELE_TD.clone(false);
 				if (j == 0) {
 					if ($chk(g_dayCodes))
 						td.set("text", g_dayCodes[i]).addClass("daycode");

@@ -1,3 +1,8 @@
+/**
+ * Copyright 2007 BitTorrent, Inc. All rights reserved.
+ * Copyright 2008 Carsten Niebuhr
+ */
+
 var CONST = {
 	VERSION: "0.380"
 	, BUILD: ""

@@ -512,19 +512,19 @@ var dxSTable = new Class({
 		//--------------------------------------------------
 
 		val = options.colMask; // bitfield
-		if ('number' == typeOf(val)) {
+		if (typeOf(val) === 'number') {
 			for (var i = 0, bit = 1, len = this.cols; i < len; ++i, bit <<= 1) {
 				this.setColumnDisabled(this.colOrder[i], !!(options.colMask & bit));
 			}
 		}
 
 		val = options.resetText; // string
-		if ('string' == typeOf(val)) {
+		if (typeOf(val) === 'string') {
 			this.resetText = val;
 		}
 
 		val = options.colText; // { colID : colText, ... }
-		if ('object' == typeOf(val)) {
+		if (typeOf(val) === 'object') {
 			$each(val, function(v, k) {
 				ind = colHdrIdx[k];
 				if ($chk(colHdr[ind])) {
@@ -535,7 +535,7 @@ var dxSTable = new Class({
 		}
 
 		val = options.colType; // { colID : colType, ... }
-		if ('object' == typeOf(val)) {
+		if (typeOf(val) === 'object') {
 			var changedCols = [];
 			$each(val, function(v, k) {
 				ind = colHdrIdx[k];
@@ -549,7 +549,7 @@ var dxSTable = new Class({
 		}
 
 		val = options.colAlign; // { colID : colAlign, ... }
-		if ('object' == typeOf(val)) {
+		if (typeOf(val) === 'object') {
 			$each(val, function(v, k) {
 				ind = colHdrIdx[k];
 				if ($chk(colHdr[ind])) {
@@ -561,7 +561,7 @@ var dxSTable = new Class({
 		}
 
 		val = options.colOrder; // [ colMIdx, colNIdx, ... ]
-		if ('array' == typeOf(val)) {
+		if (typeOf(val) === 'array') {
 			if (val.length == this.cols) {
 				var orderOK = true, orderT = Array.clone(val).sort(function(a, b) { return (a-b); });
 				for (var i = 0, l = orderT.length; i < l; ++i) {
@@ -582,7 +582,7 @@ var dxSTable = new Class({
 		}
 
 		val = options.colWidth; // [ col1Width, col2Width, ... ]
-		if ('array' == typeOf(val)) {
+		if (typeOf(val) === 'array') {
 			if (val.length == this.cols) {
 				$each(val, function(v, k) {
 					this.setColumnWidth(this.colOrder[k], v);
@@ -591,7 +591,7 @@ var dxSTable = new Class({
 		}
 
 		val = options.colSort; // [colIdx, reverse]
-		if ('array' == typeOf(val)) {
+		if (typeOf(val) === 'array') {
 			if ($chk(val[1])) this.options.reverse = !!val[1];
 			this.sort(val[0]);
 		}
@@ -614,7 +614,7 @@ var dxSTable = new Class({
 		}
 
 		val = options.rowAlternate; // boolean
-		if ('boolean' == typeOf(val) && (val != this.options.alternateRows)) {
+		if (typeOf(val) === 'boolean' && val !== this.options.alternateRows) {
 			this.options.alternateRows = !!val;
 			refresh = true;
 		}
