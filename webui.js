@@ -31,7 +31,7 @@ var utWebUI = {
 	"cacheID": 0,
 	"limits": {
 		"reqRetryDelayBase": 2, // seconds
-		"reqRetryMaxAttempts": 5,
+		"reqRetryMaxAttempts": 1,
 		"minTableRows": 5,
 		"maxVirtTableRows": Math.ceil(screen.height / 16) || 100,
 		"minUpdateInterval": 500,
@@ -284,6 +284,15 @@ var utWebUI = {
 		this.getSettings();
 	},
 
+	"showMsg": function(html) {
+		$("msg").set("html", html);
+		$("cover").show();
+	},
+
+	"hideMsg": function() {
+		$("cover").hide();
+	},
+
 	"beginPeriodicUpdate": function(delay) {
 		this.endPeriodicUpdate();
 
@@ -351,8 +360,10 @@ var utWebUI = {
 						}
 						else {
 							window.removeEvents("unload");
-							$("msg").set("html", "WebUI is having trouble contacting &micro;Torrent. Try <a href='#' onclick='window.location.reload()'>reloading</a> the page.");
-							$("cover").show();
+							self.showMsg(
+								'WebUI is having trouble contacting &micro;Torrent.<br />' +
+								'Try <a href="#" onclick="window.location.reload(true);">reloading</a> the page.'
+							);
 							return;
 						}
 
@@ -775,7 +786,7 @@ var utWebUI = {
 		if (!this.loaded) {
 			this.loaded = true;
 			this.trtTable.calcSize();
-			$("cover").hide();
+			this.hideMsg();
 		}
 		this.trtTable.refresh();
 
@@ -1347,6 +1358,8 @@ var utWebUI = {
 		value = this.getAdvSetting("gui.tall_category_list");
 		resize = resize || (undefined != value && !!this.settings["gui.tall_category_list"] != value);
 
+		this.toggleSearchBar();
+
 		for (var key in this.settings) {
 			var ele = $(key);
 			if (!ele) continue;
@@ -1399,26 +1412,30 @@ var utWebUI = {
 			this.request("action=setsetting" + str, Function.from(), !reload); // if the page is going to reload make it a synchronous request
 
 		if (this.settings["webui.enable"] == 0) {
-			$("msg").set("html", "Goodbye.");
-			$("cover").show();
+			this.showMsg('WebUI was disabled. Goodbye.');
 			return;
 		}
 
-		var port = (window.location.port ? window.location.port : (window.location.protocol == "http:" ? 80 : 443)),
-			new_port = (this.settings["webui.enable_listen"] ? this.settings["webui.port"] : this.settings["bind_port"]);
+		var port = (window.location.port ? window.location.port : (window.location.protocol == "http:" ? 80 : 443));
+		var new_port = (this.settings["webui.enable_listen"] ? this.settings["webui.port"] : this.settings["bind_port"]);
+
 		if (port != new_port) {
-			$("msg").set("html", "Redirecting...");
-			$("cover").show();
-			changePort.delay(500, null, new_port);
+			this.endPeriodicUpdate();
+			this.showMsg(
+				'WebUI has detected that the port setting was altered. How do you wish to proceed?' +
+				'<ul>' +
+					'<li><a href="#" onclick="changePort(' + new_port + ');">Reload</a> on the new port</li>' +
+					'<li><a href="#" onclick="window.location.reload(true);">Ignore</a> the port change</li>' +
+				'</ul>'
+			);
+			return;
 		}
 		else if (reload) {
-			window.location.reload();
+			window.location.reload(true);
 		}
 		else if (resize) {
 			resizeUI();
 		}
-
-		this.toggleSearchBar();
 
 	},
 
@@ -1685,7 +1702,7 @@ var utWebUI = {
 		if (!this.trtTable.selectedRows.every(function(item) { return (this.torrents[item][labelIndex] == ""); }, this)) {
 			labelSubMenu.push([lang[CONST.OV_REMOVE_LABEL], this.setLabel.bind(this, "")]);
 		}
-		if (this.trtTable.selectedRows.length > 0) {
+		if (this.customLabels.length > 0) {
 			labelSubMenu.push([CMENU_SEP]);
 			$each(this.customLabels, function(_, label) {
 				if (this.trtTable.selectedRows.every(function(item) { return (this.torrents[item][labelIndex] == label); }, this)) {
@@ -2611,8 +2628,7 @@ var utWebUI = {
 	"restoreUI": function(bc) {
 		if ((bc != false) && !confirm("Are you sure that you want to restore the interface?")) return;
 		//$("stg").hide();
-		$("msg").set("html", "Reloading...");
-		$("cover").show();
+		this.showMsg('Reloading WebUI...');
 		window.removeEvents("unload");
 		this.config = {};
 		this.saveConfig(false, function(){ window.location.reload(false); });

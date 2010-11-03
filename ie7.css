@@ -3,6 +3,17 @@
  * Copyright 2008 Carsten Niebuhr
  */
 
+#msgout {
+	position: relative;
+	width: 100%;
+}
+
+#msgmid {
+	position: absolute;
+	top: 50%;
+	width: 100%;
+}
+
 /**************************************************
  * MAIN DETAILED INFO PANE
  **************************************************/

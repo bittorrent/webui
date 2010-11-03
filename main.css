@@ -143,12 +143,29 @@ td.disabled, label.disabled, span.disabled, div.disabled {
 	position: absolute;
 	top: 0px;
 	width: 100%;
-	z-index: 500;
 }
 
 #modalbg {
 	display: none;
 	opacity: 0.60;
+	z-index: 500;
+}
+
+#cover {
+	z-index: 10000;
+}
+
+#msgout {
+	display: table;
+	height: 100%;
+	overflow: hidden;
+	position: static;
+	width: 100%;
+}
+
+#msgmid {
+	display: table-cell;
+	vertical-align: middle;
 }
 
 #msg {
@@ -156,14 +173,13 @@ td.disabled, label.disabled, span.disabled, div.disabled {
 	border: 1px solid #D0D0D0;
 	border-width: 1px 0;
 	font-weight: bold;
-	height: 100px;
-	line-height: 100px;
-	margin-top: -50px;
-	position: absolute;
+	line-height: 1.5;
+	padding: 25px;
 	text-align: center;
-	top: 50%;
-	vertical-align: middle;
-	width: 100%;
+}
+
+#msg ul {
+	list-style-position: inside;
 }
 
 

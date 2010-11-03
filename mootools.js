@@ -4024,9 +4024,15 @@ var Request = this.Request = new Class({
 		onSuccess: function(responseText, responseXML){},
 		onFailure: function(xhr){},
 		onException: function(headerName, value){},
-		onTimeout: function(){},
+// uTorrent WebUI Patch - BEGIN
+//		onTimeout: function(){},
+		onTimeout: function(){},*/
+// uTorrent WebUI Patch - END
 		user: '',
-		password: '',*/
+// uTorrent WebUI Patch - BEGIN
+//		password: '',*/
+		password: '',
+// uTorrent WebUI Patch - END
 		url: '',
 		data: '',
 		headers: {
