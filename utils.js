@@ -247,16 +247,11 @@ function $chk(obj) {
 	return !!(obj || obj === 0);
 }
 
-function $clear(timer){
-	clearTimeout(timer);
-	clearInterval(timer);
-	return null;
-};
-
 function $each(obj, fn, bind) {
 	switch (typeOf(obj)) {
 		case 'array':
 		case 'collection':
+		case 'elements':
 			return Array.each(obj, fn, bind);
 		default:
 			return Object.each(obj, fn, bind);

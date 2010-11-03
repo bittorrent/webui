@@ -144,9 +144,7 @@ var utWebUI = {
 		, ["value", 210, TYPE_STRING]
 	],
 	"flsColPrioIdx": -1, // automatically calculated based on this.flsColDefs
-	"timer": 0,
 	"updateTimeout": null,
-	"interval": -1,
 	"totalDL": 0,
 	"totalUL": 0,
 	"loaded": false,
@@ -286,10 +284,25 @@ var utWebUI = {
 		this.getSettings();
 	},
 
+	"beginPeriodicUpdate": function(delay) {
+		this.endPeriodicUpdate();
+
+		delay = parseInt(delay, 10);
+		if (isNaN(delay)) delay = this.config.updateInterval;
+
+		this.config.updateInterval = delay = delay.max(this.limits.minUpdateInterval);
+		this.updateTimeout = this.update.delay(delay, this);
+	},
+
+	"endPeriodicUpdate": function() {
+		clearTimeout(this.updateTimeout);
+		clearInterval(this.updateTimeout);
+	},
+
 	"proxyFiles": function(sid, fids, streaming) {
 
 { // TODO: Remove this once backend support is stable (requires 3.0+)
-	if (!$chk(this.settings["webui.uconnect_enable"])) return;
+	if (undefined === this.settings["webui.uconnect_enable"]) return;
 }
 
 		$each($$(".downloadfrm"), function(frm) {
@@ -329,7 +342,7 @@ var utWebUI = {
 						//       - Recoverable: Bad token (just get a new token)
 						//       - Unrecoverable: "/gui/?action=setsetting&s=webui.cookie&v=..." failing
 
-						$clear(self.updateTimeout);
+						self.endPeriodicUpdate();
 
 						fails[0]++;
 						var delay = Math.pow(self.limits.reqRetryDelayBase, fails[0]);
@@ -352,7 +365,7 @@ var utWebUI = {
 									// be exact, it may spam as many requests as there have been failures)
 
 								if (fn) fn.delay(0, self, json);
-								self.updateTimeout = self.update.delay(self.config.updateInterval, self);
+								self.beginPeriodicUpdate();
 							}
 						}, async, fails]);
 					},
@@ -511,7 +524,7 @@ var utWebUI = {
 			mode = this.settings["gui.default_del_action"] || 0;
 
 { // TODO: Remove this once backend support is stable (requires 3.0+)
-	if (!$chk(this.settings["webui.uconnect_enable"])) mode &= ~1; // force non-.torrent removal mode
+	if (undefined === this.settings["webui.uconnect_enable"]) mode &= ~1; // force non-.torrent removal mode
 }
 
 		var act = (function() {
@@ -549,8 +562,7 @@ var utWebUI = {
 	},
 
 	"getList": function(qs) {
-		$clear(this.updateTimeout);
-		this.timer = Date.now();
+		this.endPeriodicUpdate();
 		qs = qs || "";
 		if (qs != "")
 			qs += "&";
@@ -767,7 +779,7 @@ var utWebUI = {
 		}
 		this.trtTable.refresh();
 
-		this.updateTimeout = this.update.delay(this.getInterval(), this);
+		this.beginPeriodicUpdate();
 		this.updateDetails();
 		SpeedGraph.addData(this.totalUL, this.totalDL);
 
@@ -792,12 +804,6 @@ var utWebUI = {
 				this.getTransferHistory();
 			}
 		}
-	},
-
-	"getInterval": function() {
-		var t = Date.now() - this.timer;
-		this.interval = (this.interval == -1) ? (this.config.updateInterval + t * 4) : ((this.interval + this.config.updateInterval + t * 4) / 2).toInt();
-		return this.interval;
 	},
 
 	"loadLabels": function(labels) {
@@ -955,7 +961,7 @@ var utWebUI = {
 	"getDirectoryList": function(forceload) {
 
 { // TODO: Remove this once backend support is stable (requires 3.0+)
-	if (!$chk(this.settings["webui.uconnect_enable"])) return;
+	if (undefined === this.settings["webui.uconnect_enable"]) return;
 }
 
 		var now = Date.now();
@@ -988,7 +994,7 @@ var utWebUI = {
 	"getTransferHistory": function(forceload) {
 
 { // TODO: Remove this once backend support is stable (requires 3.0+)
-	if (!$chk(this.settings["webui.uconnect_enable"])) return;
+	if (undefined === this.settings["webui.uconnect_enable"]) return;
 }
 
 		var now = Date.now();
@@ -1037,7 +1043,7 @@ var utWebUI = {
 	"resetTransferHistory": function() {
 
 { // TODO: Remove this once backend support is stable (requires 3.0+)
-	if (!$chk(this.settings["webui.uconnect_enable"])) return;
+	if (undefined === this.settings["webui.uconnect_enable"]) return;
 }
 
 		this.request("action=resetxferhist");
@@ -1051,8 +1057,7 @@ var utWebUI = {
 			var qs = "action=getsettings";
 			if (!this.loaded) {
 				qs += "&list=1";
-				$clear(this.updateTimeout);
-				this.timer = Date.now();
+				this.endPeriodicUpdate();
 			}
 			this.request(qs, this.addSettings);
 		}
@@ -1284,9 +1289,7 @@ var utWebUI = {
 			$("webui.updateInterval").set("value", value);
 		}
 		if (this.config.updateInterval != value) {
-			this.config.updateInterval = value;
-			$clear(this.updateTimeout);
-			this.updateTimeout = this.update.delay(value, this);
+			this.beginPeriodicUpdate(value);
 			hasChanged = true;
 		}
 
@@ -1960,7 +1963,7 @@ var utWebUI = {
 	"getPeers": function(id, update) {
 
 { // TODO: Remove this once backend support is stable (requires 3.0+)
-	if (!$chk(this.settings["webui.uconnect_enable"])) return;
+	if (undefined === this.settings["webui.uconnect_enable"]) return;
 }
 
 		if (!has(this.peers, id) || update) {

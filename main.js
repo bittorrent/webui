@@ -70,10 +70,7 @@ function setupGlobalEvents() {
 	var mouseWhitelist = function(ev) {
 		return (
 			ev.target.retrieve("mousewhitelist") ||
-			(
-				["INPUT", "TEXTAREA"].contains(ev.target.tagName) &&
-				!["button", "checkbox", "file"].contains(ev.target.type)
-			)
+			["INPUT", "SELECT", "TEXTAREA"].contains(ev.target.tagName)
 		);
 	};
 	var mouseWhitelistWrap = function(ev) {
