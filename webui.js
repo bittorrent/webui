@@ -285,7 +285,12 @@ var utWebUI = {
 	},
 
 	"showMsg": function(html) {
-		$("msg").set("html", html);
+		if (typeOf(html) === 'element') {
+			$("msg").clear().grab(html);
+		}
+		else {
+			$("msg").set("html", html);
+		}
 		$("cover").show();
 	},
 
@@ -1425,7 +1430,7 @@ var utWebUI = {
 				'WebUI has detected that the port setting was altered. How do you wish to proceed?' +
 				'<ul>' +
 					'<li><a href="#" onclick="changePort(' + new_port + ');">Reload</a> on the new port</li>' +
-					'<li><a href="#" onclick="window.location.reload(true);">Ignore</a> the port change</li>' +
+					'<li><a href="#" onclick="utWebUI.beginPeriodicUpdate(); utWebUI.hideMsg();">Ignore</a> the port change</li>' +
 				'</ul>'
 			);
 			return;
@@ -1702,7 +1707,7 @@ var utWebUI = {
 		if (!this.trtTable.selectedRows.every(function(item) { return (this.torrents[item][labelIndex] == ""); }, this)) {
 			labelSubMenu.push([lang[CONST.OV_REMOVE_LABEL], this.setLabel.bind(this, "")]);
 		}
-		if (this.customLabels.length > 0) {
+		if (Object.getLength(this.customLabels) > 0) {
 			labelSubMenu.push([CMENU_SEP]);
 			$each(this.customLabels, function(_, label) {
 				if (this.trtTable.selectedRows.every(function(item) { return (this.torrents[item][labelIndex] == label); }, this)) {
