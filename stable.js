@@ -1210,7 +1210,7 @@ var dxSTable = new Class({
 				if (badIE) {
 					w = this.tBodyCols[i].offsetWidth - 19;
 				} else {
-					w = parseInt(this.tBodyCols[i].width) - ((Browser.chrome || Browser.safari) ? 0 : 19);
+					w = parseInt(this.tBodyCols[i].width, 10) - ((Browser.chrome || Browser.safari) ? 0 : 19);
 				}
 				this.tHeadCols[i].setStyle("width", w.max(14));
 			}

@@ -103,11 +103,13 @@ input.str {
 	width: 130px;
 }
 
+.disabled input, .disabled select,
 input.disabled, select.disabled {
 	background-color: #FAFAFA;
 	color: #808080;
 }
 
+.disabled td, .disabled label, .disabled span, .disabled div,
 td.disabled, label.disabled, span.disabled, div.disabled {
 	color: #C0C0C0;
 	cursor: default;
@@ -1158,13 +1160,10 @@ input[id="proxy.password"] { width: 70px; }
 /* Transfer Cap */
 
 #multi_day_transfer_mode,
-#multi_day_transfer_limit_value {
-	margin-left: 3px;
-}
-
+#multi_day_transfer_limit_value,
+#multi_day_transfer_limit_unit,
 #multi_day_transfer_limit_span {
 	margin-left: 3px;
-	margin-right: 3px;
 }
 
 /* Queueing */
@@ -1292,7 +1291,7 @@ ul.CMenu {
 	list-style: none;
 	padding: 2px;
 	position: absolute;
-	z-index: 1000;
+	z-index: 100000;
 }
 
 ul.CMenu li {

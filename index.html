@@ -188,10 +188,12 @@
 						<label id="DLG_TORRENTPROP_1_GEN_11" for="prop-seed_override"></label>
 					</div>
 					<div class="line-cont">
+						<input type="text" id="prop-seed_ratio" class="tbox num flr" />
 						<label for="prop-seed_ratio" id="DLG_TORRENTPROP_1_GEN_12"></label>
-						<input type="text" id="prop-seed_ratio" class="tbox num" />
+					</div>
+					<div class="line-cont">
+						<input type="text" id="prop-seed_time" class="tbox num flr" />
 						<label for="prop-seed_time" id="DLG_TORRENTPROP_1_GEN_14"></label>
-						<input type="text" class="tbox num" id="prop-seed_time" />
 					</div>
 				</fieldset>
 
@@ -599,38 +601,40 @@
 					<fieldset>
 						<legend id="DLG_SETTINGS_7_TRANSFERCAP_02"></legend>
 						<div class="line-cont">
+							<select id="multi_day_transfer_mode" class="flr"><option>--------------------</option></select>
 							<label for="multi_day_transfer_mode" id="DLG_SETTINGS_7_TRANSFERCAP_03"></label>
-							<select id="multi_day_transfer_mode"><option>--------------------</option></select>
 						</div>
-						<div class="line-cont indent">
+						<div class="line-cont">
+							<select id="multi_day_transfer_limit_unit" class="flr"><option>-----</option></select>
+							<input type="text" id="multi_day_transfer_limit_value" class="tbox num flr" />
 							<label for="multi_day_transfer_limit_value" id="DLG_SETTINGS_7_TRANSFERCAP_04"></label>
-							<input type="text" id="multi_day_transfer_limit_value" class="tbox num" /> <select id="multi_day_transfer_limit_unit"><option>-----</option></select>
+						</div>
+						<div class="line-cont">
+							<select id="multi_day_transfer_limit_span" class="flr"><option>-----</option></select>
 							<label for="multi_day_transfer_limit_span" id="DLG_SETTINGS_7_TRANSFERCAP_05"></label>
-							<select id="multi_day_transfer_limit_span"><option>-----</option></select>
-							<span id="DLG_SETTINGS_7_TRANSFERCAP_06"></span>
 						</div>
 					</fieldset>
 
 					<fieldset>
-						<legend id="DLG_SETTINGS_7_TRANSFERCAP_07"></legend>
+						<legend id="DLG_SETTINGS_7_TRANSFERCAP_06"></legend>
 						<div class="line-cont">
 							<div class="half flr" id="total_uploaded_history"></div>
-							<div id="DLG_SETTINGS_7_TRANSFERCAP_08"></div>
+							<div id="DLG_SETTINGS_7_TRANSFERCAP_07"></div>
 						</div>
 						<div class="line-cont">
 							<div class="half flr" id="total_downloaded_history"></div>
-							<div id="DLG_SETTINGS_7_TRANSFERCAP_09"></div>
+							<div id="DLG_SETTINGS_7_TRANSFERCAP_08"></div>
 						</div>
 						<div class="line-cont">
 							<div class="half flr" id="total_updown_history"></div>
-							<div id="DLG_SETTINGS_7_TRANSFERCAP_10"></div>
+							<div id="DLG_SETTINGS_7_TRANSFERCAP_09"></div>
 						</div>
 						<div class="line-cont">
 							<div class="half flr" id="history_period"></div>
-							<div id="DLG_SETTINGS_7_TRANSFERCAP_11"></div>
+							<div id="DLG_SETTINGS_7_TRANSFERCAP_10"></div>
 						</div>
 						<div class="line-cont">
-							<input type="button" id="DLG_SETTINGS_7_TRANSFERCAP_13" class="btn" />
+							<input type="button" id="DLG_SETTINGS_7_TRANSFERCAP_12" class="btn" />
 						</div>
 					</fieldset>
 				</div>
@@ -651,10 +655,12 @@
 					<fieldset>
 						<legend id="DLG_SETTINGS_8_QUEUEING_06"></legend>
 						<div class="line-cont">
+							<input type="text" id="seed_ratio" class="tbox num flr" />
 							<label for="seed_ratio" id="DLG_SETTINGS_8_QUEUEING_07"></label>
-							<input type="text" id="seed_ratio" class="tbox num" />
+						</div>
+						<div class="line-cont">
+							<input type="text" id="seed_time" class="tbox num flr" />
 							<label for="seed_time" id="DLG_SETTINGS_8_QUEUEING_09"></label>
-							<input type="text" id="seed_time" class="tbox num" />
 						</div>
 						<div class="line-cont">
 							<input type="checkbox" id="seeds_prioritized" />

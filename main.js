@@ -168,6 +168,10 @@ function setupGlobalEvents() {
 			}
 		};
 
+		var keyBindingModalOK = {
+			"esc": 1
+		};
+
 		if (Browser.Platform.mac) {
 			keyBindings["meta a"] = keyBindings["ctrl a"];
 			keyBindings["meta e"] = keyBindings["ctrl e"];
@@ -185,7 +189,7 @@ function setupGlobalEvents() {
 		document.addStopEvent("keydown", function(ev) {
 			var key = eventToKey(ev);
 			if (keyBindings[key]) {
-				if (!DialogManager.modalIsVisible())
+				if (!DialogManager.modalIsVisible() || keyBindingModalOK[key])
 					keyBindings[key]();
 			}
 			else {
@@ -351,7 +355,7 @@ function resizeUI(hDiv, vDiv) {
 		$("mainVDivider").setStyles({
 			"width": tallCat && showCat ? ww - (hDiv + 5) : ww,
 			"left": tallCat && showCat ? hDiv + 5 : 0,
-			"top":  showDet ? vDiv + 2 : -10
+			"top": showDet ? vDiv + 2 : -10
 		});
 	}
 
@@ -795,7 +799,7 @@ function setupUserInterface() {
 	$("DLG_SETTINGS_4_CONN_04").addEvent("click", function() {
 		var v = utWebUI.settings["bind_port"], rnd = 0;
 		do {
-			rnd = parseInt(Math.random() * 50000, 10) + 15000;
+			rnd = (Math.random() * 50000).toInt() + 15000;
 		} while (v == rnd);
 		$("bind_port").set("value", rnd);
 	});
@@ -815,7 +819,7 @@ function setupUserInterface() {
 		utWebUI.getTransferHistory();
 	});
 
-	$("DLG_SETTINGS_7_TRANSFERCAP_13").addEvent("click", function() {
+	$("DLG_SETTINGS_7_TRANSFERCAP_12").addEvent("click", function() {
 		utWebUI.resetTransferHistory();
 	});
 
@@ -961,7 +965,7 @@ function setupUserInterface() {
 	});
 
 	$("multi_day_transfer_limit_en").addEvent(linkedEvent, function() {
-		_link(this, 0, ["multi_day_transfer_mode", "multi_day_transfer_limit_value", "multi_day_transfer_limit_unit", "multi_day_transfer_limit_span", "DLG_SETTINGS_7_TRANSFERCAP_06"]);
+		_link(this, 0, ["multi_day_transfer_mode", "multi_day_transfer_limit_value", "multi_day_transfer_limit_unit", "multi_day_transfer_limit_span"]);
 	});
 
 	$("seed_prio_limitul_flag").addEvent(linkedEvent, function() {
@@ -1399,7 +1403,6 @@ function loadLangStrings(reload) {
 		, "DLG_SETTINGS_7_TRANSFERCAP_08"
 		, "DLG_SETTINGS_7_TRANSFERCAP_09"
 		, "DLG_SETTINGS_7_TRANSFERCAP_10"
-		, "DLG_SETTINGS_7_TRANSFERCAP_11"
 
 		// Queueing
 		, "DLG_SETTINGS_8_QUEUEING_01"
@@ -1481,7 +1484,7 @@ function loadLangStrings(reload) {
 	// -- Buttons
 	_loadStrings("value", [
 		  "DLG_SETTINGS_4_CONN_04" // "Random"
-		, "DLG_SETTINGS_7_TRANSFERCAP_13" // "Reset History"
+		, "DLG_SETTINGS_7_TRANSFERCAP_12" // "Reset History"
 		, "DLG_SETTINGS_A_ADVANCED_05" // "Set"
 	]);
 

@@ -54,7 +54,7 @@ Array.implement({
 		first = first || 0;
 		upto = upto || this.length;
 		while (first < upto) {
-			var mid = parseInt((first + upto) / 2);
+			var mid = ((first + upto) / 2).toInt();
 			var cv = comparator(value, this[mid]);
 			if (cv < 0) {
 				upto = mid;

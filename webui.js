@@ -31,7 +31,7 @@ var utWebUI = {
 	"cacheID": 0,
 	"limits": {
 		"reqRetryDelayBase": 2, // seconds
-		"reqRetryMaxAttempts": 1,
+		"reqRetryMaxAttempts": 5,
 		"minTableRows": 5,
 		"maxVirtTableRows": Math.ceil(screen.height / 16) || 100,
 		"minUpdateInterval": 500,
@@ -535,7 +535,7 @@ var utWebUI = {
 		var count = this.trtTable.selectedRows.length;
 		if (count == 0) return;
 
-		mode = parseInt(mode);
+		mode = parseInt(mode, 10);
 		if (isNaN(mode) || mode < 0 || this.delActions.length <= mode)
 			mode = this.settings["gui.default_del_action"] || 0;
 
@@ -1053,7 +1053,7 @@ var utWebUI = {
 		$("total_uploaded_history").set("text", tu.toFileSize());
 		$("total_downloaded_history").set("text", td.toFileSize());
 		$("total_updown_history").set("text", (tu + td).toFileSize());
-		$("history_period").set("text", lang[CONST.DLG_SETTINGS_7_TRANSFERCAP_12].replace(/%d/, period));
+		$("history_period").set("text", lang[CONST.DLG_SETTINGS_7_TRANSFERCAP_11].replace(/%d/, period));
 	},
 
 	"resetTransferHistory": function() {
@@ -1135,17 +1135,24 @@ var utWebUI = {
 		else {
 			var tcmode = 0;
 			for (var i = 0, j = json.settings.length; i < j; i++) {
-				var key = json.settings[i][0], typ = json.settings[i][1], val = json.settings[i][2];
+				var key = json.settings[i][CONST.SETTING_NAME],
+					typ = json.settings[i][CONST.SETTING_TYPE],
+					val = json.settings[i][CONST.SETTING_VALUE],
+					par = json.settings[i][CONST.SETTING_PARAMS] || {};
+
+				// handle cookie
 				if ((key == "webui.cookie") && !this.loaded) { // only load cookie on startup
 					loadCookie(JSON.decode(val, true));
 					continue;
 				}
-				if ((key != "proxy.proxy") && (key != "webui.username") && (key != "webui.password")) {
-					if (typ == 0)
-						val = parseInt(val);
-					if (typ == 1)
-						val = (val == "true");
+
+				// convert types
+				switch (typ) {
+					case CONST.SETTINGTYPE_INTEGER: val = val.toInt(); break;
+					case CONST.SETTINGTYPE_BOOLEAN: val = ('true' === val); break;
 				}
+
+				// handle special settings
 				switch (key) {
 					case "multi_day_transfer_mode_ul": if (val) tcmode = 0; break;
 					case "multi_day_transfer_mode_dl": if (val) tcmode = 1; break;
@@ -1157,6 +1164,11 @@ var utWebUI = {
 
 					case "bt.transp_disposition": $("enable_bw_management").checked = !!(val & CONST.TRANSDISP_UTP); break;
 				}
+
+				// handle special parameters
+				// TODO: Implement support for par.access
+
+				// insert into settings map
 				this.settings[key] = val;
 			}
 
