@@ -237,7 +237,27 @@ function resizeUI(hDiv, vDiv) {
 		tallCat = !!utWebUI.settings["gui.tall_category_list"];
 	}
 
-	var th = (showTB ? $("mainToolbar").getSize().y : 0);
+	var eleTB = $("mainToolbar");
+	var th = (showTB ? eleTB.getSize().y : 0);
+	if (showTB) {
+		// Show/hide toolbar chevron
+		var eleTBChildren = eleTB.getElements(".tbbutton");
+		var showTBChev = false;
+
+		for (var i = 0, il = eleTBChildren.length; i < il; ++i) {
+			if (eleTBChildren[i].getPosition().y > th) {
+				showTBChev = true;
+				break;
+			}
+		}
+
+		if (showTBChev) {
+			$("tbchevron").show();
+		}
+		else {
+			$("tbchevron").hide();
+		}
+	}
 
 	if (manualH) {
 		hDiv -= 2;
@@ -553,6 +573,15 @@ function setupUserInterface() {
 		});
 	});
 
+	// -- Toolbar Chevron
+
+	$("tbchevron").addStopEvents({
+		"mousedown": function(ev) {
+			utWebUI.toolbarChevronShow(this);
+		},
+		"click": null
+	});
+
 	// -- Search Field
 
 	$("query").addEvent("keydown", function(ev) {
@@ -575,7 +604,8 @@ function setupUserInterface() {
 	$("searchsel").addStopEvents({
 		"mousedown": function(ev) {
 			utWebUI.searchMenuShow(this);
-		}
+		},
+		"click": null
 	});
 
 	//--------------------------------------------------
@@ -586,6 +616,7 @@ function setupUserInterface() {
 		var isModal = ["DelTor", "Label", "Props"].contains(k);
 		DialogManager.add(k, isModal, {
 			  "Add": function () { utWebUI.getDirectoryList(); }
+			, "AddURL": function () { utWebUI.getDirectoryList(); }
 			, "Settings": function () { utWebUI.stpanes.onChange(); }
 		}[k]);
 	});

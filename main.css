@@ -208,7 +208,7 @@ td.disabled, label.disabled, span.disabled, div.disabled {
 	width: 1px;
 }
 
-#mainToolbar a {
+#mainToolbar .tbbutton {
 	cursor: pointer;
 	display: block;
 	float: left;
@@ -217,39 +217,51 @@ td.disabled, label.disabled, span.disabled, div.disabled {
 	width: 24px;
 }
 
-#mainToolbar a:active {
+#mainToolbar .tbbutton:active {
 	margin: 4px 3px 5px 5px;
 }
 
-#mainToolbar a {
+#mainToolbar .tbbutton {
 	opacity: 0.80;
 }
 
-#mainToolbar a:hover {
+#mainToolbar .tbbutton:hover {
 	opacity: 1.00;
 }
 
-#mainToolbar a {
+#mainToolbar .tbbutton {
 	background: transparent url(./images/toolbar.png) no-repeat 0px top;
 }
 
-	#mainToolbar a#add { background-position: 0px; }
-	#mainToolbar a#addurl { background-position: -24px; }
-	#mainToolbar a#remove { background-position: -72px; }
-	#mainToolbar a#start { background-position: -96px; }
-	#mainToolbar a#pause { background-position: -120px; }
-	#mainToolbar a#stop { background-position: -144px; }
-	#mainToolbar a#queueup { background-position: -168px; }
-	#mainToolbar a#queuedown { background-position: -192px; }
-	#mainToolbar a#setting { background-position: -264px; }
+	#mainToolbar .tbbutton#add { background-position: 0px; }
+	#mainToolbar .tbbutton#addurl { background-position: -24px; }
+	#mainToolbar .tbbutton#remove { background-position: -72px; }
+	#mainToolbar .tbbutton#start { background-position: -96px; }
+	#mainToolbar .tbbutton#pause { background-position: -120px; }
+	#mainToolbar .tbbutton#stop { background-position: -144px; }
+	#mainToolbar .tbbutton#queueup { background-position: -168px; }
+	#mainToolbar .tbbutton#queuedown { background-position: -192px; }
+	#mainToolbar .tbbutton#setting { background-position: -264px; }
 
-#mainToolbar a.disabled {
+#mainToolbar .tbbutton.disabled {
 	cursor: default;
 	opacity: 0.10;
 }
 
-#mainToolbar a.disabled:active {
+#mainToolbar .tbbutton.disabled:active {
 	margin: 3px 4px;
+}
+
+#mainToolbar #tbchevron {
+	display: none;
+	float: right;
+	font-size: 1.2em;
+	margin-right: 3px;
+	opacity: 0.5;
+}
+
+#mainToolbar #tbchevron:hover {
+	opacity: 1.0;
 }
 
 #mainToolbar-searchbar {
@@ -269,7 +281,7 @@ td.disabled, label.disabled, span.disabled, div.disabled {
 	height: 20px;
 	line-height: 20px;
 	padding: 0 3px;
-	width: 100px;
+	width: 110px;
 }
 
 #mainToolbar-searchbar input {

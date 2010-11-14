@@ -1341,7 +1341,7 @@ var utWebUI = {
 	},
 
 	"setSettings": function() {
-		var value = null, resize = false, reload = false, hasChanged = false;
+		var value = null, reload = false, hasChanged = false;
 
 		Logger.setLogDate(this.getAdvSetting("gui.log_date"));
 
@@ -1358,14 +1358,12 @@ var utWebUI = {
 		value = $("webui.showCategories").checked;
 		if (this.config.showCategories != value) {
 			this.toggleCatPanel(value);
-			resize = true;
 			hasChanged = true;
 		}
 
 		value = $("webui.showDetails").checked;
 		if (this.config.showDetails != value) {
 			this.toggleDetPanel(value);
-			resize = true;
 			hasChanged = true;
 		}
 
@@ -1407,9 +1405,6 @@ var utWebUI = {
 		}
 
 		value = this.getAdvSetting("gui.tall_category_list");
-		resize = resize || (undefined != value && !!this.settings["gui.tall_category_list"] != value);
-
-		this.toggleSearchBar();
 
 		for (var key in this.settings) {
 			var ele = $(key);
@@ -1475,19 +1470,17 @@ var utWebUI = {
 			this.showMsg(
 				'WebUI has detected that the port setting was altered. How do you wish to proceed?' +
 				'<ul>' +
-					'<li><a href="#" onclick="changePort(' + new_port + ');">Reload</a> on the new port</li>' +
-					'<li><a href="#" onclick="utWebUI.beginPeriodicUpdate(); utWebUI.hideMsg();">Ignore</a> the port change</li>' +
+					'<li><a href="#" onclick="changePort(' + new_port + '); return false;">Reload</a> on the new port</li>' +
+					'<li><a href="#" onclick="utWebUI.beginPeriodicUpdate(); utWebUI.hideMsg(); return false;">Ignore</a> the port change</li>' +
 				'</ul>'
 			);
-			return;
 		}
 		else if (reload) {
 			window.location.reload(true);
 		}
-		else if (resize) {
-			resizeUI();
-		}
 
+		this.toggleSearchBar();
+		resizeUI();
 	},
 
 	"showSettings": function() {
@@ -1544,10 +1537,50 @@ var utWebUI = {
 				++index;
 			}
 		}).bind(this));
+
 		var pos = ele.getPosition(), size = ele.getSize();
 		pos.x += size.x / 2;
 		pos.y += size.y / 2;
 		ContextMenu.show(pos);
+	},
+
+	"toolbarChevronShow": function(ele) {
+		var missingItems = [];
+
+		var eleTB = $("mainToolbar");
+		eleTB.getElements(".inchev").each(function(item) {
+			if (item.getPosition(eleTB).y >= eleTB.getHeight()) {
+				if (item.hasClass("separator")) {
+					missingItems.push([CMENU_SEP]);
+				}
+				else {
+					var mItem = [item.get("title")];
+					if (!item.hasClass("disabled")) {
+						mItem[1] = function(ev) {
+							ev.target = item;
+							item.fireEvent("click", ev);
+						};
+					}
+
+					missingItems.push(mItem);
+				}
+			}
+		});
+
+		while (missingItems.length > 0 && missingItems[0][0] === CMENU_SEP) {
+			missingItems.shift();
+		}
+
+		ContextMenu.clear();
+		if (missingItems.length > 0) {
+			missingItems.each(function(item) {
+				ContextMenu.add(item);
+			});
+
+			var pos = ele.getPosition(), size = ele.getSize();
+			pos.y += size.y - 2;
+			ContextMenu.show(pos);
+		}
 	},
 
 	"trtDataToRow": function(data) {
@@ -2743,8 +2776,6 @@ var utWebUI = {
 				if (checking || started || queued) {
 					buttonDisabled.stop = 0;
 				}
-
-				buttonDisabled.remove = 0;
 			}, this);
 
 			if (queueSelCount < queueSelMax) {
@@ -2753,6 +2784,8 @@ var utWebUI = {
 			if (queueSelMin <= this.torQueueMax - queueSelCount) {
 				buttonDisabled.queuedown = 0;
 			}
+
+			buttonDisabled.remove = 0;
 		}
 
 		Object.each(buttonDisabled, function(disabled, button) {
