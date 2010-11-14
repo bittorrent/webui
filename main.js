@@ -528,10 +528,16 @@ function setupUserInterface() {
 	// TOOLBAR
 	//--------------------------------------------------
 
+	utWebUI.updateToolbarStates();
+
 	// -- Buttons
 
 	["add", "addurl", "remove", "start", "pause", "stop", "queueup", "queuedown", "setting"].each(function(act) {
 		$(act).addStopEvent("click", function(ev) {
+			if (ev.target.hasClass("disabled")) {
+				return;
+			}
+
 			var arg;
 			switch (act) {
 				case "add": DialogManager.show("Add"); break;

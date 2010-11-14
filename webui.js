@@ -28,6 +28,7 @@ var utWebUI = {
 		"cat_nlb": 0  // no-label
 	},
 	"customLabels": {},
+	"torQueueMax": -1,
 	"cacheID": 0,
 	"limits": {
 		"reqRetryDelayBase": 2, // seconds
@@ -430,7 +431,9 @@ var utWebUI = {
 			this.clearDetails();
 		}
 
-		this.getList("action=" + action + "&hash=" + hashes.join("&hash="));
+		this.getList("action=" + action + "&hash=" + hashes.join("&hash="), (function() {
+			this.updateToolbarStates();
+		}).bind(this));
 	},
 
 	"getHashes": function(act) {
@@ -469,6 +472,7 @@ var utWebUI = {
 				case "queuetop":
 				case "queuebottom":
 					key = { qnum: this.torrents[key][CONST.TORRENT_QUEUE_POSITION], hash: key };
+					if (key.qnum <= 0) continue;
 					break;
 
 				case "remove":
@@ -485,21 +489,40 @@ var utWebUI = {
 		}
 
 		// Sort hash list for queue reordering, since the backend executes
-		// queue order changes serially in the order that the hashes are
-		// passed in the GET argument list.
-		var direction = 1;
-		switch (act) {
-			case "queuedown":
-			case "queuetop":
-				direction = -1;
-			case "queueup":
-			case "queuebottom":
-				hashes = hashes.sort(function(x, y) {
-					return direction * (x.qnum < y.qnum ? -1 : (x.qnum > y.qnum ? 1 : 0));
-				}).map(function(item) {
-					return item.hash;
-				});
-				break;
+		// actions sequentially in the order that the hashes are passed in the
+		// GET argument list.
+		if (hashes.length > 0 && act.test(/^queue/)) {
+			var queueLimMin = 1,
+				queueLimMax = this.torQueueMax;
+
+			switch (act) {
+				case "queuedown":
+				case "queuetop":
+					direction = -1;
+					qfilter = function(item) {
+						return (item.qnum < queueLimMax);
+					};
+					break;
+
+				case "queueup":
+				case "queuebottom":
+					direction = 1;
+					qfilter = function(item) {
+						return (queueLimMin < item.qnum);
+					};
+					break;
+			}
+
+			hashes = hashes.sort(function(x, y) {
+				return direction * (x.qnum < y.qnum ? -1 : (x.qnum > y.qnum ? 1 : 0));
+			}).each(function(item) {
+				if (item.qnum == queueLimMin)
+					++queueLimMin;
+				if (item.qnum == queueLimMax)
+					--queueLimMax;
+			}).filter(qfilter).map(function(item) {
+				return item.hash;
+			});
 		}
 
 		return hashes;
@@ -577,12 +600,15 @@ var utWebUI = {
 		this.perform("recheck");
 	},
 
-	"getList": function(qs) {
+	"getList": function(qs, fn) {
 		this.endPeriodicUpdate();
 		qs = qs || "";
 		if (qs != "")
 			qs += "&";
-		this.request(qs + "list=1&cid=" + this.cacheID + "&getmsg=1", this.loadList);
+		this.request(qs + "list=1&cid=" + this.cacheID + "&getmsg=1", (function(json) {
+			this.loadList(json);
+			if (fn) fn(json);
+		}).bind(this));
 	},
 
 	"getStatusInfo": function(state, done) {
@@ -775,6 +801,13 @@ var utWebUI = {
 				this.clearDetails();
 			}
 		}
+		var queueMax = -1;
+		Object.each(this.torrents, function(trtData) {
+			if (queueMax < trtData[CONST.TORRENT_QUEUE_POSITION]) {
+				queueMax = trtData[CONST.TORRENT_QUEUE_POSITION];
+			}
+		});
+		this.torQueueMax = queueMax;
 
 		if (!this.loaded && (this.trtTable.sIndex >= 0))
 			this.trtTable.sort();
@@ -800,6 +833,7 @@ var utWebUI = {
 		SpeedGraph.addData(this.totalUL, this.totalDL);
 
 		this.updateSpeed();
+		this.updateToolbarStates();
 	},
 
 	"updateSpeed": function() {
@@ -1668,17 +1702,22 @@ var utWebUI = {
 	},
 
 	"trtSelect": function(ev, id) {
+		this.updateToolbarStates();
+
+		var selHash = this.trtTable.selectedRows;
+
 		if (!isGuest && ev.isRightClick()) {
-			if (this.trtTable.selectedRows.length > 0)
+			if (selHash.length > 0)
 				this.showMenu.delay(0, this, [ev, id]);
-			if (this.config.showDetails && (this.trtTable.selectedRows.length == 1))
+			if (this.config.showDetails && (selHash.length == 1))
 				this.showDetails(id);
-		} else {
+		}
+		else {
 			if (this.config.showDetails) {
-				if (this.trtTable.selectedRows.length == 0) {
+				if (selHash.length == 0) {
 					this.torrentID = "";
 					this.clearDetails();
-				} else if (this.trtTable.selectedRows.length == 1) {
+				} else if (selHash.length == 1) {
 					this.showDetails(id);
 				}
 			}
@@ -2654,6 +2693,76 @@ var utWebUI = {
 	"saveConfig": function(async, callback) {
 		if (isGuest) return;
 		this.request("action=setsetting&s=webui.cookie&v=" + JSON.encode(this.config), callback || null, async || false);
+	},
+
+	"updateToolbarStates": function() {
+		if (isGuest) return;
+
+		var buttonDisabled = {
+			"pause": 1,
+			"queuedown": 1,
+			"queueup": 1,
+			"remove": 1,
+			"start": 1,
+			"stop": 1
+		};
+
+		var selHash = this.trtTable.selectedRows;
+		if (selHash.length > 0) {
+			var queueSelCount = 0,
+				queueSelMin = Number.MAX_VALUE,
+				queueSelMax = -Number.MAX_VALUE;
+
+			selHash.each(function(hash) {
+				var tor = this.torrents[hash];
+
+				var queue = tor[CONST.TORRENT_QUEUE_POSITION],
+					state = tor[CONST.TORRENT_STATUS];
+
+				var started = !!(state & CONST.STATE_STARTED),
+					checking = !!(state & CONST.STATE_CHECKING),
+					paused = !!(state & CONST.STATE_PAUSED),
+					queued = !!(state & CONST.STATE_QUEUED);
+
+				if (queue > 0) {
+					++queueSelCount;
+
+					if (queue < queueSelMin) {
+						queueSelMin = queue;
+					}
+					if (queueSelMax < queue ) {
+						queueSelMax = queue;
+					}
+				}
+				if (!(queued || checking) || paused) {
+					buttonDisabled.start = 0;
+				}
+				if (!paused && (checking || started || queued)) {
+					buttonDisabled.pause = 0;
+				}
+				if (checking || started || queued) {
+					buttonDisabled.stop = 0;
+				}
+
+				buttonDisabled.remove = 0;
+			}, this);
+
+			if (queueSelCount < queueSelMax) {
+				buttonDisabled.queueup = 0;
+			}
+			if (queueSelMin <= this.torQueueMax - queueSelCount) {
+				buttonDisabled.queuedown = 0;
+			}
+		}
+
+		Object.each(buttonDisabled, function(disabled, button) {
+			if (disabled) {
+				$(button).addClass("disabled");
+			}
+			else {
+				$(button).removeClass("disabled");
+			}
+		});
 	},
 
 	"toggleCatPanel": function(show) {

@@ -34,7 +34,7 @@ var ContextMenu = {
 					ContextMenu.hide();
 
 				if (typeOf(fn) == 'function')
-					return fn(ev);
+					fn(ev);
 			});
 		}
 
@@ -71,7 +71,10 @@ var ContextMenu = {
 						.addClass("check")
 						.setProperty("href", "#")
 						.set("text", item[1])
-						.addStopEvent("mouseup", clickEvent(item[2]))
+						.addStopEvents({
+							"mouseup": clickEvent(item[2]),
+							"click": null
+						})
 					);
 					break;
 
@@ -99,7 +102,10 @@ var ContextMenu = {
 						li.adopt(ELE_A.clone(false)
 							.setProperty("href", "#")
 							.set("text", item[0])
-							.addStopEvent("mouseup", clickEvent(item[1]))
+							.addStopEvents({
+								"mouseup": clickEvent(item[1]),
+								"click": null
+							})
 						);
 					}
 

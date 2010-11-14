@@ -23,6 +23,11 @@
 	filter: alpha(opacity=100);
 }
 
+#mainToolbar a.disabled {
+	-ms-filter: "progid:DxImageTransform.Microsoft.Alpha(opacity=10)";
+	filter: alpha(opacity=10);
+}
+
 #mainToolbar-searchbar input {
 	-ms-filter: "progid:DxImageTransform.Microsoft.Alpha(opacity=80)";
 	filter: alpha(opacity=80);

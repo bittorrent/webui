@@ -243,6 +243,15 @@ td.disabled, label.disabled, span.disabled, div.disabled {
 	#mainToolbar a#queuedown { background-position: -192px; }
 	#mainToolbar a#setting { background-position: -264px; }
 
+#mainToolbar a.disabled {
+	cursor: default;
+	opacity: 0.10;
+}
+
+#mainToolbar a.disabled:active {
+	margin: 3px 4px;
+}
+
 #mainToolbar-searchbar {
 	float: right;
 	height: 24px;
@@ -1064,12 +1073,6 @@ li.selected#tab_mainInfoPane-loggerTab span {
 	height: 100px;
 }
 
-#prop-seed_ratio,
-#prop-seed_time {
-	margin-left: 3px;
-	margin-right: 3px;
-}
-
 /**************************************************
  * DIALOG: Settings
  **************************************************/
@@ -1164,13 +1167,6 @@ input[id="proxy.password"] { width: 70px; }
 #multi_day_transfer_limit_unit,
 #multi_day_transfer_limit_span {
 	margin-left: 3px;
-}
-
-/* Queueing */
-
-#seed_ratio, #seed_time {
-	margin-left: 3px;
-	margin-right: 3px;
 }
 
 /* Scheduler */
