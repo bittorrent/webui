@@ -510,7 +510,7 @@ var utWebUI = {
 					break;
 			}
 
-			var limitsetter, qfilter;
+			var limsetter, qfilter;
 			switch (act) {
 				case "queuedown":
 					limsetter = function(item) {
@@ -518,7 +518,6 @@ var utWebUI = {
 							--queueLimMax;
 					};
 					qfilter = function(item) {
-						limsetter
 						return (item.qnum <= queueLimMax);
 					};
 					break;
