@@ -491,36 +491,85 @@ var utWebUI = {
 		// Sort hash list for queue reordering, since the backend executes
 		// actions sequentially in the order that the hashes are passed in the
 		// GET argument list.
-		if (hashes.length > 0 && act.test(/^queue/)) {
+		var hashcount = hashes.length;
+		if (hashcount > 0 && act.test(/^queue/)) {
 			var queueLimMin = 1,
 				queueLimMax = this.torQueueMax;
 
+			// Filter setup
+			var sortdir;
 			switch (act) {
 				case "queuedown":
 				case "queuetop":
-					direction = -1;
-					qfilter = function(item) {
-						return (item.qnum < queueLimMax);
-					};
+					sortdir = -1;
 					break;
 
 				case "queueup":
 				case "queuebottom":
-					direction = 1;
-					qfilter = function(item) {
-						return (queueLimMin < item.qnum);
-					};
+					sortdir = 1;
 					break;
 			}
 
+			var limitsetter, qfilter;
+			switch (act) {
+				case "queuedown":
+					limsetter = function(item) {
+						if (item.qnum == queueLimMax)
+							--queueLimMax;
+					};
+					qfilter = function(item) {
+						limsetter
+						return (item.qnum <= queueLimMax);
+					};
+					break;
+
+				case "queueup":
+					limsetter = function(item) {
+						if (item.qnum == queueLimMin)
+							++queueLimMin;
+					};
+					qfilter = function(item) {
+						return (queueLimMin <= item.qnum);
+					};
+					break;
+
+				case "queuebottom":
+					var qmin = Number.MAX_VALUE;
+					limsetter = function(_, i, list) {
+						var qnum = list[hashcount-i-1].qnum;
+						if (qnum == queueLimMax)
+							--queueLimMax;
+						if (qnum < qmin)
+							qmin = qnum;
+					};
+					qfilter = function(item) {
+						return (qmin < queueLimMax);
+					};
+					break;
+
+				case "queuetop":
+					var qmax = -Number.MAX_VALUE;
+					limsetter = function(_, i, list) {
+						var qnum = list[hashcount-i-1].qnum;
+						if (qnum == queueLimMin)
+							++queueLimMin;
+						if (qmax < qnum)
+							qmax = qnum;
+					};
+					qfilter = function(item) {
+						return (queueLimMin < qmax);
+					};
+					break;
+
+				default:
+					limsetter = Function.from();
+					qfilter = Function.from(true);
+			}
+
+			// Process hash list
 			hashes = hashes.sort(function(x, y) {
-				return direction * (x.qnum < y.qnum ? -1 : (x.qnum > y.qnum ? 1 : 0));
-			}).each(function(item) {
-				if (item.qnum == queueLimMin)
-					++queueLimMin;
-				if (item.qnum == queueLimMax)
-					--queueLimMax;
-			}).filter(qfilter).map(function(item) {
+				return sortdir * (x.qnum < y.qnum ? -1 : (x.qnum > y.qnum ? 1 : 0));
+			}).each(limsetter).filter(qfilter).map(function(item) {
 				return item.hash;
 			});
 		}
@@ -1948,7 +1997,7 @@ var utWebUI = {
 		for (var k in ids) {
 			var dis = (props[k] == -1);
 			if (k == "dht")
-				dis = !this.settings.dht_per_torrent;
+				dis = !this.settings["dht_per_torrent"];
 			ele = $("prop-" + k);
 			ele.disabled = dis;
 			ele.checked = (props[k] == 1);

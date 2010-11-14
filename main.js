@@ -238,14 +238,14 @@ function resizeUI(hDiv, vDiv) {
 	}
 
 	var eleTB = $("mainToolbar");
-	var th = (showTB ? eleTB.getSize().y : 0);
+	var tbh = (showTB ? eleTB.getSize().y : 0);
 	if (showTB) {
 		// Show/hide toolbar chevron
 		var eleTBChildren = eleTB.getElements(".tbbutton");
 		var showTBChev = false;
 
 		for (var i = 0, il = eleTBChildren.length; i < il; ++i) {
-			if (eleTBChildren[i].getPosition().y > th) {
+			if (eleTBChildren[i].getPosition().y > tbh) {
 				showTBChev = true;
 				break;
 			}
@@ -285,8 +285,8 @@ function resizeUI(hDiv, vDiv) {
 		if (vDiv > wh - minVSplit) {
 			vDiv = wh - minVSplit;
 		}
-		else if (vDiv < th + minTrtH) {
-			vDiv = th + minTrtH;
+		else if (vDiv < tbh + minTrtH) {
+			vDiv = tbh + minTrtH;
 		}
 	}
 	else {
@@ -300,7 +300,7 @@ function resizeUI(hDiv, vDiv) {
 
 	// Calculate torrent list size
 	var trtw = ww - (hDiv + 2 + (showCat ? 5 : 0)) - (badIE ? 1 : 0),
-		trth = vDiv - (th + (showDet ? 0 : 2)) - (badIE ? 1 : 0);
+		trth = vDiv - (tbh + (showDet ? 0 : 2)) - (badIE ? 1 : 0);
 
 	if (showCat) {
 		$("mainCatList").show();
@@ -328,7 +328,7 @@ function resizeUI(hDiv, vDiv) {
 			if (vDiv > wh - minVSplit) {
 				$("mainInfoPane").hide();
 				showDet = false;
-				trth = wh - th - 2;
+				trth = wh - tbh - 2;
 			}
 			else {
 				trth = minTrtH;
@@ -341,7 +341,7 @@ function resizeUI(hDiv, vDiv) {
 		if (hDiv) $("mainCatList").setStyle("width", hDiv - (badIE ? 2 : 0));
 
 		if (tallCat) {
-			$("mainCatList").setStyle("height", wh - th - 2);
+			$("mainCatList").setStyle("height", wh - tbh - 2);
 		}
 		else if (trth) {
 			$("mainCatList").setStyle("height", trth);
@@ -365,9 +365,9 @@ function resizeUI(hDiv, vDiv) {
 	// Reposition dividers
 	if ($("mainHDivider")) {
 		$("mainHDivider").setStyles({
-			"height": tallCat ? wh - th : trth + 2,
+			"height": tallCat ? wh - tbh : trth + 2,
 			"left": showCat ? hDiv + 2 : -10,
-			"top": th
+			"top": tbh
 		});
 	}
 
