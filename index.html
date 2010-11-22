@@ -471,6 +471,22 @@
 							<label for="proxy.p2p" id="DLG_SETTINGS_4_CONN_20"></label>
 						</div>
 					</fieldset>
+
+					<fieldset>
+						<legend id="DLG_SETTINGS_4_CONN_22"></legend>
+						<div class="line-cont">
+							<input type="checkbox" id="no_local_dns" />
+							<label for="no_local_dns" id="DLG_SETTINGS_4_CONN_23"></label>
+						</div>
+						<div class="line-cont">
+							<input type="checkbox" id="private_ip" />
+							<label for="private_ip" id="DLG_SETTINGS_4_CONN_24"></label>
+						</div>
+						<div class="line-cont">
+							<input type="checkbox" id="only_proxied_conns" />
+							<label for="only_proxied_conns" id="DLG_SETTINGS_4_CONN_25"></label>
+						</div>
+					</fieldset>
 				</div>
 
 				<div id="dlgSettings-Bandwidth" class="settings-pane">
@@ -563,8 +579,8 @@
 						</div>
 						<div class="line-cont">
 							<div class="half flr">
-								<input type="checkbox" id="udp_trackers" />
-								<label for="udp_trackers" id="DLG_SETTINGS_6_BITTORRENT_15"></label>
+								<input type="checkbox" id="use_udp_trackers" />
+								<label for="use_udp_trackers" id="DLG_SETTINGS_6_BITTORRENT_15"></label>
 							</div>
 							<div>
 								<input type="checkbox" id="enable_bw_management" />
@@ -895,6 +911,17 @@
 							<input type="checkbox" id="cache.disable_win_read" />
 							<label for="cache.disable_win_read" id="DLG_SETTINGS_C_ADV_CACHE_15"></label>
 						</div>
+					</fieldset>
+				</div>
+
+				<div id="dlgSettings-RunProgram" class="settings-pane">
+					<fieldset>
+						<legend id="DLG_SETTINGS_C_ADV_RUN_01"></legend>
+						<div class="line-cont"><label for="finish_cmd" id="DLG_SETTINGS_C_ADV_RUN_02"></label></div>
+						<div class="line-cont"><input type="text" id="finish_cmd" class="tbox wide" /></div>
+						<div class="line-cont"><label for="state_cmd" id="DLG_SETTINGS_C_ADV_RUN_04"></label></div>
+						<div class="line-cont"><input type="text" id="state_cmd" class="tbox wide" /></div>
+						<div id="DLG_SETTINGS_C_ADV_RUN_06" style="margin-top: 5px; white-space: pre-wrap;"></div>
 					</fieldset>
 				</div>
 			</div>

@@ -65,7 +65,7 @@ window.onerror = function(msg, url, linenumber) {
 	//return true;
 };
 
-var console = console || {};
+window.console = window.console || {};
 
 console.log = console.log || function(str) {
 	if (window.opera) {

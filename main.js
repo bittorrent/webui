@@ -238,13 +238,13 @@ function resizeUI(hDiv, vDiv) {
 	}
 
 	var eleTB = $("mainToolbar");
-	var tbh = (showTB ? eleTB.getSize().y : 0);
+	var tbh = (showTB ? eleTB.getHeight() : 0);
 	if (showTB) {
 		// Show/hide toolbar chevron
 		var eleTBChildren = eleTB.getElements(".tbbutton");
 		var showTBChev = false;
 
-		for (var i = 0, il = eleTBChildren.length; i < il; ++i) {
+		for (var i = eleTBChildren.length - 1; i >= 0; --i) {
 			if (eleTBChildren[i].getPosition().y > tbh) {
 				showTBChev = true;
 				break;
@@ -810,6 +810,7 @@ function setupUserInterface() {
 			, "dlgSettings-Advanced"    : ""
 			, "dlgSettings-UIExtras"    : ""
 			, "dlgSettings-DiskCache"   : ""
+			, "dlgSettings-RunProgram"  : ""
 		},
 		"onChange": utWebUI.settingsPaneChange.bind(utWebUI)
 	}).draw().show("dlgSettings-WebUI");
@@ -963,7 +964,7 @@ function setupUserInterface() {
 	var linkedEvent = Browser.ie ? "click" : "change";
 
 	$("proxy.type").addEvent("change", function() { // onchange fires in IE on <select>s
-		_link(this, 0, ["proxy.proxy", "proxy.port", "proxy.auth", "proxy.resolve", "proxy.p2p"]);
+		_link(this, 0, ["proxy.proxy", "proxy.port", "proxy.auth", "proxy.resolve", "proxy.p2p", "no_local_dns", "private_ip", "only_proxied_conns"]);
 	});
 
 	$("proxy.auth").addEvent(linkedEvent, function() {
@@ -1338,6 +1339,7 @@ function loadLangStrings(reload) {
 		, "dlgSettings-Advanced"    : lang[CONST.ST_CAPT_ADVANCED]
 		, "dlgSettings-UIExtras"    : "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + lang[CONST.ST_CAPT_UI_EXTRAS] // TODO: Use CSS to indent instead of modifying the string directly...
 		, "dlgSettings-DiskCache"   : "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + lang[CONST.ST_CAPT_DISK_CACHE] // TODO: Use CSS to indent instead of modifying the string directly...
+		, "dlgSettings-RunProgram"  : "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + lang[CONST.ST_CAPT_RUN_PROGRAM] // TODO: Use CSS to indent instead of modifying the string directly...
 	});
 
 	_loadStrings("text", [
@@ -1398,6 +1400,10 @@ function loadLangStrings(reload) {
 		, "DLG_SETTINGS_4_CONN_19"
 		, "DLG_SETTINGS_4_CONN_20"
 		, "DLG_SETTINGS_4_CONN_21"
+		, "DLG_SETTINGS_4_CONN_22"
+		, "DLG_SETTINGS_4_CONN_23"
+		, "DLG_SETTINGS_4_CONN_24"
+		, "DLG_SETTINGS_4_CONN_25"
 
 		// Bandwidth
 		, "DLG_SETTINGS_5_BANDWIDTH_01"
@@ -1460,6 +1466,11 @@ function loadLangStrings(reload) {
 		, "DLG_SETTINGS_9_SCHEDULER_07"
 		, "DLG_SETTINGS_9_SCHEDULER_09"
 
+		, "ST_SCH_LGND_FULL"
+		, "ST_SCH_LGND_LIMITED"
+		, "ST_SCH_LGND_OFF"
+		, "ST_SCH_LGND_SEEDING"
+
 		// Web UI
 		, "DLG_SETTINGS_9_WEBUI_01"
 		, "DLG_SETTINGS_9_WEBUI_02"
@@ -1469,6 +1480,9 @@ function loadLangStrings(reload) {
 		, "DLG_SETTINGS_9_WEBUI_09"
 		, "DLG_SETTINGS_9_WEBUI_10"
 		, "DLG_SETTINGS_9_WEBUI_12"
+
+		, "MENU_SHOW_CATEGORY"
+		, "MENU_SHOW_DETAIL"
 
 		// Advanced
 		, "DLG_SETTINGS_A_ADVANCED_01"
@@ -1499,12 +1513,12 @@ function loadLangStrings(reload) {
 		, "DLG_SETTINGS_C_ADV_CACHE_13"
 		, "DLG_SETTINGS_C_ADV_CACHE_14"
 		, "DLG_SETTINGS_C_ADV_CACHE_15"
-		, "MENU_SHOW_CATEGORY"
-		, "MENU_SHOW_DETAIL"
-		, "ST_SCH_LGND_FULL"
-		, "ST_SCH_LGND_LIMITED"
-		, "ST_SCH_LGND_OFF"
-		, "ST_SCH_LGND_SEEDING"
+
+		// Run Program
+		, "DLG_SETTINGS_C_ADV_RUN_01"
+		, "DLG_SETTINGS_C_ADV_RUN_02"
+		, "DLG_SETTINGS_C_ADV_RUN_04"
+		, "DLG_SETTINGS_C_ADV_RUN_06"
 	]);
 
 	// -- Advanced Options
