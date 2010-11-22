@@ -1248,10 +1248,15 @@ var utWebUI = {
 				}
 
 				// handle special parameters
-				// TODO: Implement support for par.access
 
-				// insert into settings map
+				// TODO: See if we need anything more in implementing support for par.access
+				if (CONST.SETTINGPARAM_ACCESS_RO === par.access) {
+					if ($(key)) $(key).addClass("disabled");
+				}
+
+				// insert into settings map and show
 				this.settings[key] = val;
+				_unhideSetting(key);
 			}
 
 			// Insert custom keys...
@@ -1511,7 +1516,7 @@ var utWebUI = {
 		}
 
 		var port = (window.location.port ? window.location.port : (window.location.protocol == "http:" ? 80 : 443));
-		var new_port = (this.settings["webui.enable_listen"] ? this.settings["webui.port"] : this.settings["bind_port"]);
+		var new_port = (this.settings["webui.enable_listen"] === undefined || this.settings["webui.enable_listen"] ? this.settings["webui.port"] : this.settings["bind_port"]);
 
 		if (port != new_port) {
 			this.endPeriodicUpdate();

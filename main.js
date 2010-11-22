@@ -812,6 +812,7 @@ function setupUserInterface() {
 			, "dlgSettings-DiskCache"   : ""
 			, "dlgSettings-RunProgram"  : ""
 		},
+		"lazyshow": true,
 		"onChange": utWebUI.settingsPaneChange.bind(utWebUI)
 	}).draw().show("dlgSettings-WebUI");
 
@@ -1048,6 +1049,33 @@ function setupUserInterface() {
 		_link(this, 0, ["gui.ulrate_menu", "gui.dlrate_menu"]);
 	});
 
+	// -- Miscellaneous
+
+	_unhideSetting([
+		// General
+		"webui.lang"
+
+		// BitTorrent
+		, "enable_bw_management"
+
+		// Transfer Cap - Usage history
+		, "multi_day_transfer_mode"
+		, "total_uploaded_history"
+		, "total_downloaded_history"
+		, "total_updown_history"
+		, "history_period"
+		, "DLG_SETTINGS_7_TRANSFERCAP_12"
+
+		// Advanced
+		, "DLG_SETTINGS_A_ADVANCED_02"
+
+		// Web UI
+		, "webui.maxRows"
+		, "webui.showDetails"
+		, "webui.updateInterval"
+		, "webui.showCategories"
+	]);
+
 	resizeUI();
 
 }
@@ -1080,6 +1108,24 @@ function _link(obj, defstate, list, ignoreLabels, reverse) {
 		}
 		label[(disabled ? "add" : "remove") + "Class"]("disabled");
 	}
+}
+
+function _unhideSetting(obj) {
+	if (typeOf(obj) !== 'array') obj = [obj];
+
+	obj.each(function(ele) {
+		ele = $(ele);
+		if (!ele) return;
+
+		ele = ele.parentNode;
+		while (ele && !ele.hasClass("settings-pane") && ele.getStyle("display") === "none") {
+			ele.show();
+			ele = ele.parentNode;
+		}
+
+		if (ele.hasClass("settings-pane"))
+			ele.fireEvent("show");
+	}, this);
 }
 
 

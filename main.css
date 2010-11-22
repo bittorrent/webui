@@ -906,7 +906,7 @@ li.selected#tab_mainInfoPane-loggerTab span {
  **************************************************/
 
 #dlgAbout {
-	width: 225px;
+	width: 250px;
 }
 
 #dlgAbout .dlg-body {
@@ -1169,7 +1169,7 @@ input[id="proxy.password"] { width: 70px; }
 
 /* BitTorrent */
 
-#tracker_ip { width: 210px; }
+#tracker_ip { width: 215px; }
 #encryption_mode { margin-left: 3px; }
 
 /* Transfer Cap */
@@ -1283,6 +1283,34 @@ input[id="gui.dlrate_menu"] {
 }
 
 #search_list { height: 75px; }
+
+/* Hide Unknown Settings */
+
+#dlgSettings .dlg-body div,
+#dlgSettings .dlg-body fieldset {
+	display: none;
+}
+
+#sched_table_lgnd,
+#sched_table_info,
+#DLG_SETTINGS_C_ADV_CACHE_02,
+#DLG_SETTINGS_C_ADV_RUN_06 {
+	display: block !important;
+}
+
+/*
+NOTE: The following is an ugly hack, but a necessary one if we want the settings
+      to remain scalable.
+*/
+
+#dlgSettings-advOptList,
+#dlgSettings-advOptList div {
+	display: block !important;
+}
+
+#dlgSettings .dlg-body div .stable-loading {
+	display: none !important;
+}
 
 
 /**************************************************

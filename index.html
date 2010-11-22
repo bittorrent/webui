@@ -588,8 +588,10 @@
 							</div>
 						</div>
 						<div class="line-cont">
-							<div class="half flr"><input type="text" id="tracker_ip" class="tbox str" maxlength="50" /></div>
-							<div><label id="DLG_SETTINGS_6_BITTORRENT_08"></label></div>
+							<div>
+								<input type="text" id="tracker_ip" class="half flr tbox str" maxlength="50" />
+								<label id="DLG_SETTINGS_6_BITTORRENT_08"></label>
+							</div>
 						</div>
 					</fieldset>
 
@@ -635,19 +637,19 @@
 						<legend id="DLG_SETTINGS_7_TRANSFERCAP_06"></legend>
 						<div class="line-cont">
 							<div class="half flr" id="total_uploaded_history"></div>
-							<div id="DLG_SETTINGS_7_TRANSFERCAP_07"></div>
+							<label for="total_uploaded_history" id="DLG_SETTINGS_7_TRANSFERCAP_07"></label>
 						</div>
 						<div class="line-cont">
 							<div class="half flr" id="total_downloaded_history"></div>
-							<div id="DLG_SETTINGS_7_TRANSFERCAP_08"></div>
+							<label for="total_downloaded_history" id="DLG_SETTINGS_7_TRANSFERCAP_08"></label>
 						</div>
 						<div class="line-cont">
 							<div class="half flr" id="total_updown_history"></div>
-							<div id="DLG_SETTINGS_7_TRANSFERCAP_09"></div>
+							<label for="total_updown_history" id="DLG_SETTINGS_7_TRANSFERCAP_09"></label>
 						</div>
 						<div class="line-cont">
 							<div class="half flr" id="history_period"></div>
-							<div id="DLG_SETTINGS_7_TRANSFERCAP_10"></div>
+							<label for="history_period" id="DLG_SETTINGS_7_TRANSFERCAP_10"></label>
 						</div>
 						<div class="line-cont">
 							<input type="button" id="DLG_SETTINGS_7_TRANSFERCAP_12" class="btn" />
@@ -777,8 +779,10 @@
 								<label for="webui.enable_listen" id="DLG_SETTINGS_9_WEBUI_10"></label>
 							</div>
 						</div>
-						<div class="line-cont"><label for="webui.restrict" id="DLG_SETTINGS_9_WEBUI_12"></label></div>
-						<div class="line-cont"><input type="text" id="webui.restrict" class="tbox wide" /></div>
+						<div>
+							<label for="webui.restrict" id="DLG_SETTINGS_9_WEBUI_12"></label>
+							<input type="text" id="webui.restrict" class="tbox wide" />
+						</div>
 					</fieldset>
 
 					<fieldset>
@@ -917,10 +921,14 @@
 				<div id="dlgSettings-RunProgram" class="settings-pane">
 					<fieldset>
 						<legend id="DLG_SETTINGS_C_ADV_RUN_01"></legend>
-						<div class="line-cont"><label for="finish_cmd" id="DLG_SETTINGS_C_ADV_RUN_02"></label></div>
-						<div class="line-cont"><input type="text" id="finish_cmd" class="tbox wide" /></div>
-						<div class="line-cont"><label for="state_cmd" id="DLG_SETTINGS_C_ADV_RUN_04"></label></div>
-						<div class="line-cont"><input type="text" id="state_cmd" class="tbox wide" /></div>
+						<div>
+							<label for="finish_cmd" id="DLG_SETTINGS_C_ADV_RUN_02"></label>
+							<input type="text" id="finish_cmd" class="tbox wide" />
+						</div>
+						<div>
+							<label for="state_cmd" id="DLG_SETTINGS_C_ADV_RUN_04"></label>
+							<input type="text" id="state_cmd" class="tbox wide" />
+						</div>
 						<div id="DLG_SETTINGS_C_ADV_RUN_06" style="margin-top: 5px; white-space: pre-wrap;"></div>
 					</fieldset>
 				</div>

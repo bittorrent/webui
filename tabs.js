@@ -11,11 +11,13 @@ var Tabs = new Class({
 
 	"active": "",
 	"tabs": {},
+	"lazyshow": false,
 	"tabchange": Function.from(),
 
 	"initialize": function(ele, options) {
 		this.element = $(ele);
 		this.tabs = options.tabs;
+		this.lazyshow = !!options.lazyshow;
 		if (typeOf(options.onChange) == 'function') {
 			this.tabchange = options.onChange;
 		}
@@ -35,7 +37,19 @@ var Tabs = new Class({
 		this.element.empty();
 
 		Object.each(this.tabs, function(text, id) {
-			this.element.adopt(ELE_LI.clone(false)
+			var ele = ELE_LI.clone(false);
+			if (this.lazyshow) {
+				ele.hide();
+
+				var showCB = function() {
+					ele.show();
+					$(id).removeEvent("show", showCB);
+				};
+
+				$(id).addEvent("show", showCB);
+			}
+
+			this.element.adopt(ele
 				.set("id", "tab_" + id)
 				.adopt(ELE_A.clone(false)
 					.setProperty("href", "#")
