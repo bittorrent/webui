@@ -345,7 +345,7 @@ function resizeUI(hDiv, vDiv) {
 		if (hDiv) $("mainCatList").setStyle("width", hDiv - (badIE ? 2 : 0));
 
 		if (tallCat) {
-			$("mainCatList").setStyle("height", wh - tbh - 2);
+			$("mainCatList").setStyle("height", wh - tbh - sbh - 2);
 		}
 		else if (trth) {
 			$("mainCatList").setStyle("height", trth);

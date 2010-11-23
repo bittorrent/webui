@@ -343,7 +343,7 @@ var dxSTable = new Class({
 
 			if (this.lastScroll != this.dBody.scrollTop) {
 				this.resizePads();
-				this.refreshRows();
+//				this.refreshRows();
 
 				this.lastScroll = this.dBody.scrollTop;
 			}
@@ -1202,8 +1202,10 @@ var dxSTable = new Class({
 
 	"calcSize": function() {
 		var badIE = (Browser.ie && Browser.version <= 7);
-		this.dBody.setStyle("height", (this.dCont.clientHeight - this.dHead.offsetHeight - ((this.options.refreshable || this.options.mode == MODE_PAGE) ? 26 : 0)).max(52));
-		this.dBody.setStyle("width", (this.dCont.offsetWidth - 2).max(0));
+		this.dBody.setStyles({
+			"height": (this.dCont.clientHeight - this.dHead.offsetHeight - ((this.options.refreshable || this.options.mode == MODE_PAGE) ? 26 : 0)).max(52),
+			"width": (this.dCont.offsetWidth - 2).max(0)
+		});
 		this.dHead.setStyle("width", (this.dCont.offsetWidth + (((this.dBody.offsetWidth - this.dBody.clientWidth) == 0) ? -4 : -1)).max(0));
 		if (!this.isResizing) {
 			for (var i = 0, j = this.cols; i < j; i++) {
@@ -1220,8 +1222,6 @@ var dxSTable = new Class({
 		}
 		if (Browser.chrome || Browser.safari)
 			this.tBody.setStyle("width", this.tHead.getWidth());
-
-		this.restoreScroll();
 	},
 
 	"hideRow": function(id) {
@@ -1319,7 +1319,10 @@ var dxSTable = new Class({
 			this.dCont.setStyle("width", w);
 //		if (typeOf(h) == 'number')
 			this.dCont.setStyle("height", h);
+
+		this.isResizing = true;
 		this.calcSize();
+		this.isResizing = false;
 	},
 
 	"colMenu": function(coords) {
@@ -1360,6 +1363,15 @@ var dxSTable = new Class({
 				this.tBody.setStyle("top", st + diff.min(0));
 
 				break;
+		}
+	},
+
+	"resetScroll": function() {
+//		if (this.options.mode != MODE_VIRTUAL) return;
+		this.dBody.scrollTop = this.lastScroll = 0;
+		if (this.activeId.length > 0) {
+			this.resizePads();
+			this.refreshRows();
 		}
 	},
 

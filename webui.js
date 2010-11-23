@@ -1163,8 +1163,8 @@ var utWebUI = {
 					var tOrig = typeOf(objOrig[k]),
 						tNew = typeOf(objNew[k]);
 
-					if (tOrig == tNew) {
-						if (tOrig == "object") {
+					if (tOrig === tNew) {
+						if (tOrig === "object") {
 							safeCopy(objOrig[k], objNew[k]);
 						}
 						else {
@@ -2240,6 +2240,7 @@ var utWebUI = {
 		}
 		this.prsTable.loadObj.hide.delay(200, this.prsTable.loadObj);
 		this.prsTable.calcSize();
+		this.prsTable.resetScroll();
 	},
 
 	"getPeers": function(id, update) {
@@ -2293,6 +2294,7 @@ var utWebUI = {
 		}
 		this.flsTable.loadObj.hide.delay(200, this.flsTable.loadObj);
 		this.flsTable.calcSize();
+		this.flsTable.resetScroll();
 	},
 
 	"getFiles": function(id, update) {
@@ -3113,6 +3115,7 @@ var utWebUI = {
 		switch (id) {
 			case "mainInfoPane-peersTab":
 				this.prsTable.calcSize();
+				this.prsTable.restoreScroll();
 
 				if (this.torrentID == "") return;
 
@@ -3123,6 +3126,7 @@ var utWebUI = {
 
 			case "mainInfoPane-filesTab":
 				this.flsTable.calcSize();
+				this.flsTable.restoreScroll();
 
 				if (this.torrentID == "") return;
 				if (has(this.flsTable.rowData, this.torrentID + "_0")) return;
@@ -3144,8 +3148,14 @@ var utWebUI = {
 	
 	"settingsPaneChange": function(id) {
 		switch (id) {
-			case "dlgSettings-TransferCap": this.getTransferHistory(); break;
-			case "dlgSettings-Advanced": this.advOptTable.calcSize(); break;
+			case "dlgSettings-TransferCap":
+				this.getTransferHistory();
+				break;
+
+			case "dlgSettings-Advanced":
+				this.advOptTable.calcSize();
+				this.advOptTable.restoreScroll();
+				break;
 		}
 	}/*,
 
