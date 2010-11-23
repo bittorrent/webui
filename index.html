@@ -787,24 +787,32 @@
 
 					<fieldset>
 						<legend>User Interface</legend>
-						<div class="line-cont">
-							<div class="half flr">
+						<div class="half flr">
+							<div class="line-cont">
+								<input type="text" id="webui.updateInterval" class="tbox num flr" value="3000" />
+								<label for="webui.updateInterval">Update GUI every (ms):</label>
+							</div>
+							<div class="line-cont">
 								<input type="text" id="webui.maxRows" class="tbox num flr" value="50" />
 								<label for="webui.maxRows">Max. rows per page:</label>
 							</div>
-							<div>
+						</div>
+						<div class="half fll">
+							<div class="line-cont">
+								<input type="checkbox" id="webui.showToolbar" checked="checked" />
+								<label for="webui.showToolbar" id="MENU_SHOW_TOOLBAR"></label>
+							</div>
+							<div class="line-cont">
+								<input type="checkbox" id="webui.showCategories" checked="checked" />
+								<label for="webui.showCategories" id="MENU_SHOW_CATEGORY"></label>
+							</div>
+							<div class="line-cont">
 								<input type="checkbox" id="webui.showDetails" checked="checked" />
 								<label for="webui.showDetails" id="MENU_SHOW_DETAIL"></label>
 							</div>
-						</div>
-						<div class="line-cont">
-							<div class="half flr">
-								<input type="text" id="webui.updateInterval" class="tbox num flr" value="3000" />
-								<label for="webui.updateInterval">Update GUI every (ms):</label>&nbsp;
-							</div>
-							<div>
-								<input type="checkbox" id="webui.showCategories" checked="checked" />
-								<label for="webui.showCategories" id="MENU_SHOW_CATEGORY"></label>
+							<div class="line-cont">
+								<input type="checkbox" id="webui.showStatusBar" checked="checked" />
+								<label for="webui.showStatusBar" id="MENU_SHOW_STATUS"></label>
 							</div>
 						</div>
 					</fieldset>
@@ -1045,6 +1053,13 @@
 			</div>
 		</div>
 		<!-- Detailed Info Pane */ -->
+
+		<!-- /* Status Bar -->
+		<div id="mainStatusBar">
+			<div id="mainStatusBar-upload" class="section"></div>
+			<div id="mainStatusBar-download" class="section"></div>
+		</div>
+		<!-- Status Bar */ -->
 
 		<div id="mainVDivider"></div>
 		<div id="mainHDivider"></div>

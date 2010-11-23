@@ -49,6 +49,7 @@ var utWebUI = {
 		"showDetails": true,
 		"showCategories": true,
 		"showToolbar": true,
+		"showStatusBar": true,
 		"updateInterval": 3000,
 		"maxRows": 0,
 		"lang": "en",
@@ -432,7 +433,7 @@ var utWebUI = {
 		}
 
 		this.getList("action=" + action + "&hash=" + hashes.join("&hash="), (function() {
-			this.updateToolbarStates();
+			this.updateToolbar();
 		}).bind(this));
 	},
 
@@ -880,15 +881,9 @@ var utWebUI = {
 		this.updateDetails();
 		SpeedGraph.addData(this.totalUL, this.totalDL);
 
-		this.updateSpeed();
-		this.updateToolbarStates();
-	},
-
-	"updateSpeed": function() {
-		var str = lang[CONST.MAIN_TITLEBAR_SPEED].replace(/%s/, this.totalDL.toFileSize() + g_perSec).replace(/%s/, this.totalUL.toFileSize() + g_perSec);
-		window.status = window.defaultStatus = str.replace(/%s/, "");
-		if (this.settings["gui.speed_in_title"])
-			document.title = str.replace(/%s/, g_winTitle);
+		this.updateTitle();
+		this.updateToolbar();
+		this.updateStatusBar();
 	},
 
 	"update": function() {
@@ -1355,6 +1350,7 @@ var utWebUI = {
 			"showDetails",
 			"showCategories",
 			"showToolbar",
+			"showStatusBar",
 			"updateInterval",
 			"lang"
 		].each((function(key) {
@@ -1383,12 +1379,14 @@ var utWebUI = {
 			"seed_time": 0,
 			"ulslots": 0
 		};
-		if (!this.config.showCategories)
-			$("mainCatList").hide();
-		if (!this.config.showDetails && !isGuest)
-			$("mainInfoPane").hide();
 		if (!this.config.showToolbar && !isGuest)
 			$("mainToolbar").hide();
+		if (!this.config.showCategories)
+			$("mainCatList").hide();
+		if (!this.config.showDetails)
+			$("mainInfoPane").hide();
+		if (!this.config.showStatusBar)
+			$("mainStatusBar").hide();
 
 		this.toggleSearchBar();
 	},
@@ -1408,6 +1406,12 @@ var utWebUI = {
 			hasChanged = true;
 		}
 
+		value = $("webui.showToolbar").checked;
+		if (this.config.showToolbar != value) {
+			this.toggleToolbar(value);
+			hasChanged = true;
+		}
+
 		value = $("webui.showCategories").checked;
 		if (this.config.showCategories != value) {
 			this.toggleCatPanel(value);
@@ -1417,6 +1421,12 @@ var utWebUI = {
 		value = $("webui.showDetails").checked;
 		if (this.config.showDetails != value) {
 			this.toggleDetPanel(value);
+			hasChanged = true;
+		}
+
+		value = $("webui.showStatusBar").checked;
+		if (this.config.showStatusBar != value) {
+			this.toggleStatusBar(value);
 			hasChanged = true;
 		}
 
@@ -1595,6 +1605,119 @@ var utWebUI = {
 		pos.x += size.x / 2;
 		pos.y += size.y / 2;
 		ContextMenu.show(pos);
+	},
+
+	"generateSpeedList": function(curSpeed, itemCount) {
+		var LOGBASE = Math.log(3);
+
+		curSpeed = parseInt(curSpeed, 10) || 0;
+		itemCount = parseInt(itemCount || 15, 10) || 0;
+		if (itemCount < 5) itemCount = 5;
+
+		// Generate items
+		var scale = (curSpeed <= 0 ? 3 : (Math.log(curSpeed) / LOGBASE));
+		var scaleinc = (scale / itemCount);
+		var list = (curSpeed > 0 ? [curSpeed] : []);
+		var first = 0;
+
+		for (var i = 1, curscale = (scale - 2).max(0); i <= itemCount; ++i, curscale += scaleinc) {
+			var offset = i * Math.round(Math.pow(2, curscale));
+
+			if (offset < curSpeed) {
+				list.unshift(curSpeed - offset);
+				++first;
+			}
+			list.push(curSpeed + offset);
+		}
+
+		// TODO: Consider post-processing items so they look "nicer" (intervals of 5, 10, 25, etc)
+
+		// Determine front of list
+		for (var i = (itemCount / 2) - 1; first > 0 && list[first] > 0 && i > 0; --i) {
+			--first;
+		}
+
+		return [0, -1].concat(list.slice(first, first+itemCount));
+	},
+
+	"statusSpeedMenuShow": function(speed, ev) {
+		if (!ev.isRightClick()) return true;
+
+		speed.set = speed.set || Function.from();
+		speed.cur = parseInt(speed.cur, 10) || 0;
+
+		switch (typeOf(speed.list)) {
+			case 'string':
+				speed.list = speed.list.split(",");
+
+			case 'array':
+				speed.list = speed.list.map(function(val) {
+					return String.from(val).trim();
+				});
+				break;
+
+			default:
+				speed.list = this.generateSpeedList(speed.cur);
+		}
+
+		ContextMenu.clear();
+
+		speed.list.each(function(val) {
+			val = parseInt(val, 10);
+			if (isNaN(val)) return;
+
+			var item;
+			switch (val) {
+				case -1: item = [CMENU_SEP]; break;
+				case 0: item = [lang[CONST.MENU_UNLIMITED]]; break;
+
+				default:
+					if (val < 0) val *= -1;
+					item = [val + " " + lang[CONST.SIZE_KB] + g_perSec];
+			}
+
+			if (val === speed.cur) {
+				item.unshift(CMENU_SEL);
+			}
+			else {
+				item.push(speed.set.pass(val));
+			}
+			ContextMenu.add(item);
+		});
+
+		ContextMenu.show(ev.page);
+	},
+
+	"setSpeedDownload": function(val) {
+		// TODO: Generalize settings storage requests
+		this.request("action=setsetting&s=max_dl_rate&v=" + val, (function() {
+			$("max_dl_rate").set("value", val);
+			this.settings["max_dl_rate"] = val;
+		}).bind(this));
+	},
+
+	"setSpeedUpload": function(val) {
+		// TODO: Generalize settings storage requests
+		this.request("action=setsetting&s=max_ul_rate&v=" + val, (function() {
+			$("max_ul_rate").set("value", val);
+			this.settings["max_ul_rate"] = val;
+		}).bind(this));
+	},
+
+	"statusDownloadMenuShow": function(ev) {
+		return this.statusSpeedMenuShow({
+			  "set": this.setSpeedDownload.bind(this)
+			, "cur": this.settings["max_dl_rate"]
+			, "list": !!this.settings["gui.manual_ratemenu"] && this.settings["gui.dlrate_menu"]
+		}, ev);
+	},
+
+	"statusUploadMenuShow": function(ev) {
+		return this.statusSpeedMenuShow({
+			  "set": this.setSpeedUpload.bind(this)
+			, "cur": this.settings["max_ul_rate"]
+			, "list": !!this.settings["gui.manual_ratemenu"] && this.settings["gui.ulrate_menu"]
+		}, ev);
 	},
 
 	"toolbarChevronShow": function(ele) {
@@ -1788,7 +1911,7 @@ var utWebUI = {
 	},
 
 	"trtSelect": function(ev, id) {
-		this.updateToolbarStates();
+		this.updateToolbar();
 
 		var selHash = this.trtTable.selectedRows;
 
@@ -2781,9 +2904,54 @@ var utWebUI = {
 		this.request("action=setsetting&s=webui.cookie&v=" + JSON.encode(this.config), callback || null, async || false);
 	},
 
-	"updateToolbarStates": function() {
+	"updateStatusBar": function() {
+		var str, seg, val, data;
+
+		// Download
+		str = '';
+
+		seg = lang[CONST.SB_DOWNLOAD].replace(/%z/, this.totalDL.toFileSize());
+
+		val = '';
+		data = this.settings["max_dl_rate"] || 0;
+		if (this.settings["gui.limits_in_statusbar"] && data > 0) {
+			val = '[' + data + " " + lang[CONST.SIZE_KB] + g_perSec + '] ';
+		}
+		seg = seg.replace(/%s/, val);
+
+		str += seg;
+
+		$("mainStatusBar-download").set("text", str);
+
+		// Upload
+		str = '';
+
+		seg = lang[CONST.SB_UPLOAD].replace(/%z/, this.totalUL.toFileSize());
+
+		val = '';
+		data = this.settings["max_ul_rate"] || 0;
+		if (this.settings["gui.limits_in_statusbar"] && data > 0) {
+			val = '[' + data + " " + lang[CONST.SIZE_KB] + g_perSec + '] ';
+		}
+		seg = seg.replace(/%s/, val);
+
+		str += seg;
+
+		$("mainStatusBar-upload").set("text", str);
+
+	},
+
+	"updateTitle": function() {
+		var str = lang[CONST.MAIN_TITLEBAR_SPEED].replace(/%s/, this.totalDL.toFileSize() + g_perSec).replace(/%s/, this.totalUL.toFileSize() + g_perSec);
+		window.status = window.defaultStatus = str.replace(/%s/, "");
+		if (this.settings["gui.speed_in_title"])
+			document.title = str.replace(/%s/, g_winTitle);
+	},
+
+	"updateToolbar": function() {
 		if (isGuest) return;
 
+		// Toggle button sensitivity
 		var buttonDisabled = {
 			"pause": 1,
 			"queuedown": 1,
@@ -2857,6 +3025,7 @@ var utWebUI = {
 		}
 
 		$("mainCatList")[show ? "show" : "hide"]();
+		$("webui.showCategories").checked = show;
 		this.config.showCategories = show;
 	},
 
@@ -2866,6 +3035,7 @@ var utWebUI = {
 		}
 
 		$("mainInfoPane")[show ? "show" : "hide"]();
+		$("webui.showDetails").checked = show;
 		this.config.showDetails = show;
 	},
 
@@ -2877,12 +3047,23 @@ var utWebUI = {
 		$("mainToolbar-searchbar")[show ? "show" : "hide"]();
 	},
 
+	"toggleStatusBar": function(show) {
+		if (show === undefined) {
+			show = !this.config.showStatusBar;
+		}
+
+		$("mainStatusBar")[show ? "show" : "hide"]();
+		$("webui.showStatusBar").checked = show;
+		this.config.showStatusBar = show;
+	},
+
 	"toggleToolbar": function(show) {
 		if (show === undefined) {
 			show = !this.config.showToolbar;
 		}
 
 		$("mainToolbar")[show ? "show" : "hide"]();
+		$("webui.showToolbar").checked = show;
 		this.config.showToolbar = show;
 	},
 

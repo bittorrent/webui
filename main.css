@@ -38,6 +38,14 @@ fieldset {
 	position: relative;
 }
 
+fieldset:after {
+    clear: both;
+    content: ".";
+    display: block;
+    height: 0;
+    visibility: hidden;
+}
+
 fieldset legend {
 	color: #000000;
 	font-weight: bold;
@@ -113,6 +121,10 @@ input.disabled, select.disabled {
 td.disabled, label.disabled, span.disabled, div.disabled {
 	color: #C0C0C0;
 	cursor: default;
+}
+
+.fll {
+	float: left;
 }
 
 .flr {
@@ -191,8 +203,7 @@ td.disabled, label.disabled, span.disabled, div.disabled {
 
 #mainToolbar {
 	background: #EEEEEE;
-	border: 0 solid #AAAAAA;
-	border-bottom-width: 1px;
+	border-bottom: 1px solid #AAAAAA;
 	height: 30px;
 	line-height: 30px;
 	margin: 0;
@@ -773,6 +784,37 @@ li.selected#tab_mainInfoPane-loggerTab span {
 
 
 /**************************************************
+ * STATUS BAR
+ **************************************************/
+
+#mainStatusBar {
+	background: #EEEEEE;
+	border-top: 1px solid #AAAAAA;
+	bottom: 0;
+	left: 0;
+	margin: 0;
+	overflow: hidden;
+	padding: 1px;
+	position: absolute;
+	right: 0;
+}
+
+#mainStatusBar .section {
+	border-left: 1px solid #CCCCCC;
+	float: right;
+	height: 16px;
+	line-height: 16px;
+	padding: 0 5px;
+	text-align: left;
+}
+
+#mainStatusBar-download,
+#mainStatusBar-upload {
+	width: 175px;
+}
+
+
+/**************************************************
  * MAIN UI DIVIDERS
  **************************************************/
 
@@ -1090,7 +1132,7 @@ li.selected#tab_mainInfoPane-loggerTab span {
  **************************************************/
 
 #dlgSettings {
-	width: 580px;
+	width: 590px;
 }
 
 #dlgSettings-head {
@@ -1106,7 +1148,7 @@ li.selected#tab_mainInfoPane-loggerTab span {
 	overflow: auto;
 	position: absolute;
 	top: 0;
-	width: 100px;
+	width: 110px;
 }
 
 #dlgSettings-menu li a {
@@ -1122,7 +1164,7 @@ li.selected#tab_mainInfoPane-loggerTab span {
 
 #dlgSettings .settings-pane {
 	height: 340px;
-	left: 100px;
+	left: 110px;
 	padding: 0 5px;
 	position: relative;
 	width: 460px;
@@ -1303,12 +1345,12 @@ NOTE: The following is an ugly hack, but a necessary one if we want the settings
       to remain scalable.
 */
 
-#dlgSettings-advOptList,
-#dlgSettings-advOptList div {
+#dlgSettings .dlg-body .stable,
+#dlgSettings .dlg-body .stable div {
 	display: block !important;
 }
 
-#dlgSettings .dlg-body div .stable-loading {
+#dlgSettings .dlg-body .stable .stable-loading {
 	display: none !important;
 }
 
@@ -1332,7 +1374,7 @@ ul.CMenu {
 
 ul.CMenu li {
 	position: relative;
-	width: 150px;
+	width: 140px;
 	word-wrap: break-word;
 }
 
@@ -1353,16 +1395,16 @@ ul.CMenu li.sep {
 	height: 0;
 	line-height: 0;
 	margin: 2px 5px;
-	width: 140px;
+	width: 130px;
 }
 
-ul.CMenu li a.exp { background: transparent url(./images/menuexp.png) no-repeat scroll 140px center; }
+ul.CMenu li a.exp { background: transparent url(./images/menuexp.png) no-repeat scroll 130px center; }
 ul.CMenu li a.sel { background: transparent url(./images/menusel.png) no-repeat scroll 4px center; }
 ul.CMenu li a.check { background: transparent url(./images/menucheck.png) no-repeat scroll 4px center; }
 
 ul.CMenu li:hover a { background-color: #0099FF; color: #FFFFFF; }
-ul.CMenu li:hover ul { display: block; position: absolute; top: 0; left: 150px; }
+ul.CMenu li:hover ul { display: block; position: absolute; top: 0; left: 140px; }
 ul.CMenu li:hover ul li ul { display: none; z-index: 1002; }
 ul.CMenu li:hover ul li a { display: block; background-color: #F6F6F6; color: #000000; }
 ul.CMenu li:hover ul li a:hover { background-color: #0099FF; color: #FFFFFF; }
-ul.CMenu li:hover ul.left { left: -150px; z-index: 1002; }
+ul.CMenu li:hover ul.left { left: -140px; z-index: 1002; }

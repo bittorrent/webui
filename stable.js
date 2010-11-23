@@ -167,27 +167,30 @@ var dxSTable = new Class({
 					$me.sort(this.element, ev.shift, true);
 			}
 		}).detach();
-		tr.addEvent("mousemove", function(ev) {
-			var ele = ev.target;
-			if (!ele) return;
-			var tag = ele.get("tag");
-			if (tag == "span") {
-				ele = ele.parentNode;
-				tag = "td";
-			}
-			if (tag == "td")
-				ColumnHandler.check.apply($me, [ev, ele]);
-		}).addEvent("mousedown", function(ev) {
-			var ele = ev.target;
-			if (!ele) return;
-			var tag = ele.get("tag");
-			if (tag == "span") {
-				ele = ele.parentNode;
-				tag = "td";
-			}
-			if (tag == "td") {
-				nDrag.element = nDrag.handles = ele;
-				nDrag.attach().start(ev);
+		tr.addEvents({
+			"mousemove": function(ev) {
+				var ele = ev.target;
+				if (!ele) return;
+				var tag = ele.get("tag");
+				if (tag == "span") {
+					ele = ele.getParent();
+					tag = "td";
+				}
+				if (tag == "td")
+					ColumnHandler.check.apply($me, [ev, ele]);
+			},
+			"mousedown": function(ev) {
+				var ele = ev.target;
+				if (!ele) return;
+				var tag = ele.get("tag");
+				if (tag == "span") {
+					ele = ele.getParent();
+					tag = "td";
+				}
+				if (tag == "td") {
+					nDrag.element = nDrag.handles = ele;
+					nDrag.attach().start(ev);
+				}
 			}
 		});
 
@@ -253,7 +256,7 @@ var dxSTable = new Class({
 					ele = ele.getParent("td");
 
 				if (ele) {
-					$me.selectRow(ev, ele.parentNode);
+					$me.selectRow(ev, ele.getParent());
 				}
 
 				if (!(Browser.ie9 && document.documentMode >= 9)) { // allow scrollbars to work on IE9
@@ -281,7 +284,7 @@ var dxSTable = new Class({
 
 				if (ele) {
 					var idprefix = new RegExp("^" + $me.id + "-row-", "");
-					$me.fireEvent("onDblClick", ele.parentNode.id.replace(idprefix, ""));
+					$me.fireEvent("onDblClick", ele.getParent().id.replace(idprefix, ""));
 				}
 
 				ev.preventDefault();
@@ -426,7 +429,7 @@ var dxSTable = new Class({
 		var bodyParent = this.tBody.getElement("colgroup"), bodyTarg = bodyParent.childNodes[iNew], bodyCol = bodyParent.childNodes[iCol].dispose();
 
 		if (iNew == this.cols) {
-			headCol.parentNode.grab(headCol.dispose(), "bottom");
+			headCol.getParent().grab(headCol.dispose(), "bottom");
 			bodyParent.grab(bodyCol, "bottom");
 
 			this.rowModel.grab(this.rowModel.childNodes[iCol].dispose(), "bottom"); // update "model" row in case it's needed again (adding more rows)

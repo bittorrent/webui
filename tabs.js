@@ -26,7 +26,7 @@ var Tabs = new Class({
 			var targ = ev.target;
 
 			if (targ && (targ.get("tag") == "span"))
-				targ = targ.parentNode;
+				targ = targ.getParent();
 
 			if (targ && (targ.get("tag") == "a"))
 				$me.show(targ.retrieve("showId"));

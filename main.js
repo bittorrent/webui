@@ -229,10 +229,12 @@ function resizeUI(hDiv, vDiv) {
 		minTrtW = uiLimits.minTrtW;
 
 	var badIE = (Browser.ie && Browser.version <= 6);
-	var showCat = true, showDet = true, showTB = false, tallCat = false;
+	var showCat = config.showCategories,
+		showDet = config.showDetails,
+		showSB = config.showStatusBar,
+		showTB, tallCat;
+
 	if (!isGuest) {
-		showCat = config.showCategories;
-		showDet = config.showDetails;
 		showTB = config.showToolbar;
 		tallCat = !!utWebUI.settings["gui.tall_category_list"];
 	}
@@ -259,6 +261,8 @@ function resizeUI(hDiv, vDiv) {
 		}
 	}
 
+	var sbh = (showSB ? $("mainStatusBar").getHeight() : 0);
+
 	if (manualH) {
 		hDiv -= 2;
 
@@ -279,7 +283,7 @@ function resizeUI(hDiv, vDiv) {
 	}
 
 	if (manualV) {
-		vDiv -= 2;
+		vDiv += sbh - 2;
 
 		// Sanity check manual drag of divider
 		if (vDiv > wh - minVSplit) {
@@ -300,7 +304,7 @@ function resizeUI(hDiv, vDiv) {
 
 	// Calculate torrent list size
 	var trtw = ww - (hDiv + 2 + (showCat ? 5 : 0)) - (badIE ? 1 : 0),
-		trth = vDiv - (tbh + (showDet ? 0 : 2)) - (badIE ? 1 : 0);
+		trth = vDiv - (tbh + sbh) - (!showDet ? 2 : 0) - (badIE ? 1 : 0);
 
 	if (showCat) {
 		$("mainCatList").show();
@@ -352,7 +356,7 @@ function resizeUI(hDiv, vDiv) {
 	if (showDet) {
 		var dw = ww - (showCat && tallCat ? hDiv + 5 : 0);
 		if (vDiv) {
-			var dh = wh - vDiv - $("mainInfoPane-tabs").getSize().y - 17;
+			var dh = wh - vDiv - $("mainInfoPane-tabs").getSize().y - (showSB ? 1 : 0) - 17;
 			$("mainInfoPane-content").setStyles({"width": dw - 8, "height": dh});
 			$("mainInfoPane-generalTab").setStyles({"width": dw - 10, "height": dh - 2});
 			SpeedGraph.resize(dw - 8, dh);
@@ -375,7 +379,7 @@ function resizeUI(hDiv, vDiv) {
 		$("mainVDivider").setStyles({
 			"width": tallCat && showCat ? ww - (hDiv + 5) : ww,
 			"left": tallCat && showCat ? hDiv + 5 : 0,
-			"top": showDet ? vDiv + 2 : -10
+			"top": showDet ? vDiv - sbh + 2 : -10
 		});
 	}
 
@@ -548,7 +552,7 @@ function setupUserInterface() {
 	// TOOLBAR
 	//--------------------------------------------------
 
-	utWebUI.updateToolbarStates();
+	utWebUI.updateToolbar();
 
 	// -- Buttons
 
@@ -1071,10 +1075,24 @@ function setupUserInterface() {
 
 		// Web UI
 		, "webui.maxRows"
-		, "webui.showDetails"
 		, "webui.updateInterval"
+		, "webui.showToolbar"
 		, "webui.showCategories"
+		, "webui.showDetails"
+		, "webui.showStatusBar"
 	]);
+
+	//--------------------------------------------------
+	// STATUS BAR
+	//--------------------------------------------------
+
+	$("mainStatusBar-download").addStopEvent("mousedown", function(ev) {
+		return utWebUI.statusDownloadMenuShow(ev);
+	});
+
+	$("mainStatusBar-upload").addStopEvent("mousedown", function(ev) {
+		return utWebUI.statusUploadMenuShow(ev);
+	});
 
 	resizeUI();
 
@@ -1117,10 +1135,10 @@ function _unhideSetting(obj) {
 		ele = $(ele);
 		if (!ele) return;
 
-		ele = ele.parentNode;
+		ele = ele.getParent();
 		while (ele && !ele.hasClass("settings-pane") && ele.getStyle("display") === "none") {
 			ele.show();
-			ele = ele.parentNode;
+			ele = ele.getParent();
 		}
 
 		if (ele.hasClass("settings-pane"))
@@ -1273,6 +1291,12 @@ function loadLangStrings(reload) {
 		, lang[CONST.OV_COL_DOWNSPD]
 	);
 	SpeedGraph.draw();
+
+	//--------------------------------------------------
+	// STATUS
+	//--------------------------------------------------
+
+	utWebUI.updateStatusBar();
 
 	//--------------------------------------------------
 	// NON-GUEST SETUP
@@ -1529,6 +1553,8 @@ function loadLangStrings(reload) {
 
 		, "MENU_SHOW_CATEGORY"
 		, "MENU_SHOW_DETAIL"
+		, "MENU_SHOW_STATUS"
+		, "MENU_SHOW_TOOLBAR"
 
 		// Advanced
 		, "DLG_SETTINGS_A_ADVANCED_01"

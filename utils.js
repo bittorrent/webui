@@ -109,8 +109,13 @@ String.implement({
 Number.implement({
 
 	"toFixedNR": function(numdec) {
-		var res = this.toFixed(20);
-		return res.substring(0, res.length-(20-numdec));
+		if (numdec <= 0) {
+			return String.from(parseInt(this));
+		}
+		else {
+			var res = this.toFixed(20);
+			return res.substring(0, res.length-(20-numdec));
+		}
 	},
 
 	"toFileSize": function(numdec, unit) {
