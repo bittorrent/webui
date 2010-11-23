@@ -369,7 +369,7 @@ function resizeUI(hDiv, vDiv) {
 	// Reposition dividers
 	if ($("mainHDivider")) {
 		$("mainHDivider").setStyles({
-			"height": tallCat ? wh - tbh : trth + 2,
+			"height": tallCat ? wh - tbh - sbh : trth + 2,
 			"left": showCat ? hDiv + 2 : -10,
 			"top": tbh
 		});
@@ -523,8 +523,11 @@ function setupUserInterface() {
 
 	new Drag("mainHDivider", {
 		"modifiers": {"x": "left", "y": ""},
-		"onComplete": function() {
+		"onDrag": function() {
 			resizeUI(this.value.now.x, null);
+		},
+		"onComplete": function() {
+//			resizeUI(this.value.now.x, null);
 			if (Browser.opera)
 				utWebUI.saveConfig(true);
 		}
@@ -532,8 +535,11 @@ function setupUserInterface() {
 
 	new Drag("mainVDivider", {
 		"modifiers": {"x": "", "y": "top"},
-		"onComplete": function() {
+		"onDrag": function() {
 			resizeUI(null, this.value.now.y);
+		},
+		"onComplete": function() {
+//			resizeUI(null, this.value.now.y);
 			if (Browser.opera)
 				utWebUI.saveConfig(true);
 		}
