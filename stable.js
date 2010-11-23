@@ -343,7 +343,7 @@ var dxSTable = new Class({
 
 			if (this.lastScroll != this.dBody.scrollTop) {
 				this.resizePads();
-//				this.refreshRows();
+				this.refreshRows();
 
 				this.lastScroll = this.dBody.scrollTop;
 			}
