@@ -1927,12 +1927,13 @@ var utWebUI = {
 		if (selHash.length === 0) {
 			this.torrentID = "";
 			this.clearDetails();
-		}
-		else if (selHash.length === 1 && this.config.showDetails) {
-			this.showDetails(id);
+			return;
 		}
 
-		if (!isGuest && ev.isRightClick() && selHash.length > 0) {
+		if (this.config.showDetails) {
+			this.showDetails(id);
+		}
+		if (!isGuest && ev.isRightClick()) {
 			this.showMenu.delay(0, this, [ev, id]);
 		}
 	},
