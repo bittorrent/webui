@@ -480,9 +480,7 @@ function setupUserInterface() {
 		"onColMove": utWebUI.prsColMove.bind(utWebUI),
 		"onColToggle": utWebUI.prsColToggle.bind(utWebUI),
 		"onSort": utWebUI.prsSort.bind(utWebUI),
-		"onSelect": utWebUI.prsSelect.bind(utWebUI),
-		"onRefresh": function() { if (this.torrentID != "") utWebUI.getPeers(utWebUI.torrentID, true); },
-		"refreshable": true
+		"onSelect": utWebUI.prsSelect.bind(utWebUI)
 	}, utWebUI.defConfig.peerTable));
 
 	$("mainInfoPane-peersTab").addEvent("mousedown", function(ev) {
@@ -501,9 +499,7 @@ function setupUserInterface() {
 		"onColToggle": utWebUI.flsColToggle.bind(utWebUI),
 		"onSort": utWebUI.flsSort.bind(utWebUI),
 		"onSelect": utWebUI.flsSelect.bind(utWebUI),
-		"onRefresh": function() { if (this.torrentID != "") utWebUI.getFiles(utWebUI.torrentID, true); },
-		"onDblClick": utWebUI.flsDblClk.bind(utWebUI),
-		"refreshable": true
+		"onDblClick": utWebUI.flsDblClk.bind(utWebUI)
 	}, utWebUI.defConfig.fileTable));
 
 	// -- Speed Tab

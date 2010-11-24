@@ -13,8 +13,8 @@ var isGuest = window.location.pathname.test(/.*guest.html$/);
 var utWebUI = {
 
 	"torrents": {},
-	"peers": {},
-	"files": {},
+	"peerlist": [],
+	"filelist": [],
 	"settings": {},
 	"props": {},
 	"xferhist": {},
@@ -37,6 +37,8 @@ var utWebUI = {
 		"maxVirtTableRows": Math.ceil(screen.height / 16) || 100,
 		"minUpdateInterval": 500,
 		"minDirListCache": 30, // seconds
+		"minFileListCache": 60, // seconds
+		"minPeerListCache": 5, // seconds
 		"minXferHistCache": 60, // seconds
 		"defHSplit": 125,
 		"defVSplit": 225,
@@ -880,12 +882,6 @@ var utWebUI = {
 		this.trtTable.refresh();
 
 		this.beginPeriodicUpdate();
-		this.updateDetails();
-		SpeedGraph.addData(this.totalUL, this.totalDL);
-
-		this.updateTitle();
-		this.updateToolbar();
-		this.updateStatusBar();
 	},
 
 	"update": function() {
@@ -893,6 +889,13 @@ var utWebUI = {
 		this.totalUL = 0;
 
 		this.getList();
+		SpeedGraph.addData(this.totalUL, this.totalDL);
+
+		this.showDetails();
+
+		this.updateTitle();
+		this.updateToolbar();
+		this.updateStatusBar();
 
 		if (typeof(DialogManager) !== 'undefined') {
 			if (DialogManager.showing.contains("Settings") && ("dlgSettings-TransferCap" == this.stpanes.active)) {
@@ -1921,21 +1924,16 @@ var utWebUI = {
 
 		var selHash = this.trtTable.selectedRows;
 
-		if (!isGuest && ev.isRightClick()) {
-			if (selHash.length > 0)
-				this.showMenu.delay(0, this, [ev, id]);
-			if (this.config.showDetails && (selHash.length == 1))
-				this.showDetails(id);
+		if (selHash.length === 0) {
+			this.torrentID = "";
+			this.clearDetails();
 		}
-		else {
-			if (this.config.showDetails) {
-				if (selHash.length == 0) {
-					this.torrentID = "";
-					this.clearDetails();
-				} else if (selHash.length == 1) {
-					this.showDetails(id);
-				}
-			}
+		else if (selHash.length === 1 && this.config.showDetails) {
+			this.showDetails(id);
+		}
+
+		if (!isGuest && ev.isRightClick() && selHash.length > 0) {
+			this.showMenu.delay(0, this, [ev, id]);
 		}
 	},
 
@@ -2171,34 +2169,49 @@ var utWebUI = {
 	},
 
 	"showDetails": function(id) {
-		this.flsTable.clearRows();
-		this.torrentID = id;
-		this.getPeers(id, true);
-		this.getFiles(id);
-		this.updateDetails();
+		var force = (id !== undefined);
+
+		if (force) this.torrentID = id;
+		else id = this.torrentID;
+
+		if (!(this.config || {}).showDetails) return;
+
+		switch (this.mainTabs.active) { // TODO: Cleanup... (don't allow direct access to internals)
+			case "mainInfoPane-generalTab":
+				this.updateDetails(id);
+			break;
+
+			case "mainInfoPane-peersTab":
+				this.getPeers(id, force);
+			break;
+
+			case "mainInfoPane-filesTab":
+				this.getFiles(id, force);
+			break;
+		}
 	},
 
 	"clearDetails": function() {
-		this.prsTable.clearRows();
-		this.flsTable.clearRows();
 		["rm", "dl", "ul", "ra", "us", "ds", "se", "pe", "hs"].each(function(id) {
 			$(id).set("html", "");
 		});
+		this.prsTable.clearRows();
+		this.flsTable.clearRows();
 	},
 
-	"updateDetails": function() {
-		if (this.torrentID != "") {
-			var d = this.torrents[this.torrentID];
-			$("hs").set("html", this.torrentID);
-			$("dl").set("html", d[CONST.TORRENT_DOWNLOADED].toFileSize());
-			$("ul").set("html", d[CONST.TORRENT_UPLOADED].toFileSize());
-			$("ra").set("html", (d[CONST.TORRENT_RATIO] == -1) ? "\u221E" : (d[CONST.TORRENT_RATIO] / 1000).toFixedNR(3));
-			$("us").set("html", d[CONST.TORRENT_UPSPEED].toFileSize() + g_perSec);
-			$("ds").set("html", d[CONST.TORRENT_DOWNSPEED].toFileSize() + g_perSec);
-			$("rm").set("html", (d[CONST.TORRENT_ETA] == 0) ? "" : (d[CONST.TORRENT_ETA] <= -1) ? "\u221E" : d[CONST.TORRENT_ETA].toTimeString());
-			$("se").set("html", lang[CONST.GN_XCONN].replace(/%d/, d[CONST.TORRENT_SEEDS_CONNECTED]).replace(/%d/, d[CONST.TORRENT_SEEDS_SWARM]).replace(/%d/, "\u00BF?"));
-			$("pe").set("html", lang[CONST.GN_XCONN].replace(/%d/, d[CONST.TORRENT_PEERS_CONNECTED]).replace(/%d/, d[CONST.TORRENT_PEERS_SWARM]).replace(/%d/, "\u00BF?"));
-		}
+	"updateDetails": function(id) {
+		if (!id) return;
+
+		var d = this.torrents[id];
+		$("hs").set("html", id);
+		$("dl").set("html", d[CONST.TORRENT_DOWNLOADED].toFileSize());
+		$("ul").set("html", d[CONST.TORRENT_UPLOADED].toFileSize());
+		$("ra").set("html", (d[CONST.TORRENT_RATIO] == -1) ? "\u221E" : (d[CONST.TORRENT_RATIO] / 1000).toFixedNR(3));
+		$("us").set("html", d[CONST.TORRENT_UPSPEED].toFileSize() + g_perSec);
+		$("ds").set("html", d[CONST.TORRENT_DOWNSPEED].toFileSize() + g_perSec);
+		$("rm").set("html", (d[CONST.TORRENT_ETA] == 0) ? "" : (d[CONST.TORRENT_ETA] <= -1) ? "\u221E" : d[CONST.TORRENT_ETA].toTimeString());
+		$("se").set("html", lang[CONST.GN_XCONN].replace(/%d/, d[CONST.TORRENT_SEEDS_CONNECTED]).replace(/%d/, d[CONST.TORRENT_SEEDS_SWARM]).replace(/%d/, "\u00BF?"));
+		$("pe").set("html", lang[CONST.GN_XCONN].replace(/%d/, d[CONST.TORRENT_PEERS_CONNECTED]).replace(/%d/, d[CONST.TORRENT_PEERS_SWARM]).replace(/%d/, "\u00BF?"));
 	},
 
 	"addURL": function() {
@@ -2221,97 +2234,104 @@ var utWebUI = {
 	},
 
 	"loadPeers": function() {
-		var id = this.torrentID;
-		if (id != "" && this.peers[id]) {
-			this.prsTable.dBody.scrollLeft = 0;
-			this.prsTable.dBody.scrollTop = 0;
-			this.peers[id].each(function(peer, i) {
-				var key = id + "_" + peer[CONST.PEER_IP].replace(/\./g, "_") + "_" + peer[CONST.PEER_PORT]; // TODO: Handle bt.allow_same_ip
-				this.prsTable.addRow(this.prsDataToRow(peer), key);
-				this.prsTable.setIcon(key, "country_" + peer[CONST.PEER_COUNTRY]);
-			}, this);
-		}
-		this.prsTable.loadObj.hide.delay(200, this.prsTable.loadObj);
-		this.prsTable.calcSize();
-		this.prsTable.resetScroll();
+		this.prsTable.keepScroll((function() {
+			this.prsTable.clearRows(true);
+
+			var id = this.torrentID;
+			if (id === this.peerlist._ID_) {
+				this.peerlist.each(function(peer, i) {
+					var key = id + "_" + peer[CONST.PEER_IP].replace(/\./g, "_") + "_" + peer[CONST.PEER_PORT]; // TODO: Handle bt.allow_same_ip
+					this.prsTable.addRow(this.prsDataToRow(peer), key);
+					this.prsTable.setIcon(key, "country_" + peer[CONST.PEER_COUNTRY]);
+				}, this);
+			}
+
+			this.prsTable.loadObj.hide();
+			this.prsTable.calcSize();
+			this.prsTable.restoreScroll();
+		}).bind(this));
 	},
 
-	"getPeers": function(id, update) {
+	"getPeers": function(id, forceload) {
 
 { // TODO: Remove this once backend support is stable (requires 3.0+)
 	if (undefined === this.settings["webui.uconnect_enable"]) return;
 }
 
-		if (!has(this.peers, id) || update) {
-			this.peers[id] = [];
-			if (update)
-				this.prsTable.clearRows();
-			if (this.mainTabs.active == "mainInfoPane-peersTab")
-				this.prsTable.loadObj.show();
-			this.request("action=getpeers&hash=" + id, this.addPeers);
-		} else {
-			if (this.mainTabs.active == "mainInfoPane-peersTab") {
-				this.prsTable.loadObj.show();
-				this.loadPeers.delay(20, this);
-			}
+		if (id === undefined) id = this.torrentID;
+		if (!id) return;
+
+		var now = Date.now();
+		if (forceload || this.peerlist._ID_ !== id || !this.peerlist._TIME_ || (now - this.peerlist._TIME_) > (this.limits.minPeerListCache * 1000)) {
+			this.request("action=getpeers&hash=" + id, (function (json) {
+				this.peerlist = [];
+
+				var peers = json.peers;
+				if (peers) {
+					for (var i = 0; i < peers.length; i += 2) {
+						if (peers[i] === id) {
+							this.peerlist = peers[i+1];
+							break;
+						}
+					}
+				}
+
+				this.peerlist._TIME_ = now;
+				this.peerlist._ID_ = id;
+
+				this.loadPeers();
+			}).bind(this));
+		}
+		else {
+//			this.loadPeers();
 		}
 	},
-
-	"addPeers": function(json) {
-		var peers = json.peers;
-		if (peers == undefined) return;
-		this.peers[peers[0]] = peers[1];
-		if (this.mainTabs.active == "mainInfoPane-peersTab")
-			this.loadPeers();
-	},
-
-/*
-	"updateFiles": function(hash) {
-		if ((this.torrentID == hash) && has(this.files, hash)) {
-			this.getFiles(hash, true);
-			this.updateDetails();
-		}
-	},
-*/
 
 	"loadFiles": function() {
-		var id = this.torrentID;
-		if (id != "" && this.files[id]) {
-			if (!has(this.flsTable.rowData, id + "_0")) { // don't unnecessarily reload the table
-				this.flsTable.dBody.scrollLeft = 0;
-				this.flsTable.dBody.scrollTop = 0;
-				this.files[id].each(function(file, i) {
+		this.flsTable.keepScroll((function() {
+			this.flsTable.clearRows(true);
+
+			var id = this.torrentID;
+			if (id === this.filelist._ID_) {
+				this.filelist.each(function(file, i) {
 					this.flsTable.addRow(this.flsDataToRow(file), id + "_" + i);
 				}, this);
 			}
-		}
-		this.flsTable.loadObj.hide.delay(200, this.flsTable.loadObj);
-		this.flsTable.calcSize();
-		this.flsTable.resetScroll();
+
+			this.flsTable.loadObj.hide();
+			this.flsTable.calcSize();
+			this.flsTable.restoreScroll();
+		}).bind(this));
 	},
 
-	"getFiles": function(id, update) {
-		if (!has(this.files, id) || update) {
-			this.files[id] = [];
-			if (update)
-				this.flsTable.clearRows();
-			if (this.mainTabs.active == "mainInfoPane-filesTab")
-				this.flsTable.loadObj.show();
-			this.request("action=getfiles&hash=" + id, this.addFiles);
-		} else {
-			if (this.mainTabs.active == "mainInfoPane-filesTab") {
-				this.flsTable.loadObj.show();
-				this.loadFiles.delay(20, this);
-			}
-		}
-	},
+	"getFiles": function(id, forceload) {
+		if (id === undefined) id = this.torrentID;
+		if (!id) return;
 
-	"addFiles": function(json) {
-		var files = json.files;
-		if (files == undefined) return;
-		this.files[files[0]] = files[1];
-		if (this.mainTabs.active == "mainInfoPane-filesTab")
-			this.loadFiles();
+		var now = Date.now();
+		if (forceload || this.filelist._ID_ !== id || !this.filelist._TIME_ || (now - this.filelist._TIME_) > (this.limits.minFileListCache * 1000)) {
+			this.request("action=getfiles&hash=" + id, (function (json) {
+				this.filelist = [];
+
+				var files = json.files;
+				if (files) {
+					for (var i = 0; i < files.length; i += 2) {
+						if (files[i] === id) {
+							this.filelist = files[i+1];
+							break;
+						}
+					}
+				}
+
+				this.filelist._TIME_ = now;
+				this.filelist._ID_ = id;
+
+				this.loadFiles();
+			}).bind(this));
+		}
+		else {
+//			this.loadFiles();
+		}
 	},
 
 	"flsDataToRow": function(data) {
@@ -2375,7 +2395,7 @@ var utWebUI = {
 
 		var id = this.torrentID;
 
-		var fileIds = this.getSelFileIds(id, -1);
+		var fileIds = this.getSelFileIds(-1);
 		if (fileIds.length <= 0) return;
 
 		var menuItems = [];
@@ -2393,9 +2413,9 @@ var utWebUI = {
 		];
 
 		// Gray out priority items based on priorities of selected files
-		var p = this.files[id][fileIds[0]][CONST.FILE_PRIORITY];
+		var p = this.filelist[fileIds[0]][CONST.FILE_PRIORITY];
 		for (var i = 1, l = fileIds.length; i < l; ++i) {
-			if (p != this.files[id][fileIds[i]][CONST.FILE_PRIORITY]) {
+			if (p != this.filelist[fileIds[i]][CONST.FILE_PRIORITY]) {
 				p = -1;
 				break;
 			}
@@ -2419,7 +2439,7 @@ var utWebUI = {
 		// Gray out download item if no selected file is complete
 		var goodFile = false;
 		for (var i = 0, l = fileIds.length; i < l; ++i) {
-			var data = this.files[id][fileIds[i]];
+			var data = this.filelist[fileIds[i]];
 			if (data[CONST.FILE_DOWNLOADED] == data[CONST.FILE_SIZE]) {
 				goodFile = true;
 				break;
@@ -2429,7 +2449,7 @@ var utWebUI = {
 			delete fileDownloadItems[1][1];
 		}
 
-		var fdata = this.files[id][fileIds[0]];
+		var fdata = this.filelist[fileIds[0]];
 		if (fileIds.length > 1 || fdata[CONST.FILE_DOWNLOADED] != fdata[CONST.FILE_SIZE]) {
 		}
 
@@ -2444,13 +2464,13 @@ var utWebUI = {
 		ContextMenu.show(ev.page);
 	},
 
-	"getSelFileIds": function(id, p) {
+	"getSelFileIds": function(p) {
 		var ids = [];
 		var len = this.flsTable.selectedRows.length;
 		while (len--) {
 			var rowId = this.flsTable.selectedRows[len];
 			var fileId = rowId.match(/.*_([0-9]+)$/)[1].toInt();
-			if (this.files[id][fileId][CONST.FILE_PRIORITY] != p) {
+			if (this.filelist[fileId][CONST.FILE_PRIORITY] != p) {
 				ids.push(fileId);
 			}
 		}
@@ -2458,11 +2478,11 @@ var utWebUI = {
 	},
 
 	"downloadFiles": function(id) {
-		var selIds = this.getSelFileIds(id, -1);
+		var selIds = this.getSelFileIds(-1);
 
 		var fileIds = [];
 		$each(selIds, function(fid) {
-			var data = this.files[id][fid];
+			var data = this.filelist[fid];
 			if (data[CONST.FILE_DOWNLOADED] == data[CONST.FILE_SIZE]) {
 				fileIds.push(fid);
 			}
@@ -2474,13 +2494,13 @@ var utWebUI = {
 	},
 
 	"setPriority": function(id, p) {
-		var fileIds = this.getSelFileIds(id, p);
+		var fileIds = this.getSelFileIds(p);
 		if (fileIds.length <= 0) return;
 
 		this.request("action=setprio&hash=" + id + "&p=" + p + "&f=" + fileIds.join("&f="), (function() {
 			$each(fileIds, function(v) {
 				var rowId = id + "_" + v;
-				this.files[id][v][CONST.FILE_PRIORITY] = p;
+				this.filelist[v][CONST.FILE_PRIORITY] = p;
 
 				this.flsTable.rowData[rowId].data[this.flsColPrioIdx] = p;
 				this.flsTable.updateCell(rowId, this.flsColPrioIdx);
@@ -2774,9 +2794,8 @@ var utWebUI = {
 
 	"flsDblClk": function(id) {
 		if (this.flsTable.selectedRows.length != 1) return;
-		var hash = id.match(/(.*)_[0-9]+$/)[1];
 		var fid = id.match(/.*_([0-9]+)$/)[1].toInt();
-		this.setPriority(hash, (this.files[hash][fid][CONST.FILE_PRIORITY] + 1) % 4);
+		this.setPriority(hash, (this.filelist[fid][CONST.FILE_PRIORITY] + 1) % 4);
 	},
 
 	"advOptDataToRow": function(data) {
@@ -3123,32 +3142,25 @@ var utWebUI = {
 				this.prsTable.restoreScroll();
 
 				if (this.torrentID == "") return;
-
-				this.prsTable.loadObj.show();
-				this.loadPeers.delay(20, this);
-
-				break;
+			break;
 
 			case "mainInfoPane-filesTab":
 				this.flsTable.calcSize();
 				this.flsTable.restoreScroll();
 
 				if (this.torrentID == "") return;
-				if (has(this.flsTable.rowData, this.torrentID + "_0")) return;
-
-				this.flsTable.loadObj.show();
-				this.loadFiles.delay(20, this);
-
-				break;
+			break;
 
 			case "mainInfoPane-speedTab":
 				SpeedGraph.draw();
-				break;
+			break;
 
 			case "mainInfoPane-loggerTab":
 				Logger.scrollBottom();
-				break;
+			break;
 		}
+
+		this.showDetails(this.torrentID);
 	},
 	
 	"settingsPaneChange": function(id) {

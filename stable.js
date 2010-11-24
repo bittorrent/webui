@@ -60,7 +60,6 @@ var dxSTable = new Class({
 	"selectedRows": [], // the selected rows
 	"stSel": null, //
 	"activeId": [], // position -> id
-	"viewRows": 0, // # of visible rows
 	"cols": 0, // # of columns
 	"colData": [], // columns' data
 	"sortCustom": null, // the custom sort function callback, function(col, datax, datay)
@@ -1179,24 +1178,29 @@ var dxSTable = new Class({
 		this.refresh();
 	},
 
-	"clearRows": function() {
+	"clearRows": function(keepSel) {
 		if (this.rows > 0) {
+			this.stSel = null;
+			this.clearCache();
+
 			Array.each(this.tb.body.rows, function(row) {
 				Array.each(row.cells, function(cell) {
 					cell.empty();
 				});
 				row.setProperty("id", "").hide();
 			});
-			delete this.rowSel;
-			this.rowSel = {};
 			delete this.rowData;
 			this.rowData = {};
-			this.clearCache();
-			this.rows = this.curPage = this.pageCount = this.activeId.length = this.selectedRows.length = this.viewRows = this.dBody.scrollLeft = this.dBody.scrollTop = 0;
+			this.rows = this.curPage = this.pageCount = this.activeId.length = this.dBody.scrollLeft = this.dBody.scrollTop = this.lastScroll = 0;
+
+			if (!keepSel) {
+				delete this.rowSel;
+				this.rowSel = {};
+				this.selectedRows.length = 0;
+			}
+
 			this.updatePageMenu();
-			this.stSel = null;
 			this.refreshPageInfo();
-			this.lastScroll = 0;
 		}
 	},
 
@@ -1377,10 +1381,19 @@ var dxSTable = new Class({
 
 	"restoreScroll": function() {
 //		if (this.options.mode != MODE_VIRTUAL) return;
-		this.dBody.scrollTop = this.lastScroll || 0;
 		if (this.activeId.length > 0) {
 			this.resizePads();
 			this.refreshRows();
+		}
+		this.dBody.scrollTop = this.lastScroll || 0;
+	},
+
+	"keepScroll": function(fn) {
+		if (typeOf(fn) === 'function') {
+			var top = this.dBody.scrollTop;
+			fn();
+			this.resizePads();
+			this.dBody.scrollTop = top;
 		}
 	},
 
