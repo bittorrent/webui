@@ -601,6 +601,10 @@ var utWebUI = {
 		this.perform(!!bot ? "queuebottom" : "queuedown");
 	},
 
+	"removeDefault": function(shift) {
+		this.remove((this.settings["gui.default_del_action"] || 0) | (shift ? 2 : 0));
+	},
+
 	"remove": function(mode) {
 		if (DialogManager.modalIsVisible()) return;
 
@@ -615,9 +619,7 @@ var utWebUI = {
 	if (undefined === this.settings["webui.uconnect_enable"]) mode &= ~1; // force non-.torrent removal mode
 }
 
-		var act = (function() {
-			this.perform(this.delActions[mode]);
-		}).bind(this);
+		var act = this.perform.bind(this, this.delActions[mode]);
 
 		if (this.settings["confirm_when_deleting"]) {
 			var ask;
@@ -1691,16 +1693,20 @@ var utWebUI = {
 	"setSpeedDownload": function(val) {
 		// TODO: Generalize settings storage requests
 		this.request("action=setsetting&s=max_dl_rate&v=" + val, (function() {
-			$("max_dl_rate").set("value", val);
 			this.settings["max_dl_rate"] = val;
+
+			$("max_dl_rate").set("value", val);
+			this.updateStatusBar();
 		}).bind(this));
 	},
 
 	"setSpeedUpload": function(val) {
 		// TODO: Generalize settings storage requests
 		this.request("action=setsetting&s=max_ul_rate&v=" + val, (function() {
-			$("max_ul_rate").set("value", val);
 			this.settings["max_ul_rate"] = val;
+
+			$("max_ul_rate").set("value", val);
+			this.updateStatusBar();
 		}).bind(this));
 	},
 
@@ -2002,29 +2008,16 @@ var utWebUI = {
 		};
 
 		// Gray out items based on status
-		if (this.trtTable.selectedRows.length <= 1) {
-			var state = this.torrents[id][CONST.TORRENT_STATUS];
-			var started = !!(state & CONST.STATE_STARTED),
-				checking = !!(state & CONST.STATE_CHECKING),
-				paused = !!(state & CONST.STATE_PAUSED),
-				queued = !!(state & CONST.STATE_QUEUED);
+		var disabled = this.getDisabledActions();
 
-			if ((started && !queued && !paused) || checking) {
-				delete menuItemsMap["forcestart"][1];
+		Object.each(disabled, function(disabled, name) {
+			var item = menuItemsMap[name];
+			if (!item) return;
+
+			if (disabled) {
+				delete item[1];
 			}
-			if ((queued || checking) && !paused) {
-				delete menuItemsMap["start"][1];
-			}
-			if (paused || !(checking || started || queued)) {
-				delete menuItemsMap["pause"][1];
-			}
-			if (!(checking || started || queued)) {
-				delete menuItemsMap["stop"][1];
-			}
-			if (started || checking || queued) {
-				delete menuItemsMap["recheck"][1];
-			}
-		}
+		});
 
 		// Create item array
 		menuItems = menuItems.concat([
@@ -2950,11 +2943,9 @@ var utWebUI = {
 			document.title = str.replace(/%s/, g_winTitle);
 	},
 
-	"updateToolbar": function() {
-		if (isGuest) return;
-
-		// Toggle button sensitivity
-		var buttonDisabled = {
+	"getDisabledActions": function() {
+		var disabled = {
+			"forcestart": 1,
 			"pause": 1,
 			"queuedown": 1,
 			"queueup": 1,
@@ -2990,33 +2981,47 @@ var utWebUI = {
 						queueSelMax = queue;
 					}
 				}
+				if ((!started || queued || paused) && !checking) {
+					disabled.forcestart = 0;
+				}
 				if (!(queued || checking) || paused) {
-					buttonDisabled.start = 0;
+					disabled.start = 0;
 				}
 				if (!paused && (checking || started || queued)) {
-					buttonDisabled.pause = 0;
+					disabled.pause = 0;
 				}
 				if (checking || started || queued) {
-					buttonDisabled.stop = 0;
+					disabled.stop = 0;
 				}
 			}, this);
 
 			if (queueSelCount < queueSelMax) {
-				buttonDisabled.queueup = 0;
+				disabled.queueup = 0;
 			}
 			if (queueSelMin <= this.torQueueMax - queueSelCount) {
-				buttonDisabled.queuedown = 0;
+				disabled.queuedown = 0;
 			}
 
-			buttonDisabled.remove = 0;
+			disabled.remove = 0;
 		}
 
-		Object.each(buttonDisabled, function(disabled, button) {
+		return disabled;
+	},
+
+	"updateToolbar": function() {
+		if (isGuest) return;
+
+		var disabled = this.getDisabledActions();
+
+		Object.each(disabled, function(disabled, name) {
+			var item = $(name);
+			if (!item) return;
+
 			if (disabled) {
-				$(button).addClass("disabled");
+				item.addClass("disabled");
 			}
 			else {
-				$(button).removeClass("disabled");
+				item.removeClass("disabled");
 			}
 		});
 	},

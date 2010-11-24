@@ -438,7 +438,7 @@ function setupUserInterface() {
 	utWebUI.trtTable.create("mainTorList", utWebUI.trtColDefs, Object.append({
 		"format": utWebUI.trtFormatRow.bind(utWebUI),
 		"sortCustom": utWebUI.trtSortCustom.bind(utWebUI),
-		"onDelete": function(ev) { utWebUI.remove(ev.shift ? 1 : 0); },
+		"onDelete": function(ev) { utWebUI.removeDefault(ev.shift); },
 		"onColReset": utWebUI.trtColReset.bind(utWebUI),
 		"onColResize": utWebUI.trtColResize.bind(utWebUI),
 		"onColMove": utWebUI.trtColMove.bind(utWebUI),
@@ -574,9 +574,12 @@ function setupUserInterface() {
 				case "addurl": DialogManager.show("AddURL"); break;
 				case "setting": utWebUI.showSettings(); break;
 
+				case "remove": utWebUI.removeDefault(ev.shift); break;
+
 				case "queueup":
 				case "queuedown":
 					arg = ev.shift;
+
 				default:
 					utWebUI[act](arg);
 			}

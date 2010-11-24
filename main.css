@@ -791,7 +791,9 @@ li.selected#tab_mainInfoPane-loggerTab span {
 	background: #EEEEEE;
 	border-top: 1px solid #AAAAAA;
 	bottom: 0;
+	height: 16px;
 	left: 0;
+	line-height: 16px;
 	margin: 0;
 	overflow: hidden;
 	padding: 1px;
@@ -802,8 +804,6 @@ li.selected#tab_mainInfoPane-loggerTab span {
 #mainStatusBar .section {
 	border-left: 1px solid #CCCCCC;
 	float: right;
-	height: 16px;
-	line-height: 16px;
 	padding: 0 5px;
 	text-align: left;
 }
