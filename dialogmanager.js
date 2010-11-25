@@ -20,13 +20,6 @@ var DialogManager = {
 			.getElement(".dlg-close").addStopEvent("click", this.hide.bind(this, id));
 
 		new Drag(dlgId, {
-			"onStart": function(el, ev) {
-				if (!ev.alt) this.stop();
-			},
-			"snap": 1
-		});
-
-		new Drag(dlgId, {
 			"handle": dlgId + "-head",
 			"snap": 1
 		});
