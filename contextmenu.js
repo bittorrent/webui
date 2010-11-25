@@ -54,17 +54,16 @@ var ContextMenu = {
 			menu.adopt(li);
 
 			switch (item[0]) {
-
 				case CMENU_SEP:
 					li.addClass("sep");
-					break;
+				break;
 
 				case CMENU_SEL:
 					li.adopt(ELE_A.clone(false)
 						.addClass("sel")
 						.set("text", item[1])
 					);
-					break;
+				break;
 
 				case CMENU_CHECK:
 					li.adopt(ELE_A.clone(false)
@@ -76,7 +75,7 @@ var ContextMenu = {
 							"click": null
 						})
 					);
-					break;
+				break;
 
 				case CMENU_CHILD:
 					li.adopt(ELE_A.clone(false)
@@ -89,7 +88,7 @@ var ContextMenu = {
 						this.add(ul, item[2][k]);
 
 					li.adopt(ul);
-					break;
+				break;
 
 				default:
 					if (item[1] === undefined) {
@@ -108,7 +107,6 @@ var ContextMenu = {
 							})
 						);
 					}
-
 			}
 		}, this);
 	},

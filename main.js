@@ -624,9 +624,9 @@ function setupUserInterface() {
 	["About", "Add", "AddURL", "DelTor", "Label", "Props", "Settings"].each(function(k) {
 		var isModal = ["DelTor", "Label", "Props"].contains(k);
 		DialogManager.add(k, isModal, {
-			  "Add": function () { utWebUI.getDirectoryList(); }
-			, "AddURL": function () { utWebUI.getDirectoryList(); }
-			, "Settings": function () { utWebUI.stpanes.onChange(); }
+			  "Add": function() { utWebUI.getDirectoryList(); }
+			, "AddURL": function() { utWebUI.getDirectoryList(); }
+			, "Settings": function() { utWebUI.stpanes.onChange(); }
 		}[k]);
 	});
 
@@ -1654,13 +1654,13 @@ function _loadStrings(prop, strings) {
 			fnload = function(val, key) {
 				$(key).set(prop, lang[CONST[val]]);
 			};
-			break;
+		break;
+
 		default:
 			strings = Array.from(strings);
 			fnload = function(val) {
 				$(val).set(prop, lang[CONST[val]]);
 			};
-			break;
 	}
 
 	$each(strings, function(val, key) {

@@ -80,7 +80,7 @@ var dxSTable = new Class({
 	"colOrder": [],
 	"colHeader": [],
 	"options": {
-		"format": function () { return arguments[0]; },
+		"format": function() { return arguments[0]; },
 		"maxRows": 25,
 		"alternateRows": false,
 		"mode": MODE_PAGE,
@@ -719,20 +719,20 @@ var dxSTable = new Class({
 					comp = function(x, y) {
 						return $me.sortAlphaNumeric(x, y);
 					};
-					break;
+				break;
 
 				case TYPE_NUMBER:
 				case TYPE_NUM_PROGRESS:
 					comp = function(x, y) {
 						return $me.sortNumeric(x, y);
 					};
-					break;
+				break;
 
 				case TYPE_NUM_ORDER:
 					comp = function(x, y) {
 						return $me.sortNumOrder(x, y);
 					};
-					break;
+				break;
 
 				case TYPE_CUSTOM:
 					if ($me.sortCustom) {
@@ -808,12 +808,12 @@ var dxSTable = new Class({
 		switch (this.colHeader[index].type) {
 			case TYPE_STRING:
 				r = Comparator.compareAlphaNumeric(m, n);
-				break;
+			break;
 
 			case TYPE_NUMBER:
 			case TYPE_NUM_PROGRESS:
 				r = Comparator.compareNumeric(m, n);
-				break;
+			break;
 
 			case TYPE_CUSTOM:
 				if (this.sortCustom) {
@@ -829,7 +829,7 @@ var dxSTable = new Class({
 					else if (n == -1)
 						r = -1;
 				}
-				break;
+			break;
 
 			default:
 				r = Comparator.compare(m, n);
@@ -991,20 +991,20 @@ var dxSTable = new Class({
 						comp = function(x, y) {
 							return $me.sortAlphaNumeric(x, y);
 						};
-						break;
+					break;
 
 					case TYPE_NUMBER:
 					case TYPE_NUM_PROGRESS:
 						comp = function(x, y) {
 							return $me.sortNumeric(x, y);
 						};
-						break;
+					break;
 
 					case TYPE_NUM_ORDER:
 						comp = function(x, y) {
 							return $me.sortNumOrder(x, y);
 						};
-						break;
+					break;
 
 					case TYPE_CUSTOM:
 						if ($me.sortCustom) {
@@ -1356,8 +1356,7 @@ var dxSTable = new Class({
 			case MODE_PAGE:
 				this.dPad.setStyle("height", 0);
 				this.tBody.setStyle("top", 0);
-
-				break;
+			break;
 
 			case MODE_VIRTUAL:
 				this.dPad.setStyle("height", this.activeId.length * this.tb.body.children[0].offsetHeight);
@@ -1365,8 +1364,7 @@ var dxSTable = new Class({
 				var st = this.dBody.scrollTop;
 				var diff = this.dPad.offsetHeight - (st + this.tBody.offsetHeight);
 				this.tBody.setStyle("top", st + diff.min(0));
-
-				break;
+			break;
 		}
 	},
 

@@ -448,27 +448,27 @@ var utWebUI = {
 			switch (act) {
 				case "forcestart":
 					if ((stat & 1) && !(stat & 64) && !(stat & 32)) continue;
-					break;
+				break;
 
 				case "start":
 					if ((stat & 1) && !(stat & 32) && (stat & 64)) continue;
-					break;
+				break;
 
 				case "pause":
 					if ((stat & 32) || (!(stat & 64) && !(stat & 1))) continue;
-					break;
+				break;
 
 				case "unpause":
 					if (!(stat & 32)) continue;
-					break;
+				break;
 
 				case "stop":
 					if (!(stat & 1) && !(stat & 2) && !(stat & 16) && !(stat & 64)) continue;
-					break;
+				break;
 
 				case "recheck":
 					if (stat & 2) continue;
-					break;
+				break;
 
 				case "queueup":
 				case "queuedown":
@@ -476,13 +476,13 @@ var utWebUI = {
 				case "queuebottom":
 					key = { qnum: this.torrents[key][CONST.TORRENT_QUEUE_POSITION], hash: key };
 					if (key.qnum <= 0) continue;
-					break;
+				break;
 
 				case "remove":
 				case "removetorrent":
 				case "removedata":
 				case "removedatatorrent":
-					break;
+				break;
 
 				default:
 					continue;
@@ -505,12 +505,12 @@ var utWebUI = {
 				case "queuedown":
 				case "queuetop":
 					sortdir = -1;
-					break;
+				break;
 
 				case "queueup":
 				case "queuebottom":
 					sortdir = 1;
-					break;
+				break;
 			}
 
 			var limsetter, qfilter;
@@ -523,7 +523,7 @@ var utWebUI = {
 					qfilter = function(item) {
 						return (item.qnum <= queueLimMax);
 					};
-					break;
+				break;
 
 				case "queueup":
 					limsetter = function(item) {
@@ -533,7 +533,7 @@ var utWebUI = {
 					qfilter = function(item) {
 						return (queueLimMin <= item.qnum);
 					};
-					break;
+				break;
 
 				case "queuebottom":
 					var qmin = Number.MAX_VALUE;
@@ -547,7 +547,7 @@ var utWebUI = {
 					qfilter = function(item) {
 						return (qmin < queueLimMax);
 					};
-					break;
+				break;
 
 				case "queuetop":
 					var qmax = -Number.MAX_VALUE;
@@ -561,7 +561,7 @@ var utWebUI = {
 					qfilter = function(item) {
 						return (queueLimMin < qmax);
 					};
-					break;
+				break;
 
 				default:
 					limsetter = Function.from();
@@ -629,10 +629,12 @@ var utWebUI = {
 				case CONST.TOR_REMOVE:
 				case CONST.TOR_REMOVE_TORRENT:
 					ask = ((count == 1) ? CONST.OV_CONFIRM_DELETE_ONE : CONST.OV_CONFIRM_DELETE_MULTIPLE);
-					break;
+				break;
+
 				case CONST.TOR_REMOVE_DATA:
 				case CONST.TOR_REMOVE_DATATORRENT:
 					ask = ((count == 1) ? CONST.OV_CONFIRM_DELETEDATA_ONE : CONST.OV_CONFIRM_DELETEDATA_MULTIPLE);
+				break;
 			}
 
 			$("dlgDelTor-message").set("text", lang[ask].replace(/%d/, count));
@@ -906,7 +908,7 @@ var utWebUI = {
 
 	"loadLabels": function(labels) {
 		var labelList = $("mainCatList-labels"), temp = {};
-		labels.each(function (lbl, idx) {
+		labels.each(function(lbl, idx) {
 			var label = lbl[0], labelId = "lbl_" + encodeID(label), count = lbl[1], li = null;
 			if ((li = $(labelId))) {
 				li.getElement("span").set("text", count);
@@ -1064,7 +1066,7 @@ var utWebUI = {
 
 		var now = Date.now();
 		if (forceload || !this.dirlist._TIME_ || (now - this.dirlist._TIME_) > (this.limits.minDirListCache * 1000)) {
-			this.request("action=list-dirs", (function (json) {
+			this.request("action=list-dirs", (function(json) {
 				this.dirlist = json["download-dirs"];
 				this.dirlist._TIME_ = now;
 
@@ -1081,7 +1083,7 @@ var utWebUI = {
 
 		// Throw data into frontend
 		list[0].path = "Default download directory";
-		var items = list.map(function (dir) {
+		var items = list.map(function(dir) {
 			return '[' + parseInt(dir.available, 10).toFileSize(2, 2) + ' free] '+ dir.path;
 		});
 
@@ -1097,7 +1099,7 @@ var utWebUI = {
 
 		var now = Date.now();
 		if (forceload || !this.xferhist._TIME_ || (now - this.xferhist._TIME_) > (this.limits.minXferHistCache * 1000)) {
-			this.request("action=getxferhist", (function (json) {
+			this.request("action=getxferhist", (function(json) {
 				this.xferhist = json.transfer_history;
 				this.xferhist._TIME_ = now;
 
@@ -1162,9 +1164,9 @@ var utWebUI = {
 	},
 
 	"addSettings": function(json) {
-		var loadCookie = (function (newcookie) {
+		var loadCookie = (function(newcookie) {
 			function safeCopy(objOrig, objNew) {
-				$each(objOrig, function (v, k) {
+				$each(objOrig, function(v, k) {
 					var tOrig = typeOf(objOrig[k]),
 						tNew = typeOf(objNew[k]);
 
@@ -1339,10 +1341,8 @@ var utWebUI = {
 				ele.checked = !!v;
 			} else {
 				switch (key) {
-					case "seed_ratio":
-						v /= 10; break;
-					case "seed_time":
-						v /= 60; break;
+					case "seed_ratio": v /= 10; break;
+					case "seed_time": v /= 60; break;
 				}
 				ele.set("value", v);
 			}
@@ -1484,15 +1484,14 @@ var utWebUI = {
 				nv = ele.get("value");
 			}
 			switch (key) {
-				case "seed_ratio":
-					nv *= 10; break;
-				case "seed_time":
-					nv *= 60; break;
+				case "seed_ratio": nv *= 10; break;
+				case "seed_time": nv *= 60; break;
+
 				case "search_list":
 					nv = nv.split('\n').map(function(item) {
 						return item.replace(/[\r\n]+/g, '');
 					}).join('\r\n');
-					break;
+				break;
 			}
 			if (v != nv) {
 				this.settings[key] = nv;
@@ -1659,7 +1658,7 @@ var utWebUI = {
 				speed.list = speed.list.map(function(val) {
 					return String.from(val).trim();
 				});
-				break;
+			break;
 
 			default:
 				speed.list = this.generateSpeedList(speed.cur);
@@ -1845,29 +1844,29 @@ var utWebUI = {
 
 				case "availability":
 					values[i] = (values[i] / 65536).toFixedNR(3);
-					break;
+				break;
 
 				case "done":
 					values[i] = (values[i] / 10).toFixedNR(1) + "%";
-					break;
+				break;
 
 				case "downloaded":
 					values[i] = values[i].toFileSize();
-					break;
+				break;
 
 				case "downspeed":
 				case "upspeed":
 					values[i] = (values[i] >= 103) ? (values[i].toFileSize() + g_perSec) : "";
-					break;
+				break;
 
 				case "eta":
 					values[i] = (values[i] == 0) ? "" :
 								(values[i] == -1) ? "\u221E" : values[i].toTimeString();
-					break;
+				break;
 
 				case "ratio":
 					values[i] = (values[i] == -1) ? "\u221E" : (values[i] / 1000).toFixedNR(3);
-					break;
+				break;
 
 				case "order":
 					// NOTE: It is known that this displays "*" for all torrents that are finished
@@ -1877,23 +1876,23 @@ var utWebUI = {
 					//       defaults. We can't know for sure unless we request getprop for each
 					//       and every torrent job, which is expensive.
 					values[i] = (values[i] <= -1) ? "*" : values[i];
-					break;
+				break;
 
 				case "remaining":
 					values[i] = (values[i] >= 103) ? values[i].toFileSize(2) : "";
-					break;
+				break;
 
 				case "seeds_peers":
 					values[i] = ($chk(values[i]) && (values[i] != Number.MAX_VALUE)) ? values[i].toFixedNR(3) : "\u221E";
-					break;
+				break;
 
 				case "size":
 					values[i]  = values[i].toFileSize(2);
-					break;
+				break;
 
 				case "uploaded":
 					values[i] = values[i].toFileSize();
-					break;
+				break;
 			}
 		}
 
@@ -1913,7 +1912,7 @@ var utWebUI = {
 					var doneIdx = this.trtColDoneIdx;
 					ret = datax[doneIdx] - datay[doneIdx];
 				}
-				break;
+			break;
 		}
 
 		return ret;
@@ -1950,7 +1949,7 @@ var utWebUI = {
 			switch (action) {
 				case CONST.TOR_DBLCLK_SHOW_PROPS:
 					this.showProperties();
-					break;
+				break;
 
 				default:
 					this.perform((tor[CONST.TORRENT_STATUS] & (CONST.STATE_STARTED | CONST.STATE_QUEUED)) ? "stop" : "start");
@@ -2140,18 +2139,19 @@ var utWebUI = {
 			}
 			if ((this.propID != "multi") && (((k == "dht") && (v == -1)) || ((k == "pex") && (v == -1)))) continue;
 			switch (k) {
-				case "seed_ratio":
-					nv *= 10; break;
-				case "seed_time":
-					nv *= 60; break;
+				case "seed_ratio": nv *= 10; break;
+				case "seed_time": nv *= 60; break;
+
 				case "dlrate":
 				case "ulrate":
-					nv *= 1024; break;
+					nv *= 1024;
+				break;
+
 				case "trackers":
 					nv = nv.split('\n').map(function(item) {
 						return item.replace(/[\r\n]+/g, '');
 					}).join('\r\n');
-					break
+				break
 			}
 			if ((v != nv) || (this.propID == "multi")) {
 				str += "&s=" + k + "&v=" + encodeURIComponent(nv);
@@ -2264,7 +2264,7 @@ var utWebUI = {
 
 		var now = Date.now();
 		if (forceload || this.peerlist._ID_ !== id || !this.peerlist._TIME_ || (now - this.peerlist._TIME_) > (this.limits.minPeerListCache * 1000)) {
-			this.request("action=getpeers&hash=" + id, (function (json) {
+			this.request("action=getpeers&hash=" + id, (function(json) {
 				this.peerlist = [];
 
 				var peers = json.peers;
@@ -2311,7 +2311,7 @@ var utWebUI = {
 
 		var now = Date.now();
 		if (forceload || this.filelist._ID_ !== id || !this.filelist._TIME_ || (now - this.filelist._TIME_) > (this.limits.minFileListCache * 1000)) {
-			this.request("action=getfiles&hash=" + id, (function (json) {
+			this.request("action=getfiles&hash=" + id, (function(json) {
 				this.filelist = [];
 
 				var files = json.files;
@@ -2368,14 +2368,15 @@ var utWebUI = {
 				case "done":
 				case "size":
 					values[i] = values[i].toFileSize(2);
-					break;
+				break;
 
 				case "pcnt":
 					values[i] = (values[i] / 10).toFixedNR(1) + "%";
-					break;
+				break;
 
 				case "prio":
 					values[i] = lang[CONST["FI_PRI" + values[i]]];
+				break;
 			}
 		}
 
@@ -2673,14 +2674,14 @@ var utWebUI = {
 				case "pcnt":
 				case "relevance":
 					values[i] = (values[i] / 10).toFixedNR(1) + "%";
-					break;
+				break;
 
 				case "uploaded":
 				case "downloaded":
 				case "hasherr":
 				case "queued":
 					values[i] = (values[i] > 103) ? values[i].toFileSize() : "";
-					break;
+				break;
 
 				case "downspeed":
 				case "upspeed":
@@ -2688,13 +2689,13 @@ var utWebUI = {
 				case "maxup":
 				case "maxdown":
 					values[i] = (values[i] > 103) ? (values[i].toFileSize() + g_perSec) : "";
-					break;
+				break;
 
 				case "waited":
 				case "inactive":
 					values[i] = (values[i] == 0) ? "" :
 								(values[i] == -1) ? "\u221E" : values[i].toTimeString();
-					break;
+				break;
 			}
 		}
 
@@ -2708,7 +2709,7 @@ var utWebUI = {
 		this.settings["resolve_peerips"] = !this.settings["resolve_peerips"];
 
 		// TODO: Generalize settings storage requests
-		this.request("action=setsetting&s=resolve_peerips&v=" + (this.settings["resolve_peerips"] ? 1 : 0), (function () {
+		this.request("action=setsetting&s=resolve_peerips&v=" + (this.settings["resolve_peerips"] ? 1 : 0), (function() {
 			if (this.torrentID != "")
 				this.getPeers(this.torrentID, true);
 		}).bind(this));
@@ -2888,15 +2889,15 @@ var utWebUI = {
 			switch (typeOf(this.getAdvSetting(id))) {
 				case 'boolean':
 					this.setAdvSetting(id, $("dlgSettings-advTrue").checked);
-					break;
+				break;
 
 				case 'number':
 					this.setAdvSetting(id, $("dlgSettings-advText").value.toInt() || 0);
-					break;
+				break;
 
 				case 'string':
 					this.setAdvSetting(id, $("dlgSettings-advText").value);
-					break;
+				break;
 			}
 
 			if (id == "bt.transp_disposition") {
@@ -3168,12 +3169,12 @@ var utWebUI = {
 		switch (id) {
 			case "dlgSettings-TransferCap":
 				this.getTransferHistory();
-				break;
+			break;
 
 			case "dlgSettings-Advanced":
 				this.advOptTable.calcSize();
 				this.advOptTable.restoreScroll();
-				break;
+			break;
 		}
 	}/*,
 

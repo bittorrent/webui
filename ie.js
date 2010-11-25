@@ -3,7 +3,7 @@
  * Copyright 2008 Carsten Niebuhr
  */
 
-(function () {
+(function() {
 	// We need this because conditional HTML comments cannot detect IE compatibility modes
 	var ieVersion = (document.documentMode !== 'undefined' && document.documentMode) || 6;
 
