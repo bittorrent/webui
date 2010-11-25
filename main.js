@@ -332,7 +332,7 @@ function resizeUI(hDiv, vDiv) {
 			if (vDiv > wh - minVSplit) {
 				$("mainInfoPane").hide();
 				showDet = false;
-				trth = wh - tbh - 2;
+				trth = wh - tbh - sbh - 2;
 			}
 			else {
 				trth = minTrtH;

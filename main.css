@@ -1359,52 +1359,51 @@ NOTE: The following is an ugly hack, but a necessary one if we want the settings
  * MENU
  **************************************************/
 
-ul.CMenu {
+div.CMenu {
 	-moz-box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.30);
 	-webkit-box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.30);
 	background: #F8F8F8;
 	border: 1px solid #A7A6AA;
 	box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.30);
 	display: none;
-	list-style: none;
-	padding: 2px;
-	position: absolute;
+	overflow-y: hidden;
+	position: fixed;
 	z-index: 100000;
 }
 
-ul.CMenu li {
+div.CMenu ul {
+	background-color: #F8F8F8;
+	list-style: none;
+	padding: 2px;
 	position: relative;
-	width: 140px;
+}
+
+div.CMenu li {
 	word-wrap: break-word;
 }
 
-ul.CMenu li a {
-	display: block;
-	font-weight: normal;
-	padding: 2px 4px 2px 16px;
-}
-
-ul.CMenu li a.dis {
-	background-color: #F8F8F8 !important;
-	color: #C0C0C0 !important;
-}
-
-ul.CMenu li.sep {
+div.CMenu ul li.sep {
 	border-top: 1px solid #D0D0D0;
 	font-size: 0;
 	height: 0;
 	line-height: 0;
 	margin: 2px 5px;
-	width: 130px;
 }
 
-ul.CMenu li a.exp { background: transparent url(./images/menuexp.png) no-repeat scroll 130px center; }
-ul.CMenu li a.sel { background: transparent url(./images/menusel.png) no-repeat scroll 4px center; }
-ul.CMenu li a.check { background: transparent url(./images/menucheck.png) no-repeat scroll 4px center; }
+div.CMenu a {
+	color: #686868;
+	display: block;
+	font-weight: normal;
+	padding: 2px 18px;
+}
 
-ul.CMenu li:hover a { background-color: #0099FF; color: #FFFFFF; }
-ul.CMenu li:hover ul { display: block; position: absolute; top: 0; left: 140px; }
-ul.CMenu li:hover ul li ul { display: none; z-index: 1002; }
-ul.CMenu li:hover ul li a { display: block; background-color: #F6F6F6; color: #000000; }
-ul.CMenu li:hover ul li a:hover { background-color: #0099FF; color: #FFFFFF; }
-ul.CMenu li:hover ul.left { left: -140px; z-index: 1002; }
+div.CMenu a.dis {
+	background-color: #F8F8F8 !important;
+	color: #C0C0C0 !important;
+}
+
+div.CMenu a.exp { background: transparent url(./images/menuexp.png) no-repeat scroll 0 center; }
+div.CMenu a.sel { background: transparent url(./images/menusel.png) no-repeat scroll 5px center; }
+div.CMenu a.check { background: transparent url(./images/menucheck.png) no-repeat scroll 5px center; }
+
+div.CMenu li:hover > a { background-color: #0099FF; color: #FFFFFF; }
