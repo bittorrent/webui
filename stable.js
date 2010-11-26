@@ -1370,6 +1370,7 @@ var dxSTable = new Class({
 
 	"resetScroll": function() {
 //		if (this.options.mode != MODE_VIRTUAL) return;
+		++this.dBody.scrollTop; --this.dBody.scrollTop;
 		this.dBody.scrollTop = this.lastScroll = 0;
 		if (this.activeId.length > 0) {
 			this.resizePads();
@@ -1383,6 +1384,7 @@ var dxSTable = new Class({
 			this.resizePads();
 			this.refreshRows();
 		}
+		++this.dBody.scrollTop; --this.dBody.scrollTop;
 		this.dBody.scrollTop = this.lastScroll || 0;
 	},
 

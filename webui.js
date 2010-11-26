@@ -1053,8 +1053,8 @@ var utWebUI = {
 		this.trtTable.curPage = 0;
 
 		if (activeChanged) {
-			this.trtTable.refreshRows();
 			this.trtTable.calcSize();
+			this.trtTable.restoreScroll();
 		}
 	},
 
