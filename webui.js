@@ -1535,9 +1535,10 @@ var utWebUI = {
 		if (port != new_port) {
 			this.endPeriodicUpdate();
 			this.showMsg(
-				'WebUI has detected that the port setting was altered. How do you wish to proceed?' +
+				'<p>&micro;Torrent has been configured to use a listening port for WebUI different from the port on which it is currently being viewed.</p>' +
+				'<p>How do you wish to proceed?</p>' +
 				'<ul>' +
-					'<li><a href="#" onclick="changePort(' + new_port + '); return false;">Reload</a> on the new port</li>' +
+					'<li><a href="' + changePort(new_port) + '">Reload</a> on the new port</li>' +
 					'<li><a href="#" onclick="utWebUI.beginPeriodicUpdate(); utWebUI.hideMsg(); return false;">Ignore</a> the port change</li>' +
 				'</ul>'
 			);

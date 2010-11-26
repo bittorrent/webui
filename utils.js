@@ -17,7 +17,7 @@ function has(obj, key) {
 }
 
 function changePort(port) {
-	if (window.location.port != port) {
+//	if (window.location.port != port) {
 		// window.location.port = port; // Does NOT work on Opera
 
 		function isIPv6(hostname) {
@@ -28,8 +28,10 @@ function changePort(port) {
 		if (isIPv6(window.location.host) && !isIPv6(hostname))
 			hostname = "[" + hostname + "]"; // Fix for Firefox
 
-		window.location.href = window.location.protocol + "//" + hostname + ":" + port + window.location.pathname + window.location.search;
-	}
+		var newURL = window.location.protocol + "//" + hostname + ":" + port + window.location.pathname + window.location.search;
+		// window.location.href = newURL;
+		return newURL
+//	}
 }
 
 function decodeID(str) {
