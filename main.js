@@ -425,9 +425,12 @@ function setupUserInterface() {
 	// CATEGORY LIST
 	//--------------------------------------------------
 
-	["cat_all", "cat_dls", "cat_com", "cat_act", "cat_iac", "cat_nlb"].each(function(k) {
-		$(k).addEvent("mousedown", function() {
-			utWebUI.switchLabel(this);
+	["mainCatList-categories", "mainCatList-labels", "mainCatList-feeds"].each(function(k) {
+		var list = $(k);
+		if (!list) return;
+
+		list.addEvent("mousedown", function(ev) {
+			utWebUI.catListClick(ev, k);
 		});
 	});
 

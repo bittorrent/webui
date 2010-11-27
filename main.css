@@ -351,14 +351,11 @@ td.disabled, label.disabled, span.disabled, div.disabled {
 	color: #FFFFFF;
 }
 
-#mainCatList ul li.hr {
-	padding: 4px;
-}
-
-#mainCatList ul li.hr hr {
+#mainCatList hr {
 	background-color: #868686;
 	border: none;
 	height: 1px;
+	margin: 4px;
 }
 
 #cat_all, #cat_dls, #cat_com, #cat_act, #cat_iac {

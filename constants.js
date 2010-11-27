@@ -8,28 +8,6 @@ var CONST = {
 	, BUILD: ""
 
 	//----------------------------------------
-	// SETTING DATA CONSTANTS
-	//----------------------------------------
-	, "SETTING_NAME": 0
-	, "SETTING_TYPE": 1
-	, "SETTING_VALUE": 2
-	, "SETTING_PARAMS": 3
-
-	//----------------------------------------
-	// SETTING TYPE CONSTANTS
-	//----------------------------------------
-	, "SETTINGTYPE_INTEGER": 0
-	, "SETTINGTYPE_BOOLEAN": 1
-	, "SETTINGTYPE_STRING": 2
-
-	//----------------------------------------
-	// SETTING PARAM CONSTANTS
-	//----------------------------------------
-	, "SETTINGPARAM_ACCESS_RO": "R"
-	, "SETTINGPARAM_ACCESS_RW": "Y"
-	, "SETTINGPARAM_ACCESS_WO": "W"
-
-	//----------------------------------------
 	// TORRENT DATA CONSTANTS
 	//----------------------------------------
 
@@ -89,6 +67,7 @@ var CONST = {
 	//----------------------------------------
 	// PEER DATA CONSTANTS
 	//----------------------------------------
+
 	, "PEER_COUNTRY": 0
 	, "PEER_IP": 1
 	, "PEER_REVDNS": 2
@@ -111,6 +90,80 @@ var CONST = {
 	, "PEER_QUEUED": 19
 	, "PEER_INACTIVE": 20
 	, "PEER_RELEVANCE": 21
+
+	//----------------------------------------
+	// RSS FEED CONSTANTS
+	//----------------------------------------
+
+	, "RSSFEED_ID": 0
+	, "RSSFEED_ENABLED": 1
+	, "RSSFEED_USE_FEED_TITLE": 2
+	, "RSSFEED_USER_SELECTED":3
+	, "RSSFEED_PROGRAMMED": 4
+	, "RSSFEED_DOWNLOAD_STATE": 5
+	, "RSSFEED_URL": 6
+	, "RSSFEED_NEXT_UPDATE": 7
+	, "RSSFEED_ITEMS": 8
+
+	//----------------------------------------
+	// RSS ITEM CONSTANTS
+	//----------------------------------------
+
+	, "RSSITEM_NAME": 0
+	, "RSSITEM_NAME_FULL": 2
+	, "RSSITEM_URL": 2
+	, "RSSITEM_QUALITY": 3
+	, "RSSITEM_CODEC": 4
+	, "RSSITEM_TIMESTAMP": 5
+	, "RSSITEM_SEASON": 6
+	, "RSSITEM_EPISODE": 7
+	, "RSSITEM_EPISODE_TO": 8
+	, "RSSITEM_FEED_ID": 9
+	, "RSSITEM_REPACK": 10
+	, "RSSITEM_IN_HISTORY": 11
+
+	//----------------------------------------
+	// RSS ITEM CONSTANTS
+	//----------------------------------------
+
+	, "RSSFILTER_ID": 0
+	, "RSSFILTER_FLAGS": 1
+	, "RSSFILTER_NAME": 2
+	, "RSSFILTER_FILTER": 3
+	, "RSSFILTER_NOT_FILTER": 4
+	, "RSSFILTER_DIRECTORY": 5
+	, "RSSFILTER_FEED": 6
+	, "RSSFILTER_QUALITY": 7
+	, "RSSFILTER_LABEL": 8
+	, "RSSFILTER_POSTPONE_MODE": 9
+	, "RSSFILTER_LAST_MATCH": 10
+	, "RSSFILTER_SMART_EP_FILTER": 11
+	, "RSSFILTER_REPACK_EP_FILTER": 12
+	, "RSSFILTER_EPISODE_FILTER_STR": 13
+	, "RSSFILTER_EPISODE_FILTER": 14
+	, "RSSFILTER_RESOLVING_CANDIDATE": 15
+
+	//----------------------------------------
+	// SETTING DATA CONSTANTS
+	//----------------------------------------
+	, "SETTING_NAME": 0
+	, "SETTING_TYPE": 1
+	, "SETTING_VALUE": 2
+	, "SETTING_PARAMS": 3
+
+	//----------------------------------------
+	// SETTING TYPE CONSTANTS
+	//----------------------------------------
+	, "SETTINGTYPE_INTEGER": 0
+	, "SETTINGTYPE_BOOLEAN": 1
+	, "SETTINGTYPE_STRING": 2
+
+	//----------------------------------------
+	// SETTING PARAM CONSTANTS
+	//----------------------------------------
+	, "SETTINGPARAM_ACCESS_RO": "R"
+	, "SETTINGPARAM_ACCESS_RW": "Y"
+	, "SETTINGPARAM_ACCESS_WO": "W"
 
 	//----------------------------------------
 	// TORRENT DOUBLE-CLICK ACTION CONSTANTS

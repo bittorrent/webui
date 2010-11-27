@@ -1022,6 +1022,29 @@ var utWebUI = {
 		});
 	},
 
+	"catListClick": function(ev, listId) {
+		var element = ev.target;
+		while (element && element.id !== listId && element.tagName !== "LI") {
+			element = element.getParent();
+		}
+		if (!element || !element.id || element.tagName !== "LI") return;
+
+		switch (listId) {
+			case "mainCatList-categories":
+			case "mainCatList-labels":
+				this.switchLabel(element);
+
+				if (ev.isRightClick()) {
+					this.trtTable.fillSelection();
+					this.trtTable.fireEvent("onSelect", ev);
+				}
+			break;
+
+			case "mainCatList-feeds":
+			break;
+		}
+	},
+
 	"switchLabel": function(element) {
 		if (element.id == this.config.activeLabelID) return;
 		if (this.config.activeLabelID != "")
