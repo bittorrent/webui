@@ -81,6 +81,7 @@ var utWebUI = {
 		"advOptTable": {
 			"rowMultiSelect": false
 		},
+		"activeSettingsPaneID": "",
 		"activeLabelID": "cat_all"
 	},
 	"torrentID": "", // selected torrent
@@ -281,6 +282,8 @@ var utWebUI = {
 		this.trtColDefs.each(function(item, index) { this.trtColToggle(index, item[3], true); }, this);
 		this.prsColDefs.each(function(item, index) { this.prsColToggle(index, item[3], true); }, this);
 		this.flsColDefs.each(function(item, index) { this.flsColToggle(index, item[3], true); }, this);
+
+		// Load settings
 		this.getSettings((function() {
 			this.update((function() {
 				// TODO: See if this can be cleaned up
@@ -290,6 +293,10 @@ var utWebUI = {
 				} else {
 					$("cat_all").removeClass("sel");
 					$(this.config.activeLabelID).addClass("sel");
+				}
+
+				if (this.config.activeSettingsPaneID) {
+					this.stpanes.show(this.config.activeSettingsPaneID.replace(/^tab_/, ''));
 				}
 
 				this.trtTable.sort();
@@ -394,6 +401,7 @@ var utWebUI = {
 									// hammer the backend with tons of requests after failure recovery (to
 									// be exact, it may spam as many requests as there have been failures)
 
+								log("Request retry succeeded: " + qs);
 								if (fn) fn.delay(0, self, json);
 								self.beginPeriodicUpdate();
 							}
@@ -3234,10 +3242,10 @@ var utWebUI = {
 				this.advOptTable.refreshRows();
 			break;
 		}
-	}/*,
 
-	"showFolderBrowser": function() {
-		$("dlgFolders").centre().show();
-	}*/
+		if (this.config) {
+			this.config.activeSettingsPaneID = id;
+		}
+	}
 
 }
