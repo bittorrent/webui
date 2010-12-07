@@ -68,9 +68,12 @@ function setupGlobalEvents() {
 	//--------------------------------------------------
 
 	var mouseWhitelist = function(ev) {
+		var targ = ev.target, tag = targ.tagName.toLowerCase();
 		return (
-			ev.target.retrieve("mousewhitelist") ||
-			["INPUT", "SELECT", "TEXTAREA"].contains(ev.target.tagName)
+			targ.retrieve("mousewhitelist") ||
+			("textarea" === tag) ||
+			(("input" === tag) && ("text" === targ.type.toLowerCase())) ||
+			(("select" === tag) && !ev.isRightClick())
 		);
 	};
 	var mouseWhitelistWrap = function(ev) {
@@ -425,11 +428,8 @@ function setupUserInterface() {
 	// CATEGORY LIST
 	//--------------------------------------------------
 
-	["mainCatList-categories", "mainCatList-labels", "mainCatList-feeds"].each(function(k) {
-		var list = $(k);
-		if (!list) return;
-
-		list.addEvent("mousedown", function(ev) {
+	["mainCatList-categories", "mainCatList-labels"].each(function(k) {
+		$(k).addEvent("mousedown", function(ev) {
 			utWebUI.catListClick(ev, k);
 		});
 	});
@@ -552,6 +552,8 @@ function setupUserInterface() {
 		resizeUI();
 		return;
 	}
+
+	var linkedEvent = Browser.ie ? "click" : "change";
 
 	//--------------------------------------------------
 	// TOOLBAR
@@ -1227,13 +1229,13 @@ function loadLangStrings(reload) {
 
 	// -- Tab Titles
 
-	var tstr = lang[CONST.OV_TABS].split("||");
+	var maintstr = lang[CONST.OV_TABS].split("||");
 	utWebUI.mainTabs.setNames({
-		  "mainInfoPane-generalTab" : tstr[0]
-		, "mainInfoPane-peersTab"   : tstr[2]
-		, "mainInfoPane-filesTab"   : tstr[4]
-		, "mainInfoPane-speedTab"   : tstr[5]
-		, "mainInfoPane-loggerTab"  : tstr[6]
+		  "mainInfoPane-generalTab" : maintstr[0]
+		, "mainInfoPane-peersTab"   : maintstr[2]
+		, "mainInfoPane-filesTab"   : maintstr[4]
+		, "mainInfoPane-speedTab"   : maintstr[5]
+		, "mainInfoPane-loggerTab"  : maintstr[6]
 	});
 
 	// -- General Tab
@@ -1257,7 +1259,7 @@ function loadLangStrings(reload) {
 	utWebUI.prsTable.setConfig({
 		"resetText": lang[CONST.MENU_RESET],
 		"colText": {
- 			  "ip"         : lang[CONST.PRS_COL_IP]
+			  "ip"         : lang[CONST.PRS_COL_IP]
 			, "port"       : lang[CONST.PRS_COL_PORT]
 			, "client"     : lang[CONST.PRS_COL_CLIENT]
 			, "flags"      : lang[CONST.PRS_COL_FLAGS]
@@ -1638,8 +1640,15 @@ function _loadComboboxStrings(id, vals, def) {
 
 		ele.options.length = 0;
 		$each(vals, function(v, k) {
-			if (v == "") return;
-			ele.options[ele.options.length] = new Option(v, k, false, false);
+			if (!v) return;
+			switch (typeOf(v)) {
+				case "array":
+					ele.options[ele.options.length] = new Option(v[1], v[0], false, false);
+				break;
+
+				default:
+					ele.options[ele.options.length] = new Option(v, k, false, false);
+			}
 		});
 
 		ele.set("value", def || 0);

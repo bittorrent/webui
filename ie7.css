@@ -15,23 +15,27 @@
 }
 
 /**************************************************
- * MAIN DETAILED INFO PANE
+ * FOLDER-TAB STYLED CONTROLS
  **************************************************/
 
-ul#mainInfoPane-tabs li,
-ul#mainInfoPane-tabs li a span {
+ul.folder-tabs li,
+ul.folder-tabs li a span {
 	zoom: 1;
 }
 
-ul#mainInfoPane-tabs li.selected a,
-ul#mainInfoPane-tabs li a:hover {
+ul.folder-tabs li.selected a,
+ul.folder-tabs li a:hover {
 	border-top-width: 1px;
 }
 
-ul#mainInfoPane-tabs li a {
+ul.folder-tabs li a {
 	padding-bottom: 2px;
 	vertical-align: top;
 }
+
+/**************************************************
+ * MAIN DETAILED INFO PANE
+ **************************************************/
 
 #mainInfoPane-generalTab table {
 	font-size: 100%;

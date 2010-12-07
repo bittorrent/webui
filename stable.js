@@ -108,16 +108,22 @@ var dxSTable = new Class({
 
 	"create": function(id, columns, options) {
 		this.cols = columns.length;
+
+		var hasicon = false;
 		this.colHeader = columns.map(function(item) {
+			if (!!item[4]) hasicon = true;
 			return {
 				  "id": item[0]
 				, "width": item[1]
 				, "type": item[2]
 				, "disabled": !![item[3], !item[1]].pick()
-				, "align": item[4] || ALIGN_AUTO
-				, "text": item[5] || item[0] || ""
+				, "icon": !!item[4]
+				, "align": item[5] || ALIGN_AUTO
+				, "text": item[6] || item[0] || ""
 			};
 		});
+		if (!hasicon) this.colHeader[0].icon = true;
+
 		this.colOrder = (options.colOrder && (options.colOrder.length == this.cols)) ? options.colOrder : columns.map(function(item, i) { return i; });
 		this.sIndex = isNaN(options.sIndex) ? -1 : options.sIndex.toInt().limit(-1, this.cols - 1);
 		delete options.colOrder;
@@ -199,8 +205,12 @@ var dxSTable = new Class({
 		for (var i = 0, j = 0; i < len; i++) {
 			this.colOrder[i] = (typeOf(this.colOrder[i]) == 'number') ? this.colOrder[i].limit(0, len - 1) : i;
 			this.colData[i] = this.colHeader[this.colOrder[i]];
-			this.rowModel.grab(
-				simpleClone(TD, false).addClass(this.id + "-col-" + this.colOrder[i]).setStyle(badIE ? "visibility" : "display", badIE ? (this.colData[i].disabled ? "hidden" : "visible") : (this.colData[i].disabled ? "none" : ""))
+			this.rowModel.grab(simpleClone(TD, false)
+				.addClass(this.id + "-col-" + this.colOrder[i])
+				.setStyle(
+					badIE ? "visibility" : "display",
+					badIE ? (this.colData[i].disabled ? "hidden" : "visible") : (this.colData[i].disabled ? "none" : "")
+				)
 			);
 			td = simpleClone(TD, false)
 				.grab(new Element("span", {"id": this.id + "-head-" + this.colData[i].id, "text": this.colData[i].text}))
@@ -246,8 +256,6 @@ var dxSTable = new Class({
 		this.colSep = simpleClone(DIV, false).addClass("stable-separator-header").inject(this.dHead);
 		this.colReszObj = simpleClone(DIV, false).addClass("stable-resize-header").inject(this.dBody);
 
-		this.loadObj = simpleClone(DIV, false).addClass("stable-loading").grab(simpleClone(DIV, false).addClass("stable-loading-text").set("html", "Loading...")).inject(this.dCont);
-
 		if (this.options.rowsSelectable) {
 			this.dBody.addEvent("mousedown", function(ev) {
 				var ele = ev.target;
@@ -258,8 +266,9 @@ var dxSTable = new Class({
 					$me.selectRow(ev, ele.getParent());
 				}
 
-				if (!(Browser.ie9 && document.documentMode >= 9)) { // allow scrollbars to work on IE9
-					ev.preventDefault();
+				if (Browser.ie9 && document.documentMode >= 9) { // allow scrollbars to work on IE9
+					ContextMenu.hide();
+					ev.stopPropagation();
 				}
 			}).addEvent("click", function(ev) {
 				if (ev.control || ev.shift || ev.meta) return;
@@ -856,12 +865,10 @@ var dxSTable = new Class({
 
 	"refreshRows": function() {
 		var range = this.getActiveRange(), count = 0, tbc = this.tb.body.childNodes;
-		if (Browser.firefox || Browser.ie)
-			this.detachBody();
-		for (var i = range[0]; i <= range[1]; i++) {
+		for (var i = range[0], il = range[1]; i <= il; i++) {
 			var id = this.activeId[i], rdata = this.rowData[id], row = tbc[count];
 			if (!(rdata && row)) continue;
-			var data = this.options.format(Array.clone(rdata.data));
+
 			var clsName = "", clsChanged = false;
 			if (has(this.rowSel, id))
 				clsName += "selected";
@@ -880,18 +887,18 @@ var dxSTable = new Class({
 			}
 			if (clsChanged)
 				row.className = clsName.clean();
-			this.fillRow(row, data, rdata.icon);
+
+			var data = this.options.format(Array.clone(rdata.data));
+			this.fillRow(row, data);
 			row.setProperties({
 				"title": data[0],
 				"id": this.id + "-row-" + id
 			}).show(true);
 			rdata.rowIndex = count++;
+			this.setIcon(id, rdata.icon);
 		}
-		for (var i = count, j = tbc.length; i < j; i++)
+		for (var i = count, il = tbc.length; i < il; i++)
 			tbc[i].setProperty("id", "").hide();
-		if (Browser.firefox || Browser.ie)
-			this.attachBody();
-		this.loadObj.hide();
 		this.refresh();
 		this.requiresRefresh = false;
 		this.refreshPageInfo();
@@ -1101,28 +1108,24 @@ var dxSTable = new Class({
 
 	"requiresRefresh": false,
 
-	"fillRow": function(row, data, icon) {
-		var $me = this;
+	"fillRow": function(row, data) {
+		var rowc = row.childNodes;
+		var colh = this.colHeader;
 		this.colOrder.each(function(v, k) {
-			var cell = row.childNodes[v];
-			if ((k == 0) && (icon != "") && !cell.hasClass(icon))
-				cell.className = "stable-icon " + icon;
-			if ($me.colHeader[k].type == TYPE_NUM_PROGRESS) {
-				var pcnt = (parseFloat(data[k]) || 0).toFixedNR(1) + "%";
-				var prog = simpleClone(DIV, false).addClass("stable-progress").set("html", "&nbsp;").inject(cell.empty());
-				var pbar = simpleClone(SPAN, false).addClass("stable-progress-bar").set("html", "&nbsp;").setStyle("width", pcnt).inject(prog);
-				var ptxt = simpleClone(SPAN, false).addClass("stable-progress-text").set("text", pcnt).inject(prog);
-			}
-/*
-			else if (cell.lastChild) {
-				var toggle = ((cell.lastChild.nodeValue == "") && (data[v] != cell.lastChild.nodeValue));
-				cell.lastChild.nodeValue = data[v];
-				if (toggle && Browser.ie)
-					cell.toggleClass("stable-bogus");
-			}
-*/
-			else {
-				cell.set("text", data[k]);
+			switch (colh[k].type) {
+				case TYPE_NUM_PROGRESS:
+					var pcnt = (parseFloat(data[k]) || 0).toFixedNR(1) + "%";
+					rowc[v].empty().grab(simpleClone(DIV, false)
+						.addClass("stable-progress").set("html", "&nbsp;")
+						.adopt(
+							simpleClone(SPAN, false).addClass("stable-progress-bar").set("html", "&nbsp;").setStyle("width", pcnt),
+							simpleClone(SPAN, false).addClass("stable-progress-text").set("text", pcnt)
+						)
+					);
+				break;
+
+				default:
+					rowc[v].set("text", data[k]);
 			}
 		});
 	},
@@ -1295,14 +1298,6 @@ var dxSTable = new Class({
 			var pbar = simpleClone(SPAN, false).addClass("stable-progress-bar").set("html", "&nbsp;").setStyle("width", pcnt).inject(prog);
 			var ptxt = simpleClone(SPAN, false).addClass("stable-progress-text").set("text", pcnt).inject(prog);
 		}
-/*
-		else if (cell.lastChild) {
-			var toggle = ((cell.lastChild.nodeValue == "") && (fval != cell.lastChild.nodeValue));
-			cell.lastChild.nodeValue = fval;
-			if (toggle && Browser.ie)
-				cell.toggleClass("stable-bogus");
-		}
-*/
 		else {
 			cell.set("text", fval);
 		}
@@ -1311,17 +1306,39 @@ var dxSTable = new Class({
 
 	"setIcon": function(id, icon) {
 		var row = this.rowData[id];
+		if (!row || (row.rowIndex < 0) || !$(this.id + "-row-" + id)) return;
+
+		var r = this.tb.body.childNodes[row.rowIndex];
+		var rc = r.childNodes;
+		var oldicon = r.retrieve("icon");
+
+		var col;
+		for (var i = 0, il = this.colHeader.length; i < il; ++i) {
+			var curcol = this.colOrder[i];
+			if (this.colHeader[i].icon) {
+				rc[curcol].removeClass(oldicon).removeClass("stable-icon");
+				if (col === undefined && !this.colHeader[i].disabled) {
+					col = curcol;
+				}
+			}
+		}
+		if (col === undefined || this.colHeader[col].disabled) {
+			col = this.colOrder[0];
+		}
+
+		if (icon) {
+			icon = icon.trim();
+			rc[col].addClass("stable-icon").addClass(icon);
+		}
+
+		r.store("icon", icon);
 		row.icon = icon;
-		if ((row.rowIndex == -1) || !$(this.id + "-row-" + id)) return;
-		var r = this.tb.body.childNodes[row.rowIndex], i = this.colOrder[0];
-		if (r.childNodes[i].hasClass(icon)) return;
-		r.childNodes[i].className = "stable-icon " + icon;
 	},
 
 	"resizeTo": function(w, h) {
-//		if (typeOf(w) == 'number')
+		if (typeof(w) !== 'number' || w >= 0)
 			this.dCont.setStyle("width", w);
-//		if (typeOf(h) == 'number')
+		if (typeof(h) !== 'number' || h >= 0)
 			this.dCont.setStyle("height", h);
 
 		this.isResizing = true;
@@ -1348,6 +1365,7 @@ var dxSTable = new Class({
 		var hide = !this.colHeader[index].disabled;
 		this.setColumnDisabled(this.colOrder[index], hide);
 		this.fireEvent("onColToggle", [index, hide]);
+		this.refreshRows(); // makes sure icons are properly shown
 		return true;
 	},
 

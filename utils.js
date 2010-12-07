@@ -110,9 +110,13 @@ String.implement({
 
 Number.implement({
 
+	"pad": function(len, str, type) {
+		return ("" + this).pad(len, str || "0", type || "left");
+	},
+
 	"toFixedNR": function(numdec) {
 		if (numdec <= 0) {
-			return String.from(parseInt(this));
+			return String.from(parseInt(this, 10));
 		}
 		else {
 			var res = this.toFixed(20);
@@ -139,7 +143,7 @@ Number.implement({
 		return (size.toFixedNR(typeOf(numdec) == 'number' ? numdec : 1) + " " + sz[unit]);
 	},
 
-	"toTimeString": function() {
+	"toTimeDelta": function() {
 		var secs = Number(this);
 		if (secs > 63072000) return "\u221E"; // secs > 2 years ~= inf. :)
 		var div, y, w, d, h, m, s, output = "";
@@ -169,6 +173,55 @@ Number.implement({
 		return output;
 	}
 
+});
+
+Date.implement({
+	"isValid": function(date){
+		return !isNaN((date || this).valueOf());
+	},
+
+	"getGMTOffset": function(){
+		var off = this.getTimezoneOffset();
+		return ((off > 0) ? '-' : '+') + (off.abs() / 60).floor().pad(2) + (off % 60).pad(2);
+	},
+
+	"getTimezone": function(){
+		return this.toString()
+			.replace(/^.*? ([A-Z]{3}).[0-9]{4}.*$/, '$1')
+			.replace(/^.*?\(([A-Z])[a-z]+ ([A-Z])[a-z]+ ([A-Z])[a-z]+\)$/, '$1$2$3');
+	},
+
+	"format": function(f){
+		if (!this.isValid()) return 'invalid date';
+		var d = this;
+		return f.replace(/%([a-z%])/gi,
+			function($0, $1){
+				switch ($1){
+					case 'd': return d.getDate().pad(2);
+					case 'e': return d.getDate().pad(2, ' ');
+					case 'H': return d.getHours().pad(2);
+					case 'I': return ((d.getHours() % 12) || 12).pad(2);
+					case 'k': return d.getHours().pad(2, ' ');
+					case 'l': return ((d.getHours() % 12) || 12).pad(2, ' ');
+					case 'L': return d.getMilliseconds().pad(3);
+					case 'm': return (d.getMonth() + 1).pad(2);
+					case 'M': return d.getMinutes().pad(2);
+					case 's': return Math.round(d / 1000);
+					case 'S': return d.getSeconds().pad(2);
+					case 'w': return d.getDay();
+					case 'y': return d.getFullYear().toString().substr(2);
+					case 'Y': return d.getFullYear();
+					case 'z': return d.getGMTOffset();
+					case 'Z': return d.getTimezone();
+				}
+				return $1;
+			}
+		);
+	},
+
+	"toISOString": function() {
+		return this.format('%Y-%m-%dT%H:%M:%S%z');
+	}
 });
 
 Element.implement({
@@ -215,6 +268,17 @@ Element.implement({
 Event.implement({
 	"isRightClick": function() {
 		return !!(this.rightClick || (this.control && (this.event.button === 0) && Browser.Platform.mac));
+	},
+
+	"withinScroll": function(ele) {
+		ele = ele || this.target;
+		if (!ele) return false;
+
+		var pos = ele.getPosition(), x = this.page.x, y = this.page.y;
+		return (
+			pos.x <= x && x <= pos.x + ele.clientWidth &&
+			pos.y <= y && y <= pos.y + ele.clientHeight
+		);
 	}
 });
 

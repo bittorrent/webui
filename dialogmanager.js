@@ -29,10 +29,10 @@ var DialogManager = {
 		if (!ContextMenu.hidden)
 			ContextMenu.hide();
 
-		this.bringToFront(id);
-
 		if (this.items[id].modal)
-			$("modalbg").show();
+			$("modalbg").show().setStyle("zIndex", ++this.winZ);
+
+		this.bringToFront(id);
 
 		if (this.isOffScreen(id))
 			$("dlg" + id).centre();

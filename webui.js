@@ -61,7 +61,6 @@ var utWebUI = {
 			"colMask": 0x0000, // automatically calculated based on this.trtColDefs
 			"colOrder": [], // automatically calculated based on this.trtColDefs
 			"colWidth": [], // automatically calculated based on this.trtColDefs
-//			"mode": MODE_VIRTUAL,
 			"reverse": false,
 			"sIndex": -1
 		},
@@ -69,7 +68,6 @@ var utWebUI = {
 			"colMask": 0x0000, // automatically calculated based on this.prsColDefs
 			"colOrder": [], // automatically calculated based on this.prsColDefs
 			"colWidth": [], // automatically calculated based on this.prsColDefs
-//			"mode": MODE_VIRTUAL,
 			"reverse": false,
 			"sIndex": -1
 		},
@@ -77,12 +75,10 @@ var utWebUI = {
 			"colMask": 0x0000, // automatically calculated based on this.flsColDefs
 			"colOrder": [], // automatically calculated based on this.flsColDefs
 			"colWidth": [], // automatically calculated based on this.flsColDefs
-//			"mode": MODE_VIRTUAL,
 			"reverse": false,
 			"sIndex": -1
 		},
 		"advOptTable": {
-//			"mode": MODE_VIRTUAL,
 			"rowMultiSelect": false
 		},
 		"activeLabelID": "cat_all"
@@ -94,7 +90,7 @@ var utWebUI = {
 	"flsTable": new dxSTable(),
 	"advOptTable": new dxSTable(),
 	"trtColDefs": [
-		//[ colID, colWidth, colType, colDisabled = false, colAlign = ALIGN_AUTO, colText = "" ]
+		//[ colID, colWidth, colType, colDisabled = false, colIcon = false, colAlign = ALIGN_AUTO, colText = "" ]
 		  ["name", 220, TYPE_STRING]
 		, ["order", 35, TYPE_NUM_ORDER]
 		, ["size", 90, TYPE_NUMBER]
@@ -114,7 +110,7 @@ var utWebUI = {
 		, ["label", 80, TYPE_STRING, true]
 	],
 	"prsColDefs": [
-		//[ colID, colWidth, colType, colDisabled = false, colAlign = ALIGN_AUTO, colText = "" ]
+		//[ colID, colWidth, colType, colDisabled = false, colIcon = false, colAlign = ALIGN_AUTO, colText = "" ]
 		  ["ip", 200, TYPE_STRING] // TODO: See if this should use TYPE_CUSTOM
 		, ["port", 60, TYPE_NUMBER, true]
 		, ["client", 125, TYPE_STRING]
@@ -135,7 +131,7 @@ var utWebUI = {
 		, ["inactive", 60, TYPE_NUMBER, true]
 	],
 	"flsColDefs": [
-		//[ colID, colWidth, colType, colDisabled = false, colAlign = ALIGN_AUTO, colText = "" ]
+		//[ colID, colWidth, colType, colDisabled = false, colIcon = false, colAlign = ALIGN_AUTO, colText = "" ]
 		  ["name", 300, TYPE_STRING]
 		, ["size", 90, TYPE_NUMBER]
 		, ["done", 90, TYPE_NUMBER]
@@ -143,15 +139,16 @@ var utWebUI = {
 		, ["prio", 80, TYPE_NUMBER]
 	],
 	"advOptColDefs": [
-		//[ colID, colWidth, colType, colDisabled = false, colAlign = ALIGN_AUTO, colText = "" ]
+		//[ colID, colWidth, colType, colDisabled = false, colIcon = false, colAlign = ALIGN_AUTO, colText = "" ]
 		  ["name", 215, TYPE_STRING]
 		, ["value", 210, TYPE_STRING]
 	],
+	"trtColDoneIdx": -1, // automatically calculated based on this.trtColDefs
+	"trtColStatusIdx": -1, // automatically calculated based on this.trtColDefs
 	"flsColPrioIdx": -1, // automatically calculated based on this.flsColDefs
 	"updateTimeout": null,
 	"totalDL": 0,
 	"totalUL": 0,
-	"loaded": false,
 	"TOKEN": "",
 	"delActions": ["remove", "removetorrent", "removedata", "removedatatorrent"],
 
@@ -284,8 +281,21 @@ var utWebUI = {
 		this.trtColDefs.each(function(item, index) { this.trtColToggle(index, item[3], true); }, this);
 		this.prsColDefs.each(function(item, index) { this.prsColToggle(index, item[3], true); }, this);
 		this.flsColDefs.each(function(item, index) { this.flsColToggle(index, item[3], true); }, this);
+		this.getSettings((function() {
+			this.update((function() {
+				// TODO: See if this can be cleaned up
+				if (!has(this.labels, this.config.activeLabelID) && !has(this.customLabels, decodeID(this.config.activeLabelID.replace(/^lbl_/, '')))) {
+					this.config.activeLabelID = "cat_all";
+					$("cat_all").addClass("sel");
+				} else {
+					$("cat_all").removeClass("sel");
+					$(this.config.activeLabelID).addClass("sel");
+				}
 
-		this.getSettings();
+				this.trtTable.sort();
+				this.hideMsg();
+			}).bind(this));
+		}).bind(this));
 	},
 
 	"showMsg": function(html) {
@@ -370,8 +380,8 @@ var utWebUI = {
 						else {
 							window.removeEvents("unload");
 							self.showMsg(
-								'WebUI is having trouble contacting &micro;Torrent.<br />' +
-								'Try <a href="#" onclick="window.location.reload(true);">reloading</a> the page.'
+								'<p>WebUI is having trouble contacting &micro;Torrent.</p>' +
+								'<p>Try <a href="#" onclick="window.location.reload(true);">reloading</a> the page.</p>'
 							);
 							return;
 						}
@@ -699,7 +709,7 @@ var utWebUI = {
 
 	"loadList": function(json) {
 		function extractLists(fullListName, changedListName, removedListName, key, exList) {
-			var extracted = {};
+			var extracted = {hasChanged: false};
 
 			if (!has(json, fullListName)) {
 				extracted[fullListName] = json[changedListName];
@@ -707,8 +717,12 @@ var utWebUI = {
 
 				extracted[removedListName] = json[removedListName];
 				delete json[removedListName];
+
+				extracted.hasChanged = ((extracted[fullListName].length + extracted[removedListName].length) > 0);
 			}
 			else {
+				extracted.hasChanged = true;
+
 				var list = extracted[fullListName] = json[fullListName];
 				delete json[fullListName];
 
@@ -733,7 +747,9 @@ var utWebUI = {
 				//   list completely and replace it with this list instead, but that
 				//   is likely to be less efficient when taking into account the fact
 				//   that more DOM manipulations would have to be used to repopulate
-				//   any UI elements dependent on the list.
+				//   any UI elements dependent on the list. Additionally, it isn't
+				//   as general an approach, as it requires specific knowledge about
+				//   the UI element in question to be included in this logic.
 
 				var removed = extracted[removedListName] = [];
 
@@ -753,151 +769,145 @@ var utWebUI = {
 			return extracted;
 		}
 
-		var torrentLists = extractLists("torrents", "torrentp", "torrentm", CONST.TORRENT_HASH, this.torrents);
-		var torrents = torrentLists.torrents;
+		// Extract Cache ID
+		this.cacheID = json.torrentc;
 
+		// Extract Labels
 		this.loadLabels(Array.clone(json.label));
-		delete json.label;
-		if (!this.loaded) {
-			if (!has(this.labels, this.config.activeLabelID) && !has(this.customLabels, decodeID(this.config.activeLabelID.replace(/^lbl_/, '')))) {
-				this.config.activeLabelID = "cat_all";
-				$("cat_all").addClass("sel");
-			} else {
-				$("cat_all").removeClass("sel");
-				$(this.config.activeLabelID).addClass("sel");
-			}
-		}
 
-		var scroll = this.trtTable.dBody.getScroll(), sortedColChanged = false;
-		for (var i = 0, len = torrents.length; i < len; i++) {
-			var tor = torrents[i], row = this.trtDataToRow(tor);
+		// Extract Torrents
+		(function(deltaLists) {
+			var sortedColChanged = false;
 
-//			if (tor[CONST.TORRENT_ETA] < -1) console.log(tor);
+			this.trtTable.keepScroll((function() {
+				// Handle added/changed items
+				deltaLists.torrents.each(function(item) {
+					var hash = item[CONST.TORRENT_HASH];
+					var done = item[CONST.TORRENT_PROGRESS];
+					var dlsp = item[CONST.TORRENT_DOWNSPEED];
+					var ulsp = item[CONST.TORRENT_UPSPEED];
+					var stat = item[CONST.TORRENT_STATUS];
+					var statinfo = this.getStatusInfo(stat, done);
 
-			var hash = tor[CONST.TORRENT_HASH];
-			var done = tor[CONST.TORRENT_PROGRESS];
-			var dlsp = tor[CONST.TORRENT_DOWNSPEED];
-			var ulsp = tor[CONST.TORRENT_UPSPEED];
-			var stat = tor[CONST.TORRENT_STATUS];
-			var statinfo = this.getStatusInfo(stat, done);
+					this.totalDL += dlsp;
+					this.totalUL += ulsp;
 
-			this.totalDL += dlsp;
-			this.totalUL += ulsp;
+					if (!has(this.labels, hash))
+						this.labels[hash] = "";
 
-			if (!has(this.labels, hash))
-				this.labels[hash] = "";
+					var labels = this.labels[hash] = this.getLabels(hash, item[CONST.TORRENT_LABEL], done, dlsp, ulsp);
+					var ret = false, activeChanged = false;
 
-			var labels = this.labels[hash] = this.getLabels(hash, tor[CONST.TORRENT_LABEL], done, dlsp, ulsp);
-			var ret = false, activeChanged = false;
+					var row = this.trtDataToRow(item);
 
-			if (has(this.torrents, hash)) {
-				// Old torrent found... update list
-				var rdata = this.trtTable.rowData[hash];
-				activeChanged = (rdata.hidden == labels.contains(this.config.activeLabelID));
-				if (activeChanged) rdata.hidden = !rdata.hidden;
+					if (has(this.torrents, hash)) {
+						// Old torrent found... update list
+						var rdata = this.trtTable.rowData[hash];
+						activeChanged = (rdata.hidden == labels.contains(this.config.activeLabelID));
+						if (activeChanged) rdata.hidden = !rdata.hidden;
 
-				this.trtTable.setIcon(hash, statinfo[0]);
+						this.trtTable.setIcon(hash, statinfo[0]);
 
-				row.each(function(v, k) {
-					if (v != rdata.data[k]) {
-						ret = this.trtTable.updateCell(hash, k, row) || ret;
+						row.each(function(v, k) {
+							if (v != rdata.data[k]) {
+								ret = this.trtTable.updateCell(hash, k, row) || ret;
 
-						if ("done" == this.trtColDefs[k][0]) {
-							// Update the "Status" column if "Done" column changed (in case "Checking" percentage needs updating)
-							ret = this.trtTable.updateCell(hash, this.trtColStatusIdx, row) || ret;
+								if ("done" == this.trtColDefs[k][0]) {
+									// Update the "Status" column if "Done" column changed (in case "Checking" percentage needs updating)
+									ret = this.trtTable.updateCell(hash, this.trtColStatusIdx, row) || ret;
+								}
+							}
+						}, this);
+
+						if (!ret && activeChanged) {
+							this.trtTable._insertRow(hash);
 						}
+					}
+					else {
+						// New torrent found... add to list
+						this.trtTable.addRow(row, hash, statinfo[0], !labels.contains(this.config.activeLabelID));
+						ret = true;
+					}
+
+					this.torrents[hash] = item;
+					sortedColChanged = sortedColChanged || ret;
+				}, this);
+
+				// Handle removed items
+				var clear = false;
+
+				deltaLists.torrentm.each(function(key) {
+					delete this.torrents[key];
+
+					if (this.labels[key].contains("cat_nlb"))
+						this.labels["cat_nlb"]--;
+
+					if (this.labels[key].contains("cat_com"))
+						this.labels["cat_com"]--;
+
+					if (this.labels[key].contains("cat_dls"))
+						this.labels["cat_dls"]--;
+
+					if (this.labels[key].contains("cat_act"))
+						this.labels["cat_act"]--;
+
+					if (this.labels[key].contains("cat_iac"))
+						this.labels["cat_iac"]--;
+
+					this.labels["cat_all"]--;
+					delete this.labels[key];
+					this.trtTable.removeRow(key);
+					if (this.torrentID == key) {
+						clear = true;
 					}
 				}, this);
 
-				if (!ret && activeChanged) {
-					this.trtTable._insertRow(hash);
+				if (clear) {
+					this.torrentID = "";
+					this.clearDetails();
 				}
+
+				// Calculate maximum torrent job queue number
+				var queueMax = -1, q = CONST.TORRENT_QUEUE_POSITION;
+				Object.each(this.torrents, function(trtData) {
+					if (queueMax < trtData[q]) {
+						queueMax = trtData[q];
+					}
+				});
+				this.torQueueMax = queueMax;
+			}).bind(this));
+
+			// Finish up
+			this.trtTable.resizePads();
+
+			if (sortedColChanged || this.trtTable.requiresRefresh) {
+				this.trtTable.refreshRows();
 			}
-			else {
-				// New torrent found... add to list
-				this.trtTable.addRow(row, hash, statinfo[0], (!labels.contains(this.config.activeLabelID)), this.loaded || (this.trtTable.sIndex == -1));
-				ret = true;
-			}
 
-			this.torrents[hash] = tor;
-			sortedColChanged = sortedColChanged || ret;
-		}
-		torrents.length = 0;
-		if (has(torrentLists, "torrentm")) {
-			var clear = false;
-			for (var i = 0, j = torrentLists.torrentm.length; i < j; i++) {
-				var k = torrentLists.torrentm[i];
-				delete this.torrents[k];
+			this.updateLabels();
+			this.trtTable.refresh();
+		}).bind(this)(extractLists("torrents", "torrentp", "torrentm", CONST.TORRENT_HASH, this.torrents));
 
-				if (this.labels[k].contains("cat_nlb"))
-					this.labels["cat_nlb"]--;
-
-				if (this.labels[k].contains("cat_com"))
-					this.labels["cat_com"]--;
-
-				if (this.labels[k].contains("cat_dls"))
-					this.labels["cat_dls"]--;
-
-				if (this.labels[k].contains("cat_act"))
-					this.labels["cat_act"]--;
-
-				if (this.labels[k].contains("cat_iac"))
-					this.labels["cat_iac"]--;
-
-				this.labels["cat_all"]--;
-				delete this.labels[k];
-				this.trtTable.removeRow(k);
-				if (this.torrentID == k)
-					clear = true;
-			}
-			delete torrentLists.torrentm;
-			if (clear) {
-				this.torrentID = "";
-				this.clearDetails();
-			}
-		}
-		var queueMax = -1;
-		Object.each(this.torrents, function(trtData) {
-			if (queueMax < trtData[CONST.TORRENT_QUEUE_POSITION]) {
-				queueMax = trtData[CONST.TORRENT_QUEUE_POSITION];
-			}
-		});
-		this.torQueueMax = queueMax;
-
-		if (!this.loaded && (this.trtTable.sIndex >= 0))
-			this.trtTable.sort();
-		else if (this.trtTable.requiresRefresh || sortedColChanged)
-			this.trtTable.refreshRows();
-
-		this.trtTable.dBody.scrollTo(scroll.x, scroll.y);
-		this.trtTable.loadObj.hide();
-
-		this.cacheID = json.torrentc;
+		// Finish up
 		json = null;
-		this.updateLabels();
-
-		if (!this.loaded) {
-			this.loaded = true;
-			this.trtTable.calcSize();
-			this.hideMsg();
-		}
-		this.trtTable.refresh();
-
 		this.beginPeriodicUpdate();
 	},
 
-	"update": function() {
+	"update": function(listcb) {
 		this.totalDL = 0;
 		this.totalUL = 0;
 
-		this.getList();
-		SpeedGraph.addData(this.totalUL, this.totalDL);
+		this.getList(null, (function() {
+			SpeedGraph.addData(this.totalUL, this.totalDL);
 
-		this.showDetails();
+			this.showDetails();
 
-		this.updateTitle();
-		this.updateToolbar();
-		this.updateStatusBar();
+			this.updateTitle();
+			this.updateToolbar();
+			this.updateStatusBar();
+
+			if (listcb) listcb();
+		}).bind(this));
 
 		if (typeof(DialogManager) !== 'undefined') {
 			if (DialogManager.showing.contains("Settings") && ("dlgSettings-TransferCap" == this.stpanes.active)) {
@@ -914,9 +924,7 @@ var utWebUI = {
 				li.getElement("span").set("text", count);
 			}
 			else {
-				$me = this;
 				(new Element("li", {"id": labelId})
-					.addEvent("mousedown", function() { $me.switchLabel(this); })
 					.appendText(label + " (")
 					.grab(new Element("span").set("text", count))
 					.appendText(")")
@@ -1034,14 +1042,34 @@ var utWebUI = {
 			case "mainCatList-labels":
 				this.switchLabel(element);
 
-				if (ev.isRightClick()) {
+				if (!isGuest && ev.isRightClick()) {
 					this.trtTable.fillSelection();
 					this.trtTable.fireEvent("onSelect", ev);
 				}
 			break;
 
-			case "mainCatList-feeds":
-			break;
+			// NOTE: Yep, this code structure isn't used for anything particularly
+			//       interesting. It was originally supposed to house the logic
+			//       for handling RSS feeds in the category list too, but after
+			//       much deliberation (seriously), I found that I simply couldn't
+			//       bring myself to implement RSS as uTorrent does, because the
+			//       current design that has been implemented since uTorrent 1.8
+			//       just doesn't make any sense to me. RSS does not interact in
+			//       any meaningful way with the rest of the UI elements in the
+			//       main overview, so there is no reason it belongs there. The
+			//       only real advantage I see to putting it there is that screen
+			//       real estate for RSS increases, but that just isn't worth
+			//       sacrificing proper and logical design for.
+			//
+			//       For this reason, I'm implementing RSS in WebUI as uTorrent
+			//       used to do it prior to 1.8: in its own dedicated dialog. It
+			//       made so much more sense to me then, and continues to make
+			//       more sense to me now. I'm leaving the code structured in
+			//       this way because it's more flexible -- which may be useful
+			//       should (for whatever reason) this decision be reversed.
+			//
+			//       - Ultima
+
 		}
 	},
 
@@ -1078,6 +1106,8 @@ var utWebUI = {
 		if (activeChanged) {
 			this.trtTable.calcSize();
 			this.trtTable.restoreScroll();
+			this.trtTable.resizePads();
+			this.trtTable.refreshRows();
 		}
 	},
 
@@ -1172,21 +1202,20 @@ var utWebUI = {
 		this.request("action=resetxferhist");
 	},
 
-	"getSettings": function() {
+	"getSettings": function(fn) {
+		var act = (function(json) {
+			this.addSettings(json, fn);
+		}).bind(this);
+
 		if (isGuest) {
-			this.addSettings();
+			act();
 		}
 		else {
-			var qs = "action=getsettings";
-			if (!this.loaded) {
-				qs += "&list=1";
-				this.endPeriodicUpdate();
-			}
-			this.request(qs, this.addSettings);
+			this.request("action=getsettings", act);
 		}
 	},
 
-	"addSettings": function(json) {
+	"addSettings": function(json, fn) {
 		var loadCookie = (function(newcookie) {
 			function safeCopy(objOrig, objNew) {
 				$each(objOrig, function(v, k) {
@@ -1248,7 +1277,7 @@ var utWebUI = {
 					par = json.settings[i][CONST.SETTING_PARAMS] || {};
 
 				// handle cookie
-				if ((key == "webui.cookie") && !this.loaded) { // only load cookie on startup
+				if (key === "webui.cookie") {
 					loadCookie(JSON.decode(val, true));
 					continue;
 				}
@@ -1297,28 +1326,27 @@ var utWebUI = {
 			delete json.settings;
 			this.loadSettings();
 		}
-		if (!this.loaded) {
-			if (!(this.config.lang in LANGUAGES)) {
-				var langList = "";
-				for (var lang in LANGUAGES) {
-					langList += "|" + lang;
-				}
 
-				var useLang = (navigator.language ? navigator.language : navigator.userLanguage || "").replace("-", "");
-				if (useLang = useLang.match(new RegExp(langList.substr(1), "i")))
-					useLang = useLang[0];
-
-				if (useLang && (useLang in LANGUAGES))
-					this.config.lang = useLang;
-				else
-					this.config.lang = (this.defConfig.lang || "en");
+		if (!(this.config.lang in LANGUAGES)) {
+			var langList = "";
+			for (var lang in LANGUAGES) {
+				langList += "|" + lang;
 			}
 
-			loadLangStrings({
-				"lang": this.config.lang,
-				"onload": this.update.bind(this)
-			});
+			var useLang = (navigator.language ? navigator.language : navigator.userLanguage || "").replace("-", "");
+			if (useLang = useLang.match(new RegExp(langList.substr(1), "i")))
+				useLang = useLang[0];
+
+			if (useLang && (useLang in LANGUAGES))
+				this.config.lang = useLang;
+			else
+				this.config.lang = (this.defConfig.lang || "en");
 		}
+
+		loadLangStrings({
+			"lang": this.config.lang,
+			"onload": fn
+		});
 	},
 
 	"getAdvSetting": function(name) {
@@ -1356,6 +1384,9 @@ var utWebUI = {
 			}
 		}, this);
 
+		this.advOptTable.resizePads();
+		this.advOptTable.refresh();
+
 		// Other settings
 		for (var key in this.settings) {
 			var v = this.settings[key], ele = $(key);
@@ -1381,7 +1412,7 @@ var utWebUI = {
 			"showStatusBar",
 			"updateInterval",
 			"lang"
-		].each((function(key) {
+		].each(function(key) {
 			var ele;
 			if (!(ele = $("webui." + key))) return;
 			var v = this.config[key];
@@ -1390,7 +1421,7 @@ var utWebUI = {
 			} else {
 				ele.set("value", v);
 			}
-		}).bind(this));
+		}, this);
 		if (this.config.maxRows < this.limits.minTableRows) {
 			value = (this.config.maxRows <= 0 ? 0 : this.limits.minTableRows);
 		}
@@ -1615,7 +1646,7 @@ var utWebUI = {
 
 		ContextMenu.clear();
 		var index = 0
-		$each(searchURLs, (function(item) {
+		$each(searchURLs, function(item) {
 			if (!item) {
 				ContextMenu.add([CMENU_SEP]);
 			}
@@ -1627,7 +1658,7 @@ var utWebUI = {
 
 				++index;
 			}
-		}).bind(this));
+		}, this);
 
 		var pos = ele.getPosition(), size = ele.getSize();
 		pos.x += size.x / 2;
@@ -1658,7 +1689,7 @@ var utWebUI = {
 			list.push(curSpeed + offset);
 		}
 
-		// TODO: Consider post-processing items so they look "nicer" (intervals of 5, 10, 25, etc)
+		// TODO: Consider post-processing items so they "look" nicer (intervals of 5, 10, 25, etc)
 
 		// Determine front of list
 		for (var i = (itemCount / 2) - 1; first > 0 && list[first] > 0 && i > 0; --i) {
@@ -1864,7 +1895,7 @@ var utWebUI = {
 				case "peers":
 				case "seeds":
 				case "status":
-					break;
+				break;
 
 				case "availability":
 					values[i] = (values[i] / 65536).toFixedNR(3);
@@ -1885,7 +1916,7 @@ var utWebUI = {
 
 				case "eta":
 					values[i] = (values[i] == 0) ? "" :
-								(values[i] == -1) ? "\u221E" : values[i].toTimeString();
+								(values[i] == -1) ? "\u221E" : values[i].toTimeDelta();
 				break;
 
 				case "ratio":
@@ -2234,7 +2265,7 @@ var utWebUI = {
 		$("ra").set("html", (d[CONST.TORRENT_RATIO] == -1) ? "\u221E" : (d[CONST.TORRENT_RATIO] / 1000).toFixedNR(3));
 		$("us").set("html", d[CONST.TORRENT_UPSPEED].toFileSize() + g_perSec);
 		$("ds").set("html", d[CONST.TORRENT_DOWNSPEED].toFileSize() + g_perSec);
-		$("rm").set("html", (d[CONST.TORRENT_ETA] == 0) ? "" : (d[CONST.TORRENT_ETA] <= -1) ? "\u221E" : d[CONST.TORRENT_ETA].toTimeString());
+		$("rm").set("html", (d[CONST.TORRENT_ETA] == 0) ? "" : (d[CONST.TORRENT_ETA] <= -1) ? "\u221E" : d[CONST.TORRENT_ETA].toTimeDelta());
 		$("se").set("html", lang[CONST.GN_XCONN].replace(/%d/, d[CONST.TORRENT_SEEDS_CONNECTED]).replace(/%d/, d[CONST.TORRENT_SEEDS_SWARM]).replace(/%d/, "\u00BF?"));
 		$("pe").set("html", lang[CONST.GN_XCONN].replace(/%d/, d[CONST.TORRENT_PEERS_CONNECTED]).replace(/%d/, d[CONST.TORRENT_PEERS_SWARM]).replace(/%d/, "\u00BF?"));
 	},
@@ -2265,16 +2296,16 @@ var utWebUI = {
 			var id = this.torrentID;
 			if (id === this.peerlist._ID_) {
 				this.peerlist.each(function(peer, i) {
-					var key = id + "_" + peer[CONST.PEER_IP].replace(/\./g, "_") + "_" + peer[CONST.PEER_PORT]; // TODO: Handle bt.allow_same_ip
-					this.prsTable.addRow(this.prsDataToRow(peer), key);
-					this.prsTable.setIcon(key, "country_" + peer[CONST.PEER_COUNTRY]);
+					var key = id + "_" + peer[CONST.PEER_IP].replace(/[\.:]/g, "_") + "_" + peer[CONST.PEER_PORT]; // TODO: Handle bt.allow_same_ip
+					this.prsTable.addRow(this.prsDataToRow(peer), key, "country country_" + peer[CONST.PEER_COUNTRY]);
 				}, this);
 			}
-
-			this.prsTable.loadObj.hide();
-			this.prsTable.calcSize();
-			this.prsTable.restoreScroll();
 		}).bind(this));
+
+		this.prsTable.calcSize();
+		this.prsTable.resizePads();
+		this.prsTable.refreshRows();
+		this.prsTable.refresh();
 	},
 
 	"getPeers": function(id, forceload) {
@@ -2322,11 +2353,12 @@ var utWebUI = {
 					this.flsTable.addRow(this.flsDataToRow(file), id + "_" + i);
 				}, this);
 			}
-
-			this.flsTable.loadObj.hide();
-			this.flsTable.calcSize();
-			this.flsTable.restoreScroll();
 		}).bind(this));
+
+		this.flsTable.calcSize();
+		this.flsTable.resizePads();
+		this.flsTable.refreshRows();
+		this.flsTable.refresh();
 	},
 
 	"getFiles": function(id, forceload) {
@@ -2387,7 +2419,7 @@ var utWebUI = {
 		for (var i = (index || 0); i < len; i++) {
 			switch (this.flsColDefs[i][0]) {
 				case "name":
-					break;
+				break;
 
 				case "done":
 				case "size":
@@ -2513,7 +2545,7 @@ var utWebUI = {
 				fileIds.push(fid);
 			}
 		}, this);
-		
+
 		if (fileIds.length <= 0) return;
 
 		this.proxyFiles(this.torrents[id][CONST.TORRENT_STREAM_ID], fileIds, false);
@@ -2693,7 +2725,7 @@ var utWebUI = {
 				case "client":
 				case "flags":
 				case "reqs":
-					break;
+				break;
 
 				case "pcnt":
 				case "relevance":
@@ -2718,7 +2750,7 @@ var utWebUI = {
 				case "waited":
 				case "inactive":
 					values[i] = (values[i] == 0) ? "" :
-								(values[i] == -1) ? "\u221E" : values[i].toTimeString();
+								(values[i] == -1) ? "\u221E" : values[i].toTimeDelta();
 				break;
 			}
 		}
@@ -3198,6 +3230,8 @@ var utWebUI = {
 			case "dlgSettings-Advanced":
 				this.advOptTable.calcSize();
 				this.advOptTable.restoreScroll();
+				this.advOptTable.resizePads();
+				this.advOptTable.refreshRows();
 			break;
 		}
 	}/*,

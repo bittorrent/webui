@@ -36,13 +36,9 @@ limitations under the License.
 }
 
 .stable-head {
-	height: 18px;
 	position: relative;
 	overflow: hidden;
 	background: transparent url(./images/header.png) repeat-x scroll center top;
-	border: 1px solid;
-	border-color: #FFFFFF #D0D0D0 #D0D0D0 #FFFFFF;
-	border-bottom: 0;
 	z-index: 10;
 	-webkit-user-select: ignore !important;
 	-moz-user-select: none !important;
@@ -72,7 +68,7 @@ limitations under the License.
 	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
 	border: 1px solid;
 	border-color: #FFFFFF #D0D0D0 #D0D0D0 #FFFFFF;
-	background: transparent url(./images/arrow.gif) no-repeat scroll right -32px;
+	background: transparent url(./images/arrow.png) no-repeat scroll right -32px;
 	padding: 0 12px 0 5px;
 	empty-cells: show;
 	overflow: hidden !important;
@@ -117,19 +113,17 @@ limitations under the License.
 
 .stable-body tr.even td {
 	background-color: #FFFFFF;
-	border-bottom: 1px solid #FFFFFF;
 }
 
 
 .stable-body tr.selected td {
 	background-color: #C0C0C0 !important;
 	color: #FFFFFF !important;
-	border-bottom: 1px solid #C0C0C0 !important;
 }
 
 .stable-body td {
-	width: 100%; height: 16px !important;
-	line-height: 16px !important;
+	width: 100%; height: 18px !important;
+	line-height: 18px !important;
 	padding: 0 5px;
 	empty-cells: show;
 	overflow: hidden;
@@ -137,11 +131,10 @@ limitations under the License.
 	font-size: 11px;
 	font-weight: normal;
 	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
-	border-bottom: 1px solid #FFFFFF;
 }
 
 .stable-icon {
-	padding-left: 25px !important;
+	padding-left: 22px !important;
 	background: transparent url(./images/blank.gif) no-repeat scroll 5px top;
 }
 
@@ -263,27 +256,6 @@ limitations under the License.
 	margin: 0px;
 	font-size: 0px;
 	position: relative;
-}
-
-.stable-loading {
-	position: absolute;
-	left: 0; top: 0;
-	width: 100%; height: 100%;
-	background: transparent url(./images/ldbg.png);
-	z-index: 100;
-}
-
-.stable-loading-text {
-	width: 100px; height: 30px;
-	line-height: 30px;
-	margin: 30px auto;
-	padding: 0 0 0 24px;
-	background: #FFFFFF url(./images/snake.gif) no-repeat scroll 4px center;
-	color: #666666;
-	border: 2px solid #868686;
-	font-size: 11px;
-	font-weight: bold;
-	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
 }
 
 .stable-hidden-column {
