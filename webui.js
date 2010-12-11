@@ -40,7 +40,7 @@ var utWebUI = {
 		"minFileListCache": 60, // seconds
 		"minPeerListCache": 5, // seconds
 		"minXferHistCache": 60, // seconds
-		"defHSplit": 125,
+		"defHSplit": 135,
 		"defVSplit": 225,
 		"minHSplit": 25,
 		"minVSplit": 150,
@@ -49,6 +49,7 @@ var utWebUI = {
 	},
 	"defConfig": {
 		"showDetails": true,
+		"showDetailsIcons": true,
 		"showCategories": true,
 		"showToolbar": true,
 		"showStatusBar": true,
@@ -299,7 +300,9 @@ var utWebUI = {
 					this.stpanes.show(this.config.activeSettingsPaneID.replace(/^tab_/, ''));
 				}
 
+				this.trtTable.calcSize();
 				this.trtTable.sort();
+
 				this.hideMsg();
 			}).bind(this));
 		}).bind(this));
@@ -1452,6 +1455,8 @@ var utWebUI = {
 			$("mainCatList").hide();
 		if (!this.config.showDetails)
 			$("mainInfoPane").hide();
+		if (!this.config.showDetailsIcons)
+			$("mainInfoPane-tabs").removeClass("icon");
 		if (!this.config.showStatusBar)
 			$("mainStatusBar").hide();
 
@@ -1613,6 +1618,18 @@ var utWebUI = {
 		resizeUI();
 	},
 
+	"showAbout": function() {
+		DialogManager.show("About");
+	},
+
+	"showAddTorrent": function() {
+		DialogManager.show("Add");
+	},
+
+	"showAddURL": function() {
+		DialogManager.show("AddURL");
+	},
+
 	"showSettings": function() {
 		DialogManager.show("Settings");
 	},
@@ -1630,7 +1647,7 @@ var utWebUI = {
 		}).filter($chk);
 
 		if (searchURLs[searchActive])
-			window.open(searchURLs[searchActive], "_blank");
+			openURL(searchURLs[searchActive]);
 	},
 
 	"searchMenuSet": function(index) {
@@ -3112,51 +3129,86 @@ var utWebUI = {
 	},
 
 	"toggleCatPanel": function(show) {
-		if (show === undefined) {
-			show = !this.config.showCategories;
-		}
+		show = (show === undefined
+			? !this.config.showCategories
+			: !!show
+		);
 
 		$("mainCatList")[show ? "show" : "hide"]();
 		$("webui.showCategories").checked = show;
 		this.config.showCategories = show;
+
+		resizeUI();
+		if (Browser.opera)
+			this.saveConfig(true);
 	},
 
 	"toggleDetPanel": function(show) {
-		if (show === undefined) {
-			show = !this.config.showDetails;
-		}
+		show = (show === undefined
+			? !this.config.showDetails
+			: !!show
+		);
 
 		$("mainInfoPane")[show ? "show" : "hide"]();
 		$("webui.showDetails").checked = show;
 		this.config.showDetails = show;
+
+		resizeUI();
+		if (Browser.opera)
+			this.saveConfig(true);
+	},
+
+	"toggleDetPanelIcons": function(show) {
+		show = (show === undefined
+			? !this.config.showDetailsIcons
+			: !!show
+		);
+
+		$("mainInfoPane-tabs")[show ? "addClass" : "removeClass"]("icon");
+		this.config.showDetailsIcons = show;
+
+		resizeUI();
+		if (Browser.opera)
+			this.saveConfig(true);
 	},
 
 	"toggleSearchBar": function(show) {
-		if (show === undefined) {
-			show = !!(this.settings["search_list"] || "").trim();
-		}
+		show = (show === undefined
+			? !!(this.settings["search_list"] || "").trim()
+			: !!show
+		);
 
 		$("mainToolbar-searchbar")[show ? "show" : "hide"]();
 	},
 
 	"toggleStatusBar": function(show) {
-		if (show === undefined) {
-			show = !this.config.showStatusBar;
-		}
+		show = (show === undefined
+			? !this.config.showStatusBar
+			: !!show
+		);
 
 		$("mainStatusBar")[show ? "show" : "hide"]();
 		$("webui.showStatusBar").checked = show;
 		this.config.showStatusBar = show;
+
+		resizeUI();
+		if (Browser.opera)
+			this.saveConfig(true);
 	},
 
 	"toggleToolbar": function(show) {
-		if (show === undefined) {
-			show = !this.config.showToolbar;
-		}
+		show = (show === undefined
+			? !this.config.showToolbar
+			: !!show
+		);
 
 		$("mainToolbar")[show ? "show" : "hide"]();
 		$("webui.showToolbar").checked = show;
 		this.config.showToolbar = show;
+
+		resizeUI();
+		if (Browser.opera)
+			this.saveConfig(true);
 	},
 
 	"tableSetMaxRows": function(max) {
@@ -3228,7 +3280,7 @@ var utWebUI = {
 
 		this.showDetails(this.torrentID);
 	},
-	
+
 	"settingsPaneChange": function(id) {
 		switch (id) {
 			case "dlgSettings-TransferCap":

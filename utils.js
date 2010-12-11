@@ -34,6 +34,10 @@ function changePort(port) {
 //	}
 }
 
+function openURL(url, target) {
+	window.open(url, target || "_blank");
+}
+
 function decodeID(str) {
 	return unescape(str.replace(/_/g, '%'));
 }

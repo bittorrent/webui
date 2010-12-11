@@ -72,7 +72,7 @@ function setupGlobalEvents() {
 		return (
 			targ.retrieve("mousewhitelist") ||
 			("textarea" === tag) ||
-			(("input" === tag) && ("text" === targ.type.toLowerCase())) ||
+			(("input" === tag) && ["text", "password"].contains(targ.type.toLowerCase())) ||
 			(("select" === tag) && !ev.isRightClick())
 		);
 	};
@@ -131,34 +131,14 @@ function setupGlobalEvents() {
 			"ctrl a": Function.from(),
 			"ctrl e": Function.from(),
 
-			"ctrl o": function() { DialogManager.show("Add"); },
-			"ctrl p": function() { utWebUI.showSettings(); },
-			"ctrl u": function() { DialogManager.show("AddURL"); },
-			"f2": function() { DialogManager.show("About"); },
+			"ctrl o": utWebUI.showAddTorrent.bind(utWebUI),
+			"ctrl p": utWebUI.showSettings.bind(utWebUI),
+			"ctrl u": utWebUI.showAddURL.bind(utWebUI),
+			"f2": utWebUI.showAbout.bind(utWebUI),
 
-			"f4": function() {
-				utWebUI.toggleToolbar();
-
-				resizeUI();
-				if (Browser.opera)
-					utWebUI.saveConfig(true);
-			},
-
-			"f6": function() {
-				utWebUI.toggleDetPanel();
-
-				resizeUI();
-				if (Browser.opera)
-					utWebUI.saveConfig(true);
-			},
-
-			"f7": function() {
-				utWebUI.toggleCatPanel();
-
-				resizeUI();
-				if (Browser.opera)
-					utWebUI.saveConfig(true);
-			},
+			"f4": utWebUI.toggleToolbar.bind(utWebUI),
+			"f6": utWebUI.toggleDetPanel.bind(utWebUI),
+			"f7": utWebUI.toggleCatPanel.bind(utWebUI),
 
 			"esc": function() {
 				if (!ContextMenu.hidden) {
@@ -571,8 +551,8 @@ function setupUserInterface() {
 
 			var arg;
 			switch (act) {
-				case "add": DialogManager.show("Add"); break;
-				case "addurl": DialogManager.show("AddURL"); break;
+				case "add": utWebUI.showAddTorrent(); break;
+				case "addurl": utWebUI.showAddURL(); break;
 				case "setting": utWebUI.showSettings(); break;
 
 				case "remove": utWebUI.removeDefault(ev.shift); break;
@@ -1417,9 +1397,9 @@ function loadLangStrings(reload) {
 		, "dlgSettings-WebUI"       : lang[CONST.ST_CAPT_WEBUI]
 		, "dlgSettings-Scheduler"   : lang[CONST.ST_CAPT_SCHEDULER]
 		, "dlgSettings-Advanced"    : lang[CONST.ST_CAPT_ADVANCED]
-		, "dlgSettings-UIExtras"    : "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + lang[CONST.ST_CAPT_UI_EXTRAS] // TODO: Use CSS to indent instead of modifying the string directly...
-		, "dlgSettings-DiskCache"   : "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + lang[CONST.ST_CAPT_DISK_CACHE] // TODO: Use CSS to indent instead of modifying the string directly...
-		, "dlgSettings-RunProgram"  : "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + lang[CONST.ST_CAPT_RUN_PROGRAM] // TODO: Use CSS to indent instead of modifying the string directly...
+		, "dlgSettings-UIExtras"    : "&nbsp;&nbsp;&nbsp;&nbsp;" + lang[CONST.ST_CAPT_UI_EXTRAS] // TODO: Use CSS to indent instead of modifying the string directly...
+		, "dlgSettings-DiskCache"   : "&nbsp;&nbsp;&nbsp;&nbsp;" + lang[CONST.ST_CAPT_DISK_CACHE] // TODO: Use CSS to indent instead of modifying the string directly...
+		, "dlgSettings-RunProgram"  : "&nbsp;&nbsp;&nbsp;&nbsp;" + lang[CONST.ST_CAPT_RUN_PROGRAM] // TODO: Use CSS to indent instead of modifying the string directly...
 	});
 
 	_loadStrings("text", [

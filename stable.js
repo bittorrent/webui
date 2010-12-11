@@ -1225,8 +1225,15 @@ var dxSTable = new Class({
 
 	"calcSize": function() {
 		var badIE = (Browser.ie && Browser.version <= 7);
+		var showIB = (this.options.refreshable || this.options.mode == MODE_PAGE);
+		if (showIB) {
+			this.infoBar.show();
+		}
+		else {
+			this.infoBar.hide();
+		}
 		this.dBody.setStyles({
-			"height": (this.dCont.clientHeight - this.dHead.offsetHeight - ((this.options.refreshable || this.options.mode == MODE_PAGE) ? 26 : 0)).max(52),
+			"height": (this.dCont.clientHeight - this.dHead.offsetHeight - (showIB ? 26 : 0)).max(52),
 			"width": (this.dCont.offsetWidth - 2).max(0)
 		});
 		this.dHead.setStyle("width", (this.dCont.offsetWidth + (((this.dBody.offsetWidth - this.dBody.clientWidth) == 0) ? -4 : -1)).max(0));
@@ -1395,6 +1402,8 @@ var dxSTable = new Class({
 			break;
 
 			case MODE_VIRTUAL:
+				if (Browser.ie) this.tb.rowheight = this.tb.body.children[0].getDimensions({computeSize: true}).height;
+
 				var top = this.dBody.scrollTop;
 				var rHeight = this.tb.rowheight;
 				var pHeight = this.activeId.length * rHeight;
@@ -1409,7 +1418,7 @@ var dxSTable = new Class({
 				else {
 					top -= (top % rHeight);
 				}
-				top = top.max(0);
+				top = top.max(0) || 0;
 
 				resized = !(
 					(this.__resizePads_prevTop__ === top) &&
