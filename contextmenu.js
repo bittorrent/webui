@@ -64,7 +64,7 @@ var ContextMenu = {
 				case CMENU_SEL:
 					li.adopt(ELE_A.clone(false)
 						.addClass("sel")
-						.set("html", item[1])
+						.set("text", item[1])
 					);
 				break;
 
@@ -72,7 +72,7 @@ var ContextMenu = {
 					li.adopt(ELE_A.clone(false)
 						.addClass("check")
 						.setProperty("href", "#")
-						.set("html", item[1])
+						.set("text", item[1])
 						.addStopEvents({
 							"mouseup": clickEvent(item[2]),
 							"click": null
@@ -83,7 +83,7 @@ var ContextMenu = {
 				case CMENU_CHILD:
 					li.adopt(ELE_A.clone(false)
 						.addClass("exp")
-						.set("html", item[1])
+						.set("text", item[1])
 					);
 
 					var ul = ELE_UL.clone(false);
@@ -103,13 +103,13 @@ var ContextMenu = {
 					if (item[1] === undefined) {
 						li.adopt(ELE_A.clone(false)
 							.addClass("dis")
-							.set("html", item[0])
+							.set("text", item[0])
 						);
 					}
 					else {
 						li.adopt(ELE_A.clone(false)
 							.setProperty("href", "#")
-							.set("html", item[0])
+							.set("text", item[0])
 							.addStopEvents({
 								"mouseup": clickEvent(item[1]),
 								"click": null

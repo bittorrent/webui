@@ -1076,6 +1076,10 @@ function setupUserInterface() {
 	// STATUS BAR
 	//--------------------------------------------------
 
+	$("mainStatusBar-menu").addStopEvent("mousedown", function(ev) {
+		return utWebUI.statusMenuShow(ev);
+	});
+
 	$("mainStatusBar-download").addStopEvent("mousedown", function(ev) {
 		return utWebUI.statusDownloadMenuShow(ev);
 	});
@@ -1541,10 +1545,10 @@ function loadLangStrings(reload) {
 		, "DLG_SETTINGS_9_WEBUI_10"
 		, "DLG_SETTINGS_9_WEBUI_12"
 
-		, "MENU_SHOW_CATEGORY"
-		, "MENU_SHOW_DETAIL"
-		, "MENU_SHOW_STATUS"
-		, "MENU_SHOW_TOOLBAR"
+		, "MM_OPTIONS_SHOW_CATEGORY"
+		, "MM_OPTIONS_SHOW_DETAIL"
+		, "MM_OPTIONS_SHOW_STATUS"
+		, "MM_OPTIONS_SHOW_TOOLBAR"
 
 		// Advanced
 		, "DLG_SETTINGS_A_ADVANCED_01"

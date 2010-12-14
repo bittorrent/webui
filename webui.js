@@ -439,13 +439,32 @@ var utWebUI = {
 	},
 
 	"perform": function(action) {
-		var hashes = this.getHashes(action);
+		var all = false;
 
-		if (hashes.length == 0) {
-			if (action == "pause") {
+		// Pre-process action
+		switch (action) {
+			case "pauseall":
+				action = "pause";
+				all = true;
+			break;
+
+			case "unpauseall":
 				action = "unpause";
-				hashes = this.getHashes("unpause");
-			}
+				all = true;
+			break;
+		}
+
+		// Get hashes
+		var hashes = this.getHashes(action, all);
+
+		// Post-process action
+		switch (action) {
+			case "pause":
+				if (!all && hashes.length === 0) {
+					action = "unpause";
+					hashes = this.getHashes(action);
+				}
+			break;
 		}
 
 		if (hashes.length == 0) return;
@@ -460,11 +479,15 @@ var utWebUI = {
 		}).bind(this));
 	},
 
-	"getHashes": function(act) {
+	"getHashes": function(act, all) {
 		var hashes = [];
-		var len = this.trtTable.selectedRows.length;
+		var list = (all
+			? Object.keys(this.torrents)
+			: this.trtTable.selectedRows
+		)
+		var len = list.length;
 		while (len--) {
-			var key = this.trtTable.selectedRows[len];
+			var key = list[len];
 			var stat = this.torrents[key][CONST.TORRENT_STATUS];
 			switch (act) {
 				case "forcestart":
@@ -674,6 +697,14 @@ var utWebUI = {
 
 	"recheck": function() {
 		this.perform("recheck");
+	},
+
+	"pauseAll": function() {
+		this.perform("pauseall");
+	},
+
+	"unpauseAll": function() {
+		this.perform("unpauseall");
 	},
 
 	"getList": function(qs, fn) {
@@ -1722,6 +1753,56 @@ var utWebUI = {
 		}
 
 		return [0, -1].concat(list.slice(first, first+itemCount));
+	},
+
+	"statusMenuShow": function(ev) {
+		// Build menu items
+		var menuItems = [
+			  [CMENU_CHILD, lang[CONST.MM_FILE], [
+				  [lang[CONST.MM_FILE_ADD_TORRENT], this.showAddTorrent.bind(this)]
+				, [lang[CONST.MM_FILE_ADD_URL], this.showAddURL.bind(this)]
+			]]
+			, [CMENU_CHILD, lang[CONST.MM_OPTIONS], [
+				  [lang[CONST.MM_OPTIONS_PREFERENCES], this.showSettings.bind(this)]
+				, [CMENU_SEP]
+				, [lang[CONST.MM_OPTIONS_SHOW_TOOLBAR], this.toggleToolbar.bind(this, undefined)]
+				, [lang[CONST.MM_OPTIONS_SHOW_DETAIL], this.toggleDetPanel.bind(this, undefined)]
+				, [lang[CONST.MM_OPTIONS_SHOW_STATUS], this.toggleStatusBar.bind(this, undefined)]
+				, [lang[CONST.MM_OPTIONS_SHOW_CATEGORY], this.toggleCatPanel.bind(this, undefined)]
+				, [CMENU_SEP]
+				, [lang[CONST.MM_OPTIONS_TAB_ICONS], this.toggleDetPanelIcons.bind(this, undefined)]
+			]]
+			, [CMENU_CHILD, lang[CONST.MM_HELP], [
+				  [lang[CONST.MM_HELP_UT_WEBPAGE], openURL.bind(null, "http://www.utorrent.com/")] 
+				, [lang[CONST.MM_HELP_UT_FORUMS], openURL.bind(null, "http://forum.utorrent.com/")] 
+				, [CMENU_SEP]
+				, [lang[CONST.MM_HELP_WEBUI_FEEDBACK], openURL.bind(null, "http://forum.utorrent.com/viewtopic.php?id=58156")] 
+				, [CMENU_SEP]
+				, [lang[CONST.MM_HELP_ABOUT_WEBUI], this.showAbout.bind(this)]
+			]]
+			, [CMENU_SEP]
+			, [CMENU_CHILD, lang[CONST.STM_TORRENTS], [
+				  [lang[CONST.STM_TORRENTS_PAUSEALL], this.pauseAll.bind(this)]
+				, [lang[CONST.STM_TORRENTS_RESUMEALL], this.unpauseAll.bind(this)]
+			]]
+		];
+
+		// Process menu items
+		// NOTE: Yeah, very nasty code here.
+		if (this.config.showToolbar) menuItems[1][2][2].unshift(CMENU_CHECK);
+		if (this.config.showDetails) menuItems[1][2][3].unshift(CMENU_CHECK);
+		if (this.config.showStatusBar) menuItems[1][2][4].unshift(CMENU_CHECK);
+		if (this.config.showCategories) menuItems[1][2][5].unshift(CMENU_CHECK);
+		if (this.config.showDetailsIcons) menuItems[1][2][7].unshift(CMENU_CHECK);
+
+		// Show menu
+		ContextMenu.clear();
+
+		menuItems.each(function(item) {
+			ContextMenu.add(item);
+		}, this);
+
+		ContextMenu.show(ev.page);
 	},
 
 	"statusSpeedMenuShow": function(speed, ev) {
@@ -2877,7 +2958,8 @@ var utWebUI = {
 
 	"flsDblClk": function(id) {
 		if (this.flsTable.selectedRows.length != 1) return;
-		var fid = id.match(/.*_([0-9]+)$/)[1].toInt();
+		var hash = id.match(/^(.*?)_.*$/)[1];
+		var fid = id.replace(hash + '_', '').toInt() || 0;
 		this.setPriority(hash, (this.filelist[fid][CONST.FILE_PRIORITY] + 1) % 4);
 	},
 

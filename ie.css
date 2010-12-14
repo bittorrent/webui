@@ -63,6 +63,21 @@ li.selected#tab_mainInfoPane-loggerTab span {
 
 
 /**************************************************
+ * STATUS BAR
+ **************************************************/
+
+#mainStatusBar-menu {
+	-ms-filter: "progid:DxImageTransform.Microsoft.Alpha(opacity=50)";
+	filter: alpha(opacity=50);
+}
+
+#mainStatusBar-menu:hover {
+	-ms-filter: "progid:DxImageTransform.Microsoft.Alpha(opacity=100)";
+	filter: alpha(opacity=100);
+}
+
+
+/**************************************************
  * SORTABLE TABLE
  **************************************************/
 

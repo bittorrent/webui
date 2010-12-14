@@ -842,6 +842,18 @@ li.selected#tab_mainInfoPane-loggerTab span {
 	width: 175px;
 }
 
+#mainStatusBar-menu {
+	background: transparent url(./images/ut_small.png) no-repeat center center;
+	float: left;
+	height: 16px;
+	opacity: 0.50;
+	width: 16px;
+}
+
+#mainStatusBar-menu:hover {
+	opacity: 1.00;
+}
+
 
 /**************************************************
  * MAIN UI DIVIDERS
