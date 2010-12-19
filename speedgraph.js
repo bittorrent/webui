@@ -50,12 +50,12 @@ var SpeedGraph = {
 	},
 
 	"resize": function(w, h) {
-		if (!w && !h) return;
 		var style = {};
-		if (w)
+		if (w > 0)
 			style.width = w;
-		if (h)
+		if (h > 0)
 			style.height = h;
+
 		this.element.setStyles(style);
 		this.draw();
 	},

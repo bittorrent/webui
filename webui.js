@@ -875,6 +875,8 @@ var utWebUI = {
 					sortedColChanged = sortedColChanged || ret;
 				}, this);
 
+				this.trtTable.requiresRefresh = sortedColChanged || this.trtTable.requiresRefresh;
+
 				// Handle removed items
 				var clear = false;
 
@@ -921,10 +923,6 @@ var utWebUI = {
 
 			// Finish up
 			this.trtTable.resizePads();
-
-			if (sortedColChanged || this.trtTable.requiresRefresh) {
-				this.trtTable.refreshRows();
-			}
 
 			this.updateLabels();
 			this.trtTable.refresh();
@@ -1149,7 +1147,6 @@ var utWebUI = {
 			this.trtTable.calcSize();
 			this.trtTable.restoreScroll();
 			this.trtTable.resizePads();
-			this.trtTable.refreshRows();
 		}
 	},
 
@@ -1162,6 +1159,8 @@ var utWebUI = {
 		var now = Date.now();
 		if (forceload || !this.dirlist._TIME_ || (now - this.dirlist._TIME_) > (this.limits.minDirListCache * 1000)) {
 			this.request("action=list-dirs", (function(json) {
+				this.dirlist.empty();
+
 				this.dirlist = json["download-dirs"];
 				this.dirlist._TIME_ = now;
 
@@ -2376,23 +2375,23 @@ var utWebUI = {
 		$("pe").set("html", lang[CONST.GN_XCONN].replace(/%d/, d[CONST.TORRENT_PEERS_CONNECTED]).replace(/%d/, d[CONST.TORRENT_PEERS_SWARM]).replace(/%d/, "\u00BF?"));
 	},
 
-	"addURL": function() {
-		var url = encodeURIComponent($("dlgAddURL-url").get("value"));
-		var dir = $("dlgAddURL-basePath").value || 0;
-		var sub = encodeURIComponent($("dlgAddURL-subPath").get("value")); // TODO: Sanitize!
-		var cookie = encodeURIComponent($("dlgAddURL-cookie").get("value"));
+	"addURL": function(param, fn) {
+		var url = encodeURIComponent((param.url || "").trim());
+		if (!url) return;
 
-		$("dlgAddURL-url").set("value", "");
-		$("dlgAddURL-cookie").set("value", "");
+		var qs = "action=add-url&s=" + url;
+		var val;
 
-		if (url) {
-			if (cookie) url += ":COOKIE:" + cookie;
-			this.request(
-				  "action=add-url&s=" + url
-				+ "&download_dir=" + dir
-				+ "&path=" + sub
-			);
-		}
+		if ((val = encodeURIComponent(param.cookie || "").trim()))
+			qs += ":COOKIE:" + val;
+
+		if ((val = (parseInt(param.dir, 10) || 0)))
+			qs += "&download_dir=" + val;
+
+		if ((val = (param.sub || "")))
+			qs += "&path=" + encodeURIComponent(val); // TODO: Sanitize!
+
+		this.request(qs, fn);
 	},
 
 	"loadPeers": function() {
@@ -2410,7 +2409,6 @@ var utWebUI = {
 
 		this.prsTable.calcSize();
 		this.prsTable.resizePads();
-		this.prsTable.refreshRows();
 		this.prsTable.refresh();
 	},
 
@@ -2426,7 +2424,7 @@ var utWebUI = {
 		var now = Date.now();
 		if (forceload || this.peerlist._ID_ !== id || !this.peerlist._TIME_ || (now - this.peerlist._TIME_) > (this.limits.minPeerListCache * 1000)) {
 			this.request("action=getpeers&hash=" + id, (function(json) {
-				this.peerlist = [];
+				this.peerlist.empty();
 
 				var peers = json.peers;
 				if (peers) {
@@ -2463,7 +2461,6 @@ var utWebUI = {
 
 		this.flsTable.calcSize();
 		this.flsTable.resizePads();
-		this.flsTable.refreshRows();
 		this.flsTable.refresh();
 	},
 
@@ -2474,7 +2471,7 @@ var utWebUI = {
 		var now = Date.now();
 		if (forceload || this.filelist._ID_ !== id || !this.filelist._TIME_ || (now - this.filelist._TIME_) > (this.limits.minFileListCache * 1000)) {
 			this.request("action=getfiles&hash=" + id, (function(json) {
-				this.filelist = [];
+				this.filelist.empty();
 
 				var files = json.files;
 				if (files) {
@@ -3373,7 +3370,6 @@ var utWebUI = {
 				this.advOptTable.calcSize();
 				this.advOptTable.restoreScroll();
 				this.advOptTable.resizePads();
-				this.advOptTable.refreshRows();
 			break;
 		}
 

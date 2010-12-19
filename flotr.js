@@ -1025,12 +1025,17 @@ var Flotr = (function(){
 				}
 			}
 			var xBoxWidth = plotWidth / noLabels;
-			labelWrapper = (labelWrapper != null) ? labelWrapper.empty() : new Element('div', {
-				"styles": {
-					'font-size': 'smaller',
-					'color': options.grid.color
-				}
-			});
+			if (labelWrapper != null) {
+				labelWrapper.getChildren().destroy();
+			}
+			else {
+				labelWrapper = new Element('div', {
+					"styles": {
+						'font-size': 'smaller',
+						'color': options.grid.color
+					}
+				});
+			}
 
 			/**
 			 * Add xlabels.

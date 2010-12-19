@@ -679,7 +679,18 @@ function setupUserInterface() {
 	$("ADD_URL_OK").addEvent("click", function() {
 		if ($("dlgAddURL-url").get("value").trim().length > 0) {
 			DialogManager.hide("AddURL");
-			utWebUI.addURL();
+
+			var param = {
+				  "url": $("dlgAddURL-url").get("value")
+				, "cookie": $("dlgAddURL-cookie").get("value")
+				, "dir": $("dlgAddURL-basePath").value
+				, "sub": $("dlgAddURL-subPath").get("value")
+			};
+
+			utWebUI.addURL(param, function() {
+				$("dlgAddURL-url").set("value", "");
+				$("dlgAddURL-cookie").set("value", "");
+			});
 		}
 	});
 
@@ -913,7 +924,7 @@ function setupUserInterface() {
 							},
 
 							"mouseleave": function() {
-								$("sched_table_info").empty();
+								$("sched_table_info").getChildren().destroy();
 							}
 						});
 						if (Browser.ie) {
@@ -926,7 +937,9 @@ function setupUserInterface() {
 			}
 			tbody.grab(tr);
 		}
-		$("sched_table").empty().grab(tbody);
+		var sched_table = $("sched_table");
+		sched_table.getChildren().destroy();
+		sched_table.grab(tbody);
 	}).fireEvent("change");
 
 	$$("#sched_table_lgnd ul li").addEvents({
@@ -934,7 +947,7 @@ function setupUserInterface() {
 			$("sched_table_info").set("text", g_schLgndEx[this.get("id").match(/.*_([^_]+)$/)[1]]);
 		},
 		"mouseleave": function() {
-			$("sched_table_info").empty();
+			$("sched_table_info").getChildren().destroy();
 		}
 	});
 

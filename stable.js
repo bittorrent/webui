@@ -343,6 +343,7 @@ var dxSTable = new Class({
 	},
 
 	"assignEvents": function() {
+		this.lastScrollUp = false;
 		this.lastScroll = 0;
 
 		var dBody = this.dBody;
@@ -357,16 +358,8 @@ var dxSTable = new Class({
 
 			var dScroll = dBody.scrollTop;
 			if (this.lastScroll !== dScroll) {
-				var dHeight = dBody.clientHeight;
-				var tCoord = this.tBody.getCoordinates(dBody);
-				var scrollUp = dScroll < this.lastScroll;
-
-				if ((scrollUp && -(dHeight * 0.25) < tCoord.top) || (!scrollUp && tCoord.bottom < (dHeight * 1.25))) {
-					if (this.resizePads(scrollUp)) {
-						this.refreshRows();
-					}
-				}
-
+				this.lastScrollUp = (dScroll < this.lastScroll);
+				this.resizePads();
 				this.lastScroll = dScroll;
 			}
 
@@ -682,7 +675,7 @@ var dxSTable = new Class({
 			this.rowCache[len].v = null;
 			this.rowCache[len] = null;
 		}
-		this.rowCache.length = 0;
+		this.rowCache.empty();
 	},
 
 	"sort": function(col, shift, revtoggle) {
@@ -880,7 +873,7 @@ var dxSTable = new Class({
 	},
 
 	"refreshRows": function() {
-		var range = this.getActiveRange(), count = 0, tbc = this.tb.body.childNodes;
+		var range = this.getActiveRange(), count = 0, tbc = this.tb.body.childNodes, altRows = this.options.alternateRows;
 		for (var i = range[0], il = range[1]; i <= il; i++) {
 			var id = this.activeId[i], rdata = this.rowData[id], row = tbc[count];
 			if (!(rdata && row)) continue;
@@ -889,7 +882,7 @@ var dxSTable = new Class({
 			if (has(this.rowSel, id))
 				clsName += "selected";
 			clsChanged = (clsName.test("selected") != row.hasClass("selected"));
-			if (this.options.alternateRows) {
+			if (altRows) {
 				if (i & 1) {
 					clsName += " odd";
 					clsChanged = clsChanged || !row.hasClass("odd");
@@ -945,7 +938,7 @@ var dxSTable = new Class({
 					var lb = this.rowData[id].activeIndex;
 					var lo = la.min(lb);
 					var hi = la.max(lb);
-					this.selectedRows.length = 0;
+					this.selectedRows.empty();
 					delete this.rowSel;
 					this.rowSel = {};
 					for (var i = lo; i <= hi; i++) {
@@ -967,7 +960,7 @@ var dxSTable = new Class({
 				}
 			} else {
 				this.stSel = id;
-				this.selectedRows.length = 0;
+				this.selectedRows.empty();
 				delete this.rowSel;
 				this.rowSel = {};
 				this.rowSel[id] = 0;
@@ -1119,7 +1112,7 @@ var dxSTable = new Class({
 	"clearActive": function() {
 		for (var i = 0, j = this.activeId.length; i < j; i++)
 			this.rowData[this.activeId[i]].activeIndex = -1;
-		this.activeId.length = 0;
+		this.activeId.empty();
 	},
 
 	"requiresRefresh": false,
@@ -1131,7 +1124,8 @@ var dxSTable = new Class({
 			switch (colh[k].type) {
 				case TYPE_NUM_PROGRESS:
 					var pcnt = (parseFloat(data[k]) || 0).toFixedNR(1) + "%";
-					rowc[v].empty().grab(simpleClone(DIV, false)
+					rowc[v].getChildren().destroy();
+					rowc[v].grab(simpleClone(DIV, false)
 						.addClass("stable-progress").set("html", "&nbsp;")
 						.adopt(
 							simpleClone(SPAN, false).addClass("stable-progress-bar").set("html", "&nbsp;").setStyle("width", pcnt),
@@ -1204,18 +1198,24 @@ var dxSTable = new Class({
 
 			Array.each(this.tb.body.rows, function(row) {
 				Array.each(row.cells, function(cell) {
-					cell.empty();
+					cell.getChildren().destroy();
 				});
 				row.setProperty("id", "").hide();
 			});
 			delete this.rowData;
 			this.rowData = {};
-			this.rows = this.curPage = this.pageCount = this.activeId.length = this.dBody.scrollLeft = this.dBody.scrollTop = this.lastScroll = 0;
+			this.rows = this.curPage = this.pageCount = 0;
+			this.activeId.empty();
+
+			this.noScrollEvent((function() {
+				this.dBody.scrollLeft = this.dBody.scrollTop = this.lastScroll = 0;
+				this.lastScrollUp = false;
+			}).bind(this));
 
 			if (!keepSel) {
 				delete this.rowSel;
 				this.rowSel = {};
-				this.selectedRows.length = 0;
+				this.selectedRows.empty();
 			}
 
 			this.updatePageMenu();
@@ -1288,7 +1288,7 @@ var dxSTable = new Class({
 
 	"clearSelection": function(noRefresh) {
 		if (this.selectedRows.length == 0) return;
-		this.selectedRows.length = 0;
+		this.selectedRows.empty();
 		delete this.rowSel;
 		this.rowSel = {};
 		this.stSel = null;
@@ -1316,8 +1316,9 @@ var dxSTable = new Class({
 		if (this.requiresRefresh || row.hidden || (row.rowIndex == -1) || !$(this.id + "-row-" + id)) return hasSortedChanged;
 		var r = this.tb.body.childNodes[row.rowIndex], cell = r.childNodes[this.colOrder[col]], fval = this.options.format(Array.clone(data), col);
 		if (this.colHeader[col].type == TYPE_NUM_PROGRESS) {
+			cell.getChildren().destroy();
 			var pcnt = (parseFloat(fval) || 0).toFixedNR(1) + "%";
-			var prog = simpleClone(DIV, false).addClass("stable-progress").set("html", "&nbsp;").inject(cell.empty());
+			var prog = simpleClone(DIV, false).addClass("stable-progress").set("html", "&nbsp;").inject(cell);
 			var pbar = simpleClone(SPAN, false).addClass("stable-progress-bar").set("html", "&nbsp;").setStyle("width", pcnt).inject(prog);
 			var ptxt = simpleClone(SPAN, false).addClass("stable-progress-text").set("text", pcnt).inject(prog);
 		}
@@ -1359,12 +1360,14 @@ var dxSTable = new Class({
 	},
 
 	"resizeTo": function(w, h) {
-		if (typeof(w) !== 'number' || w >= 0)
-			this.dCont.setStyle("width", w);
-		if (typeof(h) !== 'number' || h >= 0)
-			this.dCont.setStyle("height", h);
+		var style = {};
+		if (typeof(w) !== 'number' || w > 0)
+			style.width = w;
+		if (typeof(h) !== 'number' || h > 0)
+			style.height = h;
 
 		this.isResizing = true;
+		this.dCont.setStyles(style);
 		this.calcSize();
 		this.isResizing = false;
 	},
@@ -1392,8 +1395,8 @@ var dxSTable = new Class({
 		return true;
 	},
 
-	"resizePads": function(alignBottom) {
-		var resized = true;
+	"resizePads": function() {
+		var resized = false;
 
 		switch (this.options.mode) {
 			case MODE_PAGE:
@@ -1404,19 +1407,17 @@ var dxSTable = new Class({
 			case MODE_VIRTUAL:
 				if (Browser.ie) this.tb.rowheight = this.tb.body.children[0].getDimensions({computeSize: true}).height;
 
-				var top = this.dBody.scrollTop;
 				var rHeight = this.tb.rowheight;
 				var pHeight = this.activeId.length * rHeight;
 				var tHeight = (this.options.maxRows * rHeight).min(pHeight);
 
-				if (alignBottom) {
-					top -= tHeight - this.dBody.clientHeight - rHeight;
-				}
+				var top = this.dBody.scrollTop;
+				var tHiddenHeight = tHeight - this.dBody.clientHeight;
+
+				top -= (top % tHiddenHeight);
+
 				if (top + tHeight > pHeight) {
 					top  = pHeight - tHeight;
-				}
-				else {
-					top -= (top % rHeight);
 				}
 				top = top.max(0) || 0;
 
@@ -1432,12 +1433,17 @@ var dxSTable = new Class({
 			break;
 		}
 
+		if (resized || this.requiresRefresh) {
+			this.refreshRows();
+		}
+
 		return resized;
 	},
 
 	"resetScroll": function() {
 //		if (this.options.mode != MODE_VIRTUAL) return;
 		this.noScrollEvent((function() {
+			this.lastScrollUp = false;
 			++this.dBody.scrollTop; --this.dBody.scrollTop;
 			this.dBody.scrollTop = this.lastScroll = 0;
 			if (this.activeId.length > 0) {
@@ -1460,8 +1466,10 @@ var dxSTable = new Class({
 	"keepScroll": function(fn) {
 		if (typeof(fn) === 'function') {
 			this.noScrollEvent((function() {
+				var up = this.lastScrollUp;
 				var top = this.dBody.scrollTop;
 				fn();
+				this.lastScrollUp = up;
 				this.dBody.scrollTop = this.lastScroll = top;
 			}).bind(this));
 		}
@@ -1469,9 +1477,21 @@ var dxSTable = new Class({
 
 	"noScrollEvent": function(fn) {
 		if (typeof(fn) === 'function') {
-			this.dBody.removeEvents("scroll", this.scrollEvent);
-			fn();
-			this.dBody.addEvent("scroll", this.scrollEvent);
+			if (this.__noScrollEvent_removed__) {
+				// NOTE: We don't want to inadvertently restore the scroll events
+				//       in the case that noScrollEvent() is called several times
+				//       in some nested call stack.
+				fn();
+			}
+			else {
+				this.__noScrollEvent_removed__ = true;
+				this.dBody.removeEvents("scroll", this.scrollEvent);
+
+				fn();
+
+				this.dBody.addEvent("scroll", this.scrollEvent);
+				this.__noScrollEvent_removed__ = false;
+			}
 		}
 	},
 
@@ -1494,7 +1514,7 @@ var dxSTable = new Class({
 			this.pageNext.addClass("disabled");
 
 		this.pageSelect.options.length = 0;
-		this.pageSelect.empty();
+		this.pageSelect.getChildren().destroy();
 		if (this.pageCount <= 1) {
 			this.pageSelect.disabled = true;
 			return;

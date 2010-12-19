@@ -34,7 +34,7 @@ var Tabs = new Class({
 	},
 
 	"draw": function() {
-		this.element.empty();
+		this.element.getChildren().destroy();
 
 		Object.each(this.tabs, function(text, id) {
 			var ele = ELE_LI.clone(false);

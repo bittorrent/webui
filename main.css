@@ -1338,6 +1338,10 @@ input[id="gui.dlrate_menu"] {
 	display: none;
 }
 
+#total_uploaded_history,
+#total_downloaded_history,
+#total_updown_history,
+#history_period,
 #sched_table_lgnd,
 #sched_table_info,
 #DLG_SETTINGS_C_ADV_CACHE_02,

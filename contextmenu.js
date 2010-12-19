@@ -121,7 +121,7 @@ var ContextMenu = {
 	},
 
 	"clear": function() {
-		this.element.getElement("ul").empty();
+		this.element.getElement("ul").getChildren().destroy();
 		this.hideAfterClick = true;
 	},
 
