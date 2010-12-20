@@ -9,6 +9,112 @@ var DialogManager = {
 	"items": {},
 	"showing": [],
 
+	"init": function() {
+		// Create popup dialog
+		var dlgPopupId = this.create("Popup");
+		this.add("Popup");
+
+		$(dlgPopupId).getElement(".dlg-body").adopt(
+			new Element("span", {id: dlgPopupId + "-message"}),
+			new Element("input.tbox", {
+				id: dlgPopupId + "-input",
+				styles: {
+					marginTop: "5px",
+					width: "100%"
+				}
+			})
+		);
+	},
+
+	"create": function(id) {
+		var dlgId = "dlg" + id;
+
+		var dlgWindow = new Element("div.dlg-window", {id: dlgId}).adopt(
+			  new Element("a.dlg-close", {href: "#"})
+			, new Element("div.dlg-head", {id: dlgId + "-head"})
+			, new Element("form", {action: ""}).adopt(
+				  new Element("div.dlg-body")
+				, new Element("div.dlg-foot")
+			).addEvent("submit", Function.from(false))
+		).inject(document.body);
+
+		return dlgId;
+	},
+
+	"popup": function(options) {
+		options = options || {};
+		var opt;
+
+		var id = "Popup"
+		var dlgId = "dlg" + id;
+
+		var dlgWin = $(dlgId);
+		var dlgHead = dlgWin.getElement(".dlg-head");
+		var dlgFoot = dlgWin.getElement(".dlg-foot");
+
+		var dlgMsg = $(dlgId + "-message");
+		var dlgInput = $(dlgId + "-input");
+
+		// Clear previous configuration
+		if ((opt = dlgHead.retrieve("icon"))) {
+			dlgHead.removeClass(opt);
+		}
+
+		dlgFoot.getChildren().destroy();
+
+		// Set text
+		dlgHead.set("text", options.title || "");
+		dlgMsg.set("text", options.message || "");
+		dlgInput.set("value", options.input || "");
+
+		// Set icon
+		if ((opt = options.icon || "")) {
+			dlgHead.store("icon", opt);
+			dlgHead.addClass(opt);
+		}
+
+		// Set buttons
+		var btnFocus;
+		if ((opt = options.buttons || []).length) {
+			var $me = this;
+			opt.each(function(btn) {
+				var ele = new Element("input.btn", {
+					type: btn.submit ? "submit" : "button",
+					value: btn.text
+				}).addStopEvent("click", function(ev) {
+					if (typeof(btn.click) === 'function') {
+						if (btn.click(dlgInput.get("value")) === false) {
+							return;
+						}
+					}
+
+					$me.hide(id);
+				});
+				
+				dlgFoot.grab(ele).appendText(" ");
+				if (btn.focus) btnFocus = ele;
+			})
+		}
+
+		// Finish
+		dlgWin.setStyle("width", parseInt(options.width, 10) || 300);
+		this.items[id].modal = !![options.modal, true].pick();
+
+		this.show(id);
+
+		if (undefined !== options.input) {
+			dlgInput.show();
+			dlgInput.select();
+			dlgInput.focus();
+		}
+		else {
+			dlgInput.hide();
+			if (btnFocus) {
+				btnFocus.focus();
+			}
+		}
+	},
+
 	"add": function(id, isModal, showCB) {
 		if (has(this.items, id)) return;
 
@@ -31,6 +137,8 @@ var DialogManager = {
 
 		if (this.items[id].modal)
 			$("modalbg").show().setStyle("zIndex", ++this.winZ);
+		else
+			$("modalbg").hide();
 
 		this.bringToFront(id);
 
@@ -42,8 +150,14 @@ var DialogManager = {
 	},
 
 	"hide": function(id) {
+		var dlgWin = $("dlg" + id);
+
+		dlgWin.hide();
+		if (dlgWin.contains(document.activeElement)) {
+			document.activeElement.blur();
+		}
+
 		this.showing = this.showing.erase(id);
-		$("dlg" + id).hide();
 
 		if (this.items[id].modal && !this.modalIsVisible())
 			$("modalbg").hide();

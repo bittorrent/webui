@@ -35,7 +35,7 @@ var Logger = {
 		);
 
 		this.element.grab(new Element("p")
-			.grab(new Element("span", {"text": "[" + time + "] ", "class": "timestamp"}))
+			.grab(new Element("span.timestamp", {"text": "[" + time + "] "}))
 			.appendText(text)
 		);
 

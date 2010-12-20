@@ -681,14 +681,15 @@ var utWebUI = {
 				break;
 			}
 
-			$("dlgDelTor-message").set("text", lang[ask].replace(/%d/, count));
-			$("DELTOR_YES").addEvent("click", function(ev) {
-				$("DELTOR_NO").fireEvent("click", ev);
-				act();
+			DialogManager.popup({ // TODO: Localize
+				  title: "Remove Torrent(s)"
+				, icon: "dlgIcon-DelTor"
+				, message: lang[ask].replace(/%d/, count)
+				, buttons: [
+					{ text: "Yes", focus: true, click: act },
+					{ text: "No" }
+				]
 			});
-
-			DialogManager.show("DelTor");
-			$("DELTOR_YES").focus();
 		}
 		else {
 			act();
@@ -966,7 +967,7 @@ var utWebUI = {
 			else {
 				(new Element("li", {"id": labelId})
 					.appendText(label + " (")
-					.grab(new Element("span").set("text", count))
+					.grab(new Element("span", {"text": count}))
 					.appendText(")")
 				.inject(labelList));
 			}
@@ -1053,14 +1054,21 @@ var utWebUI = {
 		var tmpl = "";
 		if (this.trtTable.selectedRows.length == 1)
 			tmpl = this.torrents[this.trtTable.selectedRows[0]][CONST.TORRENT_LABEL];
-		DialogManager.show("Label");
-		var ele = $("dlgLabel-label");
-		ele.set("value", (tmpl == "") ? lang[CONST.OV_NEW_LABEL] : tmpl).focus();
-		ele.select();
+
+		DialogManager.popup({
+			  title: lang[CONST.OV_NEWLABEL_CAPTION]
+			, icon: "dlgIcon-Label"
+			, message: lang[CONST.OV_NEWLABEL_TEXT]
+			, input: tmpl || lang[CONST.OV_NEW_LABEL]
+			, buttons: [
+				{ text: lang[CONST.DLG_BTN_OK], submit: true, click: this.createLabel.bind(this) },
+				{ text: lang[CONST.DLG_BTN_CANCEL] }
+			]
+		});
 	},
 
-	"createLabel": function() {
-		this.setLabel($("dlgLabel-label").get("value"));
+	"createLabel": function(lbl) {
+		this.setLabel(lbl);
 	},
 
 	"updateLabels": function() {

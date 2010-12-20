@@ -50,7 +50,7 @@ Array.implement({
 
 	// http://www.leepoint.net/notes-java/algorithms/searching/binarysearch.html
 	"binarySearch": function(value, comparator, first, upto) {
-		if (typeOf(comparator) != 'function') {
+		if (typeof(comparator) != 'function') {
 			comparator = function(a, b) {
 				if (a === b) return 0;
 				if (a < b) return -1;
@@ -299,7 +299,7 @@ Event.implement({
 	"addStopEvent": function(type, fn) {
 		return this.addEvent(type, function(ev) {
 			var ret;
-			if (typeOf(fn) == "function")
+			if (typeof(fn) === 'function')
 				ret = fn.apply(this, arguments);
 
 			if (!ret) {

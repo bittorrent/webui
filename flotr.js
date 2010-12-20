@@ -778,7 +778,7 @@ var Flotr = (function(){
 
 // uTorrent WebUI Patch - BEGIN
 //	            if ($type(ticks) == 'function') {
-	            if (typeOf(ticks) == 'function') {
+	            if (typeof(ticks) == 'function') {
 // uTorrent WebUI Patch - END
 					ticks = ticks({ min: axis.min, max: axis.max });
 				}

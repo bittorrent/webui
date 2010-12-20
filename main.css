@@ -1024,6 +1024,19 @@ li.selected#tab_mainInfoPane-loggerTab span {
 
 
 /**************************************************
+ * DIALOG: Dialog Icons
+ **************************************************/
+
+.dlgIcon-DelTor {
+	background-image: url(./images/delete.png);
+}
+
+.dlgIcon-Label {
+	background-image: url(./images/label.png);
+}
+
+
+/**************************************************
  * DIALOG: Add Torrent
  **************************************************/
 
@@ -1055,36 +1068,6 @@ li.selected#tab_mainInfoPane-loggerTab span {
 
 #dlgAddURL .dlg-body .tbox {
 	width: 275px;
-}
-
-
-/**************************************************
- * DIALOG: Delete
- **************************************************/
-
-#dlgDelTor {
-	width: 280px;
-}
-
-#dlgDelTor-head {
-	background-image: url(./images/delete.png);
-}
-
-
-/**************************************************
- * DIALOG: New Label
- **************************************************/
-
-#dlgLabel {
-	width: 300px;
-}
-
-#dlgLabel-head {
-	background-image: url(./images/label.png);
-}
-
-#dlgLabel .dlg-body .tbox {
-	width: 280px;
 }
 
 

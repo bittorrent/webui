@@ -36,7 +36,7 @@ var ContextMenu = {
 				if (ContextMenu.hideAfterClick)
 					ContextMenu.hide();
 
-				if (typeOf(fn) == 'function')
+				if (typeof(fn) == 'function')
 					fn(ev);
 			});
 		}
@@ -71,7 +71,6 @@ var ContextMenu = {
 				case CMENU_CHECK:
 					li.adopt(ELE_A.clone(false)
 						.addClass("check")
-						.setProperty("href", "#")
 						.set("text", item[1])
 						.addStopEvents({
 							"mouseup": clickEvent(item[2]),
@@ -108,7 +107,6 @@ var ContextMenu = {
 					}
 					else {
 						li.adopt(ELE_A.clone(false)
-							.setProperty("href", "#")
 							.set("text", item[0])
 							.addStopEvents({
 								"mouseup": clickEvent(item[1]),

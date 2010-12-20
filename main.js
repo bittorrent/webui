@@ -606,8 +606,10 @@ function setupUserInterface() {
 	// DIALOG MANAGER
 	//--------------------------------------------------
 
-	["About", "Add", "AddURL", "DelTor", "Label", "Props", "Settings"].each(function(k) {
-		var isModal = ["DelTor", "Label", "Props"].contains(k);
+	DialogManager.init();
+
+	["About", "Add", "AddURL", "Props", "Settings"].each(function(k) {
+		var isModal = ["Props"].contains(k);
 		DialogManager.add(k, isModal, {
 			  "Add": function() { utWebUI.getDirectoryList(); }
 			, "AddURL": function() { utWebUI.getDirectoryList(); }
@@ -705,39 +707,6 @@ function setupUserInterface() {
 	$("dlgAddURL-form").addEvent("submit", Function.from(false));
 
 	//--------------------------------------------------
-	// DELETE TORRENT DIALOG
-	//--------------------------------------------------
-
-	// -- No Button
-
-	$("DELTOR_NO").addEvent("click", function(ev) {
-		$("dlgDelTor").getElement(".dlg-close").fireEvent("click", ev);
-	});
-
-	// -- Close Button
-
-	$("dlgDelTor").getElement(".dlg-close").addEvent("click", function(ev) {
-		$("DELTOR_YES").removeEvents("click");
-	});
-
-	//--------------------------------------------------
-	// LABEL DIALOG
-	//--------------------------------------------------
-
-	// -- OK Button
-
-	$("LBL_OK").addEvent("click", function() {
-		DialogManager.hide("Label");
-		utWebUI.createLabel();
-	});
-
-	// -- Cancel Button
-
-	$("LBL_CANCEL").addEvent("click", function(ev) {
-		DialogManager.hide("Label");
-	});
-
-	//--------------------------------------------------
 	// PROPERTIES DIALOG
 	//--------------------------------------------------
 
@@ -797,6 +766,10 @@ function setupUserInterface() {
 	$("dlgSettings").getElement(".dlg-close").addEvent("click", function(ev) {
 		utWebUI.loadSettings();
 	});
+
+	// -- Form Submission
+
+	$("dlgSettings-form").addEvent("submit", Function.from(false));
 
 	// -- Pane Selector
 
@@ -1336,7 +1309,6 @@ function loadLangStrings(reload) {
 	_loadStrings("text", {
 		  "dlgAdd-head"      : "OV_TB_ADDTORR"
 		, "dlgAddURL-head"   : "OV_TB_ADDURL"
-		, "dlgLabel-head"    : "OV_NEWLABEL_CAPTION"
 		, "dlgProps-head"    : "DLG_TORRENTPROP_00"
 		, "dlgSettings-head" : "DLG_SETTINGS_00"
 	});
@@ -1351,10 +1323,6 @@ function loadLangStrings(reload) {
 		// Add URL
 		, "ADD_URL_OK"      : "DLG_BTN_OK"
 		, "ADD_URL_CANCEL"  : "DLG_BTN_CANCEL"
-
-		// Label
-		, "LBL_OK"     : "DLG_BTN_OK"
-		, "LBL_CANCEL" : "DLG_BTN_CANCEL"
 
 		// Properties
 		, "DLG_TORRENTPROP_01" : "DLG_BTN_OK"
@@ -1371,12 +1339,6 @@ function loadLangStrings(reload) {
 	//--------------------------------------------------
 
 	$("dlgAbout-version").set("text", "v" + CONST.VERSION + (CONST.BUILD ? " (" + CONST.BUILD + ")" : ""));
-
-	//--------------------------------------------------
-	// LABEL DIALOG
-	//--------------------------------------------------
-
-	_loadStrings("text", "OV_NEWLABEL_TEXT");
 
 	//--------------------------------------------------
 	// PROPERTIES DIALOG

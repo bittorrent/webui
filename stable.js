@@ -223,9 +223,7 @@ var dxSTable = new Class({
 		}
 		this.tb.head.grab(tr);
 
-		this.rowCover = new Element("div", {
-			"class": "rowcover"
-		}).inject(this.dHead);
+		this.rowCover = new Element("div.rowcover").inject(this.dHead);
 
 		this.dPad = simpleClone(DIV, false).addClass("stable-pad").inject(this.dBody);
 
@@ -308,11 +306,11 @@ var dxSTable = new Class({
 		this.infoBar = simpleClone(DIV, false).addClass("stable-infobar").inject(this.dCont);
 
 		if (this.options.rowsSelectable && this.options.rowMultiSelect) {
-			this.pageInfo = new Element("span", {"class": "pageInfo", "text": "0 row(s) selected."}).inject(this.infoBar);
+			this.pageInfo = new Element("span.pageInfo", {"text": "0 row(s) selected."}).inject(this.infoBar);
 		}
 
 		if (this.options.refreshable) {
-			this.infoBar.grab(new Element("div", {"class": "refreshBtn"})
+			this.infoBar.grab(new Element("div.refreshBtn")
 				.grab(new Element("span")
 					.addEvent("click", function(ev) {
 						if ($me.rows)
@@ -322,9 +320,9 @@ var dxSTable = new Class({
 			);
 		}
 
-		this.pageChanger = new Element("div", {"class": "pageChanger"}).inject(this.infoBar);
+		this.pageChanger = new Element("div.pageChanger").inject(this.infoBar);
 
-		this.pagePrev = new Element("span", {"class": "prevlink disabled"})
+		this.pagePrev = new Element("span.prevlink.disabled")
 			.addEvent("click", this.prevPage.bind(this))
 			.inject(this.pageChanger);
 
@@ -334,7 +332,7 @@ var dxSTable = new Class({
 			})
 			.inject(this.pageChanger);
 
-		this.pageNext = new Element("span", {"class": "nextlink disabled"})
+		this.pageNext = new Element("span.nextlink.disabled")
 			.addEvent("click", this.nextPage.bind(this))
 			.inject(this.pageChanger);
 
@@ -531,29 +529,37 @@ var dxSTable = new Class({
 		// COLUMN OPTIONS
 		//--------------------------------------------------
 
-		val = options.colMask; // bitfield
-		if (typeOf(val) === 'number') {
-			for (var i = 0, bit = 1, len = this.cols; i < len; ++i, bit <<= 1) {
-				this.setColumnDisabled(this.colOrder[i], !!(options.colMask & bit));
+		// -- Column Visibility
+		this.outOfDOM((function() {
+			val = options.colMask; // bitfield
+			if (typeOf(val) === 'number') {
+				for (var i = 0, bit = 1, len = this.cols; i < len; ++i, bit <<= 1) {
+					this.setColumnDisabled(this.colOrder[i], !!(options.colMask & bit));
+				}
 			}
-		}
+		}).bind(this));
 
+		// -- Column "Reset" Text
 		val = options.resetText; // string
 		if (typeOf(val) === 'string') {
 			this.resetText = val;
 		}
 
-		val = options.colText; // { colID : colText, ... }
-		if (typeOf(val) === 'object') {
-			$each(val, function(v, k) {
-				ind = colHdrIdx[k];
-				if ($chk(colHdr[ind])) {
-					colHdr[ind].text = v;
-					$(this.id + "-head-" + k).set("html", v);
-				}
-			}, this);
-		}
+		// -- Column Header Text
+		this.outOfDOM((function() {
+			val = options.colText; // { colID : colText, ... }
+			if (typeOf(val) === 'object') {
+				$each(val, function(v, k) {
+					ind = colHdrIdx[k];
+					if ($chk(colHdr[ind])) {
+						colHdr[ind].text = v;
+						$(this.id + "-head-" + k).set("html", v);
+					}
+				}, this);
+			}
+		}).bind(this));
 
+		// -- Column Type
 		val = options.colType; // { colID : colType, ... }
 		if (typeOf(val) === 'object') {
 			var changedCols = [];
@@ -568,6 +574,7 @@ var dxSTable = new Class({
 			refresh = true;
 		}
 
+		// -- Column Alignment
 		val = options.colAlign; // { colID : colAlign, ... }
 		if (typeOf(val) === 'object') {
 			$each(val, function(v, k) {
@@ -580,51 +587,64 @@ var dxSTable = new Class({
 			this.setAlignment();
 		}
 
-		val = options.colOrder; // [ colMIdx, colNIdx, ... ]
-		if (typeOf(val) === 'array') {
-			if (val.length == this.cols) {
-				var orderOK = true, orderT = Array.clone(val).sort(function(a, b) { return (a-b); });
-				for (var i = 0, l = orderT.length; i < l; ++i) {
-					if (i != orderT[i]) {
-						orderOK = false;
-						break;
+		// -- Column Order
+		this.outOfDOM((function() {
+			val = options.colOrder; // [ colMIdx, colNIdx, ... ]
+			if (typeOf(val) === 'array') {
+				if (val.length == this.cols) {
+					var orderOK = true, orderT = Array.clone(val).sort(function(a, b) { return (a-b); });
+					for (var i = 0, l = orderT.length; i < l; ++i) {
+						if (i != orderT[i]) {
+							orderOK = false;
+							break;
+						}
+					}
+
+					if (orderOK) {
+						$each(val, function(v, k, a) {
+							if (a.indexOf(k) != this.colOrder.indexOf(k)) {
+								this.setColumnPosition(a.indexOf(k), k);
+							}
+						}, this);
 					}
 				}
+			}
+		}).bind(this));
 
-				if (orderOK) {
-					$each(val, function(v, k, a) {
-						if (a.indexOf(k) != this.colOrder.indexOf(k)) {
-							this.setColumnPosition(a.indexOf(k), k);
-						}
+		// -- Column Width
+		this.outOfDOM((function() {
+			val = options.colWidth; // [ col1Width, col2Width, ... ]
+			if (typeOf(val) === 'array') {
+				if (val.length == this.cols) {
+					$each(val, function(v, k) {
+						this.setColumnWidth(this.colOrder[k], v);
 					}, this);
 				}
 			}
-		}
+		}).bind(this));
 
-		val = options.colWidth; // [ col1Width, col2Width, ... ]
-		if (typeOf(val) === 'array') {
-			if (val.length == this.cols) {
-				$each(val, function(v, k) {
-					this.setColumnWidth(this.colOrder[k], v);
-				}, this);
+		// -- Column Sort
+		this.outOfDOM((function() {
+			val = options.colSort; // [colIdx, reverse]
+			if (typeOf(val) === 'array') {
+				if ($chk(val[1])) this.options.reverse = !!val[1];
+				this.sort(val[0]);
 			}
-		}
-
-		val = options.colSort; // [colIdx, reverse]
-		if (typeOf(val) === 'array') {
-			if ($chk(val[1])) this.options.reverse = !!val[1];
-			this.sort(val[0]);
-		}
+		}).bind(this));
 
 		//--------------------------------------------------
 		// ROW OPTIONS
 		//--------------------------------------------------
 
+		// -- Row Count
 		val = parseInt(options.rowMaxCount, 10); // integer
 		if (!isNaN(val) && (val >= 1)) {
-			var tbBody = this.tb.body;
-			while (tbBody.childNodes.length < val)
-				tbBody.appendChild(simpleClone(this.rowModel, true).hide());
+			var tbBody = this.tb.body, tbcCount = tbBody.childNodes.length;
+
+			this.outOfDOM((function() {
+				while (tbcCount++ < val)
+					tbBody.appendChild(simpleClone(this.rowModel, true).hide());
+			}).bind(this));
 
 			this.options.maxRows = val;
 			this.curPage = 0;
@@ -633,12 +653,14 @@ var dxSTable = new Class({
 			refresh = true;
 		}
 
+		// -- Row Color Alternation
 		val = options.rowAlternate; // boolean
 		if (typeOf(val) === 'boolean' && val !== this.options.alternateRows) {
 			this.options.alternateRows = !!val;
 			refresh = true;
 		}
 
+		// -- Row Mode
 		val = parseInt(options.rowMode, 10); // integer
 		if (!isNaN(val) && (val != this.options.mode)) {
 			this.pageChanger.setStyle("display", (val == MODE_VIRTUAL ? "none" : "block"));
@@ -1464,34 +1486,54 @@ var dxSTable = new Class({
 	},
 
 	"keepScroll": function(fn) {
-		if (typeof(fn) === 'function') {
-			this.noScrollEvent((function() {
-				var up = this.lastScrollUp;
-				var top = this.dBody.scrollTop;
-				fn();
-				this.lastScrollUp = up;
-				this.dBody.scrollTop = this.lastScroll = top;
-			}).bind(this));
-		}
+		if (typeof(fn) !== 'function') return;
+
+		this.noScrollEvent((function() {
+			var up = this.lastScrollUp;
+			var top = this.dBody.scrollTop;
+			fn();
+			this.lastScrollUp = up;
+			this.dBody.scrollTop = this.lastScroll = top;
+		}).bind(this));
 	},
 
 	"noScrollEvent": function(fn) {
-		if (typeof(fn) === 'function') {
-			if (this.__noScrollEvent_removed__) {
-				// NOTE: We don't want to inadvertently restore the scroll events
-				//       in the case that noScrollEvent() is called several times
-				//       in some nested call stack.
-				fn();
-			}
-			else {
-				this.__noScrollEvent_removed__ = true;
-				this.dBody.removeEvents("scroll", this.scrollEvent);
+		if (typeof(fn) !== 'function') return;
 
-				fn();
+		if (this.__noScrollEvent_removed__) {
+			// NOTE: We don't want to inadvertently restore the scroll events in
+			//       the case that noScrollEvent() is called several times in
+			//       some nested call stack.
+			fn();
+		}
+		else {
+			this.__noScrollEvent_removed__ = true;
+			this.dBody.removeEvents("scroll", this.scrollEvent);
 
-				this.dBody.addEvent("scroll", this.scrollEvent);
-				this.__noScrollEvent_removed__ = false;
-			}
+			fn();
+
+			this.dBody.addEvent("scroll", this.scrollEvent);
+			this.__noScrollEvent_removed__ = false;
+		}
+	},
+
+	"outOfDOM": function(fn) {
+		if (typeof(fn) !== 'function') return;
+
+		if (this.__outOfDOM_removed__) {
+			// NOTE: We don't want to inadvertently restore the elements in the
+			//       case that outOfDOM() is called several times in some nested
+			//       call stack.
+			fn();
+		}
+		else {
+			this.__outOfDOM_removed__ = true;
+			this.dBody.dispose();
+
+			fn();
+
+			this.dBody.inject(this.dCont);
+			this.__outOfDOM_removed__ = false;
 		}
 	},
 

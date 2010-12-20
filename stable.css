@@ -189,6 +189,10 @@ limitations under the License.
 	height: 24px;
 	background: #FFFFFF;
 	border-top: 1px solid #868686;
+	bottom: 0;
+	left: 0;
+	position: absolute;
+	right: 0;
 }
 
 .stable-infobar .pageInfo {

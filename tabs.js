@@ -18,7 +18,7 @@ var Tabs = new Class({
 		this.element = $(ele);
 		this.tabs = options.tabs;
 		this.lazyshow = !!options.lazyshow;
-		if (typeOf(options.onChange) == 'function') {
+		if (typeof(options.onChange) == 'function') {
 			this.tabchange = options.onChange;
 		}
 		var $me = this;
