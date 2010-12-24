@@ -11,11 +11,16 @@
 html, body {
 	background-color: #DDDDDD;
 	border: 0;
+	bottom: 0;
 	cursor: default;
 	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
 	font-size: 11px;
 	height: 100%;
+	left: 0;
 	overflow: hidden;
+	position: absolute;
+	right: 0;
+	top: 0;
 }
 
 a {
@@ -1027,7 +1032,7 @@ li.selected#tab_mainInfoPane-loggerTab span {
  * DIALOG: Dialog Icons
  **************************************************/
 
-.dlgIcon-DelTor {
+.dlgIcon-Delete {
 	background-image: url(./images/delete.png);
 }
 

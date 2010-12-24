@@ -51,12 +51,6 @@ function setupGlobalEvents() {
 
 	window.addEvent("resize", resizeUI);
 
-	if (Browser.opera && Browser.version >= 9.6) {
-		window.addEvent("scroll", function() {
-			document.documentElement.scrollTop = 0;
-		});
-	}
-
 	if (!isGuest) {
 		window.addEvent("unload", function() {
 			utWebUI.saveConfig(false);
@@ -72,7 +66,7 @@ function setupGlobalEvents() {
 		return (
 			targ.retrieve("mousewhitelist") ||
 			("textarea" === tag) ||
-			(("input" === tag) && ["text", "password"].contains(targ.type.toLowerCase())) ||
+			(("input" === tag) && !targ.disabled && ["text", "password"].contains(targ.type.toLowerCase())) ||
 			(("select" === tag) && !ev.isRightClick())
 		);
 	};
@@ -736,6 +730,10 @@ function setupUserInterface() {
 		this.propID = "";
 	});
 
+	// -- Form Submission
+
+	$("dlgProps-form").addEvent("submit", Function.from(false));
+
 	//--------------------------------------------------
 	// SETTINGS DIALOG
 	//--------------------------------------------------
@@ -897,7 +895,7 @@ function setupUserInterface() {
 							},
 
 							"mouseleave": function() {
-								$("sched_table_info").getChildren().destroy();
+								$("sched_table_info").set("html", "");
 							}
 						});
 						if (Browser.ie) {
@@ -910,9 +908,7 @@ function setupUserInterface() {
 			}
 			tbody.grab(tr);
 		}
-		var sched_table = $("sched_table");
-		sched_table.getChildren().destroy();
-		sched_table.grab(tbody);
+		$("sched_table").set("html", "").grab(tbody);
 	}).fireEvent("change");
 
 	$$("#sched_table_lgnd ul li").addEvents({
@@ -1133,8 +1129,12 @@ function _unhideSetting(obj) {
 
 function loadLangStrings(reload) {
 	if (reload) {
+		var loaded = false;
 		Asset.javascript("lang/" + reload.lang + ".js", {
 			"onload": function() {
+				if (loaded) return;
+				loaded = true;
+
 				loadLangStrings();
 				if (reload.onload) reload.onload();
 			}

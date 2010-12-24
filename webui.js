@@ -286,7 +286,7 @@ var utWebUI = {
 
 		// Load settings
 		this.getSettings((function() {
-			this.update((function() {
+			this.update.delay(0, this, (function() {
 				// TODO: See if this can be cleaned up
 				if (!has(this.labels, this.config.activeLabelID) && !has(this.customLabels, decodeID(this.config.activeLabelID.replace(/^lbl_/, '')))) {
 					this.config.activeLabelID = "cat_all";
@@ -681,13 +681,13 @@ var utWebUI = {
 				break;
 			}
 
-			DialogManager.popup({ // TODO: Localize
-				  title: "Remove Torrent(s)"
-				, icon: "dlgIcon-DelTor"
+			DialogManager.popup({
+				  title: "Remove Torrent(s)" // TODO: Localize
+				, icon: "dlgIcon-Delete"
 				, message: lang[ask].replace(/%d/, count)
 				, buttons: [
-					{ text: "Yes", focus: true, click: act },
-					{ text: "No" }
+					{ text: lang[CONST.DLG_BTN_YES], focus: true, click: act },
+					{ text: lang[CONST.DLG_BTN_NO] }
 				]
 			});
 		}
@@ -1059,7 +1059,7 @@ var utWebUI = {
 			  title: lang[CONST.OV_NEWLABEL_CAPTION]
 			, icon: "dlgIcon-Label"
 			, message: lang[CONST.OV_NEWLABEL_TEXT]
-			, input: tmpl || lang[CONST.OV_NEW_LABEL]
+			, input: tmpl || ""
 			, buttons: [
 				{ text: lang[CONST.DLG_BTN_OK], submit: true, click: this.createLabel.bind(this) },
 				{ text: lang[CONST.DLG_BTN_CANCEL] }
@@ -1354,7 +1354,8 @@ var utWebUI = {
 
 				// TODO: See if we need anything more in implementing support for par.access
 				if (CONST.SETTINGPARAM_ACCESS_RO === par.access) {
-					if ($(key)) $(key).addClass("disabled");
+					var ele = $(key);
+					if (ele) ele.addClass("disabled");
 				}
 
 				// insert into settings map and show
@@ -1383,7 +1384,7 @@ var utWebUI = {
 			}
 
 			var useLang = (navigator.language ? navigator.language : navigator.userLanguage || "").replace("-", "");
-			if (useLang = useLang.match(new RegExp(langList.substr(1), "i")))
+			if ((useLang = useLang.match(new RegExp(langList.substr(1), "i"))))
 				useLang = useLang[0];
 
 			if (useLang && (useLang in LANGUAGES))
@@ -1433,17 +1434,14 @@ var utWebUI = {
 			}
 		}, this);
 
-		this.advOptTable.resizePads();
-		this.advOptTable.refresh();
-
 		// Other settings
-		for (var key in this.settings) {
-			var v = this.settings[key], ele = $(key);
+		for (var k in this.settings) {
+			var v = this.settings[k], ele = $(k);
 			if (!ele) continue;
 			if (ele.type == "checkbox") {
 				ele.checked = !!v;
 			} else {
-				switch (key) {
+				switch (k) {
 					case "seed_ratio": v /= 10; break;
 					case "seed_time": v /= 60; break;
 				}
@@ -1471,6 +1469,7 @@ var utWebUI = {
 				ele.set("value", v);
 			}
 		}, this);
+
 		if (this.config.maxRows < this.limits.minTableRows) {
 			value = (this.config.maxRows <= 0 ? 0 : this.limits.minTableRows);
 		}
@@ -1487,6 +1486,7 @@ var utWebUI = {
 			"seed_time": 0,
 			"ulslots": 0
 		};
+
 		if (!this.config.showToolbar && !isGuest)
 			$("mainToolbar").hide();
 		if (!this.config.showCategories)

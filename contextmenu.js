@@ -119,7 +119,7 @@ var ContextMenu = {
 	},
 
 	"clear": function() {
-		this.element.getElement("ul").getChildren().destroy();
+		this.element.getElement("ul").set("html", "");
 		this.hideAfterClick = true;
 	},
 

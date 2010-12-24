@@ -16,12 +16,9 @@ var DialogManager = {
 
 		$(dlgPopupId).getElement(".dlg-body").adopt(
 			new Element("span", {id: dlgPopupId + "-message"}),
-			new Element("input.tbox", {
+			new Element("textarea", {
 				id: dlgPopupId + "-input",
-				styles: {
-					marginTop: "5px",
-					width: "100%"
-				}
+				styles: { marginTop: "5px" }
 			})
 		);
 	},
@@ -60,7 +57,7 @@ var DialogManager = {
 			dlgHead.removeClass(opt);
 		}
 
-		dlgFoot.getChildren().destroy();
+		dlgFoot.set("html", "");
 
 		// Set text
 		dlgHead.set("text", options.title || "");
@@ -96,10 +93,18 @@ var DialogManager = {
 			})
 		}
 
-		// Finish
-		dlgWin.setStyle("width", parseInt(options.width, 10) || 300);
-		this.items[id].modal = !![options.modal, true].pick();
+		// Set dimensions
+		var width = parseInt(options.width, 10) || 300;
+		dlgWin.setStyle("width", width);
+		if (undefined !== options.input) {
+			dlgInput.setStyles({
+				"height": ((options.input.split("\n").length || 1).min(5) * 1.3) + "em",
+				"width": width - 15
+			});
+		}
 
+		// Finish
+		this.items[id].modal = !![options.modal, true].pick();
 		this.show(id);
 
 		if (undefined !== options.input) {

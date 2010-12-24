@@ -130,70 +130,72 @@
 		<div id="dlgProps" class="dlg-window">
 			<a href="#" class="dlg-close"></a>
 			<div id="dlgProps-head" class="dlg-head"></div>
-			<div class="dlg-body">
-				<fieldset>
-					<legend id="DLG_TORRENTPROP_1_GEN_01"></legend>
-					<textarea id="prop-trackers" rows="" cols="" wrap="off" class="wide"></textarea>
-				</fieldset>
+			<form id="dlgProps-form" action="">
+				<div class="dlg-body">
+					<fieldset>
+						<legend id="DLG_TORRENTPROP_1_GEN_01"></legend>
+						<textarea id="prop-trackers" rows="" cols="" wrap="off" class="wide"></textarea>
+					</fieldset>
 
-				<fieldset>
-					<legend id="DLG_TORRENTPROP_1_GEN_03"></legend>
-					<div class="line-cont">
-						<input type="text" class="tbox num flr" id="prop-ulrate" />
-						<label for="prop-ulrate" id="DLG_TORRENTPROP_1_GEN_04"></label>
-					</div>
-					<div class="line-cont">
-						<input type="text" class="tbox num flr" id="prop-dlrate" />
-						<label for="prop-dlrate" id="DLG_TORRENTPROP_1_GEN_06"></label>
-					</div>
-					<div class="line-cont">
-						<input type="text" class="tbox num flr" id="prop-ulslots" />
-						<label for="prop-ulslots" id="DLG_TORRENTPROP_1_GEN_08"></label>
-					</div>
-				</fieldset>
+					<fieldset>
+						<legend id="DLG_TORRENTPROP_1_GEN_03"></legend>
+						<div class="line-cont">
+							<input type="text" class="tbox num flr" id="prop-ulrate" />
+							<label for="prop-ulrate" id="DLG_TORRENTPROP_1_GEN_04"></label>
+						</div>
+						<div class="line-cont">
+							<input type="text" class="tbox num flr" id="prop-dlrate" />
+							<label for="prop-dlrate" id="DLG_TORRENTPROP_1_GEN_06"></label>
+						</div>
+						<div class="line-cont">
+							<input type="text" class="tbox num flr" id="prop-ulslots" />
+							<label for="prop-ulslots" id="DLG_TORRENTPROP_1_GEN_08"></label>
+						</div>
+					</fieldset>
 
-				<fieldset>
-					<legend id="DLG_TORRENTPROP_1_GEN_10"></legend>
-					<div class="line-cont">
-						<input type="checkbox" id="prop-seed_override" />
-						<label id="DLG_TORRENTPROP_1_GEN_11" for="prop-seed_override"></label>
-					</div>
-					<div class="line-cont">
-						<input type="text" id="prop-seed_ratio" class="tbox num flr" />
-						<label for="prop-seed_ratio" id="DLG_TORRENTPROP_1_GEN_12"></label>
-					</div>
-					<div class="line-cont">
-						<input type="text" id="prop-seed_time" class="tbox num flr" />
-						<label for="prop-seed_time" id="DLG_TORRENTPROP_1_GEN_14"></label>
-					</div>
-				</fieldset>
+					<fieldset>
+						<legend id="DLG_TORRENTPROP_1_GEN_10"></legend>
+						<div class="line-cont">
+							<input type="checkbox" id="prop-seed_override" />
+							<label id="DLG_TORRENTPROP_1_GEN_11" for="prop-seed_override"></label>
+						</div>
+						<div class="line-cont">
+							<input type="text" id="prop-seed_ratio" class="tbox num flr" />
+							<label for="prop-seed_ratio" id="DLG_TORRENTPROP_1_GEN_12"></label>
+						</div>
+						<div class="line-cont">
+							<input type="text" id="prop-seed_time" class="tbox num flr" />
+							<label for="prop-seed_time" id="DLG_TORRENTPROP_1_GEN_14"></label>
+						</div>
+					</fieldset>
 
-				<fieldset>
-					<legend id="DLG_TORRENTPROP_1_GEN_16"></legend>
-					<div class="line-cont">
-						<div class="half flr">
-							<input type="checkbox" id="prop-pex" />
-							<label for="prop-pex" id="DLG_TORRENTPROP_1_GEN_19"></label>
+					<fieldset>
+						<legend id="DLG_TORRENTPROP_1_GEN_16"></legend>
+						<div class="line-cont">
+							<div class="half flr">
+								<input type="checkbox" id="prop-pex" />
+								<label for="prop-pex" id="DLG_TORRENTPROP_1_GEN_19"></label>
+							</div>
+							<div>
+								<input type="checkbox" id="prop-superseed" />
+								<label for="prop-superseed" id="DLG_TORRENTPROP_1_GEN_17"></label>
+							</div>
 						</div>
-						<div>
-							<input type="checkbox" id="prop-superseed" />
-							<label for="prop-superseed" id="DLG_TORRENTPROP_1_GEN_17"></label>
+						<div class="line-cont">
+							<div class="half flr">
+							</div>
+							<div>
+								<input type="checkbox" id="prop-dht" />
+								<label for="prop-dht" id="DLG_TORRENTPROP_1_GEN_18"></label>
+							</div>
 						</div>
-					</div>
-					<div class="line-cont">
-						<div class="half flr">
-						</div>
-						<div>
-							<input type="checkbox" id="prop-dht" />
-							<label for="prop-dht" id="DLG_TORRENTPROP_1_GEN_18"></label>
-						</div>
-					</div>
-				</fieldset>
-			</div>
-			<div class="dlg-foot">
-				<input type="button" id="DLG_TORRENTPROP_01" class="btn" />
-				<input type="button" id="DLG_TORRENTPROP_02" class="btn" />
-			</div>
+					</fieldset>
+				</div>
+				<div class="dlg-foot">
+					<input type="submit" id="DLG_TORRENTPROP_01" class="btn" />
+					<input type="button" id="DLG_TORRENTPROP_02" class="btn" />
+				</div>
+			</form>
 		</div>
 		<!-- Torrent Properties Dialog */ -->
 

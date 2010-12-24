@@ -2,6 +2,12 @@
  * @author Directrix
  */
 
+$ = function(el, nocash, doc) {
+	// NOTE: Performance hack, since MooTools $ seems to run very slowly
+	if (typeof(el) === 'object') return document.id(el, nocash, doc);
+	else return document.id(document.getElementById(el), nocash, doc);
+};
+
 function eventToKey(ev) {
 	return (
 		(ev.shift ? "shift " : "") +

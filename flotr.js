@@ -1025,17 +1025,15 @@ var Flotr = (function(){
 				}
 			}
 			var xBoxWidth = plotWidth / noLabels;
-			if (labelWrapper != null) {
-				labelWrapper.getChildren().destroy();
-			}
-			else {
-				labelWrapper = new Element('div', {
-					"styles": {
-						'font-size': 'smaller',
-						'color': options.grid.color
-					}
-				});
-			}
+// uTorrent WebUI Patch - BEGIN
+//			labelWrapper = (labelWrapper != null) ? labelWrapper.empty() : new Element('div', {
+			labelWrapper = (labelWrapper != null) ? labelWrapper.set("html", "") : new Element('div', {
+// uTorrent WebUI Patch - END
+				"styles": {
+					'font-size': 'smaller',
+					'color': options.grid.color
+				}
+			});
 
 			/**
 			 * Add xlabels.

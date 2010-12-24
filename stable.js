@@ -393,7 +393,8 @@ var dxSTable = new Class({
 
 	"setAlignment": function() {
 		var sb = "", cols = this.tBody.getElement("colgroup").getElements("col");
-		for (var i = 0; i < this.cols; i++) {
+		var tbBody = this.tb.body, tbc = tbBody.childNodes, tbcCount = tbc.length;
+		for (var i = 0, il = this.cols; i < il; ++i) {
 			var align = "left";
 			switch (this.colData[i].align) {
 				case ALIGN_CENTER: align = "center"; break;
@@ -409,7 +410,9 @@ var dxSTable = new Class({
 			}
 
 			this.tHeadCols[i].setStyle("textAlign", align);
-			$$("." + this.id + "-col-" + this.colOrder.indexOf(i)).setStyle("textAlign", align);
+			for (var j = 0; j < tbcCount; ++j) {
+				tbc[j].childNodes[i].setStyle("textAlign", align);
+			}
 		}
 	},
 
@@ -427,12 +430,9 @@ var dxSTable = new Class({
 		var sname = badIE ? "visibility" : "display";
 		var svalue = badIE ? (disabled ? "hidden" : "visible") : (disabled ? "none" : "");
 		this.rowModel.childNodes[iCol].setStyle(sname, svalue); // update "model" row in case it's needed again (adding more rows)
-		for (var i = 0, j = this.tb.body.childNodes.length; i < j; i++)
-			this.tb.body.childNodes[i].childNodes[iCol].setStyle(sname, svalue);
-		this.calcSize();
-		this.tBodyCols[iCol].replaces(this.tBodyCols[iCol]);
-		this.dHead.setStyle("width", this.dBody.clientWidth);
-		this.dHead.scrollLeft = this.dBody.scrollLeft;
+		var tbc = this.tb.body.childNodes;
+		for (var i = 0, il = tbc.length; i < il; i++)
+			tbc[i].childNodes[iCol].setStyle(sname, svalue);
 	},
 
 	"setColumnPosition": function(iCol, iNew) {
@@ -518,7 +518,7 @@ var dxSTable = new Class({
 		var val, refresh = false;
 
 		// Map column header IDs to indices
-		var ind, colHdr = this.colHeader;
+		var colHdr = this.colHeader;
 		var colHdrIdx = colHdr.map(function(item, idx) {
 			return idx;
 		}).associate(colHdr.map(function(item) {
@@ -530,14 +530,15 @@ var dxSTable = new Class({
 		//--------------------------------------------------
 
 		// -- Column Visibility
-		this.outOfDOM((function() {
-			val = options.colMask; // bitfield
-			if (typeOf(val) === 'number') {
+		val = options.colMask; // bitfield
+		if (typeOf(val) === 'number') {
+			this.outOfDOM((function() {
 				for (var i = 0, bit = 1, len = this.cols; i < len; ++i, bit <<= 1) {
-					this.setColumnDisabled(this.colOrder[i], !!(options.colMask & bit));
+					this.setColumnDisabled(this.colOrder[i], !!(val & bit));
 				}
-			}
-		}).bind(this));
+				this.calcSize();
+			}).bind(this));
+		}
 
 		// -- Column "Reset" Text
 		val = options.resetText; // string
@@ -546,18 +547,20 @@ var dxSTable = new Class({
 		}
 
 		// -- Column Header Text
-		this.outOfDOM((function() {
-			val = options.colText; // { colID : colText, ... }
-			if (typeOf(val) === 'object') {
+		val = options.colText; // { colID : colText, ... }
+		if (typeOf(val) === 'object') {
+			this.outOfDOM((function() {
+				var ind;
+				var thc = this.dHead.getElement("tr").childNodes;
 				$each(val, function(v, k) {
 					ind = colHdrIdx[k];
 					if ($chk(colHdr[ind])) {
 						colHdr[ind].text = v;
-						$(this.id + "-head-" + k).set("html", v);
+						thc[this.colOrder[ind]].set("text", v);
 					}
 				}, this);
-			}
-		}).bind(this));
+			}).bind(this));
+		}
 
 		// -- Column Type
 		val = options.colType; // { colID : colType, ... }
@@ -588,9 +591,9 @@ var dxSTable = new Class({
 		}
 
 		// -- Column Order
-		this.outOfDOM((function() {
-			val = options.colOrder; // [ colMIdx, colNIdx, ... ]
-			if (typeOf(val) === 'array') {
+		val = options.colOrder; // [ colMIdx, colNIdx, ... ]
+		if (typeOf(val) === 'array') {
+			this.outOfDOM((function() {
 				if (val.length == this.cols) {
 					var orderOK = true, orderT = Array.clone(val).sort(function(a, b) { return (a-b); });
 					for (var i = 0, l = orderT.length; i < l; ++i) {
@@ -608,29 +611,29 @@ var dxSTable = new Class({
 						}, this);
 					}
 				}
-			}
-		}).bind(this));
+			}).bind(this));
+		}
 
 		// -- Column Width
-		this.outOfDOM((function() {
-			val = options.colWidth; // [ col1Width, col2Width, ... ]
-			if (typeOf(val) === 'array') {
+		val = options.colWidth; // [ col1Width, col2Width, ... ]
+		if (typeOf(val) === 'array') {
+			this.outOfDOM((function() {
 				if (val.length == this.cols) {
 					$each(val, function(v, k) {
 						this.setColumnWidth(this.colOrder[k], v);
 					}, this);
 				}
-			}
-		}).bind(this));
+			}).bind(this));
+		}
 
 		// -- Column Sort
-		this.outOfDOM((function() {
-			val = options.colSort; // [colIdx, reverse]
-			if (typeOf(val) === 'array') {
+		val = options.colSort; // [colIdx, reverse]
+		if (typeOf(val) === 'array') {
+			this.outOfDOM((function() {
 				if ($chk(val[1])) this.options.reverse = !!val[1];
 				this.sort(val[0]);
-			}
-		}).bind(this));
+			}).bind(this));
+		}
 
 		//--------------------------------------------------
 		// ROW OPTIONS
@@ -895,6 +898,9 @@ var dxSTable = new Class({
 	},
 
 	"refreshRows": function() {
+		if (this.__refreshRows_refreshing__) return;
+		this.__refreshRows_refreshing__ = true;
+
 		var range = this.getActiveRange(), count = 0, tbc = this.tb.body.childNodes, altRows = this.options.alternateRows;
 		for (var i = range[0], il = range[1]; i <= il; i++) {
 			var id = this.activeId[i], rdata = this.rowData[id], row = tbc[count];
@@ -928,11 +934,21 @@ var dxSTable = new Class({
 			rdata.rowIndex = count++;
 			this.setIcon(id, rdata.icon);
 		}
+
 		for (var i = count, il = tbc.length; i < il; i++)
 			tbc[i].setProperty("id", "").hide();
+
+		if (Browser.ie && Browser.version <= 7) {
+			// NOTE: This hack is needed for IE7 and below because it doesn't hide
+			//       rows properly otherwise if the listview displays progressbars.
+			this.outOfDOM(Function.from());
+		}
+
 		this.refresh();
 		this.requiresRefresh = false;
 		this.refreshPageInfo();
+
+		this.__refreshRows_refreshing__ = false;
 	},
 
 	"refresh": function() {
@@ -1146,8 +1162,7 @@ var dxSTable = new Class({
 			switch (colh[k].type) {
 				case TYPE_NUM_PROGRESS:
 					var pcnt = (parseFloat(data[k]) || 0).toFixedNR(1) + "%";
-					rowc[v].getChildren().destroy();
-					rowc[v].grab(simpleClone(DIV, false)
+					rowc[v].set("html", "").grab(simpleClone(DIV, false)
 						.addClass("stable-progress").set("html", "&nbsp;")
 						.adopt(
 							simpleClone(SPAN, false).addClass("stable-progress-bar").set("html", "&nbsp;").setStyle("width", pcnt),
@@ -1220,7 +1235,7 @@ var dxSTable = new Class({
 
 			Array.each(this.tb.body.rows, function(row) {
 				Array.each(row.cells, function(cell) {
-					cell.getChildren().destroy();
+					cell.set("html", "");
 				});
 				row.setProperty("id", "").hide();
 			});
@@ -1338,7 +1353,7 @@ var dxSTable = new Class({
 		if (this.requiresRefresh || row.hidden || (row.rowIndex == -1) || !$(this.id + "-row-" + id)) return hasSortedChanged;
 		var r = this.tb.body.childNodes[row.rowIndex], cell = r.childNodes[this.colOrder[col]], fval = this.options.format(Array.clone(data), col);
 		if (this.colHeader[col].type == TYPE_NUM_PROGRESS) {
-			cell.getChildren().destroy();
+			cell.set("html", "");
 			var pcnt = (parseFloat(fval) || 0).toFixedNR(1) + "%";
 			var prog = simpleClone(DIV, false).addClass("stable-progress").set("html", "&nbsp;").inject(cell);
 			var pbar = simpleClone(SPAN, false).addClass("stable-progress-bar").set("html", "&nbsp;").setStyle("width", pcnt).inject(prog);
@@ -1412,6 +1427,7 @@ var dxSTable = new Class({
 	"toggleColumn": function(index) {
 		var hide = !this.colHeader[index].disabled;
 		this.setColumnDisabled(this.colOrder[index], hide);
+		this.calcSize();
 		this.fireEvent("onColToggle", [index, hide]);
 		this.refreshRows(); // makes sure icons are properly shown
 		return true;
@@ -1556,7 +1572,7 @@ var dxSTable = new Class({
 			this.pageNext.addClass("disabled");
 
 		this.pageSelect.options.length = 0;
-		this.pageSelect.getChildren().destroy();
+		this.pageSelect.set("html", "");
 		if (this.pageCount <= 1) {
 			this.pageSelect.disabled = true;
 			return;
