@@ -2,11 +2,14 @@
  * @author Directrix
  */
 
-$ = function(el, nocash, doc) {
+(function() {
 	// NOTE: Performance hack, since MooTools $ seems to run very slowly
-	if (typeof(el) === 'object') return document.id(el, nocash, doc);
-	else return document.id(document.getElementById(el), nocash, doc);
-};
+	var _ = document.id;
+	$ = function(el, nc) {
+		if (typeof(el) === 'string') return _(document.getElementById(el), nc, document); 
+		return _(el, nc, document);
+	};
+})();
 
 function eventToKey(ev) {
 	return (

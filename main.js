@@ -1105,9 +1105,7 @@ function _link(obj, defstate, list, ignoreLabels, reverse) {
 }
 
 function _unhideSetting(obj) {
-	if (typeOf(obj) !== 'array') obj = [obj];
-
-	obj.each(function(ele) {
+	Array.from(obj).each(function(ele) {
 		ele = $(ele);
 		if (!ele) return;
 

@@ -538,6 +538,8 @@ var dxSTable = new Class({
 				}
 				this.calcSize();
 			}).bind(this));
+
+			refresh = true;
 		}
 
 		// -- Column "Reset" Text
@@ -1228,7 +1230,7 @@ var dxSTable = new Class({
 		this.refresh();
 	},
 
-	"clearRows": function(keepSel) {
+	"clearRows": function(keepMeta) {
 		if (this.rows > 0) {
 			this.stSel = null;
 			this.clearCache();
@@ -1244,12 +1246,10 @@ var dxSTable = new Class({
 			this.rows = this.curPage = this.pageCount = 0;
 			this.activeId.empty();
 
-			this.noScrollEvent((function() {
-				this.dBody.scrollLeft = this.dBody.scrollTop = this.lastScroll = 0;
-				this.lastScrollUp = false;
-			}).bind(this));
+			if (!keepMeta) {
+				this.resetScroll();
+				this.resizePads();
 
-			if (!keepSel) {
 				delete this.rowSel;
 				this.rowSel = {};
 				this.selectedRows.empty();

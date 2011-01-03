@@ -140,12 +140,12 @@ var DialogManager = {
 		if (!ContextMenu.hidden)
 			ContextMenu.hide();
 
-		if (this.items[id].modal)
-			$("modalbg").show().setStyle("zIndex", ++this.winZ);
-		else
-			$("modalbg").hide();
-
 		this.bringToFront(id);
+
+		if (this.items[id].modal)
+			$("modalbg").show().setStyle("zIndex", this.winZ);
+		else if (!this.modalIsVisible())
+			$("modalbg").hide();
 
 		if (this.isOffScreen(id))
 			$("dlg" + id).centre();
@@ -164,17 +164,22 @@ var DialogManager = {
 
 		this.showing = this.showing.erase(id);
 
-		if (this.items[id].modal && !this.modalIsVisible())
-			$("modalbg").hide();
+		if (this.items[id].modal) {
+			var topModal = this.getTopModal();
+			if (topModal)
+				$("modalbg").setStyle("zIndex", $("dlg" + topModal).getStyle("zIndex"));
+			else
+				$("modalbg").hide();
+		}
 
-		if (this.showing[0])
-			this.bringToFront(this.showing[0]);
+		if (this.showing.length)
+			this.bringToFront(this.showing.getLast());
 	},
 
 	"hideTopMost": function(fireClose) {
-		if (this.showing.length == 0) return;
+		if (!this.showing.length) return;
 
-		var id = this.showing.shift();
+		var id = this.showing.pop();
 		this.hide(id);
 
 		if (fireClose)
@@ -195,19 +200,25 @@ var DialogManager = {
 	},
 
 	"bringToFront": function(id) {
-		if (this.showing.contains(id))
-			this.showing = this.showing.erase(id);
+		this.showing = this.showing.erase(id);
 
-		if (this.showing[0])
-			$("dlg" + this.showing[0]).removeClass("dlg-top");
+		if (this.showing.length)
+			$("dlg" + this.showing.getLast()).removeClass("dlg-top");
 
-		this.showing.unshift(id);
+		this.showing.push(id);
 		$("dlg" + id).addClass("dlg-top").setStyle("zIndex", ++this.winZ);
 	},
 
+	"getTopModal": function() {
+		for (var i = this.showing.length - 1; i >= 0; --i) {
+			if (this.items[this.showing[i]].modal) {
+				return this.showing[i];
+			}
+		}
+		return null;
+	},
+
 	"modalIsVisible": function() {
-		return this.showing.some(function(id) {
-			return this.items[id].modal;
-		}, this);
+		return !!this.getTopModal();
 	}
 };

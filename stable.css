@@ -277,7 +277,7 @@ limitations under the License.
 
 .stable-progress-bar {
 	background: #0099FF;
-	line-height: 1.1em;
+	bottom: 0;
 	left: 0;
 	position: absolute;
 	top: 0;
@@ -286,7 +286,7 @@ limitations under the License.
 .stable-progress-text {
 	color: #0A0A0A;
 	height: 100%;
-	line-height: 1em;
+	line-height: 100%;
 	left: 0;
 	position: absolute;
 	right: 0;

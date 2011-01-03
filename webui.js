@@ -19,7 +19,7 @@ var utWebUI = {
 	"props": {},
 	"xferhist": {},
 	"dirlist": [],
-	"labels": {
+	"categories": {
 		"cat_all": 0, // all
 		"cat_dls": 0, // downloading
 		"cat_com": 0, // completed
@@ -27,7 +27,12 @@ var utWebUI = {
 		"cat_iac": 0, // inactive
 		"cat_nlb": 0  // no-label
 	},
-	"customLabels": {},
+	"labels": {},
+	"torGroups": {},
+	"defTorGroup": {
+		"cat": {},
+		"lbl": {}
+	},
 	"torQueueMax": -1,
 	"cacheID": 0,
 	"limits": {
@@ -83,7 +88,10 @@ var utWebUI = {
 			"rowMultiSelect": false
 		},
 		"activeSettingsPaneID": "",
-		"activeLabelID": "cat_all"
+		"activeTorGroups": {
+			"cat": {"cat_all": 1},
+			"lbl": {}
+		}
 	},
 	"torrentID": "", // selected torrent
 	"propID": "", // selected torrent (single)
@@ -272,7 +280,8 @@ var utWebUI = {
 	},
 
 	"init": function() {
-		this.config = Object.merge(this.defConfig, {"lang": ""}); // deep copy default config
+		this.config = Object.merge({}, this.defConfig); // deep copy default config
+		this.config.lang = "";
 
 		// Calculate index of some columns for ease of reference elsewhere
 		this.trtColDoneIdx = this.trtColDefs.map(function(item) { return (item[0] == "done"); }).indexOf(true);
@@ -287,22 +296,7 @@ var utWebUI = {
 		// Load settings
 		this.getSettings((function() {
 			this.update.delay(0, this, (function() {
-				// TODO: See if this can be cleaned up
-				if (!has(this.labels, this.config.activeLabelID) && !has(this.customLabels, decodeID(this.config.activeLabelID.replace(/^lbl_/, '')))) {
-					this.config.activeLabelID = "cat_all";
-					$("cat_all").addClass("sel");
-				} else {
-					$("cat_all").removeClass("sel");
-					$(this.config.activeLabelID).addClass("sel");
-				}
-
-				if (this.config.activeSettingsPaneID) {
-					this.stpanes.show(this.config.activeSettingsPaneID.replace(/^tab_/, ''));
-				}
-
-				this.trtTable.calcSize();
-				this.trtTable.sort();
-
+				this.refreshSelectedTorGroups();
 				this.hideMsg();
 			}).bind(this));
 		}).bind(this));
@@ -370,7 +364,7 @@ var utWebUI = {
 				new Request.JSON({
 					"url": guiBase + "?token=" + self.TOKEN + "&" + qs + "&t=" + Date.now(),
 					"method": "get",
-					"async": !!async,
+					"async": typeof(async) === 'undefined' || !!async,
 					"onFailure": function() {
 						// TODO: Need to be able to distinguish between recoverable and unrecoverable errors...
 						//       Recoverable errors should be retried, unrecoverable errors should not.
@@ -390,7 +384,7 @@ var utWebUI = {
 						else {
 							window.removeEvents("unload");
 							self.showMsg(
-								'<p>WebUI is having trouble contacting &micro;Torrent.</p>' +
+								'<p>WebUI is having trouble connecting to &micro;Torrent.</p>' +
 								'<p>Try <a href="#" onclick="window.location.reload(true);">reloading</a> the page.</p>'
 							);
 							return;
@@ -825,28 +819,21 @@ var utWebUI = {
 			this.trtTable.keepScroll((function() {
 				// Handle added/changed items
 				deltaLists.torrents.each(function(item) {
+					this.totalDL += item[CONST.TORRENT_DOWNSPEED];
+					this.totalUL += item[CONST.TORRENT_UPSPEED];
+
 					var hash = item[CONST.TORRENT_HASH];
-					var done = item[CONST.TORRENT_PROGRESS];
-					var dlsp = item[CONST.TORRENT_DOWNSPEED];
-					var ulsp = item[CONST.TORRENT_UPSPEED];
-					var stat = item[CONST.TORRENT_STATUS];
-					var statinfo = this.getStatusInfo(stat, done);
+					var statinfo = this.getStatusInfo(item[CONST.TORRENT_STATUS], item[CONST.TORRENT_PROGRESS]);
 
-					this.totalDL += dlsp;
-					this.totalUL += ulsp;
-
-					if (!has(this.labels, hash))
-						this.labels[hash] = "";
-
-					var labels = this.labels[hash] = this.getLabels(hash, item[CONST.TORRENT_LABEL], done, dlsp, ulsp);
-					var ret = false, activeChanged = false;
+					this.torGroups[hash] = this.getTorGroups(item);
 
 					var row = this.trtDataToRow(item);
+					var ret = false, activeChanged = false;
 
 					if (has(this.torrents, hash)) {
 						// Old torrent found... update list
 						var rdata = this.trtTable.rowData[hash];
-						activeChanged = (rdata.hidden == labels.contains(this.config.activeLabelID));
+						activeChanged = (rdata.hidden == this.torrentIsVisible(hash));
 						if (activeChanged) rdata.hidden = !rdata.hidden;
 
 						this.trtTable.setIcon(hash, statinfo[0]);
@@ -868,7 +855,7 @@ var utWebUI = {
 					}
 					else {
 						// New torrent found... add to list
-						this.trtTable.addRow(row, hash, statinfo[0], !labels.contains(this.config.activeLabelID));
+						this.trtTable.addRow(row, hash, statinfo[0], !this.torrentIsVisible(hash));
 						ret = true;
 					}
 
@@ -882,26 +869,14 @@ var utWebUI = {
 				var clear = false;
 
 				deltaLists.torrentm.each(function(key) {
+					Object.each(this.torGroups[key].cat, function(_, cat) {
+						--this.categories[cat];
+					}, this);
+
+					delete this.torGroups[key];
 					delete this.torrents[key];
-
-					if (this.labels[key].contains("cat_nlb"))
-						this.labels["cat_nlb"]--;
-
-					if (this.labels[key].contains("cat_com"))
-						this.labels["cat_com"]--;
-
-					if (this.labels[key].contains("cat_dls"))
-						this.labels["cat_dls"]--;
-
-					if (this.labels[key].contains("cat_act"))
-						this.labels["cat_act"]--;
-
-					if (this.labels[key].contains("cat_iac"))
-						this.labels["cat_iac"]--;
-
-					this.labels["cat_all"]--;
-					delete this.labels[key];
 					this.trtTable.removeRow(key);
+
 					if (this.torrentID == key) {
 						clear = true;
 					}
@@ -971,70 +946,157 @@ var utWebUI = {
 					.appendText(")")
 				.inject(labelList));
 			}
-			if (has(this.customLabels, label))
-				delete this.customLabels[label];
+			if (has(this.labels, label))
+				delete this.labels[label];
 			temp[label] = count;
 		}, this);
 
-		var resetLabel = false;
-		for (var k in this.customLabels) {
+		var activeChanged = false;
+		for (var k in this.labels) {
 			var id = "lbl_" + encodeID(k);
-			$(id).destroy();
-			if (this.config.activeLabelID == id) {
-				resetLabel = true;
+			if (this.config.activeTorGroups.lbl[id]) {
+				activeChanged = true;
 			}
+			delete this.config.activeTorGroups.lbl[id];
+			$(id).destroy();
 		}
-		this.customLabels = temp;
+		this.labels = temp;
 
-		if (resetLabel) {
-			this.config.activeLabelID = "";
-			this.switchLabel($("cat_all"));
+		if (activeChanged) {
+			var activeGroupCount = (
+				  Object.getLength(this.config.activeTorGroups.cat)
+				+ Object.getLength(this.config.activeTorGroups.lbl)
+			);
+
+			if (activeGroupCount <= 0) {
+				this.config.activeTorGroups.cat["cat_all"] = 1;
+			}
+			this.refreshSelectedTorGroups();
 		}
 	},
 
-	"getLabels": function(id, label, done, dls, uls) {
-		var labels = [];
-		if (label == "") {
-			labels.push("cat_nlb");
-			if (!this.labels[id].contains("cat_nlb"))
-				this.labels["cat_nlb"]++;
-		} else {
-			labels.push("lbl_" + encodeID(label));
-			if (this.labels[id].contains("cat_nlb"))
-				this.labels["cat_nlb"]--;
-		}
-		if (done < 1000) {
-			labels.push("cat_dls");
-			if (!this.labels[id].contains("cat_dls"))
-				this.labels["cat_dls"]++;
-			if (this.labels[id].contains("cat_com"))
-				this.labels["cat_com"]--;
-		} else {
-			labels.push("cat_com");
-			if (!this.labels[id].contains("cat_com"))
-				this.labels["cat_com"]++;
-			if (this.labels[id].contains("cat_dls"))
-				this.labels["cat_dls"]--;
-		}
-		if ((dls > 103) || (uls > 103)) {
-			labels.push("cat_act");
-			if (!this.labels[id].contains("cat_act"))
-				this.labels["cat_act"]++;
-			if (this.labels[id].contains("cat_iac"))
-				this.labels["cat_iac"]--;
-		} else {
-			labels.push("cat_iac");
-			if (!this.labels[id].contains("cat_iac"))
-				this.labels["cat_iac"]++;
-			if (this.labels[id].contains("cat_act"))
-				this.labels["cat_act"]--;
-		}
-		labels.push("cat_all");
+	"torrentIsVisible": function(hash) {
+		var group = this.torGroups[hash];
+		var actCat = this.config.activeTorGroups.cat;
+		var actLbl = this.config.activeTorGroups.lbl;
 
-		if (this.labels[id] == "")
-			this.labels["cat_all"]++;
+		var visible = true;
 
-		return labels;
+		// Category: Downloading/Completed
+		if (visible && (actCat["cat_dls"] || actCat["cat_com"])) {
+			visible = visible && (
+				(actCat["cat_dls"] && group.cat["cat_dls"]) ||
+				(actCat["cat_com"] && group.cat["cat_com"])
+			);
+		}
+
+		// Category: Active/Inactive
+		if (visible && (actCat["cat_act"] || actCat["cat_iac"])) {
+			visible = visible && (
+				(actCat["cat_act"] && group.cat["cat_act"]) ||
+				(actCat["cat_iac"] && group.cat["cat_iac"])
+			);
+		}
+
+		// Labels
+		if (visible && (actCat["cat_nlb"] || Object.some(actLbl, Function.from(true)))) {
+			visible = visible && (
+				(actCat["cat_nlb"] && group.cat["cat_nlb"]) ||
+				Object.some(actLbl, function(_, lbl) { return group.lbl[lbl]; })
+			);
+		}
+
+		return visible;
+	},
+
+	"getTorGroups": function(tor) {
+		var groups = Object.merge({}, this.defTorGroup);
+
+		// All
+		groups.cat["cat_all"] = 1;
+
+		// Labels
+		var lbls = Array.from(tor[CONST.TORRENT_LABEL] || []);
+		if (lbls.length <= 0) {
+			groups.cat["cat_nlb"] = 1;
+		}
+		else {
+			lbls.each(function(lbl) {
+				groups.lbl["lbl_" + encodeID(lbl)] = 1;
+			});
+		}
+
+		// Categories: Downloading/Completed
+		if (tor[CONST.TORRENT_PROGRESS] < 1000) {
+			groups.cat["cat_dls"] = 1;
+		}
+		else {
+			groups.cat["cat_com"] = 1;
+		}
+
+		// Categories: Active/Inactive
+		if (
+			(tor[CONST.TORRENT_DOWNSPEED] > (this.settings["queue.slow_dl_threshold"] || 103)) ||
+			(tor[CONST.TORRENT_UPSPEED] > (this.settings["queue.slow_ul_threshold"] || 103))
+		) {
+			groups.cat["cat_act"] = 1;
+		}
+		else {
+			groups.cat["cat_iac"] = 1;
+		}
+
+		// Update group counts
+		// TODO: Move this elsewhere!
+		(function(groups, oldGroups) {
+			if (!oldGroups) {
+				Object.each(groups.cat, function(_, cat) {
+					++this.categories[cat];
+				}, this);
+			}
+			else {
+				// Labels
+				if (groups.cat["cat_nlb"]) {
+					if (!oldGroups.cat["cat_nlb"]) {
+						++this.categories["cat_nlb"];
+					}
+				}
+				else {
+					if (oldGroups.cat["cat_nlb"]) {
+						--this.categories["cat_nlb"];
+					}
+				}
+
+				// Categories: Downloading/Completed
+				if (groups.cat["cat_dls"]) {
+					if (oldGroups.cat["cat_com"]) {
+						--this.categories["cat_com"];
+						++this.categories["cat_dls"];
+					}
+				}
+				else {
+					if (oldGroups.cat["cat_dls"]) {
+						--this.categories["cat_dls"];
+						++this.categories["cat_com"];
+					}
+				}
+
+				// Categories: Active/Inactive
+				if (groups.cat["cat_act"]) {
+					if (oldGroups.cat["cat_iac"]) {
+						--this.categories["cat_iac"];
+						++this.categories["cat_act"];
+					}
+				}
+				else {
+					if (oldGroups.cat["cat_act"]) {
+						--this.categories["cat_act"];
+						++this.categories["cat_iac"];
+					}
+				}
+			}
+		}).bind(this)(groups, this.torGroups[tor[CONST.TORRENT_HASH]]);
+
+		return groups;
 	},
 
 	"setLabel": function(lbl) {
@@ -1072,28 +1134,81 @@ var utWebUI = {
 	},
 
 	"updateLabels": function() {
-		var $me = this;
-		["cat_all", "cat_dls", "cat_com", "cat_act", "cat_iac", "cat_nlb"].each(function(key) {
-			$(key + "_c").set("text", $me.labels[key]);
-		});
+		["cat_all", "cat_dls", "cat_com", "cat_act", "cat_iac", "cat_nlb"].each(function(cat) {
+			$(cat + "_c").set("text", this.categories[cat]);
+		}, this);
 	},
 
 	"catListClick": function(ev, listId) {
+		// Get selected element
 		var element = ev.target;
 		while (element && element.id !== listId && element.tagName !== "LI") {
 			element = element.getParent();
 		}
 		if (!element || !element.id || element.tagName !== "LI") return;
 
+		var eleId = element.id;
+		if (eleId === "cat_nlb") {
+			listId = "mainCatList-categories";
+		}
+
+		// Prepare for changes
+		var activeGroupCount = (
+			  Object.getLength(this.config.activeTorGroups.cat)
+			+ Object.getLength(this.config.activeTorGroups.lbl)
+		);
+
+		var prevSelected = activeGroupCount > 1 && Object.some(this.config.activeTorGroups, function(type) {
+			return (eleId in type);
+		});
+
+		if (ev.control) {
+			if (ev.isRightClick()) {
+				prevSelected = false;
+			}
+		}
+		else {
+			if (!(ev.isRightClick() && prevSelected)) {
+				this.config.activeTorGroups = {};
+				Object.each(this.defConfig.activeTorGroups, function(_, type) {
+					this.config.activeTorGroups[type] = {};
+				}, this);
+			}
+
+			prevSelected = false;
+		}
+
+		// Apply changes
+		var trtTableUpdate = (function() {
+			this.refreshSelectedTorGroups();
+
+			if (!isGuest && ev.isRightClick()) {
+				this.trtTable.fillSelection();
+				this.trtTable.fireEvent("onSelect", ev);
+			}
+		}).bind(this);
+
 		switch (listId) {
 			case "mainCatList-categories":
-			case "mainCatList-labels":
-				this.switchLabel(element);
-
-				if (!isGuest && ev.isRightClick()) {
-					this.trtTable.fillSelection();
-					this.trtTable.fireEvent("onSelect", ev);
+				if (prevSelected) {
+					delete this.config.activeTorGroups.cat[eleId];
 				}
+				else {
+					this.config.activeTorGroups.cat[eleId] = 1;
+				}
+
+				trtTableUpdate();
+			break;
+
+			case "mainCatList-labels":
+				if (prevSelected) {
+					delete this.config.activeTorGroups.lbl[eleId];
+				}
+				else {
+					this.config.activeTorGroups.lbl[eleId] = 1;
+				}
+
+				trtTableUpdate();
 			break;
 
 			// NOTE: Yep, this code structure isn't used for anything particularly
@@ -1121,29 +1236,84 @@ var utWebUI = {
 		}
 	},
 
-	"switchLabel": function(element) {
-		if (element.id == this.config.activeLabelID) return;
-		if (this.config.activeLabelID != "")
-			$(this.config.activeLabelID).removeClass("sel");
-		element.addClass("sel");
-		this.config.activeLabelID = element.id;
+	"refreshSelectedTorGroups": function() {
+		// Prevent needless refresh
+		var deltaGroups;
 
+		var oldGroups = this.__refreshSelectedTorGroups_activeTorGroups__;
+		if (oldGroups) {
+			var curGroups = this.config.activeTorGroups;
+			var changeCount = 0;
+
+			deltaGroups = {};
+
+			// Copy group types
+			for (var type in oldGroups) { deltaGroups[type] = {}; }
+			for (var type in curGroups) { deltaGroups[type] = {}; }
+
+			// Removed groups
+			for (var type in oldGroups) {
+				for (var group in oldGroups[type]) {
+					if (!(group in curGroups[type])) {
+						deltaGroups[type][group] = -1
+						++changeCount;
+					}
+				}
+			}
+
+			// Added groups
+			for (var type in curGroups) {
+				for (var group in curGroups[type]) {
+					if (!(group in oldGroups[type])) {
+						deltaGroups[type][group] = 1;
+						++changeCount;
+					}
+				}
+			}
+
+			if (!changeCount) return;
+		}
+
+		this.__refreshSelectedTorGroups_activeTorGroups__ = Object.merge({}, this.config.activeTorGroups);
+		if (!oldGroups) {
+			deltaGroups = this.config.activeTorGroups;
+		}
+
+		// Update groups list
+		var val, ele;
+		for (var type in deltaGroups) {
+			for (var group in deltaGroups[type]) {
+				ele = $(group);
+				if (!ele) continue;
+
+				val = deltaGroups[type][group];
+				if (val > 0) {
+					ele.addClass("sel");
+				}
+				else if (val < 0) {
+					ele.removeClass("sel");
+				}
+			}
+		}
+
+		// Update detailed info pane
 		if (this.torrentID != "") {
 			this.torrentID = "";
 			this.clearDetails();
 		}
 
+		// Update torrent jobs list
 		var activeChanged = false;
-		for (var k in this.torrents) {
-			if (this.labels[k].contains(this.config.activeLabelID)) {
-				if (this.trtTable.rowData[k].hidden) {
-					this.trtTable.unhideRow(k);
-					activeChanged = true;
+		for (var hash in this.torrents) {
+			var changed = (!!this.trtTable.rowData[hash].hidden === !!this.torrentIsVisible(hash));
+			if (changed) {
+				activeChanged = true;
+
+				if (this.trtTable.rowData[hash].hidden) {
+					this.trtTable.unhideRow(hash);
 				}
-			} else {
-				if (!this.trtTable.rowData[k].hidden) {
-					this.trtTable.hideRow(k);
-					activeChanged = true;
+				else {
+					this.trtTable.hideRow(hash);
 				}
 			}
 		}
@@ -1286,8 +1456,19 @@ var utWebUI = {
 
 			// Pull out only data from received cookie that we already know about.
 			// Next best thing short of sanity checking every single value.
-			safeCopy(cookie, newcookie || {});
+			newcookie = newcookie || {};
+			safeCopy(cookie, newcookie);
 
+			// Special case the activeTorGroups setting, since its keys may be
+			// dynanically modified during runtime.
+			cookie.activeTorGroups = newcookie.activeTorGroups || this.defConfig.activeTorGroups || {};
+
+			// Set up pane selections
+			if (cookie.activeSettingsPaneID) {
+				this.stpanes.show(cookie.activeSettingsPaneID.replace(/^tab_/, ''));
+			}
+
+			// Set up listivews
 			this.trtTable.setConfig({
 				  "colSort": [cookie.torrentTable.sIndex, cookie.torrentTable.reverse]
 				, "colMask": cookie.torrentTable.colMask
@@ -2139,9 +2320,9 @@ var utWebUI = {
 		if (!this.trtTable.selectedRows.every(function(item) { return (this.torrents[item][labelIndex] == ""); }, this)) {
 			labelSubMenu.push([lang[CONST.OV_REMOVE_LABEL], this.setLabel.bind(this, "")]);
 		}
-		if (Object.getLength(this.customLabels) > 0) {
+		if (Object.getLength(this.labels) > 0) {
 			labelSubMenu.push([CMENU_SEP]);
-			$each(this.customLabels, function(_, label) {
+			$each(this.labels, function(_, label) {
 				if (this.trtTable.selectedRows.every(function(item) { return (this.torrents[item][labelIndex] == label); }, this)) {
 					labelSubMenu.push([CMENU_SEL, label]);
 				}
@@ -2962,6 +3143,7 @@ var utWebUI = {
 	},
 
 	"flsDblClk": function(id) {
+		if (isGuest) return;
 		if (this.flsTable.selectedRows.length != 1) return;
 		var hash = id.match(/^(.*?)_.*$/)[1];
 		var fid = id.replace(hash + '_', '').toInt() || 0;
