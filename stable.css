@@ -269,27 +269,21 @@ limitations under the License.
 .stable-progress {
 	background: #FFFFFF;
 	border: 1px solid #B0B0B0;
+	color: #000000 !important;
 	height: 12px;
+	line-height: 100%;
 	margin: 0;
 	overflow: hidden;
 	position: relative;
+	white-space: nowrap;
 }
 
 .stable-progress-bar {
-	background: #0099FF;
+	background: #0077DD;
 	bottom: 0;
+	color: #FFFFFF !important;
 	left: 0;
+	overflow: hidden;
 	position: absolute;
 	top: 0;
-}
-
-.stable-progress-text {
-	color: #0A0A0A;
-	height: 100%;
-	line-height: 100%;
-	left: 0;
-	position: absolute;
-	right: 0;
-	top: 0;
-	z-index: 1;
 }

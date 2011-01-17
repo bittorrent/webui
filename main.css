@@ -1228,6 +1228,7 @@ input[id="proxy.password"] { width: 70px; }
 #sched_table_lgnd .block {
 	line-height: 16px;
 	padding: 0 6px;
+	margin: 0 5px;
 }
 
 #sched_table_info {

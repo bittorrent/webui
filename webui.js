@@ -1961,10 +1961,10 @@ var utWebUI = {
 				, [lang[CONST.MM_OPTIONS_TAB_ICONS], this.toggleDetPanelIcons.bind(this, undefined)]
 			]]
 			, [CMENU_CHILD, lang[CONST.MM_HELP], [
-				  [lang[CONST.MM_HELP_UT_WEBPAGE], openURL.bind(null, "http://www.utorrent.com/")] 
-				, [lang[CONST.MM_HELP_UT_FORUMS], openURL.bind(null, "http://forum.utorrent.com/")] 
+				  [lang[CONST.MM_HELP_UT_WEBPAGE], openURL.pass(["http://www.utorrent.com/", null])] 
+				, [lang[CONST.MM_HELP_UT_FORUMS], openURL.pass(["http://forum.utorrent.com/", null])] 
 				, [CMENU_SEP]
-				, [lang[CONST.MM_HELP_WEBUI_FEEDBACK], openURL.bind(null, "http://forum.utorrent.com/viewtopic.php?id=58156")] 
+				, [lang[CONST.MM_HELP_WEBUI_FEEDBACK], openURL.pass(["http://forum.utorrent.com/viewtopic.php?id=58156", null])] 
 				, [CMENU_SEP]
 				, [lang[CONST.MM_HELP_ABOUT_WEBUI], this.showAbout.bind(this)]
 			]]
@@ -1985,11 +1985,7 @@ var utWebUI = {
 
 		// Show menu
 		ContextMenu.clear();
-
-		menuItems.each(function(item) {
-			ContextMenu.add(item);
-		}, this);
-
+		ContextMenu.add.apply(ContextMenu, menuItems);
 		ContextMenu.show(ev.page);
 	},
 
@@ -2106,9 +2102,7 @@ var utWebUI = {
 
 		ContextMenu.clear();
 		if (missingItems.length > 0) {
-			missingItems.each(function(item) {
-				ContextMenu.add(item);
-			});
+			ContextMenu.add.apply(ContextMenu, missingItems);
 
 			var pos = ele.getPosition(), size = ele.getSize();
 			pos.y += size.y - 2;
@@ -2745,7 +2739,7 @@ var utWebUI = {
 
 		var id = this.torrentID;
 
-		var fileIds = this.getSelFileIds(-1);
+		var fileIds = this.getSelFileIds();
 		if (fileIds.length <= 0) return;
 
 		var menuItems = [];
@@ -2814,21 +2808,21 @@ var utWebUI = {
 		ContextMenu.show(ev.page);
 	},
 
-	"getSelFileIds": function(p) {
+	"getSelFileIds": function() {
 		var ids = [];
+
 		var len = this.flsTable.selectedRows.length;
 		while (len--) {
 			var rowId = this.flsTable.selectedRows[len];
 			var fileId = rowId.match(/.*_([0-9]+)$/)[1].toInt();
-			if (this.filelist[fileId][CONST.FILE_PRIORITY] != p) {
-				ids.push(fileId);
-			}
+			ids.push(fileId);
 		}
+
 		return ids;
 	},
 
 	"downloadFiles": function(id) {
-		var selIds = this.getSelFileIds(-1);
+		var selIds = this.getSelFileIds();
 
 		var fileIds = [];
 		$each(selIds, function(fid) {
@@ -2844,7 +2838,9 @@ var utWebUI = {
 	},
 
 	"setPriority": function(id, p) {
-		var fileIds = this.getSelFileIds(p);
+		var fileIds = this.getSelFileIds().filter(function(fileId) {
+			return (this.filelist[fileId][CONST.FILE_PRIORITY] != p);
+		}, this);
 		if (fileIds.length <= 0) return;
 
 		this.request("action=setprio&hash=" + id + "&p=" + p + "&f=" + fileIds.join("&f="), (function() {
@@ -3304,7 +3300,6 @@ var utWebUI = {
 		str += seg;
 
 		$("mainStatusBar-upload").set("text", str);
-
 	},
 
 	"updateTitle": function() {

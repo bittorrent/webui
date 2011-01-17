@@ -53,6 +53,8 @@ var ContextMenu = {
 		}
 
 		items.each(function(item) {
+			if (!item) return;
+
 			var li = ELE_LI.clone(false);
 			menu.adopt(li);
 

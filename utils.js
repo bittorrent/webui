@@ -44,7 +44,7 @@ function changePort(port) {
 }
 
 function openURL(url, target) {
-	window.open(url, target || "_blank");
+	window.open(url, target || "_utwebui_blank" + encodeID(url));
 }
 
 function decodeID(str) {

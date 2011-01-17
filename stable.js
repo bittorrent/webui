@@ -1163,12 +1163,12 @@ var dxSTable = new Class({
 		this.colOrder.each(function(v, k) {
 			switch (colh[k].type) {
 				case TYPE_NUM_PROGRESS:
-					var pcnt = (parseFloat(data[k]) || 0).toFixedNR(1) + "%";
-					rowc[v].set("html", "").grab(simpleClone(DIV, false)
-						.addClass("stable-progress").set("html", "&nbsp;")
-						.adopt(
-							simpleClone(SPAN, false).addClass("stable-progress-bar").set("html", "&nbsp;").setStyle("width", pcnt),
-							simpleClone(SPAN, false).addClass("stable-progress-text").set("text", pcnt)
+					var pcnt = (parseFloat(data[k]) || 0), pcntp = pcnt.toFixedNR(1) + "%";
+					rowc[v].set("html", "").grab(
+						simpleClone(DIV, false).addClass("stable-progress").set("text", pcntp).grab(
+							simpleClone(DIV, false).addClass("stable-progress-bar").setStyle("width", pcntp).grab(
+								simpleClone(DIV, false).set("text", pcntp).setStyle("width", (pcnt ? (100 * 100/pcnt).toFixedNR(1) + "%" : 0))
+							)
 						)
 					);
 				break;
@@ -1353,11 +1353,14 @@ var dxSTable = new Class({
 		if (this.requiresRefresh || row.hidden || (row.rowIndex == -1) || !$(this.id + "-row-" + id)) return hasSortedChanged;
 		var r = this.tb.body.childNodes[row.rowIndex], cell = r.childNodes[this.colOrder[col]], fval = this.options.format(Array.clone(data), col);
 		if (this.colHeader[col].type == TYPE_NUM_PROGRESS) {
-			cell.set("html", "");
-			var pcnt = (parseFloat(fval) || 0).toFixedNR(1) + "%";
-			var prog = simpleClone(DIV, false).addClass("stable-progress").set("html", "&nbsp;").inject(cell);
-			var pbar = simpleClone(SPAN, false).addClass("stable-progress-bar").set("html", "&nbsp;").setStyle("width", pcnt).inject(prog);
-			var ptxt = simpleClone(SPAN, false).addClass("stable-progress-text").set("text", pcnt).inject(prog);
+			var pcnt = (parseFloat(fval) || 0), pcntp = pcnt.toFixedNR(1) + "%";
+			cell.set("html", "").grab(
+				simpleClone(DIV, false).addClass("stable-progress").set("text", pcntp).grab(
+					simpleClone(DIV, false).addClass("stable-progress-bar").setStyle("width", pcntp).grab(
+						simpleClone(DIV, false).set("text", pcntp).setStyle("width", (pcnt ? (100 * 100/pcnt).toFixedNR(1) + "%" : 0))
+					)
+				)
+			);
 		}
 		else {
 			cell.set("text", fval);

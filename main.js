@@ -1078,7 +1078,7 @@ function _link(obj, defstate, list, ignoreLabels, reverse) {
 	ignoreLabels = ignoreLabels || [];
 	var disabled = true, tag = obj.get("tag");
 	if (tag == "input") {
-		if (obj.type == "checkbox")
+		if (obj.type == "checkbox" || obj.type == "radio")
 			disabled = !obj.checked || obj.disabled;
 			if (reverse)
 				disabled = !disabled;
