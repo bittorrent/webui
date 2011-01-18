@@ -83,7 +83,7 @@ var dxSTable = new Class({
 	"options": {
 		"format": function() { return arguments[0]; },
 		"maxRows": 25,
-		"alternateRows": false,
+		"alternateRows": true,
 		"mode": MODE_PAGE,
 		"rowsSelectable": true,
 		"rowMultiSelect": true,

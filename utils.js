@@ -82,10 +82,17 @@ Array.implement({
 		return -(first + 1);
 	},
 
-
 	"insertAt": function(value, index) {
 		this.splice(index, 0, value);
 		return this;
+	},
+
+	"invert": function() {
+		var obj = {};
+		for (var i = 0, il = this.length; i < il; ++i) {
+			obj[this[i]] = i;
+		}
+		return obj;
 	},
 
 	"swap": function(indexA, indexB) {

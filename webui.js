@@ -940,11 +940,11 @@ var utWebUI = {
 				li.getElement("span").set("text", count);
 			}
 			else {
-				(new Element("li", {"id": labelId})
+				labelList.grab(new Element("li", {"id": labelId})
 					.appendText(label + " (")
 					.grab(new Element("span", {"text": count}))
 					.appendText(")")
-				.inject(labelList));
+				);
 			}
 			if (has(this.labels, label))
 				delete this.labels[label];
@@ -1442,7 +1442,7 @@ var utWebUI = {
 						tNew = typeOf(objNew[k]);
 
 					if (tOrig === tNew) {
-						if (tOrig === "object") {
+						if (tOrig === 'object') {
 							safeCopy(objOrig[k], objNew[k]);
 						}
 						else {
@@ -1459,8 +1459,8 @@ var utWebUI = {
 			newcookie = newcookie || {};
 			safeCopy(cookie, newcookie);
 
-			// Special case the activeTorGroups setting, since its keys may be
-			// dynanically modified during runtime.
+			// Special case some settings objects whose keys may be dynamically
+			// modified during runtime.
 			cookie.activeTorGroups = newcookie.activeTorGroups || this.defConfig.activeTorGroups || {};
 
 			// Set up pane selections
@@ -2276,7 +2276,7 @@ var utWebUI = {
 			this.showDetails(id);
 		}
 		if (!isGuest && ev.isRightClick()) {
-			this.showMenu.delay(0, this, [ev, id]);
+			this.showTrtMenu.delay(0, this, [ev, id]);
 		}
 	},
 
@@ -2300,7 +2300,7 @@ var utWebUI = {
 		}
 	},
 
-	"showMenu": function(ev, id) {
+	"showTrtMenu": function(ev, id) {
 		if (!ev.isRightClick()) return;
 
 		var menuItems = []
