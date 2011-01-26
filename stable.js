@@ -1732,7 +1732,7 @@ var Comparator = {
 	},
 
 	"compareNumeric": function(x, y) {
-		return (x.toFloat() - y.toFloat());
+		return (parseFloat(x) - parseFloat(y));
 	},
 
 	"compareAlphaNumeric": function(x, y) {

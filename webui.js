@@ -922,7 +922,7 @@ var utWebUI = {
 			this.updateToolbar();
 			this.updateStatusBar();
 
-			if (listcb) listcb();
+			if (typeof(listcb) === 'function') listcb();
 		}).bind(this));
 
 		if (typeof(DialogManager) !== 'undefined') {
@@ -1555,7 +1555,6 @@ var utWebUI = {
 
 			// Cleanup
 			delete json.settings;
-			this.loadSettings();
 		}
 
 		if (!(this.config.lang in LANGUAGES)) {
@@ -1576,7 +1575,10 @@ var utWebUI = {
 
 		loadLangStrings({
 			"lang": this.config.lang,
-			"onload": fn
+			"onload": (function() {
+				if (!isGuest) this.loadSettings();
+				if (fn) fn();
+			}).bind(this)
 		});
 	},
 
@@ -1617,17 +1619,21 @@ var utWebUI = {
 
 		// Other settings
 		for (var k in this.settings) {
-			var v = this.settings[k], ele = $(k);
+			var ele = $(k);
 			if (!ele) continue;
+
+			var v = this.settings[k];
 			if (ele.type == "checkbox") {
 				ele.checked = !!v;
-			} else {
+			}
+			else {
 				switch (k) {
 					case "seed_ratio": v /= 10; break;
 					case "seed_time": v /= 60; break;
 				}
 				ele.set("value", v);
 			}
+
 			ele.fireEvent("change");
 			if (Browser.ie) ele.fireEvent("click");
 		}
@@ -2156,7 +2162,7 @@ var utWebUI = {
 					return data[CONST.TORRENT_SIZE];
 
 				case "status":
-					return data[CONST.TORRENT_STATUS];
+					return [data[CONST.TORRENT_STATUS], data[CONST.TORRENT_STATUS_MESSAGE]];
 
 				case "uploaded":
 					return data[CONST.TORRENT_UPLOADED];
@@ -2173,7 +2179,8 @@ var utWebUI = {
 
 		var doneIdx = this.trtColDoneIdx, statIdx = this.trtColStatusIdx;
 		if (!useidx || index == statIdx) {
-			values[statIdx] = this.getStatusInfo(values[statIdx], values[doneIdx])[1]
+			var statInfo = this.getStatusInfo(values[statIdx][0], values[doneIdx]);
+			values[statIdx] = (statInfo[0] === "Status_Error" ? values[statIdx][1] || statInfo[1] : statInfo[1]);
 		}
 
 		for (var i = (index || 0); i < len; i++) {
