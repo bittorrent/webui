@@ -324,6 +324,7 @@ ul.folder-tabs.icon li a span {
 	#mainToolbar .tbbutton#stop { background-position: -144px; }
 	#mainToolbar .tbbutton#queueup { background-position: -168px; }
 	#mainToolbar .tbbutton#queuedown { background-position: -192px; }
+	#mainToolbar .tbbutton#rssdownloader { background-position: -240px; }
 	#mainToolbar .tbbutton#setting { background-position: -264px; }
 
 #mainToolbar .tbbutton.disabled {
@@ -1094,6 +1095,137 @@ li.selected#tab_mainInfoPane-loggerTab span {
 
 #prop-trackers {
 	height: 75px;
+}
+
+
+/**************************************************
+ * DIALOG: Add/Edit RSS Feed
+ **************************************************/
+
+#dlgAddEditRSSFeed {
+	width: 400px;
+}
+
+#dlgAddEditRSSFeed-head {
+	background-image: url(./images/feed.png);
+}
+
+#dlgAddEditRSSFeed .dlg-body .tbox {
+	width: 250px;
+}
+
+
+/**************************************************
+ * DIALOG: RSS Downloader
+ **************************************************/
+
+#dlgRSSDownloader {
+	width: 700px;
+}
+
+#dlgRSSDownloader-head {
+	background-image: url(./images/feed.png);
+}
+
+#dlgRSSDownloader-content {
+	background: #FFFFFF;
+	border: 1px solid #868686;
+	height: 350px;
+	padding: 3px;
+	position: relative;
+}
+
+#dlgRSSDownloader-feedsMenu,
+#dlgRSSDownloader-filtersMenu {
+	background-color: #FFFFFF;
+	border: 1px solid #868686;
+	bottom: 3px;
+	left: 3px;
+	overflow: auto;
+	position: absolute;
+	top: 3px;
+	width: 150px;
+}
+
+#dlgRSSDownloader-feedsMenu > div,
+#dlgRSSDownloader-filtersMenu > div {
+	min-width: 100%;
+}
+
+#dlgRSSDownloader-feeds,
+#dlgRSSDownloader-filters {
+	list-style: none;
+	white-space: nowrap;
+}
+
+#dlgRSSDownloader-feeds li,
+#dlgRSSDownloader-filters li {
+	cursor: pointer;
+	line-height: 18px;
+	padding: 0 4px;
+}
+
+#dlgRSSDownloader-feeds li.sel,
+#dlgRSSDownloader-filters li.sel {
+	background-color: #C0C0C0;
+	color: #FFFFFF;
+}
+
+#dlgRSSDownloader-feedItemList,
+#dlgRSSDownloader-filterSettings {
+	bottom: 3px;
+	left: 158px;
+	margin: 0;
+	position: absolute;
+	right: 3px;
+	top: 3px;
+}
+
+/* Feeds Tab */
+
+#dlgRSSDownloader-feeds li {
+	background: transparent url(./images/tstatus.png) no-repeat 3px -208px;
+	padding-left: 22px;
+}
+
+#dlgRSSDownloader-feeds li.disabled {
+	background-position: 3px -32px;
+}
+
+.RSS_New { background: transparent url(./images/tstatus.png) no-repeat 3px -272px; }
+.RSS_Old { background: transparent url(./images/tstatus.png) no-repeat 3px -208px; }
+.RSS_Added { background: transparent url(./images/tstatus.png) no-repeat 3px -288px; }
+
+/* Favorites Tab */
+
+#dlgRSSDownloader-filters li input {
+	margin: 0 4px 0 1px;
+	vertical-align: text-top;
+}
+
+#rssfilter_edit_control {
+	bottom: 5px;
+	display: none;
+	position: absolute;
+	right: 5px;
+}
+
+#rssfilter_name,
+#rssfilter_filter,
+#rssfilter_not,
+#rssfilter_save_in,
+#rssfilter_feed,
+#rssfilter_quality {
+	width: 450px;
+}
+
+#rssfilter_quality {
+	text-align: center;
+}
+
+#rssfilter_min_interval,
+#rssfilter_label {
+	width: 375px;
 }
 
 /**************************************************

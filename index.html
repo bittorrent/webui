@@ -199,6 +199,149 @@
 		</div>
 		<!-- Torrent Properties Dialog */ -->
 
+		<!-- /* Add/Edit RSS Feed Dialog -->
+		<div id="dlgAddEditRSSFeed" class="dlg-window">
+			<a href="#" class="dlg-close"></a>
+			<div id="dlgAddEditRSSFeed-head" class="dlg-head"></div>
+			<form id="dlgAddEditRSSFeed-form" action="">
+				<div class="dlg-body">
+					<input type="hidden" id="aerssfd-id" />
+
+					<fieldset id="dlgAddEditRSSFeed-feed">
+						<legend id="DLG_ADDEDITRSSFEED_03"></legend>
+						<div class="line-cont">
+							<input type="text" id="aerssfd-url" class="tbox flr" />
+							<label for="aerssfd-url" id="DLG_ADDEDITRSSFEED_04"></label>
+						</div>
+						<div class="line-cont">
+							<div class="fll">
+								<input type="checkbox" id="aerssfd-use_custom_alias" />
+								<label for="aerssfd-use_custom_alias" id="DLG_ADDEDITRSSFEED_05"></label>
+							</div>
+							<input type="text" id="aerssfd-custom_alias" class="tbox flr" />
+						</div>
+					</fieldset>
+
+					<fieldset id="dlgAddEditRSSFeed-subscription">
+						<legend id="DLG_ADDEDITRSSFEED_06"></legend>
+						<div class="line-cont">
+							<input type="radio" name="subscribe" value="0" id="aerssfd-subscribe_0" checked="checked" />
+							<label for="aerssfd-subscribe_0" id="DLG_ADDEDITRSSFEED_07"></label>
+						</div>
+						<div class="line-cont">
+							<input type="radio" name="subscribe" value="1" id="aerssfd-subscribe_1" />
+							<label for="aerssfd-subscribe_1" id="DLG_ADDEDITRSSFEED_08"></label>
+						</div>
+						<div class="line-cont indent">
+							<input type="checkbox" id="aerssfd-smart_ep" />
+							<label for="aerssfd-smart_ep" id="DLG_ADDEDITRSSFEED_09"></label>
+						</div>
+					</fieldset>
+				</div>
+				<div class="dlg-foot">
+					<input type="submit" id="DLG_ADDEDITRSSFEED_01" class="btn" />
+					<input type="button" id="DLG_ADDEDITRSSFEED_02" class="btn" />
+				</div>
+			</form>
+		</div>
+		<!-- Add/Edit RSS Feed Dialog */ -->
+
+		<!-- /* RSS Downloader Dialog -->
+		<div id="dlgRSSDownloader" class="dlg-window">
+			<a href="#" class="dlg-close"></a>
+			<div id="dlgRSSDownloader-head" class="dlg-head"></div>
+			<div class="dlg-body">
+				<ul id="dlgRSSDownloader-tabs" class="folder-tabs"></ul>
+				<div id="dlgRSSDownloader-content">
+					<div id="dlgRSSDownloader-feedsTab">
+						<div id="dlgRSSDownloader-feedsMenu"><div class="fll">
+							<ul id="dlgRSSDownloader-feeds">
+								<li id="rssfeed_all"><span id="DLG_RSSDOWNLOADER_03"></span></li>
+							</ul>
+						</div></div>
+
+						<div id="dlgRSSDownloader-feedItemList"></div>
+					</div>
+					<div id="dlgRSSDownloader-filtersTab">
+						<div id="dlgRSSDownloader-filtersMenu"><div class="fll">
+							<ul id="dlgRSSDownloader-filters"></ul>
+						</div></div>
+
+						<fieldset id="dlgRSSDownloader-filterSettings">
+							<legend id="DLG_RSSDOWNLOADER_04"></legend>
+
+							<div class="line-cont">
+								<input type="text" id="rssfilter_name" class="tbox flr" />
+								<label for="rssfilter_name" id="DLG_RSSDOWNLOADER_05"></label>
+							</div>
+							<div class="line-cont">
+								<input type="text" id="rssfilter_filter" class="tbox flr" />
+								<label for="rssfilter_filter" id="DLG_RSSDOWNLOADER_06"></label>
+							</div>
+							<div class="line-cont">
+								<input type="text" id="rssfilter_not" class="tbox flr" />
+								<label for="rssfilter_not" id="DLG_RSSDOWNLOADER_07"></label>
+							</div>
+							<div class="line-cont">
+								<input type="text" id="rssfilter_save_in" class="tbox flr" />
+								<label for="rssfilter_save_in" id="DLG_RSSDOWNLOADER_08"></label>
+							</div>
+							<div class="line-cont">
+								<select id="rssfilter_feed" class="flr"><option>--------------------</option></select>
+								<label for="rssfilter_feed" id="DLG_RSSDOWNLOADER_09"></label>
+							</div>
+							<div class="line-cont">
+								<input type="button" id="rssfilter_quality" class="btn flr" />
+								<label for="rssfilter_quality" id="DLG_RSSDOWNLOADER_10"></label>
+							</div>
+							<div class="line-cont">
+								<div class="fll">
+									<input type="checkbox" id="rssfilter_episode_enable" />
+									<label for="rssfilter_episode_enable" id="DLG_RSSDOWNLOADER_11"></label>
+								</div>
+								<input type="text" id="rssfilter_episode" class="tbox half flr" />
+							</div>
+							<div class="line-cont">
+								<input type="checkbox" id="rssfilter_orig_name" />
+								<label for="rssfilter_orig_name" id="DLG_RSSDOWNLOADER_12"></label>
+							</div>
+							<div class="line-cont">
+								<input type="checkbox" id="rssfilter_add_stopped" />
+								<label for="rssfilter_add_stopped" id="DLG_RSSDOWNLOADER_13"></label>
+							</div>
+							<div class="line-cont">
+								<div class="fll">
+									<input type="checkbox" id="rssfilter_prio" />
+									<label for="rssfilter_prio" id="DLG_RSSDOWNLOADER_15"></label>
+								</div>
+								<div class="half flr">
+									<input type="checkbox" id="rssfilter_smart_ep" />
+									<label for="rssfilter_smart_ep" id="DLG_RSSDOWNLOADER_14"></label>
+								</div>
+							</div>
+							<div class="line-cont">
+								<select id="rssfilter_min_interval" class="flr"><option>--------------------</option></select>
+								<label for="rssfilter_min_interval" id="DLG_RSSDOWNLOADER_16"></label>
+							</div>
+							<div class="line-cont">
+								<input type="text" id="rssfilter_label" class="tbox flr" />
+								<label for="rssfilter_label" id="DLG_RSSDOWNLOADER_17"></label>
+							</div>
+
+							<div id="rssfilter_edit_control">
+								<input type="button" id="rssfilter_edit_cancel" class="btn" />
+								<input type="button" id="rssfilter_edit_apply" class="btn" />
+							</div>
+						</fieldset>
+					</div>
+				</div>
+			</div>
+			<div class="dlg-foot">
+				<input type="button" id="DLG_RSSDOWNLOADER_01" class="btn" />
+			</div>
+		</div>
+		<!-- RSS Downloader Dialog */ -->
+
 		<!-- /* Settings Dialog -->
 		<div id="dlgSettings" class="dlg-window">
 			<a href="#" class="dlg-close"></a>
@@ -959,6 +1102,7 @@
 
 			<div class="separator inchev"></div>
 
+			<a href="#" id="rssdownloader" class="tbbutton inchev"></a>
 			<a href="#" id="setting" class="tbbutton inchev"></a>
 		</div>
 		<!-- Toolbar */ -->

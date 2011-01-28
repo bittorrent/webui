@@ -12,6 +12,28 @@ var g_dayCodes; // array of strings representing ["Mon", "Tue", ..., "Sun"]
 var g_dayNames; // array of strings representing ["Monday", "Tuesday", ... , "Sunday"]
 var g_schLgndEx; // object whose values are string explanations of scheduler table colors
 
+// Constants
+
+var g_feedItemQlty = [
+	  ["?", CONST.RSSITEMQUALITY_NONE]
+	, ["DSRip", CONST.RSSITEMQUALITY_DSRIP]
+	, ["DVBRip", CONST.RSSITEMQUALITY_DVBRIP]
+	, ["DVDR", CONST.RSSITEMQUALITY_DVDR]
+	, ["DVDRip", CONST.RSSITEMQUALITY_DVDRIP]
+	, ["DVDScr", CONST.RSSITEMQUALITY_DVDSCR]
+	, ["HDTV", CONST.RSSITEMQUALITY_HDTV]
+	, ["HR.HDTV", CONST.RSSITEMQUALITY_HRHDTV]
+	, ["HR.PDTV", CONST.RSSITEMQUALITY_HRPDTV]
+	, ["PDTV", CONST.RSSITEMQUALITY_PDTV]
+	, ["SatRip", CONST.RSSITEMQUALITY_SATRIP]
+	, ["SVCD", CONST.RSSITEMQUALITY_SVCD]
+	, ["TVRip", CONST.RSSITEMQUALITY_TVRIP]
+	, ["WebRip", CONST.RSSITEMQUALITY_WEBRIP]
+	, ["720p", CONST.RSSITEMQUALITY_720P]
+	, ["1080i", CONST.RSSITEMQUALITY_1080I]
+	, ["1080p", CONST.RSSITEMQUALITY_1080P]
+];
+
 // Pre-generated elements
 
 var ELE_TD = new Element("td");
@@ -183,12 +205,12 @@ function setupGlobalEvents() {
 
 }
 
-var resizing = false;
+var __resizeUI_ready__ = false;
 
 function resizeUI(hDiv, vDiv) {
 
-	if (resizing) return;
-	resizing = true;
+	if (!__resizeUI_ready__) return;
+	__resizeUI_ready__ = false;
 
 	if (!ContextMenu.hidden)
 		ContextMenu.hide();
@@ -380,7 +402,7 @@ function resizeUI(hDiv, vDiv) {
 		utWebUI.trtTable.resizeTo(undefined, trth);
 	}
 
-	resizing = false;
+	__resizeUI_ready__ = true;
 
 }
 
@@ -522,6 +544,8 @@ function setupUserInterface() {
 	// NON-GUEST SETUP
 	//--------------------------------------------------
 
+	__resizeUI_ready__ = true;
+
 	if (isGuest) {
 		resizeUI();
 		return;
@@ -537,7 +561,7 @@ function setupUserInterface() {
 
 	// -- Buttons
 
-	["add", "addurl", "remove", "start", "pause", "stop", "queueup", "queuedown", "setting"].each(function(act) {
+	["add", "addurl", "remove", "start", "pause", "stop", "queueup", "queuedown", "rssdownloader", "setting"].each(function(act) {
 		$(act).addStopEvent("click", function(ev) {
 			if (ev.target.hasClass("disabled")) {
 				return;
@@ -547,6 +571,7 @@ function setupUserInterface() {
 			switch (act) {
 				case "add": utWebUI.showAddTorrent(); break;
 				case "addurl": utWebUI.showAddURL(); break;
+				case "rssdownloader": utWebUI.showRSSDownloader(); break;
 				case "setting": utWebUI.showSettings(); break;
 
 				case "remove": utWebUI.removeDefault(ev.shift); break;
@@ -602,11 +627,12 @@ function setupUserInterface() {
 
 	DialogManager.init();
 
-	["About", "Add", "AddURL", "Props", "Settings"].each(function(k) {
-		var isModal = ["Props"].contains(k);
+	["About", "Add", "AddEditRSSFeed", "AddURL", "Props", "RSSDownloader", "Settings"].each(function(k) {
+		var isModal = ["AddEditRSSFeed", "Props"].contains(k);
 		DialogManager.add(k, isModal, {
 			  "Add": function() { utWebUI.getDirectoryList(); }
 			, "AddURL": function() { utWebUI.getDirectoryList(); }
+			, "RSSDownloader": function() { utWebUI.rssDownloaderShow(true); }
 			, "Settings": function() { utWebUI.stpanes.onChange(); }
 		}[k]);
 	});
@@ -665,6 +691,41 @@ function setupUserInterface() {
 	}).inject(document.body);
 
 	$("dlgAdd-form").set("target", uploadfrm.get("id"));
+
+	//--------------------------------------------------
+	// ADD/EDIT RSS FEED DIALOG
+	//--------------------------------------------------
+
+	// -- OK Button
+
+	$("DLG_ADDEDITRSSFEED_01").addEvent("click", function() {
+		utWebUI.feedAddEditOK();
+		DialogManager.hide("AddEditRSSFeed");
+	});
+
+	// -- Cancel Button
+
+	$("DLG_ADDEDITRSSFEED_02").addEvent("click", function(ev) {
+		DialogManager.hide("AddEditRSSFeed");
+	});
+
+	// -- Form Submission
+
+	$("dlgAddEditRSSFeed-form").addEvent("submit", Function.from(false));
+
+	// -- Elements
+
+	$("aerssfd-use_custom_alias").addEvent(linkedEvent, function() {
+		_link(this, 0, ["aerssfd-custom_alias"]);
+	});
+
+	$("aerssfd-subscribe_0").addEvent("click", function() {
+		_link(this, 0, ["aerssfd-smart_ep"], null, true);
+	}).fireEvent("click");
+
+	$("aerssfd-subscribe_1").addEvent("click", function() {
+		_link(this, 0, ["aerssfd-smart_ep"]);
+	});
 
 	//--------------------------------------------------
 	// ADD URL DIALOG
@@ -733,6 +794,79 @@ function setupUserInterface() {
 	// -- Form Submission
 
 	$("dlgProps-form").addEvent("submit", Function.from(false));
+
+	//--------------------------------------------------
+	// RSS DOWNLOADER DIALOG
+	//--------------------------------------------------
+
+	// -- Close Button
+
+	$("DLG_RSSDOWNLOADER_01").addEvent("click", function(ev) {
+		DialogManager.hide("RSSDownloader");
+	});
+
+	// -- Feeds Tab
+
+	$("dlgRSSDownloader-feedsMenu").addEvent("mousedown", function(ev) {
+		utWebUI.feedListClick.delay(0, utWebUI, ev);
+	});
+
+	utWebUI.rssfdTable.create("dlgRSSDownloader-feedItemList", utWebUI.fdColDefs, Object.append({
+		"format": utWebUI.fdFormatRow.bind(utWebUI),
+		"onColReset": utWebUI.fdColReset.bind(utWebUI),
+		"onColResize": utWebUI.fdColResize.bind(utWebUI),
+		"onColMove": utWebUI.fdColMove.bind(utWebUI),
+		"onColToggle": utWebUI.fdColToggle.bind(utWebUI),
+		"onSort": utWebUI.fdSort.bind(utWebUI),
+		"onSelect": utWebUI.fdSelect.bind(utWebUI),
+		"onDblClick": utWebUI.fdDblClk.bind(utWebUI)
+	}, utWebUI.defConfig.feedTable));
+
+	var feedSize = $("dlgRSSDownloader-content").getDimensions({computeSize: true});
+	utWebUI.rssfdTable.resizeTo(feedSize.x - 15, feedSize.y - 2);
+
+	// -- Favorites Tab
+
+	$("dlgRSSDownloader-filtersMenu").addEvent("mousedown", function(ev) {
+		utWebUI.rssfilterListClick.delay(0, utWebUI, ev);
+	}).addEvent(linkedEvent, function(ev) {
+		utWebUI.rssfilterCheckboxClick(ev);
+	});
+
+	$("dlgRSSDownloader-filterSettings").getElements("input, select").addEvent("change", function(ev) {
+		utWebUI.rssfilterEdited(ev);
+	});
+
+	$("rssfilter_edit_apply").addStopEvent("click", function(ev) {
+		utWebUI.rssfilterEditApply();
+	});
+
+	$("rssfilter_edit_cancel").addStopEvent("click", function(ev) {
+		utWebUI.rssfilterEditCancel();
+	});
+
+	$("rssfilter_quality").addStopEvent("mousedown", function(ev) {
+		utWebUI.rssfilterQualityClick(ev);
+	});
+
+	$("rssfilter_episode_enable").addEvent(linkedEvent, function() {
+		_link(this, 0, ["rssfilter_episode"]);
+	});
+
+	// -- RSS Downloader Tabs
+
+	// NOTE: We perform tab setup after the other dialog elements are set up
+	//       because they are expected to have already been set up by the time
+	//       the tab control's show() method (and consequently, the onChange
+	//       event handler) are fired.
+
+	utWebUI.rssDownloaderTabs = new Tabs("dlgRSSDownloader-tabs", {
+		"tabs": {
+			  "dlgRSSDownloader-feedsTab"   : ""
+			, "dlgRSSDownloader-filtersTab" : ""
+		},
+		"onChange": utWebUI.rssDownloaderTabChange.bind(utWebUI)
+	}).draw().show("dlgRSSDownloader-feedsTab");
 
 	//--------------------------------------------------
 	// SETTINGS DIALOG
@@ -1287,15 +1421,16 @@ function loadLangStrings(reload) {
 	//--------------------------------------------------
 
 	_loadStrings("title", {
-		  "add"       : "OV_TB_ADDTORR"
-		, "addurl"    : "OV_TB_ADDURL"
-		, "remove"    : "OV_TB_REMOVE"
-		, "start"     : "OV_TB_START"
-		, "pause"     : "OV_TB_PAUSE"
-		, "stop"      : "OV_TB_STOP"
-		, "queueup"   : "OV_TB_QUEUEUP"
-		, "queuedown" : "OV_TB_QUEUEDOWN"
-		, "setting"   : "OV_TB_PREF"
+		  "add"           : "OV_TB_ADDTORR"
+		, "addurl"        : "OV_TB_ADDURL"
+		, "remove"        : "OV_TB_REMOVE"
+		, "start"         : "OV_TB_START"
+		, "pause"         : "OV_TB_PAUSE"
+		, "stop"          : "OV_TB_STOP"
+		, "queueup"       : "OV_TB_QUEUEUP"
+		, "queuedown"     : "OV_TB_QUEUEDOWN"
+		, "rssdownloader" : "OV_TB_RSSDOWNLDR"
+		, "setting"       : "OV_TB_PREF"
 	});
 
 	//--------------------------------------------------
@@ -1305,18 +1440,23 @@ function loadLangStrings(reload) {
 	// -- Titles
 
 	_loadStrings("text", {
-		  "dlgAdd-head"      : "OV_TB_ADDTORR"
-		, "dlgAddURL-head"   : "OV_TB_ADDURL"
-		, "dlgProps-head"    : "DLG_TORRENTPROP_00"
-		, "dlgSettings-head" : "DLG_SETTINGS_00"
+		  "dlgAdd-head"           : "OV_TB_ADDTORR"
+		, "dlgAddURL-head"        : "OV_TB_ADDURL"
+		, "dlgProps-head"         : "DLG_TORRENTPROP_00"
+		, "dlgRSSDownloader-head" : "OV_TB_RSSDOWNLDR"
+		, "dlgSettings-head"      : "OV_TB_PREF"
 	});
 
-	// -- [ OK | Cancel | Apply ] Buttons
+	// -- [ OK | Cancel | Apply | Close ] Buttons
 
 	_loadStrings("value", {
 		// Add
 		  "ADD_FILE_OK"     : "DLG_BTN_OK"
 		, "ADD_FILE_CANCEL" : "DLG_BTN_CANCEL"
+
+		// Add/Edit RSS Feed
+		, "DLG_ADDEDITRSSFEED_01" : "DLG_BTN_OK"
+		, "DLG_ADDEDITRSSFEED_02" : "DLG_BTN_CANCEL"
 
 		// Add URL
 		, "ADD_URL_OK"      : "DLG_BTN_OK"
@@ -1325,6 +1465,11 @@ function loadLangStrings(reload) {
 		// Properties
 		, "DLG_TORRENTPROP_01" : "DLG_BTN_OK"
 		, "DLG_TORRENTPROP_02" : "DLG_BTN_CANCEL"
+
+		// RSS Downloader
+		, "DLG_RSSDOWNLOADER_01" : "DLG_BTN_CLOSE"
+		, "rssfilter_edit_cancel"   : "DLG_BTN_CANCEL"
+		, "rssfilter_edit_apply"    : "DLG_BTN_APPLY"
 
 		// Settings
 		, "DLG_SETTINGS_03" : "DLG_BTN_OK"
@@ -1357,6 +1502,72 @@ function loadLangStrings(reload) {
 		, "DLG_TORRENTPROP_1_GEN_18"
 		, "DLG_TORRENTPROP_1_GEN_19"
 	]);
+
+	//--------------------------------------------------
+	// ADD/EDIT RSS FEED DIALOG
+	//--------------------------------------------------
+
+	_loadStrings("text", [
+		  "DLG_ADDEDITRSSFEED_03"
+		, "DLG_ADDEDITRSSFEED_04"
+		, "DLG_ADDEDITRSSFEED_05"
+		, "DLG_ADDEDITRSSFEED_06"
+		, "DLG_ADDEDITRSSFEED_07"
+		, "DLG_ADDEDITRSSFEED_08"
+		, "DLG_ADDEDITRSSFEED_09"
+	]);
+
+	//--------------------------------------------------
+	// RSS DOWNLOADER DIALOG
+	//--------------------------------------------------
+
+	// -- Tab Titles
+
+	var rsststr = lang[CONST.DLG_RSSDOWNLOADER_02].split("||");
+	utWebUI.mainTabs.setNames({
+		  "dlgRSSDownloader-feedsTab"   : rsststr[0]
+		, "dlgRSSDownloader-filtersTab" : rsststr[1]
+	});
+
+	// -- Feeds Tab
+
+	_loadStrings("text", "DLG_RSSDOWNLOADER_03")
+
+	utWebUI.rssfdTable.refreshRows();
+	utWebUI.rssfdTable.setConfig({
+		"resetText": lang[CONST.MENU_RESET],
+		"colText": {
+			  "fullname" : lang[CONST.FEED_COL_FULLNAME]
+			, "name"     : lang[CONST.FEED_COL_NAME]
+			, "episode"  : lang[CONST.FEED_COL_EPISODE]
+			, "format"   : lang[CONST.FEED_COL_FORMAT]
+			, "codec"    : lang[CONST.FEED_COL_CODEC]
+			, "date"     : lang[CONST.FEED_COL_DATE]
+			, "feed"     : lang[CONST.FEED_COL_FEED]
+			, "url"      : lang[CONST.FEED_COL_URL]
+		}
+	});
+
+	// -- Favorites Tab
+
+	_loadStrings("text", [
+		  "DLG_RSSDOWNLOADER_04"
+		, "DLG_RSSDOWNLOADER_05"
+		, "DLG_RSSDOWNLOADER_06"
+		, "DLG_RSSDOWNLOADER_07"
+		, "DLG_RSSDOWNLOADER_08"
+		, "DLG_RSSDOWNLOADER_09"
+		, "DLG_RSSDOWNLOADER_10"
+		, "DLG_RSSDOWNLOADER_11"
+		, "DLG_RSSDOWNLOADER_12"
+		, "DLG_RSSDOWNLOADER_13"
+		, "DLG_RSSDOWNLOADER_14"
+		, "DLG_RSSDOWNLOADER_15"
+		, "DLG_RSSDOWNLOADER_16"
+		, "DLG_RSSDOWNLOADER_17"
+	])
+
+	_loadComboboxStrings("rssfilter_min_interval", lang[CONST.DLG_RSSDOWNLOADER_31].split("||"));
 
 	//--------------------------------------------------
 	// SETTINGS DIALOG

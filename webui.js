@@ -13,6 +13,8 @@ var isGuest = window.location.pathname.test(/.*guest.html$/);
 var utWebUI = {
 
 	"torrents": {},
+	"rssfeeds": {},
+	"rssfilters": {},
 	"peerlist": [],
 	"filelist": [],
 	"settings": {},
@@ -84,10 +86,18 @@ var utWebUI = {
 			"reverse": false,
 			"sIndex": -1
 		},
+		"feedTable": {
+			"colMask": 0x0000, // automatically calculated based on this.fdColDefs
+			"colOrder": [], // automatically calculated based on this.fdColDefs
+			"colWidth": [], // automatically calculated based on this.fdColDefs
+			"reverse": false,
+			"sIndex": -1
+		},
 		"advOptTable": {
 			"rowMultiSelect": false
 		},
-		"activeSettingsPaneID": "",
+		"activeSettingsPane": "",
+		"activeRssFeeds": {"rssfeed_all": 1},
 		"activeTorGroups": {
 			"cat": {"cat_all": 1},
 			"lbl": {}
@@ -95,9 +105,11 @@ var utWebUI = {
 	},
 	"torrentID": "", // selected torrent
 	"propID": "", // selected torrent (single)
+	"rssfilterId": "", // selected RSS filter
 	"trtTable": new dxSTable(),
 	"prsTable": new dxSTable(),
 	"flsTable": new dxSTable(),
+	"rssfdTable": new dxSTable(),
 	"advOptTable": new dxSTable(),
 	"trtColDefs": [
 		//[ colID, colWidth, colType, colDisabled = false, colIcon = false, colAlign = ALIGN_AUTO, colText = "" ]
@@ -147,6 +159,17 @@ var utWebUI = {
 		, ["done", 90, TYPE_NUMBER]
 		, ["pcnt", 80, TYPE_NUM_PROGRESS]
 		, ["prio", 80, TYPE_NUMBER]
+	],
+	"fdColDefs": [
+		//[ colID, colWidth, colType, colDisabled = false, colIcon = false, colAlign = ALIGN_AUTO, colText = "" ]
+		  ["fullname", 360, TYPE_STRING, false, true]
+		, ["name", 220, TYPE_STRING, true, true]
+		, ["episode", 70, TYPE_NUMBER, true]
+		, ["format", 70, TYPE_NUMBER, true]
+		, ["codec", 70, TYPE_NUMBER, true]
+		, ["date", 145, TYPE_NUMBER]
+		, ["feed", 130, TYPE_STRING, true]
+		, ["url", 250, TYPE_STRING, true]
 	],
 	"advOptColDefs": [
 		//[ colID, colWidth, colType, colDisabled = false, colIcon = false, colAlign = ALIGN_AUTO, colText = "" ]
@@ -292,6 +315,7 @@ var utWebUI = {
 		this.trtColDefs.each(function(item, index) { this.trtColToggle(index, item[3], true); }, this);
 		this.prsColDefs.each(function(item, index) { this.prsColToggle(index, item[3], true); }, this);
 		this.flsColDefs.each(function(item, index) { this.flsColToggle(index, item[3], true); }, this);
+		this.fdColDefs.each(function(item, index) { this.fdColToggle(index, item[3], true); }, this);
 
 		// Load settings
 		this.getSettings((function() {
@@ -702,6 +726,142 @@ var utWebUI = {
 		this.perform("unpauseall");
 	},
 
+	"rssRemove": function(ids) {
+
+{ // TODO: Remove this once backend support is stable (requires 3.0+)
+	if (undefined === this.settings["webui.uconnect_enable"]) return;
+}
+
+		Array.from(ids).each(function(id) {
+			id = parseInt(id, 10);
+			if (isNaN(id) || id < 0) return;
+
+			this.request("action=rss-remove&feed-id=" + id);
+		}, this);
+	},
+
+	"rssUpdate": function(param, fn) {
+
+{ // TODO: Remove this once backend support is stable (requires 3.0+)
+	if (undefined === this.settings["webui.uconnect_enable"]) return;
+}
+
+		Array.from(param.id).each(function(id) {
+			var qs = "action=rss-update";
+			if (param) {
+				var val;
+
+				if (undefined !== id)
+					qs += "&feed-id=" + (parseInt(id, 10) || -1);
+
+				if (undefined !== param.url)
+					qs += "&url=" + encodeURIComponent(param.url);
+
+				if (undefined !== param.name)
+					qs += "&alias=" + encodeURIComponent(param.name);
+
+				if (undefined !== param.subscribe)
+					qs += "&subscribe=" + (!!param.subscribe ? 1 : 0);
+
+				if (undefined !== param.smart_ep)
+					qs += "&smart-filter=" + (!!param.smart_ep ? 1 : 0);
+
+				if (undefined !== param.enabled)
+					qs += "&enabled=" + (!!param.enabled ? 1 : 0);
+
+				if (undefined !== param.update)
+					qs += "&update=" + (!!param.update ? 1 : 0);
+			}
+
+			this.request(qs, fn);
+		}, this);
+	},
+
+	"rssfilterRemove": function(ids) {
+
+{ // TODO: Remove this once backend support is stable (requires 3.0+)
+	if (undefined === this.settings["webui.uconnect_enable"]) return;
+}
+
+		Array.from(ids).each(function(id) {
+			id = parseInt(id, 10);
+			if (isNaN(id) || id < 0) return;
+
+			this.request("action=filter-remove&filter-id=" + id);
+		}, this);
+	},
+
+	"rssfilterUpdate": function(param, fn) {
+
+{ // TODO: Remove this once backend support is stable (requires 3.0+)
+	if (undefined === this.settings["webui.uconnect_enable"]) return;
+}
+
+		if (!param) {
+			param = {"id": -1};
+		}
+
+		Array.from(param.id).each(function(id) {
+			var qs = "action=filter-update";
+			if (param) {
+				var val;
+
+				if (undefined !== id)
+					qs += "&filter-id=" + (parseInt(id, 10) || -1);
+
+				if (undefined !== param.name)
+					qs += "&name=" + encodeURIComponent(param.name);
+
+				if (undefined !== param.filter)
+					qs += "&filter=" + encodeURIComponent(param.filter);
+
+				if (undefined !== param.not)
+					qs += "&not-filter=" + encodeURIComponent(param.not);
+
+				if (undefined !== param.orig_name)
+					qs += "&origname=" + (!!param.orig_name ? 1 : 0);
+
+				if (undefined !== param.episode_enable)
+					qs += "&episode-filter=" + (!!param.episode_enable ? 1 : 0);
+
+				if (undefined !== param.episode)
+					qs += "&episode=" + encodeURIComponent(param.episode);
+
+				if (undefined !== param.smart_ep)
+					qs += "&smart-ep-filter=" + (!!param.smart_ep ? 1 : 0);
+
+				if (undefined !== param.add_stopped)
+					qs += "&add-stopped=" + (!!param.add_stopped ? 1 : 0);
+
+				if (undefined !== param.prio)
+					qs += "&prio=" + (!!param.prio ? 1 : 0);
+
+				if (undefined !== param.savein)
+					qs += "&save-in=" + encodeURIComponent(param.savein);
+
+				if (undefined !== param.label)
+					qs += "&label=" + encodeURIComponent(param.label);
+
+				if (undefined !== param.postpone_mode) {
+					val = parseInt(param.postpone_mode, 10);
+					qs += "&postpone-mode=" + (isNaN(val) ? 0 : val);
+				}
+
+				if (undefined !== param.quality) {
+					val = parseInt(param.quality, 10);
+					qs += "&quality=" + (isNaN(val) ? -1 : val);
+				}
+
+				if (undefined !== param.feed) {
+					val = parseInt(param.feed, 10);
+					qs += "&feed-id=" + (isNaN(val) ? -1 : val);
+				}
+			}
+
+			this.request(qs, fn);
+		}, this);
+	},
+
 	"getList": function(qs, fn) {
 		this.endPeriodicUpdate();
 		qs = qs || "";
@@ -904,9 +1064,158 @@ var utWebUI = {
 			this.trtTable.refresh();
 		}).bind(this)(extractLists("torrents", "torrentp", "torrentm", CONST.TORRENT_HASH, this.torrents));
 
+		// Extract RSS Feeds
+		(function(deltaLists) {
+			// Handle added/changed items
+			var idIdx = CONST.RSSFEED_ID;
+			deltaLists.rssfeeds.sort(function (x, y) {
+				var idX = x[idIdx], idY = y[idIdx];
+				if (idX < idY) return -1;
+				if (idY < idX) return 1;
+				return 0;
+			}).each(function(item) {
+				this.rssfeeds[item[idIdx]] = item;
+			}, this);
+
+			// Handle removed items
+			deltaLists.rssfeedm.each(function(key) {
+				delete this.rssfeeds[key];
+			}, this);
+
+			// Update RSS Downloader dialog if it is open
+			if (typeof(DialogManager) !== 'undefined') {
+				if (DialogManager.showing.contains("RSSDownloader")) {
+					if (deltaLists.hasChanged) {
+						this.rssDownloaderShow();
+					}
+				}
+			}
+		}).bind(this)(extractLists("rssfeeds", "rssfeedp", "rssfeedm", CONST.RSSFEED_ID, this.rssfeeds));
+
+		// Extract RSS Filters
+		(function(deltaLists) {
+			// Handle added/changed items
+			var idIdx = CONST.RSSFILTER_ID;
+			deltaLists.rssfilters.sort(function (x, y) {
+				var idX = x[idIdx], idY = y[idIdx];
+				if (idX < idY) return -1;
+				if (idY < idX) return 1;
+				return 0;
+			}).each(function(item) {
+				this.rssfilters[item[idIdx]] = item;
+			}, this);
+
+			// Handle removed items
+			deltaLists.rssfilterm.each(function(key) {
+				delete this.rssfilters[key];
+			}, this);
+
+			// Update RSS Downloader dialog if it is open
+			if (typeof(DialogManager) !== 'undefined') {
+				if (DialogManager.showing.contains("RSSDownloader")) {
+					if (deltaLists.hasChanged) {
+						this.rssDownloaderShow();
+					}
+				}
+			}
+		}).bind(this)(extractLists("rssfilters", "rssfilterp", "rssfilterm", CONST.RSSFILTER_ID, this.rssfilters));
+
 		// Finish up
 		json = null;
 		this.beginPeriodicUpdate();
+	},
+
+	"loadRSSFeedList": function() {
+		var feedList = $("dlgRSSDownloader-feeds");
+		var itemAll = $("rssfeed_all").dispose();
+
+		feedList.empty();
+		Object.each(this.rssfeeds, function(feed, id) {
+			feedList.grab(new Element("li", {
+				  "id": "rssfeed_" + id
+				, "text": feed[CONST.RSSFEED_URL].split("|")[0]
+				, "class": (feed[CONST.RSSFEED_ENABLED] ? "" : "disabled")
+			}));
+		}, this);
+
+		feedList.grab(itemAll, 'top');
+
+		this.refreshSelectedRSSFeeds();
+	},
+
+	"loadRSSFilterList": function() {
+		var filterList = $("dlgRSSDownloader-filters");
+
+		filterList.empty();
+		$each(this.rssfilters, function(filter, id) {
+			if (id === "EDIT") return;
+
+			filterList.grab(
+				new Element("li", {
+					"id": "rssfilter_" + id,
+					"text": filter[CONST.RSSFILTER_NAME]
+				}).grab(
+					new Element("input", {
+						"type": "checkbox",
+						"id": "rssfilter_toggle_" + id,
+						"checked": !!(filter[CONST.RSSFILTER_FLAGS] & CONST.RSSFILTERFLAG_ENABLE)
+					}),
+					"top"
+				)
+			);
+		}, this);
+
+		this.switchRSSFilter($(this.rssfilterId));
+	},
+
+	"loadRSSFilter": function(filterId) {
+		var filter = this.rssfilters[filterId] || [];
+
+		// Setup filter toggle
+		var filterToggle = $("rssfilter_toggle_" + filterId);
+		if (filterToggle) filterToggle.checked = !!(filter[CONST.RSSFILTER_FLAGS] & CONST.RSSFILTERFLAG_ENABLE);
+
+		// Setup Feed item
+		// RSSTODO: Move this elsewhere
+		var feeds = [[-1, lang[CONST.DLG_RSSDOWNLOADER_30]]];
+		Object.map(this.rssfeeds, function(item, key) {
+			feeds.push([key, item[CONST.RSSFEED_URL].split("|")[0]]);
+		}, this);
+
+		_loadComboboxStrings("rssfilter_feed", feeds, [filter[CONST.RSSFILTER_FEED], -1].pick());
+
+		// Setup remaining options
+		$("rssfilter_name").set("value", filter[CONST.RSSFILTER_NAME] || "");
+		$("rssfilter_filter").set("value", filter[CONST.RSSFILTER_FILTER] || "");
+		$("rssfilter_not").set("value", filter[CONST.RSSFILTER_NOT_FILTER] || "");
+		$("rssfilter_save_in").set("value", filter[CONST.RSSFILTER_DIRECTORY] || "");
+		$("rssfilter_episode").set("value", filter[CONST.RSSFILTER_EPISODE_FILTER_STR] || "");
+		$("rssfilter_episode_enable").checked = !!filter[CONST.RSSFILTER_EPISODE_FILTER];
+		$("rssfilter_quality").set("value", this.rssfilterQualityText(filter[CONST.RSSFILTER_QUALITY]));
+		$("rssfilter_orig_name").checked = !!(filter[CONST.RSSFILTER_FLAGS] & CONST.RSSFILTERFLAG_ORIG_NAME);
+		$("rssfilter_add_stopped").checked = !!(filter[CONST.RSSFILTER_FLAGS] & CONST.RSSFILTERFLAG_ADD_STOPPED);
+		$("rssfilter_prio").checked = !!(filter[CONST.RSSFILTER_FLAGS] & CONST.RSSFILTERFLAG_HIGH_PRIORITY);
+		$("rssfilter_smart_ep").checked = !!(filter[CONST.RSSFILTER_FLAGS] & CONST.RSSFILTERFLAG_SMART_EP_FILTER);
+		$("rssfilter_min_interval").set("value", filter[CONST.RSSFILTER_POSTPONE_MODE] || 0);
+		$("rssfilter_label").set("value", filter[CONST.RSSFILTER_LABEL] || "");
+
+		var filterForm = $("dlgRSSDownloader-filterSettings");
+		if (filterId) {
+			filterForm.removeClass("disabled");
+			filterForm.getElements("input, select").each(function(ele) {
+				ele.disabled = false;
+			});
+
+			$("rssfilter_episode_enable").fireEvent("change");
+			if (Browser.ie) $("rssfilter_episode_enable").fireEvent("click");
+		}
+		else {
+			filterForm.addClass("disabled");
+			filterForm.getElements("input, select").each(function(ele) {
+				ele.disabled = true;
+			});
+		}
+
 	},
 
 	"update": function(listcb) {
@@ -1328,6 +1637,531 @@ var utWebUI = {
 		}
 	},
 
+	"feedListClick": function(ev) {
+		ContextMenu.hide();
+
+		// Get selected element
+		var stopEle = ["LI", "DIV"];
+		var element = ev.target;
+
+		while (element && !stopEle.contains(element.tagName)) {
+			element = element.getParent();
+		}
+		if (!element) return;
+
+		switch (element.tagName) {
+			case "DIV":
+				element = (ev.withinScroll(element)
+					? undefined
+					: $(this.config.activeRssFeeds)
+				);
+			break;
+		}
+
+		// Prepare for changes
+		if (element) {
+			var activeFeedCount = Object.getLength(this.config.activeRssFeeds);
+
+			var prevSelected = activeFeedCount > 1 && element.id in this.config.activeRssFeeds;
+
+			if (ev.control) {
+				if (ev.isRightClick()) {
+					prevSelected = false;
+				}
+			}
+			else {
+				if (!(ev.isRightClick() && prevSelected)) {
+					this.config.activeRssFeeds = {};
+				}
+
+				prevSelected = false;
+			}
+		}
+
+		// Apply changes
+		if (element) {
+			if (prevSelected) {
+				delete this.config.activeRssFeeds[element.id];
+			}
+			else {
+				this.config.activeRssFeeds[element.id] = 1;
+			}
+		}
+
+		this.refreshSelectedRSSFeeds();
+
+		if (!isGuest && ev.isRightClick()) {
+			// Generate menu items
+			var menuItems = [[lang[CONST.DLG_RSSDOWNLOADER_18], this.showAddEditRSSFeed.bind(this, -1)]];
+
+			if (element) {
+				var feedIds = ("rssfeed_all" in this.config.activeRssFeeds
+					? Object.keys(this.rssfeeds)
+					: Object.keys(this.config.activeRssFeeds).map(function(feed) { return feed.replace(/^rssfeed_/, ''); })
+				);
+
+				var feedIsEnabled = (function(feedIds) {
+					var ENABLED = CONST.RSSFEED_ENABLED;
+					return feedIds.every(function(id) {
+						return !!this.rssfeeds[id][ENABLED];
+					}, this);
+				}).bind(this)(feedIds);
+
+				if (feedIds.length > 0) {
+					menuItems.push([CMENU_SEP]);
+
+					if (feedIds.length === 1) {
+						menuItems.push([lang[CONST.DLG_RSSDOWNLOADER_19], this.showAddEditRSSFeed.bind(this, feedIds[0])]);
+					}
+
+					menuItems = menuItems.concat([
+						  [lang[(feedIsEnabled ? CONST.DLG_RSSDOWNLOADER_20 : CONST.DLG_RSSDOWNLOADER_21)],
+							this.rssUpdate.bind(this, {id: feedIds, enabled: !feedIsEnabled}, null)
+						]
+						, [lang[CONST.DLG_RSSDOWNLOADER_22], this.rssUpdate.bind(this, {id: feedIds, update: 1}, null)]
+						, [lang[CONST.DLG_RSSDOWNLOADER_23],
+							(function(feedIds) { // RSSTODO: Move this elsewhere
+								DialogManager.popup({
+									  title: lang[CONST.DLG_RSSDOWNLOADER_34]
+									, icon: "dlgIcon-Delete"
+									, message: (feedIds.length > 1
+										? lang[CONST.DLG_RSSDOWNLOADER_35].replace(/%d/, feedIds.length)
+										: lang[CONST.DLG_RSSDOWNLOADER_36].replace(/%s/, this.rssfeeds[feedIds][CONST.RSSFEED_URL].split("|")[0])
+									)
+									, buttons: [
+										{ text: lang[CONST.DLG_BTN_YES], focus: true, click: this.rssRemove.bind(this, feedIds) },
+										{ text: lang[CONST.DLG_BTN_NO] }
+									]
+								});
+							}).bind(this, feedIds)
+						]
+					]);
+				}
+			}
+
+			// Populate and show menu
+			ContextMenu.clear();
+			ContextMenu.add.apply(ContextMenu, menuItems);
+			ContextMenu.show(ev.page);
+		}
+	},
+
+	"refreshSelectedRSSFeeds": function() {
+		// Prevent needless refresh
+		var deltaFeeds;
+
+		var oldFeeds = this.__refreshSelectedRSSFeeds_activeRssFeeds__;
+		if (oldFeeds) {
+			var curFeeds = this.config.activeRssFeeds;
+			var selCount = 0;
+
+			deltaFeeds = {};
+
+			// Removed feeds
+			for (var feed in oldFeeds) {
+				if (!(feed in curFeeds)) {
+					deltaFeeds[feed] = -1
+				}
+			}
+
+			// Added feeds
+			for (var feed in curFeeds) {
+				deltaFeeds[feed] = 1;
+				if ($(feed)) ++selCount;
+			}
+
+			if (!selCount) {
+				deltaFeeds = this.config.activeRssFeeds = Object.merge({}, this.defConfig.activeRssFeeds);
+			}
+		}
+
+		this.__refreshSelectedRSSFeeds_activeRssFeeds__ = Object.merge({}, this.config.activeRssFeeds);
+		if (!oldFeeds) {
+			deltaFeeds = this.config.activeRssFeeds;
+		}
+
+		// Update feeds list
+		var val, ele;
+		for (var feed in deltaFeeds) {
+			ele = $(feed);
+			if (!ele) continue;
+
+			val = deltaFeeds[feed];
+			if (val > 0) {
+				ele.addClass("sel");
+			}
+			else if (val < 0) {
+				ele.removeClass("sel");
+			}
+		}
+
+		// Update RSS feed list
+		this.rssfdTable.keepScroll((function() {
+			this.rssfdTable.clearRows(true);
+
+			var TIMESTAMP = CONST.RSSITEM_TIMESTAMP;
+			var IN_HISTORY = CONST.RSSITEM_IN_HISTORY;
+
+			var now = Date.now();
+
+			var activeFeeds = this.config.activeRssFeeds;
+			Object.each(this.rssfeeds, function(feed, id) {
+				if (!activeFeeds["rssfeed_all"] && !(("rssfeed_" + id) in activeFeeds)) return;
+
+				feed[CONST.RSSFEED_ITEMS].each(function(item, idx) {
+					var key = id + "_" + idx;
+					var icon = "RSS_Old";
+					if (item[IN_HISTORY]) {
+						icon = "RSS_Added";
+					}
+					else if (now - 86400000 < item[TIMESTAMP]) {
+						icon = "RSS_New";
+					}
+					
+					this.rssfdTable.addRow(this.fdDataToRow(item), key, icon);
+				}, this);
+			}, this);
+		}).bind(this));
+
+		this.rssfdTable.calcSize();
+		this.rssfdTable.resizePads();
+
+		this.rssfdTable.refresh();
+	},
+
+	"feedAddEditOK": function() {
+		var feedId = parseInt($("aerssfd-id").get("value"), 10);
+		var feed = this.rssfeeds[feedId];
+
+		var deltaObj = {"id": (feed ? feedId : -1)};
+
+		var url = $("aerssfd-url").get("value");
+		var alias = $("aerssfd-custom_alias").get("value");
+		var use_cust_alias = !!$("aerssfd-use_custom_alias").checked;
+
+		if (feed) {
+			var oldurl = feed[CONST.RSSFEED_URL].split("|");
+
+			if (url !== [oldurl[1], oldurl[0]].pick()) {
+				deltaObj["url"] = url;
+			}
+
+			if (!use_cust_alias && !feed[CONST.RSSFEED_USE_FEED_TITLE]) {
+				alias = "";
+			}
+
+			if (alias !== oldurl[0]) {
+				deltaObj["name"] = alias;
+			}
+		}
+		else {
+			deltaObj["url"] = url;
+			if (use_cust_alias) {
+				deltaObj["name"] = alias;
+			}
+
+			deltaObj["subscribe"] = !!$("aerssfd-subscribe_1").checked;
+			deltaObj["smart_ep"] = !!("aerssfd-smart_ep").checked;
+		}
+
+		this.rssUpdate(deltaObj);
+	},
+
+	"rssfilterListClick": function(ev) {
+		ContextMenu.hide();
+
+		var stopEle = ["INPUT", "LI", "DIV"];
+		var element = ev.target;
+
+		while (element && !stopEle.contains(element.tagName)) {
+			element = element.getParent();
+		}
+		if (!element) return;
+
+		switch (element.tagName) {
+			case "INPUT":
+				// Do nothing... handled by this.rssfilterCheckboxClick()
+				return;
+			break;
+
+			case "DIV":
+				element = (ev.withinScroll(element)
+					? undefined
+					: $(this.rssfilterId)
+				);
+			break;
+		}
+
+		if (!element || element.id !== this.rssfilterId) {
+			this.switchRSSFilter(element);
+		}
+
+		if (!isGuest && ev.isRightClick()) {
+			// Generate menu items
+			var menuItems = [
+				[lang[CONST.DLG_RSSDOWNLOADER_27],
+					this.rssfilterUpdate.bind(this, null, (function(json) {
+						this.rssfilterId = "rssfilter_" + json.filter_ident;
+					}).bind(this))
+				]
+			];
+
+			if (element) {
+				var filterId = element.id.replace(/^rssfilter_/, '');
+
+				menuItems.push([lang[CONST.DLG_RSSDOWNLOADER_28],
+					(function(filterId) { // RSSTODO: Move this elsewhere
+						DialogManager.popup({
+							  title: "Remove RSS Filter(s)" // TODO: Localize
+							, icon: "dlgIcon-Delete"
+							, message: lang[CONST.OV_CONFIRM_DELETE_RSSFILTER].replace(/%s/, this.rssfilters[filterId][CONST.RSSFILTER_NAME])
+							, buttons: [
+								{ text: lang[CONST.DLG_BTN_YES], focus: true, click: this.rssfilterRemove.bind(this, filterId) },
+								{ text: lang[CONST.DLG_BTN_NO] }
+							]
+						});
+					}).bind(this, filterId)
+				]);
+			}
+
+			// Populate and show menu
+			ContextMenu.clear();
+			ContextMenu.add.apply(ContextMenu, menuItems);
+			ContextMenu.show(ev.page);
+		}
+	},
+
+	"rssfilterCheckboxClick": function(ev) {
+		var element = ev.target;
+		if (element.tagName !== "INPUT") return;
+
+		var filterId = ev.target.id.replace(/^rssfilter_toggle_/, '').toInt();
+
+// RSSTODO: Implement
+	},
+
+	"rssfilterEdited": function(ev) {
+		var filter = this.rssfilters.EDIT;
+
+		if (!filter) {
+			$("rssfilter_edit_control").show();
+			this.rssfilters.EDIT = filter = Array.clone(this.rssfilters[this.rssfilterId.replace(/^rssfilter_/, '')] || []);
+		}
+
+		if (ev) {
+			var idx = -1;
+			var val = ev.target.get("value");
+
+			switch (ev.target.id) {
+				case "rssfilter_name": idx = CONST.RSSFILTER_NAME; break;
+				case "rssfilter_filter": idx = CONST.RSSFILTER_FILTER; break;
+				case "rssfilter_not": idx = CONST.RSSFILTER_NOT_FILTER; break;
+				case "rssfilter_save_in": idx = CONST.RSSFILTER_DIRECTORY; break;
+				case "rssfilter_label": idx = CONST.RSSFILTER_LABEL; break;
+				case "rssfilter_feed": idx = CONST.RSSFILTER_FEED; break;
+				case "rssfilter_min_interval": idx = CONST.RSSFILTER_POSTPONE_MODE; break;
+
+				case "rssfilter_episode": idx = CONST.RSSFILTER_EPISODE_FILTER_STR; break;
+				case "rssfilter_episode_enable":
+					idx = CONST.RSSFILTER_EPISODE_FILTER;
+					val = !!ev.target.checked;
+				break;
+
+				case "rssfilter_orig_name":
+					idx = CONST.RSSFILTER_FLAGS;
+					val = filter[idx];
+
+					if (!!ev.target.checked) {
+						val |= CONST.RSSFILTERFLAG_ORIG_NAME;
+					}
+					else {
+						val &= ~CONST.RSSFILTERFLAG_ORIG_NAME;
+					}
+				break;
+
+				case "rssfilter_add_stopped":
+					idx = CONST.RSSFILTER_FLAGS;
+					val = filter[idx];
+
+					if (!!ev.target.checked) {
+						val |= CONST.RSSFILTERFLAG_ADD_STOPPED;
+					}
+					else {
+						val &= ~CONST.RSSFILTERFLAG_ADD_STOPPED;
+					}
+				break;
+
+				case "rssfilter_smart_ep":
+					idx = CONST.RSSFILTER_FLAGS;
+					val = filter[idx];
+
+					if (!!ev.target.checked) {
+						val |= CONST.RSSFILTERFLAG_SMART_EP_FILTER;
+					}
+					else {
+						val &= ~CONST.RSSFILTERFLAG_SMART_EP_FILTER;
+					}
+				break;
+
+				case "rssfilter_prio":
+					idx = CONST.RSSFILTER_FLAGS;
+					val = filter[idx];
+
+					if (!!ev.target.checked) {
+						val |= CONST.RSSFILTERFLAG_HIGH_PRIORITY;
+					}
+					else {
+						val &= ~CONST.RSSFILTERFLAG_HIGH_PRIORITY;
+					}
+				break;
+			}
+
+			if (idx >= 0) {
+				filter[idx] = val;
+			}
+		}
+	},
+
+	"rssfilterEditApply": function() {
+		var oldFilter = this.rssfilters[this.rssfilterId.replace(/^rssfilter_/, '')];
+		if (!oldFilter) return;
+
+		var deltaObj = {"id": oldFilter[CONST.RSSFILTER_ID]};
+		var newFilter = this.rssfilters.EDIT;
+		newFilter.each(function(val, idx) {
+			var valOld = oldFilter[idx];
+			if (val !== valOld) {
+				switch (idx) {
+					case CONST.RSSFILTER_NAME: deltaObj["name"] = val; break;
+					case CONST.RSSFILTER_FILTER: deltaObj["filter"] = val; break;
+					case CONST.RSSFILTER_NOT_FILTER: deltaObj["not"] = val; break;
+					case CONST.RSSFILTER_DIRECTORY: deltaObj["savein"] = val; break;
+					case CONST.RSSFILTER_FEED: deltaObj["feed"] = val; break;
+					case CONST.RSSFILTER_QUALITY: deltaObj["quality"] = val; break;
+					case CONST.RSSFILTER_LABEL: deltaObj["label"] = val; break;
+					case CONST.RSSFILTER_POSTPONE_MODE: deltaObj["postpone_mode"] = val; break;
+					case CONST.RSSFILTER_EPISODE_FILTER_STR: deltaObj["episode"] = val; break;
+					case CONST.RSSFILTER_EPISODE_FILTER: deltaObj["episode_enable"] = !!val; break;
+
+					case CONST.RSSFILTER_FLAGS:
+						Object.each({
+							  "orig_name"   : CONST.RSSFILTERFLAG_ORIG_NAME
+							, "prio"        : CONST.RSSFILTERFLAG_HIGH_PRIORITY
+							, "smart_ep"    : CONST.RSSFILTERFLAG_SMART_EP_FILTER
+							, "add_stopped" : CONST.RSSFILTERFLAG_ADD_STOPPED
+						}, function(bit, key) {
+							var cur = val & bit;
+							if (cur !== (valOld & bit)) {
+								deltaObj[key] = !!cur;
+							}
+						}, this);
+					break;
+				}
+			}
+		}, this);
+		newFilter = null;
+
+		this.rssfilterUpdate(deltaObj);
+
+		delete this.rssfilters.EDIT;
+		$("rssfilter_edit_control").hide();
+	},
+
+	"rssfilterEditCancel": function() {
+		this.loadRSSFilter(this.rssfilterId.replace(/^rssfilter_/, ''));
+
+		delete this.rssfilters.EDIT;
+		$("rssfilter_edit_control").hide();
+	},
+
+	"rssfilterQualityText": function(qual) {
+		var qualities = [lang[CONST.DLG_RSSDOWNLOADER_29]];
+		if (qual !== undefined && qual !== CONST.RSSITEMQUALITY_ALL) {
+			qualities = [];
+			g_feedItemQlty.each(function(item) {
+				if (qual & item[1]) {
+					qualities.push(item[0]);
+				}
+			});
+		}
+		return qualities.join(",");
+	},
+
+	"rssfilterToggleQuality": function(qual) {
+		var qualBtn = $("rssfilter_quality");
+		qualBtn.fireEvent("change");
+
+		var qualOld = this.rssfilters.EDIT[CONST.RSSFILTER_QUALITY];
+		if (qualOld === CONST.RSSITEMQUALITY_ALL) {
+			qualOld = CONST.RSSITEMQUALITY_NONE;
+		}
+		qual |= qualOld;
+
+		this.rssfilters.EDIT[CONST.RSSFILTER_QUALITY] = qual;
+		qualBtn.set("value", this.rssfilterQualityText(qual));
+	},
+
+	"rssfilterQualityClick": function(ev) {
+		var qualSelect = (function(qual) {
+			return this.rssfilterToggleQuality.bind(this, qual);
+		}).bind(this);
+
+		// Generate menu items
+		var menuItems = [
+			[CMENU_CHECK, lang[CONST.DLG_RSSDOWNLOADER_29], qualSelect(CONST.RSSITEMQUALITY_ALL)],
+			[CMENU_SEP]
+		];
+
+		for (var i = 1, il = g_feedItemQlty.length; i < il; ++i) {
+			menuItems.push([g_feedItemQlty[i][0], qualSelect(g_feedItemQlty[i][1])]);
+		}
+
+		// Check relevant items
+		var filter = this.rssfilters.EDIT || this.rssfilters[this.rssfilterId.replace(/^rssfilter_/, '')];
+		if (filter) {
+			var quality = filter[CONST.RSSFILTER_QUALITY];
+			if (quality !== CONST.RSSITEMQUALITY_ALL) {
+				menuItems[0].shift();
+				for (var i = 2, il = menuItems.length; i < il; ++i) {
+					if (quality & g_feedItemQlty[i-1][1]) {
+						menuItems[i].unshift(CMENU_CHECK);
+					}
+				}
+			}
+		}
+
+		// Populate and show menu
+		ContextMenu.clear();
+		ContextMenu.add.apply(ContextMenu, menuItems);
+		ContextMenu.show(ev.page);
+	},
+
+	"switchRSSFilter": function(element) {
+		var actId = this.rssfilterId;
+		if ($(actId)) $(actId).removeClass("sel");
+
+		if (element) {
+			element.addClass("sel");
+			actId = element.id;
+		}
+		else {
+			actId = "";
+		}
+
+		if (this.rssfilterId !== actId) {
+			delete this.rssfilters.EDIT;
+			$("rssfilter_edit_control").hide();
+		}
+
+		this.rssfilterId = actId;
+
+		if (!this.rssfilters.EDIT) {
+			this.rssfilters.EDIT = 1; // prevent form element "change" event from firing
+			this.loadRSSFilter(actId.replace(/^rssfilter_/, ''));
+			delete this.rssfilters.EDIT;
+		}
+	},
+
 	"getDirectoryList": function(forceload) {
 
 { // TODO: Remove this once backend support is stable (requires 3.0+)
@@ -1461,11 +2295,12 @@ var utWebUI = {
 
 			// Special case some settings objects whose keys may be dynamically
 			// modified during runtime.
+			cookie.activeRssFeeds = newcookie.activeRssFeeds || this.defConfig.activeRssFeeds || {};
 			cookie.activeTorGroups = newcookie.activeTorGroups || this.defConfig.activeTorGroups || {};
 
 			// Set up pane selections
-			if (cookie.activeSettingsPaneID) {
-				this.stpanes.show(cookie.activeSettingsPaneID.replace(/^tab_/, ''));
+			if (cookie.activeSettingsPane) {
+				this.stpanes.show(cookie.activeSettingsPane.replace(/^tab_/, ''));
 			}
 
 			// Set up listivews
@@ -1489,6 +2324,15 @@ var utWebUI = {
 				, "colOrder": cookie.fileTable.colOrder
 				, "colWidth": cookie.fileTable.colWidth
 			});
+
+			if (!isGuest) {
+				this.rssfdTable.setConfig({
+					  "colSort": [cookie.feedTable.sIndex, cookie.feedTable.reverse]
+					, "colMask": cookie.feedTable.colMask
+					, "colOrder": cookie.feedTable.colOrder
+					, "colWidth": cookie.feedTable.colWidth
+				});
+			}
 
 			this.tableSetMaxRows(cookie.maxRows);
 
@@ -1847,12 +2691,45 @@ var utWebUI = {
 		DialogManager.show("About");
 	},
 
+	"showAddEditRSSFeed": function(feedId) {
+		var feed = this.rssfeeds[feedId] || [];
+		var url = (feed[CONST.RSSFEED_URL] || "").split("|");
+		var use_cust_alias = ![feed[CONST.RSSFEED_USE_FEED_TITLE], true].pick();
+
+		$("aerssfd-id").set("value", feedId);
+		$("aerssfd-url").set("value", [url[1], url[0]].pick());
+		$("aerssfd-custom_alias").set("value", url[0]);
+		$("aerssfd-use_custom_alias").set("checked", use_cust_alias).fireEvent("change");
+
+		if (feed.length <= 0) {
+			$("dlgAddEditRSSFeed-head").set("text", lang[CONST.DLG_RSSDOWNLOADER_32]);
+			$("dlgAddEditRSSFeed-subscription").show();
+
+			$("aerssfd-subscribe_0").set("checked", true).fireEvent("click");
+			$("aerssfd-subscribe_1").set("checked", false);
+			$("aerssfd-smart_ep").set("checked", false);
+		}
+		else {
+			$("dlgAddEditRSSFeed-head").set("text", lang[CONST.DLG_RSSDOWNLOADER_33]);
+			$("dlgAddEditRSSFeed-subscription").hide();
+		}
+
+		DialogManager.show("AddEditRSSFeed");
+
+		$("aerssfd-url").select();
+		$("aerssfd-url").focus();
+	},
+
 	"showAddTorrent": function() {
 		DialogManager.show("Add");
 	},
 
 	"showAddURL": function() {
 		DialogManager.show("AddURL");
+	},
+
+	"showRSSDownloader": function() {
+		DialogManager.show("RSSDownloader");
 	},
 
 	"showSettings": function() {
@@ -1958,6 +2835,7 @@ var utWebUI = {
 			]]
 			, [CMENU_CHILD, lang[CONST.MM_OPTIONS], [
 				  [lang[CONST.MM_OPTIONS_PREFERENCES], this.showSettings.bind(this)]
+				, [lang[CONST.OV_TB_RSSDOWNLDR], this.showRSSDownloader.bind(this)]
 				, [CMENU_SEP]
 				, [lang[CONST.MM_OPTIONS_SHOW_TOOLBAR], this.toggleToolbar.bind(this, undefined)]
 				, [lang[CONST.MM_OPTIONS_SHOW_DETAIL], this.toggleDetPanel.bind(this, undefined)]
@@ -1983,11 +2861,11 @@ var utWebUI = {
 
 		// Process menu items
 		// NOTE: Yeah, very nasty code here.
-		if (this.config.showToolbar) menuItems[1][2][2].unshift(CMENU_CHECK);
-		if (this.config.showDetails) menuItems[1][2][3].unshift(CMENU_CHECK);
-		if (this.config.showStatusBar) menuItems[1][2][4].unshift(CMENU_CHECK);
-		if (this.config.showCategories) menuItems[1][2][5].unshift(CMENU_CHECK);
-		if (this.config.showDetailsIcons) menuItems[1][2][7].unshift(CMENU_CHECK);
+		if (this.config.showToolbar) menuItems[1][2][3].unshift(CMENU_CHECK);
+		if (this.config.showDetails) menuItems[1][2][4].unshift(CMENU_CHECK);
+		if (this.config.showStatusBar) menuItems[1][2][5].unshift(CMENU_CHECK);
+		if (this.config.showCategories) menuItems[1][2][6].unshift(CMENU_CHECK);
+		if (this.config.showDetailsIcons) menuItems[1][2][8].unshift(CMENU_CHECK);
 
 		// Show menu
 		ContextMenu.clear();
@@ -2563,6 +3441,11 @@ var utWebUI = {
 		$("rm").set("html", (d[CONST.TORRENT_ETA] == 0) ? "" : (d[CONST.TORRENT_ETA] <= -1) ? "\u221E" : d[CONST.TORRENT_ETA].toTimeDelta());
 		$("se").set("html", lang[CONST.GN_XCONN].replace(/%d/, d[CONST.TORRENT_SEEDS_CONNECTED]).replace(/%d/, d[CONST.TORRENT_SEEDS_SWARM]).replace(/%d/, "\u00BF?"));
 		$("pe").set("html", lang[CONST.GN_XCONN].replace(/%d/, d[CONST.TORRENT_PEERS_CONNECTED]).replace(/%d/, d[CONST.TORRENT_PEERS_SWARM]).replace(/%d/, "\u00BF?"));
+	},
+
+	"addRSSFeedItem": function(feedId, itemId) {
+		var item = this.getRSSFeedItem(feedId, itemId);
+		if (item) this.addURL({url: item[CONST.RSSITEM_URL]});
 	},
 
 	"addURL": function(param, fn) {
@@ -3261,7 +4144,6 @@ var utWebUI = {
 
 	"restoreUI": function(bc) {
 		if ((bc != false) && !confirm("Are you sure that you want to restore the interface?")) return;
-		//$("stg").hide();
 		this.showMsg('Reloading WebUI...');
 		window.removeEvents("unload");
 		this.config = {};
@@ -3501,6 +4383,7 @@ var utWebUI = {
 		this.prsTable.setConfig({"rowMaxCount": max || virtRows, "rowMode": mode});
 		this.flsTable.setConfig({"rowMaxCount": max || virtRows, "rowMode": mode});
 		if (!isGuest) {
+			this.rssfdTable.setConfig({"rowMaxCount": max || virtRows, "rowMode": mode});
 			this.advOptTable.setConfig({"rowMaxCount": max || virtRows, "rowMode": mode});
 		}
 	},
@@ -3510,6 +4393,7 @@ var utWebUI = {
 		this.prsTable.setConfig({"rowAlternate": enable});
 		this.flsTable.setConfig({"rowAlternate": enable});
 		if (!isGuest) {
+			this.rssfdTable.setConfig({"rowAlternate": enable});
 			this.advOptTable.setConfig({"rowAlternate": enable});
 		}
 	},
@@ -3552,6 +4436,28 @@ var utWebUI = {
 		this.showDetails(this.torrentID);
 	},
 
+	"rssDownloaderShow": function(tabChange) {
+		this.loadRSSFeedList();
+		this.loadRSSFilterList();
+
+		if (tabChange) {
+			this.rssDownloaderTabs.onChange();
+		}
+	},
+
+	"rssDownloaderTabChange": function(id) {
+		switch (id) {
+			case "dlgRSSDownloader-feedsTab":
+				this.rssfdTable.calcSize();
+				this.rssfdTable.restoreScroll();
+				this.rssfdTable.resizePads();
+			break;
+
+			case "dlgRSSDownloader-filtersTab":
+			break;
+		}
+	},
+
 	"settingsPaneChange": function(id) {
 		switch (id) {
 			case "dlgSettings-TransferCap":
@@ -3566,8 +4472,217 @@ var utWebUI = {
 		}
 
 		if (this.config) {
-			this.config.activeSettingsPaneID = id;
+			this.config.activeSettingsPane = id;
 		}
+	},
+
+	"fdFormatRow": function(values, index) {
+		var useidx = $chk(index);
+		var len = (useidx ? (index + 1) : values.length);
+
+		for (var i = (index || 0); i < len; i++) {
+			switch (this.fdColDefs[i][0]) {
+				case "fullname":
+				case "name":
+				case "url":
+				break;
+
+				case "date":
+					values[i] = new Date(values[i]).toISOString();
+				break;
+
+				case "codec":
+// RSSTODO: Implement
+				break;
+
+				case "episode":
+					var season = Math.floor(values[i] / 100000000);
+					var episode = values[i] % 10000;
+					var episodeTo = Math.floor((values[i] % 100000000) / 10000);
+
+					values[i] = (
+						(season > 0 ? season + "x" : "") +
+						(episode > 0
+							? episode.pad(2) + (episodeTo > episode
+								? "-" + episodeTo.pad(2)
+								: ""
+							)
+							: ""
+						)
+					);
+				break;
+
+				case "feed":
+					var feed = this.rssfeeds[values[i]];
+
+					values[i] = (feed
+						? feed[CONST.RSSFEED_URL].split("|")[0]
+						: ""
+					);
+				break;
+
+				case "format":
+// RSSTODO: Implement
+				break;
+			}
+		}
+
+		if (useidx)
+			return values[index];
+		else
+			return values;
+	},
+
+	"fdDataToRow": function(data) {
+		return this.fdColDefs.map(function(item) {
+			switch (item[0]) {
+				case "fullname":
+					return data[CONST.RSSITEM_NAME_FULL];
+
+				case "name":
+					return data[CONST.RSSITEM_NAME];
+
+				case "episode":
+					return (
+						(data[CONST.RSSITEM_SEASON] || 0) * 100000000 +
+						(data[CONST.RSSITEM_EPISODE_TO] || 0) * 10000 +
+						(data[CONST.RSSITEM_EPISODE] || 0)
+					);
+
+				case "format":
+					return data[CONST.RSSITEM_QUALITY];
+
+				case "codec":
+					return data[CONST.RSSITEM_CODEC];
+
+				case "date":
+					return data[CONST.RSSITEM_TIMESTAMP];
+
+				case "feed":
+					return data[CONST.RSSITEM_FEED_ID];
+
+				case "url":
+					return data[CONST.RSSITEM_URL];
+			}
+		}, this);
+	},
+
+	"fdColReset": function() {
+		var config = {
+			  "colMask": 0
+			, "colOrder": this.fdColDefs.map(function(item, idx) { return idx; })
+			, "colWidth": this.fdColDefs.map(function(item, idx) { return item[1]; })
+		};
+
+		this.fdColDefs.each(function(item, idx) { if (!!item[3]) config.colMask |= (1 << idx); });
+
+		this.rssfdTable.setConfig(config);
+		Object.append(this.config.feedTable, config);
+		if (Browser.opera)
+			this.saveConfig(true);
+	},
+
+	"fdColResize": function() {
+		this.config.feedTable.colWidth = this.rssfdTable.getColumnWidths();
+		if (Browser.opera)
+			this.saveConfig(true);
+	},
+
+	"fdColMove": function() {
+		this.config.feedTable.colOrder = this.rssfdTable.colOrder;
+		this.config.feedTable.sIndex = this.rssfdTable.sIndex;
+		if (Browser.opera)
+			this.saveConfig(true);
+	},
+
+	"fdColToggle": function(index, enable, nosave) {
+		var num = 1 << index;
+		if (enable) {
+			this.config.feedTable.colMask |= num;
+		} else {
+			this.config.feedTable.colMask &= ~num;
+		}
+		if (!nosave && Browser.opera)
+			this.saveConfig(true);
+	},
+
+	"fdSort": function(index, reverse) {
+		this.config.feedTable.sIndex = index;
+		this.config.feedTable.reverse = reverse;
+		if (Browser.opera)
+			this.saveConfig(true);
+	},
+
+	"fdSelect": function(ev, id) {
+		if (ev.isRightClick() && this.rssfdTable.selectedRows.length > 0)
+			this.showFeedMenu.delay(0, this, ev);
+	},
+
+	"showFeedMenu": function(ev) {
+		if (isGuest || !ev.isRightClick()) return;
+
+		var feedItemIds = this.getSelFeedItemIds();
+		if (feedItemIds.length <= 0) return;
+
+		var menuItems = [
+			  [lang[CONST.DLG_RSSDOWNLOADER_24], (function(feedItemIds) { // RSSTODO: Move this elsewhere
+				feedItemIds.each(function(id) {
+					this.addRSSFeedItem(id[0], id[1]);
+				}, this);
+			}).bind(this, feedItemIds)]
+			, [lang[CONST.DLG_RSSDOWNLOADER_25], (function(feedItemIds) { // RSSTODO: Move this elsewhere
+				feedItemIds.each(function(id) {
+					var item = this.getRSSFeedItem(id[0], id[1]);
+					if (item) openURL(item[CONST.RSSITEM_URL]);
+				}, this);
+			}).bind(this, feedItemIds)]
+			, [CMENU_SEP]
+			, [lang[CONST.DLG_RSSDOWNLOADER_26], (function(feedItemIds) {
+				feedItemIds.each(function(id) { // RSSTODO: Move this elsewhere
+					var item = this.getRSSFeedItem(id[0], id[1]);
+					if (item) {
+						this.rssfilterUpdate({
+							  "id": -1
+							, "name": item[CONST.RSSITEM_NAME]
+							, "filter": item[CONST.RSSITEM_NAME]
+							, "feed": item[CONST.RSSITEM_FEED_ID]
+						});
+					}
+				}, this);
+			}).bind(this, feedItemIds)]
+		];
+
+		//--------------------------------------------------
+		// Draw Menu
+		//--------------------------------------------------
+
+		ContextMenu.clear();
+		ContextMenu.add.apply(ContextMenu, menuItems);
+		ContextMenu.show(ev.page);
+	},
+
+	"getRSSFeedItem": function(feedId, itemId) {
+		return ((this.rssfeeds[feedId] || {})[CONST.RSSFEED_ITEMS] || [])[itemId];
+	},
+
+	"getSelFeedItemIds": function() {
+		var ids = [];
+
+		var len = this.rssfdTable.selectedRows.length;
+		while (len--) {
+			var rowId = this.rssfdTable.selectedRows[len];
+			var feedItemId = rowId.match(/.*?([0-9]+)_([0-9]+)$/).slice(1);
+			ids.push(feedItemId);
+		}
+
+		return ids;
+	},
+
+	"fdDblClk": function(id) {
+		if (this.rssfdTable.selectedRows.length != 1) return;
+
+		var split = id.split("_");
+		this.addRSSFeedItem(split[0], split[1]);
 	}
 
 }
