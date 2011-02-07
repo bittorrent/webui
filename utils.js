@@ -1,6 +1,7 @@
-/**
- * @author Directrix
- */
+/*
+Copyright 2007 BitTorrent, Inc. All rights reserved.
+Copyright 2008 Carsten Niebuhr
+*/
 
 (function() {
 	// NOTE: Performance hack, since MooTools $ seems to run very slowly

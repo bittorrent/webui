@@ -1,7 +1,7 @@
-/**
- * Copyright 2007 BitTorrent, Inc. All rights reserved.
- * Copyright 2008 Carsten Niebuhr
- */
+/*
+Copyright 2007 BitTorrent, Inc. All rights reserved.
+Copyright 2008 Carsten Niebuhr
+*/
 
 var g_winTitle = "\u00B5Torrent WebUI v" + CONST.VERSION;
 
@@ -355,7 +355,7 @@ function resizeUI(hDiv, vDiv) {
 	if (showDet) {
 		var dw = ww - (showCat && tallCat ? hDiv + 5 : 0);
 		if (vDiv) {
-			var dh = wh - vDiv - $("mainInfoPane-tabs").getSize().y - (showSB ? 1 : 0) - 17;
+			var dh = wh - vDiv - $("mainInfoPane-tabs").getSize().y - (showSB ? 1 : 0) - 14;
 			$("mainInfoPane-content").setStyles({"width": dw - 8, "height": dh});
 			$("mainInfoPane-generalTab").setStyles({"width": dw - 10, "height": dh - 2});
 			SpeedGraph.resize(dw - 8, dh);
@@ -1068,7 +1068,7 @@ function setupUserInterface() {
 	$("dlgSettings-advFalse").addEvent("click", utWebUI.advOptChanged.bind(utWebUI));
 
 	var advSize = $("dlgSettings-Advanced").getDimensions({computeSize: true});
-	utWebUI.advOptTable.resizeTo(advSize.x - 15, advSize.y - 60);
+	utWebUI.advOptTable.resizeTo(advSize.x - 15, advSize.y - 70);
 
 	// -- Linked Controls
 

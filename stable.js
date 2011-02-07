@@ -1,23 +1,21 @@
 /*
-
-	Copyright Emil A Eklund - Column List Widget 1.03
-			 (http://webfx.eae.net/dhtml/collist/columnlist.html)
-	Copyright Erik Arvidsson - Sortable Table 1.12
-			 (http://webfx.eae.net/dhtml/sortabletable/sortabletable.html)
-	Copyright 2007, 2008 Carsten Niebuhr
+Copyright Emil A Eklund - Column List Widget 1.03
+  (http://webfx.eae.net/dhtml/collist/columnlist.html)
+Copyright Erik Arvidsson - Sortable Table 1.12
+  (http://webfx.eae.net/dhtml/sortabletable/sortabletable.html)
+Copyright 2007, 2008 Carsten Niebuhr
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-   http://www.apache.org/licenses/LICENSE-2.0
+  http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
-
 */
 
 var TYPE_STRING = 0;
@@ -103,7 +101,6 @@ var dxSTable = new Class({
 	"curPage": 0,
 	"pageCount": 0,
 	"rowCache": [],
-	"rowCover" : null,
 	"rowModel" : null,
 	"resetText": null,
 
@@ -160,7 +157,6 @@ var dxSTable = new Class({
 		var nDrag = new Drag(tr, {
 			"modifiers" : {"x": "left", "y": false},
 			"snap" : 1,
-			"onBeforeStart" : function() { if ($me.hotCell >= 0) { $me.rowCover.show(); } },
 			"onStart" : function(){ ColumnHandler.start($me, this); },
 			"onDrag" : function(){ ColumnHandler.drag($me, this); },
 			"onComplete" : function(){ ColumnHandler.end($me, this); },
@@ -168,32 +164,31 @@ var dxSTable = new Class({
 			"onCancel" : function(_, ev) {
 				this.detach();
 				$me.cancelSort = false;
-				$me.rowCover.hide();
-				if (!ev.isRightClick())
+				if (!ev.isRightClick()) {
+					if (this.element.tagName !== "TD")
+						this.element = this.element.getParent("td");
+
 					$me.sort(this.element, ev.shift, true);
+				}
 			}
 		}).detach();
 		tr.addEvents({
 			"mousemove": function(ev) {
 				var ele = ev.target;
-				if (!ele) return;
-				var tag = ele.get("tag");
-				if (tag == "span") {
-					ele = ele.getParent();
-					tag = "td";
-				}
-				if (tag == "td")
+				if (!ele || ele.tagName === "TR") return;
+				if (ele.tagName !== "TD")
+					ele = ele.getParent("td");
+
+				if (ele.tagName === "TD")
 					ColumnHandler.check.apply($me, [ev, ele]);
 			},
 			"mousedown": function(ev) {
 				var ele = ev.target;
-				if (!ele) return;
-				var tag = ele.get("tag");
-				if (tag == "span") {
-					ele = ele.getParent();
-					tag = "td";
-				}
-				if (tag == "td") {
+				if (!ele || ele.tagName === "TR") return;
+				if (ele.tagName !== "TD")
+					ele = ele.getParent("td");
+
+				if (ele.tagName === "TD") {
 					nDrag.element = nDrag.handles = ele;
 					nDrag.attach().start(ev);
 				}
@@ -203,9 +198,10 @@ var dxSTable = new Class({
 		var len = this.cols;
 		this.rowModel = simpleClone(TR, false);
 
-		for (var i = 0, j = 0; i < len; i++) {
+		for (var i = 0; i < len; i++) {
 			this.colOrder[i] = (typeOf(this.colOrder[i]) == 'number') ? this.colOrder[i].limit(0, len - 1) : i;
 			this.colData[i] = this.colHeader[this.colOrder[i]];
+
 			this.rowModel.grab(simpleClone(TD, false)
 				.addClass(this.id + "-col-" + this.colOrder[i])
 				.setStyle(
@@ -213,17 +209,16 @@ var dxSTable = new Class({
 					badIE ? (this.colData[i].disabled ? "hidden" : "visible") : (this.colData[i].disabled ? "none" : "")
 				)
 			);
+
 			td = simpleClone(TD, false)
-				.grab(new Element("span", {"id": this.id + "-head-" + this.colData[i].id, "text": this.colData[i].text}))
+				.grab(new Element("div", {"id": this.id + "-head-" + this.colData[i].id, "text": this.colData[i].text}))
 				.setStyles({"width": this.colHeader[i].width, "display": this.colData[i].disabled ? "none" : ""})
 				.store("index", i)
 				.inject(tr);
+
 			this.tHeadCols[i] = td;
-			j++;
 		}
 		this.tb.head.grab(tr);
-
-		this.rowCover = new Element("div.rowcover").inject(this.dHead);
 
 		this.dPad = simpleClone(DIV, false).addClass("stable-pad").inject(this.dBody);
 
@@ -486,29 +481,29 @@ var dxSTable = new Class({
 		if (!this.isValidCol(iCol)) return;
 
 		var badIE = (Browser.ie && Browser.version <= 7);
-		this.colData[iCol].width = iWidth;
-
-		var safetyX = (this.tb.body.childNodes[0].childNodes[iCol].hasClass("stable-icon") ? 30 : 10);
+		var minX = 32;//(this.tb.body.childNodes[0].childNodes[iCol].hasClass("stable-icon") ? 32 : 16);
 
 		// Set column header width
-		var offset = this.tHeadCols[iCol].getDimensions().x - this.tHeadCols[iCol].getStyle("width").toInt();
-		if (iWidth - safetyX < offset)
-			iWidth = offset + safetyX + 5;
+		var colHead = this.tHeadCols[iCol];
+		var offset = (colHead.offsetWidth - parseInt(colHead.style.width, 10)).max(0);
 
-		this.tHeadCols[iCol].setStyle("width", iWidth - offset).setProperty("width", iWidth - offset);
+		if (iWidth < minX) {
+			iWidth = minX;
+		}
+
+		colHead.setStyle("width", (iWidth - offset).max(0));
 
 		// Set column body width
-		if (badIE)
-			iWidth -= safetyX; // substract the left & right padding
-
-		this.tBodyCols[iCol].setStyle("width", iWidth).setProperty("width", iWidth);
+		this.tBodyCols[iCol].setStyle("width", iWidth - (badIE ? 10 : 0));
 
 		// Set column header row width
-		iWidth = this.tHead.getWidth();
 		if (Browser.chrome || Browser.safari)
-			this.tBody.setStyle("width", iWidth);
+			this.tBody.setStyle("width", this.tHead.getWidth());
 		else
-			this.tb.body.setStyle("width", iWidth);
+			this.tb.body.setStyle("width", this.tHead.getWidth());
+
+		// Store width
+		this.colData[iCol].width = iWidth;
 	},
 
 	"setConfig": function(options) {
@@ -552,13 +547,18 @@ var dxSTable = new Class({
 		val = options.colText; // { colID : colText, ... }
 		if (typeOf(val) === 'object') {
 			this.outOfDOM((function() {
-				var ind;
+				var ind, div, span;
 				var thc = this.dHead.getElement("tr").childNodes;
 				$each(val, function(v, k) {
 					ind = colHdrIdx[k];
 					if ($chk(colHdr[ind])) {
+						div = thc[this.colOrder[ind]].getElement("div");
+						span = div.getElement("span");
+						if (span) span.dispose();
+						div.set("html", v);
+						if (span) div.grab(span);
+
 						colHdr[ind].text = v;
-						thc[this.colOrder[ind]].set("text", v);
 					}
 				}, this);
 			}).bind(this));
@@ -595,8 +595,8 @@ var dxSTable = new Class({
 		// -- Column Order
 		val = options.colOrder; // [ colMIdx, colNIdx, ... ]
 		if (typeOf(val) === 'array') {
-			this.outOfDOM((function() {
-				if (val.length == this.cols) {
+			if (val.length == this.cols) {
+				this.outOfDOM((function() {
 					var orderOK = true, orderT = Array.clone(val).sort(function(a, b) { return (a-b); });
 					for (var i = 0, l = orderT.length; i < l; ++i) {
 						if (i != orderT[i]) {
@@ -612,20 +612,8 @@ var dxSTable = new Class({
 							}
 						}, this);
 					}
-				}
-			}).bind(this));
-		}
-
-		// -- Column Width
-		val = options.colWidth; // [ col1Width, col2Width, ... ]
-		if (typeOf(val) === 'array') {
-			this.outOfDOM((function() {
-				if (val.length == this.cols) {
-					$each(val, function(v, k) {
-						this.setColumnWidth(this.colOrder[k], v);
-					}, this);
-				}
-			}).bind(this));
+				}).bind(this));
+			}
 		}
 
 		// -- Column Sort
@@ -635,6 +623,18 @@ var dxSTable = new Class({
 				if ($chk(val[1])) this.options.reverse = !!val[1];
 				this.sort(val[0]);
 			}).bind(this));
+		}
+
+		// -- Column Width
+		val = options.colWidth; // [ col1Width, col2Width, ... ]
+		if (typeOf(val) === 'array') {
+			if (val.length == this.cols) {
+				this.outOfDOM((function() {
+					$each(val, function(v, k) {
+						this.setColumnWidth(this.colOrder[k], v);
+					}, this);
+				}).bind(this));
+			}
 		}
 
 		//--------------------------------------------------
@@ -751,10 +751,14 @@ var dxSTable = new Class({
 			simpleReverse = false;
 			this.getCache(ind);
 			if (this.isValidCol(this.sIndex))
-				this.tHeadCols[this.colOrder[this.sIndex]].setStyle("backgroundPosition", "right -32px");
+				this.tHeadCols[this.colOrder[this.sIndex]].removeClass("sorted").getElements("span").destroy();
 		}
 
-		col.setStyle("backgroundPosition", "right " + ((this.options.reverse) ? "0px" : "-16px"));
+		col.getElements("span").destroy();
+		col.addClass("sorted").getElement("div").grab(
+			new Element("span." + ((this.options.reverse) ? "desc" : "asc"))
+		);
+		this.calcSize();
 
 		this.sIndex = ind;
 		if (!simpleReverse) {
@@ -957,7 +961,6 @@ var dxSTable = new Class({
 		if (this.isScrolling) return;
 		this.updatePageMenu();
 		this.dHead.setStyle("width", this.dBody.clientWidth);
-		this.rowCover.setStyle("width", this.dBody.clientWidth);
 		//if (this.options.mode == MODE_VIRTUAL)
 		//	this.resizePads();
 	},
@@ -1174,7 +1177,16 @@ var dxSTable = new Class({
 				break;
 
 				default:
-					rowc[v].set("text", data[k]);
+					if (colh[k].icon) {
+						rowc[v].set("html", "").grab(
+							simpleClone(DIV, false).grab(
+								simpleClone(SPAN, false).set("class", "icon")
+							).appendText(data[k])
+						);
+					}
+					else {
+						rowc[v].set("text", data[k]);
+					}
 			}
 		});
 	},
@@ -1261,7 +1273,6 @@ var dxSTable = new Class({
 	},
 
 	"calcSize": function() {
-		var badIE = (Browser.ie && Browser.version <= 7);
 		var showIB = (this.options.refreshable || this.options.mode == MODE_PAGE);
 		if (showIB) {
 			this.infoBar.show();
@@ -1270,21 +1281,18 @@ var dxSTable = new Class({
 			this.infoBar.hide();
 		}
 		this.dBody.setStyles({
-			"height": (this.dCont.clientHeight - this.dHead.offsetHeight - (showIB ? 26 : 0)).max(52),
+			"height": (this.dCont.clientHeight - this.dHead.offsetHeight - (showIB ? this.infoBar.offsetHeight : 0)).max(52),
 			"width": (this.dCont.offsetWidth - 2).max(0)
 		});
 		this.dHead.setStyle("width", (this.dCont.offsetWidth + (((this.dBody.offsetWidth - this.dBody.clientWidth) == 0) ? -4 : -1)).max(0));
 		if (!this.isResizing) {
 			for (var i = 0, j = this.cols; i < j; i++) {
 				if (this.colData[i].disabled) continue;
-				var w = 0;
-				// padding width + border width = 19
-				if (badIE) {
-					w = this.tBodyCols[i].offsetWidth - 19;
-				} else {
-					w = parseInt(this.tBodyCols[i].width, 10) - ((Browser.chrome || Browser.safari) ? 0 : 19);
-				}
-				this.tHeadCols[i].setStyle("width", w.max(14));
+
+				var offset = (this.tHeadCols[i].offsetWidth - parseInt(this.tHeadCols[i].style.width, 10)).max(0);
+				this.tHeadCols[i].setStyle("width", (
+					this.colData[i].width - ((Browser.chrome || Browser.safari) ? 0 : offset)
+				).max(offset))
 			}
 		}
 		if (Browser.chrome || Browser.safari)
@@ -1363,7 +1371,16 @@ var dxSTable = new Class({
 			);
 		}
 		else {
-			cell.set("text", fval);
+			if (this.colHeader[col].icon) {
+				cell.set("html", "").grab(
+					simpleClone(DIV, false).grab(
+						simpleClone(SPAN, false).set("class", "icon")
+					).appendText(fval)
+				);
+			}
+			else {
+				cell.set("text", fval);
+			}
 		}
 		return hasSortedChanged;
 	},
@@ -1663,10 +1680,10 @@ var ColumnHandler = {
 			drag.value.now.x = left;
 			drag.mouse.pos.x = drag.mouse.start.x - left;
 			st.colDragObj.set("html", drag.element.get("text")).setStyles({
-				"visibility": "visible",
-				"left": left,
-				"width": drag.element.getStyle("width").toInt() - ((Browser.chrome || Browser.safari) ? 19 : 0),
-				"textAlign": drag.element.getStyle("textAlign")
+				  "visibility": "visible"
+				, "left": left
+				, "width": drag.element.getStyle("width").toInt() - ((Browser.firefox || Browser.ie) ? 0 : 18) // TODO: Fix up hardcoding!
+				, "textAlign": drag.element.getStyle("textAlign")
 			});
 
 			st.colDragEle = drag.element;
@@ -1679,10 +1696,12 @@ var ColumnHandler = {
 
 	"drag": function(st, drag) {
 		if (st.cancelMove) { // resizing
-			var w = drag.value.now.x - st.resizeCol.left + st.resizeCol.width;
-			drag.limit.x[0] = st.tHeadCols[st.hotCell].getPosition(st.dCont).x + st.dBody.getScrollLeft();
-			st.tHeadCols[st.hotCell].setStyle("width", w.max(14));
-			st.setColumnWidth(st.hotCell, st.tHeadCols[st.hotCell].getWidth());
+			var colHead = st.tHeadCols[st.hotCell];
+			var w = drag.value.now.x - st.resizeCol.left + st.resizeCol.width + ((Browser.ie || Browser.firefox) ? colHead.offsetWidth - parseInt(colHead.style.width, 10) : 0);
+			drag.limit.x[0] = colHead.getPosition(st.dCont).x + st.dBody.getScrollLeft();
+//			colHead.setStyle("width", w.max(14));
+//			st.setColumnWidth(st.hotCell, colHead.getWidth());
+			st.setColumnWidth(st.hotCell, w);
 			$(document.body).setStyle("cursor", "e-resize");
 		} else { // reordering
 			var i = 0, x = drag.mouse.now.x;
@@ -1708,7 +1727,6 @@ var ColumnHandler = {
 //			st.setColumnWidth(st.hotCell, st.tHeadCols[st.hotCell].getWidth());
 			st.fireEvent("onColResize");
 			document.body.setStyle("cursor", "default");
-			st.rowCover.hide();
 			drag.options.limit = false;
 		} else { // reordering
 			st.colDragObj.setStyles({"left": 0, "width": 0, "visibility": "hidden"});

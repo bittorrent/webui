@@ -1,7 +1,7 @@
-/**
- * Copyright 2007 BitTorrent, Inc. All rights reserved.
- * Copyright 2008 Carsten Niebuhr
- */
+/*
+Copyright 2007 BitTorrent, Inc. All rights reserved.
+Copyright 2008 Carsten Niebuhr
+*/
 
 var LANGUAGES = {
 	  "ar"   : "Arabic"

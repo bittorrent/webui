@@ -1,17 +1,15 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <!--
-/**
- * Copyright 2007 BitTorrent, Inc. All rights reserved.
- * Copyright 2008 Carsten Niebuhr
- */
+Copyright 2007 BitTorrent, Inc. All rights reserved.
+Copyright 2008 Carsten Niebuhr
 -->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<title></title>
 		<link href="./images/ut_small.png" rel="icon" type="image/png" />
-		<style type="text/css">@import "./stable.css";</style>
-		<style type="text/css">@import "./main.css";</style>
+		<link href="./main.css" rel="stylesheet" type="text/css" />
+		<link href="./stable.css" rel="stylesheet" type="text/css" />
 		<!--[if IE]>
 		<script type="text/javascript" src="./ie.js"></script>
 		<script type="text/javascript" src="./excanvas.js"></script>
@@ -67,8 +65,8 @@
 						<label for="dlgAdd-file">Torrent file:</label>
 					</div>
 
-					<fieldset>
-						<legend>Options</legend><!-- TODO: Localize -->
+					<fieldset><!-- TODO: Localize -->
+						<legend>Options</legend>
 						<div class="line-cont">
 							<select id="dlgAdd-basePath" class="tbox flr">
 								<option value="0">Default download directory</option>
@@ -104,8 +102,8 @@
 						<label for="dlgAddURL-cookie">Cookies:</label>
 					</div>
 
-					<fieldset>
-						<legend>Options</legend><!-- TODO: Localize -->
+					<fieldset><!-- TODO: Localize -->
+						<legend>Options</legend>
 						<div class="line-cont">
 							<select id="dlgAddURL-basePath" class="tbox flr">
 								<option value="0">Default download directory</option>
@@ -134,7 +132,7 @@
 				<div class="dlg-body">
 					<fieldset>
 						<legend id="DLG_TORRENTPROP_1_GEN_01"></legend>
-						<textarea id="prop-trackers" rows="" cols="" wrap="off" class="wide"></textarea>
+						<div class="textarea_wrap"><textarea id="prop-trackers" rows="" cols="" wrap="off" class="wide"></textarea></div>
 					</fieldset>
 
 					<fieldset>
@@ -256,7 +254,7 @@
 					<div id="dlgRSSDownloader-feedsTab">
 						<div id="dlgRSSDownloader-feedsMenu"><div class="fll">
 							<ul id="dlgRSSDownloader-feeds">
-								<li id="rssfeed_all"><span id="DLG_RSSDOWNLOADER_03"></span></li>
+								<li id="rssfeed_all"><span class="icon"></span> <span id="DLG_RSSDOWNLOADER_03"></span></li>
 							</ul>
 						</div></div>
 
@@ -479,7 +477,7 @@
 									<label for="always_show_add_dialog" id="DLG_SETTINGS_3_PATHS_03"></label>
 								</div>
 							</div>
-							<div class="line-cont indent"><input type="text" id="dir_active_download" class="tbox" /></div>
+							<div class="line-cont indent"><input type="text" id="dir_active_download" class="tbox wide" /></div>
 							<div class="line-cont">
 								<div class="fll">
 									<input type="checkbox" id="dir_completed_download_flag" />
@@ -490,7 +488,7 @@
 									<label for="dir_add_label" id="DLG_SETTINGS_3_PATHS_07"></label>
 								</div>
 							</div>
-							<div class="line-cont indent"><input type="text" id="dir_completed_download" class="tbox" /></div>
+							<div class="line-cont indent"><input type="text" id="dir_completed_download" class="tbox wide" /></div>
 							<div class="line-cont indent">
 								<input type="checkbox" id="move_if_defdir" />
 								<label for="move_if_defdir" id="DLG_SETTINGS_3_PATHS_10"></label>
@@ -503,12 +501,12 @@
 								<input type="checkbox" id="dir_torrent_files_flag" />
 								<label for="dir_torrent_files_flag" id="DLG_SETTINGS_3_PATHS_12"></label>
 							</div>
-							<div class="line-cont indent"><input type="text" id="dir_torrent_files" class="tbox" /></div>
+							<div class="line-cont indent"><input type="text" id="dir_torrent_files" class="tbox wide" /></div>
 							<div class="line-cont">
 								<input type="checkbox" id="dir_completed_torrents_flag" />
 								<label for="dir_completed_torrents_flag" id="DLG_SETTINGS_3_PATHS_15"></label>
 							</div>
-							<div class="line-cont indent"><input type="text" id="dir_completed_torrents" class="tbox" /></div>
+							<div class="line-cont indent"><input type="text" id="dir_completed_torrents" class="tbox wide" /></div>
 							<div class="line-cont">
 								<div class="fll">
 									<input type="checkbox" id="dir_autoload_flag" />
@@ -519,7 +517,7 @@
 									<label for="dir_autoload_delete" id="DLG_SETTINGS_3_PATHS_19"></label>
 								</div>
 							</div>
-							<div class="line-cont indent"><input type="text" id="dir_autoload" class="tbox" /></div>
+							<div class="line-cont indent"><input type="text" id="dir_autoload" class="tbox wide" /></div>
 						</fieldset>
 					</div>
 
@@ -742,11 +740,9 @@
 								<label for="multi_day_transfer_mode" id="DLG_SETTINGS_7_TRANSFERCAP_03"></label>
 							</div>
 							<div class="line-cont">
-								<div class="fll">
-									<select id="multi_day_transfer_limit_unit" class="flr"><option>-----</option></select>
-									<label for="multi_day_transfer_limit_value" id="DLG_SETTINGS_7_TRANSFERCAP_04"></label>
-								</div>
+								<select id="multi_day_transfer_limit_unit" class="flr"><option>-----</option></select>
 								<input type="text" id="multi_day_transfer_limit_value" class="tbox num flr" />
+								<label for="multi_day_transfer_limit_value" id="DLG_SETTINGS_7_TRANSFERCAP_04"></label>
 							</div>
 							<div class="line-cont">
 								<select id="multi_day_transfer_limit_span" class="flr"><option>-----</option></select>
@@ -871,11 +867,11 @@
 						<fieldset>
 							<legend id="DLG_SETTINGS_9_WEBUI_02"></legend>
 							<div class="line-cont">
-								<div class="fll">
+								<div class="half fll">
 									<label for="webui.username" id="DLG_SETTINGS_9_WEBUI_03"></label>
 									<input type="text" id="webui.username" class="tbox str" />
 								</div>
-								<div class="flr">
+								<div class="half flr">
 									<label for="webui.password" id="DLG_SETTINGS_9_WEBUI_05"></label>
 									<input type="password" id="webui.password" class="tbox str" />
 								</div>
@@ -908,8 +904,8 @@
 							</div>
 						</fieldset>
 
-						<fieldset>
-							<legend>User Interface</legend><!-- TODO: Localize -->
+						<fieldset><!-- TODO: Localize -->
+							<legend>User Interface</legend>
 							<div class="half fll">
 								<div class="line-cont">
 									<input type="checkbox" id="webui.showToolbar" checked="checked" />
@@ -945,7 +941,7 @@
 						<fieldset>
 							<legend id="DLG_SETTINGS_A_ADVANCED_01"></legend>
 							<div id="dlgSettings-advOptList"></div>
-							<div class="line-cont tall">
+							<div id="dlgSettings-advOptInput">
 								<label id="DLG_SETTINGS_A_ADVANCED_02"></label>
 								<span id="dlgSettings-advBool-cont">
 									<span>
@@ -958,7 +954,7 @@
 									</span>
 								</span>
 								<span id="dlgSettings-advText-cont">
-									<input type="text" id="dlgSettings-advText" class="tbox" />
+									<span id="dlgSettings-advText-wrap"><input type="text" id="dlgSettings-advText" class="tbox" /></span>
 									<input type="button" id="DLG_SETTINGS_A_ADVANCED_05" class="btn" />
 								</span>
 							</div>
@@ -984,12 +980,12 @@
 
 						<fieldset>
 							<legend id="DLG_SETTINGS_B_ADV_UI_07"></legend>
-							<div class="line-cont"><input type="text" id="gui.persistent_labels" class="tbox wide" /></div>
+							<input type="text" id="gui.persistent_labels" class="tbox wide" />
 						</fieldset>
 
 						<fieldset>
 							<legend id="DLG_SETTINGS_B_ADV_UI_08"></legend>
-							<textarea id="search_list" rows="" cols="" wrap="off" class="wide"></textarea>
+							<div class="textarea_wrap"><textarea id="search_list" rows="" cols="" wrap="off" class="wide"></textarea></div>
 						</fieldset>
 					</div>
 
@@ -1110,17 +1106,17 @@
 		<!-- /* Category/Label List -->
 		<div id="mainCatList"><div class="fll">
 			<ul id="mainCatList-categories">
-				<li id="cat_all"><span id="OV_CAT_ALL"></span> (<span id="cat_all_c">0</span>)</li>
-				<li id="cat_dls"><span id="OV_CAT_DL"></span> (<span id="cat_dls_c">0</span>)</li>
-				<li id="cat_com"><span id="OV_CAT_COMPL"></span> (<span id="cat_com_c">0</span>)</li>
-				<li id="cat_act"><span id="OV_CAT_ACTIVE"></span> (<span id="cat_act_c">0</span>)</li>
-				<li id="cat_iac"><span id="OV_CAT_INACTIVE"></span> (<span id="cat_iac_c">0</span>)</li>
+				<li id="cat_all"><span class="icon"></span> <span id="OV_CAT_ALL"></span>&nbsp;(<span id="cat_all_c">0</span>)</li>
+				<li id="cat_dls"><span class="icon"></span> <span id="OV_CAT_DL"></span>&nbsp;(<span id="cat_dls_c">0</span>)</li>
+				<li id="cat_com"><span class="icon"></span> <span id="OV_CAT_COMPL"></span>&nbsp;(<span id="cat_com_c">0</span>)</li>
+				<li id="cat_act"><span class="icon"></span> <span id="OV_CAT_ACTIVE"></span>&nbsp;(<span id="cat_act_c">0</span>)</li>
+				<li id="cat_iac"><span class="icon"></span> <span id="OV_CAT_INACTIVE"></span>&nbsp;(<span id="cat_iac_c">0</span>)</li>
 			</ul>
 
 			<hr />
 
 			<ul id="mainCatList-labels">
-				<li id="cat_nlb"><span id="OV_CAT_NOLABEL"></span> (<span id="cat_nlb_c">0</span>)</li>
+				<li id="cat_nlb"><span id="OV_CAT_NOLABEL"></span>&nbsp;(<span id="cat_nlb_c">0</span>)</li>
 			</ul>
 		</div></div>
 		<!-- Category/Label List */ -->

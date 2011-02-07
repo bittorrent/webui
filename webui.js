@@ -1,7 +1,7 @@
-/**
- * Copyright 2007 BitTorrent, Inc. All rights reserved.
- * Copyright 2008 Carsten Niebuhr
- */
+/*
+Copyright 2007 BitTorrent, Inc. All rights reserved.
+Copyright 2008 Carsten Niebuhr
+*/
 
 var LANGUAGES = LANGUAGES || {};
 var lang = lang || null;
@@ -173,8 +173,8 @@ var utWebUI = {
 	],
 	"advOptColDefs": [
 		//[ colID, colWidth, colType, colDisabled = false, colIcon = false, colAlign = ALIGN_AUTO, colText = "" ]
-		  ["name", 215, TYPE_STRING]
-		, ["value", 210, TYPE_STRING]
+		  ["name", 240, TYPE_STRING]
+		, ["value", 235, TYPE_STRING]
 	],
 	"trtColDoneIdx": -1, // automatically calculated based on this.trtColDefs
 	"trtColStatusIdx": -1, // automatically calculated based on this.trtColDefs
@@ -1135,7 +1135,7 @@ var utWebUI = {
 				  "id": "rssfeed_" + id
 				, "text": feed[CONST.RSSFEED_URL].split("|")[0]
 				, "class": (feed[CONST.RSSFEED_ENABLED] ? "" : "disabled")
-			}));
+			}).grab(new Element("span", {"class": "icon"}), "top"));
 		}, this);
 
 		feedList.grab(itemAll, 'top');
@@ -1246,12 +1246,12 @@ var utWebUI = {
 		labels.each(function(lbl, idx) {
 			var label = lbl[0], labelId = "lbl_" + encodeID(label), count = lbl[1], li = null;
 			if ((li = $(labelId))) {
-				li.getElement("span").set("text", count);
+				li.getElement(".count").set("text", count);
 			}
 			else {
 				labelList.grab(new Element("li", {"id": labelId})
 					.appendText(label + " (")
-					.grab(new Element("span", {"text": count}))
+					.grab(new Element("span", {"class": "count", "text": count}))
 					.appendText(")")
 				);
 			}
@@ -1315,7 +1315,7 @@ var utWebUI = {
 			);
 		}
 
-		return visible;
+		return !!visible;
 	},
 
 	"getTorGroups": function(tor) {
@@ -1471,7 +1471,7 @@ var utWebUI = {
 			return (eleId in type);
 		});
 
-		if (ev.control) {
+		if ((Browser.Platform.mac && ev.meta) || (!Browser.Platform.mac && ev.control)) {
 			if (ev.isRightClick()) {
 				prevSelected = false;
 			}
@@ -1664,7 +1664,7 @@ var utWebUI = {
 
 			var prevSelected = activeFeedCount > 1 && element.id in this.config.activeRssFeeds;
 
-			if (ev.control) {
+			if ((Browser.Platform.mac && ev.meta) || (!Browser.Platform.mac && ev.control)) {
 				if (ev.isRightClick()) {
 					prevSelected = false;
 				}
@@ -1825,7 +1825,6 @@ var utWebUI = {
 
 		this.rssfdTable.calcSize();
 		this.rssfdTable.resizePads();
-
 		this.rssfdTable.refresh();
 	},
 

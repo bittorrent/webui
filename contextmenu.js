@@ -1,7 +1,7 @@
-/**
- * Copyright 2007 BitTorrent, Inc. All rights reserved.
- * Copyright 2008 Carsten Niebuhr
- */
+/*
+Copyright 2007 BitTorrent, Inc. All rights reserved.
+Copyright 2008 Carsten Niebuhr
+*/
 
 var CMENU_SEP = 0;
 var CMENU_CHILD = 1;

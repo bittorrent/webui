@@ -1,23 +1,25 @@
-/**
- * Copyright 2007 BitTorrent, Inc. All rights reserved.
- * Copyright 2008 Carsten Niebuhr
- */
+/*
+Copyright 2007 BitTorrent, Inc. All rights reserved.
+Copyright 2008 Carsten Niebuhr
+*/
 
 * {
 	margin: 0;
 	padding: 0;
 }
 
-html, body {
+html {
+	overflow: hidden;
+}
+
+body {
 	background-color: #DDDDDD;
 	border: 0;
 	bottom: 0;
 	cursor: default;
-	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
-	font-size: 11px;
+	font: small-caption;
 	height: 100%;
 	left: 0;
-	overflow: hidden;
 	position: absolute;
 	right: 0;
 	top: 0;
@@ -37,8 +39,7 @@ fieldset {
 	-webkit-border-radius: 5px;
 	border: 1px solid #D0D0D0;
 	border-radius: 5px;
-	margin-bottom: 6px;
-	overflow: hidden;
+	margin: 1px 0 5px 0;
 	padding: 0 5px 5px 5px;
 	position: relative;
 }
@@ -63,7 +64,9 @@ label {
 
 textarea {
 	border: 1px solid #D0D0D0;
+/*
 	font-size: 11px;
+*/
 	overflow: auto;
 	padding: 2px;
 }
@@ -72,9 +75,12 @@ textarea:focus {
 	border: 1px solid #0099FF;
 }
 
+.textarea_wrap {
+	padding-right: 5px;
+}
+
 input, select {
-	font-family: inherit;
-	font-size: 11px;
+	font: inherit;
 }
 
 input[type="checkbox"] {
@@ -85,14 +91,12 @@ input.fbox, input.tbox, select {
 	background-color: #FFFFFF;
 	border: 1px solid #D0D0D0;
 	color: #000000;
-	height: 19px;
 }
 
 input.btn {
 	background: #F0F0F0 url(./images/header.png) repeat center top;
 	border: 1px solid #A0A0A0;
-	width: 80px;
-	height: 19px;
+	width: 6.5em;
 }
 
 input.btn:active {
@@ -109,7 +113,6 @@ input.tbox {
 	background-color: #FFFFFF;
 	margin: 1px 0;
 	vertical-align: top;
-	height: 16px;
 }
 
 input.tbox:focus {
@@ -118,12 +121,12 @@ input.tbox:focus {
 
 input.num {
 	text-align: right;
-	width: 50px;
+	width: 4em;
 }
 
 input.str {
 	text-align: left;
-	width: 130px;
+	width: 12em;
 }
 
 .disabled input, .disabled select,
@@ -151,14 +154,20 @@ td.disabled, label.disabled, span.disabled, div.disabled {
 	width: 49%;
 }
 
+.wide {
+	width: 100%;
+}
+
 .indent {
 	padding-left: 18px;
+	padding-right: 5px;
 }
 
 .line-cont {
 	clear: both;
-	overflow: hidden;
-	height: 20px;
+	height: 1.5em;
+	line-height: 1.3em;
+/*	overflow: hidden;*/
 }
 
 .line-cont * {
@@ -221,10 +230,8 @@ td.disabled, label.disabled, span.disabled, div.disabled {
  **************************************************/
 
 ul.folder-tabs {
-	height: 18px;
+	height: 1.9em;
 	list-style: none;
-	margin: 7px 0 0 0;
-	position: relative;
 	text-align: left;
 	white-space: nowrap;
 }
@@ -241,8 +248,9 @@ ul.folder-tabs li a {
 	border-bottom: 1px solid #868686;
 	border-radius: 5px 5px 0 0;
 	color: #3B3B3B;
-	padding: 2px 0 5px 0;
+	padding: 0.2em 0 0.4em 0;
 	position: relative;
+	top: 0.3em;
 }
 
 ul.folder-tabs li a:hover {
@@ -259,13 +267,30 @@ ul.folder-tabs li.selected a {
 	z-index: 50;
 }
 
+ul.folder-tabs li span {
+	opacity: 0.60;
+}
 
-ul.folder-tabs li a span {
+ul.folder-tabs li.selected span {
+	opacity: 1.00;
+}
+
+ul.folder-tabs li a > span {
 	padding: 0 10px 3px 10px;
 }
 
-ul.folder-tabs.icon li a span {
-	padding-left: 24px;
+ul.folder-tabs.icon li a > span {
+	padding-left: 26px;
+	position: relative;
+}
+
+ul.folder-tabs.icon li a > span > span {
+	clip: rect(0 16px 16px 0);
+	left: 0;
+	margin: -8px 5px;
+	padding: 8px;
+	position: absolute;
+	top: 50%;
 }
 
 
@@ -400,6 +425,7 @@ ul.folder-tabs.icon li a span {
 	float: left;
 	margin: 0 3px 0 0;
 	overflow: auto;
+	position: relative;
 }
 
 #mainCatList > div {
@@ -413,8 +439,8 @@ ul.folder-tabs.icon li a span {
 
 #mainCatList ul li {
 	cursor: pointer;
-	line-height: 18px;
-	padding: 0 4px 0 22px;
+	padding: 2px 4px 2px 22px;
+	position: relative;
 }
 
 #mainCatList ul li.sel {
@@ -429,41 +455,41 @@ ul.folder-tabs.icon li a span {
 	margin: 4px;
 }
 
-#cat_all, #cat_dls, #cat_com, #cat_act, #cat_iac {
-	background: transparent url(./images/tstatus.png) no-repeat 3px 0px;
+#mainCatList ul li .icon {
+	background: transparent url(./images/tstatus.png) no-repeat;
+	clip: rect(0 16px 16px 0);
+	left: 0;
+	margin: -8px 3px;
+	padding: 8px;
+	position: absolute;
+	top: 50%;
 }
 
-	#cat_all { background-position: 3px -176px; }
-	#cat_com { background-position: 3px -16px; }
-	#cat_act { background-position: 3px -160px; }
-	#cat_iac { background-position: 3px -192px; }
+	#cat_all .icon { background-position: 0 -176px !important; }
+	#cat_com .icon { background-position: 0 -16px !important; }
+	#cat_act .icon { background-position: 0 -160px !important; }
+	#cat_iac .icon { background-position: 0 -192px !important; }
 
 
 /**************************************************
  * MAIN TORRENT LIST
  **************************************************/
 
-#mainTorList {
-	-moz-user-focus: normal;
-	-moz-user-input: enabled;
-	-moz-user-select: none;
-	background-color: #FFFFFF;
-	border: 1px solid #868686;
-	display: block;
-	overflow: hidden;
+#mainTorList .icon {
+	background: transparent url(./images/tstatus.png) no-repeat 0 0px;
 }
 
-.Status_Down        { background: transparent url(./images/tstatus.png) no-repeat 3px 0px; }
-.Status_Up          { background: transparent url(./images/tstatus.png) no-repeat 3px -16px; }
-.Status_Checking,
-.Status_Incomplete  { background: transparent url(./images/tstatus.png) no-repeat 3px -32px; }
-.Status_Paused      { background: transparent url(./images/tstatus.png) no-repeat 3px -48px; }
-.Status_Error_Down  { background: transparent url(./images/tstatus.png) no-repeat 3px -64px; }
-.Status_Error_Up    { background: transparent url(./images/tstatus.png) no-repeat 3px -80px; }
-.Status_Error       { background: transparent url(./images/tstatus.png) no-repeat 3px -96px; }
-.Status_Completed   { background: transparent url(./images/tstatus.png) no-repeat 3px -112px; }
-.Status_Queued_Down { background: transparent url(./images/tstatus.png) no-repeat 3px -128px; }
-.Status_Queued_Up   { background: transparent url(./images/tstatus.png) no-repeat 3px -144px; }
+.Status_Down        .icon { background-position: 0 0px !important; }
+.Status_Up          .icon { background-position: 0 -16px !important; }
+.Status_Checking    .icon,
+.Status_Incomplete  .icon { background-position: 0 -32px !important; }
+.Status_Paused      .icon { background-position: 0 -48px !important; }
+.Status_Error_Down  .icon { background-position: 0 -64px !important; }
+.Status_Error_Up    .icon { background-position: 0 -80px !important; }
+.Status_Error       .icon { background-position: 0 -96px !important; }
+.Status_Completed   .icon { background-position: 0 -112px !important; }
+.Status_Queued_Down .icon { background-position: 0 -128px !important; }
+.Status_Queued_Up   .icon { background-position: 0 -144px !important; }
 
 
 /**************************************************
@@ -472,38 +498,30 @@ ul.folder-tabs.icon li a span {
 
 #mainInfoPane {
 	float: left;
+	margin: 4px 0 0 0;
 	width: 0; /* NOTE: This fixes poor reflow under FF/IE when zooming out */
 }
 
-.icon li#tab_mainInfoPane-generalTab span,
-.icon li#tab_mainInfoPane-peersTab span,
-.icon li#tab_mainInfoPane-filesTab span,
-.icon li#tab_mainInfoPane-speedTab span,
-.icon li#tab_mainInfoPane-loggerTab span {
-	background: transparent url(./images/tabs.png) no-repeat 4px top;
-	opacity: 0.50;
+#mainInfoPane-tabs {
+	position: absolute; /* NOTE: This fixes tab wrapping on Opera caused by FF/IE reflow fix */
 }
 
-	.icon li#tab_mainInfoPane-generalTab span { background-position: 4px 0px; }
-	.icon li#tab_mainInfoPane-peersTab span { background-position: 4px -32px; }
-	.icon li#tab_mainInfoPane-filesTab span { background-position: 4px -64px; }
-	.icon li#tab_mainInfoPane-speedTab span { background-position: 4px -80px; }
-	.icon li#tab_mainInfoPane-loggerTab span { background-position: 4px -96px; }
-
-li.selected#tab_mainInfoPane-generalTab span,
-li.selected#tab_mainInfoPane-peersTab span,
-li.selected#tab_mainInfoPane-filesTab span,
-li.selected#tab_mainInfoPane-speedTab span,
-li.selected#tab_mainInfoPane-loggerTab span {
-	opacity: 1.0;
+#mainInfoPane-tabs.icon li span span {
+	background: transparent url(./images/tabs.png) no-repeat;
 }
+
+	.icon li#tab_mainInfoPane-generalTab span span { background-position: 0 0px; }
+	.icon li#tab_mainInfoPane-peersTab span span { background-position: 0 -32px; }
+	.icon li#tab_mainInfoPane-filesTab span span { background-position: 0 -64px; }
+	.icon li#tab_mainInfoPane-speedTab span span { background-position: 0 -80px; }
+	.icon li#tab_mainInfoPane-loggerTab span span { background-position: 0 -96px; }
 
 #mainInfoPane-content {
 	background: #FFFFFF;
 	border: 1px solid #868686;
-	height: 200px;
 	padding: 3px;
 	position: relative;
+	top: 1.9em;
 }
 
 #mainInfoPane-generalTab, #mainInfoPane-loggerTab {
@@ -532,266 +550,257 @@ li.selected#tab_mainInfoPane-loggerTab span {
 	float: left;
 }
 
-.country { background: transparent url(./images/flags.png) no-repeat 2px 16px; }
-	.country_00 { background-position: 3px 0px; }
-	.country_AC { background-position: 3px -16px; }
-	.country_AD { background-position: 3px -32px; }
-	.country_AE { background-position: 3px -48px; }
-	.country_AF { background-position: 3px -64px; }
-	.country_AG { background-position: 3px -80px; }
-	.country_AI { background-position: 3px -96px; }
-	.country_AL { background-position: 3px -112px; }
-	.country_AM { background-position: 3px -128px; }
-	.country_AN { background-position: 3px -144px; }
-	.country_AO { background-position: 3px -160px; }
-	.country_AQ { background-position: 3px -176px; }
-	.country_AR { background-position: 3px -192px; }
-	.country_AS { background-position: 3px -208px; }
-	.country_AT { background-position: 3px -224px; }
-	.country_AU { background-position: 3px -240px; }
-	.country_AW { background-position: 3px -256px; }
-	.country_AX { background-position: 3px -272px; }
-	.country_AZ { background-position: 3px -288px; }
-	.country_BA { background-position: 3px -304px; }
-	.country_BB { background-position: 3px -320px; }
-	.country_BD { background-position: 3px -336px; }
-	.country_BE { background-position: 3px -352px; }
-	.country_BF { background-position: 3px -368px; }
-	.country_BG { background-position: 3px -384px; }
-	.country_BH { background-position: 3px -400px; }
-	.country_BI { background-position: 3px -416px; }
-	.country_BJ { background-position: 3px -432px; }
-	.country_BM { background-position: 3px -448px; }
-	.country_BN { background-position: 3px -464px; }
-	.country_BO { background-position: 3px -480px; }
-	.country_BR { background-position: 3px -496px; }
-	.country_BS { background-position: 3px -512px; }
-	.country_BT { background-position: 3px -528px; }
-	.country_BV { background-position: 3px -544px; }
-	.country_BW { background-position: 3px -560px; }
-	.country_BY { background-position: 3px -576px; }
-	.country_BZ { background-position: 3px -592px; }
-	.country_CA { background-position: 3px -608px; }
-	.country_CC { background-position: 3px -624px; }
-	.country_CD { background-position: 3px -640px; }
-	.country_CF { background-position: 3px -656px; }
-	.country_CG { background-position: 3px -672px; }
-	.country_CH { background-position: 3px -688px; }
-	.country_CI { background-position: 3px -704px; }
-	.country_CK { background-position: 3px -720px; }
-	.country_CL { background-position: 3px -736px; }
-	.country_CM { background-position: 3px -752px; }
-	.country_CN { background-position: 3px -768px; }
-	.country_CO { background-position: 3px -784px; }
-	.country_CR { background-position: 3px -800px; }
-	.country_CU { background-position: 3px -816px; }
-	.country_CV { background-position: 3px -832px; }
-	.country_CX { background-position: 3px -848px; }
-	.country_CY { background-position: 3px -864px; }
-	.country_CZ { background-position: 3px -880px; }
-	.country_DE { background-position: 3px -896px; }
-	.country_DJ { background-position: 3px -912px; }
-	.country_DK { background-position: 3px -928px; }
-	.country_DM { background-position: 3px -944px; }
-	.country_DO { background-position: 3px -960px; }
-	.country_DZ { background-position: 3px -976px; }
-	.country_EC { background-position: 3px -992px; }
-	.country_EE { background-position: 3px -1008px; }
-	.country_EG { background-position: 3px -1024px; }
-	.country_EH { background-position: 3px -1040px; }
-	.country_ER { background-position: 3px -1056px; }
-	.country_ES { background-position: 3px -1072px; }
-	.country_ET { background-position: 3px -1088px; }
-	.country_EU { background-position: 3px -1104px; }
-	.country_FI { background-position: 3px -1120px; }
-	.country_FJ { background-position: 3px -1136px; }
-	.country_FK { background-position: 3px -1152px; }
-	.country_FM { background-position: 3px -1168px; }
-	.country_FO { background-position: 3px -1184px; }
-	.country_FR { background-position: 3px -1200px; }
-	.country_GA { background-position: 3px -1216px; }
-	.country_GB { background-position: 3px -1232px; }
-	.country_GD { background-position: 3px -1248px; }
-	.country_GE { background-position: 3px -1264px; }
-	.country_GF { background-position: 3px -1280px; }
-	.country_GG { background-position: 3px -1296px; }
-	.country_GH { background-position: 3px -1312px; }
-	.country_GI { background-position: 3px -1328px; }
-	.country_GL { background-position: 3px -1344px; }
-	.country_GM { background-position: 3px -1360px; }
-	.country_GN { background-position: 3px -1376px; }
-	.country_GP { background-position: 3px -1392px; }
-	.country_GQ { background-position: 3px -1408px; }
-	.country_GR { background-position: 3px -1424px; }
-	.country_GS { background-position: 3px -1440px; }
-	.country_GT { background-position: 3px -1456px; }
-	.country_GU { background-position: 3px -1472px; }
-	.country_GW { background-position: 3px -1488px; }
-	.country_GY { background-position: 3px -1504px; }
-	.country_HK { background-position: 3px -1520px; }
-	.country_HM { background-position: 3px -1536px; }
-	.country_HN { background-position: 3px -1552px; }
-	.country_HR { background-position: 3px -1568px; }
-	.country_HT { background-position: 3px -1584px; }
-	.country_HU { background-position: 3px -1600px; }
-	.country_ID { background-position: 3px -1616px; }
-	.country_IE { background-position: 3px -1632px; }
-	.country_IL { background-position: 3px -1648px; }
-	.country_IM { background-position: 3px -1664px; }
-	.country_IN { background-position: 3px -1680px; }
-	.country_IO { background-position: 3px -1696px; }
-	.country_IQ { background-position: 3px -1712px; }
-	.country_IR { background-position: 3px -1728px; }
-	.country_IS { background-position: 3px -1744px; }
-	.country_IT { background-position: 3px -1760px; }
-	.country_JE { background-position: 3px -1776px; }
-	.country_JM { background-position: 3px -1792px; }
-	.country_JO { background-position: 3px -1808px; }
-	.country_JP { background-position: 3px -1824px; }
-	.country_KE { background-position: 3px -1840px; }
-	.country_KG { background-position: 3px -1856px; }
-	.country_KH { background-position: 3px -1872px; }
-	.country_KI { background-position: 3px -1888px; }
-	.country_KM { background-position: 3px -1904px; }
-	.country_KN { background-position: 3px -1920px; }
-	.country_KP { background-position: 3px -1936px; }
-	.country_KR { background-position: 3px -1952px; }
-	.country_KW { background-position: 3px -1968px; }
-	.country_KY { background-position: 3px -1984px; }
-	.country_KZ { background-position: 3px -2000px; }
-	.country_LA { background-position: 3px -2016px; }
-	.country_LB { background-position: 3px -2032px; }
-	.country_LC { background-position: 3px -2048px; }
-	.country_LI { background-position: 3px -2064px; }
-	.country_LK { background-position: 3px -2080px; }
-	.country_LR { background-position: 3px -2096px; }
-	.country_LS { background-position: 3px -2112px; }
-	.country_LT { background-position: 3px -2128px; }
-	.country_LU { background-position: 3px -2144px; }
-	.country_LV { background-position: 3px -2160px; }
-	.country_LY { background-position: 3px -2176px; }
-	.country_MA { background-position: 3px -2192px; }
-	.country_MC { background-position: 3px -2208px; }
-	.country_MD { background-position: 3px -2224px; }
-	.country_ME { background-position: 3px -2240px; }
-	.country_MG { background-position: 3px -2256px; }
-	.country_MH { background-position: 3px -2272px; }
-	.country_MK { background-position: 3px -2288px; }
-	.country_ML { background-position: 3px -2304px; }
-	.country_MM { background-position: 3px -2320px; }
-	.country_MN { background-position: 3px -2336px; }
-	.country_MO { background-position: 3px -2352px; }
-	.country_MP { background-position: 3px -2368px; }
-	.country_MQ { background-position: 3px -2384px; }
-	.country_MR { background-position: 3px -2400px; }
-	.country_MS { background-position: 3px -2416px; }
-	.country_MT { background-position: 3px -2432px; }
-	.country_MU { background-position: 3px -2448px; }
-	.country_MV { background-position: 3px -2464px; }
-	.country_MW { background-position: 3px -2480px; }
-	.country_MX { background-position: 3px -2496px; }
-	.country_MY { background-position: 3px -2512px; }
-	.country_MZ { background-position: 3px -2528px; }
-	.country_NA { background-position: 3px -2544px; }
-	.country_NC { background-position: 3px -2560px; }
-	.country_NE { background-position: 3px -2576px; }
-	.country_NF { background-position: 3px -2592px; }
-	.country_NG { background-position: 3px -2608px; }
-	.country_NI { background-position: 3px -2624px; }
-	.country_NL { background-position: 3px -2640px; }
-	.country_NO { background-position: 3px -2656px; }
-	.country_NP { background-position: 3px -2672px; }
-	.country_NR { background-position: 3px -2688px; }
-	.country_NU { background-position: 3px -2704px; }
-	.country_NZ { background-position: 3px -2720px; }
-	.country_OM { background-position: 3px -2736px; }
-	.country_PA { background-position: 3px -2752px; }
-	.country_PE { background-position: 3px -2768px; }
-	.country_PF { background-position: 3px -2784px; }
-	.country_PG { background-position: 3px -2800px; }
-	.country_PH { background-position: 3px -2816px; }
-	.country_PK { background-position: 3px -2832px; }
-	.country_PL { background-position: 3px -2848px; }
-	.country_PM { background-position: 3px -2864px; }
-	.country_PN { background-position: 3px -2880px; }
-	.country_PR { background-position: 3px -2896px; }
-	.country_PS { background-position: 3px -2912px; }
-	.country_PT { background-position: 3px -2928px; }
-	.country_PW { background-position: 3px -2944px; }
-	.country_PY { background-position: 3px -2960px; }
-	.country_QA { background-position: 3px -2976px; }
-	.country_RE { background-position: 3px -2992px; }
-	.country_RO { background-position: 3px -3008px; }
-	.country_RS { background-position: 3px -3024px; }
-	.country_RU { background-position: 3px -3040px; }
-	.country_RW { background-position: 3px -3056px; }
-	.country_SA { background-position: 3px -3072px; }
-	.country_SB { background-position: 3px -3088px; }
-	.country_SC { background-position: 3px -3104px; }
-	.country_SD { background-position: 3px -3120px; }
-	.country_SE { background-position: 3px -3136px; }
-	.country_SG { background-position: 3px -3152px; }
-	.country_SH { background-position: 3px -3168px; }
-	.country_SI { background-position: 3px -3184px; }
-	.country_SJ { background-position: 3px -3200px; }
-	.country_SK { background-position: 3px -3216px; }
-	.country_SL { background-position: 3px -3232px; }
-	.country_SM { background-position: 3px -3248px; }
-	.country_SN { background-position: 3px -3264px; }
-	.country_SO { background-position: 3px -3280px; }
-	.country_SR { background-position: 3px -3296px; }
-	.country_ST { background-position: 3px -3312px; }
-	.country_SU { background-position: 3px -3328px; }
-	.country_SV { background-position: 3px -3344px; }
-	.country_SY { background-position: 3px -3360px; }
-	.country_SZ { background-position: 3px -3376px; }
-	.country_TC { background-position: 3px -3392px; }
-	.country_TD { background-position: 3px -3408px; }
-	.country_TF { background-position: 3px -3424px; }
-	.country_TG { background-position: 3px -3440px; }
-	.country_TH { background-position: 3px -3456px; }
-	.country_TJ { background-position: 3px -3472px; }
-	.country_TK { background-position: 3px -3488px; }
-	.country_TL { background-position: 3px -3504px; }
-	.country_TM { background-position: 3px -3520px; }
-	.country_TN { background-position: 3px -3536px; }
-	.country_TO { background-position: 3px -3552px; }
-	.country_TP { background-position: 3px -3568px; }
-	.country_TR { background-position: 3px -3584px; }
-	.country_TT { background-position: 3px -3600px; }
-	.country_TV { background-position: 3px -3616px; }
-	.country_TW { background-position: 3px -3632px; }
-	.country_TZ { background-position: 3px -3648px; }
-	.country_UA { background-position: 3px -3664px; }
-	.country_UG { background-position: 3px -3680px; }
-	.country_UK { background-position: 3px -3696px; }
-	.country_UM { background-position: 3px -3712px; }
-	.country_US { background-position: 3px -3728px; }
-	.country_UY { background-position: 3px -3744px; }
-	.country_UZ { background-position: 3px -3760px; }
-	.country_VA { background-position: 3px -3776px; }
-	.country_VC { background-position: 3px -3792px; }
-	.country_VE { background-position: 3px -3808px; }
-	.country_VG { background-position: 3px -3824px; }
-	.country_VI { background-position: 3px -3840px; }
-	.country_VN { background-position: 3px -3856px; }
-	.country_VU { background-position: 3px -3872px; }
-	.country_WF { background-position: 3px -3888px; }
-	.country_WS { background-position: 3px -3904px; }
-	.country_YE { background-position: 3px -3920px; }
-	.country_YT { background-position: 3px -3936px; }
-	.country_ZA { background-position: 3px -3952px; }
-	.country_ZM { background-position: 3px -3968px; }
-	.country_ZW { background-position: 3px -3984px; }
-
-#mainInfoPane-filesTab {
-	-moz-user-focus: normal;
-	-moz-user-input: enabled;
-	-moz-user-select: none;
-	background-color: #FFFFFF;
-	display: block;
-	overflow: hidden;
-}
+.country .icon { background: transparent url(./images/flags.png) no-repeat 0 16px; }
+	.country_00 .icon { background-position: 0 0px !important; }
+	.country_AC .icon { background-position: 0 -16px !important; }
+	.country_AD .icon { background-position: 0 -32px !important; }
+	.country_AE .icon { background-position: 0 -48px !important; }
+	.country_AF .icon { background-position: 0 -64px !important; }
+	.country_AG .icon { background-position: 0 -80px !important; }
+	.country_AI .icon { background-position: 0 -96px !important; }
+	.country_AL .icon { background-position: 0 -112px !important; }
+	.country_AM .icon { background-position: 0 -128px !important; }
+	.country_AN .icon { background-position: 0 -144px !important; }
+	.country_AO .icon { background-position: 0 -160px !important; }
+	.country_AQ .icon { background-position: 0 -176px !important; }
+	.country_AR .icon { background-position: 0 -192px !important; }
+	.country_AS .icon { background-position: 0 -208px !important; }
+	.country_AT .icon { background-position: 0 -224px !important; }
+	.country_AU .icon { background-position: 0 -240px !important; }
+	.country_AW .icon { background-position: 0 -256px !important; }
+	.country_AX .icon { background-position: 0 -272px !important; }
+	.country_AZ .icon { background-position: 0 -288px !important; }
+	.country_BA .icon { background-position: 0 -304px !important; }
+	.country_BB .icon { background-position: 0 -320px !important; }
+	.country_BD .icon { background-position: 0 -336px !important; }
+	.country_BE .icon { background-position: 0 -352px !important; }
+	.country_BF .icon { background-position: 0 -368px !important; }
+	.country_BG .icon { background-position: 0 -384px !important; }
+	.country_BH .icon { background-position: 0 -400px !important; }
+	.country_BI .icon { background-position: 0 -416px !important; }
+	.country_BJ .icon { background-position: 0 -432px !important; }
+	.country_BM .icon { background-position: 0 -448px !important; }
+	.country_BN .icon { background-position: 0 -464px !important; }
+	.country_BO .icon { background-position: 0 -480px !important; }
+	.country_BR .icon { background-position: 0 -496px !important; }
+	.country_BS .icon { background-position: 0 -512px !important; }
+	.country_BT .icon { background-position: 0 -528px !important; }
+	.country_BV .icon { background-position: 0 -544px !important; }
+	.country_BW .icon { background-position: 0 -560px !important; }
+	.country_BY .icon { background-position: 0 -576px !important; }
+	.country_BZ .icon { background-position: 0 -592px !important; }
+	.country_CA .icon { background-position: 0 -608px !important; }
+	.country_CC .icon { background-position: 0 -624px !important; }
+	.country_CD .icon { background-position: 0 -640px !important; }
+	.country_CF .icon { background-position: 0 -656px !important; }
+	.country_CG .icon { background-position: 0 -672px !important; }
+	.country_CH .icon { background-position: 0 -688px !important; }
+	.country_CI .icon { background-position: 0 -704px !important; }
+	.country_CK .icon { background-position: 0 -720px !important; }
+	.country_CL .icon { background-position: 0 -736px !important; }
+	.country_CM .icon { background-position: 0 -752px !important; }
+	.country_CN .icon { background-position: 0 -768px !important; }
+	.country_CO .icon { background-position: 0 -784px !important; }
+	.country_CR .icon { background-position: 0 -800px !important; }
+	.country_CU .icon { background-position: 0 -816px !important; }
+	.country_CV .icon { background-position: 0 -832px !important; }
+	.country_CX .icon { background-position: 0 -848px !important; }
+	.country_CY .icon { background-position: 0 -864px !important; }
+	.country_CZ .icon { background-position: 0 -880px !important; }
+	.country_DE .icon { background-position: 0 -896px !important; }
+	.country_DJ .icon { background-position: 0 -912px !important; }
+	.country_DK .icon { background-position: 0 -928px !important; }
+	.country_DM .icon { background-position: 0 -944px !important; }
+	.country_DO .icon { background-position: 0 -960px !important; }
+	.country_DZ .icon { background-position: 0 -976px !important; }
+	.country_EC .icon { background-position: 0 -992px !important; }
+	.country_EE .icon { background-position: 0 -1008px !important; }
+	.country_EG .icon { background-position: 0 -1024px !important; }
+	.country_EH .icon { background-position: 0 -1040px !important; }
+	.country_ER .icon { background-position: 0 -1056px !important; }
+	.country_ES .icon { background-position: 0 -1072px !important; }
+	.country_ET .icon { background-position: 0 -1088px !important; }
+	.country_EU .icon { background-position: 0 -1104px !important; }
+	.country_FI .icon { background-position: 0 -1120px !important; }
+	.country_FJ .icon { background-position: 0 -1136px !important; }
+	.country_FK .icon { background-position: 0 -1152px !important; }
+	.country_FM .icon { background-position: 0 -1168px !important; }
+	.country_FO .icon { background-position: 0 -1184px !important; }
+	.country_FR .icon { background-position: 0 -1200px !important; }
+	.country_GA .icon { background-position: 0 -1216px !important; }
+	.country_GB .icon { background-position: 0 -1232px !important; }
+	.country_GD .icon { background-position: 0 -1248px !important; }
+	.country_GE .icon { background-position: 0 -1264px !important; }
+	.country_GF .icon { background-position: 0 -1280px !important; }
+	.country_GG .icon { background-position: 0 -1296px !important; }
+	.country_GH .icon { background-position: 0 -1312px !important; }
+	.country_GI .icon { background-position: 0 -1328px !important; }
+	.country_GL .icon { background-position: 0 -1344px !important; }
+	.country_GM .icon { background-position: 0 -1360px !important; }
+	.country_GN .icon { background-position: 0 -1376px !important; }
+	.country_GP .icon { background-position: 0 -1392px !important; }
+	.country_GQ .icon { background-position: 0 -1408px !important; }
+	.country_GR .icon { background-position: 0 -1424px !important; }
+	.country_GS .icon { background-position: 0 -1440px !important; }
+	.country_GT .icon { background-position: 0 -1456px !important; }
+	.country_GU .icon { background-position: 0 -1472px !important; }
+	.country_GW .icon { background-position: 0 -1488px !important; }
+	.country_GY .icon { background-position: 0 -1504px !important; }
+	.country_HK .icon { background-position: 0 -1520px !important; }
+	.country_HM .icon { background-position: 0 -1536px !important; }
+	.country_HN .icon { background-position: 0 -1552px !important; }
+	.country_HR .icon { background-position: 0 -1568px !important; }
+	.country_HT .icon { background-position: 0 -1584px !important; }
+	.country_HU .icon { background-position: 0 -1600px !important; }
+	.country_ID .icon { background-position: 0 -1616px !important; }
+	.country_IE .icon { background-position: 0 -1632px !important; }
+	.country_IL .icon { background-position: 0 -1648px !important; }
+	.country_IM .icon { background-position: 0 -1664px !important; }
+	.country_IN .icon { background-position: 0 -1680px !important; }
+	.country_IO .icon { background-position: 0 -1696px !important; }
+	.country_IQ .icon { background-position: 0 -1712px !important; }
+	.country_IR .icon { background-position: 0 -1728px !important; }
+	.country_IS .icon { background-position: 0 -1744px !important; }
+	.country_IT .icon { background-position: 0 -1760px !important; }
+	.country_JE .icon { background-position: 0 -1776px !important; }
+	.country_JM .icon { background-position: 0 -1792px !important; }
+	.country_JO .icon { background-position: 0 -1808px !important; }
+	.country_JP .icon { background-position: 0 -1824px !important; }
+	.country_KE .icon { background-position: 0 -1840px !important; }
+	.country_KG .icon { background-position: 0 -1856px !important; }
+	.country_KH .icon { background-position: 0 -1872px !important; }
+	.country_KI .icon { background-position: 0 -1888px !important; }
+	.country_KM .icon { background-position: 0 -1904px !important; }
+	.country_KN .icon { background-position: 0 -1920px !important; }
+	.country_KP .icon { background-position: 0 -1936px !important; }
+	.country_KR .icon { background-position: 0 -1952px !important; }
+	.country_KW .icon { background-position: 0 -1968px !important; }
+	.country_KY .icon { background-position: 0 -1984px !important; }
+	.country_KZ .icon { background-position: 0 -2000px !important; }
+	.country_LA .icon { background-position: 0 -2016px !important; }
+	.country_LB .icon { background-position: 0 -2032px !important; }
+	.country_LC .icon { background-position: 0 -2048px !important; }
+	.country_LI .icon { background-position: 0 -2064px !important; }
+	.country_LK .icon { background-position: 0 -2080px !important; }
+	.country_LR .icon { background-position: 0 -2096px !important; }
+	.country_LS .icon { background-position: 0 -2112px !important; }
+	.country_LT .icon { background-position: 0 -2128px !important; }
+	.country_LU .icon { background-position: 0 -2144px !important; }
+	.country_LV .icon { background-position: 0 -2160px !important; }
+	.country_LY .icon { background-position: 0 -2176px !important; }
+	.country_MA .icon { background-position: 0 -2192px !important; }
+	.country_MC .icon { background-position: 0 -2208px !important; }
+	.country_MD .icon { background-position: 0 -2224px !important; }
+	.country_ME .icon { background-position: 0 -2240px !important; }
+	.country_MG .icon { background-position: 0 -2256px !important; }
+	.country_MH .icon { background-position: 0 -2272px !important; }
+	.country_MK .icon { background-position: 0 -2288px !important; }
+	.country_ML .icon { background-position: 0 -2304px !important; }
+	.country_MM .icon { background-position: 0 -2320px !important; }
+	.country_MN .icon { background-position: 0 -2336px !important; }
+	.country_MO .icon { background-position: 0 -2352px !important; }
+	.country_MP .icon { background-position: 0 -2368px !important; }
+	.country_MQ .icon { background-position: 0 -2384px !important; }
+	.country_MR .icon { background-position: 0 -2400px !important; }
+	.country_MS .icon { background-position: 0 -2416px !important; }
+	.country_MT .icon { background-position: 0 -2432px !important; }
+	.country_MU .icon { background-position: 0 -2448px !important; }
+	.country_MV .icon { background-position: 0 -2464px !important; }
+	.country_MW .icon { background-position: 0 -2480px !important; }
+	.country_MX .icon { background-position: 0 -2496px !important; }
+	.country_MY .icon { background-position: 0 -2512px !important; }
+	.country_MZ .icon { background-position: 0 -2528px !important; }
+	.country_NA .icon { background-position: 0 -2544px !important; }
+	.country_NC .icon { background-position: 0 -2560px !important; }
+	.country_NE .icon { background-position: 0 -2576px !important; }
+	.country_NF .icon { background-position: 0 -2592px !important; }
+	.country_NG .icon { background-position: 0 -2608px !important; }
+	.country_NI .icon { background-position: 0 -2624px !important; }
+	.country_NL .icon { background-position: 0 -2640px !important; }
+	.country_NO .icon { background-position: 0 -2656px !important; }
+	.country_NP .icon { background-position: 0 -2672px !important; }
+	.country_NR .icon { background-position: 0 -2688px !important; }
+	.country_NU .icon { background-position: 0 -2704px !important; }
+	.country_NZ .icon { background-position: 0 -2720px !important; }
+	.country_OM .icon { background-position: 0 -2736px !important; }
+	.country_PA .icon { background-position: 0 -2752px !important; }
+	.country_PE .icon { background-position: 0 -2768px !important; }
+	.country_PF .icon { background-position: 0 -2784px !important; }
+	.country_PG .icon { background-position: 0 -2800px !important; }
+	.country_PH .icon { background-position: 0 -2816px !important; }
+	.country_PK .icon { background-position: 0 -2832px !important; }
+	.country_PL .icon { background-position: 0 -2848px !important; }
+	.country_PM .icon { background-position: 0 -2864px !important; }
+	.country_PN .icon { background-position: 0 -2880px !important; }
+	.country_PR .icon { background-position: 0 -2896px !important; }
+	.country_PS .icon { background-position: 0 -2912px !important; }
+	.country_PT .icon { background-position: 0 -2928px !important; }
+	.country_PW .icon { background-position: 0 -2944px !important; }
+	.country_PY .icon { background-position: 0 -2960px !important; }
+	.country_QA .icon { background-position: 0 -2976px !important; }
+	.country_RE .icon { background-position: 0 -2992px !important; }
+	.country_RO .icon { background-position: 0 -3008px !important; }
+	.country_RS .icon { background-position: 0 -3024px !important; }
+	.country_RU .icon { background-position: 0 -3040px !important; }
+	.country_RW .icon { background-position: 0 -3056px !important; }
+	.country_SA .icon { background-position: 0 -3072px !important; }
+	.country_SB .icon { background-position: 0 -3088px !important; }
+	.country_SC .icon { background-position: 0 -3104px !important; }
+	.country_SD .icon { background-position: 0 -3120px !important; }
+	.country_SE .icon { background-position: 0 -3136px !important; }
+	.country_SG .icon { background-position: 0 -3152px !important; }
+	.country_SH .icon { background-position: 0 -3168px !important; }
+	.country_SI .icon { background-position: 0 -3184px !important; }
+	.country_SJ .icon { background-position: 0 -3200px !important; }
+	.country_SK .icon { background-position: 0 -3216px !important; }
+	.country_SL .icon { background-position: 0 -3232px !important; }
+	.country_SM .icon { background-position: 0 -3248px !important; }
+	.country_SN .icon { background-position: 0 -3264px !important; }
+	.country_SO .icon { background-position: 0 -3280px !important; }
+	.country_SR .icon { background-position: 0 -3296px !important; }
+	.country_ST .icon { background-position: 0 -3312px !important; }
+	.country_SU .icon { background-position: 0 -3328px !important; }
+	.country_SV .icon { background-position: 0 -3344px !important; }
+	.country_SY .icon { background-position: 0 -3360px !important; }
+	.country_SZ .icon { background-position: 0 -3376px !important; }
+	.country_TC .icon { background-position: 0 -3392px !important; }
+	.country_TD .icon { background-position: 0 -3408px !important; }
+	.country_TF .icon { background-position: 0 -3424px !important; }
+	.country_TG .icon { background-position: 0 -3440px !important; }
+	.country_TH .icon { background-position: 0 -3456px !important; }
+	.country_TJ .icon { background-position: 0 -3472px !important; }
+	.country_TK .icon { background-position: 0 -3488px !important; }
+	.country_TL .icon { background-position: 0 -3504px !important; }
+	.country_TM .icon { background-position: 0 -3520px !important; }
+	.country_TN .icon { background-position: 0 -3536px !important; }
+	.country_TO .icon { background-position: 0 -3552px !important; }
+	.country_TP .icon { background-position: 0 -3568px !important; }
+	.country_TR .icon { background-position: 0 -3584px !important; }
+	.country_TT .icon { background-position: 0 -3600px !important; }
+	.country_TV .icon { background-position: 0 -3616px !important; }
+	.country_TW .icon { background-position: 0 -3632px !important; }
+	.country_TZ .icon { background-position: 0 -3648px !important; }
+	.country_UA .icon { background-position: 0 -3664px !important; }
+	.country_UG .icon { background-position: 0 -3680px !important; }
+	.country_UK .icon { background-position: 0 -3696px !important; }
+	.country_UM .icon { background-position: 0 -3712px !important; }
+	.country_US .icon { background-position: 0 -3728px !important; }
+	.country_UY .icon { background-position: 0 -3744px !important; }
+	.country_UZ .icon { background-position: 0 -3760px !important; }
+	.country_VA .icon { background-position: 0 -3776px !important; }
+	.country_VC .icon { background-position: 0 -3792px !important; }
+	.country_VE .icon { background-position: 0 -3808px !important; }
+	.country_VG .icon { background-position: 0 -3824px !important; }
+	.country_VI .icon { background-position: 0 -3840px !important; }
+	.country_VN .icon { background-position: 0 -3856px !important; }
+	.country_VU .icon { background-position: 0 -3872px !important; }
+	.country_WF .icon { background-position: 0 -3888px !important; }
+	.country_WS .icon { background-position: 0 -3904px !important; }
+	.country_YE .icon { background-position: 0 -3920px !important; }
+	.country_YT .icon { background-position: 0 -3936px !important; }
+	.country_ZA .icon { background-position: 0 -3952px !important; }
+	.country_ZM .icon { background-position: 0 -3968px !important; }
+	.country_ZW .icon { background-position: 0 -3984px !important; }
 
 #mainInfoPane-speedTab {
 	background-color: #FFFFFF;
@@ -805,8 +814,7 @@ li.selected#tab_mainInfoPane-loggerTab span {
 #mainInfoPane-loggerTab p {
 	border-bottom: 1px solid #f0f0f0;
 	font-family: monospace;
-	font-size: 12px;
-	line-height: 12px;
+	line-height: 1em;
 	padding: 3px;
 	white-space: pre;
 	word-wrap: break-word;
@@ -826,9 +834,9 @@ li.selected#tab_mainInfoPane-loggerTab span {
 	background: #EEEEEE;
 	border-top: 1px solid #AAAAAA;
 	bottom: 0;
-	height: 16px;
+	height: 1.25em;
 	left: 0;
-	line-height: 16px;
+	line-height: 1.25em;
 	margin: 0;
 	overflow: hidden;
 	padding: 1px;
@@ -839,19 +847,20 @@ li.selected#tab_mainInfoPane-loggerTab span {
 #mainStatusBar .section {
 	border-left: 1px solid #CCCCCC;
 	float: right;
-	padding: 0 5px;
+	padding: 0 0.5em;
 	text-align: left;
 }
 
 #mainStatusBar-download,
 #mainStatusBar-upload {
-	width: 175px;
+	width: 15em;
 }
 
 #mainStatusBar-menu {
 	background: transparent url(./images/ut_small.png) no-repeat center center;
 	float: left;
-	height: 16px;
+	height: 100%;
+	min-height: 16px;
 	opacity: 0.50;
 	width: 16px;
 }
@@ -882,7 +891,6 @@ li.selected#tab_mainInfoPane-loggerTab span {
 #mainVDivider {
 	cursor: n-resize;
 	height: 3px;
-	font-size: 1px;
 }
 
 
@@ -892,15 +900,15 @@ li.selected#tab_mainInfoPane-loggerTab span {
 
 .dlg-window {
 	-moz-border-radius: 5px 5px 0 0;
-	-moz-box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.15);
+	-moz-box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.15), 0 0 6px rgba(0, 0, 0, 0.10);
 	-webkit-border-radius: 5px 5px 0 0;
-	-webkit-box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.15);
+	-webkit-box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.15), 0 0 6px rgba(0, 0, 0, 0.10);
 	background-color: #FFFFFF;
 	border: 2px solid #C0C0C0;
 	border-bottom-color: #A0A0A0 !important;
 	border-radius: 5px 5px 0 0;
 	border-right-color: #A0A0A0 !important;
-	box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.15);
+	box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.15), 0 0 6px rgba(0, 0, 0, 0.10);
 	color: #000000;
 	display: none;
 	left: 0px;
@@ -913,16 +921,16 @@ li.selected#tab_mainInfoPane-loggerTab span {
 .dlg-head {
 	-moz-border-radius: 4px 4px 0 0;
 	-webkit-border-radius: 4px 4px 0 0;
-	background: #F5F5F5 url(./images/blank.gif) no-repeat 3px 3px;
+	background: #F5F5F5 url(./images/blank.gif) no-repeat 0.3em 0.3em;
 	border-bottom: 1px solid #C0C0C0;
 	border-radius: 4px 4px 0 0;
 	color: #A0A0A0;
 	font-weight: bold;
-	height: 19px;
+	height: 1.2em;
 	left: 0;
-	line-height: 19px;
+	line-height: 1.2em;
 	overflow: hidden;
-	padding: 2px 22px;
+	padding: 0.3em 22px;
 	position: absolute;
 	right: 0;
 	top: 0;
@@ -932,7 +940,7 @@ li.selected#tab_mainInfoPane-loggerTab span {
 }
 
 .dlg-body {
-	margin: 24px 0 28px 0;
+	margin: 1.8em 0 2.1em 0;
 	padding: 5px;
 	position: relative;
 }
@@ -948,8 +956,8 @@ li.selected#tab_mainInfoPane-loggerTab span {
 .dlg-close {
 	height: 14px;
 	position: absolute;
-	right: 4px;
-	top: 4px;
+	right: 0.3em;
+	top: 0.3em;
 	width: 14px;
 	z-index: 2;
 }
@@ -965,8 +973,8 @@ li.selected#tab_mainInfoPane-loggerTab span {
 	background: #F0F0F0;
 	border-top: 1px solid #D0D0D0;
 	bottom: 0;
-	height: 19px;
-	padding: 4px;
+	height: 1.5em;
+	padding: 0.3em;
 	position: absolute;
 	right: 0;
 	text-align: right;
@@ -974,12 +982,12 @@ li.selected#tab_mainInfoPane-loggerTab span {
 }
 
 .dlg-top {
-	-moz-box-shadow: 5px 3px 5px rgba(0, 0, 0, 0.25);
-	-webkit-box-shadow: 5px 3px 5px rgba(0, 0, 0, 0.25);
+	-moz-box-shadow: 5px 3px 5px rgba(0, 0, 0, 0.25), 0 0 8px rgba(0, 0, 0, 0.15);
+	-webkit-box-shadow: 5px 3px 5px rgba(0, 0, 0, 0.25), 0 0 8px rgba(0, 0, 0, 0.15);
 	border-color: #989898;
 	border-bottom-color: #707070 !important;
 	border-right-color: #707070 !important;
-	box-shadow: 5px 3px 5px rgba(0, 0, 0, 0.25);
+	box-shadow: 5px 3px 5px rgba(0, 0, 0, 0.25), 0 0 8px rgba(0, 0, 0, 0.15);
 }
 
 .dlg-top .dlg-head {
@@ -990,11 +998,24 @@ li.selected#tab_mainInfoPane-loggerTab span {
 
 
 /**************************************************
+ * DIALOG: Dialog Icons
+ **************************************************/
+
+.dlgIcon-Delete {
+	background-image: url(./images/delete.png);
+}
+
+.dlgIcon-Label {
+	background-image: url(./images/label.png);
+}
+
+
+/**************************************************
  * DIALOG: About
  **************************************************/
 
 #dlgAbout {
-	width: 250px;
+	width: 20em;
 }
 
 #dlgAbout .dlg-body {
@@ -1011,7 +1032,7 @@ li.selected#tab_mainInfoPane-loggerTab span {
 }
 
 #dlgAbout-name {
-	font-size: 1.75em;
+	font-size: 1.5em;
 	font-weight: bold;
 }
 
@@ -1030,24 +1051,11 @@ li.selected#tab_mainInfoPane-loggerTab span {
 
 
 /**************************************************
- * DIALOG: Dialog Icons
- **************************************************/
-
-.dlgIcon-Delete {
-	background-image: url(./images/delete.png);
-}
-
-.dlgIcon-Label {
-	background-image: url(./images/label.png);
-}
-
-
-/**************************************************
  * DIALOG: Add Torrent
  **************************************************/
 
 #dlgAdd {
-	width: 365px;
+	width: 30em;
 }
 
 #dlgAdd-head {
@@ -1056,7 +1064,7 @@ li.selected#tab_mainInfoPane-loggerTab span {
 
 #dlgAdd .dlg-body .fbox,
 #dlgAdd .dlg-body .tbox {
-	width: 265px;
+	width: 22em;
 }
 
 
@@ -1065,7 +1073,7 @@ li.selected#tab_mainInfoPane-loggerTab span {
  **************************************************/
 
 #dlgAddURL {
-	width: 375px;
+	width: 31em;
 }
 
 #dlgAddURL-head {
@@ -1073,7 +1081,7 @@ li.selected#tab_mainInfoPane-loggerTab span {
 }
 
 #dlgAddURL .dlg-body .tbox {
-	width: 275px;
+	width: 23em;
 }
 
 
@@ -1082,19 +1090,15 @@ li.selected#tab_mainInfoPane-loggerTab span {
  **************************************************/
 
 #dlgProps {
-	width: 375px;
+	width: 31em;
 }
 
 #dlgProps-head {
 	background-image: url(./images/props.png);
 }
 
-#dlgProps fieldset .wide {
-	width: 345px;
-}
-
 #prop-trackers {
-	height: 75px;
+	height: 4em;
 }
 
 
@@ -1103,7 +1107,7 @@ li.selected#tab_mainInfoPane-loggerTab span {
  **************************************************/
 
 #dlgAddEditRSSFeed {
-	width: 400px;
+	width: 32em;
 }
 
 #dlgAddEditRSSFeed-head {
@@ -1111,7 +1115,7 @@ li.selected#tab_mainInfoPane-loggerTab span {
 }
 
 #dlgAddEditRSSFeed .dlg-body .tbox {
-	width: 250px;
+	width: 20em;
 }
 
 
@@ -1161,8 +1165,8 @@ li.selected#tab_mainInfoPane-loggerTab span {
 #dlgRSSDownloader-feeds li,
 #dlgRSSDownloader-filters li {
 	cursor: pointer;
-	line-height: 18px;
-	padding: 0 4px;
+	padding: 2px 4px 2px 22px;
+	position: relative;
 }
 
 #dlgRSSDownloader-feeds li.sel,
@@ -1183,23 +1187,31 @@ li.selected#tab_mainInfoPane-loggerTab span {
 
 /* Feeds Tab */
 
-#dlgRSSDownloader-feeds li {
-	background: transparent url(./images/tstatus.png) no-repeat 3px -208px;
-	padding-left: 22px;
+#dlgRSSDownloader-feeds li .icon {
+	background: transparent url(./images/tstatus.png) no-repeat 0 -208px;
+	clip: rect(0 16px 16px 0);
+	left: 0;
+	margin: -8px 3px;
+	padding: 8px;
+	position: absolute;
+	top: 50%;
 }
 
-#dlgRSSDownloader-feeds li.disabled {
-	background-position: 3px -32px;
+#dlgRSSDownloader-feeds li.disabled .icon {
+	background-position: 0 -32px;
 }
 
-.RSS_New { background: transparent url(./images/tstatus.png) no-repeat 3px -272px; }
-.RSS_Old { background: transparent url(./images/tstatus.png) no-repeat 3px -208px; }
-.RSS_Added { background: transparent url(./images/tstatus.png) no-repeat 3px -288px; }
+.RSS_New .icon { background: transparent url(./images/tstatus.png) no-repeat 0 -272px; }
+.RSS_Old .icon { background: transparent url(./images/tstatus.png) no-repeat 0 -208px; }
+.RSS_Added .icon { background: transparent url(./images/tstatus.png) no-repeat 0 -288px; }
 
 /* Favorites Tab */
 
 #dlgRSSDownloader-filters li input {
-	margin: 0 4px 0 1px;
+	left: 0;
+	margin: -6px 5px;
+	position: absolute;
+	top: 50%;
 	vertical-align: text-top;
 }
 
@@ -1233,7 +1245,7 @@ li.selected#tab_mainInfoPane-loggerTab span {
  **************************************************/
 
 #dlgSettings {
-	width: 600px;
+	width: 650px;
 }
 
 #dlgSettings-head {
@@ -1262,13 +1274,9 @@ li.selected#tab_mainInfoPane-loggerTab span {
 	white-space: nowrap;
 }
 
-#dlgSettings-menu li {
-	line-height: 18px;
-}
-
 #dlgSettings-menu li a {
 	display: block;
-	padding: 0 6px;
+	padding: 2px 6px;
 }
 
 #dlgSettings-menu li.selected a {
@@ -1276,16 +1284,17 @@ li.selected#tab_mainInfoPane-loggerTab span {
 	color: #FFFFFF;
 }
 
-#dlgSettings .settings-pane {
-	height: 340px;
-	left: 120px;
-	padding: 0 5px;
-	position: relative;
-	width: 460px;
+#dlgSettings .dlg-body {
+	padding: 0;
 }
 
-#dlgSettings .settings-pane fieldset .wide {
-	width: 445px;
+#dlgSettings .settings-pane {
+	height: 350px;
+	left: 120px;
+	overflow: auto;
+	padding: 5px 10px;
+	position: relative;
+	width: 510px;
 }
 
 /* General */
@@ -1297,12 +1306,6 @@ select[id="webui.lang"] { width: 360px; }
 select[id="gui.dblclick_seed"],
 select[id="gui.dblclick_dl"] {
 	width: 290px;
-}
-
-/* Directories */
-
-#dir_active_download, #dir_completed_download, #dir_torrent_files, #dir_completed_torrents, #dir_autoload {
-	width: 420px;
 }
 
 /* Connection */
@@ -1325,7 +1328,7 @@ input[id="proxy.password"] { width: 70px; }
 
 /* BitTorrent */
 
-#tracker_ip { width: 215px; }
+#tracker_ip { width: 245px; }
 #encryption_mode { margin-left: 3px; }
 
 /* Transfer Cap */
@@ -1347,7 +1350,7 @@ input[id="proxy.password"] { width: 70px; }
 
 #sched_table * {
 	-webkit-user-select: ignore !important;
-	font-size: 9px;
+	font-size: 0.95em;
 	font-weight: bold;
 }
 
@@ -1358,12 +1361,12 @@ input[id="proxy.password"] { width: 70px; }
 }
 
 #sched_table_lgnd .block {
-	line-height: 16px;
 	padding: 0 6px;
 	margin: 0 5px;
 }
 
 #sched_table_info {
+	line-height: 1.1em;
 	padding: 5px;
 	width: 200px;
 }
@@ -1376,8 +1379,8 @@ input[id="proxy.password"] { width: 70px; }
 
 #dlgSettings-Scheduler .block {
 	border: 1px solid #000000;
-	height: 17px;
-	width: 17px;
+	height: 2em;
+	width: 2em;
 }
 
 #dlgSettings-Scheduler .mode0 { background-color: #00A800; }
@@ -1398,59 +1401,68 @@ input[id="proxy.password"] { width: 70px; }
 
 /* Web UI */
 
+#DLG_SETTINGS_9_WEBUI_03,
+#DLG_SETTINGS_9_WEBUI_05 {
+	float: left;
+}
+
 input[id="webui.username"],
-input[id="webui.password"] {
+input[id="webui.password"],
+input[id="webui.guest"] {
+	float: right;
 	margin-left: 3px;
+	width: 135px;
 }
 
 /* Advanced */
 
-#dlgSettings-advOptList {
-	-moz-user-focus: normal;
-	-moz-user-input: enabled;
-	-moz-user-select: none;
-	background-color: #FFFFFF;
-	display: block;
-	overflow: hidden;
+#dlgSettings-advOptInput {
+	height: 1.5em;
+	line-height: 1.3em;
+	margin-top: 3px;
+	padding: 0.1em 0;
+	position: relative;
 }
 
-#dlgSettings-Advanced .tall {
-	padding-top: 3px;
-	line-height: 17px;
+#dlgSettings-advOptInput input {
+	vertical-align: baseline;
 }
 
 #dlgSettings-advBool-cont,
 #dlgSettings-advText-cont {
 	display: none;
-	padding-left: 4px;
+	left: 4em;
+	position: absolute;
+	right: 0;
 }
 
-#dlgSettings-advBool-cont *,
-#dlgSettings-advText-cont * {
-	vertical-align: baseline;
-}
-
-#dlgSettings-advBool-cont input[type="radio"],
-#dlgSettings-advText-cont input[type="radio"] {
-	vertical-align: text-top;
-}
-
-#dlgSettings-advBool-cont span {
-	padding: 0 3px;
+#dlgSettings-advText-wrap {
+	left: 0;
+	margin-right: 5px;
+	position: absolute;
+	right: 6em;
 }
 
 #dlgSettings-advText {
-	width: 325px;
+	width: 100%;
+}
+
+#DLG_SETTINGS_A_ADVANCED_05 {
+	float: right;
+	margin-top: 1px;
+	width: 6em;
 }
 
 /* UI Extras */
 
 input[id="gui.ulrate_menu"],
 input[id="gui.dlrate_menu"] {
-	width: 260px;
+	width: 300px;
 }
 
-#search_list { height: 75px; }
+#search_list {
+	height: 75px;
+}
 
 /* Hide Unknown Settings */
 
@@ -1486,11 +1498,11 @@ NOTE: The following is an ugly hack, but a necessary one if we want the settings
  **************************************************/
 
 div.CMenu {
-	-moz-box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.30);
-	-webkit-box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.30);
+	-moz-box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.30), 0 0 4px rgba(0, 0, 0, 0.20);
+	-webkit-box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.30), 0 0 4px rgba(0, 0, 0, 0.20);
 	background: #F8F8F8;
 	border: 1px solid #A7A6AA;
-	box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.30);
+	box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.30), 0 0 4px rgba(0, 0, 0, 0.20);
 	display: none;
 	overflow-y: hidden;
 	position: fixed;

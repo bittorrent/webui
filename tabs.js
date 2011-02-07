@@ -1,7 +1,7 @@
-/**
- * Copyright 2007 BitTorrent, Inc. All rights reserved.
- * Copyright 2008 Carsten Niebuhr
- */
+/*
+Copyright 2007 BitTorrent, Inc. All rights reserved.
+Copyright 2008 Carsten Niebuhr
+*/
 
 var ELE_A = new Element("a");
 var ELE_LI = new Element("li");
@@ -26,7 +26,7 @@ var Tabs = new Class({
 			var targ = ev.target;
 
 			if (targ && (targ.get("tag") == "span"))
-				targ = targ.getParent();
+				targ = targ.getParent("a");
 
 			if (targ && (targ.get("tag") == "a"))
 				$me.show(targ.retrieve("showId"));
@@ -55,7 +55,8 @@ var Tabs = new Class({
 					.setProperty("href", "#")
 					.store("showId", id)
 					.adopt(ELE_SPAN.clone(false)
-						.set("html", text)
+						.adopt(ELE_SPAN.clone(false))
+						.appendText(text)
 					)
 				)
 			);
@@ -73,7 +74,11 @@ var Tabs = new Class({
 
 	"setNames": function(names) {
 		Object.each(names, function(name, id) {
-			$("tab_" + id).getElement("span").set("html", name);
+			var tab = $("tab_" + id);
+			var icon = tab.getElement("span span");
+			if (icon) icon.dispose();
+			tab.getElement("span").set("html", name);
+			if (icon) tab.getElement("span").grab(icon, "top");
 		});
 
 		return this;

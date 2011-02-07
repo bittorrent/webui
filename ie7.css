@@ -1,7 +1,11 @@
-/**
- * Copyright 2007 BitTorrent, Inc. All rights reserved.
- * Copyright 2008 Carsten Niebuhr
- */
+/*
+Copyright 2007 BitTorrent, Inc. All rights reserved.
+Copyright 2008 Carsten Niebuhr
+*/
+
+input, select {
+	font: small-caption;
+}
 
 #msgout {
 	position: relative;
@@ -38,7 +42,7 @@ ul.folder-tabs li a {
  **************************************************/
 
 #mainInfoPane-generalTab table {
-	font-size: 100%;
+	font-size: 1em;
 }
 
 /**************************************************
@@ -48,6 +52,14 @@ ul.folder-tabs li a {
 input[type="checkbox"] {
 	height: 13px;
 	width: 13px;
+}
+
+/**************************************************
+ * DIALOG: Settings
+ **************************************************/
+
+#dlgSettings-advText-wrap {
+	margin-right: 15px !important;
 }
 
 /**************************************************

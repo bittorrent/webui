@@ -1,7 +1,7 @@
-/**
- * Copyright 2007 BitTorrent, Inc. All rights reserved.
- * Copyright 2008 Carsten Niebuhr
- */
+/*
+Copyright 2007 BitTorrent, Inc. All rights reserved.
+Copyright 2008 Carsten Niebuhr
+*/
 
 var DialogManager = {
 
@@ -16,10 +16,12 @@ var DialogManager = {
 
 		$(dlgPopupId).getElement(".dlg-body").adopt(
 			new Element("span", {id: dlgPopupId + "-message"}),
-			new Element("textarea", {
-				id: dlgPopupId + "-input",
-				styles: { marginTop: "5px" }
-			})
+			new Element("div.textarea_wrap").grab(
+				new Element("textarea.wide", {
+					id: dlgPopupId + "-input",
+					styles: { marginTop: "5px" }
+				})
+			)
 		);
 	},
 
@@ -94,12 +96,13 @@ var DialogManager = {
 		}
 
 		// Set dimensions
-		var width = parseInt(options.width, 10) || 300;
+		var width = parseInt(options.width, 10) || "25em";
 		dlgWin.setStyle("width", width);
 		if (undefined !== options.input) {
-			dlgInput.setStyles({
-				"height": ((options.input.split("\n").length || 1).min(5) * 1.3) + "em",
-				"width": width - 15
+			dlgWin.measure(function() {
+				dlgInput.setStyles({
+					"height": ((options.input.split("\n").length || 1).min(5) * 1.3) + "em"
+				});
 			});
 		}
 
