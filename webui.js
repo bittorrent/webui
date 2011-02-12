@@ -4555,7 +4555,7 @@ var utWebUI = {
 					return data[CONST.RSSITEM_CODEC];
 
 				case "date":
-					return data[CONST.RSSITEM_TIMESTAMP];
+					return data[CONST.RSSITEM_TIMESTAMP] * 1000;
 
 				case "feed":
 					return data[CONST.RSSITEM_FEED_ID];
