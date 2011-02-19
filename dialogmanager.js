@@ -20,7 +20,7 @@ var DialogManager = {
 				new Element("textarea.wide", {
 					id: dlgPopupId + "-input",
 					styles: { marginTop: "5px" }
-				})
+				}).setProperty("wrap", "off")
 			)
 		);
 	},
@@ -96,13 +96,21 @@ var DialogManager = {
 		}
 
 		// Set dimensions
-		var width = parseInt(options.width, 10) || "25em";
+		var width = [options.width, "25em"].pick();
 		dlgWin.setStyle("width", width);
 		if (undefined !== options.input) {
-			dlgWin.measure(function() {
-				dlgInput.setStyles({
-					"height": ((options.input.split("\n").length || 1).min(5) * 1.3) + "em"
-				});
+			dlgInput.measure(function() {
+				var lines = (options.input.split("\n").length || 1).min(5);
+				dlgInput.setStyle("height", (lines * 1.3) + "em");
+
+				// Make room for horizontal scrollbar
+				var dims = dlgInput.getDimensions({computeSize: true});
+				var bordY = dims["border-bottom-width"] + dims["border-top-width"];
+				var sbHeight = dlgInput.offsetHeight - (dlgInput.clientHeight + bordY);
+
+				if (sbHeight > 0) {
+					dlgInput.setStyle("height", dlgInput.offsetHeight - bordY + sbHeight);
+				}
 			});
 		}
 

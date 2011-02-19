@@ -30,6 +30,7 @@ limitations under the License.
 }
 
 .stable td {
+	empty-cells: show;
 	text-overflow: ellipsis !important;
 	white-space: nowrap !important;
 	overflow: hidden !important;
@@ -59,7 +60,6 @@ limitations under the License.
 	border: 1px solid;
 	border-color: #FFFFFF #D0D0D0 #D0D0D0 #FFFFFF;
 	padding: 1px 0.5em;
-	empty-cells: show;
 }
 
 .stable-head td:hover {
@@ -127,7 +127,6 @@ limitations under the License.
 .stable-body td {
 	width: 100%;
 	padding: 2px 5px;
-	empty-cells: show;
 	overflow: hidden;
 }
 
@@ -162,17 +161,6 @@ limitations under the License.
 	visibility: hidden;
 	border: 1px solid #868686;
 	overflow: hidden;
-}
-
-.stable-resize-header {
-	position: absolute;
-	background-color: #A0A0A0;
-	width: 1px;
-	top: 0px;
-	-moz-user-select: none;
-	visibility: hidden;
-	overflow: hidden;
-	z-index: 100;
 }
 
 .stable-active-header {

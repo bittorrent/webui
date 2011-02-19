@@ -466,8 +466,20 @@ function setupUserInterface() {
 
 	// -- General Tab
 
-	$$("#mainInfoPane-generalTab td span").addEvent("mousedown", function(ev) {
-		ev.target.store("mousewhitelist", true);
+	$$("#mainInfoPane-generalTab td").addEvent("mousedown", function(ev) {
+		if (!ev.isRightClick()) return;
+
+		var targ = ev.target;
+		if (targ.tagName.toLowerCase() !== "td")
+			targ = targ.getParent("td");
+
+		if (targ) {
+			var span = targ.getElement("span");
+			if (span) {
+				ev.target = span;
+				utWebUI.showGeneralMenu(ev);
+			}
+		}
 	});
 
 	// -- Peers Tab
@@ -1306,22 +1318,25 @@ function loadLangStrings(reload) {
 		"resetText": lang[CONST.MENU_RESET],
 		"colText": {
 			  "name"         : lang[CONST.OV_COL_NAME]
-			, "status"       : lang[CONST.OV_COL_STATUS]
+			, "order"        : lang[CONST.OV_COL_ORDER]
 			, "size"         : lang[CONST.OV_COL_SIZE]
+			, "remaining"    : lang[CONST.OV_COL_REMAINING]
 			, "done"         : lang[CONST.OV_COL_DONE]
-			, "downloaded"   : lang[CONST.OV_COL_DOWNLOADED]
-			, "uploaded"     : lang[CONST.OV_COL_UPPED]
-			, "ratio"        : lang[CONST.OV_COL_SHARED]
+			, "status"       : lang[CONST.OV_COL_STATUS]
+			, "seeds"        : lang[CONST.OV_COL_SEEDS]
+			, "peers"        : lang[CONST.OV_COL_PEERS]
+			, "seeds_peers"  : lang[CONST.OV_COL_SEEDS_PEERS]
 			, "downspeed"    : lang[CONST.OV_COL_DOWNSPD]
 			, "upspeed"      : lang[CONST.OV_COL_UPSPD]
 			, "eta"          : lang[CONST.OV_COL_ETA]
-			, "label"        : lang[CONST.OV_COL_LABEL]
-			, "peers"        : lang[CONST.OV_COL_PEERS]
-			, "seeds"        : lang[CONST.OV_COL_SEEDS]
-			, "seeds_peers"  : lang[CONST.OV_COL_SEEDS_PEERS]
+			, "downloaded"   : lang[CONST.OV_COL_DOWNLOADED]
+			, "uploaded"     : lang[CONST.OV_COL_UPPED]
+			, "ratio"        : lang[CONST.OV_COL_SHARED]
 			, "availability" : lang[CONST.OV_COL_AVAIL].split("||")[1]
-			, "order"        : lang[CONST.OV_COL_ORDER]
-			, "remaining"    : lang[CONST.OV_COL_REMAINING]
+			, "label"        : lang[CONST.OV_COL_LABEL]
+			, "added"        : lang[CONST.OV_COL_DATE_ADDED]
+			, "completed"    : lang[CONST.OV_COL_DATE_COMPLETED]
+			, "url"          : lang[CONST.OV_COL_SOURCE_URL]
 		}
 	});
 
@@ -1352,7 +1367,10 @@ function loadLangStrings(reload) {
 		, "GN_TP_06"
 		, "GN_TP_07"
 		, "GN_TP_08"
+
+		, "GN_GENERAL"
 		, "GN_TP_09"
+		, "GN_TP_10"
 	]);
 
 	// -- Peers Tab

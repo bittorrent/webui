@@ -248,7 +248,6 @@ var dxSTable = new Class({
 		this.colDragEle = null;
 		this.colDragObj = simpleClone(DIV, false).addClass("stable-move-header").inject(this.dHead);
 		this.colSep = simpleClone(DIV, false).addClass("stable-separator-header").inject(this.dHead);
-		this.colReszObj = simpleClone(DIV, false).addClass("stable-resize-header").inject(this.dBody);
 
 		if (this.options.rowsSelectable) {
 			this.dBody.addEvent("mousedown", function(ev) {
@@ -341,19 +340,18 @@ var dxSTable = new Class({
 
 		var dBody = this.dBody;
 		this.scrollEvent = (function() {
-			if (this.options.mode == MODE_PAGE) return;
-
 			if (this.isScrolling) return;
 			this.isScrolling = true;
 
-			var dBody = this.dBody;
 			this.dHead.scrollLeft = dBody.scrollLeft;
 
-			var dScroll = dBody.scrollTop;
-			if (this.lastScroll !== dScroll) {
-				this.lastScrollUp = (dScroll < this.lastScroll);
-				this.resizePads();
-				this.lastScroll = dScroll;
+			if (this.options.mode != MODE_PAGE) {
+				var dScroll = dBody.scrollTop;
+				if (this.lastScroll !== dScroll) {
+					this.lastScrollUp = (dScroll < this.lastScroll);
+					this.resizePads();
+					this.lastScroll = dScroll;
+				}
 			}
 
 			this.isScrolling = false;
@@ -1284,7 +1282,7 @@ var dxSTable = new Class({
 			"height": (this.dCont.clientHeight - this.dHead.offsetHeight - (showIB ? this.infoBar.offsetHeight : 0)).max(52),
 			"width": (this.dCont.offsetWidth - 2).max(0)
 		});
-		this.dHead.setStyle("width", (this.dCont.offsetWidth + (((this.dBody.offsetWidth - this.dBody.clientWidth) == 0) ? -4 : -1)).max(0));
+		this.dHead.setStyle("width", this.dBody.clientWidth);
 		if (!this.isResizing) {
 			for (var i = 0, j = this.cols; i < j; i++) {
 				if (this.colData[i].disabled) continue;
@@ -1347,6 +1345,35 @@ var dxSTable = new Class({
 			this.rowSel[this.selectedRows[i]] = i;
 		if (!noRefresh)
 			this.refreshSelection();
+	},
+
+	"copySelection": function(delim) {
+		delim = [delim, "\t"].pick();
+
+		var selCols = this.colOrder.map(function(idx) {
+			if (!this.colHeader[idx].disabled) return idx;
+		}, this).clean();
+
+		return (
+			selCols.map(function(idx) { return this.colHeader[idx].text; }, this).join(delim) + "\r\n" +
+			this.getSortedSelection().map(function(id) {
+				var data = Array.clone(this.rowData[id].data);
+				return selCols.map(function(idx) {
+					return this.options.format(data, idx);
+				}, this).join(delim);
+			}, this).join("\r\n")
+		);
+	},
+
+	"getSortedSelection": function() {
+		var rowIdx = Object.map(this.rowData, function(r) { return r.activeIndex; });
+
+		return Array.clone(this.selectedRows).sort(function(x, y) {
+			// Sort according to the table's logical row order
+			if (rowIdx[x] < rowIdx[y]) return -1;
+			if (rowIdx[y] < rowIdx[x]) return 1;
+			return 0;
+		}, this);
 	},
 
 	"updateCell": function(id, col, data) {
@@ -1439,7 +1466,10 @@ var dxSTable = new Class({
 		}, this);
 		if (this.resetText) {
 			ContextMenu.add([CMENU_SEP]);
-			ContextMenu.add([this.resetText, this.fireEvent.bind(this, "onColReset")]);
+			ContextMenu.add([this.resetText, (function() {
+				this.fireEvent("onColReset");
+				this.scrollEvent();
+			}).bind(this)]);
 		}
 		ContextMenu.show(coords);
 	},
@@ -1487,7 +1517,10 @@ var dxSTable = new Class({
 				this.__resizePads_prevHeight__ = pHeight;
 
 				this.dPad.setStyle("height", pHeight);
-				this.tBody.setStyle("top", top);
+				this.tBody.setStyles({
+					"paddingBottom": (pHeight <= 0 ? 1 : undefined), // Prevent horizontal scrollbar from disappearing
+					"top": top
+				});
 			break;
 		}
 
@@ -1664,15 +1697,7 @@ var ColumnHandler = {
 			drag.mouse.pos.x = drag.mouse.start.x - left;
 			st.cancelMove = true;
 			st.isResizing = true;
-/*
-			st.colReszObj.setStyles({
-				"left": left,
-				"height": st.tBody.getHeight(), //st.dBody.getSize().y + 2,
-				"visibility": "visible"
-			});
-*/
 			st.colDragEle = drag.element;
-//			drag.element = drag.handle = st.colReszObj;
 			drag.limit.x = [];
 			drag.options.limit = true;
 		} else { // reordering
@@ -1722,7 +1747,6 @@ var ColumnHandler = {
 		drag.element = drag.handle = st.colDragEle;
 		st.colDragEle = null;
 		if (st.isResizing) { // resizing
-//			st.colReszObj.setStyles({"left": 0, "height": 0, "visibility": "hidden"});
 			st.isResizing = false;
 //			st.setColumnWidth(st.hotCell, st.tHeadCols[st.hotCell].getWidth());
 			st.fireEvent("onColResize");

@@ -47,7 +47,7 @@ var utWebUI = {
 		"minFileListCache": 60, // seconds
 		"minPeerListCache": 5, // seconds
 		"minXferHistCache": 60, // seconds
-		"defHSplit": 135,
+		"defHSplit": 140,
 		"defVSplit": 225,
 		"minHSplit": 25,
 		"minVSplit": 150,
@@ -130,6 +130,9 @@ var utWebUI = {
 		, ["ratio", 60, TYPE_NUMBER]
 		, ["availability", 60, TYPE_NUMBER]
 		, ["label", 80, TYPE_STRING, true]
+		, ["added", 150, TYPE_NUMBER, true]
+		, ["completed", 150, TYPE_NUMBER, true]
+		, ["url", 250, TYPE_STRING, true]
 	],
 	"prsColDefs": [
 		//[ colID, colWidth, colType, colDisabled = false, colIcon = false, colAlign = ALIGN_AUTO, colText = "" ]
@@ -162,12 +165,12 @@ var utWebUI = {
 	],
 	"fdColDefs": [
 		//[ colID, colWidth, colType, colDisabled = false, colIcon = false, colAlign = ALIGN_AUTO, colText = "" ]
-		  ["fullname", 360, TYPE_STRING, false, true]
-		, ["name", 220, TYPE_STRING, true, true]
+		  ["fullname", 355, TYPE_STRING, false, true]
+		, ["name", 215, TYPE_STRING, true, true]
 		, ["episode", 70, TYPE_NUMBER, true]
 		, ["format", 70, TYPE_NUMBER, true]
 		, ["codec", 70, TYPE_NUMBER, true]
-		, ["date", 145, TYPE_NUMBER]
+		, ["date", 150, TYPE_NUMBER]
 		, ["feed", 130, TYPE_STRING, true]
 		, ["url", 250, TYPE_STRING, true]
 	],
@@ -2996,8 +2999,14 @@ var utWebUI = {
 	"trtDataToRow": function(data) {
 		return this.trtColDefs.map(function(item) {
 			switch (item[0]) {
+				case "added":
+					return data[CONST.TORRENT_DATE_ADDED] * 1000;
+
 				case "availability":
 					return data[CONST.TORRENT_AVAILABILITY];
+
+				case "completed":
+					return data[CONST.TORRENT_DATE_COMPLETED] * 1000;
 
 				case "done":
 					return data[CONST.TORRENT_PROGRESS];
@@ -3046,6 +3055,9 @@ var utWebUI = {
 
 				case "upspeed":
 					return data[CONST.TORRENT_UPSPEED];
+
+				case "url":
+					return data[CONST.TORRENT_DOWNLOAD_URL] || "";
 			}
 		}, this);
 	},
@@ -3067,6 +3079,12 @@ var utWebUI = {
 				case "peers":
 				case "seeds":
 				case "status":
+				case "url":
+				break;
+
+				case "added":
+				case "completed":
+					values[i] = (values[i] > 0) ? new Date(values[i]).toISOString() : "";
 				break;
 
 				case "availability":
@@ -3078,6 +3096,7 @@ var utWebUI = {
 				break;
 
 				case "downloaded":
+				case "uploaded":
 					values[i] = values[i].toFileSize();
 				break;
 
@@ -3115,10 +3134,6 @@ var utWebUI = {
 
 				case "size":
 					values[i]  = values[i].toFileSize(2);
-				break;
-
-				case "uploaded":
-					values[i] = values[i].toFileSize();
 				break;
 			}
 		}
@@ -3229,6 +3244,8 @@ var utWebUI = {
 				, [lang[CONST.ML_DELETE_DATA], this.remove.bind(this, CONST.TOR_REMOVE_DATA)]
 			]]
 			, "recheck"    : [lang[CONST.ML_FORCE_RECHECK], this.recheck.bind(this)]
+			, "copymagnet" : [lang[CONST.ML_COPY_MAGNETURI], this.torShowMagnetCopy.bind(this)]
+			, "copy"       : [lang[CONST.MENU_COPY], this.torShowCopy.bind(this)]
 			, "properties" : [lang[CONST.ML_PROPERTIES], this.showProperties.bind(this)]
 		};
 
@@ -3260,6 +3277,9 @@ var utWebUI = {
 			, [CMENU_SEP]
 			, menuItemsMap["recheck"]
 			, [CMENU_SEP]
+			, menuItemsMap["copymagnet"]
+			, menuItemsMap["copy"]
+			, [CMENU_SEP]
 			, menuItemsMap["properties"]
 		]);
 
@@ -3270,6 +3290,29 @@ var utWebUI = {
 		ContextMenu.clear();
 		ContextMenu.add.apply(ContextMenu, menuItems);
 		ContextMenu.show(ev.page);
+	},
+
+	"torShowCopy": function() {
+		this.showCopy(lang[CONST.MENU_COPY], this.trtTable.copySelection());
+	},
+
+	"torShowMagnetCopy": function() {
+		var txtArray = [];
+		this.trtTable.getSortedSelection().each(function(hash) {
+			txtArray.push("magnet:?xt=urn:btih:" + hash + "&dn=" + encodeURIComponent(this.torrents[hash][CONST.TORRENT_NAME]));
+		}, this);
+
+		this.showCopy(lang[CONST.ML_COPY_MAGNETURI], txtArray.join("\r\n"));
+	},
+
+	"showCopy": function(title, txt) {
+		DialogManager.popup({
+			  title: title
+			, icon: "dlgIcon-Copy"
+			, width: "35em"
+			, input: txt
+			, buttons: [{ text: lang[CONST.DLG_BTN_CLOSE] }]
+		});
 	},
 
 	"showProperties": function(k) {
@@ -3420,7 +3463,7 @@ var utWebUI = {
 	},
 
 	"clearDetails": function() {
-		["rm", "dl", "ul", "ra", "us", "ds", "se", "pe", "hs"].each(function(id) {
+		["rm", "dl", "ul", "ra", "us", "ds", "se", "pe", "sa", "hs"].each(function(id) {
 			$(id).set("html", "");
 		});
 		this.prsTable.clearRows();
@@ -3431,7 +3474,6 @@ var utWebUI = {
 		if (!id) return;
 
 		var d = this.torrents[id];
-		$("hs").set("html", id);
 		$("dl").set("html", d[CONST.TORRENT_DOWNLOADED].toFileSize());
 		$("ul").set("html", d[CONST.TORRENT_UPLOADED].toFileSize());
 		$("ra").set("html", (d[CONST.TORRENT_RATIO] == -1) ? "\u221E" : (d[CONST.TORRENT_RATIO] / 1000).toFixedNR(3));
@@ -3440,6 +3482,8 @@ var utWebUI = {
 		$("rm").set("html", (d[CONST.TORRENT_ETA] == 0) ? "" : (d[CONST.TORRENT_ETA] <= -1) ? "\u221E" : d[CONST.TORRENT_ETA].toTimeDelta());
 		$("se").set("html", lang[CONST.GN_XCONN].replace(/%d/, d[CONST.TORRENT_SEEDS_CONNECTED]).replace(/%d/, d[CONST.TORRENT_SEEDS_SWARM]).replace(/%d/, "\u00BF?"));
 		$("pe").set("html", lang[CONST.GN_XCONN].replace(/%d/, d[CONST.TORRENT_PEERS_CONNECTED]).replace(/%d/, d[CONST.TORRENT_PEERS_SWARM]).replace(/%d/, "\u00BF?"));
+		$("sa").set("html", d[CONST.TORRENT_SAVE_PATH] || "");
+		$("hs").set("html", id);
 	},
 
 	"addRSSFeedItem": function(feedId, itemId) {
@@ -3689,12 +3733,24 @@ var utWebUI = {
 		menuItems = menuItems.concat(fileDownloadItems);
 
 		//--------------------------------------------------
+		// Miscellaneous Items
+		//--------------------------------------------------
+		menuItems = menuItems.concat([
+			  [CMENU_SEP]
+			, [lang[CONST.MENU_COPY], this.flsShowCopy.bind(this)]
+		]);
+
+		//--------------------------------------------------
 		// Draw Menu
 		//--------------------------------------------------
 
 		ContextMenu.clear();
 		ContextMenu.add.apply(ContextMenu, menuItems);
 		ContextMenu.show(ev.page);
+	},
+
+	"flsShowCopy": function() {
+		this.showCopy(lang[CONST.MENU_COPY], this.flsTable.copySelection());
 	},
 
 	"getSelFileIds": function() {
@@ -3787,6 +3843,25 @@ var utWebUI = {
 		}
 		if (!nosave && Browser.opera)
 			this.saveConfig(true);
+	},
+
+	"showGeneralMenu": function(ev) {
+		if (isGuest || !ev.isRightClick()) return;
+
+		var menuItems = [
+			[lang[CONST.MENU_COPY], this.showCopy.bind(this, lang[CONST.MENU_COPY], ev.target.get("text"))]
+		];
+
+		//--------------------------------------------------
+		// Draw Menu
+		//--------------------------------------------------
+
+		ContextMenu.clear();
+		ContextMenu.add.apply(ContextMenu, menuItems);
+		ContextMenu.show(ev.page);
+
+		// Prevent global click handler from hiding the menu
+		ev.stopPropagation();
 	},
 
 	"prsColMove": function() {
@@ -3957,9 +4032,13 @@ var utWebUI = {
 		if (isGuest || !ev.isRightClick()) return;
 
 		var menuItems = [
-			[lang[CONST.MP_RESOLVE_IPS], this.toggleResolveIP.bind(this)]
+			  [lang[CONST.MP_RESOLVE_IPS], this.toggleResolveIP.bind(this)]
+			, [CMENU_SEP]
+			, [lang[CONST.MENU_COPY], this.prsShowCopy.bind(this)]
 		];
 
+		// Process menu items
+		// NOTE: Yeah, very nasty code here.
 		if (this.settings["resolve_peerips"]) {
 			menuItems[0].splice(0, 0, CMENU_CHECK);
 		}
@@ -3973,6 +4052,9 @@ var utWebUI = {
 		ContextMenu.show(ev.page);
 	},
 
+	"prsShowCopy": function() {
+		this.showCopy(lang[CONST.MENU_COPY], this.prsTable.copySelection());
+	},
 
 	"prsSort": function(index, reverse) {
 		this.config.peerTable.sIndex = index;
@@ -4487,7 +4569,7 @@ var utWebUI = {
 				break;
 
 				case "date":
-					values[i] = new Date(values[i]).toISOString();
+					values[i] = (values[i] > 0) ? new Date(values[i]).toISOString() : "";
 				break;
 
 				case "codec":
@@ -4513,11 +4595,7 @@ var utWebUI = {
 
 				case "feed":
 					var feed = this.rssfeeds[values[i]];
-
-					values[i] = (feed
-						? feed[CONST.RSSFEED_URL].split("|")[0]
-						: ""
-					);
+					values[i] = feed? feed[CONST.RSSFEED_URL].split("|")[0] : ""
 				break;
 
 				case "format":
