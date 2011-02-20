@@ -1,4 +1,4 @@
-var lang = [
+var LANG_STR = [
 	  "Fitxers Torrent||*.torrent||Tots els fitxers (*.*)||*.*||"
 	, "OK"
 	, "Cancela"

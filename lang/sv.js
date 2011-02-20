@@ -1,4 +1,4 @@
-var lang = [
+var LANG_STR = [
 	  "Torrentfiler||*.torrent||Alla filer (*.*)||*.*||"
 	, "OK"
 	, "Avbryt"

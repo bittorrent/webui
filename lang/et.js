@@ -1,4 +1,4 @@
-var lang = [
+var LANG_STR = [
 	  "Torrenti failid||*.torrent||Kõik failid (*.*)||*.*||"
 	, "OK"
 	, "Loobu"

@@ -1,4 +1,4 @@
-var lang = [
+var LANG_STR = [
 	  "Datoteke torrent||*.torrent||Vse datoteke (*.*)||*.*||"
 	, "V redu"
 	, "Prekliči"

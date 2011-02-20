@@ -1,4 +1,4 @@
-var lang = [
+var LANG_STR = [
 	  "Torrent 文件||*.torrent||所有文件 (*.*)||*.*||"
 	, "确定"
 	, "取消"

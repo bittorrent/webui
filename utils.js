@@ -5,10 +5,9 @@ Copyright 2008 Carsten Niebuhr
 
 (function() {
 	// NOTE: Performance hack, since MooTools $ seems to run very slowly
-	var _ = document.id;
+	var moo = document.id;
 	$ = function(el, nc) {
-		if (typeof(el) === 'string') return _(document.getElementById(el), nc, document); 
-		return _(el, nc, document);
+		return moo(((typeof(el) === 'string') ? document.getElementById(el) : el), nc, document); 
 	};
 })();
 
@@ -146,7 +145,7 @@ Number.implement({
 	},
 
 	"toFileSize": function(numdec, unit) {
-		var sz = [lang[CONST.SIZE_B], lang[CONST.SIZE_KB], lang[CONST.SIZE_MB], lang[CONST.SIZE_GB], lang[CONST.SIZE_TB], lang[CONST.SIZE_PB], lang[CONST.SIZE_EB]];
+		var sz = [_("SIZE_B"), _("SIZE_KB"), _("SIZE_MB"), _("SIZE_GB"), _("SIZE_TB"), _("SIZE_PB"), _("SIZE_EB")];
 		var szmax = sz.length-1;
 		var size = this;
 
@@ -179,17 +178,17 @@ Number.implement({
 		m = Math.floor(div / 60);
 		s = div % 60;
 		if (y > 0) {
-			output = lang[CONST.TIME_YEARS_WEEKS].replace(/%d/, y).replace(/%d/, w);
+			output = _("TIME_YEARS_WEEKS").replace(/%d/, y).replace(/%d/, w);
 		} else if (w > 0) {
-			output = lang[CONST.TIME_WEEKS_DAYS].replace(/%d/, w).replace(/%d/, d);
+			output = _("TIME_WEEKS_DAYS").replace(/%d/, w).replace(/%d/, d);
 		} else if (d > 0) {
-			output = lang[CONST.TIME_DAYS_HOURS].replace(/%d/, d).replace(/%d/, h);
+			output = _("TIME_DAYS_HOURS").replace(/%d/, d).replace(/%d/, h);
 		} else if (h > 0) {
-			output = lang[CONST.TIME_HOURS_MINS].replace(/%d/, h).replace(/%d/, m);
+			output = _("TIME_HOURS_MINS").replace(/%d/, h).replace(/%d/, m);
 		} else if (m > 0) {
-			output = lang[CONST.TIME_MINS_SECS].replace(/%d/, m).replace(/%d/, s);
+			output = _("TIME_MINS_SECS").replace(/%d/, m).replace(/%d/, s);
 		} else {
-			output = lang[CONST.TIME_SECS].replace(/%d/, s);
+			output = _("TIME_SECS").replace(/%d/, s);
 		}
 		return output;
 	}

@@ -941,7 +941,7 @@ function setupUserInterface() {
 	// -- General
 
 	var langArr = [];
-	$each(LANGUAGES, function(lang, code) {
+	$each(LANG_LIST, function(lang, code) {
 		langArr.push({lang: lang, code: code});
 	});
 	langArr.sort(function(x, y) {
@@ -1286,14 +1286,14 @@ function loadLangStrings(reload) {
 		return;
 	}
 
-	g_perSec = "/" + lang[CONST.TIME_SECS].replace(/%d/, "").trim();
-	g_dayCodes = lang[CONST.ST_SCH_DAYCODES].split("||");
-	g_dayNames = lang[CONST.ST_SCH_DAYNAMES].split("||");
+	g_perSec = "/" + _("TIME_SECS").replace(/%d/, "").trim();
+	g_dayCodes = _("ST_SCH_DAYCODES").split("||");
+	g_dayNames = _("ST_SCH_DAYNAMES").split("||");
 	g_schLgndEx = {
-		  "full"    : lang[CONST.ST_SCH_LGND_FULLEX]
-		, "limited" : lang[CONST.ST_SCH_LGND_LIMITEDEX]
-		, "off"     : lang[CONST.ST_SCH_LGND_OFFEX]
-		, "seeding" : lang[CONST.ST_SCH_LGND_SEEDINGEX]
+		  "full"    : _("ST_SCH_LGND_FULLEX")
+		, "limited" : _("ST_SCH_LGND_LIMITEDEX")
+		, "off"     : _("ST_SCH_LGND_OFFEX")
+		, "seeding" : _("ST_SCH_LGND_SEEDINGEX")
 	};
 
 	//--------------------------------------------------
@@ -1315,28 +1315,28 @@ function loadLangStrings(reload) {
 
 	utWebUI.trtTable.refreshRows();
 	utWebUI.trtTable.setConfig({
-		"resetText": lang[CONST.MENU_RESET],
+		"resetText": _("MENU_RESET"),
 		"colText": {
-			  "name"         : lang[CONST.OV_COL_NAME]
-			, "order"        : lang[CONST.OV_COL_ORDER]
-			, "size"         : lang[CONST.OV_COL_SIZE]
-			, "remaining"    : lang[CONST.OV_COL_REMAINING]
-			, "done"         : lang[CONST.OV_COL_DONE]
-			, "status"       : lang[CONST.OV_COL_STATUS]
-			, "seeds"        : lang[CONST.OV_COL_SEEDS]
-			, "peers"        : lang[CONST.OV_COL_PEERS]
-			, "seeds_peers"  : lang[CONST.OV_COL_SEEDS_PEERS]
-			, "downspeed"    : lang[CONST.OV_COL_DOWNSPD]
-			, "upspeed"      : lang[CONST.OV_COL_UPSPD]
-			, "eta"          : lang[CONST.OV_COL_ETA]
-			, "downloaded"   : lang[CONST.OV_COL_DOWNLOADED]
-			, "uploaded"     : lang[CONST.OV_COL_UPPED]
-			, "ratio"        : lang[CONST.OV_COL_SHARED]
-			, "availability" : lang[CONST.OV_COL_AVAIL].split("||")[1]
-			, "label"        : lang[CONST.OV_COL_LABEL]
-			, "added"        : lang[CONST.OV_COL_DATE_ADDED]
-			, "completed"    : lang[CONST.OV_COL_DATE_COMPLETED]
-			, "url"          : lang[CONST.OV_COL_SOURCE_URL]
+			  "name"         : _("OV_COL_NAME")
+			, "order"        : _("OV_COL_ORDER")
+			, "size"         : _("OV_COL_SIZE")
+			, "remaining"    : _("OV_COL_REMAINING")
+			, "done"         : _("OV_COL_DONE")
+			, "status"       : _("OV_COL_STATUS")
+			, "seeds"        : _("OV_COL_SEEDS")
+			, "peers"        : _("OV_COL_PEERS")
+			, "seeds_peers"  : _("OV_COL_SEEDS_PEERS")
+			, "downspeed"    : _("OV_COL_DOWNSPD")
+			, "upspeed"      : _("OV_COL_UPSPD")
+			, "eta"          : _("OV_COL_ETA")
+			, "downloaded"   : _("OV_COL_DOWNLOADED")
+			, "uploaded"     : _("OV_COL_UPPED")
+			, "ratio"        : _("OV_COL_SHARED")
+			, "availability" : _("OV_COL_AVAIL").split("||")[1]
+			, "label"        : _("OV_COL_LABEL")
+			, "added"        : _("OV_COL_DATE_ADDED")
+			, "completed"    : _("OV_COL_DATE_COMPLETED")
+			, "url"          : _("OV_COL_SOURCE_URL")
 		}
 	});
 
@@ -1346,7 +1346,7 @@ function loadLangStrings(reload) {
 
 	// -- Tab Titles
 
-	var maintstr = lang[CONST.OV_TABS].split("||");
+	var maintstr = _("OV_TABS").split("||");
 	utWebUI.mainTabs.setNames({
 		  "mainInfoPane-generalTab" : maintstr[0]
 		, "mainInfoPane-peersTab"   : maintstr[2]
@@ -1377,26 +1377,26 @@ function loadLangStrings(reload) {
 
 	utWebUI.prsTable.refreshRows();
 	utWebUI.prsTable.setConfig({
-		"resetText": lang[CONST.MENU_RESET],
+		"resetText": _("MENU_RESET"),
 		"colText": {
-			  "ip"         : lang[CONST.PRS_COL_IP]
-			, "port"       : lang[CONST.PRS_COL_PORT]
-			, "client"     : lang[CONST.PRS_COL_CLIENT]
-			, "flags"      : lang[CONST.PRS_COL_FLAGS]
-			, "pcnt"       : lang[CONST.PRS_COL_PCNT]
-			, "relevance"  : lang[CONST.PRS_COL_RELEVANCE]
-			, "downspeed"  : lang[CONST.PRS_COL_DOWNSPEED]
-			, "upspeed"    : lang[CONST.PRS_COL_UPSPEED]
-			, "reqs"       : lang[CONST.PRS_COL_REQS]
-			, "waited"     : lang[CONST.PRS_COL_WAITED]
-			, "uploaded"   : lang[CONST.PRS_COL_UPLOADED]
-			, "downloaded" : lang[CONST.PRS_COL_DOWNLOADED]
-			, "hasherr"    : lang[CONST.PRS_COL_HASHERR]
-			, "peerdl"     : lang[CONST.PRS_COL_PEERDL]
-			, "maxup"      : lang[CONST.PRS_COL_MAXUP]
-			, "maxdown"    : lang[CONST.PRS_COL_MAXDOWN]
-			, "queued"     : lang[CONST.PRS_COL_QUEUED]
-			, "inactive"   : lang[CONST.PRS_COL_INACTIVE]
+			  "ip"         : _("PRS_COL_IP")
+			, "port"       : _("PRS_COL_PORT")
+			, "client"     : _("PRS_COL_CLIENT")
+			, "flags"      : _("PRS_COL_FLAGS")
+			, "pcnt"       : _("PRS_COL_PCNT")
+			, "relevance"  : _("PRS_COL_RELEVANCE")
+			, "downspeed"  : _("PRS_COL_DOWNSPEED")
+			, "upspeed"    : _("PRS_COL_UPSPEED")
+			, "reqs"       : _("PRS_COL_REQS")
+			, "waited"     : _("PRS_COL_WAITED")
+			, "uploaded"   : _("PRS_COL_UPLOADED")
+			, "downloaded" : _("PRS_COL_DOWNLOADED")
+			, "hasherr"    : _("PRS_COL_HASHERR")
+			, "peerdl"     : _("PRS_COL_PEERDL")
+			, "maxup"      : _("PRS_COL_MAXUP")
+			, "maxdown"    : _("PRS_COL_MAXDOWN")
+			, "queued"     : _("PRS_COL_QUEUED")
+			, "inactive"   : _("PRS_COL_INACTIVE")
 		}
 	});
 
@@ -1404,21 +1404,21 @@ function loadLangStrings(reload) {
 
 	utWebUI.flsTable.refreshRows();
 	utWebUI.flsTable.setConfig({
-		"resetText": lang[CONST.MENU_RESET],
+		"resetText": _("MENU_RESET"),
 		"colText": {
-			  "name" : lang[CONST.FI_COL_NAME]
-			, "size" : lang[CONST.FI_COL_SIZE]
-			, "done" : lang[CONST.FI_COL_DONE]
-			, "pcnt" : lang[CONST.FI_COL_PCNT]
-			, "prio" : lang[CONST.FI_COL_PRIO]
+			  "name" : _("FI_COL_NAME")
+			, "size" : _("FI_COL_SIZE")
+			, "done" : _("FI_COL_DONE")
+			, "pcnt" : _("FI_COL_PCNT")
+			, "prio" : _("FI_COL_PRIO")
 		}
 	});
 
 	// -- Speed Tab
 
 	SpeedGraph.setLabels(
-		  lang[CONST.OV_COL_UPSPD]
-		, lang[CONST.OV_COL_DOWNSPD]
+		  _("OV_COL_UPSPD")
+		, _("OV_COL_DOWNSPD")
 	);
 	SpeedGraph.draw();
 
@@ -1541,7 +1541,7 @@ function loadLangStrings(reload) {
 
 	// -- Tab Titles
 
-	var rsststr = lang[CONST.DLG_RSSDOWNLOADER_02].split("||");
+	var rsststr = _("DLG_RSSDOWNLOADER_02").split("||");
 	utWebUI.mainTabs.setNames({
 		  "dlgRSSDownloader-feedsTab"   : rsststr[0]
 		, "dlgRSSDownloader-filtersTab" : rsststr[1]
@@ -1553,16 +1553,16 @@ function loadLangStrings(reload) {
 
 	utWebUI.rssfdTable.refreshRows();
 	utWebUI.rssfdTable.setConfig({
-		"resetText": lang[CONST.MENU_RESET],
+		"resetText": _("MENU_RESET"),
 		"colText": {
-			  "fullname" : lang[CONST.FEED_COL_FULLNAME]
-			, "name"     : lang[CONST.FEED_COL_NAME]
-			, "episode"  : lang[CONST.FEED_COL_EPISODE]
-			, "format"   : lang[CONST.FEED_COL_FORMAT]
-			, "codec"    : lang[CONST.FEED_COL_CODEC]
-			, "date"     : lang[CONST.FEED_COL_DATE]
-			, "feed"     : lang[CONST.FEED_COL_FEED]
-			, "url"      : lang[CONST.FEED_COL_URL]
+			  "fullname" : _("FEED_COL_FULLNAME")
+			, "name"     : _("FEED_COL_NAME")
+			, "episode"  : _("FEED_COL_EPISODE")
+			, "format"   : _("FEED_COL_FORMAT")
+			, "codec"    : _("FEED_COL_CODEC")
+			, "date"     : _("FEED_COL_DATE")
+			, "feed"     : _("FEED_COL_FEED")
+			, "url"      : _("FEED_COL_URL")
 		}
 	});
 
@@ -1585,27 +1585,27 @@ function loadLangStrings(reload) {
 		, "DLG_RSSDOWNLOADER_17"
 	])
 
-	_loadComboboxStrings("rssfilter_min_interval", lang[CONST.DLG_RSSDOWNLOADER_31].split("||"));
+	_loadComboboxStrings("rssfilter_min_interval", _("DLG_RSSDOWNLOADER_31").split("||"));
 
 	//--------------------------------------------------
 	// SETTINGS DIALOG
 	//--------------------------------------------------
 
 	utWebUI.stpanes.setNames({
-		  "dlgSettings-General"     : lang[CONST.ST_CAPT_GENERAL]
-		, "dlgSettings-UISettings"  : lang[CONST.ST_CAPT_UI_SETTINGS]
-		, "dlgSettings-Directories" : lang[CONST.ST_CAPT_FOLDER]
-		, "dlgSettings-Connection"  : lang[CONST.ST_CAPT_CONNECTION]
-		, "dlgSettings-Bandwidth"   : lang[CONST.ST_CAPT_BANDWIDTH]
-		, "dlgSettings-BitTorrent"  : lang[CONST.ST_CAPT_BITTORRENT]
-		, "dlgSettings-TransferCap" : lang[CONST.ST_CAPT_TRANSFER_CAP]
-		, "dlgSettings-Queueing"    : lang[CONST.ST_CAPT_QUEUEING]
-		, "dlgSettings-WebUI"       : lang[CONST.ST_CAPT_WEBUI]
-		, "dlgSettings-Scheduler"   : lang[CONST.ST_CAPT_SCHEDULER]
-		, "dlgSettings-Advanced"    : lang[CONST.ST_CAPT_ADVANCED]
-		, "dlgSettings-UIExtras"    : "&nbsp;&nbsp;&nbsp;&nbsp;" + lang[CONST.ST_CAPT_UI_EXTRAS] // TODO: Use CSS to indent instead of modifying the string directly...
-		, "dlgSettings-DiskCache"   : "&nbsp;&nbsp;&nbsp;&nbsp;" + lang[CONST.ST_CAPT_DISK_CACHE] // TODO: Use CSS to indent instead of modifying the string directly...
-		, "dlgSettings-RunProgram"  : "&nbsp;&nbsp;&nbsp;&nbsp;" + lang[CONST.ST_CAPT_RUN_PROGRAM] // TODO: Use CSS to indent instead of modifying the string directly...
+		  "dlgSettings-General"     : _("ST_CAPT_GENERAL")
+		, "dlgSettings-UISettings"  : _("ST_CAPT_UI_SETTINGS")
+		, "dlgSettings-Directories" : _("ST_CAPT_FOLDER")
+		, "dlgSettings-Connection"  : _("ST_CAPT_CONNECTION")
+		, "dlgSettings-Bandwidth"   : _("ST_CAPT_BANDWIDTH")
+		, "dlgSettings-BitTorrent"  : _("ST_CAPT_BITTORRENT")
+		, "dlgSettings-TransferCap" : _("ST_CAPT_TRANSFER_CAP")
+		, "dlgSettings-Queueing"    : _("ST_CAPT_QUEUEING")
+		, "dlgSettings-WebUI"       : _("ST_CAPT_WEBUI")
+		, "dlgSettings-Scheduler"   : _("ST_CAPT_SCHEDULER")
+		, "dlgSettings-Advanced"    : _("ST_CAPT_ADVANCED")
+		, "dlgSettings-UIExtras"    : "&nbsp;&nbsp;&nbsp;&nbsp;" + _("ST_CAPT_UI_EXTRAS") // TODO: Use CSS to indent instead of modifying the string directly...
+		, "dlgSettings-DiskCache"   : "&nbsp;&nbsp;&nbsp;&nbsp;" + _("ST_CAPT_DISK_CACHE") // TODO: Use CSS to indent instead of modifying the string directly...
+		, "dlgSettings-RunProgram"  : "&nbsp;&nbsp;&nbsp;&nbsp;" + _("ST_CAPT_RUN_PROGRAM") // TODO: Use CSS to indent instead of modifying the string directly...
 	});
 
 	_loadStrings("text", [
@@ -1793,10 +1793,10 @@ function loadLangStrings(reload) {
 
 	utWebUI.advOptTable.refreshRows();
 	utWebUI.advOptTable.setConfig({
-		"resetText": lang[CONST.MENU_RESET],
+		"resetText": _("MENU_RESET"),
 		"colText": {
-			  "name"  : lang[CONST.ST_COL_NAME]
-			, "value" : lang[CONST.ST_COL_VALUE]
+			  "name"  : _("ST_COL_NAME")
+			, "value" : _("ST_COL_VALUE")
 		}
 	});
 
@@ -1808,13 +1808,13 @@ function loadLangStrings(reload) {
 	]);
 
 	// -- Comboboxes
-	_loadComboboxStrings("gui.dblclick_seed", lang[CONST.ST_CBO_UI_DBLCLK_TOR].split("||"), utWebUI.settings["gui.dblclick_seed"]);
-	_loadComboboxStrings("gui.dblclick_dl", lang[CONST.ST_CBO_UI_DBLCLK_TOR].split("||"), utWebUI.settings["gui.dblclick_dl"]);
-	_loadComboboxStrings("encryption_mode", lang[CONST.ST_CBO_ENCRYPTIONS].split("||"), utWebUI.settings["encryption_mode"]);
-	_loadComboboxStrings("proxy.type", lang[CONST.ST_CBO_PROXY].split("||"), utWebUI.settings["proxy.type"]);
-	_loadComboboxStrings("multi_day_transfer_mode", lang[CONST.ST_CBO_TCAP_MODES].split("||"), utWebUI.settings["multi_day_transfer_mode"]);
-	_loadComboboxStrings("multi_day_transfer_limit_unit", lang[CONST.ST_CBO_TCAP_UNITS].split("||"), utWebUI.settings["multi_day_transfer_limit_unit"]);
-	_loadComboboxStrings("multi_day_transfer_limit_span", lang[CONST.ST_CBO_TCAP_PERIODS].split("||"), utWebUI.settings["multi_day_transfer_limit_span"]);
+	_loadComboboxStrings("gui.dblclick_seed", _("ST_CBO_UI_DBLCLK_TOR").split("||"), utWebUI.settings["gui.dblclick_seed"]);
+	_loadComboboxStrings("gui.dblclick_dl", _("ST_CBO_UI_DBLCLK_TOR").split("||"), utWebUI.settings["gui.dblclick_dl"]);
+	_loadComboboxStrings("encryption_mode", _("ST_CBO_ENCRYPTIONS").split("||"), utWebUI.settings["encryption_mode"]);
+	_loadComboboxStrings("proxy.type", _("ST_CBO_PROXY").split("||"), utWebUI.settings["proxy.type"]);
+	_loadComboboxStrings("multi_day_transfer_mode", _("ST_CBO_TCAP_MODES").split("||"), utWebUI.settings["multi_day_transfer_mode"]);
+	_loadComboboxStrings("multi_day_transfer_limit_unit", _("ST_CBO_TCAP_UNITS").split("||"), utWebUI.settings["multi_day_transfer_limit_unit"]);
+	_loadComboboxStrings("multi_day_transfer_limit_span", _("ST_CBO_TCAP_PERIODS").split("||"), utWebUI.settings["multi_day_transfer_limit_span"]);
 
 	$("sched_table").fireEvent("change"); // Force update scheduler related language strings
 
@@ -1850,14 +1850,14 @@ function _loadStrings(prop, strings) {
 	switch (typeOf(strings)) {
 		case 'object':
 			fnload = function(val, key) {
-				$(key).set(prop, lang[CONST[val]]);
+				$(key).set(prop, _(val));
 			};
 		break;
 
 		default:
 			strings = Array.from(strings);
 			fnload = function(val) {
-				$(val).set(prop, lang[CONST[val]]);
+				$(val).set(prop, _(val));
 			};
 	}
 

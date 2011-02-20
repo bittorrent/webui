@@ -1,4 +1,4 @@
-var lang = [
+var LANG_STR = [
 	  "Deiliskrár||*.torrent||Allar skrár (*.*)||*.*||"
 	, "Í lagi"
 	, "Hætta við"

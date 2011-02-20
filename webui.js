@@ -3,8 +3,7 @@ Copyright 2007 BitTorrent, Inc. All rights reserved.
 Copyright 2008 Carsten Niebuhr
 */
 
-var LANGUAGES = LANGUAGES || {};
-var lang = lang || null;
+var LANG_LIST = LANG_LIST || {};
 var urlBase = window.location.pathname.substr(0, window.location.pathname.indexOf("/gui"));
 var guiBase = urlBase + "/gui/";
 var proxyBase = urlBase + "/proxy";
@@ -693,22 +692,22 @@ var utWebUI = {
 			switch (mode) {
 				case CONST.TOR_REMOVE:
 				case CONST.TOR_REMOVE_TORRENT:
-					ask = ((count == 1) ? CONST.OV_CONFIRM_DELETE_ONE : CONST.OV_CONFIRM_DELETE_MULTIPLE);
+					ask = ((count == 1) ? "OV_CONFIRM_DELETE_ONE" : "OV_CONFIRM_DELETE_MULTIPLE");
 				break;
 
 				case CONST.TOR_REMOVE_DATA:
 				case CONST.TOR_REMOVE_DATATORRENT:
-					ask = ((count == 1) ? CONST.OV_CONFIRM_DELETEDATA_ONE : CONST.OV_CONFIRM_DELETEDATA_MULTIPLE);
+					ask = ((count == 1) ? "OV_CONFIRM_DELETEDATA_ONE" : "OV_CONFIRM_DELETEDATA_MULTIPLE");
 				break;
 			}
 
 			DialogManager.popup({
 				  title: "Remove Torrent(s)" // TODO: Localize
 				, icon: "dlgIcon-Delete"
-				, message: lang[ask].replace(/%d/, count)
+				, message: _(ask).replace(/%d/, count)
 				, buttons: [
-					{ text: lang[CONST.DLG_BTN_YES], focus: true, click: act },
-					{ text: lang[CONST.DLG_BTN_NO] }
+					{ text: _("DLG_BTN_YES"), focus: true, click: act },
+					{ text: _("DLG_BTN_NO") }
 				]
 			});
 		}
@@ -880,28 +879,28 @@ var utWebUI = {
 		var res = ["", ""];
 
 		if (state & CONST.STATE_PAUSED) { // paused
-			res = ["Status_Paused", (state & CONST.STATE_CHECKING) ? lang[CONST.OV_FL_CHECKED].replace(/%:\.1d%/, (done / 10).toFixedNR(1)) : lang[CONST.OV_FL_PAUSED]];
+			res = ["Status_Paused", (state & CONST.STATE_CHECKING) ? _("OV_FL_CHECKED").replace(/%:\.1d%/, (done / 10).toFixedNR(1)) : _("OV_FL_PAUSED")];
 		}
 		else if (state & CONST.STATE_STARTED) { // started, seeding or leeching
-			res = (done == 1000) ? ["Status_Up", lang[CONST.OV_FL_SEEDING]] : ["Status_Down", lang[CONST.OV_FL_DOWNLOADING]];
+			res = (done == 1000) ? ["Status_Up", _("OV_FL_SEEDING")] : ["Status_Down", _("OV_FL_DOWNLOADING")];
 			if (!(state & CONST.STATE_QUEUED)) { // forced start
 				res[1] = "[F] " + res[1];
 			}
 		}
 		else if (state & CONST.STATE_CHECKING) { // checking
-			res = ["Status_Checking", lang[CONST.OV_FL_CHECKED].replace(/%:\.1d%/, (done / 10).toFixedNR(1))];
+			res = ["Status_Checking", _("OV_FL_CHECKED").replace(/%:\.1d%/, (done / 10).toFixedNR(1))];
 		}
 		else if (state & CONST.STATE_ERROR) { // error
-			res = ["Status_Error", lang[CONST.OV_FL_ERROR].replace(/%s/, "??")];
+			res = ["Status_Error", _("OV_FL_ERROR").replace(/%s/, "??")];
 		}
 		else if (state & CONST.STATE_QUEUED) { // queued
-			res = (done == 1000) ? ["Status_Queued_Up", lang[CONST.OV_FL_QUEUED_SEED]] : ["Status_Queued_Down", lang[CONST.OV_FL_QUEUED]];
+			res = (done == 1000) ? ["Status_Queued_Up", _("OV_FL_QUEUED_SEED")] : ["Status_Queued_Down", _("OV_FL_QUEUED")];
 		}
 		else if (done == 1000) { // finished
-			res = ["Status_Completed", lang[CONST.OV_FL_FINISHED]];
+			res = ["Status_Completed", _("OV_FL_FINISHED")];
 		}
 		else { // stopped
-			res = ["Status_Incomplete", lang[CONST.OV_FL_STOPPED]];
+			res = ["Status_Incomplete", _("OV_FL_STOPPED")];
 		}
 
 		return res;
@@ -1180,7 +1179,7 @@ var utWebUI = {
 
 		// Setup Feed item
 		// RSSTODO: Move this elsewhere
-		var feeds = [[-1, lang[CONST.DLG_RSSDOWNLOADER_30]]];
+		var feeds = [[-1, _("DLG_RSSDOWNLOADER_30")]];
 		Object.map(this.rssfeeds, function(item, key) {
 			feeds.push([key, item[CONST.RSSFEED_URL].split("|")[0]]);
 		}, this);
@@ -1430,13 +1429,13 @@ var utWebUI = {
 			tmpl = this.torrents[this.trtTable.selectedRows[0]][CONST.TORRENT_LABEL];
 
 		DialogManager.popup({
-			  title: lang[CONST.OV_NEWLABEL_CAPTION]
+			  title: _("OV_NEWLABEL_CAPTION")
 			, icon: "dlgIcon-Label"
-			, message: lang[CONST.OV_NEWLABEL_TEXT]
+			, message: _("OV_NEWLABEL_TEXT")
 			, input: tmpl || ""
 			, buttons: [
-				{ text: lang[CONST.DLG_BTN_OK], submit: true, click: this.createLabel.bind(this) },
-				{ text: lang[CONST.DLG_BTN_CANCEL] }
+				{ text: _("DLG_BTN_OK"), submit: true, click: this.createLabel.bind(this) },
+				{ text: _("DLG_BTN_CANCEL") }
 			]
 		});
 	},
@@ -1695,7 +1694,7 @@ var utWebUI = {
 
 		if (!isGuest && ev.isRightClick()) {
 			// Generate menu items
-			var menuItems = [[lang[CONST.DLG_RSSDOWNLOADER_18], this.showAddEditRSSFeed.bind(this, -1)]];
+			var menuItems = [[_("DLG_RSSDOWNLOADER_18"), this.showAddEditRSSFeed.bind(this, -1)]];
 
 			if (element) {
 				var feedIds = ("rssfeed_all" in this.config.activeRssFeeds
@@ -1714,26 +1713,26 @@ var utWebUI = {
 					menuItems.push([CMENU_SEP]);
 
 					if (feedIds.length === 1) {
-						menuItems.push([lang[CONST.DLG_RSSDOWNLOADER_19], this.showAddEditRSSFeed.bind(this, feedIds[0])]);
+						menuItems.push([_("DLG_RSSDOWNLOADER_19"), this.showAddEditRSSFeed.bind(this, feedIds[0])]);
 					}
 
 					menuItems = menuItems.concat([
-						  [lang[(feedIsEnabled ? CONST.DLG_RSSDOWNLOADER_20 : CONST.DLG_RSSDOWNLOADER_21)],
+						  [_(feedIsEnabled ? "DLG_RSSDOWNLOADER_20" : "DLG_RSSDOWNLOADER_21"),
 							this.rssUpdate.bind(this, {id: feedIds, enabled: !feedIsEnabled}, null)
 						]
-						, [lang[CONST.DLG_RSSDOWNLOADER_22], this.rssUpdate.bind(this, {id: feedIds, update: 1}, null)]
-						, [lang[CONST.DLG_RSSDOWNLOADER_23],
+						, [_("DLG_RSSDOWNLOADER_22"), this.rssUpdate.bind(this, {id: feedIds, update: 1}, null)]
+						, [_("DLG_RSSDOWNLOADER_23"),
 							(function(feedIds) { // RSSTODO: Move this elsewhere
 								DialogManager.popup({
-									  title: lang[CONST.DLG_RSSDOWNLOADER_34]
+									  title: _("DLG_RSSDOWNLOADER_34")
 									, icon: "dlgIcon-Delete"
 									, message: (feedIds.length > 1
-										? lang[CONST.DLG_RSSDOWNLOADER_35].replace(/%d/, feedIds.length)
-										: lang[CONST.DLG_RSSDOWNLOADER_36].replace(/%s/, this.rssfeeds[feedIds][CONST.RSSFEED_URL].split("|")[0])
+										? _("DLG_RSSDOWNLOADER_35").replace(/%d/, feedIds.length)
+										: _("DLG_RSSDOWNLOADER_36").replace(/%s/, this.rssfeeds[feedIds][CONST.RSSFEED_URL].split("|")[0])
 									)
 									, buttons: [
-										{ text: lang[CONST.DLG_BTN_YES], focus: true, click: this.rssRemove.bind(this, feedIds) },
-										{ text: lang[CONST.DLG_BTN_NO] }
+										{ text: _("DLG_BTN_YES"), focus: true, click: this.rssRemove.bind(this, feedIds) },
+										{ text: _("DLG_BTN_NO") }
 									]
 								});
 							}).bind(this, feedIds)
@@ -1901,7 +1900,7 @@ var utWebUI = {
 		if (!isGuest && ev.isRightClick()) {
 			// Generate menu items
 			var menuItems = [
-				[lang[CONST.DLG_RSSDOWNLOADER_27],
+				[_("DLG_RSSDOWNLOADER_27"),
 					this.rssfilterUpdate.bind(this, null, (function(json) {
 						this.rssfilterId = "rssfilter_" + json.filter_ident;
 					}).bind(this))
@@ -1911,15 +1910,15 @@ var utWebUI = {
 			if (element) {
 				var filterId = element.id.replace(/^rssfilter_/, '');
 
-				menuItems.push([lang[CONST.DLG_RSSDOWNLOADER_28],
+				menuItems.push([_("DLG_RSSDOWNLOADER_28"),
 					(function(filterId) { // RSSTODO: Move this elsewhere
 						DialogManager.popup({
 							  title: "Remove RSS Filter(s)" // TODO: Localize
 							, icon: "dlgIcon-Delete"
-							, message: lang[CONST.OV_CONFIRM_DELETE_RSSFILTER].replace(/%s/, this.rssfilters[filterId][CONST.RSSFILTER_NAME])
+							, message: _("OV_CONFIRM_DELETE_RSSFILTER").replace(/%s/, this.rssfilters[filterId][CONST.RSSFILTER_NAME])
 							, buttons: [
-								{ text: lang[CONST.DLG_BTN_YES], focus: true, click: this.rssfilterRemove.bind(this, filterId) },
-								{ text: lang[CONST.DLG_BTN_NO] }
+								{ text: _("DLG_BTN_YES"), focus: true, click: this.rssfilterRemove.bind(this, filterId) },
+								{ text: _("DLG_BTN_NO") }
 							]
 						});
 					}).bind(this, filterId)
@@ -2077,7 +2076,7 @@ var utWebUI = {
 	},
 
 	"rssfilterQualityText": function(qual) {
-		var qualities = [lang[CONST.DLG_RSSDOWNLOADER_29]];
+		var qualities = [_("DLG_RSSDOWNLOADER_29")];
 		if (qual !== undefined && qual !== CONST.RSSITEMQUALITY_ALL) {
 			qualities = [];
 			g_feedItemQlty.each(function(item) {
@@ -2110,7 +2109,7 @@ var utWebUI = {
 
 		// Generate menu items
 		var menuItems = [
-			[CMENU_CHECK, lang[CONST.DLG_RSSDOWNLOADER_29], qualSelect(CONST.RSSITEMQUALITY_ALL)],
+			[CMENU_CHECK, _("DLG_RSSDOWNLOADER_29"), qualSelect(CONST.RSSITEMQUALITY_ALL)],
 			[CMENU_SEP]
 		];
 
@@ -2223,8 +2222,7 @@ var utWebUI = {
 		var history = this.xferhist;
 
 		// Obtain number of days to consider
-		if (!lang) return;
-		var periodList = lang[CONST.ST_CBO_TCAP_PERIODS].split("||");
+		var periodList = _("ST_CBO_TCAP_PERIODS").split("||");
 		var periodIdx = ($("multi_day_transfer_limit_span").get("value").toInt() || 0).max(0).min(periodList.length-2);
 		var period = periodList[periodIdx].toInt();
 
@@ -2245,7 +2243,7 @@ var utWebUI = {
 		$("total_uploaded_history").set("text", tu.toFileSize());
 		$("total_downloaded_history").set("text", td.toFileSize());
 		$("total_updown_history").set("text", (tu + td).toFileSize());
-		$("history_period").set("text", lang[CONST.DLG_SETTINGS_7_TRANSFERCAP_11].replace(/%d/, period));
+		$("history_period").set("text", _("DLG_SETTINGS_7_TRANSFERCAP_11").replace(/%d/, period));
 	},
 
 	"resetTransferHistory": function() {
@@ -2403,9 +2401,9 @@ var utWebUI = {
 			delete json.settings;
 		}
 
-		if (!(this.config.lang in LANGUAGES)) {
+		if (!(this.config.lang in LANG_LIST)) {
 			var langList = "";
-			for (var lang in LANGUAGES) {
+			for (var lang in LANG_LIST) {
 				langList += "|" + lang;
 			}
 
@@ -2413,7 +2411,7 @@ var utWebUI = {
 			if ((useLang = useLang.match(new RegExp(langList.substr(1), "i"))))
 				useLang = useLang[0];
 
-			if (useLang && (useLang in LANGUAGES))
+			if (useLang && (useLang in LANG_LIST))
 				this.config.lang = useLang;
 			else
 				this.config.lang = (this.defConfig.lang || "en");
@@ -2704,7 +2702,7 @@ var utWebUI = {
 		$("aerssfd-use_custom_alias").set("checked", use_cust_alias).fireEvent("change");
 
 		if (feed.length <= 0) {
-			$("dlgAddEditRSSFeed-head").set("text", lang[CONST.DLG_RSSDOWNLOADER_32]);
+			$("dlgAddEditRSSFeed-head").set("text", _("DLG_RSSDOWNLOADER_32"));
 			$("dlgAddEditRSSFeed-subscription").show();
 
 			$("aerssfd-subscribe_0").set("checked", true).fireEvent("click");
@@ -2712,7 +2710,7 @@ var utWebUI = {
 			$("aerssfd-smart_ep").set("checked", false);
 		}
 		else {
-			$("dlgAddEditRSSFeed-head").set("text", lang[CONST.DLG_RSSDOWNLOADER_33]);
+			$("dlgAddEditRSSFeed-head").set("text", _("DLG_RSSDOWNLOADER_33"));
 			$("dlgAddEditRSSFeed-subscription").hide();
 		}
 
@@ -2831,33 +2829,33 @@ var utWebUI = {
 	"statusMenuShow": function(ev) {
 		// Build menu items
 		var menuItems = [
-			  [CMENU_CHILD, lang[CONST.MM_FILE], [
-				  [lang[CONST.MM_FILE_ADD_TORRENT], this.showAddTorrent.bind(this)]
-				, [lang[CONST.MM_FILE_ADD_URL], this.showAddURL.bind(this)]
+			  [CMENU_CHILD, _("MM_FILE"), [
+				  [_("MM_FILE_ADD_TORRENT"), this.showAddTorrent.bind(this)]
+				, [_("MM_FILE_ADD_URL"), this.showAddURL.bind(this)]
 			]]
-			, [CMENU_CHILD, lang[CONST.MM_OPTIONS], [
-				  [lang[CONST.MM_OPTIONS_PREFERENCES], this.showSettings.bind(this)]
-				, [lang[CONST.OV_TB_RSSDOWNLDR], this.showRSSDownloader.bind(this)]
+			, [CMENU_CHILD, _("MM_OPTIONS"), [
+				  [_("MM_OPTIONS_PREFERENCES"), this.showSettings.bind(this)]
+				, [_("OV_TB_RSSDOWNLDR"), this.showRSSDownloader.bind(this)]
 				, [CMENU_SEP]
-				, [lang[CONST.MM_OPTIONS_SHOW_TOOLBAR], this.toggleToolbar.bind(this, undefined)]
-				, [lang[CONST.MM_OPTIONS_SHOW_DETAIL], this.toggleDetPanel.bind(this, undefined)]
-				, [lang[CONST.MM_OPTIONS_SHOW_STATUS], this.toggleStatusBar.bind(this, undefined)]
-				, [lang[CONST.MM_OPTIONS_SHOW_CATEGORY], this.toggleCatPanel.bind(this, undefined)]
+				, [_("MM_OPTIONS_SHOW_TOOLBAR"), this.toggleToolbar.bind(this, undefined)]
+				, [_("MM_OPTIONS_SHOW_DETAIL"), this.toggleDetPanel.bind(this, undefined)]
+				, [_("MM_OPTIONS_SHOW_STATUS"), this.toggleStatusBar.bind(this, undefined)]
+				, [_("MM_OPTIONS_SHOW_CATEGORY"), this.toggleCatPanel.bind(this, undefined)]
 				, [CMENU_SEP]
-				, [lang[CONST.MM_OPTIONS_TAB_ICONS], this.toggleDetPanelIcons.bind(this, undefined)]
+				, [_("MM_OPTIONS_TAB_ICONS"), this.toggleDetPanelIcons.bind(this, undefined)]
 			]]
-			, [CMENU_CHILD, lang[CONST.MM_HELP], [
-				  [lang[CONST.MM_HELP_UT_WEBPAGE], openURL.pass(["http://www.utorrent.com/", null])] 
-				, [lang[CONST.MM_HELP_UT_FORUMS], openURL.pass(["http://forum.utorrent.com/", null])] 
+			, [CMENU_CHILD, _("MM_HELP"), [
+				  [_("MM_HELP_UT_WEBPAGE"), openURL.pass(["http://www.utorrent.com/", null])] 
+				, [_("MM_HELP_UT_FORUMS"), openURL.pass(["http://forum.utorrent.com/", null])] 
 				, [CMENU_SEP]
-				, [lang[CONST.MM_HELP_WEBUI_FEEDBACK], openURL.pass(["http://forum.utorrent.com/viewtopic.php?id=58156", null])] 
+				, [_("MM_HELP_WEBUI_FEEDBACK"), openURL.pass(["http://forum.utorrent.com/viewtopic.php?id=58156", null])] 
 				, [CMENU_SEP]
-				, [lang[CONST.MM_HELP_ABOUT_WEBUI], this.showAbout.bind(this)]
+				, [_("MM_HELP_ABOUT_WEBUI"), this.showAbout.bind(this)]
 			]]
 			, [CMENU_SEP]
-			, [CMENU_CHILD, lang[CONST.STM_TORRENTS], [
-				  [lang[CONST.STM_TORRENTS_PAUSEALL], this.pauseAll.bind(this)]
-				, [lang[CONST.STM_TORRENTS_RESUMEALL], this.unpauseAll.bind(this)]
+			, [CMENU_CHILD, _("STM_TORRENTS"), [
+				  [_("STM_TORRENTS_PAUSEALL"), this.pauseAll.bind(this)]
+				, [_("STM_TORRENTS_RESUMEALL"), this.unpauseAll.bind(this)]
 			]]
 		];
 
@@ -2904,11 +2902,11 @@ var utWebUI = {
 			var item;
 			switch (val) {
 				case -1: item = [CMENU_SEP]; break;
-				case 0: item = [lang[CONST.MENU_UNLIMITED]]; break;
+				case 0: item = [_("MENU_UNLIMITED")]; break;
 
 				default:
 					if (val < 0) val *= -1;
-					item = [val + " " + lang[CONST.SIZE_KB] + g_perSec];
+					item = [val + " " + _("SIZE_KB") + g_perSec];
 			}
 
 			if (val === speed.cur) {
@@ -3209,9 +3207,9 @@ var utWebUI = {
 		//--------------------------------------------------
 
 		var labelIndex = CONST.TORRENT_LABEL;
-		var labelSubMenu = [[lang[CONST.OV_NEW_LABEL], this.newLabel.bind(this)]];
+		var labelSubMenu = [[_("OV_NEW_LABEL"), this.newLabel.bind(this)]];
 		if (!this.trtTable.selectedRows.every(function(item) { return (this.torrents[item][labelIndex] == ""); }, this)) {
-			labelSubMenu.push([lang[CONST.OV_REMOVE_LABEL], this.setLabel.bind(this, "")]);
+			labelSubMenu.push([_("OV_REMOVE_LABEL"), this.setLabel.bind(this, "")]);
 		}
 		if (Object.getLength(this.labels) > 0) {
 			labelSubMenu.push([CMENU_SEP]);
@@ -3230,23 +3228,23 @@ var utWebUI = {
 		//--------------------------------------------------
 
 		var menuItemsMap = {
-			  "forcestart" : [lang[CONST.ML_FORCE_START], this.forcestart.bind(this)]
-			, "start"      : [lang[CONST.ML_START], this.start.bind(this)]
-			, "pause"      : [lang[CONST.ML_PAUSE], this.pause.bind(this)]
-			, "stop"       : [lang[CONST.ML_STOP],  this.stop.bind(this)]
-			, "queueup"    : [lang[CONST.ML_QUEUEUP], (function(ev) { this.queueup(ev.shift); }).bind(this)]
-			, "queuedown"  : [lang[CONST.ML_QUEUEDOWN], (function(ev) { this.queuedown(ev.shift); }).bind(this)]
-			, "label"      : [CMENU_CHILD, lang[CONST.ML_LABEL], labelSubMenu]
-			, "remove"     : [lang[CONST.ML_REMOVE], this.remove.bind(this, CONST.TOR_REMOVE)]
-			, "removeand"  : [CMENU_CHILD, lang[CONST.ML_REMOVE_AND], [
-				  [lang[CONST.ML_DELETE_TORRENT], this.remove.bind(this, CONST.TOR_REMOVE_TORRENT)]
-				, [lang[CONST.ML_DELETE_DATATORRENT], this.remove.bind(this, CONST.TOR_REMOVE_DATATORRENT)]
-				, [lang[CONST.ML_DELETE_DATA], this.remove.bind(this, CONST.TOR_REMOVE_DATA)]
+			  "forcestart" : [_("ML_FORCE_START"), this.forcestart.bind(this)]
+			, "start"      : [_("ML_START"), this.start.bind(this)]
+			, "pause"      : [_("ML_PAUSE"), this.pause.bind(this)]
+			, "stop"       : [_("ML_STOP"),  this.stop.bind(this)]
+			, "queueup"    : [_("ML_QUEUEUP"), (function(ev) { this.queueup(ev.shift); }).bind(this)]
+			, "queuedown"  : [_("ML_QUEUEDOWN"), (function(ev) { this.queuedown(ev.shift); }).bind(this)]
+			, "label"      : [CMENU_CHILD, _("ML_LABEL"), labelSubMenu]
+			, "remove"     : [_("ML_REMOVE"), this.remove.bind(this, CONST.TOR_REMOVE)]
+			, "removeand"  : [CMENU_CHILD, _("ML_REMOVE_AND"), [
+				  [_("ML_DELETE_TORRENT"), this.remove.bind(this, CONST.TOR_REMOVE_TORRENT)]
+				, [_("ML_DELETE_DATATORRENT"), this.remove.bind(this, CONST.TOR_REMOVE_DATATORRENT)]
+				, [_("ML_DELETE_DATA"), this.remove.bind(this, CONST.TOR_REMOVE_DATA)]
 			]]
-			, "recheck"    : [lang[CONST.ML_FORCE_RECHECK], this.recheck.bind(this)]
-			, "copymagnet" : [lang[CONST.ML_COPY_MAGNETURI], this.torShowMagnetCopy.bind(this)]
-			, "copy"       : [lang[CONST.MENU_COPY], this.torShowCopy.bind(this)]
-			, "properties" : [lang[CONST.ML_PROPERTIES], this.showProperties.bind(this)]
+			, "recheck"    : [_("ML_FORCE_RECHECK"), this.recheck.bind(this)]
+			, "copymagnet" : [_("ML_COPY_MAGNETURI"), this.torShowMagnetCopy.bind(this)]
+			, "copy"       : [_("MENU_COPY"), this.torShowCopy.bind(this)]
+			, "properties" : [_("ML_PROPERTIES"), this.showProperties.bind(this)]
 		};
 
 		// Gray out items based on status
@@ -3293,7 +3291,7 @@ var utWebUI = {
 	},
 
 	"torShowCopy": function() {
-		this.showCopy(lang[CONST.MENU_COPY], this.trtTable.copySelection());
+		this.showCopy(_("MENU_COPY"), this.trtTable.copySelection());
 	},
 
 	"torShowMagnetCopy": function() {
@@ -3302,7 +3300,7 @@ var utWebUI = {
 			txtArray.push("magnet:?xt=urn:btih:" + hash + "&dn=" + encodeURIComponent(this.torrents[hash][CONST.TORRENT_NAME]));
 		}, this);
 
-		this.showCopy(lang[CONST.ML_COPY_MAGNETURI], txtArray.join("\r\n"));
+		this.showCopy(_("ML_COPY_MAGNETURI"), txtArray.join("\r\n"));
 	},
 
 	"showCopy": function(title, txt) {
@@ -3311,7 +3309,7 @@ var utWebUI = {
 			, icon: "dlgIcon-Copy"
 			, width: "35em"
 			, input: txt
-			, buttons: [{ text: lang[CONST.DLG_BTN_CLOSE] }]
+			, buttons: [{ text: _("DLG_BTN_CLOSE") }]
 		});
 	},
 
@@ -3360,7 +3358,7 @@ var utWebUI = {
 				e.disabled = !e.disabled;
 			});
 		});
-		$("dlgProps-head").set("text", "|[" + this.trtTable.selectedRows.length + " Torrents]| - " + lang[CONST.DLG_TORRENTPROP_00]);
+		$("dlgProps-head").set("text", "|[" + this.trtTable.selectedRows.length + " Torrents]| - " + _("DLG_TORRENTPROP_00"));
 		DialogManager.show("Props");
 	},
 
@@ -3391,7 +3389,7 @@ var utWebUI = {
 			ele.checked = (props[k] == 1);
 			$("DLG_TORRENTPROP_1_GEN_" + ids[k])[dis ? "addClass" : "removeClass"]("disabled");
 		}
-		$("dlgProps-head").set("text", this.torrents[this.propID][CONST.TORRENT_NAME] + " - " + lang[CONST.DLG_TORRENTPROP_00]);
+		$("dlgProps-head").set("text", this.torrents[this.propID][CONST.TORRENT_NAME] + " - " + _("DLG_TORRENTPROP_00"));
 		DialogManager.show("Props");
 	},
 
@@ -3480,8 +3478,8 @@ var utWebUI = {
 		$("us").set("html", d[CONST.TORRENT_UPSPEED].toFileSize() + g_perSec);
 		$("ds").set("html", d[CONST.TORRENT_DOWNSPEED].toFileSize() + g_perSec);
 		$("rm").set("html", (d[CONST.TORRENT_ETA] == 0) ? "" : (d[CONST.TORRENT_ETA] <= -1) ? "\u221E" : d[CONST.TORRENT_ETA].toTimeDelta());
-		$("se").set("html", lang[CONST.GN_XCONN].replace(/%d/, d[CONST.TORRENT_SEEDS_CONNECTED]).replace(/%d/, d[CONST.TORRENT_SEEDS_SWARM]).replace(/%d/, "\u00BF?"));
-		$("pe").set("html", lang[CONST.GN_XCONN].replace(/%d/, d[CONST.TORRENT_PEERS_CONNECTED]).replace(/%d/, d[CONST.TORRENT_PEERS_SWARM]).replace(/%d/, "\u00BF?"));
+		$("se").set("html", _("GN_XCONN").replace(/%d/, d[CONST.TORRENT_SEEDS_CONNECTED]).replace(/%d/, d[CONST.TORRENT_SEEDS_SWARM]).replace(/%d/, "\u00BF?"));
+		$("pe").set("html", _("GN_XCONN").replace(/%d/, d[CONST.TORRENT_PEERS_CONNECTED]).replace(/%d/, d[CONST.TORRENT_PEERS_SWARM]).replace(/%d/, "\u00BF?"));
 		$("sa").set("html", d[CONST.TORRENT_SAVE_PATH] || "");
 		$("hs").set("html", id);
 	},
@@ -3650,7 +3648,7 @@ var utWebUI = {
 				break;
 
 				case "prio":
-					values[i] = lang[CONST["FI_PRI" + values[i]]];
+					values[i] = _("FI_PRI" + values[i]);
 				break;
 			}
 		}
@@ -3682,11 +3680,11 @@ var utWebUI = {
 		//--------------------------------------------------
 
 		var prioItems = [
-			  [lang[CONST.MF_DONT], this.setPriority.pass([id, CONST.FILEPRIORITY_SKIP], this)]
+			  [_("MF_DONT"), this.setPriority.pass([id, CONST.FILEPRIORITY_SKIP], this)]
 			, [CMENU_SEP]
-			, [lang[CONST.MF_LOW], this.setPriority.pass([id, CONST.FILEPRIORITY_LOW], this)]
-			, [lang[CONST.MF_NORMAL], this.setPriority.pass([id, CONST.FILEPRIORITY_NORMAL], this)]
-			, [lang[CONST.MF_HIGH], this.setPriority.pass([id, CONST.FILEPRIORITY_HIGH], this)]
+			, [_("MF_LOW"), this.setPriority.pass([id, CONST.FILEPRIORITY_LOW], this)]
+			, [_("MF_NORMAL"), this.setPriority.pass([id, CONST.FILEPRIORITY_NORMAL], this)]
+			, [_("MF_HIGH"), this.setPriority.pass([id, CONST.FILEPRIORITY_HIGH], this)]
 		];
 
 		// Gray out priority items based on priorities of selected files
@@ -3710,7 +3708,7 @@ var utWebUI = {
 
 		var fileDownloadItems = [
 			  [CMENU_SEP]
-			, [lang[CONST.MF_GETFILE], this.downloadFiles.bind(this, id)]
+			, [_("MF_GETFILE"), this.downloadFiles.bind(this, id)]
 		];
 
 		// Gray out download item if no selected file is complete
@@ -3737,7 +3735,7 @@ var utWebUI = {
 		//--------------------------------------------------
 		menuItems = menuItems.concat([
 			  [CMENU_SEP]
-			, [lang[CONST.MENU_COPY], this.flsShowCopy.bind(this)]
+			, [_("MENU_COPY"), this.flsShowCopy.bind(this)]
 		]);
 
 		//--------------------------------------------------
@@ -3750,7 +3748,7 @@ var utWebUI = {
 	},
 
 	"flsShowCopy": function() {
-		this.showCopy(lang[CONST.MENU_COPY], this.flsTable.copySelection());
+		this.showCopy(_("MENU_COPY"), this.flsTable.copySelection());
 	},
 
 	"getSelFileIds": function() {
@@ -3849,7 +3847,7 @@ var utWebUI = {
 		if (isGuest || !ev.isRightClick()) return;
 
 		var menuItems = [
-			[lang[CONST.MENU_COPY], this.showCopy.bind(this, lang[CONST.MENU_COPY], ev.target.get("text"))]
+			[_("MENU_COPY"), this.showCopy.bind(this, _("MENU_COPY"), ev.target.get("text"))]
 		];
 
 		//--------------------------------------------------
@@ -4032,9 +4030,9 @@ var utWebUI = {
 		if (isGuest || !ev.isRightClick()) return;
 
 		var menuItems = [
-			  [lang[CONST.MP_RESOLVE_IPS], this.toggleResolveIP.bind(this)]
+			  [_("MP_RESOLVE_IPS"), this.toggleResolveIP.bind(this)]
 			, [CMENU_SEP]
-			, [lang[CONST.MENU_COPY], this.prsShowCopy.bind(this)]
+			, [_("MENU_COPY"), this.prsShowCopy.bind(this)]
 		];
 
 		// Process menu items
@@ -4053,7 +4051,7 @@ var utWebUI = {
 	},
 
 	"prsShowCopy": function() {
-		this.showCopy(lang[CONST.MENU_COPY], this.prsTable.copySelection());
+		this.showCopy(_("MENU_COPY"), this.prsTable.copySelection());
 	},
 
 	"prsSort": function(index, reverse) {
@@ -4242,12 +4240,12 @@ var utWebUI = {
 		// Download
 		str = '';
 
-		seg = lang[CONST.SB_DOWNLOAD].replace(/%z/, this.totalDL.toFileSize());
+		seg = _("SB_DOWNLOAD").replace(/%z/, this.totalDL.toFileSize());
 
 		val = '';
 		data = this.settings["max_dl_rate"] || 0;
 		if (this.settings["gui.limits_in_statusbar"] && data > 0) {
-			val = '[' + data + " " + lang[CONST.SIZE_KB] + g_perSec + '] ';
+			val = '[' + data + " " + _("SIZE_KB") + g_perSec + '] ';
 		}
 		seg = seg.replace(/%s/, val);
 
@@ -4258,12 +4256,12 @@ var utWebUI = {
 		// Upload
 		str = '';
 
-		seg = lang[CONST.SB_UPLOAD].replace(/%z/, this.totalUL.toFileSize());
+		seg = _("SB_UPLOAD").replace(/%z/, this.totalUL.toFileSize());
 
 		val = '';
 		data = this.settings["max_ul_rate"] || 0;
 		if (this.settings["gui.limits_in_statusbar"] && data > 0) {
-			val = '[' + data + " " + lang[CONST.SIZE_KB] + g_perSec + '] ';
+			val = '[' + data + " " + _("SIZE_KB") + g_perSec + '] ';
 		}
 		seg = seg.replace(/%s/, val);
 
@@ -4273,7 +4271,7 @@ var utWebUI = {
 	},
 
 	"updateTitle": function() {
-		var str = lang[CONST.MAIN_TITLEBAR_SPEED].replace(/%s/, this.totalDL.toFileSize() + g_perSec).replace(/%s/, this.totalUL.toFileSize() + g_perSec);
+		var str = _("MAIN_TITLEBAR_SPEED").replace(/%s/, this.totalDL.toFileSize() + g_perSec).replace(/%s/, this.totalUL.toFileSize() + g_perSec);
 		window.status = window.defaultStatus = str.replace(/%s/, "");
 		if (this.settings["gui.speed_in_title"])
 			document.title = str.replace(/%s/, g_winTitle);
@@ -4702,19 +4700,19 @@ var utWebUI = {
 		if (feedItemIds.length <= 0) return;
 
 		var menuItems = [
-			  [lang[CONST.DLG_RSSDOWNLOADER_24], (function(feedItemIds) { // RSSTODO: Move this elsewhere
+			  [_("DLG_RSSDOWNLOADER_24"), (function(feedItemIds) { // RSSTODO: Move this elsewhere
 				feedItemIds.each(function(id) {
 					this.addRSSFeedItem(id[0], id[1]);
 				}, this);
 			}).bind(this, feedItemIds)]
-			, [lang[CONST.DLG_RSSDOWNLOADER_25], (function(feedItemIds) { // RSSTODO: Move this elsewhere
+			, [_("DLG_RSSDOWNLOADER_25"), (function(feedItemIds) { // RSSTODO: Move this elsewhere
 				feedItemIds.each(function(id) {
 					var item = this.getRSSFeedItem(id[0], id[1]);
 					if (item) openURL(item[CONST.RSSITEM_URL]);
 				}, this);
 			}).bind(this, feedItemIds)]
 			, [CMENU_SEP]
-			, [lang[CONST.DLG_RSSDOWNLOADER_26], (function(feedItemIds) {
+			, [_("DLG_RSSDOWNLOADER_26"), (function(feedItemIds) {
 				feedItemIds.each(function(id) { // RSSTODO: Move this elsewhere
 					var item = this.getRSSFeedItem(id[0], id[1]);
 					if (item) {

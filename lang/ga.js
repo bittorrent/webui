@@ -1,4 +1,4 @@
-var lang = [
+var LANG_STR = [
 	  "Comhaid Torrent||*.torrent||Gach comhad (*.*)||*.*||"
 	, "Tá go maith"
 	, "Cealaigh"

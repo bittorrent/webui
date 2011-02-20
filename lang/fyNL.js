@@ -1,4 +1,4 @@
-var lang = [
+var LANG_STR = [
 	  "Torrent triemen||*.torrent||Alle triemen (*.*)||*.*||"
 	, "Okee"
 	, "Ofbrekke"
