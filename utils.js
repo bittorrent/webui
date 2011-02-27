@@ -25,6 +25,21 @@ function has(obj, key) {
 	return Object.prototype.hasOwnProperty.apply(obj, [key]);
 }
 
+function $chk(obj) {
+	return !!(obj || obj === 0);
+}
+
+function $each(obj, fn, bind) {
+	switch (typeOf(obj)) {
+		case 'array':
+		case 'collection':
+		case 'elements':
+			return Array.each(obj, fn, bind);
+		default:
+			return Object.each(obj, fn, bind);
+	}
+}
+
 function changePort(port) {
 //	if (window.location.port != port) {
 		// window.location.port = port; // Does NOT work on Opera
@@ -334,17 +349,6 @@ Event.implement({
 	}
 });
 
-function $chk(obj) {
-	return !!(obj || obj === 0);
-}
-
-function $each(obj, fn, bind) {
-	switch (typeOf(obj)) {
-		case 'array':
-		case 'collection':
-		case 'elements':
-			return Array.each(obj, fn, bind);
-		default:
-			return Object.each(obj, fn, bind);
-	}
-}
+Object.append(Element.NativeEvents, {
+	dragstart: 2, drag: 2, dragover: 2, dragenter: 2, dragleave: 2, drop: 2, dragend: 2 // drag-and-drop
+});

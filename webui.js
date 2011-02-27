@@ -114,9 +114,9 @@ var utWebUI = {
 		//[ colID, colWidth, colType, colDisabled = false, colIcon = false, colAlign = ALIGN_AUTO, colText = "" ]
 		  ["name", 220, TYPE_STRING]
 		, ["order", 35, TYPE_NUM_ORDER]
-		, ["size", 90, TYPE_NUMBER]
+		, ["size", 75, TYPE_NUMBER]
 		, ["remaining", 90, TYPE_NUMBER, true]
-		, ["done", 80, TYPE_NUM_PROGRESS]
+		, ["done", 60, TYPE_NUM_PROGRESS]
 		, ["status", 100, TYPE_CUSTOM]
 		, ["seeds", 60, TYPE_NUMBER]
 		, ["peers", 60, TYPE_NUMBER]
@@ -124,10 +124,10 @@ var utWebUI = {
 		, ["downspeed", 80, TYPE_NUMBER]
 		, ["upspeed", 80, TYPE_NUMBER]
 		, ["eta", 60, TYPE_NUM_ORDER]
-		, ["uploaded", 90, TYPE_NUMBER, true]
-		, ["downloaded", 90, TYPE_NUMBER, true]
-		, ["ratio", 60, TYPE_NUMBER]
-		, ["availability", 60, TYPE_NUMBER]
+		, ["uploaded", 75, TYPE_NUMBER, true]
+		, ["downloaded", 75, TYPE_NUMBER, true]
+		, ["ratio", 50, TYPE_NUMBER]
+		, ["availability", 50, TYPE_NUMBER]
 		, ["label", 80, TYPE_STRING, true]
 		, ["added", 150, TYPE_NUMBER, true]
 		, ["completed", 150, TYPE_NUMBER, true]
@@ -2773,7 +2773,7 @@ var utWebUI = {
 
 		ContextMenu.clear();
 		var index = 0
-		$each(searchURLs, function(item) {
+		Array.each(searchURLs, function(item) {
 			if (!item) {
 				ContextMenu.add([CMENU_SEP]);
 			}
@@ -3484,20 +3484,17 @@ var utWebUI = {
 		$("hs").set("html", id);
 	},
 
-	"addRSSFeedItem": function(feedId, itemId) {
-		var item = this.getRSSFeedItem(feedId, itemId);
-		if (item) this.addURL({url: item[CONST.RSSITEM_URL]});
-	},
+	"addFile": function(param, fn) {
+		var files = Array.from(param.file);
+		if (files.length <= 0) return;
 
-	"addURL": function(param, fn) {
-		var url = encodeURIComponent((param.url || "").trim());
-		if (!url) return;
+		var count = 0;
+		var fnwrap = (function() {
+			if (++count === files.length) fn();
+		});
 
-		var qs = "action=add-url&s=" + url;
+		var qs = "action=add-file"
 		var val;
-
-		if ((val = encodeURIComponent(param.cookie || "").trim()))
-			qs += ":COOKIE:" + val;
 
 		if ((val = (parseInt(param.dir, 10) || 0)))
 			qs += "&download_dir=" + val;
@@ -3505,7 +3502,55 @@ var utWebUI = {
 		if ((val = (param.sub || "")))
 			qs += "&path=" + encodeURIComponent(val); // TODO: Sanitize!
 
-		this.request(qs, fn);
+		Array.each(files, function(file) {
+
+			// TODO: Finish implementing!
+			//
+			// NOTE: Not implemented because I don't feel like the FileReader
+			//       standard is completely stabilized, with browsers having
+			//       spotty support for it. Too, it would probably be better to
+			//       wait for MooTools to implement the requisite interfaces
+			//       natively rather than hack it in myself only to  have to
+			//       toss it all out again later.
+			//
+			//       Once finished, we can rewrite the ADD_FILE_OK click event
+			//       handler to use this API rather than having it do everything
+			//       manually. May have to be an indirect usage so that we can
+			//       fall back gracefully for older browsers.
+
+		}, this);
+	},
+
+	"addRSSFeedItem": function(feedId, itemId) {
+		var item = this.getRSSFeedItem(feedId, itemId);
+		if (item) this.addURL({url: item[CONST.RSSITEM_URL]});
+	},
+
+	"addURL": function(param, fn) {
+		var urls = Array.from(param.url).map(function(url) {
+			return (encodeURIComponent((url || "").trim()) || undefined);
+		}).clean();
+		if (urls.length <= 0) return;
+
+		var count = 0;
+		var fnwrap = (function() {
+			if (++count === urls.length) fn();
+		});
+
+		var val, tail = "";
+
+		if ((val = encodeURIComponent(param.cookie || "").trim()))
+			tail += ":COOKIE:" + val;
+
+		if ((val = (parseInt(param.dir, 10) || 0)))
+			tail += "&download_dir=" + val;
+
+		if ((val = (param.sub || "")))
+			tail += "&path=" + encodeURIComponent(val); // TODO: Sanitize!
+
+		Array.each(urls, function(url) {
+			this.request("action=add-url&s=" + url + tail, fnwrap);
+		}, this);
 	},
 
 	"loadPeers": function() {

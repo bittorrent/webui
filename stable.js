@@ -547,7 +547,7 @@ var dxSTable = new Class({
 			this.outOfDOM((function() {
 				var ind, div, span;
 				var thc = this.dHead.getElement("tr").childNodes;
-				$each(val, function(v, k) {
+				Object.each(val, function(v, k) {
 					ind = colHdrIdx[k];
 					if ($chk(colHdr[ind])) {
 						div = thc[this.colOrder[ind]].getElement("div");
@@ -566,7 +566,7 @@ var dxSTable = new Class({
 		val = options.colType; // { colID : colType, ... }
 		if (typeOf(val) === 'object') {
 			var changedCols = [];
-			$each(val, function(v, k) {
+			Object.each(val, function(v, k) {
 				ind = colHdrIdx[k];
 				if ($chk(colHdr[ind]) && colHdr[ind].type != v) {
 					changedCols.push(ind);
@@ -580,7 +580,7 @@ var dxSTable = new Class({
 		// -- Column Alignment
 		val = options.colAlign; // { colID : colAlign, ... }
 		if (typeOf(val) === 'object') {
-			$each(val, function(v, k) {
+			Object.each(val, function(v, k) {
 				ind = colHdrIdx[k];
 				if ($chk(colHdr[ind])) {
 					colHdr[ind].align = v;
@@ -604,7 +604,7 @@ var dxSTable = new Class({
 					}
 
 					if (orderOK) {
-						$each(val, function(v, k, a) {
+						Array.each(val, function(v, k, a) {
 							if (a.indexOf(k) != this.colOrder.indexOf(k)) {
 								this.setColumnPosition(a.indexOf(k), k);
 							}
@@ -628,7 +628,7 @@ var dxSTable = new Class({
 		if (typeOf(val) === 'array') {
 			if (val.length == this.cols) {
 				this.outOfDOM((function() {
-					$each(val, function(v, k) {
+					Array.each(val, function(v, k) {
 						this.setColumnWidth(this.colOrder[k], v);
 					}, this);
 				}).bind(this));

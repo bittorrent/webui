@@ -80,6 +80,34 @@ function setupGlobalEvents() {
 	}
 
 	//--------------------------------------------------
+	// DOCUMENT EVENTS
+	//--------------------------------------------------
+
+	if (!isGuest) {
+		document.addStopEvents({
+			"dragenter": null,
+			"dragover": null,
+			"drop": function(ev) {
+				var dt = ev.event.dataTransfer;
+				if (!dt) return;
+
+				var data;
+
+				if ((data = dt.getData("Text"))) {
+					// Text/URL dropped
+					data = data.split(/[\r\n]+/g).map(String.trim);
+					utWebUI.addURL({url: data});
+				}
+
+				if ((data = dt.files) && data.length > 0) {
+					// Files dropped
+					utWebUI.addFile({file: data});
+				}
+			}
+		});
+	}
+
+	//--------------------------------------------------
 	// MOUSE EVENTS
 	//--------------------------------------------------
 
@@ -950,7 +978,7 @@ function setupUserInterface() {
 
 	var langSelect = $("webui.lang");
 	langSelect.options.length = langArr.length;
-	$each(langArr, function(v, k) {
+	Array.each(langArr, function(v, k) {
 		langSelect.options[k] = new Option(v.lang, v.code, false, false);
 	});
 	langSelect.set("value", utWebUI.defConfig.lang);
