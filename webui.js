@@ -3142,15 +3142,36 @@ var utWebUI = {
 			return values;
 	},
 
-	"trtSortCustom": function(col, datax, datay) {
+	"trtSortCustom": function(col, dataX, dataY) {
 		var ret = 0;
 
 		switch (this.trtColDefs[col][0]) {
 			case "status":
-				ret = datax[col] - datay[col];
+				var statX = dataX[col][0], statY = dataY[col][0];
+				ret = ((statY & CONST.STATE_ERROR) - (statX & CONST.STATE_ERROR)); // errored sorts before unerrored
 				if (!ret) {
-					var doneIdx = this.trtColDoneIdx;
-					ret = datax[doneIdx] - datay[doneIdx];
+					ret = ((statY & CONST.STATE_CHECKING) - (statX & CONST.STATE_CHECKING)); // checking sorts before non-checking
+					if (!ret) {
+						ret = ((statY & CONST.STATE_STARTED) - (statX & CONST.STATE_STARTED)); // started sorts before unstarted
+						if (!ret) {
+							ret = ((statY & CONST.STATE_PAUSED) - (statX & CONST.STATE_PAUSED)); // paused sorts before unpaused
+							if (!ret) {
+								ret = (dataX[this.trtColDoneIdx] - dataY[this.trtColDoneIdx]); // lower progress sorts before higher progress
+								if (!ret) {
+									// some default tie-breaker
+									if (dataX[0] < dataY[0]) {
+										ret = -1;
+									}
+									else if (dataX[0] > dataY[0]) {
+										ret = 1;
+									}
+									else {
+										ret = 0;
+									}
+								}
+							}
+						}
+					}
 				}
 			break;
 		}

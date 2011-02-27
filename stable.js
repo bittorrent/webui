@@ -763,22 +763,16 @@ var dxSTable = new Class({
 			var $me = this, comp;
 			switch (this.colHeader[ind].type) {
 				case TYPE_STRING:
-					comp = function(x, y) {
-						return $me.sortAlphaNumeric(x, y);
-					};
+					comp = this.sortAlphaNumeric.bind(this);
 				break;
 
 				case TYPE_NUMBER:
 				case TYPE_NUM_PROGRESS:
-					comp = function(x, y) {
-						return $me.sortNumeric(x, y);
-					};
+					comp = this.sortNumeric.bind(this);
 				break;
 
 				case TYPE_NUM_ORDER:
-					comp = function(x, y) {
-						return $me.sortNumOrder(x, y);
-					};
+					comp = this.sortNumOrder.bind(this);
 				break;
 
 				case TYPE_CUSTOM:
@@ -1045,22 +1039,16 @@ var dxSTable = new Class({
 				};
 				switch (this.colHeader[sindex].type) {
 					case TYPE_STRING:
-						comp = function(x, y) {
-							return $me.sortAlphaNumeric(x, y);
-						};
+						comp = this.sortAlphaNumeric.bind(this);
 					break;
 
 					case TYPE_NUMBER:
 					case TYPE_NUM_PROGRESS:
-						comp = function(x, y) {
-							return $me.sortNumeric(x, y);
-						};
+						comp = this.sortNumeric.bind(this);
 					break;
 
 					case TYPE_NUM_ORDER:
-						comp = function(x, y) {
-							return $me.sortNumOrder(x, y);
-						};
+						comp = this.sortNumOrder.bind(this);
 					break;
 
 					case TYPE_CUSTOM:
