@@ -129,8 +129,8 @@ var utWebUI = {
 		, ["ratio", 50, TYPE_NUMBER]
 		, ["availability", 50, TYPE_NUMBER]
 		, ["label", 80, TYPE_STRING, true]
-		, ["added", 150, TYPE_NUMBER, true]
-		, ["completed", 150, TYPE_NUMBER, true]
+		, ["added", 150, TYPE_NUMBER, true, false, ALIGN_LEFT]
+		, ["completed", 150, TYPE_NUMBER, true, false, ALIGN_LEFT]
 		, ["url", 250, TYPE_STRING, true]
 	],
 	"prsColDefs": [
@@ -167,9 +167,9 @@ var utWebUI = {
 		  ["fullname", 355, TYPE_STRING, false, true]
 		, ["name", 215, TYPE_STRING, true, true]
 		, ["episode", 70, TYPE_NUMBER, true]
-		, ["format", 70, TYPE_NUMBER, true]
-		, ["codec", 70, TYPE_NUMBER, true]
-		, ["date", 150, TYPE_NUMBER]
+		, ["format", 70, TYPE_NUMBER, true, false, ALIGN_LEFT]
+		, ["codec", 70, TYPE_NUMBER, true, false, ALIGN_LEFT]
+		, ["date", 150, TYPE_NUMBER, false, false, ALIGN_LEFT]
 		, ["feed", 130, TYPE_STRING, true]
 		, ["url", 250, TYPE_STRING, true]
 	],
@@ -4663,7 +4663,7 @@ var utWebUI = {
 				break;
 
 				case "format":
-// RSSTODO: Implement
+					values[i] = values[i] ? g_feedItemQltyMap[values[i]] : "?";
 				break;
 			}
 		}

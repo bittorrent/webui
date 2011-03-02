@@ -36,7 +36,7 @@ var CONST = {
 	, "TORRENT_STREAM_ID": 22
 	, "TORRENT_DATE_ADDED": 23
 	, "TORRENT_DATE_COMPLETED": 24
-	, "": 25 // TODO: Declare proper name
+	, "TORRENT_APP_UPDATE_URL": 25
 	, "TORRENT_SAVE_PATH": 26
 
 	//----------------------------------------

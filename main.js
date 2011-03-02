@@ -34,6 +34,12 @@ var g_feedItemQlty = [
 	, ["1080p", CONST.RSSITEMQUALITY_1080P]
 ];
 
+var g_feedItemQltyMap = Object.map(g_feedItemQlty.slice(1).map(function(item){
+	return parseInt(log2(item[1]) + 1, 10);
+}).invert(), function(idx) {
+	return g_feedItemQlty[idx + 1][0];
+});
+
 // Pre-generated elements
 
 var ELE_TD = new Element("td");

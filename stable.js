@@ -390,6 +390,7 @@ var dxSTable = new Class({
 		for (var i = 0, il = this.cols; i < il; ++i) {
 			var align = "left";
 			switch (this.colData[i].align) {
+				case ALIGN_LEFT: break;
 				case ALIGN_CENTER: align = "center"; break;
 				case ALIGN_RIGHT: align = "right"; break;
 
