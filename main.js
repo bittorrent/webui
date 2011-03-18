@@ -1440,11 +1440,13 @@ function loadLangStrings(reload) {
 	utWebUI.flsTable.setConfig({
 		"resetText": _("MENU_RESET"),
 		"colText": {
-			  "name" : _("FI_COL_NAME")
-			, "size" : _("FI_COL_SIZE")
-			, "done" : _("FI_COL_DONE")
-			, "pcnt" : _("FI_COL_PCNT")
-			, "prio" : _("FI_COL_PRIO")
+			  "name"    : _("FI_COL_NAME")
+			, "size"    : _("FI_COL_SIZE")
+			, "done"    : _("FI_COL_DONE")
+			, "pcnt"    : _("FI_COL_PCNT")
+			, "firstpc" : _("FI_COL_FIRSTPC")
+			, "numpcs"  : _("FI_COL_NUMPCS")
+			, "prio"    : _("FI_COL_PRIO")
 		}
 	});
 

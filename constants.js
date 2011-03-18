@@ -57,6 +57,15 @@ var CONST = {
 	, "FILE_SIZE": 1
 	, "FILE_DOWNLOADED": 2
 	, "FILE_PRIORITY": 3
+	, "FILE_FIRST_PIECE": 4
+	, "FILE_NUM_PIECES": 5
+	, "FILE_STREAMABLE": 6
+	, "FILE_ENCODED_RATE": 7
+	, "FILE_DURATION": 8
+	, "FILE_WIDTH": 9
+	, "FILE_HEIGHT": 10
+	, "FILE_STREAM_ETA": 11
+	, "FILE_STREAMABILITY": 12
 
 	//----------------------------------------
 	// FILE PRIORITY CONSTANTS

@@ -157,10 +157,12 @@ var utWebUI = {
 	"flsColDefs": [
 		//[ colID, colWidth, colType, colDisabled = false, colIcon = false, colAlign = ALIGN_AUTO, colText = "" ]
 		  ["name", 300, TYPE_STRING]
-		, ["size", 90, TYPE_NUMBER]
-		, ["done", 90, TYPE_NUMBER]
-		, ["pcnt", 80, TYPE_NUM_PROGRESS]
-		, ["prio", 80, TYPE_NUMBER]
+		, ["size", 75, TYPE_NUMBER]
+		, ["done", 75, TYPE_NUMBER]
+		, ["pcnt", 60, TYPE_NUM_PROGRESS]
+		, ["firstpc", 70, TYPE_NUMBER, true]
+		, ["numpcs", 70, TYPE_NUMBER, true]
+		, ["prio", 65, TYPE_NUMBER, false, false, ALIGN_LEFT]
 	],
 	"fdColDefs": [
 		//[ colID, colWidth, colType, colDisabled = false, colIcon = false, colAlign = ALIGN_AUTO, colText = "" ]
@@ -911,13 +913,19 @@ var utWebUI = {
 			var extracted = {hasChanged: false};
 
 			if (!has(json, fullListName)) {
-				extracted[fullListName] = json[changedListName];
-				delete json[changedListName];
+				if (!has(json, changedListName)) {
+					extracted[fullListName] = extracted[removedListName] = [];
+					extracted.hasChanged = false;
+				}
+				else {
+					extracted[fullListName] = json[changedListName];
+					delete json[changedListName];
 
-				extracted[removedListName] = json[removedListName];
-				delete json[removedListName];
+					extracted[removedListName] = json[removedListName];
+					delete json[removedListName];
 
-				extracted.hasChanged = ((extracted[fullListName].length + extracted[removedListName].length) > 0);
+					extracted.hasChanged = ((extracted[fullListName].length + extracted[removedListName].length) > 0);
+				}
 			}
 			else {
 				extracted.hasChanged = true;
@@ -3680,8 +3688,14 @@ var utWebUI = {
 				case "done":
 					return data[CONST.FILE_DOWNLOADED];
 
+				case "firstpc":
+					return data[CONST.FILE_FIRST_PIECE];
+
 				case "name":
 					return data[CONST.FILE_NAME];
+
+				case "numpcs":
+					return data[CONST.FILE_NUM_PIECES];
 
 				case "pcnt":
 					return data[CONST.FILE_DOWNLOADED] / data[CONST.FILE_SIZE] * 1000;
@@ -3707,6 +3721,11 @@ var utWebUI = {
 				case "done":
 				case "size":
 					values[i] = values[i].toFileSize(2);
+				break;
+
+				case "firstpc":
+				case "numpcs":
+					values[i] = [values[i], ""].pick();
 				break;
 
 				case "pcnt":
