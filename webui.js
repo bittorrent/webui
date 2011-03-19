@@ -3343,7 +3343,10 @@ var utWebUI = {
 	},
 
 	"showProperties": function(k) {
-		this.propID = (this.trtTable.selectedRows.length != 1) ? "multi" : this.trtTable.selectedRows[0];
+		var count = this.trtTable.selectedRows.length;
+		if (count <= 0) return;
+
+		this.propID = (count > 1) ? "multi" : this.trtTable.selectedRows[0];
 		if (this.propID != "multi")
 			this.request("action=getprops&hash=" + this.propID, this.loadProperties);
 		else
@@ -3562,9 +3565,9 @@ var utWebUI = {
 		if (urls.length <= 0) return;
 
 		var count = 0;
-		var fnwrap = (function() {
+		var fnwrap = fn ? (function() {
 			if (++count === urls.length) fn();
-		});
+		}) : undefined;
 
 		var val, tail = "";
 

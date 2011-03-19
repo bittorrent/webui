@@ -365,15 +365,17 @@ var dxSTable = new Class({
 		this.dCont.addEvent("keydown", (function(ev) {
 			var ctrl = ((Browser.Platform.mac && ev.meta) || (!Browser.Platform.mac && ev.control));
 
-			if (ev.key == "delete") { // DEL
-				this.fireEvent("onDelete", ev);
-			} else if (ctrl && (ev.key == "a")) { // Ctrl + A
+			if (ctrl && (ev.key == "a")) { // Ctrl + A
 				this.fillSelection();
 				this.fireEvent("onSelect", ev);
 			} else if (ctrl && (ev.key == "e")) { // Ctrl + E
 				this.clearSelection();
 				this.fireEvent("onSelect", ev);
 			}
+		}).bind(this));
+
+		this.dCont.addEvent("keydown", (function(ev) {
+			this.fireEvent("onKeyDown", ev);
 		}).bind(this));
 
 //		if (Browser.firefox) {

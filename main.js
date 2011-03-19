@@ -471,11 +471,22 @@ function setupUserInterface() {
 	utWebUI.trtTable.create("mainTorList", utWebUI.trtColDefs, Object.append({
 		"format": utWebUI.trtFormatRow.bind(utWebUI),
 		"sortCustom": utWebUI.trtSortCustom.bind(utWebUI),
-		"onDelete": function(ev) { utWebUI.removeDefault(ev.shift); },
 		"onColReset": utWebUI.trtColReset.bind(utWebUI),
 		"onColResize": utWebUI.trtColResize.bind(utWebUI),
 		"onColMove": utWebUI.trtColMove.bind(utWebUI),
 		"onColToggle": utWebUI.trtColToggle.bind(utWebUI),
+		"onKeyDown": function(ev) {
+			switch (eventToKey(ev)) {
+				case "alt enter":
+					utWebUI.showProperties();
+				break;
+
+				case "shift delete":
+				case "delete":
+					utWebUI.removeDefault(ev.shift);
+				break;
+			}
+		},
 		"onSort": utWebUI.trtSort.bind(utWebUI),
 		"onSelect": utWebUI.trtSelect.bind(utWebUI),
 		"onDblClick": utWebUI.trtDblClk.bind(utWebUI)
