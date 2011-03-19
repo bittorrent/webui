@@ -48,7 +48,7 @@ function simpleClone(element, content) {
 	return element;
 }
 
-var dxSTable = new Class({
+var STable = new Class({
 
 	"Implements": [Options, Events],
 	"rows": 0, // # of rows

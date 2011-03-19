@@ -1193,12 +1193,24 @@ var Flotr = (function(){
 		}
 
 		function insertLegend(){
-			if (!options.legend.show) return;
-
 // uTorrent WebUI Patch - BEGIN
+//			if (!options.legend.show) return;
+
 			// Allocate a unique legend for each plot. Otherwise, a new element is created on
 			// each refresh, but never destroyed (leading to wasted resources).
 			var lgndId = this.id + "-legend";
+
+			if (!options.legend.show) {
+				if (this.__insertLegend_inserted__) {
+					this.__insertLegend_inserted__ = false;
+					var lgnd = $(lgndId), lgndbg = $(lgndId + "-bg");
+					if (lgnd) lgnd.empty();
+					if (lgndbg) lgndbg.destroy();
+				}
+				return;
+			}
+
+			this.__insertLegend_inserted__ = true;
 // uTorrent WebUI Patch - END
 
 			var fragments = [];
@@ -1235,7 +1247,11 @@ var Flotr = (function(){
 					if (p.charAt(1) == 'e')
 						pos.right = (m + plotOffset.right) + 'px';
 					else if (p.charAt(1) == 'w')
-						pos.left = (m + plotOffset.bottom) + 'px';
+// uTorrent WebUI Patch - BEGIN
+//						pos.left = (m + plotOffset.bottom) + 'px';
+						pos.left = (m + plotOffset.left) + 'px';
+// uTorrent WebUI Patch - END
+
 // uTorrent WebUI Patch - BEGIN
 //					var div = new Element('div').addClass('flotr-legend').setStyles($extend(pos, {
 //						'position': 'absolute',
@@ -1252,7 +1268,7 @@ var Flotr = (function(){
 
 						target.adopt(div);
 					}
-					div.set("html", table);
+					div.setStyles(pos).set("html", table);
 // uTorrent WebUI Patch - END
 
 					if (options.legend.backgroundOpacity != 0.0) {

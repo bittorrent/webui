@@ -392,7 +392,7 @@ function resizeUI(hDiv, vDiv) {
 			var dh = wh - vDiv - $("mainInfoPane-tabs").getSize().y - (showSB ? 1 : 0) - 14;
 			$("mainInfoPane-content").setStyles({"width": dw - 8, "height": dh});
 			$("mainInfoPane-generalTab").setStyles({"width": dw - 10, "height": dh - 2});
-			SpeedGraph.resize(dw - 8, dh);
+			utWebUI.spdGraph.resizeTo(dw - 8, dh);
 			$("mainInfoPane-loggerTab").setStyles({"width": dw - 14, "height": dh - 6});
 			utWebUI.prsTable.resizeTo(dw - 10, dh - 2);
 			utWebUI.flsTable.resizeTo(dw - 10, dh - 2);
@@ -560,7 +560,7 @@ function setupUserInterface() {
 
 	// -- Speed Tab
 
-	SpeedGraph.init("mainInfoPane-speedTab");
+	utWebUI.spdGraph.create("mainInfoPane-speedTab");
 
 	// -- Logger Tab
 
@@ -1463,11 +1463,10 @@ function loadLangStrings(reload) {
 
 	// -- Speed Tab
 
-	SpeedGraph.setLabels(
+	utWebUI.spdGraph.setLabels(
 		  _("OV_COL_UPSPD")
 		, _("OV_COL_DOWNSPD")
 	);
-	SpeedGraph.draw();
 
 	//--------------------------------------------------
 	// STATUS

@@ -105,11 +105,12 @@ var utWebUI = {
 	"torrentID": "", // selected torrent
 	"propID": "", // selected torrent (single)
 	"rssfilterId": "", // selected RSS filter
-	"trtTable": new dxSTable(),
-	"prsTable": new dxSTable(),
-	"flsTable": new dxSTable(),
-	"rssfdTable": new dxSTable(),
-	"advOptTable": new dxSTable(),
+	"spdGraph": new SpeedGraph(),
+	"trtTable": new STable(),
+	"prsTable": new STable(),
+	"flsTable": new STable(),
+	"rssfdTable": new STable(),
+	"advOptTable": new STable(),
 	"trtColDefs": [
 		//[ colID, colWidth, colType, colDisabled = false, colIcon = false, colAlign = ALIGN_AUTO, colText = "" ]
 		  ["name", 220, TYPE_STRING]
@@ -1233,7 +1234,7 @@ var utWebUI = {
 		this.totalUL = 0;
 
 		this.getList(null, (function() {
-			SpeedGraph.addData(this.totalUL, this.totalDL);
+			this.spdGraph.addData(this.totalUL, this.totalDL);
 
 			this.showDetails();
 
@@ -2377,6 +2378,7 @@ var utWebUI = {
 					case "multi_day_transfer_mode_uldl": if (val) tcmode = 2; break;
 
 					case "gui.alternate_color": this.tableUseAltColor(val); break;
+					case "gui.graph_legend": this.spdGraph.showLegend(val); break;
 					case "gui.graphic_progress": this.tableUseProgressBar(val); break;
 					case "gui.log_date": Logger.setLogDate(val); break;
 
@@ -2609,6 +2611,11 @@ var utWebUI = {
 		value = $("gui.alternate_color").checked;
 		if (!!this.settings["gui.alternate_color"] != value) {
 			this.tableUseAltColor(value);
+		}
+
+		value = this.getAdvSetting("gui.graph_legend");
+		if (undefined != value && !!this.settings["gui.graph_legend"] != value) {
+			this.spdGraph.showLegend(value);
 		}
 
 		value = this.getAdvSetting("gui.graphic_progress");
@@ -4592,7 +4599,7 @@ var utWebUI = {
 			break;
 
 			case "mainInfoPane-speedTab":
-				SpeedGraph.draw();
+				this.spdGraph.draw();
 			break;
 
 			case "mainInfoPane-loggerTab":

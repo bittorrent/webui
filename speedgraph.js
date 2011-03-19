@@ -1,41 +1,38 @@
-/**
- * @author Novik
- */
+/*
+Copyright (c) 2011 BitTorrent, Inc. All rights reserved.
+*/
 
-var SpeedGraph = {
+var SpeedGraph = new Class({
 
+	"element": null,
 	"plot": null,
 
-	"init": function(element) {
-		this.element = $(element);
-		this.maxSeconds = 600;
-		this.seconds = -1;
-		this.startSeconds = Date.now() / 1000;
+	"maxInterval": 600 * 1000, // milliseconds
+
+	"create": function(id) {
+		this.element = $(id);
 
 		this.plot = new Flotr.Plot(this.element, [{ data: [] }, { data: [] }], {
 			"colors" : ["#EE0000", "#00AA00"],
+			"legend" : {
+				"position": 'nw'
+			},
 			"lines" : {
-				show: true,
-				lineWidth: 1
+				"show": true,
+				"lineWidth": 1
 			},
 			"xaxis" : {
-				"max" : (this.seconds - this.startSeconds >= this.maxSeconds) ? null : this.maxSeconds + this.startSeconds,
 				"tickSize" : 60,
 				"tickFormatter" : function(n) {
-					var dt = new Date(n * 1000);
-					var h = dt.getHours();
-					var m = dt.getMinutes();
-					var s = dt.getSeconds();
-					h = (h < 10) ? ("0" + h) : h;
-					m = (m < 10) ? ("0" + m) : m;
-					s = (s < 10) ? ("0" + s) : s;
-					return (h + ":" + m + ":" + s);
+					return (new Date(Number(n))).format('%H:%M:%S');
 				}
 			},
 			"yaxis" : {
 				"min": 0,
 				"minMaxTickSize": 512,
-				"tickFormatter": function(n) { return (parseInt(n).toFileSize() + g_perSec); }
+				"tickFormatter": function(n) {
+					return (parseInt(n).toFileSize() + g_perSec);
+				}
 			},
 			"grid": {
 				"color": "#868686"
@@ -49,32 +46,45 @@ var SpeedGraph = {
 		this.plot.repaint();
 	},
 
-	"resize": function(w, h) {
+	"resizeTo": function(w, h) {
 		var style = {};
-		if (w > 0)
+		if (typeof(w) === 'number' && w > 0)
 			style.width = w;
-		if (h > 0)
+		if (typeof(h) === 'number' && h > 0)
 			style.height = h;
 
 		this.element.setStyles(style);
 		this.draw();
 	},
 
+	"showLegend": function(show) {
+		this.plot.options.legend.show = !!show;
+		this.draw();
+	},
+
 	"setLabels": function(upLabel, downLabel) {
-		if (upLabel) this.plot.series[0].label = upLabel;
-		if (downLabel) this.plot.series[1].label = downLabel;
+		if (typeof(upLabel) !== 'undefined')
+			this.plot.series[0].label = upLabel;
+		if (typeof(downLabel) !== 'undefined')
+			this.plot.series[1].label = downLabel;
 	},
 
 	"addData": function(upSpeed, downSpeed) {
-		this.seconds = Date.now() / 1000;
-		this.plot.series[0].data.push([this.seconds, upSpeed]);
-		this.plot.series[1].data.push([this.seconds, downSpeed]);
-		var data = this.plot.series[0].data;
-		while ((data[data.length - 1][0] - data[0][0]) > this.maxSeconds) {
-			this.plot.series[0].data.shift();
-			this.plot.series[1].data.shift();
+		var now = Date.now();
+
+		var dataUp = this.plot.series[0].data;
+		var dataDown = this.plot.series[1].data;
+
+		dataUp.push([now, upSpeed]);
+		dataDown.push([now, downSpeed]);
+
+		while ((now - dataUp[0][0]) > this.maxInterval) {
+			dataUp.shift();
+			dataDown.shift();
 		}
-		this.plot.options.xaxis.max = (this.seconds - this.startSeconds >= this.maxSeconds) ? null : this.maxSeconds + this.startSeconds;
+
+		this.plot.options.xaxis.min = now - this.maxInterval;
+
 		this.draw();
 	}
-};
+});
