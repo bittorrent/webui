@@ -3207,6 +3207,8 @@ var utWebUI = {
 			return;
 		}
 
+		this.torrentID = id;
+
 		if (this.config.showDetails) {
 			this.showDetails(id);
 		}
@@ -4481,6 +4483,7 @@ var utWebUI = {
 		$("mainInfoPane")[show ? "show" : "hide"]();
 		$("webui.showDetails").checked = show;
 		this.config.showDetails = show;
+		this.detPanelTabChange();
 
 		resizeUI();
 		if (Browser.opera)
@@ -4585,6 +4588,9 @@ var utWebUI = {
 	},
 
 	"detPanelTabChange": function(id) {
+		if (!(this.config || {}).showDetails) return;
+		if (id === undefined) id = this.mainTabs.active;
+
 		switch (id) {
 			case "mainInfoPane-peersTab":
 				this.prsTable.calcSize();

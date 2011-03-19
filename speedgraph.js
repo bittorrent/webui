@@ -10,7 +10,8 @@ var SpeedGraph = new Class({
 	"element": null,
 	"plot": null,
 
-	"maxInterval": 600 * 1000, // milliseconds
+	"maxDataInterval": 600 * 1000, // milliseconds
+	"maxShowInterval": -1,
 
 	"create": function(id) {
 		this.element = $(id);
@@ -45,7 +46,7 @@ var SpeedGraph = new Class({
 	},
 
 	"draw": function() {
-		if (utWebUI.mainTabs.active != "mainInfoPane-speedTab") return;
+		if (!(utWebUI.config || {}).showDetails || utWebUI.mainTabs.active != "mainInfoPane-speedTab") return;
 		this.plot.repaint();
 	},
 
@@ -81,12 +82,16 @@ var SpeedGraph = new Class({
 		dataUp.push([now, upSpeed]);
 		dataDown.push([now, downSpeed]);
 
-		while ((now - dataUp[0][0]) > this.maxInterval) {
+		while ((now - dataUp[0][0]) > this.maxDataInterval) {
 			dataUp.shift();
 			dataDown.shift();
 		}
 
-		this.plot.options.xaxis.min = now - this.maxInterval;
+		this.plot.options.xaxis.min = now - (
+			0 < this.maxShowInterval && this.maxShowInterval < this.maxDataInterval
+				? this.maxShowInterval
+				: this.maxDataInterval
+		);
 
 		this.draw();
 	}
