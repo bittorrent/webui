@@ -1,6 +1,8 @@
 /*
-Copyright 2007 BitTorrent, Inc. All rights reserved.
-Copyright 2008 Carsten Niebuhr
+Copyright (c) 2011 BitTorrent, Inc. All rights reserved.
+
+Use of this source code is governed by a BSD-style that can be
+found in the LICENSE file.
 */
 
 var LANG_LIST = LANG_LIST || {};

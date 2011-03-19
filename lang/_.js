@@ -1,3 +1,10 @@
+/*
+Copyright (c) 2011 BitTorrent, Inc. All rights reserved.
+
+Use of this source code is governed by a BSD-style that can be
+found in the LICENSE file.
+*/
+
 var LANG_CONST = [
 	  "CT_MASK1"
 	, "DLG_BTN_OK"

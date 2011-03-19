@@ -3,7 +3,7 @@ Copyright Emil A Eklund - Column List Widget 1.03
   (http://webfx.eae.net/dhtml/collist/columnlist.html)
 Copyright Erik Arvidsson - Sortable Table 1.12
   (http://webfx.eae.net/dhtml/sortabletable/sortabletable.html)
-Copyright 2007, 2008 Carsten Niebuhr
+Copyright (c) 2011 BitTorrent, Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
