@@ -692,7 +692,7 @@ var utWebUI = {
 
 		var act = this.perform.bind(this, this.delActions[mode]);
 
-		if (this.settings["confirm_when_deleting"]) {
+		if ([this.settings["confirm_when_deleting"], true].pick()) {
 			var ask;
 			switch (mode) {
 				case CONST.TOR_REMOVE:
