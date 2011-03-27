@@ -61,6 +61,7 @@ var utWebUI = {
 		"showCategories": true,
 		"showToolbar": true,
 		"showStatusBar": true,
+		"useSysFont": true,
 		"updateInterval": 3000,
 		"maxRows": 0,
 		"lang": "en",
@@ -2458,6 +2459,19 @@ var utWebUI = {
 	},
 
 	"loadSettings": function() {
+		this.props.multi = {
+			"trackers": 0,
+			"ulrate": 0,
+			"dlrate": 0,
+			"superseed": 0,
+			"dht": 0,
+			"pex": 0,
+			"seed_override": 0,
+			"seed_ratio": 0,
+			"seed_time": 0,
+			"ulslots": 0
+		};
+
 		// Advanced settings
 		this.advOptTable.clearSelection();
 		this.advOptSelect();
@@ -2496,6 +2510,7 @@ var utWebUI = {
 
 		// WebUI configuration
 		[
+			"useSysFont",
 			"showDetails",
 			"showCategories",
 			"showToolbar",
@@ -2517,18 +2532,8 @@ var utWebUI = {
 			value = (this.config.maxRows <= 0 ? 0 : this.limits.minTableRows);
 		}
 		$("webui.maxRows").set("value", this.config.maxRows);
-		this.props.multi = {
-			"trackers": 0,
-			"ulrate": 0,
-			"dlrate": 0,
-			"superseed": 0,
-			"dht": 0,
-			"pex": 0,
-			"seed_override": 0,
-			"seed_ratio": 0,
-			"seed_time": 0,
-			"ulslots": 0
-		};
+
+		this.toggleSystemFont(this.config.useSysFont);
 
 		if (!this.config.showToolbar && !isGuest)
 			$("mainToolbar").hide();
@@ -2597,6 +2602,12 @@ var utWebUI = {
 		}
 		if (this.config.maxRows != value) {
 			this.tableSetMaxRows(value);
+			hasChanged = true;
+		}
+
+		value = $("webui.useSysFont").checked;
+		if (this.config.useSysFont != value) {
+			this.toggleSystemFont(value);
 			hasChanged = true;
 		}
 
@@ -4537,6 +4548,20 @@ var utWebUI = {
 		$("mainToolbar")[show ? "show" : "hide"]();
 		$("webui.showToolbar").checked = show;
 		this.config.showToolbar = show;
+
+		resizeUI();
+		if (Browser.opera)
+			this.saveConfig(true);
+	},
+
+	"toggleSystemFont": function(use) {
+		use = (use === undefined
+			? !this.config.useSysFont
+			: !!use
+		);
+
+		document.body[use ? "removeClass" : "addClass"]("nosysfont");
+		this.config.useSysFont = use;
 
 		resizeUI();
 		if (Browser.opera)

@@ -1239,12 +1239,13 @@ function setupUserInterface() {
 		, "DLG_SETTINGS_A_ADVANCED_02"
 
 		// Web UI
-		, "webui.maxRows"
-		, "webui.updateInterval"
 		, "webui.showToolbar"
 		, "webui.showCategories"
 		, "webui.showDetails"
 		, "webui.showStatusBar"
+		, "webui.maxRows"
+		, "webui.updateInterval"
+		, "webui.useSysFont"
 	]);
 
 	//--------------------------------------------------
