@@ -4699,7 +4699,7 @@ var utWebUI = {
 				break;
 
 				case "codec":
-// RSSTODO: Implement
+					values[i] = CONST.RSSITEMCODECMAP[values[i]] || ("UNKNOWN CODEC: " + values[i]);
 				break;
 
 				case "episode":
@@ -4725,7 +4725,7 @@ var utWebUI = {
 				break;
 
 				case "format":
-					values[i] = values[i] ? g_feedItemQltyMap[values[i]] : "?";
+					values[i] = CONST.RSSITEMQUALITYMAP[values[i]] || ("UNKNOWN QUALITY: " + values[i]);
 				break;
 			}
 		}

@@ -137,6 +137,38 @@ var CONST = {
 	, "RSSITEM_IN_HISTORY": 11
 
 	//----------------------------------------
+	// RSS ITEM CODEC CONSTANTS
+	//----------------------------------------
+
+	, "RSSITEMCODEC_NONE": 0
+	, "RSSITEMCODEC_MPEG": 1
+	, "RSSITEMCODEC_MPEG2": 2
+	, "RSSITEMCODEC_MPEG4": 3
+	, "RSSITEMCODEC_REAL": 4
+	, "RSSITEMCODEC_WMV": 5
+	, "RSSITEMCODEC_XVID": 6
+	, "RSSITEMCODEC_DIVX": 7
+	, "RSSITEMCODEC_X264": 8
+	, "RSSITEMCODEC_H264": 9
+	, "RSSITEMCODEC_WMVHD": 10
+	, "RSSITEMCODEC_VC1": 11
+
+	, "RSSITEMCODECMAP": [
+		  "?"
+		, "MPEG"
+		, "MPEG-2"
+		, "MPEG-4"
+		, "Real"
+		, "WMV"
+		, "Xvid"
+		, "DivX"
+		, "X264"
+		, "H264"
+		, "WMV-HD"
+		, "VC1"
+	]
+
+	//----------------------------------------
 	// RSS ITEM QUALITY CONSTANTS
 	//----------------------------------------
 
@@ -158,6 +190,26 @@ var CONST = {
 	, "RSSITEMQUALITY_1080P": 8192
 	, "RSSITEMQUALITY_WEBRIP": 16384
 	, "RSSITEMQUALITY_SATRIP": 32768
+
+	, "RSSITEMQUALITYMAP": [
+		  "?"
+		, "HDTV"
+		, "TVRip"
+		, "DVDRip"
+		, "SVCD"
+		, "DSRip"
+		, "DVBRip"
+		, "PDTV"
+		, "HR.HDTV"
+		, "HR.PDTV"
+		, "DVDR"
+		, "DVDScr"
+		, "720p"
+		, "1080i"
+		, "1080p"
+		, "WebRip"
+		, "SatRip"
+	]
 
 	//----------------------------------------
 	// RSS FILTER CONSTANTS

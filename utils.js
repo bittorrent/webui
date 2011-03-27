@@ -23,11 +23,6 @@ function eventToKey(ev) {
 	);
 }
 
-var __log2_base__ = Math.log(2);
-function log2(x) {
-	return Math.log(x) / __log2_base__;
-}
-
 function has(obj, key) {
 	return Object.prototype.hasOwnProperty.apply(obj, [key]);
 }
