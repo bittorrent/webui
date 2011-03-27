@@ -124,7 +124,7 @@ function setupGlobalEvents() {
 		return (
 			targ.retrieve("mousewhitelist") ||
 			("textarea" === tag) ||
-			(("input" === tag) && !targ.disabled && ["text", "password"].contains(targ.type.toLowerCase())) ||
+			(("input" === tag) && !targ.disabled && ["text", "file", "password"].contains(targ.type.toLowerCase())) ||
 			(("select" === tag) && !ev.isRightClick())
 		);
 	};
