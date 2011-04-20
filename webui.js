@@ -7,8 +7,13 @@ found in the LICENSE file.
 
 var LANG_LIST = LANG_LIST || {};
 var urlBase = window.location.pathname.substr(0, window.location.pathname.indexOf("/gui"));
-var guiBase = urlBase + "/gui/";
-var proxyBase = urlBase + "/proxy";
+if (window.raptor) {
+	var guiBase = urlBase + "/client/gui/";
+	var proxyBase = urlBase + "/client/proxy";
+} else {
+	var guiBase = urlBase + "/gui/";
+	var proxyBase = urlBase + "/proxy";
+}
 var isGuest = window.location.pathname.test(/.*guest.html$/);
 
 var utWebUI = {
@@ -390,6 +395,21 @@ var utWebUI = {
 		if (typeOf(fails) != 'array') fails = [0]; // array so to pass by reference
 
 		var self = this;
+
+		if (window.raptor) {
+			var params = qs.split('&');
+			var d = {};
+			for (var i=0; i<params.length; i++) {
+				var kv = params[i].split('=');
+				if (kv.length == 2) {
+					if (kv[0] != 'token') {
+						d[kv[0]] = decodeURIComponent(kv[1]);
+					}
+				}
+			}
+			console.log('request through raptor with url params',d);
+			return raptor.post_raw( d, {}, fn.bind(self), fails );
+		}
 
 		var req = function() {
 			try {

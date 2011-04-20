@@ -1695,7 +1695,6 @@ function parser(
 };
 
 // Slick NS
-
 var Slick = (this.Slick || {});
 
 Slick.parse = function(expression){
@@ -1706,8 +1705,8 @@ Slick.escapeRegExp = escapeRegExp;
 
 if (!this.Slick) this.Slick = Slick;
 
-}).apply(/*<CommonJS>*/(typeof exports != 'undefined') ? exports : /*</CommonJS>*/this);
-
+}).apply(/*<CommonJS>(typeof exports != 'undefined') ? exports : </CommonJS>*/this);
+/* the export is broken, later on the code assumes Slick is in the global window namespace */
 
 /*
 ---
@@ -2666,7 +2665,7 @@ Slick.uidOf = function(node){
 
 if (!this.Slick) this.Slick = Slick;
 
-}).apply(/*<CommonJS>*/(typeof exports != 'undefined') ? exports : /*</CommonJS>*/this);
+}).apply(/*<CommonJS>(typeof exports != 'undefined') ? exports : </CommonJS>*/this);
 
 
 /*

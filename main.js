@@ -4,7 +4,6 @@ Copyright (c) 2011 BitTorrent, Inc. All rights reserved.
 Use of this source code is governed by a BSD-style that can be
 found in the LICENSE file.
 */
-
 var g_winTitle = "\u00B5Torrent WebUI v" + CONST.VERSION;
 
 // Localized string globals ... initialized in loadLangStrings()
@@ -46,13 +45,15 @@ var ELE_TR = new Element("tr");
 // MAIN
 //================================================================================
 
-window.addEvent("domready", function() {
+function webui_main() {
 	$(document.body);
-
 	setupGlobalEvents();
 	setupUserInterface();
-
 	utWebUI.init();
+}
+
+window.addEvent("domready", function() {
+	webui_main();	
 });
 
 
