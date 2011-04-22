@@ -4,6 +4,7 @@ Copyright (c) 2011 BitTorrent, Inc. All rights reserved.
 Use of this source code is governed by a BSD-style that can be
 found in the LICENSE file.
 */
+(function(){
 
 var LANG_LIST = LANG_LIST || {};
 var urlBase = window.location.pathname.substr(0, window.location.pathname.indexOf("/gui"));
@@ -4909,3 +4910,8 @@ var utWebUI = {
 	}
 
 }
+
+window.isGuest = isGuest;
+window.utWebUI = utWebUI;
+
+})();
