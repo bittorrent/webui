@@ -417,8 +417,7 @@ var utWebUI = {
 					}
 				}
 			}
-			console.log('request through raptor with url params',d);
-			return raptor.post_raw( d, {}, fn.bind(self), fails );
+			return raptor.post_raw( d, {}, fn ? fn.bind(self) : function(resp) {}, fails );
 		}
 
 		var req = function() {
@@ -3524,8 +3523,15 @@ var utWebUI = {
 			});
 		}
 		this.propID = "";
-		if (str != "")
-			this.request("action=setprops&hash=" + this.trtTable.selectedRows.join(str + "&hash=") + str);
+
+		if (str != "") {
+			if (window.utweb === undefined) {
+				this.request("action=setprops&hash=" + this.trtTable.selectedRows.join(str + "&hash=") + str);
+			} else {
+				raptor.post_raw( "action=setprops"+str, utweb.tables.torrent.view.selectedRows()[0], function() {} );
+			}
+		}				
+
 	},
 
 	"showDetails": function(id) {
