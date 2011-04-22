@@ -2729,7 +2729,7 @@ var utWebUI = {
 		var port = (window.location.port ? window.location.port : (window.location.protocol == "http:" ? 80 : 443));
 		var new_port = (this.settings["webui.enable_listen"] === undefined || this.settings["webui.enable_listen"] ? this.settings["webui.port"] : this.settings["bind_port"]);
 
-		if (port != new_port && window.raptor) {
+		if (port != new_port && ! window.raptor) {
 			this.endPeriodicUpdate();
 			this.showMsg(
 				'<p>&micro;Torrent has been configured to use a listening port for WebUI different from the port on which it is currently being viewed.</p>' +
