@@ -27,6 +27,7 @@ http://web.utorrent.com/client/app/{ app id }/index.html
 		<title></title>
 		<link href="./images/ut_small.png" rel="icon" type="image/png" />
 		<link href="./main.css" rel="stylesheet" type="text/css" />
+		<link href="./dialogs.css" rel="stylesheet" type="text/css" />
 		<link href="./stable.css" rel="stylesheet" type="text/css" />
 		<!--[if IE]>
 		<script type="text/javascript" src="./ie.js"></script>
@@ -53,20 +54,7 @@ http://web.utorrent.com/client/app/{ app id }/index.html
 				<span id="dlgAbout-version"></span>
 
 				<div id="dlgAbout-credits">
-					<div><strong>Developers:</strong>
-						<div>
-							Carsten Niebuhr (Directrix)<br />
-							Ultima
-						</div>
-					</div>
-					<div><strong>Contributors:</strong>
-						<div>Firon, icleolion, <a href="http://www.ignorantcow.net/" target="_blank">Ignorantcow</a>, Novik, <a href="http://outfitfox.blogspot.com/" target="_blank">savaden</a>, shawnz</div>
-					</div>
-					<div><strong>Artwork:</strong>
-						<div>(Flags) <a href="http://forum.utorrent.com/viewtopic.php?id=2070" target="_blank">Flags</a> by eng</div>
-						<div>(Icons) <a href="http://www.famfamfam.com/lab/icons/silk/" target="_blank">Silk</a> by Mark James</div>
-					</div>
-					<div id="mootools"><a href="http://www.mootools.net/" target="_blank"><img src="./images/mootools.png" alt="MooTools" /></a></div>
+
 				</div>
 			</div>
 		</div>
@@ -1255,7 +1243,9 @@ raptor.api.get_token( function() {
 
   new JSLoad( make_tags(webui_scripts) ).load([ webui_scripts[webui_scripts.length-1] ], function() {
     if (window.console && window.console.log) { console.log('webui loaded'); }
-    webui_main();
+
+do_webui_main();
+
   });
 
 });
