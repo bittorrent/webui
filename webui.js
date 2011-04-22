@@ -8,6 +8,15 @@ found in the LICENSE file.
 
 var LANG_LIST = LANG_LIST || {};
 var urlBase = window.location.pathname.substr(0, window.location.pathname.indexOf("/gui"));
+
+/* there are 3 main modes of operation
+
+1) standard webui
+2) standard webui but with request wrapped (window.raptor)
+3) this is imported from the uT Remote interface (window.utweb !== undefined)
+
+*/
+
 if (window.raptor) {
 	var guiBase = urlBase + "/client/gui/";
 	var proxyBase = urlBase + "/client/proxy";
@@ -330,7 +339,7 @@ var utWebUI = {
 		this.prsColDefs.each(function(item, index) { this.prsColToggle(index, item[3], true); }, this);
 		this.flsColDefs.each(function(item, index) { this.flsColToggle(index, item[3], true); }, this);
 		this.fdColDefs.each(function(item, index) { this.fdColToggle(index, item[3], true); }, this);
-
+		if (window.utweb !== undefined) return;
 		// Load settings
 		this.getSettings((function() {
 			this.update.delay(0, this, (function() {
@@ -2337,37 +2346,39 @@ var utWebUI = {
 			}
 
 			// Set up listivews
-			this.trtTable.setConfig({
-				  "colSort": [cookie.torrentTable.sIndex, cookie.torrentTable.reverse]
-				, "colMask": cookie.torrentTable.colMask
-				, "colOrder": cookie.torrentTable.colOrder
-				, "colWidth": this.config.torrentTable.colWidth
-			});
-
-			this.prsTable.setConfig({
-				  "colSort": [cookie.peerTable.sIndex, cookie.peerTable.reverse]
-				, "colMask": cookie.peerTable.colMask
-				, "colOrder": cookie.peerTable.colOrder
-				, "colWidth": cookie.peerTable.colWidth
-			});
-
-			this.flsTable.setConfig({
-				  "colSort": [cookie.fileTable.sIndex, cookie.fileTable.reverse]
-				, "colMask": cookie.fileTable.colMask
-				, "colOrder": cookie.fileTable.colOrder
-				, "colWidth": cookie.fileTable.colWidth
-			});
-
-			if (!isGuest) {
-				this.rssfdTable.setConfig({
-					  "colSort": [cookie.feedTable.sIndex, cookie.feedTable.reverse]
-					, "colMask": cookie.feedTable.colMask
-					, "colOrder": cookie.feedTable.colOrder
-					, "colWidth": cookie.feedTable.colWidth
+			if (window.utweb === undefined) {
+				this.trtTable.setConfig({
+					  "colSort": [cookie.torrentTable.sIndex, cookie.torrentTable.reverse]
+					, "colMask": cookie.torrentTable.colMask
+					, "colOrder": cookie.torrentTable.colOrder
+					, "colWidth": this.config.torrentTable.colWidth
 				});
-			}
 
-			this.tableSetMaxRows(cookie.maxRows);
+				this.prsTable.setConfig({
+					  "colSort": [cookie.peerTable.sIndex, cookie.peerTable.reverse]
+					, "colMask": cookie.peerTable.colMask
+					, "colOrder": cookie.peerTable.colOrder
+					, "colWidth": cookie.peerTable.colWidth
+				});
+
+				this.flsTable.setConfig({
+					  "colSort": [cookie.fileTable.sIndex, cookie.fileTable.reverse]
+					, "colMask": cookie.fileTable.colMask
+					, "colOrder": cookie.fileTable.colOrder
+					, "colWidth": cookie.fileTable.colWidth
+				});
+
+				if (!isGuest) {
+					this.rssfdTable.setConfig({
+						  "colSort": [cookie.feedTable.sIndex, cookie.feedTable.reverse]
+						, "colMask": cookie.feedTable.colMask
+						, "colOrder": cookie.feedTable.colOrder
+						, "colWidth": cookie.feedTable.colWidth
+					});
+				}
+				this.tableSetMaxRows(cookie.maxRows);
+			}
+			
 
 			resizeUI();
 		}).bind(this);
@@ -2396,15 +2407,16 @@ var utWebUI = {
 				}
 
 				// handle special settings
+
 				switch (key) {
 					case "multi_day_transfer_mode_ul": if (val) tcmode = 0; break;
 					case "multi_day_transfer_mode_dl": if (val) tcmode = 1; break;
 					case "multi_day_transfer_mode_uldl": if (val) tcmode = 2; break;
 
-					case "gui.alternate_color": this.tableUseAltColor(val); break;
-					case "gui.graph_legend": this.spdGraph.showLegend(val); break;
-					case "gui.graphic_progress": this.tableUseProgressBar(val); break;
-					case "gui.log_date": Logger.setLogDate(val); break;
+					case "gui.alternate_color": if (window.utweb === undefined) { this.tableUseAltColor(val); } break;
+					case "gui.graph_legend": if (window.utweb === undefined) { this.spdGraph.showLegend(val); } break;
+					case "gui.graphic_progress": if (window.utweb === undefined) { this.tableUseProgressBar(val); } break;
+					case "gui.log_date": if (window.utweb === undefined) { Logger.setLogDate(val); } break;
 
 					case "bt.transp_disposition": $("enable_bw_management").checked = !!(val & CONST.TRANSDISP_UTP); break;
 				}
@@ -2450,7 +2462,7 @@ var utWebUI = {
 			else
 				this.config.lang = (this.defConfig.lang || "en");
 		}
-
+		if (window.utweb !== undefined) return;
 		loadLangStrings({
 			"lang": this.config.lang,
 			"onload": (function() {
@@ -2717,7 +2729,7 @@ var utWebUI = {
 		var port = (window.location.port ? window.location.port : (window.location.protocol == "http:" ? 80 : 443));
 		var new_port = (this.settings["webui.enable_listen"] === undefined || this.settings["webui.enable_listen"] ? this.settings["webui.port"] : this.settings["bind_port"]);
 
-		if (port != new_port && window.falcon) {
+		if (port != new_port && window.raptor) {
 			this.endPeriodicUpdate();
 			this.showMsg(
 				'<p>&micro;Torrent has been configured to use a listening port for WebUI different from the port on which it is currently being viewed.</p>' +
