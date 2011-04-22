@@ -3,10 +3,10 @@
 MooTools: the javascript framework
 
 web build:
- - http://mootools.net/core/94f47673bfddc794bc9b552ee3bc7c67
+ - http://mootools.net/core/7c56cfef9dddcf170a5d68e3fb61cfd7
 
 packager build:
- - packager build Core/Core Core/Array Core/String Core/Number Core/Function Core/Object Core/Event Core/Browser Core/Class Core/Class.Extras Core/Element Core/Element.Style Core/Element.Event Core/Element.Dimensions Core/Request Core/Request.JSON Core/JSON Core/DOMReady
+ - packager build Core/Core Core/Array Core/String Core/Number Core/Function Core/Object Core/Event Core/Browser Core/Class Core/Class.Extras Core/Slick.Parser Core/Slick.Finder Core/Element Core/Element.Style Core/Element.Event Core/Element.Dimensions Core/Fx Core/Fx.CSS Core/Fx.Tween Core/Fx.Morph Core/Fx.Transitions Core/Request Core/Request.HTML Core/Request.JSON Core/Cookie Core/JSON Core/DOMReady Core/Swiff
 
 /*
 ---
@@ -167,7 +167,9 @@ var Type = this.Type = function(name, object){
 			object.prototype.$family = (function(){
 				return lower;
 			}).hide();
-			
+			//<1.2compat>
+			object.type = typeCheck;
+			//</1.2compat>
 		}
 	}
 
@@ -396,7 +398,125 @@ String.extend('uniqueID', function(){
 	return (UID++).toString(36);
 });
 
+//<1.2compat>
 
+var Hash = this.Hash = new Type('Hash', function(object){
+	if (typeOf(object) == 'hash') object = Object.clone(object.getClean());
+	for (var key in object) this[key] = object[key];
+	return this;
+});
+
+Hash.implement({
+
+	forEach: function(fn, bind){
+		Object.forEach(this, fn, bind);
+	},
+
+	getClean: function(){
+		var clean = {};
+		for (var key in this){
+			if (this.hasOwnProperty(key)) clean[key] = this[key];
+		}
+		return clean;
+	},
+
+	getLength: function(){
+		var length = 0;
+		for (var key in this){
+			if (this.hasOwnProperty(key)) length++;
+		}
+		return length;
+	}
+
+});
+
+Hash.alias('each', 'forEach');
+
+Object.type = Type.isObject;
+
+var Native = this.Native = function(properties){
+	return new Type(properties.name, properties.initialize);
+};
+
+Native.type = Type.type;
+
+Native.implement = function(objects, methods){
+	for (var i = 0; i < objects.length; i++) objects[i].implement(methods);
+	return Native;
+};
+
+var arrayType = Array.type;
+Array.type = function(item){
+	return instanceOf(item, Array) || arrayType(item);
+};
+
+this.$A = function(item){
+	return Array.from(item).slice();
+};
+
+this.$arguments = function(i){
+	return function(){
+		return arguments[i];
+	};
+};
+
+this.$chk = function(obj){
+	return !!(obj || obj === 0);
+};
+
+this.$clear = function(timer){
+	clearTimeout(timer);
+	clearInterval(timer);
+	return null;
+};
+
+this.$defined = function(obj){
+	return (obj != null);
+};
+
+this.$each = function(iterable, fn, bind){
+	var type = typeOf(iterable);
+	((type == 'arguments' || type == 'collection' || type == 'array' || type == 'elements') ? Array : Object).each(iterable, fn, bind);
+};
+
+this.$empty = function(){};
+
+this.$extend = function(original, extended){
+	return Object.append(original, extended);
+};
+
+this.$H = function(object){
+	return new Hash(object);
+};
+
+this.$merge = function(){
+	var args = Array.slice(arguments);
+	args.unshift({});
+	return Object.merge.apply(null, args);
+};
+
+this.$lambda = Function.from;
+this.$mixin = Object.merge;
+this.$random = Number.random;
+this.$splat = Array.from;
+this.$time = Date.now;
+
+this.$type = function(object){
+	var type = typeOf(object);
+	if (type == 'elements') return 'array';
+	return (type == 'null') ? false : type;
+};
+
+this.$unlink = function(object){
+	switch (typeOf(object)){
+		case 'object': return Object.clone(object);
+		case 'array': return Array.clone(object);
+		case 'hash': return new Hash(object);
+		default: return object;
+	}
+};
+
+//</1.2compat>
 
 }).call(this);
 
@@ -568,7 +688,15 @@ Array.implement({
 
 });
 
+//<1.2compat>
 
+Array.alias('extend', 'append');
+
+var $pick = function(){
+	return Array.from(arguments).pick();
+};
+
+//</1.2compat>
 
 
 /*
@@ -777,7 +905,54 @@ Function.implement({
 
 });
 
+//<1.2compat>
 
+delete Function.prototype.bind;
+
+Function.implement({
+
+	create: function(options){
+		var self = this;
+		options = options || {};
+		return function(event){
+			var args = options.arguments;
+			args = (args != null) ? Array.from(args) : Array.slice(arguments, (options.event) ? 1 : 0);
+			if (options.event) args = [event || window.event].extend(args);
+			var returns = function(){
+				return self.apply(options.bind || null, args);
+			};
+			if (options.delay) return setTimeout(returns, options.delay);
+			if (options.periodical) return setInterval(returns, options.periodical);
+			if (options.attempt) return Function.attempt(returns);
+			return returns();
+		};
+	},
+
+	bind: function(bind, args){
+		var self = this;
+		if (args != null) args = Array.from(args);
+		return function(){
+			return self.apply(bind, args || arguments);
+		};
+	},
+
+	bindWithEvent: function(bind, args){
+		var self = this;
+		if (args != null) args = Array.from(args);
+		return function(event){
+			return self.apply(bind, (args == null) ? arguments : [event].concat(args));
+		};
+	},
+
+	run: function(args, bind){
+		return this.apply(bind, Array.from(args));
+	}
+
+});
+
+var $try = Function.attempt;
+
+//</1.2compat>
 
 
 /*
@@ -899,7 +1074,95 @@ Object.extend({
 
 })();
 
+//<1.2compat>
 
+Hash.implement({
+
+	has: Object.prototype.hasOwnProperty,
+
+	keyOf: function(value){
+		return Object.keyOf(this, value);
+	},
+
+	hasValue: function(value){
+		return Object.contains(this, value);
+	},
+
+	extend: function(properties){
+		Hash.each(properties || {}, function(value, key){
+			Hash.set(this, key, value);
+		}, this);
+		return this;
+	},
+
+	combine: function(properties){
+		Hash.each(properties || {}, function(value, key){
+			Hash.include(this, key, value);
+		}, this);
+		return this;
+	},
+
+	erase: function(key){
+		if (this.hasOwnProperty(key)) delete this[key];
+		return this;
+	},
+
+	get: function(key){
+		return (this.hasOwnProperty(key)) ? this[key] : null;
+	},
+
+	set: function(key, value){
+		if (!this[key] || this.hasOwnProperty(key)) this[key] = value;
+		return this;
+	},
+
+	empty: function(){
+		Hash.each(this, function(value, key){
+			delete this[key];
+		}, this);
+		return this;
+	},
+
+	include: function(key, value){
+		if (this[key] == null) this[key] = value;
+		return this;
+	},
+
+	map: function(fn, bind){
+		return new Hash(Object.map(this, fn, bind));
+	},
+
+	filter: function(fn, bind){
+		return new Hash(Object.filter(this, fn, bind));
+	},
+
+	every: function(fn, bind){
+		return Object.every(this, fn, bind);
+	},
+
+	some: function(fn, bind){
+		return Object.some(this, fn, bind);
+	},
+
+	getKeys: function(){
+		return Object.keys(this);
+	},
+
+	getValues: function(){
+		return Object.values(this);
+	},
+
+	toQueryString: function(base){
+		return Object.toQueryString(this, base);
+	}
+
+});
+
+Hash.extend = Object.append;
+
+Hash.alias({indexOf: 'keyOf', contains: 'hasValue'});
+
+//</1.2compat>
 
 
 /*
@@ -1101,7 +1364,67 @@ try {
 	});
 }
 
+//<1.2compat>
 
+if (Browser.Platform.ios) Browser.Platform.ipod = true;
+
+Browser.Engine = {};
+
+var setEngine = function(name, version){
+	Browser.Engine.name = name;
+	Browser.Engine[name + version] = true;
+	Browser.Engine.version = version;
+};
+
+if (Browser.ie){
+	Browser.Engine.trident = true;
+
+	switch (Browser.version){
+		case 6: setEngine('trident', 4); break;
+		case 7: setEngine('trident', 5); break;
+		case 8: setEngine('trident', 6);
+	}
+}
+
+if (Browser.firefox){
+	Browser.Engine.gecko = true;
+
+	if (Browser.version >= 3) setEngine('gecko', 19);
+	else setEngine('gecko', 18);
+}
+
+if (Browser.safari || Browser.chrome){
+	Browser.Engine.webkit = true;
+
+	switch (Browser.version){
+		case 2: setEngine('webkit', 419); break;
+		case 3: setEngine('webkit', 420); break;
+		case 4: setEngine('webkit', 525);
+	}
+}
+
+if (Browser.opera){
+	Browser.Engine.presto = true;
+
+	if (Browser.version >= 9.6) setEngine('presto', 960);
+	else if (Browser.version >= 9.5) setEngine('presto', 950);
+	else setEngine('presto', 925);
+}
+
+if (Browser.name == 'unknown'){
+	switch ((ua.match(/(?:webkit|khtml|gecko)/) || [])[0]){
+		case 'webkit':
+		case 'khtml':
+			Browser.Engine.webkit = true;
+		break;
+		case 'gecko':
+			Browser.Engine.gecko = true;
+	}
+}
+
+this.$exec = Browser.exec;
+
+//</1.2compat>
 
 }).call(this);
 
@@ -1216,7 +1539,11 @@ Event.Keys = {
 	'delete': 46
 };
 
+//<1.2compat>
 
+Event.Keys = new Hash(Event.Keys);
+
+//</1.2compat>
 
 Event.implement({
 
@@ -1407,7 +1734,9 @@ this.Events = new Class({
 	addEvent: function(type, fn, internal){
 		type = removeOn(type);
 
-		
+		/*<1.2compat>*/
+		if (fn == $empty) return this;
+		/*</1.2compat>*/
 
 		this.$events[type] = (this.$events[type] || []).include(fn);
 		if (internal) fn.internal = true;
@@ -1695,6 +2024,7 @@ function parser(
 };
 
 // Slick NS
+
 var Slick = (this.Slick || {});
 
 Slick.parse = function(expression){
@@ -1706,7 +2036,7 @@ Slick.escapeRegExp = escapeRegExp;
 if (!this.Slick) this.Slick = Slick;
 
 }).apply(/*<CommonJS>(typeof exports != 'undefined') ? exports : </CommonJS>*/this);
-/* the export is broken, later on the code assumes Slick is in the global window namespace */
+
 
 /*
 ---
@@ -2739,7 +3069,11 @@ if (!Browser.Element){
 
 Element.Constructors = {};
 
+//<1.2compat>
 
+Element.Constructors = new Hash;
+
+//</1.2compat>
 
 var IFrame = new Type('IFrame', function(){
 	var params = Array.link(arguments, {
@@ -2830,7 +3164,11 @@ new Type('Elements', Elements).implement({
 
 });
 
+//<1.2compat>
 
+Elements.alias('extend', 'append');
+
+//</1.2compat>
 
 (function(){
 
@@ -2962,7 +3300,52 @@ Window.implement({
 
 });
 
+//<1.2compat>
 
+(function(search, find, match){
+
+	this.Selectors = {};
+	var pseudos = this.Selectors.Pseudo = new Hash();
+
+	var addSlickPseudos = function(){
+		for (var name in pseudos) if (pseudos.hasOwnProperty(name)){
+			Slick.definePseudo(name, pseudos[name]);
+			delete pseudos[name];
+		}
+	};
+
+	Slick.search = function(context, expression, append){
+		addSlickPseudos();
+		return search.call(this, context, expression, append);
+	};
+
+	Slick.find = function(context, expression){
+		addSlickPseudos();
+		return find.call(this, context, expression);
+	};
+
+	Slick.match = function(node, selector){
+		addSlickPseudos();
+		return match.call(this, node, selector);
+	};
+
+})(Slick.search, Slick.find, Slick.match);
+
+if (window.$$ == null) Window.implement('$$', function(selector){
+	var elements = new Elements;
+	if (arguments.length == 1 && typeof selector == 'string') return Slick.search(this.document, selector, elements);
+	var args = Array.flatten(arguments);
+	for (var i = 0, l = args.length; i < l; i++){
+		var item = args[i];
+		switch (typeOf(item)){
+			case 'element': elements.push(item); break;
+			case 'string': Slick.search(this.document, item, elements);
+		}
+	}
+	return elements;
+});
+
+//</1.2compat>
 
 if (window.$$ == null) Window.implement('$$', function(selector){
 	if (arguments.length == 1){
@@ -3041,7 +3424,29 @@ var inserters = {
 
 inserters.inside = inserters.bottom;
 
+//<1.2compat>
 
+Object.each(inserters, function(inserter, where){
+
+	where = where.capitalize();
+
+	var methods = {};
+
+	methods['inject' + where] = function(el){
+		inserter(this, document.id(el, true));
+		return this;
+	};
+
+	methods['grab' + where] = function(el){
+		inserter(document.id(el, true), this);
+		return this;
+	};
+
+	Element.implement(methods);
+
+});
+
+//</1.2compat>
 
 var injectCombinator = function(expression, combinator){
 	if (!expression) return combinator;
@@ -3312,7 +3717,13 @@ var contains = {contains: function(element){
 if (!document.contains) Document.implement(contains);
 if (!document.createElement('div').contains) Element.implement(contains);
 
+//<1.2compat>
 
+Element.implement('hasChild', function(element){
+	return this !== element && this.contains(element);
+});
+
+//</1.2compat>
 
 [Element, Window, Document].invoke('implement', {
 
@@ -3367,7 +3778,11 @@ if (window.attachEvent && !window.addEventListener) window.addListener('unload',
 
 Element.Properties = {};
 
+//<1.2compat>
 
+Element.Properties = new Hash;
+
+//</1.2compat>
 
 Element.Properties.style = {
 
@@ -3598,7 +4013,11 @@ Element.Styles = {
 	zIndex: '@', 'zoom': '@', fontWeight: '@', textIndent: '@px', opacity: '@'
 };
 
+//<1.2compat>
 
+Element.Styles = new Hash(Element.Styles);
+
+//</1.2compat>
 
 Element.ShortStyles = {margin: {}, padding: {}, border: {}, borderWidth: {}, borderStyle: {}, borderColor: {}};
 
@@ -3789,7 +4208,11 @@ Element.Events = {
 
 };
 
+//<1.2compat>
 
+Element.Events = new Hash(Element.Events);
+
+//</1.2compat>
 
 }).call(this);
 
@@ -4082,6 +4505,637 @@ Element.alias({position: 'setPosition'}); //compatability
 /*
 ---
 
+name: Fx
+
+description: Contains the basic animation logic to be extended by all other Fx Classes.
+
+license: MIT-style license.
+
+requires: [Chain, Events, Options]
+
+provides: Fx
+
+...
+*/
+
+(function(){
+
+var Fx = this.Fx = new Class({
+
+	Implements: [Chain, Events, Options],
+
+	options: {
+		/*
+		onStart: nil,
+		onCancel: nil,
+		onComplete: nil,
+		*/
+		fps: 60,
+		unit: false,
+		duration: 500,
+		frames: null,
+		frameSkip: true,
+		link: 'ignore'
+	},
+
+	initialize: function(options){
+		this.subject = this.subject || this;
+		this.setOptions(options);
+	},
+
+	getTransition: function(){
+		return function(p){
+			return -(Math.cos(Math.PI * p) - 1) / 2;
+		};
+	},
+
+	step: function(now){
+		if (this.options.frameSkip){
+			var diff = (this.time != null) ? (now - this.time) : 0, frames = diff / this.frameInterval;
+			this.time = now;
+			this.frame += frames;
+		} else {
+			this.frame++;
+		}
+		
+		if (this.frame < this.frames){
+			var delta = this.transition(this.frame / this.frames);
+			this.set(this.compute(this.from, this.to, delta));
+		} else {
+			this.frame = this.frames;
+			this.set(this.compute(this.from, this.to, 1));
+			this.stop();
+		}
+	},
+
+	set: function(now){
+		return now;
+	},
+
+	compute: function(from, to, delta){
+		return Fx.compute(from, to, delta);
+	},
+
+	check: function(){
+		if (!this.isRunning()) return true;
+		switch (this.options.link){
+			case 'cancel': this.cancel(); return true;
+			case 'chain': this.chain(this.caller.pass(arguments, this)); return false;
+		}
+		return false;
+	},
+
+	start: function(from, to){
+		if (!this.check(from, to)) return this;
+		this.from = from;
+		this.to = to;
+		this.frame = (this.options.frameSkip) ? 0 : -1;
+		this.time = null;
+		this.transition = this.getTransition();
+		var frames = this.options.frames, fps = this.options.fps, duration = this.options.duration;
+		this.duration = Fx.Durations[duration] || duration.toInt();
+		this.frameInterval = 1000 / fps;
+		this.frames = frames || Math.round(this.duration / this.frameInterval);
+		this.fireEvent('start', this.subject);
+		pushInstance.call(this, fps);
+		return this;
+	},
+	
+	stop: function(){
+		if (this.isRunning()){
+			this.time = null;
+			pullInstance.call(this, this.options.fps);
+			if (this.frames == this.frame){
+				this.fireEvent('complete', this.subject);
+				if (!this.callChain()) this.fireEvent('chainComplete', this.subject);
+			} else {
+				this.fireEvent('stop', this.subject);
+			}
+		}
+		return this;
+	},
+	
+	cancel: function(){
+		if (this.isRunning()){
+			this.time = null;
+			pullInstance.call(this, this.options.fps);
+			this.frame = this.frames;
+			this.fireEvent('cancel', this.subject).clearChain();
+		}
+		return this;
+	},
+	
+	pause: function(){
+		if (this.isRunning()){
+			this.time = null;
+			pullInstance.call(this, this.options.fps);
+		}
+		return this;
+	},
+	
+	resume: function(){
+		if ((this.frame < this.frames) && !this.isRunning()) pushInstance.call(this, this.options.fps);
+		return this;
+	},
+	
+	isRunning: function(){
+		var list = instances[this.options.fps];
+		return list && list.contains(this);
+	}
+
+});
+
+Fx.compute = function(from, to, delta){
+	return (to - from) * delta + from;
+};
+
+Fx.Durations = {'short': 250, 'normal': 500, 'long': 1000};
+
+// global timers
+
+var instances = {}, timers = {};
+
+var loop = function(){
+	var now = Date.now();
+	for (var i = this.length; i--;){
+		var instance = this[i];
+		if (instance) instance.step(now);
+	}
+};
+
+var pushInstance = function(fps){
+	var list = instances[fps] || (instances[fps] = []);
+	list.push(this);
+	if (!timers[fps]) timers[fps] = loop.periodical(Math.round(1000 / fps), list);
+};
+
+var pullInstance = function(fps){
+	var list = instances[fps];
+	if (list){
+		list.erase(this);
+		if (!list.length && timers[fps]){
+			delete instances[fps];
+			timers[fps] = clearInterval(timers[fps]);
+		}
+	}
+};
+
+}).call(this);
+
+
+/*
+---
+
+name: Fx.CSS
+
+description: Contains the CSS animation logic. Used by Fx.Tween, Fx.Morph, Fx.Elements.
+
+license: MIT-style license.
+
+requires: [Fx, Element.Style]
+
+provides: Fx.CSS
+
+...
+*/
+
+Fx.CSS = new Class({
+
+	Extends: Fx,
+
+	//prepares the base from/to object
+
+	prepare: function(element, property, values){
+		values = Array.from(values);
+		if (values[1] == null){
+			values[1] = values[0];
+			values[0] = element.getStyle(property);
+		}
+		var parsed = values.map(this.parse);
+		return {from: parsed[0], to: parsed[1]};
+	},
+
+	//parses a value into an array
+
+	parse: function(value){
+		value = Function.from(value)();
+		value = (typeof value == 'string') ? value.split(' ') : Array.from(value);
+		return value.map(function(val){
+			val = String(val);
+			var found = false;
+			Object.each(Fx.CSS.Parsers, function(parser, key){
+				if (found) return;
+				var parsed = parser.parse(val);
+				if (parsed || parsed === 0) found = {value: parsed, parser: parser};
+			});
+			found = found || {value: val, parser: Fx.CSS.Parsers.String};
+			return found;
+		});
+	},
+
+	//computes by a from and to prepared objects, using their parsers.
+
+	compute: function(from, to, delta){
+		var computed = [];
+		(Math.min(from.length, to.length)).times(function(i){
+			computed.push({value: from[i].parser.compute(from[i].value, to[i].value, delta), parser: from[i].parser});
+		});
+		computed.$family = Function.from('fx:css:value');
+		return computed;
+	},
+
+	//serves the value as settable
+
+	serve: function(value, unit){
+		if (typeOf(value) != 'fx:css:value') value = this.parse(value);
+		var returned = [];
+		value.each(function(bit){
+			returned = returned.concat(bit.parser.serve(bit.value, unit));
+		});
+		return returned;
+	},
+
+	//renders the change to an element
+
+	render: function(element, property, value, unit){
+		element.setStyle(property, this.serve(value, unit));
+	},
+
+	//searches inside the page css to find the values for a selector
+
+	search: function(selector){
+		if (Fx.CSS.Cache[selector]) return Fx.CSS.Cache[selector];
+		var to = {}, selectorTest = new RegExp('^' + selector.escapeRegExp() + '$');
+		Array.each(document.styleSheets, function(sheet, j){
+			var href = sheet.href;
+			if (href && href.contains('://') && !href.contains(document.domain)) return;
+			var rules = sheet.rules || sheet.cssRules;
+			Array.each(rules, function(rule, i){
+				if (!rule.style) return;
+				var selectorText = (rule.selectorText) ? rule.selectorText.replace(/^\w+/, function(m){
+					return m.toLowerCase();
+				}) : null;
+				if (!selectorText || !selectorTest.test(selectorText)) return;
+				Object.each(Element.Styles, function(value, style){
+					if (!rule.style[style] || Element.ShortStyles[style]) return;
+					value = String(rule.style[style]);
+					to[style] = ((/^rgb/).test(value)) ? value.rgbToHex() : value;
+				});
+			});
+		});
+		return Fx.CSS.Cache[selector] = to;
+	}
+
+});
+
+Fx.CSS.Cache = {};
+
+Fx.CSS.Parsers = {
+
+	Color: {
+		parse: function(value){
+			if (value.match(/^#[0-9a-f]{3,6}$/i)) return value.hexToRgb(true);
+			return ((value = value.match(/(\d+),\s*(\d+),\s*(\d+)/))) ? [value[1], value[2], value[3]] : false;
+		},
+		compute: function(from, to, delta){
+			return from.map(function(value, i){
+				return Math.round(Fx.compute(from[i], to[i], delta));
+			});
+		},
+		serve: function(value){
+			return value.map(Number);
+		}
+	},
+
+	Number: {
+		parse: parseFloat,
+		compute: Fx.compute,
+		serve: function(value, unit){
+			return (unit) ? value + unit : value;
+		}
+	},
+
+	String: {
+		parse: Function.from(false),
+		compute: function(zero, one){
+			return one;
+		},
+		serve: function(zero){
+			return zero;
+		}
+	}
+
+};
+
+//<1.2compat>
+
+Fx.CSS.Parsers = new Hash(Fx.CSS.Parsers);
+
+//</1.2compat>
+
+
+/*
+---
+
+name: Fx.Tween
+
+description: Formerly Fx.Style, effect to transition any CSS property for an element.
+
+license: MIT-style license.
+
+requires: Fx.CSS
+
+provides: [Fx.Tween, Element.fade, Element.highlight]
+
+...
+*/
+
+Fx.Tween = new Class({
+
+	Extends: Fx.CSS,
+
+	initialize: function(element, options){
+		this.element = this.subject = document.id(element);
+		this.parent(options);
+	},
+
+	set: function(property, now){
+		if (arguments.length == 1){
+			now = property;
+			property = this.property || this.options.property;
+		}
+		this.render(this.element, property, now, this.options.unit);
+		return this;
+	},
+
+	start: function(property, from, to){
+		if (!this.check(property, from, to)) return this;
+		var args = Array.flatten(arguments);
+		this.property = this.options.property || args.shift();
+		var parsed = this.prepare(this.element, this.property, args);
+		return this.parent(parsed.from, parsed.to);
+	}
+
+});
+
+Element.Properties.tween = {
+
+	set: function(options){
+		this.get('tween').cancel().setOptions(options);
+		return this;
+	},
+
+	get: function(){
+		var tween = this.retrieve('tween');
+		if (!tween){
+			tween = new Fx.Tween(this, {link: 'cancel'});
+			this.store('tween', tween);
+		}
+		return tween;
+	}
+
+};
+
+Element.implement({
+
+	tween: function(property, from, to){
+		this.get('tween').start(arguments);
+		return this;
+	},
+
+	fade: function(how){
+		var fade = this.get('tween'), o = 'opacity', toggle;
+		how = [how, 'toggle'].pick();
+		switch (how){
+			case 'in': fade.start(o, 1); break;
+			case 'out': fade.start(o, 0); break;
+			case 'show': fade.set(o, 1); break;
+			case 'hide': fade.set(o, 0); break;
+			case 'toggle':
+				var flag = this.retrieve('fade:flag', this.get('opacity') == 1);
+				fade.start(o, (flag) ? 0 : 1);
+				this.store('fade:flag', !flag);
+				toggle = true;
+			break;
+			default: fade.start(o, arguments);
+		}
+		if (!toggle) this.eliminate('fade:flag');
+		return this;
+	},
+
+	highlight: function(start, end){
+		if (!end){
+			end = this.retrieve('highlight:original', this.getStyle('background-color'));
+			end = (end == 'transparent') ? '#fff' : end;
+		}
+		var tween = this.get('tween');
+		tween.start('background-color', start || '#ffff88', end).chain(function(){
+			this.setStyle('background-color', this.retrieve('highlight:original'));
+			tween.callChain();
+		}.bind(this));
+		return this;
+	}
+
+});
+
+
+/*
+---
+
+name: Fx.Morph
+
+description: Formerly Fx.Styles, effect to transition any number of CSS properties for an element using an object of rules, or CSS based selector rules.
+
+license: MIT-style license.
+
+requires: Fx.CSS
+
+provides: Fx.Morph
+
+...
+*/
+
+Fx.Morph = new Class({
+
+	Extends: Fx.CSS,
+
+	initialize: function(element, options){
+		this.element = this.subject = document.id(element);
+		this.parent(options);
+	},
+
+	set: function(now){
+		if (typeof now == 'string') now = this.search(now);
+		for (var p in now) this.render(this.element, p, now[p], this.options.unit);
+		return this;
+	},
+
+	compute: function(from, to, delta){
+		var now = {};
+		for (var p in from) now[p] = this.parent(from[p], to[p], delta);
+		return now;
+	},
+
+	start: function(properties){
+		if (!this.check(properties)) return this;
+		if (typeof properties == 'string') properties = this.search(properties);
+		var from = {}, to = {};
+		for (var p in properties){
+			var parsed = this.prepare(this.element, p, properties[p]);
+			from[p] = parsed.from;
+			to[p] = parsed.to;
+		}
+		return this.parent(from, to);
+	}
+
+});
+
+Element.Properties.morph = {
+
+	set: function(options){
+		this.get('morph').cancel().setOptions(options);
+		return this;
+	},
+
+	get: function(){
+		var morph = this.retrieve('morph');
+		if (!morph){
+			morph = new Fx.Morph(this, {link: 'cancel'});
+			this.store('morph', morph);
+		}
+		return morph;
+	}
+
+};
+
+Element.implement({
+
+	morph: function(props){
+		this.get('morph').start(props);
+		return this;
+	}
+
+});
+
+
+/*
+---
+
+name: Fx.Transitions
+
+description: Contains a set of advanced transitions to be used with any of the Fx Classes.
+
+license: MIT-style license.
+
+credits:
+  - Easing Equations by Robert Penner, <http://www.robertpenner.com/easing/>, modified and optimized to be used with MooTools.
+
+requires: Fx
+
+provides: Fx.Transitions
+
+...
+*/
+
+Fx.implement({
+
+	getTransition: function(){
+		var trans = this.options.transition || Fx.Transitions.Sine.easeInOut;
+		if (typeof trans == 'string'){
+			var data = trans.split(':');
+			trans = Fx.Transitions;
+			trans = trans[data[0]] || trans[data[0].capitalize()];
+			if (data[1]) trans = trans['ease' + data[1].capitalize() + (data[2] ? data[2].capitalize() : '')];
+		}
+		return trans;
+	}
+
+});
+
+Fx.Transition = function(transition, params){
+	params = Array.from(params);
+	var easeIn = function(pos){
+		return transition(pos, params);
+	};
+	return Object.append(easeIn, {
+		easeIn: easeIn,
+		easeOut: function(pos){
+			return 1 - transition(1 - pos, params);
+		},
+		easeInOut: function(pos){
+			return (pos <= 0.5 ? transition(2 * pos, params) : (2 - transition(2 * (1 - pos), params))) / 2;
+		}
+	});
+};
+
+Fx.Transitions = {
+
+	linear: function(zero){
+		return zero;
+	}
+
+};
+
+//<1.2compat>
+
+Fx.Transitions = new Hash(Fx.Transitions);
+
+//</1.2compat>
+
+Fx.Transitions.extend = function(transitions){
+	for (var transition in transitions) Fx.Transitions[transition] = new Fx.Transition(transitions[transition]);
+};
+
+Fx.Transitions.extend({
+
+	Pow: function(p, x){
+		return Math.pow(p, x && x[0] || 6);
+	},
+
+	Expo: function(p){
+		return Math.pow(2, 8 * (p - 1));
+	},
+
+	Circ: function(p){
+		return 1 - Math.sin(Math.acos(p));
+	},
+
+	Sine: function(p){
+		return 1 - Math.cos(p * Math.PI / 2);
+	},
+
+	Back: function(p, x){
+		x = x && x[0] || 1.618;
+		return Math.pow(p, 2) * ((x + 1) * p - x);
+	},
+
+	Bounce: function(p){
+		var value;
+		for (var a = 0, b = 1; 1; a += b, b /= 2){
+			if (p >= (7 - 4 * a) / 11){
+				value = b * b - Math.pow((11 - 6 * a - 11 * p) / 4, 2);
+				break;
+			}
+		}
+		return value;
+	},
+
+	Elastic: function(p, x){
+		return Math.pow(2, 10 * --p) * Math.cos(20 * p * Math.PI * (x && x[0] || 1) / 3);
+	}
+
+});
+
+['Quad', 'Cubic', 'Quart', 'Quint'].each(function(transition, i){
+	Fx.Transitions[transition] = new Fx.Transition(function(p){
+		return Math.pow(p, i + 2);
+	});
+});
+
+
+/*
+---
+
 name: Request
 
 description: Powerful all purpose Request Class. Uses XMLHTTPRequest.
@@ -4113,15 +5167,9 @@ var Request = this.Request = new Class({
 		onSuccess: function(responseText, responseXML){},
 		onFailure: function(xhr){},
 		onException: function(headerName, value){},
-// uTorrent WebUI Patch - BEGIN
-//		onTimeout: function(){},
-		onTimeout: function(){},*/
-// uTorrent WebUI Patch - END
+		onTimeout: function(){},
 		user: '',
-// uTorrent WebUI Patch - BEGIN
-//		password: '',*/
-		password: '',
-// uTorrent WebUI Patch - END
+		password: '',*/
 		url: '',
 		data: '',
 		headers: {
@@ -4367,6 +5415,89 @@ Element.implement({
 /*
 ---
 
+name: Request.HTML
+
+description: Extends the basic Request Class with additional methods for interacting with HTML responses.
+
+license: MIT-style license.
+
+requires: [Element, Request]
+
+provides: Request.HTML
+
+...
+*/
+
+Request.HTML = new Class({
+
+	Extends: Request,
+
+	options: {
+		update: false,
+		append: false,
+		evalScripts: true,
+		filter: false,
+		headers: {
+			Accept: 'text/html, application/xml, text/xml, */*'
+		}
+	},
+
+	success: function(text){
+		var options = this.options, response = this.response;
+
+		response.html = text.stripScripts(function(script){
+			response.javascript = script;
+		});
+
+		var match = response.html.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
+		if (match) response.html = match[1];
+		var temp = new Element('div').set('html', response.html);
+
+		response.tree = temp.childNodes;
+		response.elements = temp.getElements('*');
+
+		if (options.filter) response.tree = response.elements.filter(options.filter);
+		if (options.update) document.id(options.update).empty().set('html', response.html);
+		else if (options.append) document.id(options.append).adopt(temp.getChildren());
+		if (options.evalScripts) Browser.exec(response.javascript);
+
+		this.onSuccess(response.tree, response.elements, response.html, response.javascript);
+	}
+
+});
+
+Element.Properties.load = {
+
+	set: function(options){
+		var load = this.get('load').cancel();
+		load.setOptions(options);
+		return this;
+	},
+
+	get: function(){
+		var load = this.retrieve('load');
+		if (!load){
+			load = new Request.HTML({data: this, link: 'cancel', update: this, method: 'get'});
+			this.store('load', load);
+		}
+		return load;
+	}
+
+};
+
+Element.implement({
+
+	load: function(){
+		this.get('load').send(Array.link(arguments, {data: Type.isObject, url: Type.isString}));
+		return this;
+	}
+
+});
+
+
+/*
+---
+
 name: JSON
 
 description: JSON encoder and decoder.
@@ -4384,7 +5515,14 @@ provides: JSON
 
 if (typeof JSON == 'undefined') this.JSON = {};
 
+//<1.2compat>
 
+JSON = new Hash({
+	stringify: JSON.stringify,
+	parse: JSON.parse
+});
+
+//</1.2compat>
 
 (function(){
 
@@ -4486,6 +5624,82 @@ Request.JSON = new Class({
 	}
 
 });
+
+
+/*
+---
+
+name: Cookie
+
+description: Class for creating, reading, and deleting browser Cookies.
+
+license: MIT-style license.
+
+credits:
+  - Based on the functions by Peter-Paul Koch (http://quirksmode.org).
+
+requires: [Options, Browser]
+
+provides: Cookie
+
+...
+*/
+
+var Cookie = new Class({
+
+	Implements: Options,
+
+	options: {
+		path: '/',
+		domain: false,
+		duration: false,
+		secure: false,
+		document: document,
+		encode: true
+	},
+
+	initialize: function(key, options){
+		this.key = key;
+		this.setOptions(options);
+	},
+
+	write: function(value){
+		if (this.options.encode) value = encodeURIComponent(value);
+		if (this.options.domain) value += '; domain=' + this.options.domain;
+		if (this.options.path) value += '; path=' + this.options.path;
+		if (this.options.duration){
+			var date = new Date();
+			date.setTime(date.getTime() + this.options.duration * 24 * 60 * 60 * 1000);
+			value += '; expires=' + date.toGMTString();
+		}
+		if (this.options.secure) value += '; secure';
+		this.options.document.cookie = this.key + '=' + value;
+		return this;
+	},
+
+	read: function(){
+		var value = this.options.document.cookie.match('(?:^|;)\\s*' + this.key.escapeRegExp() + '=([^;]*)');
+		return (value) ? decodeURIComponent(value[1]) : null;
+	},
+
+	dispose: function(){
+		new Cookie(this.key, Object.merge({}, this.options, {duration: -1})).write('');
+		return this;
+	}
+
+});
+
+Cookie.write = function(key, value, options){
+	return new Cookie(key, options).write(value);
+};
+
+Cookie.read = function(key){
+	return new Cookie(key).read();
+};
+
+Cookie.dispose = function(key, options){
+	return new Cookie(key, options).dispose();
+};
 
 
 /*
@@ -4597,595 +5811,118 @@ window.addEvent('load', function(){
 
 })(window, document);
 
-// MooTools: the javascript framework.
-// Load this file's selection again by visiting: http://mootools.net/more/b4e50ecb9f757ac1b814a55b8bd07f77 
-// Or build this file again with packager using: packager build More/More More/Element.Measure More/Drag More/Assets
-/*
----
-
-script: More.js
-
-name: More
-
-description: MooTools More
-
-license: MIT-style license
-
-authors:
-  - Guillermo Rauch
-  - Thomas Aylott
-  - Scott Kyle
-  - Arian Stolwijk
-  - Tim Wienk
-  - Christoph Pojer
-  - Aaron Newton
-
-requires:
-  - Core/MooTools
-
-provides: [MooTools.More]
-
-...
-*/
-
-MooTools.More = {
-	'version': '1.3.1.1',
-	'build': '0292a3af1eea242b817fecf9daa127417d10d4ce'
-};
-
 
 /*
 ---
 
-script: Element.Measure.js
+name: Swiff
 
-name: Element.Measure
+description: Wrapper for embedding SWF movies. Supports External Interface Communication.
 
-description: Extends the Element native object to include methods useful in measuring dimensions.
+license: MIT-style license.
 
-credits: "Element.measure / .expose methods by Daniel Steigerwald License: MIT-style license. Copyright: Copyright (c) 2008 Daniel Steigerwald, daniel.steigerwald.cz"
+credits:
+  - Flash detection & Internet Explorer + Flash Player 9 fix inspired by SWFObject.
 
-license: MIT-style license
+requires: [Options, Object, Element]
 
-authors:
-  - Aaron Newton
-
-requires:
-  - Core/Element.Style
-  - Core/Element.Dimensions
-  - /MooTools.More
-
-provides: [Element.Measure]
+provides: Swiff
 
 ...
 */
 
 (function(){
 
-var getStylesList = function(styles, planes){
-	var list = [];
-	Object.each(planes, function(directions){
-		Object.each(directions, function(edge){
-			styles.each(function(style){
-				list.push(style + '-' + edge + (style == 'border' ? '-width' : ''));
-			});
-		});
-	});
-	return list;
-};
+var Swiff = this.Swiff = new Class({
 
-var calculateEdgeSize = function(edge, styles){
-	var total = 0;
-	Object.each(styles, function(value, style){
-		if (style.test(edge)) total = total + value.toInt();
-	});
-	return total;
-};
+	Implements: Options,
 
-var isVisible = function(el){
-	return !!(!el || el.offsetHeight || el.offsetWidth);
-};
-
-
-Element.implement({
-
-	measure: function(fn){
-		if (isVisible(this)) return fn.call(this);
-		var parent = this.getParent(),
-			toMeasure = [];
-		while (!isVisible(parent) && parent != document.body){
-			toMeasure.push(parent.expose());
-			parent = parent.getParent();
-		}
-		var restore = this.expose(),
-			result = fn.call(this);
-		restore();
-		toMeasure.each(function(restore){
-			restore();
-		});
-		return result;
+	options: {
+		id: null,
+		height: 1,
+		width: 1,
+		container: null,
+		properties: {},
+		params: {
+			quality: 'high',
+			allowScriptAccess: 'always',
+			wMode: 'window',
+			swLiveConnect: true
+		},
+		callBacks: {},
+		vars: {}
 	},
 
-	expose: function(){
-		if (this.getStyle('display') != 'none') return function(){};
-		var before = this.style.cssText;
-		this.setStyles({
-			display: 'block',
-			position: 'absolute',
-			visibility: 'hidden'
-		});
-		return function(){
-			this.style.cssText = before;
-		}.bind(this);
+	toElement: function(){
+		return this.object;
 	},
 
-	getDimensions: function(options){
-		options = Object.merge({computeSize: false}, options);
-		var dim = {x: 0, y: 0};
+	initialize: function(path, options){
+		this.instance = 'Swiff_' + String.uniqueID();
 
-		var getSize = function(el, options){
-			return (options.computeSize) ? el.getComputedSize(options) : el.getSize();
-		};
+		this.setOptions(options);
+		options = this.options;
+		var id = this.id = options.id || this.instance;
+		var container = document.id(options.container);
 
-		var parent = this.getParent('body');
+		Swiff.CallBacks[this.instance] = {};
 
-		if (parent && this.getStyle('display') == 'none'){
-			dim = this.measure(function(){
-				return getSize(this, options);
-			});
-		} else if (parent){
-			try { //safari sometimes crashes here, so catch it
-				dim = getSize(this, options);
-			}catch(e){}
+		var params = options.params, vars = options.vars, callBacks = options.callBacks;
+		var properties = Object.append({height: options.height, width: options.width}, options.properties);
+
+		var self = this;
+
+		for (var callBack in callBacks){
+			Swiff.CallBacks[this.instance][callBack] = (function(option){
+				return function(){
+					return option.apply(self.object, arguments);
+				};
+			})(callBacks[callBack]);
+			vars[callBack] = 'Swiff.CallBacks.' + this.instance + '.' + callBack;
 		}
 
-		return Object.append(dim, (dim.x || dim.x === 0) ? {
-				width: dim.x,
-				height: dim.y
-			} : {
-				x: dim.width,
-				y: dim.height
-			}
-		);
+		params.flashVars = Object.toQueryString(vars);
+		if (Browser.ie){
+			properties.classid = 'clsid:D27CDB6E-AE6D-11cf-96B8-444553540000';
+			params.movie = path;
+		} else {
+			properties.type = 'application/x-shockwave-flash';
+		}
+		properties.data = path;
+
+		var build = '<object id="' + id + '"';
+		for (var property in properties) build += ' ' + property + '="' + properties[property] + '"';
+		build += '>';
+		for (var param in params){
+			if (params[param]) build += '<param name="' + param + '" value="' + params[param] + '" />';
+		}
+		build += '</object>';
+		this.object = ((container) ? container.empty() : new Element('div')).set('html', build).firstChild;
 	},
 
-	getComputedSize: function(options){
-		
+	replaces: function(element){
+		element = document.id(element, true);
+		element.parentNode.replaceChild(this.toElement(), element);
+		return this;
+	},
 
-		options = Object.merge({
-			styles: ['padding','border'],
-			planes: {
-				height: ['top','bottom'],
-				width: ['left','right']
-			},
-			mode: 'both'
-		}, options);
+	inject: function(element){
+		document.id(element, true).appendChild(this.toElement());
+		return this;
+	},
 
-		var styles = {},
-			size = {width: 0, height: 0};
-
-		if (options.mode == 'vertical'){
-			delete size.width;
-			delete options.planes.width;
-		} else if (options.mode == 'horizontal'){
-			delete size.height;
-			delete options.planes.height;
-		}
-
-		getStylesList(options.styles, options.planes).each(function(style){
-			styles[style] = this.getStyle(style).toInt();
-		}, this);
-
-		Object.each(options.planes, function(edges, plane){
-
-			var capitalized = plane.capitalize(),
-				style = this.getStyle(plane);
-
-			if (style == 'auto' && !dimensions) dimensions = this.getDimensions();
-
-			style = styles[plane] = (style == 'auto') ? dimensions[plane] : style.toInt();
-			size['total' + capitalized] = style;
-
-			edges.each(function(edge){
-				var edgesize = calculateEdgeSize(edge, styles);
-				size['computed' + edge.capitalize()] = edgesize;
-				size['total' + capitalized] += edgesize;
-			});
-
-		}, this);
-
-		return Object.append(size, styles);
+	remote: function(){
+		return Swiff.remote.apply(Swiff, [this.toElement()].append(arguments));
 	}
 
 });
+
+Swiff.CallBacks = {};
+
+Swiff.remote = function(obj, fn){
+	var rs = obj.CallFunction('<invoke name="' + fn + '" returntype="javascript">' + __flash__argumentsToXML(arguments, 2) + '</invoke>');
+	return eval(rs);
+};
 
 }).call(this);
-
-
-/*
----
-
-script: Drag.js
-
-name: Drag
-
-description: The base Drag Class. Can be used to drag and resize Elements using mouse events.
-
-license: MIT-style license
-
-authors:
-  - Valerio Proietti
-  - Tom Occhinno
-  - Jan Kassens
-
-requires:
-  - Core/Events
-  - Core/Options
-  - Core/Element.Event
-  - Core/Element.Style
-  - Core/Element.Dimensions
-  - /MooTools.More
-
-provides: [Drag]
-...
-
-*/
-
-var Drag = new Class({
-
-	Implements: [Events, Options],
-
-	options: {/*
-		onBeforeStart: function(thisElement){},
-		onStart: function(thisElement, event){},
-		onSnap: function(thisElement){},
-		onDrag: function(thisElement, event){},
-		onCancel: function(thisElement){},
-		onComplete: function(thisElement, event){},*/
-		snap: 6,
-		unit: 'px',
-		grid: false,
-		style: true,
-		limit: false,
-		handle: false,
-		invert: false,
-		preventDefault: false,
-		stopPropagation: false,
-		modifiers: {x: 'left', y: 'top'}
-	},
-
-	initialize: function(){
-		var params = Array.link(arguments, {
-			'options': Type.isObject,
-			'element': function(obj){
-				return obj != null;
-			}
-		});
-
-		this.element = document.id(params.element);
-		this.document = this.element.getDocument();
-		this.setOptions(params.options || {});
-		var htype = typeOf(this.options.handle);
-		this.handles = ((htype == 'array' || htype == 'collection') ? $$(this.options.handle) : document.id(this.options.handle)) || this.element;
-		this.mouse = {'now': {}, 'pos': {}};
-		this.value = {'start': {}, 'now': {}};
-
-		this.selection = (Browser.ie) ? 'selectstart' : 'mousedown';
-
-
-		if (Browser.ie && !Drag.ondragstartFixed){
-			document.ondragstart = Function.from(false);
-			Drag.ondragstartFixed = true;
-		}
-
-		this.bound = {
-			start: this.start.bind(this),
-			check: this.check.bind(this),
-			drag: this.drag.bind(this),
-			stop: this.stop.bind(this),
-			cancel: this.cancel.bind(this),
-			eventStop: Function.from(false)
-		};
-		this.attach();
-	},
-
-	attach: function(){
-		this.handles.addEvent('mousedown', this.bound.start);
-		return this;
-	},
-
-	detach: function(){
-		this.handles.removeEvent('mousedown', this.bound.start);
-		return this;
-	},
-
-	start: function(event){
-		var options = this.options;
-
-// uTorrent WebUI Patch - BEGIN
-//		if (event.rightClick) return;
-// uTorrent WebUI Patch - END
-
-		if (options.preventDefault) event.preventDefault();
-		if (options.stopPropagation) event.stopPropagation();
-// uTorrent WebUI Patch - BEGIN
-		if (event.rightClick) {
-			this.fireEvent("onRightClick", event.page);
-			return;
-		}
-// uTorrent WebUI Patch - END
-		this.mouse.start = event.page;
-
-		this.fireEvent('beforeStart', this.element);
-
-		var limit = options.limit;
-		this.limit = {x: [], y: []};
-
-		var styles = this.element.getStyles('left', 'right', 'top', 'bottom');
-		this._invert = {
-			x: options.modifiers.x == 'left' && styles.left == 'auto' && !isNaN(styles.right.toInt()) && (options.modifiers.x = 'right'),
-			y: options.modifiers.y == 'top' && styles.top == 'auto' && !isNaN(styles.bottom.toInt()) && (options.modifiers.y = 'bottom')
-		};
-
-		var z, coordinates;
-		for (z in options.modifiers){
-			if (!options.modifiers[z]) continue;
-
-			var style = this.element.getStyle(options.modifiers[z]);
-
-			// Some browsers (IE and Opera) don't always return pixels.
-			if (style && !style.match(/px$/)){
-				if (!coordinates) coordinates = this.element.getCoordinates(this.element.getOffsetParent());
-				style = coordinates[options.modifiers[z]];
-			}
-
-			if (options.style) this.value.now[z] = (style || 0).toInt();
-			else this.value.now[z] = this.element[options.modifiers[z]];
-
-			if (options.invert) this.value.now[z] *= -1;
-			if (this._invert[z]) this.value.now[z] *= -1;
-
-			this.mouse.pos[z] = event.page[z] - this.value.now[z];
-
-			if (limit && limit[z]){
-				var i = 2;
-				while (i--){
-					var limitZI = limit[z][i];
-					if (limitZI || limitZI === 0) this.limit[z][i] = (typeof limitZI == 'function') ? limitZI() : limitZI;
-				}
-			}
-		}
-
-		if (typeOf(this.options.grid) == 'number') this.options.grid = {
-			x: this.options.grid,
-			y: this.options.grid
-		};
-
-		var events = {
-			mousemove: this.bound.check,
-			mouseup: this.bound.cancel
-		};
-		events[this.selection] = this.bound.eventStop;
-		this.document.addEvents(events);
-	},
-
-	check: function(event){
-		if (this.options.preventDefault) event.preventDefault();
-		var distance = Math.round(Math.sqrt(Math.pow(event.page.x - this.mouse.start.x, 2) + Math.pow(event.page.y - this.mouse.start.y, 2)));
-		if (distance > this.options.snap){
-			this.cancel();
-			this.document.addEvents({
-				mousemove: this.bound.drag,
-				mouseup: this.bound.stop
-			});
-			this.fireEvent('start', [this.element, event]).fireEvent('snap', this.element);
-		}
-	},
-
-	drag: function(event){
-		var options = this.options;
-
-		if (options.preventDefault) event.preventDefault();
-		this.mouse.now = event.page;
-
-		for (var z in options.modifiers){
-			if (!options.modifiers[z]) continue;
-			this.value.now[z] = this.mouse.now[z] - this.mouse.pos[z];
-
-			if (options.invert) this.value.now[z] *= -1;
-			if (this._invert[z]) this.value.now[z] *= -1;
-
-			if (options.limit && this.limit[z]){
-				if ((this.limit[z][1] || this.limit[z][1] === 0) && (this.value.now[z] > this.limit[z][1])){
-					this.value.now[z] = this.limit[z][1];
-				} else if ((this.limit[z][0] || this.limit[z][0] === 0) && (this.value.now[z] < this.limit[z][0])){
-					this.value.now[z] = this.limit[z][0];
-				}
-			}
-
-			if (options.grid[z]) this.value.now[z] -= ((this.value.now[z] - (this.limit[z][0]||0)) % options.grid[z]);
-
-			if (options.style) this.element.setStyle(options.modifiers[z], this.value.now[z] + options.unit);
-			else this.element[options.modifiers[z]] = this.value.now[z];
-		}
-
-		this.fireEvent('drag', [this.element, event]);
-	},
-
-	cancel: function(event){
-		this.document.removeEvents({
-			mousemove: this.bound.check,
-			mouseup: this.bound.cancel
-		});
-		if (event){
-			this.document.removeEvent(this.selection, this.bound.eventStop);
-// uTorrent WebUI Patch - BEGIN
-//			this.fireEvent('cancel', this.element);
-			this.fireEvent('cancel', [this.element, event]);
-// uTorrent WebUI Patch - END
-		}
-	},
-
-	stop: function(event){
-		var events = {
-			mousemove: this.bound.drag,
-			mouseup: this.bound.stop
-		};
-		events[this.selection] = this.bound.eventStop;
-		this.document.removeEvents(events);
-		if (event) this.fireEvent('complete', [this.element, event]);
-	}
-
-});
-
-Element.implement({
-
-	makeResizable: function(options){
-		var drag = new Drag(this, Object.merge({
-			modifiers: {
-				x: 'width',
-				y: 'height'
-			}
-		}, options));
-
-		this.store('resizer', drag);
-		return drag.addEvent('drag', function(){
-			this.fireEvent('resize', drag);
-		}.bind(this));
-	}
-
-});
-
-
-/*
----
-
-script: Assets.js
-
-name: Assets
-
-description: Provides methods to dynamically load JavaScript, CSS, and Image files into the document.
-
-license: MIT-style license
-
-authors:
-  - Valerio Proietti
-
-requires:
-  - Core/Element.Event
-  - /MooTools.More
-
-provides: [Assets]
-
-...
-*/
-
-var Asset = {
-
-	javascript: function(source, properties){
-		if (!properties) properties = {};
-
-		var script = new Element('script', {src: source, type: 'text/javascript'}),
-			doc = properties.document || document,
-			loaded = 0,
-			loadEvent = properties.onload || properties.onLoad;
-
-		var load = loadEvent ? function(){ // make sure we only call the event once
-			if (++loaded == 1) loadEvent.call(this);
-		} : function(){};
-
-		delete properties.onload;
-		delete properties.onLoad;
-		delete properties.document;
-
-		return script.addEvents({
-			load: load,
-			readystatechange: function(){
-				if (['loaded', 'complete'].contains(this.readyState)) load.call(this);
-			}
-		}).set(properties).inject(doc.head);
-	},
-
-	css: function(source, properties){
-		if (!properties) properties = {};
-
-		var link = new Element('link', {
-			rel: 'stylesheet',
-			media: 'screen',
-			type: 'text/css',
-			href: source
-		});
-
-		var load = properties.onload || properties.onLoad,
-			doc = properties.document || document;
-
-		delete properties.onload;
-		delete properties.onLoad;
-		delete properties.document;
-
-		if (load) link.addEvent('load', load);
-		return link.set(properties).inject(doc.head);
-	},
-
-	image: function(source, properties){
-		if (!properties) properties = {};
-
-		var image = new Image(),
-			element = document.id(image) || new Element('img');
-
-		['load', 'abort', 'error'].each(function(name){
-			var type = 'on' + name,
-				cap = 'on' + name.capitalize(),
-				event = properties[type] || properties[cap] || function(){};
-
-			delete properties[cap];
-			delete properties[type];
-
-			image[type] = function(){
-				if (!image) return;
-				if (!element.parentNode){
-					element.width = image.width;
-					element.height = image.height;
-				}
-				image = image.onload = image.onabort = image.onerror = null;
-				event.delay(1, element, element);
-				element.fireEvent(name, element, 1);
-			};
-		});
-
-		image.src = element.src = source;
-		if (image && image.complete) image.onload.delay(1);
-		return element.set(properties);
-	},
-
-	images: function(sources, options){
-		sources = Array.from(sources);
-
-		var fn = function(){},
-			counter = 0;
-
-		options = Object.merge({
-			onComplete: fn,
-			onProgress: fn,
-			onError: fn,
-			properties: {}
-		}, options);
-
-		return new Elements(sources.map(function(source, index){
-			return Asset.image(source, Object.append(options.properties, {
-				onload: function(){
-					counter++;
-					options.onProgress.call(this, counter, index, source);
-					if (counter == sources.length) options.onComplete();
-				},
-				onerror: function(){
-					counter++;
-					options.onError.call(this, counter, index, source);
-					if (counter == sources.length) options.onComplete();
-				}
-			}));
-		}));
-	}
-
-};
 
