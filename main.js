@@ -52,11 +52,11 @@ function do_webui_main() {
 	setupUserInterface();
 	utWebUI.init();
 }
-
-window.addEvent("domready", function() {
-	do_webui_main();	
-});
-
+if (!window.raptor) {
+	window.addEvent("domready", function() {
+		do_webui_main();	
+	});
+}
 
 function setupWindowEvents() {
 	//--------------------------------------------------
@@ -1378,44 +1378,7 @@ function _unhideSetting(obj) {
 // LANGUAGE STRING LOADING
 //================================================================================
 
-function loadLangStrings(reload) {
-	if (reload) {
-		var loaded = false;
-		Asset.javascript("lang/" + reload.lang + ".js", {
-			"onload": function() {
-				if (loaded) return;
-				loaded = true;
-
-				loadLangStrings();
-				if (reload.onload) reload.onload();
-			}
-		});
-		return;
-	}
-
-	g_perSec = "/" + _("TIME_SECS").replace(/%d/, "").trim();
-	g_dayCodes = _("ST_SCH_DAYCODES").split("||");
-	g_dayNames = _("ST_SCH_DAYNAMES").split("||");
-	g_schLgndEx = {
-		  "full"    : _("ST_SCH_LGND_FULLEX")
-		, "limited" : _("ST_SCH_LGND_LIMITEDEX")
-		, "off"     : _("ST_SCH_LGND_OFFEX")
-		, "seeding" : _("ST_SCH_LGND_SEEDINGEX")
-	};
-
-	//--------------------------------------------------
-	// CATEGORY LIST
-	//--------------------------------------------------
-
-	_loadStrings("text", [
-		  "OV_CAT_ALL"
-		, "OV_CAT_DL"
-		, "OV_CAT_COMPL"
-		, "OV_CAT_ACTIVE"
-		, "OV_CAT_INACTIVE"
-		, "OV_CAT_NOLABEL"
-	]);
-
+function loadTorrentLangStrings() {
 	//--------------------------------------------------
 	// TORRENT JOBS LIST
 	//--------------------------------------------------
@@ -1447,6 +1410,22 @@ function loadLangStrings(reload) {
 		}
 	});
 
+}
+function loadCategoryStrings() {
+	//--------------------------------------------------
+	// CATEGORY LIST
+	//--------------------------------------------------
+
+	_loadStrings("text", [
+		  "OV_CAT_ALL"
+		, "OV_CAT_DL"
+		, "OV_CAT_COMPL"
+		, "OV_CAT_ACTIVE"
+		, "OV_CAT_INACTIVE"
+		, "OV_CAT_NOLABEL"
+	]);
+}
+function loadDetailPaneStrings() {
 	//--------------------------------------------------
 	// DETAILED INFO PANE
 	//--------------------------------------------------
@@ -1530,6 +1509,9 @@ function loadLangStrings(reload) {
 		, _("OV_COL_DOWNSPD")
 	);
 
+}
+
+function loadMiscStrings() {
 	//--------------------------------------------------
 	// STATUS
 	//--------------------------------------------------
@@ -1558,7 +1540,9 @@ function loadLangStrings(reload) {
 		, "rssdownloader" : "OV_TB_RSSDOWNLDR"
 		, "setting"       : "OV_TB_PREF"
 	});
+}
 
+function loadDialogStrings() {
 	//--------------------------------------------------
 	// ALL DIALOGS
 	//--------------------------------------------------
@@ -1642,7 +1626,9 @@ function loadLangStrings(reload) {
 		, "DLG_ADDEDITRSSFEED_08"
 		, "DLG_ADDEDITRSSFEED_09"
 	]);
+}
 
+function loadRSSStrings() {
 	//--------------------------------------------------
 	// RSS DOWNLOADER DIALOG
 	//--------------------------------------------------
@@ -1695,6 +1681,8 @@ function loadLangStrings(reload) {
 
 	_loadComboboxStrings("rssfilter_min_interval", _("DLG_RSSDOWNLOADER_31").split("||"));
 
+}
+function loadSettingStrings() {
 	//--------------------------------------------------
 	// SETTINGS DIALOG
 	//--------------------------------------------------
@@ -1925,6 +1913,40 @@ function loadLangStrings(reload) {
 	_loadComboboxStrings("multi_day_transfer_limit_span", _("ST_CBO_TCAP_PERIODS").split("||"), utWebUI.settings["multi_day_transfer_limit_span"]);
 
 	$("sched_table").fireEvent("change"); // Force update scheduler related language strings
+}
+
+function loadLangStrings(reload) {
+	if (reload) {
+		var loaded = false;
+		Asset.javascript("lang/" + reload.lang + ".js", {
+			"onload": function() {
+				if (loaded) return;
+				loaded = true;
+
+				loadLangStrings();
+				if (reload.onload) reload.onload();
+			}
+		});
+		return;
+	}
+
+	g_perSec = "/" + _("TIME_SECS").replace(/%d/, "").trim();
+	g_dayCodes = _("ST_SCH_DAYCODES").split("||");
+	g_dayNames = _("ST_SCH_DAYNAMES").split("||");
+	g_schLgndEx = {
+		  "full"    : _("ST_SCH_LGND_FULLEX")
+		, "limited" : _("ST_SCH_LGND_LIMITEDEX")
+		, "off"     : _("ST_SCH_LGND_OFFEX")
+		, "seeding" : _("ST_SCH_LGND_SEEDINGEX")
+	};
+
+	loadCategoryStrings();
+	loadTorrentLangStrings();
+	loadDetailPaneStrings();
+	loadMiscStrings();
+	loadDialogStrings();
+	loadRSSStrings();
+	loadSettingStrings();
 
 }
 
