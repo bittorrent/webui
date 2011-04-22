@@ -40,12 +40,13 @@ var g_feedItemQlty = [
 var ELE_TD = new Element("td");
 var ELE_TR = new Element("tr");
 
+var linkedEvent = Browser.ie ? "click" : "change";
 
 //================================================================================
 // MAIN
 //================================================================================
 
-function webui_main() {
+function do_webui_main() {
 	$(document.body);
 	setupGlobalEvents();
 	setupUserInterface();
@@ -53,23 +54,11 @@ function webui_main() {
 }
 
 window.addEvent("domready", function() {
-	webui_main();	
+	do_webui_main();	
 });
 
 
-//================================================================================
-// GLOBAL EVENT SETUP
-//================================================================================
-
-var __executed_setupGlobalEvents__;
-
-function setupGlobalEvents() {
-
-	if (__executed_setupGlobalEvents__) return;
-	__executed_setupGlobalEvents__ = true;
-
-	ContextMenu.init("ContextMenu");
-
+function setupWindowEvents() {
 	//--------------------------------------------------
 	// WINDOW EVENTS
 	//--------------------------------------------------
@@ -81,7 +70,8 @@ function setupGlobalEvents() {
 			utWebUI.saveConfig(false);
 		});
 	}
-
+}
+function setupDocumentEvents() {
 	//--------------------------------------------------
 	// DOCUMENT EVENTS
 	//--------------------------------------------------
@@ -109,7 +99,9 @@ function setupGlobalEvents() {
 			}
 		});
 	}
+}
 
+function setupMouseEvents() {
 	//--------------------------------------------------
 	// MOUSE EVENTS
 	//--------------------------------------------------
@@ -169,6 +161,9 @@ function setupGlobalEvents() {
 		});
 	}
 
+}
+
+function setupKeyboardEvents() {
 	//--------------------------------------------------
 	// KEYBOARD EVENTS
 	//--------------------------------------------------
@@ -233,6 +228,28 @@ function setupGlobalEvents() {
 			});
 		}
 	}
+}
+
+//================================================================================
+// GLOBAL EVENT SETUP
+//================================================================================
+
+var __executed_setupGlobalEvents__;
+
+function setupGlobalEvents() {
+
+	if (__executed_setupGlobalEvents__) return;
+	__executed_setupGlobalEvents__ = true;
+
+	ContextMenu.init("ContextMenu");
+
+	setupWindowEvents();
+
+	setupDocumentEvents();
+
+	setupMouseEvents();
+
+	setupKeyboardEvents();
 
 }
 
@@ -444,13 +461,7 @@ function resizeUI(hDiv, vDiv) {
 
 var __executed_setupUserInterface__;
 
-function setupUserInterface() {
-
-	if (__executed_setupUserInterface__) return;
-	__executed_setupUserInterface__ = true;
-
-	document.title = g_winTitle;
-
+function setupCategoryUI() {
 	//--------------------------------------------------
 	// CATEGORY LIST
 	//--------------------------------------------------
@@ -460,7 +471,8 @@ function setupUserInterface() {
 			utWebUI.catListClick(ev, k);
 		});
 	});
-
+}
+function setupTorrentJobsUI() {
 	//--------------------------------------------------
 	// TORRENT JOBS LIST
 	//--------------------------------------------------
@@ -489,6 +501,8 @@ function setupUserInterface() {
 		"onDblClick": utWebUI.trtDblClk.bind(utWebUI)
 	}, utWebUI.defConfig.torrentTable));
 
+}
+function setupDetailInfoPaneUI() {
 	//--------------------------------------------------
 	// DETAILED INFO PANE
 	//--------------------------------------------------
@@ -566,6 +580,8 @@ function setupUserInterface() {
 		ev.target.store("mousewhitelist", true);
 	});
 
+}
+function setupDividers() {
 	//--------------------------------------------------
 	// DIVIDERS
 	//--------------------------------------------------
@@ -594,6 +610,8 @@ function setupUserInterface() {
 		}
 	});
 
+}
+function setupNonGuest() {
 	//--------------------------------------------------
 	// NON-GUEST SETUP
 	//--------------------------------------------------
@@ -605,8 +623,8 @@ function setupUserInterface() {
 		return;
 	}
 
-	var linkedEvent = Browser.ie ? "click" : "change";
-
+}
+function setupToolbar() {
 	//--------------------------------------------------
 	// TOOLBAR
 	//--------------------------------------------------
@@ -674,7 +692,8 @@ function setupUserInterface() {
 		},
 		"click": null
 	});
-
+}
+function setupDialogManager() {
 	//--------------------------------------------------
 	// DIALOG MANAGER
 	//--------------------------------------------------
@@ -691,6 +710,9 @@ function setupUserInterface() {
 		}[k]);
 	});
 
+}
+
+function setupAddTorrentDialog() {
 	//--------------------------------------------------
 	// ADD TORRENT DIALOG
 	//--------------------------------------------------
@@ -746,6 +768,9 @@ function setupUserInterface() {
 
 	$("dlgAdd-form").set("target", uploadfrm.get("id"));
 
+}
+
+function setupRSSDialogs() {
 	//--------------------------------------------------
 	// ADD/EDIT RSS FEED DIALOG
 	//--------------------------------------------------
@@ -781,73 +806,7 @@ function setupUserInterface() {
 		_link(this, 0, ["aerssfd-smart_ep"]);
 	});
 
-	//--------------------------------------------------
-	// ADD URL DIALOG
-	//--------------------------------------------------
 
-	// -- OK Button (URL)
-
-	$("ADD_URL_OK").addEvent("click", function() {
-		if ($("dlgAddURL-url").get("value").trim().length > 0) {
-			DialogManager.hide("AddURL");
-
-			var param = {
-				  "url": $("dlgAddURL-url").get("value")
-				, "cookie": $("dlgAddURL-cookie").get("value")
-				, "dir": $("dlgAddURL-basePath").value
-				, "sub": $("dlgAddURL-subPath").get("value")
-			};
-
-			utWebUI.addURL(param, function() {
-				$("dlgAddURL-url").set("value", "");
-				$("dlgAddURL-cookie").set("value", "");
-			});
-		}
-	});
-
-	// -- Cancel Button (URL)
-
-	$("ADD_URL_CANCEL").addEvent("click", function(ev) {
-		DialogManager.hide("AddURL");
-	});
-
-	// -- Form Submission
-
-	$("dlgAddURL-form").addEvent("submit", Function.from(false));
-
-	//--------------------------------------------------
-	// PROPERTIES DIALOG
-	//--------------------------------------------------
-
-	// -- OK Button
-
-	$("DLG_TORRENTPROP_01").addEvent("click", function() {
-		DialogManager.hide("Props");
-		utWebUI.setProperties();
-	});
-
-	// -- Cancel Button
-
-	$("DLG_TORRENTPROP_02").addEvent("click", function(ev) {
-		$("dlgProps").getElement(".dlg-close").fireEvent("click", ev);
-			// Fire the "Close" button's click handler to make sure
-			// controls are restored if necessary
-	});
-
-	// -- Close Button
-
-	$("dlgProps").getElement(".dlg-close").addEvent("click", function(ev) {
-		if (utWebUI.propID == "multi") {
-			[11, 17, 18, 19].each(function(v) {
-				$("DLG_TORRENTPROP_1_GEN_" + v).removeEvents("click");
-			});
-		}
-		this.propID = "";
-	});
-
-	// -- Form Submission
-
-	$("dlgProps-form").addEvent("submit", Function.from(false));
 
 	//--------------------------------------------------
 	// RSS DOWNLOADER DIALOG
@@ -922,6 +881,85 @@ function setupUserInterface() {
 		"onChange": utWebUI.rssDownloaderTabChange.bind(utWebUI)
 	}).draw().show("dlgRSSDownloader-feedsTab");
 
+
+
+}
+
+function setupPropertiesDialog() {
+	//--------------------------------------------------
+	// PROPERTIES DIALOG
+	//--------------------------------------------------
+
+	// -- OK Button
+
+	$("DLG_TORRENTPROP_01").addEvent("click", function() {
+		DialogManager.hide("Props");
+		utWebUI.setProperties();
+	});
+
+	// -- Cancel Button
+
+	$("DLG_TORRENTPROP_02").addEvent("click", function(ev) {
+		$("dlgProps").getElement(".dlg-close").fireEvent("click", ev);
+			// Fire the "Close" button's click handler to make sure
+			// controls are restored if necessary
+	});
+
+	// -- Close Button
+
+	$("dlgProps").getElement(".dlg-close").addEvent("click", function(ev) {
+		if (utWebUI.propID == "multi") {
+			[11, 17, 18, 19].each(function(v) {
+				$("DLG_TORRENTPROP_1_GEN_" + v).removeEvents("click");
+			});
+		}
+		this.propID = "";
+	});
+
+	// -- Form Submission
+
+	$("dlgProps-form").addEvent("submit", Function.from(false));
+
+}
+
+function setupAddURLDialog() {
+	//--------------------------------------------------
+	// ADD URL DIALOG
+	//--------------------------------------------------
+
+	// -- OK Button (URL)
+
+	$("ADD_URL_OK").addEvent("click", function() {
+		if ($("dlgAddURL-url").get("value").trim().length > 0) {
+			DialogManager.hide("AddURL");
+
+			var param = {
+				  "url": $("dlgAddURL-url").get("value")
+				, "cookie": $("dlgAddURL-cookie").get("value")
+				, "dir": $("dlgAddURL-basePath").value
+				, "sub": $("dlgAddURL-subPath").get("value")
+			};
+
+			utWebUI.addURL(param, function() {
+				$("dlgAddURL-url").set("value", "");
+				$("dlgAddURL-cookie").set("value", "");
+			});
+		}
+	});
+
+	// -- Cancel Button (URL)
+
+	$("ADD_URL_CANCEL").addEvent("click", function(ev) {
+		DialogManager.hide("AddURL");
+	});
+
+	// -- Form Submission
+
+	$("dlgAddURL-form").addEvent("submit", Function.from(false));
+
+}
+
+function setupSettings() {
 	//--------------------------------------------------
 	// SETTINGS DIALOG
 	//--------------------------------------------------
@@ -1243,6 +1281,10 @@ function setupUserInterface() {
 		, "webui.useSysFont"
 	]);
 
+}
+
+function setupStatusBar() {
+
 	//--------------------------------------------------
 	// STATUS BAR
 	//--------------------------------------------------
@@ -1258,6 +1300,28 @@ function setupUserInterface() {
 	$("mainStatusBar-upload").addStopEvent("mousedown", function(ev) {
 		return utWebUI.statusUploadMenuShow(ev);
 	});
+
+}
+
+function setupUserInterface() {
+
+	if (__executed_setupUserInterface__) return;
+	__executed_setupUserInterface__ = true;
+
+	document.title = g_winTitle;
+	setupCategoryUI();
+	setupTorrentJobsUI();
+	setupDetailInfoPaneUI();
+	setupDividers();
+	setupNonGuest();
+	setupToolbar();
+	setupDialogManager();
+	setupAddTorrentDialog();
+	setupRSSDialogs();
+	setupPropertiesDialog();
+	setupAddURLDialog();
+	setupSettings();
+	setupStatusBar();
 
 	resizeUI();
 
