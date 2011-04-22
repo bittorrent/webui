@@ -1385,28 +1385,28 @@ function loadTorrentLangStrings() {
 
 	utWebUI.trtTable.refreshRows();
 	utWebUI.trtTable.setConfig({
-		"resetText": _("MENU_RESET"),
+		"resetText": L_("MENU_RESET"),
 		"colText": {
-			  "name"         : _("OV_COL_NAME")
-			, "order"        : _("OV_COL_ORDER")
-			, "size"         : _("OV_COL_SIZE")
-			, "remaining"    : _("OV_COL_REMAINING")
-			, "done"         : _("OV_COL_DONE")
-			, "status"       : _("OV_COL_STATUS")
-			, "seeds"        : _("OV_COL_SEEDS")
-			, "peers"        : _("OV_COL_PEERS")
-			, "seeds_peers"  : _("OV_COL_SEEDS_PEERS")
-			, "downspeed"    : _("OV_COL_DOWNSPD")
-			, "upspeed"      : _("OV_COL_UPSPD")
-			, "eta"          : _("OV_COL_ETA")
-			, "downloaded"   : _("OV_COL_DOWNLOADED")
-			, "uploaded"     : _("OV_COL_UPPED")
-			, "ratio"        : _("OV_COL_SHARED")
-			, "availability" : _("OV_COL_AVAIL").split("||")[1]
-			, "label"        : _("OV_COL_LABEL")
-			, "added"        : _("OV_COL_DATE_ADDED")
-			, "completed"    : _("OV_COL_DATE_COMPLETED")
-			, "url"          : _("OV_COL_SOURCE_URL")
+			  "name"         : L_("OV_COL_NAME")
+			, "order"        : L_("OV_COL_ORDER")
+			, "size"         : L_("OV_COL_SIZE")
+			, "remaining"    : L_("OV_COL_REMAINING")
+			, "done"         : L_("OV_COL_DONE")
+			, "status"       : L_("OV_COL_STATUS")
+			, "seeds"        : L_("OV_COL_SEEDS")
+			, "peers"        : L_("OV_COL_PEERS")
+			, "seeds_peers"  : L_("OV_COL_SEEDS_PEERS")
+			, "downspeed"    : L_("OV_COL_DOWNSPD")
+			, "upspeed"      : L_("OV_COL_UPSPD")
+			, "eta"          : L_("OV_COL_ETA")
+			, "downloaded"   : L_("OV_COL_DOWNLOADED")
+			, "uploaded"     : L_("OV_COL_UPPED")
+			, "ratio"        : L_("OV_COL_SHARED")
+			, "availability" : L_("OV_COL_AVAIL").split("||")[1]
+			, "label"        : L_("OV_COL_LABEL")
+			, "added"        : L_("OV_COL_DATE_ADDED")
+			, "completed"    : L_("OV_COL_DATE_COMPLETED")
+			, "url"          : L_("OV_COL_SOURCE_URL")
 		}
 	});
 
@@ -1432,7 +1432,7 @@ function loadDetailPaneStrings() {
 
 	// -- Tab Titles
 
-	var maintstr = _("OV_TABS").split("||");
+	var maintstr = L_("OV_TABS").split("||");
 	utWebUI.mainTabs.setNames({
 		  "mainInfoPane-generalTab" : maintstr[0]
 		, "mainInfoPane-peersTab"   : maintstr[2]
@@ -1463,26 +1463,26 @@ function loadDetailPaneStrings() {
 
 	utWebUI.prsTable.refreshRows();
 	utWebUI.prsTable.setConfig({
-		"resetText": _("MENU_RESET"),
+		"resetText": L_("MENU_RESET"),
 		"colText": {
-			  "ip"         : _("PRS_COL_IP")
-			, "port"       : _("PRS_COL_PORT")
-			, "client"     : _("PRS_COL_CLIENT")
-			, "flags"      : _("PRS_COL_FLAGS")
-			, "pcnt"       : _("PRS_COL_PCNT")
-			, "relevance"  : _("PRS_COL_RELEVANCE")
-			, "downspeed"  : _("PRS_COL_DOWNSPEED")
-			, "upspeed"    : _("PRS_COL_UPSPEED")
-			, "reqs"       : _("PRS_COL_REQS")
-			, "waited"     : _("PRS_COL_WAITED")
-			, "uploaded"   : _("PRS_COL_UPLOADED")
-			, "downloaded" : _("PRS_COL_DOWNLOADED")
-			, "hasherr"    : _("PRS_COL_HASHERR")
-			, "peerdl"     : _("PRS_COL_PEERDL")
-			, "maxup"      : _("PRS_COL_MAXUP")
-			, "maxdown"    : _("PRS_COL_MAXDOWN")
-			, "queued"     : _("PRS_COL_QUEUED")
-			, "inactive"   : _("PRS_COL_INACTIVE")
+			  "ip"         : L_("PRS_COL_IP")
+			, "port"       : L_("PRS_COL_PORT")
+			, "client"     : L_("PRS_COL_CLIENT")
+			, "flags"      : L_("PRS_COL_FLAGS")
+			, "pcnt"       : L_("PRS_COL_PCNT")
+			, "relevance"  : L_("PRS_COL_RELEVANCE")
+			, "downspeed"  : L_("PRS_COL_DOWNSPEED")
+			, "upspeed"    : L_("PRS_COL_UPSPEED")
+			, "reqs"       : L_("PRS_COL_REQS")
+			, "waited"     : L_("PRS_COL_WAITED")
+			, "uploaded"   : L_("PRS_COL_UPLOADED")
+			, "downloaded" : L_("PRS_COL_DOWNLOADED")
+			, "hasherr"    : L_("PRS_COL_HASHERR")
+			, "peerdl"     : L_("PRS_COL_PEERDL")
+			, "maxup"      : L_("PRS_COL_MAXUP")
+			, "maxdown"    : L_("PRS_COL_MAXDOWN")
+			, "queued"     : L_("PRS_COL_QUEUED")
+			, "inactive"   : L_("PRS_COL_INACTIVE")
 		}
 	});
 
@@ -1490,23 +1490,23 @@ function loadDetailPaneStrings() {
 
 	utWebUI.flsTable.refreshRows();
 	utWebUI.flsTable.setConfig({
-		"resetText": _("MENU_RESET"),
+		"resetText": L_("MENU_RESET"),
 		"colText": {
-			  "name"    : _("FI_COL_NAME")
-			, "size"    : _("FI_COL_SIZE")
-			, "done"    : _("FI_COL_DONE")
-			, "pcnt"    : _("FI_COL_PCNT")
-			, "firstpc" : _("FI_COL_FIRSTPC")
-			, "numpcs"  : _("FI_COL_NUMPCS")
-			, "prio"    : _("FI_COL_PRIO")
+			  "name"    : L_("FI_COL_NAME")
+			, "size"    : L_("FI_COL_SIZE")
+			, "done"    : L_("FI_COL_DONE")
+			, "pcnt"    : L_("FI_COL_PCNT")
+			, "firstpc" : L_("FI_COL_FIRSTPC")
+			, "numpcs"  : L_("FI_COL_NUMPCS")
+			, "prio"    : L_("FI_COL_PRIO")
 		}
 	});
 
 	// -- Speed Tab
 
 	utWebUI.spdGraph.setLabels(
-		  _("OV_COL_UPSPD")
-		, _("OV_COL_DOWNSPD")
+		  L_("OV_COL_UPSPD")
+		, L_("OV_COL_DOWNSPD")
 	);
 
 }
@@ -1635,7 +1635,7 @@ function loadRSSStrings() {
 
 	// -- Tab Titles
 
-	var rsststr = _("DLG_RSSDOWNLOADER_02").split("||");
+	var rsststr = L_("DLG_RSSDOWNLOADER_02").split("||");
 	utWebUI.mainTabs.setNames({
 		  "dlgRSSDownloader-feedsTab"   : rsststr[0]
 		, "dlgRSSDownloader-filtersTab" : rsststr[1]
@@ -1647,16 +1647,16 @@ function loadRSSStrings() {
 
 	utWebUI.rssfdTable.refreshRows();
 	utWebUI.rssfdTable.setConfig({
-		"resetText": _("MENU_RESET"),
+		"resetText": L_("MENU_RESET"),
 		"colText": {
-			  "fullname" : _("FEED_COL_FULLNAME")
-			, "name"     : _("FEED_COL_NAME")
-			, "episode"  : _("FEED_COL_EPISODE")
-			, "format"   : _("FEED_COL_FORMAT")
-			, "codec"    : _("FEED_COL_CODEC")
-			, "date"     : _("FEED_COL_DATE")
-			, "feed"     : _("FEED_COL_FEED")
-			, "url"      : _("FEED_COL_URL")
+			  "fullname" : L_("FEED_COL_FULLNAME")
+			, "name"     : L_("FEED_COL_NAME")
+			, "episode"  : L_("FEED_COL_EPISODE")
+			, "format"   : L_("FEED_COL_FORMAT")
+			, "codec"    : L_("FEED_COL_CODEC")
+			, "date"     : L_("FEED_COL_DATE")
+			, "feed"     : L_("FEED_COL_FEED")
+			, "url"      : L_("FEED_COL_URL")
 		}
 	});
 
@@ -1679,7 +1679,7 @@ function loadRSSStrings() {
 		, "DLG_RSSDOWNLOADER_17"
 	])
 
-	_loadComboboxStrings("rssfilter_min_interval", _("DLG_RSSDOWNLOADER_31").split("||"));
+	_loadComboboxStrings("rssfilter_min_interval", L_("DLG_RSSDOWNLOADER_31").split("||"));
 
 }
 function loadSettingStrings() {
@@ -1688,20 +1688,20 @@ function loadSettingStrings() {
 	//--------------------------------------------------
 
 	utWebUI.stpanes.setNames({
-		  "dlgSettings-General"     : _("ST_CAPT_GENERAL")
-		, "dlgSettings-UISettings"  : _("ST_CAPT_UI_SETTINGS")
-		, "dlgSettings-Directories" : _("ST_CAPT_FOLDER")
-		, "dlgSettings-Connection"  : _("ST_CAPT_CONNECTION")
-		, "dlgSettings-Bandwidth"   : _("ST_CAPT_BANDWIDTH")
-		, "dlgSettings-BitTorrent"  : _("ST_CAPT_BITTORRENT")
-		, "dlgSettings-TransferCap" : _("ST_CAPT_TRANSFER_CAP")
-		, "dlgSettings-Queueing"    : _("ST_CAPT_QUEUEING")
-		, "dlgSettings-WebUI"       : _("ST_CAPT_WEBUI")
-		, "dlgSettings-Scheduler"   : _("ST_CAPT_SCHEDULER")
-		, "dlgSettings-Advanced"    : _("ST_CAPT_ADVANCED")
-		, "dlgSettings-UIExtras"    : "&nbsp;&nbsp;&nbsp;&nbsp;" + _("ST_CAPT_UI_EXTRAS") // TODO: Use CSS to indent instead of modifying the string directly...
-		, "dlgSettings-DiskCache"   : "&nbsp;&nbsp;&nbsp;&nbsp;" + _("ST_CAPT_DISK_CACHE") // TODO: Use CSS to indent instead of modifying the string directly...
-		, "dlgSettings-RunProgram"  : "&nbsp;&nbsp;&nbsp;&nbsp;" + _("ST_CAPT_RUN_PROGRAM") // TODO: Use CSS to indent instead of modifying the string directly...
+		  "dlgSettings-General"     : L_("ST_CAPT_GENERAL")
+		, "dlgSettings-UISettings"  : L_("ST_CAPT_UI_SETTINGS")
+		, "dlgSettings-Directories" : L_("ST_CAPT_FOLDER")
+		, "dlgSettings-Connection"  : L_("ST_CAPT_CONNECTION")
+		, "dlgSettings-Bandwidth"   : L_("ST_CAPT_BANDWIDTH")
+		, "dlgSettings-BitTorrent"  : L_("ST_CAPT_BITTORRENT")
+		, "dlgSettings-TransferCap" : L_("ST_CAPT_TRANSFER_CAP")
+		, "dlgSettings-Queueing"    : L_("ST_CAPT_QUEUEING")
+		, "dlgSettings-WebUI"       : L_("ST_CAPT_WEBUI")
+		, "dlgSettings-Scheduler"   : L_("ST_CAPT_SCHEDULER")
+		, "dlgSettings-Advanced"    : L_("ST_CAPT_ADVANCED")
+		, "dlgSettings-UIExtras"    : "&nbsp;&nbsp;&nbsp;&nbsp;" + L_("ST_CAPT_UI_EXTRAS") // TODO: Use CSS to indent instead of modifying the string directly...
+		, "dlgSettings-DiskCache"   : "&nbsp;&nbsp;&nbsp;&nbsp;" + L_("ST_CAPT_DISK_CACHE") // TODO: Use CSS to indent instead of modifying the string directly...
+		, "dlgSettings-RunProgram"  : "&nbsp;&nbsp;&nbsp;&nbsp;" + L_("ST_CAPT_RUN_PROGRAM") // TODO: Use CSS to indent instead of modifying the string directly...
 	});
 
 	_loadStrings("text", [
@@ -1889,10 +1889,10 @@ function loadSettingStrings() {
 
 	utWebUI.advOptTable.refreshRows();
 	utWebUI.advOptTable.setConfig({
-		"resetText": _("MENU_RESET"),
+		"resetText": L_("MENU_RESET"),
 		"colText": {
-			  "name"  : _("ST_COL_NAME")
-			, "value" : _("ST_COL_VALUE")
+			  "name"  : L_("ST_COL_NAME")
+			, "value" : L_("ST_COL_VALUE")
 		}
 	});
 
@@ -1904,15 +1904,27 @@ function loadSettingStrings() {
 	]);
 
 	// -- Comboboxes
-	_loadComboboxStrings("gui.dblclick_seed", _("ST_CBO_UI_DBLCLK_TOR").split("||"), utWebUI.settings["gui.dblclick_seed"]);
-	_loadComboboxStrings("gui.dblclick_dl", _("ST_CBO_UI_DBLCLK_TOR").split("||"), utWebUI.settings["gui.dblclick_dl"]);
-	_loadComboboxStrings("encryption_mode", _("ST_CBO_ENCRYPTIONS").split("||"), utWebUI.settings["encryption_mode"]);
-	_loadComboboxStrings("proxy.type", _("ST_CBO_PROXY").split("||"), utWebUI.settings["proxy.type"]);
-	_loadComboboxStrings("multi_day_transfer_mode", _("ST_CBO_TCAP_MODES").split("||"), utWebUI.settings["multi_day_transfer_mode"]);
-	_loadComboboxStrings("multi_day_transfer_limit_unit", _("ST_CBO_TCAP_UNITS").split("||"), utWebUI.settings["multi_day_transfer_limit_unit"]);
-	_loadComboboxStrings("multi_day_transfer_limit_span", _("ST_CBO_TCAP_PERIODS").split("||"), utWebUI.settings["multi_day_transfer_limit_span"]);
+	_loadComboboxStrings("gui.dblclick_seed", L_("ST_CBO_UI_DBLCLK_TOR").split("||"), utWebUI.settings["gui.dblclick_seed"]);
+	_loadComboboxStrings("gui.dblclick_dl", L_("ST_CBO_UI_DBLCLK_TOR").split("||"), utWebUI.settings["gui.dblclick_dl"]);
+	_loadComboboxStrings("encryption_mode", L_("ST_CBO_ENCRYPTIONS").split("||"), utWebUI.settings["encryption_mode"]);
+	_loadComboboxStrings("proxy.type", L_("ST_CBO_PROXY").split("||"), utWebUI.settings["proxy.type"]);
+	_loadComboboxStrings("multi_day_transfer_mode", L_("ST_CBO_TCAP_MODES").split("||"), utWebUI.settings["multi_day_transfer_mode"]);
+	_loadComboboxStrings("multi_day_transfer_limit_unit", L_("ST_CBO_TCAP_UNITS").split("||"), utWebUI.settings["multi_day_transfer_limit_unit"]);
+	_loadComboboxStrings("multi_day_transfer_limit_span", L_("ST_CBO_TCAP_PERIODS").split("||"), utWebUI.settings["multi_day_transfer_limit_span"]);
 
 	$("sched_table").fireEvent("change"); // Force update scheduler related language strings
+}
+
+function loadGlobalStrings() {
+	g_perSec = "/" + L_("TIME_SECS").replace(/%d/, "").trim();
+	g_dayCodes = L_("ST_SCH_DAYCODES").split("||");
+	g_dayNames = L_("ST_SCH_DAYNAMES").split("||");
+	g_schLgndEx = {
+		  "full"    : L_("ST_SCH_LGND_FULLEX")
+		, "limited" : L_("ST_SCH_LGND_LIMITEDEX")
+		, "off"     : L_("ST_SCH_LGND_OFFEX")
+		, "seeding" : L_("ST_SCH_LGND_SEEDINGEX")
+	};
 }
 
 function loadLangStrings(reload) {
@@ -1930,16 +1942,7 @@ function loadLangStrings(reload) {
 		return;
 	}
 
-	g_perSec = "/" + _("TIME_SECS").replace(/%d/, "").trim();
-	g_dayCodes = _("ST_SCH_DAYCODES").split("||");
-	g_dayNames = _("ST_SCH_DAYNAMES").split("||");
-	g_schLgndEx = {
-		  "full"    : _("ST_SCH_LGND_FULLEX")
-		, "limited" : _("ST_SCH_LGND_LIMITEDEX")
-		, "off"     : _("ST_SCH_LGND_OFFEX")
-		, "seeding" : _("ST_SCH_LGND_SEEDINGEX")
-	};
-
+	loadGlobalStrings();
 	loadCategoryStrings();
 	loadTorrentLangStrings();
 	loadDetailPaneStrings();
@@ -1980,14 +1983,14 @@ function _loadStrings(prop, strings) {
 	switch (typeOf(strings)) {
 		case 'object':
 			fnload = function(val, key) {
-				$(key).set(prop, _(val));
+				$(key).set(prop, L_(val));
 			};
 		break;
 
 		default:
 			strings = Array.from(strings);
 			fnload = function(val) {
-				$(val).set(prop, _(val));
+				$(val).set(prop, L_(val));
 			};
 	}
 

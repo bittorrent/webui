@@ -469,6 +469,6 @@ var LANG_LIST = {
 	, "zhTW" : "Chinese (Traditional)"
 };
 
-function _(id) {
+function L_(id) {
 	return (LANG_STR[LANG_CONST[id]] || "[ UNRECOGNIZED STRING ID: '" + id + "' ]");
 }

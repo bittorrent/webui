@@ -742,8 +742,8 @@ var utWebUI = {
 				, icon: "dlgIcon-Delete"
 				, message: _(ask).replace(/%d/, count)
 				, buttons: [
-					{ text: _("DLG_BTN_YES"), focus: true, click: act },
-					{ text: _("DLG_BTN_NO") }
+					{ text: L_("DLG_BTN_YES"), focus: true, click: act },
+					{ text: L_("DLG_BTN_NO") }
 				]
 			});
 		}
@@ -915,28 +915,28 @@ var utWebUI = {
 		var res = ["", ""];
 
 		if (state & CONST.STATE_PAUSED) { // paused
-			res = ["Status_Paused", (state & CONST.STATE_CHECKING) ? _("OV_FL_CHECKED").replace(/%:\.1d%/, (done / 10).toFixedNR(1)) : _("OV_FL_PAUSED")];
+			res = ["Status_Paused", (state & CONST.STATE_CHECKING) ? L_("OV_FL_CHECKED").replace(/%:\.1d%/, (done / 10).toFixedNR(1)) : L_("OV_FL_PAUSED")];
 		}
 		else if (state & CONST.STATE_STARTED) { // started, seeding or leeching
-			res = (done == 1000) ? ["Status_Up", _("OV_FL_SEEDING")] : ["Status_Down", _("OV_FL_DOWNLOADING")];
+			res = (done == 1000) ? ["Status_Up", L_("OV_FL_SEEDING")] : ["Status_Down", L_("OV_FL_DOWNLOADING")];
 			if (!(state & CONST.STATE_QUEUED)) { // forced start
 				res[1] = "[F] " + res[1];
 			}
 		}
 		else if (state & CONST.STATE_CHECKING) { // checking
-			res = ["Status_Checking", _("OV_FL_CHECKED").replace(/%:\.1d%/, (done / 10).toFixedNR(1))];
+			res = ["Status_Checking", L_("OV_FL_CHECKED").replace(/%:\.1d%/, (done / 10).toFixedNR(1))];
 		}
 		else if (state & CONST.STATE_ERROR) { // error
-			res = ["Status_Error", _("OV_FL_ERROR").replace(/%s/, "??")];
+			res = ["Status_Error", L_("OV_FL_ERROR").replace(/%s/, "??")];
 		}
 		else if (state & CONST.STATE_QUEUED) { // queued
-			res = (done == 1000) ? ["Status_Queued_Up", _("OV_FL_QUEUED_SEED")] : ["Status_Queued_Down", _("OV_FL_QUEUED")];
+			res = (done == 1000) ? ["Status_Queued_Up", L_("OV_FL_QUEUED_SEED")] : ["Status_Queued_Down", L_("OV_FL_QUEUED")];
 		}
 		else if (done == 1000) { // finished
-			res = ["Status_Completed", _("OV_FL_FINISHED")];
+			res = ["Status_Completed", L_("OV_FL_FINISHED")];
 		}
 		else { // stopped
-			res = ["Status_Incomplete", _("OV_FL_STOPPED")];
+			res = ["Status_Incomplete", L_("OV_FL_STOPPED")];
 		}
 
 		return res;
@@ -1221,7 +1221,7 @@ var utWebUI = {
 
 		// Setup Feed item
 		// RSSTODO: Move this elsewhere
-		var feeds = [[-1, _("DLG_RSSDOWNLOADER_30")]];
+		var feeds = [[-1, L_("DLG_RSSDOWNLOADER_30")]];
 		Object.map(this.rssfeeds, function(item, key) {
 			feeds.push([key, item[CONST.RSSFEED_URL].split("|")[0]]);
 		}, this);
@@ -1471,13 +1471,13 @@ var utWebUI = {
 			tmpl = this.torrents[this.trtTable.selectedRows[0]][CONST.TORRENT_LABEL];
 
 		DialogManager.popup({
-			  title: _("OV_NEWLABEL_CAPTION")
+			  title: L_("OV_NEWLABEL_CAPTION")
 			, icon: "dlgIcon-Label"
-			, message: _("OV_NEWLABEL_TEXT")
+			, message: L_("OV_NEWLABEL_TEXT")
 			, input: tmpl || ""
 			, buttons: [
-				{ text: _("DLG_BTN_OK"), submit: true, click: this.createLabel.bind(this) },
-				{ text: _("DLG_BTN_CANCEL") }
+				{ text: L_("DLG_BTN_OK"), submit: true, click: this.createLabel.bind(this) },
+				{ text: L_("DLG_BTN_CANCEL") }
 			]
 		});
 	},
@@ -1736,7 +1736,7 @@ var utWebUI = {
 
 		if (!isGuest && ev.isRightClick()) {
 			// Generate menu items
-			var menuItems = [[_("DLG_RSSDOWNLOADER_18"), this.showAddEditRSSFeed.bind(this, -1)]];
+			var menuItems = [[L_("DLG_RSSDOWNLOADER_18"), this.showAddEditRSSFeed.bind(this, -1)]];
 
 			if (element) {
 				var feedIds = ("rssfeed_all" in this.config.activeRssFeeds
@@ -1755,26 +1755,26 @@ var utWebUI = {
 					menuItems.push([CMENU_SEP]);
 
 					if (feedIds.length === 1) {
-						menuItems.push([_("DLG_RSSDOWNLOADER_19"), this.showAddEditRSSFeed.bind(this, feedIds[0])]);
+						menuItems.push([L_("DLG_RSSDOWNLOADER_19"), this.showAddEditRSSFeed.bind(this, feedIds[0])]);
 					}
 
 					menuItems = menuItems.concat([
 						  [_(feedIsEnabled ? "DLG_RSSDOWNLOADER_20" : "DLG_RSSDOWNLOADER_21"),
 							this.rssUpdate.bind(this, {id: feedIds, enabled: !feedIsEnabled}, null)
 						]
-						, [_("DLG_RSSDOWNLOADER_22"), this.rssUpdate.bind(this, {id: feedIds, update: 1}, null)]
-						, [_("DLG_RSSDOWNLOADER_23"),
+						, [L_("DLG_RSSDOWNLOADER_22"), this.rssUpdate.bind(this, {id: feedIds, update: 1}, null)]
+						, [L_("DLG_RSSDOWNLOADER_23"),
 							(function(feedIds) { // RSSTODO: Move this elsewhere
 								DialogManager.popup({
-									  title: _("DLG_RSSDOWNLOADER_34")
+									  title: L_("DLG_RSSDOWNLOADER_34")
 									, icon: "dlgIcon-Delete"
 									, message: (feedIds.length > 1
-										? _("DLG_RSSDOWNLOADER_35").replace(/%d/, feedIds.length)
-										: _("DLG_RSSDOWNLOADER_36").replace(/%s/, this.rssfeeds[feedIds][CONST.RSSFEED_URL].split("|")[0])
+										? L_("DLG_RSSDOWNLOADER_35").replace(/%d/, feedIds.length)
+										: L_("DLG_RSSDOWNLOADER_36").replace(/%s/, this.rssfeeds[feedIds][CONST.RSSFEED_URL].split("|")[0])
 									)
 									, buttons: [
-										{ text: _("DLG_BTN_YES"), focus: true, click: this.rssRemove.bind(this, feedIds) },
-										{ text: _("DLG_BTN_NO") }
+										{ text: L_("DLG_BTN_YES"), focus: true, click: this.rssRemove.bind(this, feedIds) },
+										{ text: L_("DLG_BTN_NO") }
 									]
 								});
 							}).bind(this, feedIds)
@@ -1942,7 +1942,7 @@ var utWebUI = {
 		if (!isGuest && ev.isRightClick()) {
 			// Generate menu items
 			var menuItems = [
-				[_("DLG_RSSDOWNLOADER_27"),
+				[L_("DLG_RSSDOWNLOADER_27"),
 					this.rssfilterUpdate.bind(this, null, (function(json) {
 						this.rssfilterId = "rssfilter_" + json.filter_ident;
 					}).bind(this))
@@ -1952,15 +1952,15 @@ var utWebUI = {
 			if (element) {
 				var filterId = element.id.replace(/^rssfilter_/, '');
 
-				menuItems.push([_("DLG_RSSDOWNLOADER_28"),
+				menuItems.push([L_("DLG_RSSDOWNLOADER_28"),
 					(function(filterId) { // RSSTODO: Move this elsewhere
 						DialogManager.popup({
 							  title: "Remove RSS Filter(s)" // TODO: Localize
 							, icon: "dlgIcon-Delete"
-							, message: _("OV_CONFIRM_DELETE_RSSFILTER").replace(/%s/, this.rssfilters[filterId][CONST.RSSFILTER_NAME])
+							, message: L_("OV_CONFIRM_DELETE_RSSFILTER").replace(/%s/, this.rssfilters[filterId][CONST.RSSFILTER_NAME])
 							, buttons: [
-								{ text: _("DLG_BTN_YES"), focus: true, click: this.rssfilterRemove.bind(this, filterId) },
-								{ text: _("DLG_BTN_NO") }
+								{ text: L_("DLG_BTN_YES"), focus: true, click: this.rssfilterRemove.bind(this, filterId) },
+								{ text: L_("DLG_BTN_NO") }
 							]
 						});
 					}).bind(this, filterId)
@@ -2118,7 +2118,7 @@ var utWebUI = {
 	},
 
 	"rssfilterQualityText": function(qual) {
-		var qualities = [_("DLG_RSSDOWNLOADER_29")];
+		var qualities = [L_("DLG_RSSDOWNLOADER_29")];
 		if (qual !== undefined && qual !== CONST.RSSITEMQUALITY_ALL) {
 			qualities = [];
 			g_feedItemQlty.each(function(item) {
@@ -2151,7 +2151,7 @@ var utWebUI = {
 
 		// Generate menu items
 		var menuItems = [
-			[CMENU_CHECK, _("DLG_RSSDOWNLOADER_29"), qualSelect(CONST.RSSITEMQUALITY_ALL)],
+			[CMENU_CHECK, L_("DLG_RSSDOWNLOADER_29"), qualSelect(CONST.RSSITEMQUALITY_ALL)],
 			[CMENU_SEP]
 		];
 
@@ -2264,7 +2264,7 @@ var utWebUI = {
 		var history = this.xferhist;
 
 		// Obtain number of days to consider
-		var periodList = _("ST_CBO_TCAP_PERIODS").split("||");
+		var periodList = L_("ST_CBO_TCAP_PERIODS").split("||");
 		var periodIdx = ($("multi_day_transfer_limit_span").get("value").toInt() || 0).max(0).min(periodList.length-2);
 		var period = periodList[periodIdx].toInt();
 
@@ -2285,7 +2285,7 @@ var utWebUI = {
 		$("total_uploaded_history").set("text", tu.toFileSize());
 		$("total_downloaded_history").set("text", td.toFileSize());
 		$("total_updown_history").set("text", (tu + td).toFileSize());
-		$("history_period").set("text", _("DLG_SETTINGS_7_TRANSFERCAP_11").replace(/%d/, period));
+		$("history_period").set("text", L_("DLG_SETTINGS_7_TRANSFERCAP_11").replace(/%d/, period));
 	},
 
 	"resetTransferHistory": function() {
@@ -2763,7 +2763,7 @@ var utWebUI = {
 		$("aerssfd-use_custom_alias").set("checked", use_cust_alias).fireEvent("change");
 
 		if (feed.length <= 0) {
-			$("dlgAddEditRSSFeed-head").set("text", _("DLG_RSSDOWNLOADER_32"));
+			$("dlgAddEditRSSFeed-head").set("text", L_("DLG_RSSDOWNLOADER_32"));
 			$("dlgAddEditRSSFeed-subscription").show();
 
 			$("aerssfd-subscribe_0").set("checked", true).fireEvent("click");
@@ -2771,7 +2771,7 @@ var utWebUI = {
 			$("aerssfd-smart_ep").set("checked", false);
 		}
 		else {
-			$("dlgAddEditRSSFeed-head").set("text", _("DLG_RSSDOWNLOADER_33"));
+			$("dlgAddEditRSSFeed-head").set("text", L_("DLG_RSSDOWNLOADER_33"));
 			$("dlgAddEditRSSFeed-subscription").hide();
 		}
 
@@ -2890,33 +2890,33 @@ var utWebUI = {
 	"statusMenuShow": function(ev) {
 		// Build menu items
 		var menuItems = [
-			  [CMENU_CHILD, _("MM_FILE"), [
-				  [_("MM_FILE_ADD_TORRENT"), this.showAddTorrent.bind(this)]
-				, [_("MM_FILE_ADD_URL"), this.showAddURL.bind(this)]
+			  [CMENU_CHILD, L_("MM_FILE"), [
+				  [L_("MM_FILE_ADD_TORRENT"), this.showAddTorrent.bind(this)]
+				, [L_("MM_FILE_ADD_URL"), this.showAddURL.bind(this)]
 			]]
-			, [CMENU_CHILD, _("MM_OPTIONS"), [
-				  [_("MM_OPTIONS_PREFERENCES"), this.showSettings.bind(this)]
-				, [_("OV_TB_RSSDOWNLDR"), this.showRSSDownloader.bind(this)]
+			, [CMENU_CHILD, L_("MM_OPTIONS"), [
+				  [L_("MM_OPTIONS_PREFERENCES"), this.showSettings.bind(this)]
+				, [L_("OV_TB_RSSDOWNLDR"), this.showRSSDownloader.bind(this)]
 				, [CMENU_SEP]
-				, [_("MM_OPTIONS_SHOW_TOOLBAR"), this.toggleToolbar.bind(this, undefined)]
-				, [_("MM_OPTIONS_SHOW_DETAIL"), this.toggleDetPanel.bind(this, undefined)]
-				, [_("MM_OPTIONS_SHOW_STATUS"), this.toggleStatusBar.bind(this, undefined)]
-				, [_("MM_OPTIONS_SHOW_CATEGORY"), this.toggleCatPanel.bind(this, undefined)]
+				, [L_("MM_OPTIONS_SHOW_TOOLBAR"), this.toggleToolbar.bind(this, undefined)]
+				, [L_("MM_OPTIONS_SHOW_DETAIL"), this.toggleDetPanel.bind(this, undefined)]
+				, [L_("MM_OPTIONS_SHOW_STATUS"), this.toggleStatusBar.bind(this, undefined)]
+				, [L_("MM_OPTIONS_SHOW_CATEGORY"), this.toggleCatPanel.bind(this, undefined)]
 				, [CMENU_SEP]
-				, [_("MM_OPTIONS_TAB_ICONS"), this.toggleDetPanelIcons.bind(this, undefined)]
+				, [L_("MM_OPTIONS_TAB_ICONS"), this.toggleDetPanelIcons.bind(this, undefined)]
 			]]
-			, [CMENU_CHILD, _("MM_HELP"), [
-				  [_("MM_HELP_UT_WEBPAGE"), openURL.pass(["http://www.utorrent.com/", null])] 
-				, [_("MM_HELP_UT_FORUMS"), openURL.pass(["http://forum.utorrent.com/", null])] 
+			, [CMENU_CHILD, L_("MM_HELP"), [
+				  [L_("MM_HELP_UT_WEBPAGE"), openURL.pass(["http://www.utorrent.com/", null])] 
+				, [L_("MM_HELP_UT_FORUMS"), openURL.pass(["http://forum.utorrent.com/", null])] 
 				, [CMENU_SEP]
-				, [_("MM_HELP_WEBUI_FEEDBACK"), openURL.pass(["http://forum.utorrent.com/viewtopic.php?id=58156", null])] 
+				, [L_("MM_HELP_WEBUI_FEEDBACK"), openURL.pass(["http://forum.utorrent.com/viewtopic.php?id=58156", null])] 
 				, [CMENU_SEP]
-				, [_("MM_HELP_ABOUT_WEBUI"), this.showAbout.bind(this)]
+				, [L_("MM_HELP_ABOUT_WEBUI"), this.showAbout.bind(this)]
 			]]
 			, [CMENU_SEP]
-			, [CMENU_CHILD, _("STM_TORRENTS"), [
-				  [_("STM_TORRENTS_PAUSEALL"), this.pauseAll.bind(this)]
-				, [_("STM_TORRENTS_RESUMEALL"), this.unpauseAll.bind(this)]
+			, [CMENU_CHILD, L_("STM_TORRENTS"), [
+				  [L_("STM_TORRENTS_PAUSEALL"), this.pauseAll.bind(this)]
+				, [L_("STM_TORRENTS_RESUMEALL"), this.unpauseAll.bind(this)]
 			]]
 		];
 
@@ -2963,11 +2963,11 @@ var utWebUI = {
 			var item;
 			switch (val) {
 				case -1: item = [CMENU_SEP]; break;
-				case 0: item = [_("MENU_UNLIMITED")]; break;
+				case 0: item = [L_("MENU_UNLIMITED")]; break;
 
 				default:
 					if (val < 0) val *= -1;
-					item = [val + " " + _("SIZE_KB") + g_perSec];
+					item = [val + " " + L_("SIZE_KB") + g_perSec];
 			}
 
 			if (val === speed.cur) {
@@ -3291,9 +3291,9 @@ var utWebUI = {
 		//--------------------------------------------------
 
 		var labelIndex = CONST.TORRENT_LABEL;
-		var labelSubMenu = [[_("OV_NEW_LABEL"), this.newLabel.bind(this)]];
+		var labelSubMenu = [[L_("OV_NEW_LABEL"), this.newLabel.bind(this)]];
 		if (!this.trtTable.selectedRows.every(function(item) { return (this.torrents[item][labelIndex] == ""); }, this)) {
-			labelSubMenu.push([_("OV_REMOVE_LABEL"), this.setLabel.bind(this, "")]);
+			labelSubMenu.push([L_("OV_REMOVE_LABEL"), this.setLabel.bind(this, "")]);
 		}
 		if (Object.getLength(this.labels) > 0) {
 			labelSubMenu.push([CMENU_SEP]);
@@ -3312,23 +3312,23 @@ var utWebUI = {
 		//--------------------------------------------------
 
 		var menuItemsMap = {
-			  "forcestart" : [_("ML_FORCE_START"), this.forcestart.bind(this)]
-			, "start"      : [_("ML_START"), this.start.bind(this)]
-			, "pause"      : [_("ML_PAUSE"), this.pause.bind(this)]
-			, "stop"       : [_("ML_STOP"),  this.stop.bind(this)]
-			, "queueup"    : [_("ML_QUEUEUP"), (function(ev) { this.queueup(ev.shift); }).bind(this)]
-			, "queuedown"  : [_("ML_QUEUEDOWN"), (function(ev) { this.queuedown(ev.shift); }).bind(this)]
-			, "label"      : [CMENU_CHILD, _("ML_LABEL"), labelSubMenu]
-			, "remove"     : [_("ML_REMOVE"), this.remove.bind(this, CONST.TOR_REMOVE)]
-			, "removeand"  : [CMENU_CHILD, _("ML_REMOVE_AND"), [
-				  [_("ML_DELETE_TORRENT"), this.remove.bind(this, CONST.TOR_REMOVE_TORRENT)]
-				, [_("ML_DELETE_DATATORRENT"), this.remove.bind(this, CONST.TOR_REMOVE_DATATORRENT)]
-				, [_("ML_DELETE_DATA"), this.remove.bind(this, CONST.TOR_REMOVE_DATA)]
+			  "forcestart" : [L_("ML_FORCE_START"), this.forcestart.bind(this)]
+			, "start"      : [L_("ML_START"), this.start.bind(this)]
+			, "pause"      : [L_("ML_PAUSE"), this.pause.bind(this)]
+			, "stop"       : [L_("ML_STOP"),  this.stop.bind(this)]
+			, "queueup"    : [L_("ML_QUEUEUP"), (function(ev) { this.queueup(ev.shift); }).bind(this)]
+			, "queuedown"  : [L_("ML_QUEUEDOWN"), (function(ev) { this.queuedown(ev.shift); }).bind(this)]
+			, "label"      : [CMENU_CHILD, L_("ML_LABEL"), labelSubMenu]
+			, "remove"     : [L_("ML_REMOVE"), this.remove.bind(this, CONST.TOR_REMOVE)]
+			, "removeand"  : [CMENU_CHILD, L_("ML_REMOVE_AND"), [
+				  [L_("ML_DELETE_TORRENT"), this.remove.bind(this, CONST.TOR_REMOVE_TORRENT)]
+				, [L_("ML_DELETE_DATATORRENT"), this.remove.bind(this, CONST.TOR_REMOVE_DATATORRENT)]
+				, [L_("ML_DELETE_DATA"), this.remove.bind(this, CONST.TOR_REMOVE_DATA)]
 			]]
-			, "recheck"    : [_("ML_FORCE_RECHECK"), this.recheck.bind(this)]
-			, "copymagnet" : [_("ML_COPY_MAGNETURI"), this.torShowMagnetCopy.bind(this)]
-			, "copy"       : [_("MENU_COPY"), this.torShowCopy.bind(this)]
-			, "properties" : [_("ML_PROPERTIES"), this.showProperties.bind(this)]
+			, "recheck"    : [L_("ML_FORCE_RECHECK"), this.recheck.bind(this)]
+			, "copymagnet" : [L_("ML_COPY_MAGNETURI"), this.torShowMagnetCopy.bind(this)]
+			, "copy"       : [L_("MENU_COPY"), this.torShowCopy.bind(this)]
+			, "properties" : [L_("ML_PROPERTIES"), this.showProperties.bind(this)]
 		};
 
 		// Gray out items based on status
@@ -3375,7 +3375,7 @@ var utWebUI = {
 	},
 
 	"torShowCopy": function() {
-		this.showCopy(_("MENU_COPY"), this.trtTable.copySelection());
+		this.showCopy(L_("MENU_COPY"), this.trtTable.copySelection());
 	},
 
 	"torShowMagnetCopy": function() {
@@ -3384,7 +3384,7 @@ var utWebUI = {
 			txtArray.push("magnet:?xt=urn:btih:" + hash + "&dn=" + encodeURIComponent(this.torrents[hash][CONST.TORRENT_NAME]));
 		}, this);
 
-		this.showCopy(_("ML_COPY_MAGNETURI"), txtArray.join("\r\n"));
+		this.showCopy(L_("ML_COPY_MAGNETURI"), txtArray.join("\r\n"));
 	},
 
 	"showCopy": function(title, txt) {
@@ -3393,7 +3393,7 @@ var utWebUI = {
 			, icon: "dlgIcon-Copy"
 			, width: "35em"
 			, input: txt
-			, buttons: [{ text: _("DLG_BTN_CLOSE") }]
+			, buttons: [{ text: L_("DLG_BTN_CLOSE") }]
 		});
 	},
 
@@ -3445,7 +3445,9 @@ var utWebUI = {
 				e.disabled = !e.disabled;
 			});
 		});
-		$("dlgProps-head").set("text", "|[" + this.trtTable.selectedRows.length + " Torrents]| - " + _("DLG_TORRENTPROP_00"));
+		if (window.utweb === undefined) {
+			$("dlgProps-head").set("text", "|[" + this.trtTable.selectedRows.length + " Torrents]| - " + L_("DLG_TORRENTPROP_00"));
+		}
 		DialogManager.show("Props");
 	},
 
@@ -3476,7 +3478,9 @@ var utWebUI = {
 			ele.checked = (props[k] == 1);
 			$("DLG_TORRENTPROP_1_GEN_" + ids[k])[dis ? "addClass" : "removeClass"]("disabled");
 		}
-		$("dlgProps-head").set("text", this.torrents[this.propID][CONST.TORRENT_NAME] + " - " + _("DLG_TORRENTPROP_00"));
+		if (window.utweb === undefined) {
+			$("dlgProps-head").set("text", this.torrents[this.propID][CONST.TORRENT_NAME] + " - " + L_("DLG_TORRENTPROP_00"));
+		}
 		DialogManager.show("Props");
 	},
 
@@ -3565,8 +3569,8 @@ var utWebUI = {
 		$("us").set("html", d[CONST.TORRENT_UPSPEED].toFileSize() + g_perSec);
 		$("ds").set("html", d[CONST.TORRENT_DOWNSPEED].toFileSize() + g_perSec);
 		$("rm").set("html", (d[CONST.TORRENT_ETA] == 0) ? "" : (d[CONST.TORRENT_ETA] <= -1) ? "\u221E" : d[CONST.TORRENT_ETA].toTimeDelta());
-		$("se").set("html", _("GN_XCONN").replace(/%d/, d[CONST.TORRENT_SEEDS_CONNECTED]).replace(/%d/, d[CONST.TORRENT_SEEDS_SWARM]).replace(/%d/, "\u00BF?"));
-		$("pe").set("html", _("GN_XCONN").replace(/%d/, d[CONST.TORRENT_PEERS_CONNECTED]).replace(/%d/, d[CONST.TORRENT_PEERS_SWARM]).replace(/%d/, "\u00BF?"));
+		$("se").set("html", L_("GN_XCONN").replace(/%d/, d[CONST.TORRENT_SEEDS_CONNECTED]).replace(/%d/, d[CONST.TORRENT_SEEDS_SWARM]).replace(/%d/, "\u00BF?"));
+		$("pe").set("html", L_("GN_XCONN").replace(/%d/, d[CONST.TORRENT_PEERS_CONNECTED]).replace(/%d/, d[CONST.TORRENT_PEERS_SWARM]).replace(/%d/, "\u00BF?"));
 		$("sa").set("html", d[CONST.TORRENT_SAVE_PATH] || "");
 		$("hs").set("html", id);
 	},
@@ -3791,7 +3795,7 @@ var utWebUI = {
 				break;
 
 				case "prio":
-					values[i] = _("FI_PRI" + values[i]);
+					values[i] = L_("FI_PRI" + values[i]);
 				break;
 			}
 		}
@@ -3823,11 +3827,11 @@ var utWebUI = {
 		//--------------------------------------------------
 
 		var prioItems = [
-			  [_("MF_DONT"), this.setPriority.pass([id, CONST.FILEPRIORITY_SKIP], this)]
+			  [L_("MF_DONT"), this.setPriority.pass([id, CONST.FILEPRIORITY_SKIP], this)]
 			, [CMENU_SEP]
-			, [_("MF_LOW"), this.setPriority.pass([id, CONST.FILEPRIORITY_LOW], this)]
-			, [_("MF_NORMAL"), this.setPriority.pass([id, CONST.FILEPRIORITY_NORMAL], this)]
-			, [_("MF_HIGH"), this.setPriority.pass([id, CONST.FILEPRIORITY_HIGH], this)]
+			, [L_("MF_LOW"), this.setPriority.pass([id, CONST.FILEPRIORITY_LOW], this)]
+			, [L_("MF_NORMAL"), this.setPriority.pass([id, CONST.FILEPRIORITY_NORMAL], this)]
+			, [L_("MF_HIGH"), this.setPriority.pass([id, CONST.FILEPRIORITY_HIGH], this)]
 		];
 
 		// Gray out priority items based on priorities of selected files
@@ -3851,7 +3855,7 @@ var utWebUI = {
 
 		var fileDownloadItems = [
 			  [CMENU_SEP]
-			, [_("MF_GETFILE"), this.downloadFiles.bind(this, id)]
+			, [L_("MF_GETFILE"), this.downloadFiles.bind(this, id)]
 		];
 
 		// Gray out download item if no selected file is complete
@@ -3878,7 +3882,7 @@ var utWebUI = {
 		//--------------------------------------------------
 		menuItems = menuItems.concat([
 			  [CMENU_SEP]
-			, [_("MENU_COPY"), this.flsShowCopy.bind(this)]
+			, [L_("MENU_COPY"), this.flsShowCopy.bind(this)]
 		]);
 
 		//--------------------------------------------------
@@ -3891,7 +3895,7 @@ var utWebUI = {
 	},
 
 	"flsShowCopy": function() {
-		this.showCopy(_("MENU_COPY"), this.flsTable.copySelection());
+		this.showCopy(L_("MENU_COPY"), this.flsTable.copySelection());
 	},
 
 	"getSelFileIds": function() {
@@ -3990,7 +3994,7 @@ var utWebUI = {
 		if (isGuest || !ev.isRightClick()) return;
 
 		var menuItems = [
-			[_("MENU_COPY"), this.showCopy.bind(this, _("MENU_COPY"), ev.target.get("text"))]
+			[L_("MENU_COPY"), this.showCopy.bind(this, L_("MENU_COPY"), ev.target.get("text"))]
 		];
 
 		//--------------------------------------------------
@@ -4173,9 +4177,9 @@ var utWebUI = {
 		if (isGuest || !ev.isRightClick()) return;
 
 		var menuItems = [
-			  [_("MP_RESOLVE_IPS"), this.toggleResolveIP.bind(this)]
+			  [L_("MP_RESOLVE_IPS"), this.toggleResolveIP.bind(this)]
 			, [CMENU_SEP]
-			, [_("MENU_COPY"), this.prsShowCopy.bind(this)]
+			, [L_("MENU_COPY"), this.prsShowCopy.bind(this)]
 		];
 
 		// Process menu items
@@ -4194,7 +4198,7 @@ var utWebUI = {
 	},
 
 	"prsShowCopy": function() {
-		this.showCopy(_("MENU_COPY"), this.prsTable.copySelection());
+		this.showCopy(L_("MENU_COPY"), this.prsTable.copySelection());
 	},
 
 	"prsSort": function(index, reverse) {
@@ -4383,12 +4387,12 @@ var utWebUI = {
 		// Download
 		str = '';
 
-		seg = _("SB_DOWNLOAD").replace(/%z/, this.totalDL.toFileSize());
+		seg = L_("SB_DOWNLOAD").replace(/%z/, this.totalDL.toFileSize());
 
 		val = '';
 		data = this.settings["max_dl_rate"] || 0;
 		if (this.settings["gui.limits_in_statusbar"] && data > 0) {
-			val = '[' + data + " " + _("SIZE_KB") + g_perSec + '] ';
+			val = '[' + data + " " + L_("SIZE_KB") + g_perSec + '] ';
 		}
 		seg = seg.replace(/%s/, val);
 
@@ -4399,12 +4403,12 @@ var utWebUI = {
 		// Upload
 		str = '';
 
-		seg = _("SB_UPLOAD").replace(/%z/, this.totalUL.toFileSize());
+		seg = L_("SB_UPLOAD").replace(/%z/, this.totalUL.toFileSize());
 
 		val = '';
 		data = this.settings["max_ul_rate"] || 0;
 		if (this.settings["gui.limits_in_statusbar"] && data > 0) {
-			val = '[' + data + " " + _("SIZE_KB") + g_perSec + '] ';
+			val = '[' + data + " " + L_("SIZE_KB") + g_perSec + '] ';
 		}
 		seg = seg.replace(/%s/, val);
 
@@ -4414,7 +4418,7 @@ var utWebUI = {
 	},
 
 	"updateTitle": function() {
-		var str = _("MAIN_TITLEBAR_SPEED").replace(/%s/, this.totalDL.toFileSize() + g_perSec).replace(/%s/, this.totalUL.toFileSize() + g_perSec);
+		var str = L_("MAIN_TITLEBAR_SPEED").replace(/%s/, this.totalDL.toFileSize() + g_perSec).replace(/%s/, this.totalUL.toFileSize() + g_perSec);
 		window.status = window.defaultStatus = str.replace(/%s/, "");
 		if (this.settings["gui.speed_in_title"])
 			document.title = str.replace(/%s/, g_winTitle);
@@ -4861,19 +4865,19 @@ var utWebUI = {
 		if (feedItemIds.length <= 0) return;
 
 		var menuItems = [
-			  [_("DLG_RSSDOWNLOADER_24"), (function(feedItemIds) { // RSSTODO: Move this elsewhere
+			  [L_("DLG_RSSDOWNLOADER_24"), (function(feedItemIds) { // RSSTODO: Move this elsewhere
 				feedItemIds.each(function(id) {
 					this.addRSSFeedItem(id[0], id[1]);
 				}, this);
 			}).bind(this, feedItemIds)]
-			, [_("DLG_RSSDOWNLOADER_25"), (function(feedItemIds) { // RSSTODO: Move this elsewhere
+			, [L_("DLG_RSSDOWNLOADER_25"), (function(feedItemIds) { // RSSTODO: Move this elsewhere
 				feedItemIds.each(function(id) {
 					var item = this.getRSSFeedItem(id[0], id[1]);
 					if (item) openURL(item[CONST.RSSITEM_URL]);
 				}, this);
 			}).bind(this, feedItemIds)]
 			, [CMENU_SEP]
-			, [_("DLG_RSSDOWNLOADER_26"), (function(feedItemIds) {
+			, [L_("DLG_RSSDOWNLOADER_26"), (function(feedItemIds) {
 				feedItemIds.each(function(id) { // RSSTODO: Move this elsewhere
 					var item = this.getRSSFeedItem(id[0], id[1]);
 					if (item) {
