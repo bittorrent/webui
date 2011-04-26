@@ -1383,7 +1383,7 @@ function loadTorrentLangStrings() {
 	// TORRENT JOBS LIST
 	//--------------------------------------------------
 
-	utWebUI.trtTable.refreshRows();
+	if (utWebUI.trtTable.tb.body) { utWebUI.trtTable.refreshRows(); }
 	utWebUI.trtTable.setConfig({
 		"resetText": L_("MENU_RESET"),
 		"colText": {
@@ -1461,7 +1461,7 @@ function loadDetailPaneStrings() {
 
 	// -- Peers Tab
 
-	utWebUI.prsTable.refreshRows();
+	if (utWebUI.prsTable.tb.body) { utWebUI.prsTable.refreshRows(); }
 	utWebUI.prsTable.setConfig({
 		"resetText": L_("MENU_RESET"),
 		"colText": {
@@ -1488,7 +1488,7 @@ function loadDetailPaneStrings() {
 
 	// -- Files Tab
 
-	utWebUI.flsTable.refreshRows();
+	if (utWebUI.flsTable.tb.body) { utWebUI.flsTable.refreshRows(); }
 	utWebUI.flsTable.setConfig({
 		"resetText": L_("MENU_RESET"),
 		"colText": {
@@ -1645,7 +1645,7 @@ function loadRSSStrings() {
 
 	_loadStrings("text", "DLG_RSSDOWNLOADER_03")
 
-	utWebUI.rssfdTable.refreshRows();
+	if (utWebUI.rssfdTable.tb.body) { utWebUI.rssfdTable.refreshRows(); }
 	utWebUI.rssfdTable.setConfig({
 		"resetText": L_("MENU_RESET"),
 		"colText": {
@@ -1887,7 +1887,7 @@ function loadSettingStrings() {
 
 	// -- Advanced Options
 
-	utWebUI.advOptTable.refreshRows();
+	if (utWebUI.advOptTable.tb.body) { utWebUI.advOptTable.refreshRows(); }
 	utWebUI.advOptTable.setConfig({
 		"resetText": L_("MENU_RESET"),
 		"colText": {
