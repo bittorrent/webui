@@ -417,4 +417,12 @@ var LANG_STR = [
 	, "%ds"
 	, "%dw %dd"
 	, "%dy %dw"
+	, "Client Information"
+	, "Product Version"
+	, "Source Revision"
+	, "Build Date"
+	, "Peer ID"
+	, "User-agent"
+	, "UPnP external address:"
+
 ];

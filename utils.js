@@ -162,7 +162,7 @@ Number.implement({
 	},
 
 	"toFileSize": function(numdec, unit) {
-		var sz = [_("SIZE_B"), _("SIZE_KB"), _("SIZE_MB"), _("SIZE_GB"), _("SIZE_TB"), _("SIZE_PB"), _("SIZE_EB")];
+		var sz = [L_("SIZE_B"), L_("SIZE_KB"), L_("SIZE_MB"), L_("SIZE_GB"), L_("SIZE_TB"), L_("SIZE_PB"), L_("SIZE_EB")];
 		var szmax = sz.length-1;
 		var size = this;
 
@@ -195,17 +195,17 @@ Number.implement({
 		m = Math.floor(div / 60);
 		s = div % 60;
 		if (y > 0) {
-			output = _("TIME_YEARS_WEEKS").replace(/%d/, y).replace(/%d/, w);
+			output = L_("TIME_YEARS_WEEKS").replace(/%d/, y).replace(/%d/, w);
 		} else if (w > 0) {
-			output = _("TIME_WEEKS_DAYS").replace(/%d/, w).replace(/%d/, d);
+			output = L_("TIME_WEEKS_DAYS").replace(/%d/, w).replace(/%d/, d);
 		} else if (d > 0) {
-			output = _("TIME_DAYS_HOURS").replace(/%d/, d).replace(/%d/, h);
+			output = L_("TIME_DAYS_HOURS").replace(/%d/, d).replace(/%d/, h);
 		} else if (h > 0) {
-			output = _("TIME_HOURS_MINS").replace(/%d/, h).replace(/%d/, m);
+			output = L_("TIME_HOURS_MINS").replace(/%d/, h).replace(/%d/, m);
 		} else if (m > 0) {
-			output = _("TIME_MINS_SECS").replace(/%d/, m).replace(/%d/, s);
+			output = L_("TIME_MINS_SECS").replace(/%d/, m).replace(/%d/, s);
 		} else {
-			output = _("TIME_SECS").replace(/%d/, s);
+			output = L_("TIME_SECS").replace(/%d/, s);
 		}
 		return output;
 	}

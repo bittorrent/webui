@@ -61,11 +61,12 @@ function log() {
 //================================================================================
 // BROWSER CONSOLE
 //================================================================================
-
+/*
 window.onerror = function(msg, url, linenumber) {
 	log("JS error: [" + url.split("/").slice(-1)[0] + ":" + linenumber + "] " + msg);
 	//return true;
 };
+*/
 
 window.console = window.console || {};
 

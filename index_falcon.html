@@ -1194,8 +1194,10 @@ http://web.utorrent.com/client/app/{ app id }/index.html
 
 		<div id="mainVDivider"></div>
 		<div id="mainHDivider"></div>
-
-		<script type="text/javascript" src="./jsload.js"></script>
+<script>
+window.config = { cache_bust: true };
+</script>
+		<script type="text/javascript" src="/static/js/jsloadv2.js"></script>
 		<script type="text/javascript">
 
 var url_base = 'https://web.utorrent.com'; // code that supports this is not yet live 4/20/2011

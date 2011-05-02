@@ -1432,14 +1432,17 @@ function loadDetailPaneStrings() {
 
 	// -- Tab Titles
 
-	var maintstr = L_("OV_TABS").split("||");
-	utWebUI.mainTabs.setNames({
-		  "mainInfoPane-generalTab" : maintstr[0]
-		, "mainInfoPane-peersTab"   : maintstr[2]
-		, "mainInfoPane-filesTab"   : maintstr[4]
-		, "mainInfoPane-speedTab"   : maintstr[5]
-		, "mainInfoPane-loggerTab"  : maintstr[6]
-	});
+	
+	if (utWebUI.mainTabs) { 
+		var maintstr = L_("OV_TABS").split("||");
+		utWebUI.mainTabs.setNames({
+			  "mainInfoPane-generalTab" : maintstr[0]
+			, "mainInfoPane-peersTab"   : maintstr[2]
+			, "mainInfoPane-filesTab"   : maintstr[4]
+			, "mainInfoPane-speedTab"   : maintstr[5]
+			, "mainInfoPane-loggerTab"  : maintstr[6]
+		});
+	}
 
 	// -- General Tab
 
@@ -1461,7 +1464,8 @@ function loadDetailPaneStrings() {
 
 	// -- Peers Tab
 
-	if (utWebUI.prsTable.tb.body) { utWebUI.prsTable.refreshRows(); }
+	if (utWebUI.prsTable.tb.body) { 
+utWebUI.prsTable.refreshRows(); 
 	utWebUI.prsTable.setConfig({
 		"resetText": L_("MENU_RESET"),
 		"colText": {
@@ -1485,10 +1489,11 @@ function loadDetailPaneStrings() {
 			, "inactive"   : L_("PRS_COL_INACTIVE")
 		}
 	});
+}
 
 	// -- Files Tab
 
-	if (utWebUI.flsTable.tb.body) { utWebUI.flsTable.refreshRows(); }
+	if (utWebUI.flsTable.tb.body) { utWebUI.flsTable.refreshRows();
 	utWebUI.flsTable.setConfig({
 		"resetText": L_("MENU_RESET"),
 		"colText": {
@@ -1501,17 +1506,37 @@ function loadDetailPaneStrings() {
 			, "prio"    : L_("FI_COL_PRIO")
 		}
 	});
+}
 
 	// -- Speed Tab
-
+if (utWebUI.spdGraph) {
 	utWebUI.spdGraph.setLabels(
 		  L_("OV_COL_UPSPD")
 		, L_("OV_COL_DOWNSPD")
 	);
+}
 
 }
 
+function loadAboutStrings() {
+	//--------------------------------------------------
+	// ABOUT DIALOG
+	//--------------------------------------------------
+
+	_loadStrings("text", [
+		  "DLG_ABOUT_VERSION_LEGEND"
+		, "DLG_ABOUT_VERSION_VERSION"
+		, "DLG_ABOUT_VERSION_REVISION"
+		, "DLG_ABOUT_VERSION_BUILD_DATE"
+		, "DLG_ABOUT_VERSION_PEER_ID"
+		, "DLG_ABOUT_VERSION_USER_AGENT"
+		, "DLG_ABOUT_UPNP_EXTERNAL_ADDRESS"
+	]);
+}
+
 function loadMiscStrings() {
+
+	
 	//--------------------------------------------------
 	// STATUS
 	//--------------------------------------------------
@@ -1927,29 +1952,34 @@ function loadGlobalStrings() {
 	};
 }
 
-function loadLangStrings(reload) {
+function loadLangStrings(reload, sTableLoad, newLang) {
 	if (reload) {
 		var loaded = false;
-		Asset.javascript("lang/" + reload.lang + ".js", {
+		var lang_path = (config.utweb && ! config.webui) ? '/static/webui/lang/' : 'lang/';
+		Asset.javascript(lang_path + reload.lang + ".js", {
 			"onload": function() {
 				if (loaded) return;
 				loaded = true;
-
-				loadLangStrings();
+				var newLang = reload.lang;
+				loadLangStrings(null, ! window.utweb, newLang);
 				if (reload.onload) reload.onload();
 			}
 		});
 		return;
 	}
-
 	loadGlobalStrings();
 	loadCategoryStrings();
-	loadTorrentLangStrings();
-	loadDetailPaneStrings();
+	if (sTableLoad) {
+		loadTorrentLangStrings();
+		loadDetailPaneStrings();
+		loadRSSStrings();
+	}
 	loadMiscStrings();
 	loadDialogStrings();
-	loadRSSStrings();
 	loadSettingStrings();
+if (window.utweb) {
+  utweb.change_language(newLang);
+}
 
 }
 
