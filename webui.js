@@ -2720,7 +2720,7 @@ var utWebUI = {
 		if (str != "")
 			this.request("action=setsetting" + str, Function.from(), !reload); // if the page is going to reload make it a synchronous request
 
-		if (this.settings["webui.enable"] == 0) {
+		if (this.settings["webui.enable"] == 0 && ! window.raptor) {
 			this.showMsg('WebUI was disabled. Goodbye.');
 			return;
 		}
