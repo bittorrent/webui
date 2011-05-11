@@ -2586,60 +2586,63 @@ var utWebUI = {
 
 		Logger.setLogDate(this.getAdvSetting("gui.log_date"));
 
-		value = ($("webui.updateInterval").get("value").toInt() || 0);
-		if (value < this.limits.minUpdateInterval) {
-			value = this.limits.minUpdateInterval;
-			$("webui.updateInterval").set("value", value);
-		}
-		if (this.config.updateInterval != value) {
-			this.beginPeriodicUpdate(value);
-			hasChanged = true;
-		}
+		if (window.utweb === undefined) {
+			// these settings don't apply in the ut remote version
+			value = ($("webui.updateInterval").get("value").toInt() || 0);
+			if (value < this.limits.minUpdateInterval) {
+				value = this.limits.minUpdateInterval;
+				$("webui.updateInterval").set("value", value);
+			}
+			if (this.config.updateInterval != value) {
+				this.beginPeriodicUpdate(value);
+				hasChanged = true;
+			}
 
-		value = $("webui.showToolbar").checked;
-		if (this.config.showToolbar != value) {
-			this.toggleToolbar(value);
-			hasChanged = true;
-		}
+			value = $("webui.showToolbar").checked;
+			if (this.config.showToolbar != value) {
+				this.toggleToolbar(value);
+				hasChanged = true;
+			}
 
-		value = $("webui.showCategories").checked;
-		if (this.config.showCategories != value) {
-			this.toggleCatPanel(value);
-			hasChanged = true;
-		}
+			value = $("webui.showCategories").checked;
+			if (this.config.showCategories != value) {
+				this.toggleCatPanel(value);
+				hasChanged = true;
+			}
 
-		value = $("webui.showDetails").checked;
-		if (this.config.showDetails != value) {
-			this.toggleDetPanel(value);
-			hasChanged = true;
-		}
+			value = $("webui.showDetails").checked;
+			if (this.config.showDetails != value) {
+				this.toggleDetPanel(value);
+				hasChanged = true;
+			}
 
-		value = $("webui.showStatusBar").checked;
-		if (this.config.showStatusBar != value) {
-			this.toggleStatusBar(value);
-			hasChanged = true;
+			value = $("webui.showStatusBar").checked;
+			if (this.config.showStatusBar != value) {
+				this.toggleStatusBar(value);
+				hasChanged = true;
+			}
+
+			value = ($("webui.maxRows").get("value").toInt() || 0);
+			if (value < this.limits.minTableRows) {
+				value = (value <= 0 ? 0 : this.limits.minTableRows);
+				$("webui.maxRows").set("value", value);
+			}
+			if (this.config.maxRows != value) {
+				this.tableSetMaxRows(value);
+				hasChanged = true;
+			}
+
+			value = $("webui.useSysFont").checked;
+			if (this.config.useSysFont != value) {
+				this.toggleSystemFont(value);
+				hasChanged = true;
+			}
 		}
 
 		value = $("webui.lang").get("value");
 		if (this.config.lang != value) {
 			this.config.lang = value;
 			loadLangStrings({"lang": value});
-			hasChanged = true;
-		}
-
-		value = ($("webui.maxRows").get("value").toInt() || 0);
-		if (value < this.limits.minTableRows) {
-			value = (value <= 0 ? 0 : this.limits.minTableRows);
-			$("webui.maxRows").set("value", value);
-		}
-		if (this.config.maxRows != value) {
-			this.tableSetMaxRows(value);
-			hasChanged = true;
-		}
-
-		value = $("webui.useSysFont").checked;
-		if (this.config.useSysFont != value) {
-			this.toggleSystemFont(value);
 			hasChanged = true;
 		}
 
