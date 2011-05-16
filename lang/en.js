@@ -300,7 +300,7 @@ var LANG_STR = [
 	, "||Avail.||Availability"
 	, "Added On"
 	, "Completed On"
-	, "Done"
+	, "Completed"
 	, "Downloaded"
 	, "Down Speed"
 	, "ETA"

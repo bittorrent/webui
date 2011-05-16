@@ -423,8 +423,6 @@ var LANG_CONST = [
 	, "DLG_ABOUT_VERSION_BUILD_DATE"
 	, "DLG_ABOUT_VERSION_PEER_ID"
 	, "DLG_ABOUT_VERSION_USER_AGENT"
-
-	// UPnP external address in about dialog
 	, "DLG_ABOUT_UPNP_EXTERNAL_ADDRESS"
 ].invert();
 
