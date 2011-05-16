@@ -416,5 +416,41 @@ var LANG_STR = [
 	, "%dm %ds"
 	, "%ds"
 	, "%dw %dd"
-	, "%dy %dw"
+	, "%dy %dw",
+"Torrenty",
+		"Kanały",
+		"Aplikacja",
+		"kraj",
+		'Szacowane', // i.e. how much time remaining
+		"z", // i.e. 3 of 4 peers
+		"/s", // "per second""
+		"Wklej torrent lub adres URL kanału",
+		"Strona główna",
+		"Wyloguj",
+		"Udostępnianie",
+		"Wszystkie kanały",
+		"prędkość transmisji (w bitach)",
+		"rozdzielczość",
+		"długość",
+		"do strumieniowania",
+		"typ", // i.e. file extension
+		"zdalnie", // i.e. uTorrent remote
+		"informacje",
+		"sesje",
+		"udostępnij",
+		"udostępnij ten torrent",
+		"udostępnij to łącze",
+		"dodaj",
+		"wyloguj",
+		"zaloguj",
+		"dostęp w dowolnym miejscu",
+		"nie wylogowuj",
+		"pobierz",
+		"Twój klient jest obecnie niedostępny. Sprawdź, czy masz połączenie z Internetem.",
+		"Brak komunikacji z Twoim klientem &micro;Torrent. Ten komunikat zniknie automatycznie po ponownym nawiązaniu połączenia.",
+		"Otwórz plik",
+		"Pobierz na dysk komputera",
+		"Otwórz za pomocą VLC Media Player",
+		"Działania",
+		"sezon" // i.e. of a TV show
 ];

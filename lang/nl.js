@@ -416,5 +416,41 @@ var LANG_STR = [
 	, "%dm %ds"
 	, "%ds"
 	, "%dw %dd"
-	, "%dj %dw"
+	, "%dj %dw",
+"Torrents",
+		"Feeds",
+		"Applicatie",
+		"land",
+		'Resterend', // i.e. how much time remaining
+		"van", // i.e. 3 of 4 peers
+		"/s", // "per second""
+		"Plak de URL van een torrent of feed",
+		"Home",
+		"Afmelden",
+		"Uploaden",
+		"Alle feeds",
+		"bitrate",
+		"resolutie",
+		"lengte",
+		"streambaar",
+		"type", // i.e. file extension
+		"extern", // i.e. uTorrent remote
+		"over",
+		"sessies",
+		"delen",
+		"deze torrent delen",
+		"link delen",
+		"toevoegen",
+		"afmelden",
+		"aanmelden",
+		"toegang overal",
+		"aangemeld blijven",
+		"downloaden",
+		"De client is momenteel niet beschikbaar. Controleer of deze verbonden is met internet.",
+		"Kan niet communiceren met de &micro;Torrent-client. Dit bericht verdwijnt automatisch zodra er weer een verbinding tot stand komt.",
+		"Bestand openen",
+		"Downloaden naar je computer",
+		"Openen met VLC Media Player",
+		"Acties",
+		"seizoen" // i.e. of a TV show
 ];

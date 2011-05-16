@@ -416,5 +416,41 @@ var LANG_STR = [
 	, "%dm %ds"
 	, "%ds"
 	, "%dw %dd"
-	, "%dy %dw"
+	, "%dy %dw",
+"Torrent’ler",
+		"Haber Akışları",
+		"Uygulama",
+		"ülke",
+		'Kalan Süre', // i.e. how much time remaining
+		"/", // i.e. 3 of 4 peers
+		"/sn", // "per second""
+		"Torrent veya haber akışı URL’si yapıştırın",
+		"Giriş",
+		"Oturumu Kapat",
+		"Çekirdek sağlama",
+		"Tüm Haber Akışları",
+		"bit hızı",
+		"çözünürlük",
+		"uzunluk",
+		"akışlı",
+		"tür", // i.e. file extension
+		"uzak", // i.e. uTorrent remote
+		"hakkında",
+		"oturumlar",
+		"paylaş",
+		"bu torrent’i paylaş",
+		"bağlantıyı paylaş",
+		"ekle",
+		"oturumu kapat",
+		"oturum aç",
+		"her yerden erişim",
+		"oturumum açık kalsın",
+		"indir",
+		"İstemciniz şu anda kullanılamıyor. İnternete bağlı olduğunuzdan emin olun.",
+		"&micro;Torrent istemcinizle iletişim kurulamıyor. Yeniden bağlantı kurulduğunda bu mesaj otomatik olarak kaybolacaktır.",
+		"Dosya aç",
+		"Bilgisayarınıza indirin",
+		"VLC Media Player ile aç",
+		"Eylemler",
+		"sezon" // i.e. of a TV show
 ];

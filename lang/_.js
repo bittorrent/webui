@@ -416,7 +416,48 @@ var LANG_CONST = [
 	, "TIME_MINS_SECS"
 	, "TIME_SECS"
 	, "TIME_WEEKS_DAYS"
-	, "TIME_YEARS_WEEKS"
+	, "TIME_YEARS_WEEKS",
+
+	// extra strings
+	"Torrents",
+	"Feeds",
+	"App",
+	"country",
+	'ETA', // i.e. how much time remaining
+	"of", // i.e. 3 of 4 peers
+	"/s", // "per second""
+	"Paste a torrent or feed URL",
+	"Home",
+	"Logout",
+	"Seeding",
+	"All Feeds",
+	"bitrate",
+	"resolution",
+	"length",
+	"streamable",
+	"type", // i.e. file extension
+	"remote", // i.e. uTorrent remote
+	"about",
+	"sessions",
+	"share",
+	"share this torrent",
+	"share link",
+	"add",
+	"logout",
+	"log in",
+	"anywhere access",
+	"stay signed in",
+	"download",
+	"Your client is currently not available. Verify that it is connected to the internet.",
+	"Unable to communicate with your &micro;Torrent client. This message will disappear automatically when a connection is re-established.",
+	"Open file",
+	"Download to your computer",
+	"Open with VLC Media Player",
+	"Actions",
+	"season", // i.e. of a TV show
+
+
+	// about dialog, embedded version
 	, "DLG_ABOUT_VERSION_LEGEND"
 	, "DLG_ABOUT_VERSION_VERSION"
 	, "DLG_ABOUT_VERSION_REVISION"
@@ -424,6 +465,7 @@ var LANG_CONST = [
 	, "DLG_ABOUT_VERSION_PEER_ID"
 	, "DLG_ABOUT_VERSION_USER_AGENT"
 	, "DLG_ABOUT_UPNP_EXTERNAL_ADDRESS"
+
 ].invert();
 
 var LANG_LIST = {
