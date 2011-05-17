@@ -742,7 +742,7 @@ var utWebUI = {
 			DialogManager.popup({
 				  title: "Remove Torrent(s)" // TODO: Localize
 				, icon: "dlgIcon-Delete"
-				, message: _(ask).replace(/%d/, count)
+				, message: L_(ask).replace(/%d/, count)
 				, buttons: [
 					{ text: L_("DLG_BTN_YES"), focus: true, click: act },
 					{ text: L_("DLG_BTN_NO") }
