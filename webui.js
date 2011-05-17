@@ -3533,11 +3533,25 @@ var utWebUI = {
 		}
 		this.propID = "";
 
-		if (str != "") {
+		if (str != "" || window.utweb !== undefined) {
 			if (window.utweb === undefined) {
 				this.request("action=setprops&hash=" + this.trtTable.selectedRows.join(str + "&hash=") + str);
 			} else {
-				raptor.post_raw( "action=setprops"+str, utweb.tables.torrent.view.selectedRows()[0], function() {} );
+                            // setting label
+                            var torrent = utweb.tables.torrent.view.selectedRows()[0];
+                            var newlabel = jQuery('#torrent_props_label').val();
+                            if (newlabel != torrent.label) {
+                                console.log('label has changed!  -- set to empty label');
+                                // first set the label to empty string...
+                                str += '&s=label&v=';
+                                var after_update = function() {
+                                    console.log('label has changed!  -- set to new primary label');
+                                    raptor.post_raw( "action=setprops&s=label&v="+newlabel, { hash: torrent.hash }, function() {} );
+                                }
+                            } else {
+                                var after_update = function() {}
+                            }
+			    raptor.post_raw( "action=setprops"+str, { hash: torrent.hash }, after_update );
 			}
 		}				
 

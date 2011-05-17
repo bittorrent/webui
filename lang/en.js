@@ -130,7 +130,7 @@ var LANG_STR = [
 	, "Enable Guest account with username:"
 	, "Connectivity"
 	, "Alternative listening port (default is the connection port):"
-	, "Restrict access to the following IPs (separate multiple entries with a comma):"
+	, "Allow access only from these IPs (separate multiple entries with a comma):"
 	, "Advanced Options [WARNING: Do not modify!]"
 	, "Value:"
 	, "True"
@@ -298,9 +298,9 @@ var LANG_STR = [
 	, "Inactive"
 	, "No Label"
 	, "||Avail.||Availability"
-	, "Added On"
+	, "Added"
 	, "Completed On"
-	, "Done"
+	, "Status"
 	, "Downloaded"
 	, "Down Speed"
 	, "ETA"
@@ -449,7 +449,7 @@ var LANG_STR = [
 	"download",
 	"Your client is currently not available. Verify that it is connected to the internet.",
 	"Unable to communicate with your &micro;Torrent client. This message will disappear automatically when a connection is re-established.",
-	"Open file",
+	"Get file",
 	"Download to your computer",
 	"Open with VLC Media Player",
 	"Actions",
