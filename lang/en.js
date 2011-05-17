@@ -449,7 +449,7 @@ var LANG_STR = [
 	"download",
 	"Your client is currently not available. Verify that it is connected to the internet.",
 	"Unable to communicate with your &micro;Torrent client. This message will disappear automatically when a connection is re-established.",
-	"Open file",
+	"Get file",
 	"Download to your computer",
 	"Open with VLC Media Player",
 	"Actions",
