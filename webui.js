@@ -17,13 +17,15 @@ var urlBase = window.location.pathname.substr(0, window.location.pathname.indexO
 
 */
 
-if (window.raptor) {
+if (window.raptor && ! window.config.webui) {
 	var guiBase = urlBase + "/client/gui/";
 	var proxyBase = urlBase + "/client/proxy";
 } else {
 	var guiBase = urlBase + "/gui/";
 	var proxyBase = urlBase + "/proxy";
 }
+window.guiBase = guiBase;
+window.proxyBase = guiBase;
 var isGuest = window.location.pathname.test(/.*guest.html$/);
 
 var utWebUI = {
@@ -76,6 +78,7 @@ var utWebUI = {
 		"showCategories": true,
 		"showToolbar": true,
 		"showStatusBar": true,
+		"showSpeedGraph": true,
 		"useSysFont": true,
 		"updateInterval": 3000,
 		"maxRows": 0,
@@ -2204,10 +2207,11 @@ var utWebUI = {
 		}
 	},
 
-	"getDirectoryList": function(forceload) {
+	"getDirectoryList": function(forceload, callback) {
 
 { // TODO: Remove this once backend support is stable (requires 3.0+)
-	if (undefined === this.settings["webui.uconnect_enable"]) return;
+    // better to base this off the "build" parameter that comes back with every action request?
+	// if (undefined === this.settings["webui.uconnect_enable"]) return;
 }
 
 		var now = Date.now();
@@ -2219,10 +2223,12 @@ var utWebUI = {
 				this.dirlist._TIME_ = now;
 
 				this.loadDirectoryList();
+				if (callback) { callback(); }
 			}).bind(this));
 		}
 		else {
 			this.loadDirectoryList();
+			if (callback) { callback(); }
 		}
 	},
 

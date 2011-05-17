@@ -570,9 +570,9 @@ function setupDetailInfoPaneUI() {
 	}, utWebUI.defConfig.fileTable));
 
 	// -- Speed Tab
-
-	utWebUI.spdGraph.create("mainInfoPane-speedTab");
-
+	if (utWebUI.defConfig.showSpeedGraph) {
+		utWebUI.spdGraph.create("mainInfoPane-speedTab");
+	}
 	// -- Logger Tab
 
 	Logger.init("mainInfoPane-loggerTab");
@@ -731,6 +731,7 @@ function setupAddTorrentDialog() {
 			+ "&download_dir=" + dir
 			+ "&path=" + sub
 		).submit();
+		// should it hide the dialog now?
 	});
 
 	// -- Cancel Button (File)
