@@ -1074,20 +1074,21 @@ var utWebUI = {
 				// Handle removed items
 				var clear = false;
 
-				deltaLists.torrentm.each(function(key) {
-					Object.each(this.torGroups[key].cat, function(_, cat) {
-						--this.categories[cat];
+				if (window.utweb === undefined) { // torGroups does not get setup properly in remote
+					deltaLists.torrentm.each(function(key) {
+						Object.each(this.torGroups[key].cat, function(_, cat) {
+							--this.categories[cat];
+						}, this);
+
+						delete this.torGroups[key];
+						delete this.torrents[key];
+						this.trtTable.removeRow(key);
+
+						if (this.torrentID == key) {
+							clear = true;
+						}
 					}, this);
-
-					delete this.torGroups[key];
-					delete this.torrents[key];
-					this.trtTable.removeRow(key);
-
-					if (this.torrentID == key) {
-						clear = true;
-					}
-				}, this);
-
+				}
 				if (clear) {
 					this.torrentID = "";
 					this.clearDetails();
