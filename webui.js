@@ -409,7 +409,7 @@ var utWebUI = {
 
 		var self = this;
 
-		if (window.raptor) {
+		if (window.raptor) {/*
 			var params = qs.split('&');
 			var d = {};
 			for (var i=0; i<params.length; i++) {
@@ -419,8 +419,8 @@ var utWebUI = {
 						d[kv[0]] = decodeURIComponent(kv[1]);
 					}
 				}
-			}
-			return raptor.post_raw( d, {}, fn ? fn.bind(self) : function(resp) {}, fails );
+			}*/
+			return raptor.post_raw( qs, {}, fn ? fn.bind(self) : function(resp) {}, fails );
 		}
 
 		var req = function() {
