@@ -130,7 +130,7 @@ var LANG_STR = [
 	, "Erlaube Gastzugriff mit Benutzernamen:"
 	, "Verbindungen"
 	, "Alternativer Listening-Port (Standard: uTorrent-Port):"
-	, "Beschränke Zugriff auf folgende IPs (Trenne mehrere Einträge durch \",\"):"
+,"Zugriff nur von diesen IP-Adressen zulassen (mehrere Einträge durch Komma trennen):"
 	, "Experten-Einstellungen [ACHTUNG: Änderungen auf eigenes Risiko!]"
 	, "Wert:"
 	, "Ja"

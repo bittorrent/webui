@@ -130,7 +130,7 @@ var LANG_STR = [
 	, "Bu kullanıcı adıyla misafir hesabını etkinleştir:"
 	, "Bağlanabilirlik"
 	, "Alternatif dinleme portu (öntanımlı olan bağlantı portudur):"
-	, "Aşağıdaki IP numaralarının erişimini engelle (IP numaralarını virgülle ayırın):"
+,"Yalnızca bu IP adreslerinden erişime izin ver (birden fazla giriş yapmak için ayraç olarak virgül kullanın):"
 	, "Gelişmiş Seçenekler [UYARI: Değiştirmeyin!]"
 	, "Değer:"
 	, "Doğru"

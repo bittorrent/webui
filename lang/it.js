@@ -130,7 +130,7 @@ var LANG_STR = [
 	, "Abilita account ospite con nome utente:"
 	, "Connettività"
 	, "Porta in ascolto alternativa (la porta bt è la predefinita):"
-	, "Limita l'accesso ai seguenti IP (separa i valori con una virgola):"
+,"Consenti l'accesso solo dagli IP seguenti (separare più indirizzi con una virgola):"
 	, "Opzioni avanzate [ATTENZIONE: Non modificare!]"
 	, "Valore:"
 	, "Vero"

@@ -130,7 +130,7 @@ var LANG_STR = [
 	, "Gastaccount toestaan met gebruikersnaam:"
 	, "Bereikbaarheid"
 	, "Alternatieve luisterpoort (standaard is verbindingspoort):"
-	, "Beperk toegang tot de volgende IP's (scheid meerdere waarden met komma)"
+,"Toegang alleen toestaan vanaf deze IP’s (als u meerdere IP’s invoert, moet u deze scheiden door een komma):"
 	, "Geavanceerde opties [WAARSCHUWING: niet wijzigen!]"
 	, "Waarde:"
 	, "Waar"
