@@ -130,7 +130,7 @@ var LANG_STR = [
 	, "Włącz konto gościa dla użytkownika o nazwie:"
 	, "Dostępność"
 	, "Alternatywny port nasłuchu (domyślnie = port protokołu):"
-	, "Zablokuj dostęp adresom IP (wielokrotne wpisy separuj za pomocą ,)"
+,"Zezwalaj na dostęp tylko z tych adresów IP (w przypadku wielu wpisów odziel je przecinkiem):"
 	, "Opcje zaawansowane [UWAGA: Modyfikujesz na własne ryzyko!]"
 	, "Wartość:"
 	, "Tak"

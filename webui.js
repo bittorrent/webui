@@ -1266,6 +1266,7 @@ var utWebUI = {
 	},
 
 	"update": function(listcb) {
+		if (window.utweb !== undefined) { return; }
 		this.totalDL = 0;
 		this.totalUL = 0;
 

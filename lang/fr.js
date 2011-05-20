@@ -130,7 +130,7 @@ var LANG_STR = [
 	, "Activer le compte invité avec pour identifiant:"
 	, "Connectivité"
 	, "Port d'écoute alternatif [Port de connexion par défaut]:"
-	, "Accès restreint aux adresses IP suivantes [Séparez les IPs par une virgule]"
+,"Limiter l'accès à ces adresses IP (séparer les différentes entrées par une virgule) :"
 	, "Options avancées [ATTENTION: modifications déconseillées]"
 	, "Valeur:"
 	, "Oui"

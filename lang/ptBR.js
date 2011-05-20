@@ -130,7 +130,7 @@ var LANG_STR = [
 	, "Habilitar conta Visitante com o nome:"
 	, "Conectividade"
 	, "Porta alternativa de escuta (padrão é porta de conexão):"
-	, "Restringir acesso somente para os IPs (Separe múltiplas entradas com ,):"
+,"Permite acesso apenas a partir desses IPs (separe as entradas com uma vírgula)"
 	, "Opções Avançadas [CUIDADO: Não modifique!]"
 	, "Valor:"
 	, "Verdadeiro"
