@@ -783,7 +783,7 @@ var utWebUI = {
 	"rssUpdate": function(param, fn) {
 
 { // TODO: Remove this once backend support is stable (requires 3.0+)
-	if (undefined === this.settings["webui.uconnect_enable"]) return;
+	if (window.raptor === undefined && undefined === this.settings["webui.uconnect_enable"]) return;
 }
 
 		Array.from(param.id).each(function(id) {
