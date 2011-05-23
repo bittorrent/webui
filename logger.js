@@ -68,31 +68,38 @@ window.onerror = function(msg, url, linenumber) {
 };
 */
 
-window.console = window.console || {};
-
-console.log = console.log || function(str) {
+if (! window.console) { window.console = {};
+console.log = function(str) {
 	if (window.opera) {
 		opera.postError(str);
 	} else {
 		log(str);
 	}
 };
+}
 
-console.assert = console.assert || function() {
+
+if (! console.assert) {
+console.assert = function() {
 	var args = Array.from(arguments), expr = args.shift();
 	if (!expr) {
 		throw new Error(false);
 	}
 };
+}
 
+if (! console.time) {
 var __console_timers__ = {};
-console.time = console.time || function(name) {
+console.time = function(name) {
 	if (name == "") return;
 	__console_timers__[name] = Date.now();
 };
+}
 
-console.timeEnd = console.timeEnd || function(name) {
+if (! console.timeEnd) {
+console.timeEnd = function(name) {
 	if (name == "" || !__console_timers__.hasOwnProperty(name)) return;
 	console.log(name + ": " + (Date.now() - __console_timers__[name]) + "ms");
 	delete __console_timers__[name];
 };
+}
