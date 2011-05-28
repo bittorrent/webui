@@ -1679,6 +1679,8 @@ var utWebUI = {
 		this.trtTable.curPage = 0;
 
 		if (activeChanged) {
+			this.trtTable.requiresRefresh = true;
+
 			this.trtTable.calcSize();
 			this.trtTable.restoreScroll();
 			this.trtTable.resizePads();
