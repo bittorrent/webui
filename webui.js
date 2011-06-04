@@ -2690,8 +2690,8 @@ var utWebUI = {
 		for (var key in this.settings) {
 			var ele = $(key);
 			if (!ele) continue;
-			var v = this.settings[key];
-			if (ele.type && (ele.type == "checkbox")) {
+			var v = this.settings[key], nv;
+			if (ele.type == "checkbox") {
 				nv = ele.checked ? 1 : 0;
 			} else {
 				nv = ele.get("value");
@@ -3501,19 +3501,23 @@ var utWebUI = {
 	},
 
 	"setProperties": function() {
+		var isMulti = ("multi" === this.propID);
+		var props = this.props[this.propID];
+
 		var str = "";
-		for (var k in this.props[this.propID]) {
-			if (k == "hash") continue;
-			var v = this.props[this.propID][k], nv, ele = $("prop-" + k);
+		for (var key in props) {
+			var ele = $("prop-" + key);
+			if (!ele) continue;
+			var v = props[key], nv;
+			if (!isMulti && (v == -1) && ((key == "dht") || (key == "pex"))) continue;
 			if (ele.type == "checkbox") {
-				if ((this.propID == "multi") && ele.disabled) continue;
+				if (isMulti && ele.disabled) continue;
 				nv = ele.checked ? 1 : 0;
 			} else {
 				nv = ele.get("value");
-				if ((this.propID == "multi") && (nv == "")) continue;
+				if (isMulti && (nv == "")) continue;
 			}
-			if ((this.propID != "multi") && (((k == "dht") && (v == -1)) || ((k == "pex") && (v == -1)))) continue;
-			switch (k) {
+			switch (key) {
 				case "seed_ratio": nv *= 10; break;
 				case "seed_time": nv *= 60; break;
 
@@ -3528,13 +3532,12 @@ var utWebUI = {
 					}).join('\r\n');
 				break
 			}
-			if ((v != nv) || (this.propID == "multi")) {
-				str += "&s=" + k + "&v=" + encodeURIComponent(nv);
-				if (this.propID != "multi")
-					this.props[this.propID][k] = nv;
+			if (isMulti || v != nv) {
+				str += "&s=" + key + "&v=" + encodeURIComponent(nv);
+				if (!isMulti) props[key] = nv;
 			}
 		}
-		if (this.propID == "multi") {
+		if (isMulti) {
 			[11, 17, 18, 19].each(function(v) {
 				$("DLG_TORRENTPROP_1_GEN_" + v).removeEvents("click");
 			});
