@@ -291,11 +291,11 @@ var STable = new Class({
 				ev.preventDefault();
 			});
 		}
+
 		for (var i = 0; i < this.options.maxRows; i++)
 			this.tb.body.appendChild(simpleClone(this.rowModel, true).hide());
 
 		this.tBody.grab(this.tb.body);
-		this.tb.rowheight = this.tb.body.children[0].getDimensions({computeSize: true}).height;
 
 		this.infoBar = simpleClone(DIV, false).addClass("stable-infobar").inject(this.dCont);
 
@@ -1261,6 +1261,18 @@ var STable = new Class({
 		}
 	},
 
+	"calcRowHeight": function() {
+		var dummy = simpleClone(this.rowModel, true);
+		dummy.children[0].set("html", "&nbsp;");
+		this.tb.body.appendChild(dummy);
+
+		this.tb.rowheight = dummy.getDimensions({computeSize: true}).totalHeight;
+
+		dummy.destroy();
+
+		return this.tb.rowheight;
+	},
+
 	"calcSize": function() {
 		var showIB = (this.options.refreshable || this.options.mode == MODE_PAGE);
 		if (showIB) {
@@ -1269,11 +1281,16 @@ var STable = new Class({
 		else {
 			this.infoBar.hide();
 		}
+
 		this.dBody.setStyles({
 			"height": (this.dCont.clientHeight - this.dHead.offsetHeight - (showIB ? this.infoBar.offsetHeight : 0)).max(52),
 			"width": (this.dCont.offsetWidth - 2).max(0)
 		});
+
 		this.dHead.setStyle("width", this.dBody.clientWidth);
+
+		this.calcRowHeight();
+
 		if (!this.isResizing) {
 			for (var i = 0, j = this.cols; i < j; i++) {
 				if (this.colData[i].disabled) continue;
@@ -1284,6 +1301,7 @@ var STable = new Class({
 				).max(offset))
 			}
 		}
+
 		if (Browser.chrome || Browser.safari)
 			this.tBody.setStyle("width", this.tHead.getWidth());
 	},
@@ -1484,8 +1502,6 @@ var STable = new Class({
 			break;
 
 			case MODE_VIRTUAL:
-				if (Browser.ie) this.tb.rowheight = this.tb.body.children[0].getDimensions({computeSize: true}).height;
-
 				var rHeight = this.tb.rowheight;
 				var pHeight = this.activeId.length * rHeight;
 				var tHeight = (this.options.maxRows * rHeight).min(pHeight);
