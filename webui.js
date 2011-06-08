@@ -16,8 +16,11 @@ var urlBase = window.location.pathname.substr(0, window.location.pathname.indexO
 3) this is imported from the uT Remote interface (window.utweb !== undefined)
 
 */
-
-if (window.raptor && ! window.config.webui) {
+if (! window.config.webui && (window.utweb !== undefined || window.raptor)) {
+        window.getraptor = function() {
+	        if (window.utweb !== undefined) { return utweb.current_client().raptor; }
+	        if (window.raptor) { return raptor; }
+	}
 	var guiBase = urlBase + "/client/gui/";
 	var proxyBase = urlBase + "/client/proxy";
 } else {
@@ -409,7 +412,7 @@ var utWebUI = {
 
 		var self = this;
 
-		if (window.raptor) {/*
+		if (window.getraptor) {/*
 			var params = qs.split('&');
 			var d = {};
 			for (var i=0; i<params.length; i++) {
@@ -420,7 +423,7 @@ var utWebUI = {
 					}
 				}
 			}*/
-			return raptor.post_raw( qs, {}, fn ? fn.bind(self) : function(resp) {}, fails );
+			return getraptor().post_raw( qs, {}, fn ? fn.bind(self) : function(resp) {}, fails );
 		}
 
 		var req = function() {
@@ -3548,12 +3551,12 @@ var utWebUI = {
                                 str += '&s=label&v=';
                                 var after_update = function() {
                                     console.log('label has changed!  -- set to new primary label');
-                                    raptor.post_raw( "action=setprops&s=label&v="+newlabel, { hash: torrent.hash }, function() {} );
+                                    getraptor().post_raw( "action=setprops&s=label&v="+newlabel, { hash: torrent.hash }, function() {} );
                                 }
                             } else {
                                 var after_update = function() {}
                             }
-			    raptor.post_raw( "action=setprops"+str, { hash: torrent.hash }, after_update );
+			    getraptor().post_raw( "action=setprops"+str, { hash: torrent.hash }, after_update );
 			}
 		}				
 
