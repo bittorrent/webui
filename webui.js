@@ -18,7 +18,7 @@ var urlBase = window.location.pathname.substr(0, window.location.pathname.indexO
 */
 if (! window.config.webui && (window.utweb !== undefined || window.raptor)) {
         window.getraptor = function() {
-	        if (window.utweb !== undefined) { return utweb.current_client().raptor; }
+	        if (window.utweb) { return utweb.current_client().raptor; }
 	        if (window.raptor) { return raptor; }
 	}
 	var guiBase = urlBase + "/client/gui/";
@@ -345,7 +345,7 @@ var utWebUI = {
 		this.prsColDefs.each(function(item, index) { this.prsColToggle(index, item[3], true); }, this);
 		this.flsColDefs.each(function(item, index) { this.flsColToggle(index, item[3], true); }, this);
 		this.fdColDefs.each(function(item, index) { this.fdColToggle(index, item[3], true); }, this);
-		if (window.utweb !== undefined) return;
+		if (window.utweb) return;
 		// Load settings
 		this.getSettings((function() {
 			this.update.delay(0, this, (function() {
@@ -2474,7 +2474,7 @@ var utWebUI = {
 			else
 				this.config.lang = (this.defConfig.lang || "en");
 		}
-		if (window.utweb !== undefined) return;
+		if (window.utweb) return;
 		loadLangStrings({
 			"lang": this.config.lang,
 			"onload": (function() {
