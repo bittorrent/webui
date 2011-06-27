@@ -126,6 +126,18 @@
 	width: 20em;
 }
 
+#dlgAbout .centered-about-body {
+	margin-top: 40px;
+	width: 170px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+#dlgAbout .content {
+	margin-left: 15px;
+	font-size: 13px;
+}
+
 #dlgAbout .dlg-body {
 	margin-bottom: 0 !important;
 }
@@ -136,7 +148,7 @@
 
 #dlgAbout-logo {
 	float: left;
-	margin: 3px 8px 0 3px;
+	margin: 0px 8px 0 15px;
 }
 
 #dlgAbout-name {
