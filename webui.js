@@ -1016,7 +1016,10 @@ var utWebUI = {
 		this.cacheID = json.torrentc;
 
 		// Extract Labels
-		this.loadLabels(Array.clone(json.label));
+		if (json.label) {
+			// XXX: Array.clone(null) causes stack overflow errors!
+			this.loadLabels(Array.clone(json.label));
+		}
 
 		// Extract Torrents
 		(function(deltaLists) {
