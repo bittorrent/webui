@@ -16,8 +16,11 @@ var urlBase = window.location.pathname.substr(0, window.location.pathname.indexO
 3) this is imported from the uT Remote interface (window.utweb !== undefined)
 
 */
-
-if (window.raptor && ! window.config.webui) {
+if (! window.config.webui && (window.utweb !== undefined || window.raptor)) {
+        window.getraptor = function() {
+	        if (window.utweb) { return utweb.current_client().raptor; }
+	        if (window.raptor) { return raptor; }
+	}
 	var guiBase = urlBase + "/client/gui/";
 	var proxyBase = urlBase + "/client/proxy";
 } else {
@@ -342,7 +345,7 @@ var utWebUI = {
 		this.prsColDefs.each(function(item, index) { this.prsColToggle(index, item[3], true); }, this);
 		this.flsColDefs.each(function(item, index) { this.flsColToggle(index, item[3], true); }, this);
 		this.fdColDefs.each(function(item, index) { this.fdColToggle(index, item[3], true); }, this);
-		if (window.utweb !== undefined) return;
+		if (window.utweb) return;
 		// Load settings
 		this.getSettings((function() {
 			this.update.delay(0, this, (function() {
@@ -409,7 +412,7 @@ var utWebUI = {
 
 		var self = this;
 
-		if (window.raptor) {/*
+		if (window.getraptor) {/*
 			var params = qs.split('&');
 			var d = {};
 			for (var i=0; i<params.length; i++) {
@@ -420,7 +423,7 @@ var utWebUI = {
 					}
 				}
 			}*/
-			return raptor.post_raw( qs, {}, fn ? fn.bind(self) : function(resp) {}, fails );
+			return getraptor().post_raw( qs, {}, fn ? fn.bind(self) : function(resp) {}, fails );
 		}
 
 		var req = function() {
@@ -1016,10 +1019,8 @@ var utWebUI = {
 		this.cacheID = json.torrentc;
 
 		// Extract Labels
-		if (json.label) {
-			// XXX: Array.clone(null) causes stack overflow errors!
-			this.loadLabels(Array.clone(json.label));
-		}
+	        if (! json.label) { this.loadLabels(Array.clone([])); }
+	        else { this.loadLabels(Array.clone(json.label)); }
 
 		// Extract Torrents
 		(function(deltaLists) {
@@ -1682,6 +1683,8 @@ var utWebUI = {
 		this.trtTable.curPage = 0;
 
 		if (activeChanged) {
+			this.trtTable.requiresRefresh = true;
+
 			this.trtTable.calcSize();
 			this.trtTable.restoreScroll();
 			this.trtTable.resizePads();
@@ -2472,7 +2475,7 @@ var utWebUI = {
 			else
 				this.config.lang = (this.defConfig.lang || "en");
 		}
-		if (window.utweb !== undefined) return;
+		if (window.utweb) return;
 		loadLangStrings({
 			"lang": this.config.lang,
 			"onload": (function() {
@@ -2687,8 +2690,8 @@ var utWebUI = {
 		for (var key in this.settings) {
 			var ele = $(key);
 			if (!ele) continue;
-			var v = this.settings[key];
-			if (ele.type && (ele.type == "checkbox")) {
+			var v = this.settings[key], nv;
+			if (ele.type == "checkbox") {
 				nv = ele.checked ? 1 : 0;
 			} else {
 				nv = ele.get("value");
@@ -3498,19 +3501,23 @@ var utWebUI = {
 	},
 
 	"setProperties": function() {
+		var isMulti = ("multi" === this.propID);
+		var props = this.props[this.propID];
+
 		var str = "";
-		for (var k in this.props[this.propID]) {
-			if (k == "hash") continue;
-			var v = this.props[this.propID][k], nv, ele = $("prop-" + k);
+		for (var key in props) {
+			var ele = $("prop-" + key);
+			if (!ele) continue;
+			var v = props[key], nv;
+			if (!isMulti && (v == -1) && ((key == "dht") || (key == "pex"))) continue;
 			if (ele.type == "checkbox") {
-				if ((this.propID == "multi") && ele.disabled) continue;
+				if (isMulti && ele.disabled) continue;
 				nv = ele.checked ? 1 : 0;
 			} else {
 				nv = ele.get("value");
-				if ((this.propID == "multi") && (nv == "")) continue;
+				if (isMulti && (nv == "")) continue;
 			}
-			if ((this.propID != "multi") && (((k == "dht") && (v == -1)) || ((k == "pex") && (v == -1)))) continue;
-			switch (k) {
+			switch (key) {
 				case "seed_ratio": nv *= 10; break;
 				case "seed_time": nv *= 60; break;
 
@@ -3525,13 +3532,12 @@ var utWebUI = {
 					}).join('\r\n');
 				break
 			}
-			if ((v != nv) || (this.propID == "multi")) {
-				str += "&s=" + k + "&v=" + encodeURIComponent(nv);
-				if (this.propID != "multi")
-					this.props[this.propID][k] = nv;
+			if (isMulti || v != nv) {
+				str += "&s=" + key + "&v=" + encodeURIComponent(nv);
+				if (!isMulti) props[key] = nv;
 			}
 		}
-		if (this.propID == "multi") {
+		if (isMulti) {
 			[11, 17, 18, 19].each(function(v) {
 				$("DLG_TORRENTPROP_1_GEN_" + v).removeEvents("click");
 			});
@@ -3551,12 +3557,12 @@ var utWebUI = {
                                 str += '&s=label&v=';
                                 var after_update = function() {
                                     console.log('label has changed!  -- set to new primary label');
-                                    raptor.post_raw( "action=setprops&s=label&v="+newlabel, { hash: torrent.hash }, function() {} );
+                                    getraptor().post_raw( "action=setprops&s=label&v="+newlabel, { hash: torrent.hash }, function() {} );
                                 }
                             } else {
                                 var after_update = function() {}
                             }
-			    raptor.post_raw( "action=setprops"+str, { hash: torrent.hash }, after_update );
+			    getraptor().post_raw( "action=setprops"+str, { hash: torrent.hash }, after_update );
 			}
 		}				
 

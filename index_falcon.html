@@ -1200,12 +1200,17 @@ window.config = { cache_bust: true };
 		<script type="text/javascript" src="/static/js/jsloadv2.js"></script>
 		<script type="text/javascript">
 
-var url_base = 'https://web.utorrent.com'; // code that supports this is not yet live 4/20/2011
-//var url_base = 'http://127.0.0.1';
+//var url_base = 'https://web.utorrent.com'; // code that supports this is not yet live 4/20/2011
+var url_base = 'http://127.0.0.1';
+/*
+
+TODO: use ../build.sh to create the dependencies (tags.js is created and included)
+*/
+
 var dependencies = [
                 '/static/js/lib/common.js',
                 '/static/js/lib/underscore.js',
-                '/static/js/lib/jquery-1.4.2.js',
+                '/static/js/lib/jquery-1.6.2.js',
                 '/static/js/lib/jquery.json.js',
                 '/static/js/lib/jquery.jstorage.js',
                 '/static/js/lib/jquery.cookie.js',
@@ -1216,6 +1221,7 @@ var dependencies = [
                 '/static/js/client/api.js',
                 '/static/js/featured_apps.js',
                 '/static/js/client/models.js',
+                '/static/js/client/client.js',
                 '/static/js/btapp.js'
 ];
 
@@ -1240,21 +1246,23 @@ var tags = make_tags(dependencies);
 new JSLoad(tags).load([dependencies[ dependencies.length - 1 ]], function () {
   if (window.console && window.console.log) { console.log('dependencies loaded'); }
 
-var client = new Client( jQuery.cookie('bt_user'), jQuery.cookie('cid') );
-var api = new ClientAPI(); // handles encryption and stuff
-raptor = new RaptorRequestManager(client, api);
-var utweb = null;
 
-raptor.api.get_token( function() {
+window.clients = new ClientManager();
+clients.sync();
+clients.set_current_client();
+window.raptor = client.raptor;
+
+// window.utweb = null;
 
   new JSLoad( make_tags(webui_scripts) ).load([ webui_scripts[webui_scripts.length-1] ], function() {
-    if (window.console && window.console.log) { console.log('webui loaded'); }
+    if (window.console && window.console.log) { 
+      console.log('webui loaded');
+    }
+    do_webui_main();
 
-do_webui_main();
+
 
   });
-
-});
 
 
 

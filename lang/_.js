@@ -416,7 +416,8 @@ var LANG_CONST = [
 	, "TIME_MINS_SECS"
 	, "TIME_SECS"
 	, "TIME_WEEKS_DAYS"
-	, "TIME_YEARS_WEEKS",
+	, "TIME_YEARS_WEEKS"
+	, "ML_MORE_ACTIONS" ,
 
 	// extra strings
 	"Torrents",
