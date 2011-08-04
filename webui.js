@@ -2805,6 +2805,10 @@ var utWebUI = {
 		DialogManager.show("AddURL");
 	},
 
+	"showAddLabel": function() {
+		DialogManager.show("AddLabel");
+	},
+	
 	"showRSSDownloader": function() {
 		DialogManager.show("RSSDownloader");
 	},
@@ -3656,6 +3660,26 @@ var utWebUI = {
 		var item = this.getRSSFeedItem(feedId, itemId);
 		if (item) this.addURL({url: item[CONST.RSSITEM_URL]});
 	},
+	
+	"setLabel": function(param, fn) {
+		var new_label = encodeURIComponent((param.label || "").trim());
+
+		var torrents = param.view.selectedRows();
+
+        var self = this;
+        var client = utweb.current_client();
+        
+        var i,l = torrents.length;
+        for (i=0; i<l; i++) {
+            (function (t) {
+        		var after_update = function() {
+                    client.raptor.post_raw( "action=setprops&s=label&v="+new_label, { hash: t.hash }, function() {} );
+                }
+
+        	     client.raptor.post_raw( "action=setprops&s=label&v=", { hash: t.hash }, after_update );
+	        })(torrents[i]);
+        }
+	},	
 
 	"addURL": function(param, fn) {
 		var urls = Array.from(param.url).map(function(url) {

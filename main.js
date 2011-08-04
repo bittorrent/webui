@@ -700,7 +700,7 @@ function setupDialogManager() {
 
 	DialogManager.init();
 
-	["About", "Add", "AddEditRSSFeed", "AddURL", "Props", "RSSDownloader", "Settings"].each(function(k) {
+	["About", "Add", "AddEditRSSFeed", "AddURL", "AddLabel", "Props", "RSSDownloader", "Settings"].each(function(k) {
 		var isModal = ["AddEditRSSFeed", "Props"].contains(k);
 		DialogManager.add(k, isModal, {
 			  "Add": function() { utWebUI.getDirectoryList(); }
@@ -923,13 +923,45 @@ function setupPropertiesDialog() {
 
 }
 
+function setupAddLabelDialog(view) {
+	//--------------------------------------------------
+	// ADD URL DIALOG
+	//--------------------------------------------------
+
+	// -- OK Button (URL)
+	$("ADD_LABEL_OK").addEvent("click", function() {
+		if ($("dlgAddLabel-label").get("value").trim().length > 0) {
+			DialogManager.hide("AddLabel");
+
+			var param = {
+				  "label": $("dlgAddLabel-label").get("value"),
+				  "view": view
+			};
+
+			utWebUI.setLabel(param, function() {
+				$("dlgAddLabel-label").set("value", "");
+			});
+		}
+	});
+
+	// -- Cancel Button (URL)
+
+	$("ADD_LABEL_CANCEL").addEvent("click", function(ev) {
+		DialogManager.hide("AddLabel");
+	});
+
+	// -- Form Submission
+
+	$("dlgAddLabel-form").addEvent("submit", Function.from(false));
+
+}
+
 function setupAddURLDialog() {
 	//--------------------------------------------------
 	// ADD URL DIALOG
 	//--------------------------------------------------
 
 	// -- OK Button (URL)
-
 	$("ADD_URL_OK").addEvent("click", function() {
 		if ($("dlgAddURL-url").get("value").trim().length > 0) {
 			DialogManager.hide("AddURL");
@@ -1321,6 +1353,7 @@ function setupUserInterface() {
 	setupRSSDialogs();
 	setupPropertiesDialog();
 	setupAddURLDialog();
+	setupAddLabelDialog();
 	setupSettings();
 	setupStatusBar();
 
@@ -1578,7 +1611,8 @@ function loadDialogStrings() {
 	_loadStrings("text", {
 		  "dlgAdd-head"           : "OV_TB_ADDTORR"
 		, "dlgAddURL-head"        : "OV_TB_ADDURL"
-		, "dlgProps-head"         : "DLG_TORRENTPROP_00"
+		, "dlgAddLabel-head"      : "OV_NEWLABEL_CAPTION"
+ 		, "dlgProps-head"         : "DLG_TORRENTPROP_00"
 		, "dlgRSSDownloader-head" : "OV_TB_RSSDOWNLDR"
 		, "dlgSettings-head"      : "OV_TB_PREF"
 	});
@@ -1593,6 +1627,10 @@ function loadDialogStrings() {
 		// Add/Edit RSS Feed
 		, "DLG_ADDEDITRSSFEED_01" : "DLG_BTN_OK"
 		, "DLG_ADDEDITRSSFEED_02" : "DLG_BTN_CANCEL"
+
+		// Add LABEL
+		, "ADD_LABEL_OK"      : "DLG_BTN_OK"
+		, "ADD_LABEL_CANCEL"  : "DLG_BTN_CANCEL"
 
 		// Add URL
 		, "ADD_URL_OK"      : "DLG_BTN_OK"
