@@ -3554,17 +3554,21 @@ var utWebUI = {
 			} else {
                             // setting label
                             var torrent = utweb.tables.torrent.view.selectedRows()[0];
-                            var newlabel = jQuery('#torrent_props_label').val();
-                            if (newlabel != torrent.label) {
-                                console.log('label has changed!  -- set to empty label');
-                                // first set the label to empty string...
-                                str += '&s=label&v=';
-                                var after_update = function() {
-                                    console.log('label has changed!  -- set to new primary label');
-                                    getraptor().post_raw( "action=setprops&s=label&v="+newlabel, { hash: torrent.hash }, function() {} );
+                            var newLabelInput = jQuery('#torrent_props_label');
+                            if (newLabelInput)
+                            {
+                                var newlabel = jQuery('#torrent_props_label').val();
+                                if (newlabel != torrent.label) {
+                                    console.log('label has changed!  -- set to empty label');
+                                    // first set the label to empty string...
+                                    str += '&s=label&v=';
+                                    var after_update = function() {
+                                        console.log('label has changed!  -- set to new primary label');
+                                        getraptor().post_raw( "action=setprops&s=label&v="+newlabel, { hash: torrent.hash }, function() {} );
+                                    }
+                                } else {
+                                    var after_update = function() {}
                                 }
-                            } else {
-                                var after_update = function() {}
                             }
 			    getraptor().post_raw( "action=setprops"+str, { hash: torrent.hash }, after_update );
 			}
