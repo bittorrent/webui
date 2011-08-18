@@ -140,6 +140,7 @@ var DialogManager = {
 		this.items[id] = {"modal": !!isModal, "onShow": showCB};
 
 		var dlgId = "dlg" + id;
+		if (! $(dlgId)) { return; }
 		$(dlgId)
 			.addEvent("mousedown", this.bringToFront.bind(this, id))
 			.getElement(".dlg-close").addStopEvent("click", this.hide.bind(this, id));
