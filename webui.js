@@ -2579,7 +2579,7 @@ var utWebUI = {
 		}
 		var elemaxrows = $("webui.maxRows");
 		if (elemaxrows)
-			$("webui.maxRows").set("value", this.config.maxRows);
+			elemaxrows.set("value", this.config.maxRows);
 
 		this.toggleSystemFont(this.config.useSysFont);
 
