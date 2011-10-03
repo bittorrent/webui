@@ -2249,8 +2249,28 @@ var utWebUI = {
 			return '[' + parseInt(dir.available, 10).toFileSize(2, 2) + ' free] '+ dir.path;
 		});
 
-		_loadComboboxStrings("dlgAdd-basePath", items, $("dlgAdd-basePath").value);
-		_loadComboboxStrings("dlgAddURL-basePath", items, $("dlgAddURL-basePath").value);
+		var eleList = $("dlgAdd-basePath");
+		var eleListDiv = $("dlgAdd-basePathDiv");
+		var eleURLList = $("dlgAddURL-basePath");
+		var eleURLListDiv = $("dlgAddURL-basePathDiv");
+		var dispStyle;
+		if (items.length > 1) {
+			if (eleList)
+				_loadComboboxStrings("dlgAdd-basePath", items, eleList.value);
+			if (eleURLList)
+				_loadComboboxStrings("dlgAddURL-basePath", items, eleURLList.value);
+			dispStyle = "block";
+		} else {
+			dispStyle = "none";
+		}
+		if (eleList)
+			eleList.setStyle("display", dispStyle);
+		if (eleListDiv)
+			eleListDiv.setStyle("display", dispStyle);
+		if (eleURLList)
+			eleURLList.setStyle("display", dispStyle);
+		if (eleURLListDiv)
+			eleURLListDiv.setStyle("display", dispStyle);
 	},
 
 	"getTransferHistory": function(forceload) {
