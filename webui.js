@@ -16,11 +16,13 @@ var urlBase = window.location.pathname.substr(0, window.location.pathname.indexO
 3) this is imported from the uT Remote interface (window.utweb !== undefined)
 
 */
-if (! window.config.webui && (window.utweb !== undefined || window.raptor)) {
+if (window.utweb !== undefined || window.raptor) {
         window.getraptor = function() {
 	        if (window.utweb) { return utweb.current_client().raptor; }
 	        if (window.raptor) { return raptor; }
 	}
+}
+if (! window.config.webui) {
 	var guiBase = urlBase + "/client/gui/";
 	var proxyBase = urlBase + "/client/proxy";
 } else {
@@ -3576,9 +3578,7 @@ var utWebUI = {
 		this.propID = "";
 
 		if (str != "" || window.utweb !== undefined) {
-			if (window.utweb === undefined) {
-				this.request("action=setprops&hash=" + this.trtTable.selectedRows.join(str + "&hash=") + str);
-			} else {
+			if (window.getraptor) {
                             // setting label
                             var torrent = utweb.tables.torrent.view.selectedRows()[0];
                             var newLabelInput = jQuery('#torrent_props_label');
@@ -3598,8 +3598,10 @@ var utWebUI = {
                                 }
                             }
 			    getraptor().post_raw( "action=setprops"+str, { hash: torrent.hash }, after_update );
+			} else {
+				this.request("action=setprops&hash=" + this.trtTable.selectedRows.join(str + "&hash=") + str);
 			}
-		}				
+		}
 
 	},
 
