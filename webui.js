@@ -412,6 +412,11 @@ var utWebUI = {
 
 		var self = this;
 
+            var really_async = true;
+            if (really_async !== undefined) {
+                really_async = async;
+            }
+
 		if (window.getraptor) {/*
 			var params = qs.split('&');
 			var d = {};
@@ -423,7 +428,7 @@ var utWebUI = {
 					}
 				}
 			}*/
-			return getraptor().post_raw( qs, {}, fn ? fn.bind(self) : function(resp) {}, fails );
+			return getraptor().post_raw( qs, {}, fn ? fn.bind(self) : function(resp) {}, fails, {async:async} );
 		}
 
 		var req = function() {
