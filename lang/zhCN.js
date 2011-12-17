@@ -80,7 +80,7 @@ var LANG_STR = [
 	, "每个 Torrent 的最大连接数:"
 	, "每个 Torrent 的上传通道数:"
 	, "使用额外的上传通道如果上传速度 < 90%"
-	, "Global Rate Limit Options"
+	, "整體速度限制選項"
 	, "应用比率限制到传输开销"
 	, "应用比率限制到 uTP 连接"
 	, "基本 BitTorrent 功能"

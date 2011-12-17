@@ -80,7 +80,7 @@ var LANG_STR = [
 	, "Nombre maximum de clients connectés par torrent:"
 	, "Nombre de slots d'émission par torrent:"
 	, "Ajouter des slots d'émission lorsque le taux d'émission < 90%"
-	, "Global Rate Limit Options"
+	, "Options de limitation du taux global"
 	, "Appliquer la limite du taux au surcoût de transport"
 	, "Appliquer la limite du taux aux connexions uTP"
 	, "Fonctions BitTorrent basiques"
