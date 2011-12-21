@@ -2333,8 +2333,7 @@ var utWebUI = {
 { // TODO: Remove this once backend support is stable (requires 3.0+)
 	if (undefined === this.settings["webui.uconnect_enable"]) return;
 }
-
-		this.request("action=resetxferhist");
+		this.request("action=resetxferhist", function () { window.location.reload(true); } );
 	},
 
 	"getSettings": function(fn) {
