@@ -3697,7 +3697,7 @@ var utWebUI = {
 	"setLabel": function(param, fn) {
 		var new_label = encodeURIComponent((param.label || "").trim());
 
-		var torrents = utweb.tables.torrent.view.selectedRows();
+		var torrents = param.view.selectedRows();
 
         var self = this;
         var client = utweb.current_client();
