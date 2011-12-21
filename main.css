@@ -182,7 +182,7 @@ td.disabled, label.disabled, span.disabled, div.disabled {
 	vertical-align: middle;
 }
 
-#cover, #modalbg {
+#cover {
 	background: #FFFFFF;
 	height: 100%;
 	left: 0px;
@@ -193,7 +193,6 @@ td.disabled, label.disabled, span.disabled, div.disabled {
 
 #modalbg {
 	display: none;
-	opacity: 0.60;
 	z-index: 500;
 }
 

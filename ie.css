@@ -6,8 +6,7 @@ found in the LICENSE file.
 */
 
 #modalbg {
-	-ms-filter: "progid:DxImageTransform.Microsoft.Alpha(opacity=60)";
-	filter: alpha(opacity=60);
+	display: none;
 }
 
 
