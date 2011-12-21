@@ -417,6 +417,7 @@ var LANG_STR = [
 	, "%ds"
 	, "%dw %dd"
 	, "%dy %dw",
+"More Action",
 "Torrent’ler",
 		"Haber Akışları",
 		"Uygulama",

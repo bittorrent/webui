@@ -417,6 +417,7 @@ var LANG_STR = [
 	, "%ds"
 	, "%ds %dd"
 	, "%da %ds",
+"More Action",
 "Torrents",
 		"Feeds",
 		"Aplicativo",

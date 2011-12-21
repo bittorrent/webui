@@ -417,6 +417,7 @@ var LANG_STR = [
 	, "%d 秒"
 	, "%d 周 %d 天"
 	, "%d 年 %d 周",
+"More Action",
 "Torrent",
 		"订阅",
 		"程序",
