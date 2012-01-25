@@ -464,5 +464,6 @@ var LANG_STR = [
 	, "Peer ID"
 	, "User-agent"
 	, "UPnP external address:"
+	, "UI Revision"
 
 ];
