@@ -455,8 +455,7 @@ var LANG_CONST = [
 	"Download to your computer",
 	"Open with VLC Media Player",
 	"Actions",
-	"season", // i.e. of a TV show
-
+	"season" // i.e. of a TV show
 
 	// about dialog, embedded version
 	, "DLG_ABOUT_VERSION_LEGEND"
@@ -521,5 +520,5 @@ var LANG_LIST = {
 };
 
 function L_(id) {
-	return (LANG_STR[LANG_CONST[id]] || "[ UNRECOGNIZED STRING ID: '" + id + "' ]");
+	return (LANG_STR[LANG_CONST[id]] || LANG_STR_fallback[id]);
 }

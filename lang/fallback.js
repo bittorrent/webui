@@ -5,7 +5,9 @@ Use of this source code is governed by a BSD-style that can be
 found in the LICENSE file.
 */
 
-var LANG_STR = [
+/* List of the strings where any language could fallback is there was no translation yet */
+
+var LANG_STR_fallback = [
 	  "Torrent files||*.torrent||All files (*.*)||*.*||"
 	, "OK"
 	, "Cancel"
@@ -466,5 +468,3 @@ var LANG_STR = [
 	, "UI Revision"
 
 ];
-
-/* README : If you add any strings *Please consider updating fallback.js */
