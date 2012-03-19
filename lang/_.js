@@ -471,6 +471,7 @@ var LANG_CONST = [
 
 var LANG_LIST = {
 	  "ar"   : "Arabic"
+	, "eu"   : "Basque"
 	, "be"   : "Belarusian"
 	, "bg"   : "Bulgarian"
 	, "bs"   : "Bosnian"
