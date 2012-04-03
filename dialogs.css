@@ -374,7 +374,9 @@
  **************************************************/
 
 #dlgSettings {
-	width: 650px;
+	width: 680px;
+	font-family: Helvetica, Arial, sans-serif;
+	font-size: 12px;
 }
 
 #dlgSettings-head {
@@ -382,15 +384,15 @@
 }
 
 #dlgSettings-menuCont {
-	background-color: #FFFFFF;
-	border-right: 1px solid #D0D0D0;
+	background-color: #F4F6F9;
+	border-right: 1px solid #ccc;
 	bottom: 0;
 	display: block !important;
 	left: 0;
 	overflow: auto;
 	position: absolute;
 	top: 0;
-	width: 120px;
+	width: 149px;
 }
 
 #dlgSettings-menuCont > div {
@@ -406,11 +408,18 @@
 #dlgSettings-menu li a {
 	display: block;
 	padding: 2px 6px;
+	color: #333;
+	font-size: 12px;
+	border: 1px solid transparent;
+	border-left: 0;
+	border-right: 0;
 }
 
 #dlgSettings-menu li.selected a {
-	background-color: #0099FF;
-	color: #FFFFFF;
+	background-color: #BBCEE9;
+	border-color: #8FAAD9;
+	color: #000;
+/*	color: #FFFFFF;*/
 }
 
 #dlgSettings .dlg-body {
@@ -418,12 +427,13 @@
 }
 
 #dlgSettings .settings-pane {
-	height: 350px;
-	left: 120px;
+	height: 400px;
+	left: 150px;
 	overflow: auto;
 	padding: 5px 10px;
 	position: relative;
 	width: 510px;
+	background: #fff;
 }
 
 /* General */
@@ -598,6 +608,77 @@ input[id="gui.dlrate_menu"] {
 #dlgSettings .dlg-body div,
 #dlgSettings .dlg-body fieldset {
 	display: none;
+}
+
+#dlgSettings fieldset{
+	position: relative;
+	background: #fff;
+	margin: 8px 0;
+	padding: 5px 15px 10px;
+	border: 0;
+	border-top: 1px solid #ddd;
+	-webkit-border-radius: 	0;
+	-moz-border-radius: 	0;
+	-ms-border-radius: 		0;
+	-o-border-radius: 		0;
+	border-radius: 			0;
+	-webkit-box-shadow: 0 1px 0 #fdfdfd inset;
+/*	background-image: -webkit-linear-gradient(top, #f2f2f2, #fff);*/
+}
+
+#dlgSettings fieldset legend{
+	padding: 0 5px;
+	font-family: Helvetica, Arial, sans-serif;
+	font-weight: normal;
+	font-size: 16px;
+/*	float: left;*/
+}
+#dlgSettings input.btn{
+	height: 21px;
+	width: auto;
+	min-width: 70px;
+	padding: 0 3px;
+}
+#dlgSettings input.tbox{
+	text-indent: 4px;
+	height: 19px;
+}
+#dlgSettings textarea,
+#dlgSettings input.tbox{
+	-webkit-box-shadow:	rgba(255,255,255,0.4) 0px 1px 0px, rgba(0,0,0,0.2) 0px 1px 2px inset;
+	-moz-box-shadow: 	rgba(255,255,255,0.4) 0px 1px 0px, rgba(0,0,0,0.2) 0px 1px 2px inset;
+	-ms-box-shadow: 	rgba(255,255,255,0.4) 0px 1px 0px, rgba(0,0,0,0.2) 0px 1px 2px inset;
+	-o-box-shadow: 		rgba(255,255,255,0.4) 0px 1px 0px, rgba(0,0,0,0.2) 0px 1px 2px inset;
+	box-shadow: 		rgba(255,255,255,0.4) 0px 1px 0px, rgba(0,0,0,0.2) 0px 1px 2px inset;
+}
+#dlgSettings textarea,
+#dlgSettings input.tbox,
+#dlgSettings input.btn{
+	border: 1px solid #aaa;
+	-webkit-border-radius: 	2px;
+	-moz-border-radius: 	2px;
+	-ms-border-radius: 		2px;
+	-o-border-radius: 		2px;
+	border-radius: 			2px;
+}
+#dlgSettings input[type="checkbox"],
+#dlgSettings select{
+	top: 0;
+	position: relative;
+}
+#dlgSettings label{
+	
+}
+#dlgSettings .line-cont{
+	height: 22px;
+	line-height: 19px;
+}
+#dlgSettings .indent{
+	
+}
+#dlgSettings .dlg-foot{
+	height: 22px;
+	padding: 5px;
 }
 
 #total_uploaded_history,
