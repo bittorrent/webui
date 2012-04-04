@@ -455,4 +455,14 @@ var LANG_STR = [
 		"Acciones",
 		"temporada" // i.e. of a TV show
 
+		, "Información del Cliente"
+		, "Version del Producto"
+		, "Revisión del Código"
+		, "Fecha de Construcción"
+		, "ID de Peer"
+		, "Agente de Usuario"
+		, "Dirección externa de UPnP:"
+		, "Revisión de UI"
+	
+		, "Guardar"
 ];

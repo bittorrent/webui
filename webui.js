@@ -2844,14 +2844,18 @@ var utWebUI = {
 	},
 
 	"showSettings": function() {
-		jQuery("#settingsHider").addClass('open');
-		//DialogManager.show("Settings");
+		var hider = jQuery("#settingsHider");
+		hider.addClass('open');
+		// hider.children('.dlg-window').animate({ top: '+=100%' }, 250);
 	},
 	
 	"hideSettings": function(load_settings) {
 		if(load_settings)
 			utWebUI.loadSettings();
-		jQuery("#settingsHider").removeClass('open');
+			
+		var hider = jQuery("#settingsHider");
+		hider.removeClass('open');
+		// hider.children('.dlg-window').animate({ top: '-=100%' }, 250);
 		//DialogManager.show("Settings");
 	},
 
@@ -4824,7 +4828,6 @@ var utWebUI = {
 		if (this.config) {
 			this.config.activeSettingsPane = id;
 		}
-		//console.log('#tab_' + id);
 		
 		jQuery('#dlgSettings-title').text(jQuery('#tab_' + id).text() || "Web UI");
 	},

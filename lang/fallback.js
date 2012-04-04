@@ -466,5 +466,6 @@ var LANG_STR_fallback = [
 	, "User-agent"
 	, "UPnP external address:"
 	, "UI Revision"
-
+	
+	, "Save"
 ];

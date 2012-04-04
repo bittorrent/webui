@@ -15,7 +15,7 @@ html {
 }
 
 body {
-	background-color: #DDDDDD;
+	background-color: #ddd;
 	border: 0;
 	bottom: 0;
 	cursor: default;
@@ -25,11 +25,13 @@ body {
 	position: absolute;
 	right: 0;
 	top: 0;
+	font-weight: normal;
 }
 
 body.nosysfont {
 	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
 	font-size: 8pt;
+	font-weight: normal;
 }
 
 a {

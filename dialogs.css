@@ -3,10 +3,16 @@
  **************************************************/
 
 .dlg-window {
-	-moz-border-radius: 5px 5px 0 0;
-	-moz-box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.15), 0 0 6px rgba(0, 0, 0, 0.10);
-	-webkit-border-radius: 5px 5px 0 0;
+	-webkit-border-radius: 	5px 5px 0 0;
+	-moz-border-radius: 	5px 5px 0 0;
+	-ms-border-radius: 	5px 5px 0 0;
+	-o-border-radius: 	5px 5px 0 0;
+	border-radius: 	5px 5px 0 0;
 	-webkit-box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.15), 0 0 6px rgba(0, 0, 0, 0.10);
+	-moz-box-shadow: 	3px 3px 3px rgba(0, 0, 0, 0.15), 0 0 6px rgba(0, 0, 0, 0.10);
+	-ms-box-shadow: 	3px 3px 3px rgba(0, 0, 0, 0.15), 0 0 6px rgba(0, 0, 0, 0.10);
+	-o-box-shadow: 		3px 3px 3px rgba(0, 0, 0, 0.15), 0 0 6px rgba(0, 0, 0, 0.10);
+	box-shadow: 		3px 3px 3px rgba(0, 0, 0, 0.15), 0 0 6px rgba(0, 0, 0, 0.10);
 	background-color: #FFFFFF;
 	border: 2px solid #C0C0C0;
 	border-bottom-color: #A0A0A0 !important;
@@ -23,8 +29,11 @@
 }
 
 .dlg-head {
-	-moz-border-radius: 4px 4px 0 0;
-	-webkit-border-radius: 4px 4px 0 0;
+	-webkit-border-radius: 	4px 4px 0 0;
+	-moz-border-radius: 	4px 4px 0 0;
+	-ms-border-radius: 		4px 4px 0 0;
+	-o-border-radius: 		4px 4px 0 0;
+	border-radius: 			4px 4px 0 0;
 	background: #F5F5F5 url(./images/blank.gif) no-repeat 0.3em 0.3em;
 	border-bottom: 1px solid #C0C0C0;
 	border-radius: 4px 4px 0 0;
@@ -86,8 +95,11 @@
 }
 
 .dlg-top {
-	-moz-box-shadow: 5px 3px 5px rgba(0, 0, 0, 0.25), 0 0 8px rgba(0, 0, 0, 0.15);
 	-webkit-box-shadow: 5px 3px 5px rgba(0, 0, 0, 0.25), 0 0 8px rgba(0, 0, 0, 0.15);
+	-moz-box-shadow: 	5px 3px 5px rgba(0, 0, 0, 0.25), 0 0 8px rgba(0, 0, 0, 0.15);
+	-ms-box-shadow: 	5px 3px 5px rgba(0, 0, 0, 0.25), 0 0 8px rgba(0, 0, 0, 0.15);
+	-o-box-shadow: 		5px 3px 5px rgba(0, 0, 0, 0.25), 0 0 8px rgba(0, 0, 0, 0.15);
+	box-shadow: 		5px 3px 5px rgba(0, 0, 0, 0.25), 0 0 8px rgba(0, 0, 0, 0.15);
 	border-color: #989898;
 	border-bottom-color: #707070 !important;
 	border-right-color: #707070 !important;
@@ -407,7 +419,6 @@
 	pointer-events: auto;
 }
 .panel-hider.open .dlg-window{
-/*	height: 100%;*/
 	top: 0;
 }
 
@@ -432,9 +443,21 @@
 #dlgSettings-title{
 	font-weight: normal;
 	font-size: 24px;
-	padding: 10px 0 5px;
-	margin: 0 20px 5px 170px;
-	border-bottom: 1px solid #ddd;
+	padding: 5px 10px 5px;
+	margin: 0 0 5px 150px;
+	color: #333;
+	text-shadow: 0 1px 0 #fff;
+	border-bottom: 1px solid #ccc;
+	background: #ECECEC;
+/*	background-image: -webkit-linear-gradient(top, #ECECEC, #DCDCDC);*/
+}
+#dlgSettings-title{
+	padding-left: 0;
+	border-color: #ddd;
+	background: none;
+	text-shadow: none;
+	margin-left: 160px;
+	margin-right: 10px;
 }
 
 #dlgSettings .dlg-body,
@@ -705,6 +728,16 @@ input[id="gui.dlrate_menu"] {
 	width: auto;
 	min-width: 70px;
 	padding: 0 3px;
+	-webkit-border-radius: 4px !important;
+	-moz-border-radius: 4px !important;
+	-ms-border-radius: 4px !important;
+	-o-border-radius: 4px !important;
+	border-radius: 4px !important;
+	-webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+	-moz-box-shadow: 	0 1px 3px rgba(0,0,0,0.1);
+	-ms-box-shadow: 	0 1px 3px rgba(0,0,0,0.1);
+	-o-box-shadow: 		0 1px 3px rgba(0,0,0,0.1);
+	box-shadow: 		0 1px 3px rgba(0,0,0,0.1);
 }
 #dlgSettings input.tbox{
 	text-indent: 4px;
@@ -745,7 +778,16 @@ input[id="gui.dlrate_menu"] {
 }
 #dlgSettings .dlg-foot{
 	height: 22px;
-	padding: 5px;
+	padding: 0;
+	position: absolute;
+	background: none;
+	border: 0;
+	margin: 0;
+	top: 8px;
+	right: 10px;
+}
+#dlgSettings .dlg-foot input.btn{
+	margin-bottom: 10px;
 }
 
 #total_uploaded_history,
