@@ -4,7 +4,7 @@ Copyright (c) 2011 BitTorrent, Inc. All rights reserved.
 Use of this source code is governed by a BSD-style that can be
 found in the LICENSE file.
 */
-(function(){
+(function(jQuery){
 
 var LANG_LIST = LANG_LIST || {};
 var urlBase = window.location.pathname.substr(0, window.location.pathname.indexOf("/gui"));
@@ -2476,11 +2476,11 @@ var utWebUI = {
 			// Insert custom keys...
 			this.settings["multi_day_transfer_mode"] = tcmode;
 
-{ // TODO: Remove this once backend support is stable (requires 3.0+)
-	this.settings["sched_table"] = [this.settings["sched_table"], "033000330020000000000000300303003222000000000000000303003020000000000000033003003111010010100101000303003101011010100111300303003101010110100001033020330111010010110111"].pick();
-	this.settings["search_list_sel"] = [this.settings["search_list_sel"], 0].pick();
-	this.settings["search_list"] = [this.settings["search_list"], "BitTorrent|http://www.bittorrent.com/search?client=%v&search=\r\nGoogle|http://google.com/search?q=filetype%3Atorrent+\r\nMininova|http://www.mininova.org/search/?cat=0&search=\r\nVuze|http://search.vuze.com/xsearch/?q="].pick();
-}
+			{ // TODO: Remove this once backend support is stable (requires 3.0+)
+				this.settings["sched_table"] = [this.settings["sched_table"], "033000330020000000000000300303003222000000000000000303003020000000000000033003003111010010100101000303003101011010100111300303003101010110100001033020330111010010110111"].pick();
+				this.settings["search_list_sel"] = [this.settings["search_list_sel"], 0].pick();
+				this.settings["search_list"] = [this.settings["search_list"], "BitTorrent|http://www.bittorrent.com/search?client=%v&search=\r\nGoogle|http://google.com/search?q=filetype%3Atorrent+\r\nMininova|http://www.mininova.org/search/?cat=0&search=\r\nVuze|http://search.vuze.com/xsearch/?q="].pick();
+			}
 
 			// Cleanup
 			delete json.settings;
@@ -2501,7 +2501,9 @@ var utWebUI = {
 			else
 				this.config.lang = (this.defConfig.lang || "en");
 		}
-		if (window.utweb) return;
+		if (window.utweb)
+			return;
+		
 		loadLangStrings({
 			"lang": this.config.lang,
 			"onload": (function() {
@@ -2842,7 +2844,15 @@ var utWebUI = {
 	},
 
 	"showSettings": function() {
-		DialogManager.show("Settings");
+		jQuery("#settingsHider").addClass('open');
+		//DialogManager.show("Settings");
+	},
+	
+	"hideSettings": function(load_settings) {
+		if(load_settings)
+			utWebUI.loadSettings();
+		jQuery("#settingsHider").removeClass('open');
+		//DialogManager.show("Settings");
 	},
 
 	"searchExecute": function() {
@@ -4814,6 +4824,9 @@ var utWebUI = {
 		if (this.config) {
 			this.config.activeSettingsPane = id;
 		}
+		//console.log('#tab_' + id);
+		
+		jQuery('#dlgSettings-title').text(jQuery('#tab_' + id).text() || "Web UI");
 	},
 
 	"fdFormatRow": function(values, index) {
@@ -5026,4 +5039,4 @@ var utWebUI = {
 window.isGuest = isGuest;
 window.utWebUI = utWebUI;
 
-})();
+})(window.jQuery);

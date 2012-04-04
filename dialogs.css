@@ -369,18 +369,78 @@
 	width: 375px;
 }
 
+.panel-hider{
+	z-index: 499;
+	overflow: hidden;
+	position: absolute;
+	top: 85px;
+	bottom: 30px;
+	left: 0;
+	right: 0;
+	pointer-events: none;
+}
+.panel-hider .dlg-window{
+	position: absolute;
+	display: block;
+	height: 100%;
+	right: 0;
+	left: 0;
+	top: -100%;
+	border: 0;
+	-webkit-border-radius:	0;
+	-moz-border-radius: 	0;
+	-ms-border-radius: 		0;
+	-o-border-radius: 		0;
+	border-radius: 			0;
+	-webkit-box-shadow: none;
+	-moz-box-shadow: 	none;
+	-ms-box-shadow: 	none;
+	-o-box-shadow: 		none;
+	box-shadow: 		none;
+	-webkit-transition: top 0.25s linear;
+	-moz-transition: 	top 0.25s linear;
+	-ms-transition: 	top 0.25s linear;
+	-o-transition: 		top 0.25s linear;
+	transition: 		top 0.25s linear;
+}
+.panel-hider.open{
+	pointer-events: auto;
+}
+.panel-hider.open .dlg-window{
+/*	height: 100%;*/
+	top: 0;
+}
+
 /**************************************************
  * DIALOG: Settings
  **************************************************/
 
 #dlgSettings {
-	width: 680px;
+	width: 100%;
 	font-family: Helvetica, Arial, sans-serif;
 	font-size: 12px;
 }
 
-#dlgSettings-head {
+#dlgSettings .dlg-body{
+	margin: 0;
+}
+
+/*#dlgSettings-head {
 	background-image: url(./images/settings.png);
+}*/
+
+#dlgSettings-title{
+	font-weight: normal;
+	font-size: 24px;
+	padding: 10px 0 5px;
+	margin: 0 20px 5px 170px;
+	border-bottom: 1px solid #ddd;
+}
+
+#dlgSettings .dlg-body,
+#dlgSettings-form{
+	height: 100%;
+	width: 100%;
 }
 
 #dlgSettings-menuCont {
@@ -394,10 +454,19 @@
 	top: 0;
 	width: 149px;
 }
+#dlgSettings-menuCont h2{
+	font-weight: normal;
+	font-size: 22px;
+	padding: 10px 0 10px 10px;
+}
 
 #dlgSettings-menuCont > div {
 	display: block !important;
 	min-width: 100%;
+}
+
+#dlgSettings-advOptList{
+	min-height: 400px;
 }
 
 #dlgSettings-menu {
@@ -411,6 +480,7 @@
 	color: #333;
 	font-size: 12px;
 	border: 1px solid transparent;
+	text-indent: 10px;
 	border-left: 0;
 	border-right: 0;
 }
@@ -427,12 +497,11 @@
 }
 
 #dlgSettings .settings-pane {
-	height: 400px;
 	left: 150px;
 	overflow: auto;
-	padding: 5px 10px;
+	padding: 5px 20px;
 	position: relative;
-	width: 510px;
+	width: 560px;
 	background: #fff;
 }
 
@@ -614,23 +683,21 @@ input[id="gui.dlrate_menu"] {
 	position: relative;
 	background: #fff;
 	margin: 8px 0;
-	padding: 5px 15px 10px;
+	padding: 10px 15px 15px;
 	border: 0;
-	border-top: 1px solid #ddd;
+	border-top: 1px solid #e2e2e2;
 	-webkit-border-radius: 	0;
 	-moz-border-radius: 	0;
 	-ms-border-radius: 		0;
 	-o-border-radius: 		0;
 	border-radius: 			0;
-	-webkit-box-shadow: 0 1px 0 #fdfdfd inset;
-/*	background-image: -webkit-linear-gradient(top, #f2f2f2, #fff);*/
 }
 
 #dlgSettings fieldset legend{
 	padding: 0 5px;
 	font-family: Helvetica, Arial, sans-serif;
 	font-weight: normal;
-	font-size: 16px;
+	font-size: 18px;
 /*	float: left;*/
 }
 #dlgSettings input.btn{

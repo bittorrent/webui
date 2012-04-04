@@ -700,7 +700,7 @@ function setupDialogManager() {
 
 	DialogManager.init();
 
-	["About", "Add", "AddEditRSSFeed", "AddURL", "AddLabel", "Props", "RSSDownloader", "Settings"].each(function(k) {
+	["About", "Add", "AddEditRSSFeed", "AddURL", "AddLabel", "Props", "RSSDownloader"/*, "Settings" */].each(function(k) {
 		var isModal = ["AddEditRSSFeed", "Props"].contains(k);
 		DialogManager.add(k, isModal, {
 			  "Add": function() { utWebUI.getDirectoryList(); }
@@ -1000,14 +1000,16 @@ function setupSettings() {
 	// -- OK Button
 
 	$("DLG_SETTINGS_03").addEvent("click", function() {
-		DialogManager.hide("Settings");
+		//DialogManager.hide("Settings");
+		utWebUI.hideSettings();
 		utWebUI.setSettings();
 	});
 
 	// -- Cancel Button
 
 	$("DLG_SETTINGS_04").addEvent("click", function(ev) {
-		$("dlgSettings").getElement(".dlg-close").fireEvent("click", ev);
+		utWebUI.hideSettings(true);
+		//$("dlgSettings").getElement(".dlg-close").fireEvent("click", ev);
 			// Fire the "Close" button's click handler to make sure
 			// controls are restored if necessary
 	});
@@ -1020,9 +1022,10 @@ function setupSettings() {
 
 	// -- Close Button
 
-	$("dlgSettings").getElement(".dlg-close").addEvent("click", function(ev) {
-		utWebUI.loadSettings();
-	});
+	/*$("dlgSettings").getElement(".dlg-close").addEvent("click", function(ev) {
+		utWebUI.hideSettings(true);
+		//utWebUI.loadSettings();
+	});*/
 
 	// -- Form Submission
 
