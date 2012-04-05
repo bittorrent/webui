@@ -999,26 +999,37 @@ function setupSettings() {
 
 	// -- OK Button
 
-	$("DLG_SETTINGS_03").addEvent("click", function() {
-		//DialogManager.hide("Settings");
+	// $("DLG_SETTINGS_03").addEvent("click", function() {
+	// 	//DialogManager.hide("Settings");
+	// 	utWebUI.hideSettings();
+	// 	utWebUI.setSettings();
+	// });
+	
+	// -- Save Button
+	$("DLG_SETTINGS_SAVE").addEvent("click", function() {
 		utWebUI.hideSettings();
 		utWebUI.setSettings();
+	});
+	
+	$("DLG_SETTINGS_CLOSE").addEvent("click", function(e) {
+		e.preventDefault();
+		utWebUI.hideSettings();
 	});
 
 	// -- Cancel Button
 
-	$("DLG_SETTINGS_04").addEvent("click", function(ev) {
-		utWebUI.hideSettings(true);
-		//$("dlgSettings").getElement(".dlg-close").fireEvent("click", ev);
-			// Fire the "Close" button's click handler to make sure
-			// controls are restored if necessary
-	});
+	// $("DLG_SETTINGS_04").addEvent("click", function(ev) {
+	// 	utWebUI.hideSettings(true);
+	// 	//$("dlgSettings").getElement(".dlg-close").fireEvent("click", ev);
+	// 		// Fire the "Close" button's click handler to make sure
+	// 		// controls are restored if necessary
+	// });
 
 	// -- Apply Button
 
-	$("DLG_SETTINGS_05").addEvent("click", function(ev) {
-		utWebUI.setSettings();
-	});
+	// $("DLG_SETTINGS_05").addEvent("click", function(ev) {
+	// 	utWebUI.setSettings();
+	// });
 
 	// -- Close Button
 
@@ -1966,9 +1977,14 @@ function loadSettingStrings() {
 
 	// -- Buttons
 	_loadStrings("value", [
-		  "DLG_SETTINGS_4_CONN_04" // "Random"
+		  "DLG_SETTINGS_SAVE" // "Save settings"
+		, "DLG_SETTINGS_4_CONN_04" // "Random"
 		, "DLG_SETTINGS_7_TRANSFERCAP_12" // "Reset History"
 		, "DLG_SETTINGS_A_ADVANCED_05" // "Set"
+	]);
+	
+	_loadStrings("text", [
+		  "DLG_SETTINGS_MENU_TITLE" // "Settings"
 	]);
 
 	// -- Comboboxes

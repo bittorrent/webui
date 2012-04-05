@@ -465,7 +465,8 @@ var LANG_STR = [
 	, "UPnP external address:"
 	, "UI Revision"
 	
-	, "Save"
+	, "Save settings"
+	, "Settings"
 ];
 
 /* README : If you add any strings *Please consider updating fallback.js */

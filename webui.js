@@ -2844,19 +2844,29 @@ var utWebUI = {
 	},
 
 	"showSettings": function() {
-		var hider = jQuery("#settingsHider");
-		hider.addClass('open');
-		// hider.children('.dlg-window').animate({ top: '+=100%' }, 250);
+		this.animateToggle(true);
+		//DialogManager.show("Settings");
 	},
 	
 	"hideSettings": function(load_settings) {
 		if(load_settings)
 			utWebUI.loadSettings();
 			
-		var hider = jQuery("#settingsHider");
-		hider.removeClass('open');
-		// hider.children('.dlg-window').animate({ top: '-=100%' }, 250);
-		//DialogManager.show("Settings");
+		this.animateToggle(false);
+	},
+	
+	"animateToggle": function(show) {
+		var _top = show ? '0%' : '-100%';
+		
+		if(show)
+			jQuery("#settingsHider").addClass('open');
+		
+		jQuery('#dlgSettings').animate(
+			{ top: _top }, 350, 'linear', 
+			function(){
+				jQuery("#settingsHider").toggleClass('open', show);
+			}
+		);
 	},
 
 	"searchExecute": function() {

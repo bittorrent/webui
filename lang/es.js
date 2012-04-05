@@ -464,5 +464,6 @@ var LANG_STR = [
 		, "Dirección externa de UPnP:"
 		, "Revisión de UI"
 	
-		, "Guardar"
+		, "Guardar ajustes"
+		, "Ajustes"
 ];
