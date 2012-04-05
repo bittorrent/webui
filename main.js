@@ -2036,9 +2036,9 @@ function loadLangStrings(reload, sTableLoad, newLang) {
 	loadMiscStrings();
 	loadDialogStrings();
 	loadSettingStrings();
-if (window.utweb) {
-  utweb.change_language(newLang);
-}
+	if (window.utweb) {
+		utweb.change_language(newLang);
+	}
 
 }
 
