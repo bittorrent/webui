@@ -706,7 +706,7 @@ function setupDialogManager() {
 			  "Add": function() { utWebUI.getDirectoryList(); }
 			, "AddURL": function() { utWebUI.getDirectoryList(); }
 			, "RSSDownloader": function() { utWebUI.rssDownloaderShow(true); }
-			, "Settings": function() { utWebUI.stpanes.onChange(); }
+			// , "Settings": function() { utWebUI.stpanes.onChange(); }
 		}[k]);
 	});
 
