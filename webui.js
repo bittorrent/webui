@@ -3608,7 +3608,7 @@ var utWebUI = {
                             var torrent = utweb.tables.torrent.view.selectedRows()[0];
                             var newLabelInput = jQuery('#torrent_props_label');
 							
-							if (newLabelInput && newLabelInput.length)
+							if (newLabelInput.length)
                             {
                                 var newlabel = jQuery('#torrent_props_label').val();
                                 if (newlabel != torrent.label) {
