@@ -2861,12 +2861,14 @@ var utWebUI = {
 		if(show)
 			jQuery("#settingsHider").addClass('open');
 		
-		jQuery('#dlgSettings').animate(
-			{ top: _top }, 350, 'linear', 
-			function(){
-				jQuery("#settingsHider").toggleClass('open', show);
-			}
-		);
+		jQuery('#dlgSettings')
+			.addClass('moving')
+			.animate({ top: _top }, 350, 'linear', 
+				function(){
+					jQuery(this).removeClass('moving');
+					jQuery("#settingsHider").toggleClass('open', show);
+				}
+			);
 	},
 
 	"searchExecute": function() {
@@ -3605,7 +3607,8 @@ var utWebUI = {
                             // setting label
                             var torrent = utweb.tables.torrent.view.selectedRows()[0];
                             var newLabelInput = jQuery('#torrent_props_label');
-                            if (newLabelInput)
+							
+							if (newLabelInput && newLabelInput.length)
                             {
                                 var newlabel = jQuery('#torrent_props_label').val();
                                 if (newlabel != torrent.label) {
