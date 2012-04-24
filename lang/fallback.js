@@ -419,7 +419,7 @@ var LANG_STR_fallback = [
 	, "%ds"
 	, "%dw %dd"
 	, "%dy %dw"
-	, "More Actions" ,
+	, "More actions" ,
 
 	"Torrents",
 	"Feeds",
