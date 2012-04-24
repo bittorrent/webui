@@ -468,5 +468,6 @@ var LANG_STR = [
 	, "Save settings"
 	, "Settings"
 ];
+var LANG_STR_fallback = LANG_STR;
 
 /* README : If you add any strings *Please consider updating fallback.js */
