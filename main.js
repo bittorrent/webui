@@ -700,7 +700,7 @@ function setupDialogManager() {
 
 	DialogManager.init();
 
-	["About", "Add", "AddEditRSSFeed", "AddURL", "AddLabel", "Props", "RSSDownloader"/*, "Settings" */].each(function(k) {
+	["About", "Add", "AddEditRSSFeed", "AddURL", "AddLabel", "Props", "RSSDownloader", "Delete"].each(function(k) {
 		var isModal = ["AddEditRSSFeed", "Props"].contains(k);
 		DialogManager.add(k, isModal, {
 			  "Add": function() { utWebUI.getDirectoryList(); }
@@ -923,6 +923,33 @@ function setupPropertiesDialog() {
 
 }
 
+function setupDeleteTorrentDialog() {
+	//--------------------------------------------------
+	// DELETE TORRENT DIALOG
+	//--------------------------------------------------
+	
+	// -- OK Button
+	$("DELETE_TORRENT_OK").addEvent("click", function() {
+		DialogManager.hide("Delete");
+		
+		var torrent = utweb.tables.torrent;
+		var rows = utweb.tables.torrent.view.selectedRows();
+		var value = $$('input[name=dlgDelete-torrent]:checked').get('value');
+			
+		torrent.remove_torrents(rows, { delete_data: value === "delete_data" });
+	});
+
+	// -- Cancel Button
+
+	$("DELETE_TORRENT_CANCEL").addEvent("click", function(ev) {
+		DialogManager.hide("Delete");
+	});
+
+	// -- Form Submission
+
+	$("dlgDelete-form").addEvent("submit", Function.from(false));
+}
+
 function setupAddLabelDialog(view) {
 	//--------------------------------------------------
 	// ADD URL DIALOG
@@ -953,7 +980,6 @@ function setupAddLabelDialog(view) {
 	// -- Form Submission
 
 	$("dlgAddLabel-form").addEvent("submit", Function.from(false));
-
 }
 
 function setupAddURLDialog() {
@@ -1366,6 +1392,7 @@ function setupUserInterface() {
 	setupAddTorrentDialog();
 	setupRSSDialogs();
 	setupPropertiesDialog();
+	setupDeleteTorrentDialog();
 	setupAddURLDialog();
 	setupAddLabelDialog();
 	setupSettings();
