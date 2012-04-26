@@ -91,6 +91,34 @@ found in the LICENSE file.
 		</div>
 		<!-- Torrent Add Dialog */ -->
 
+		<!-- /* Torrent Delete Dialog -->
+		<div id="dlgDelete" class="dlg-window">
+			<a href="#" class="dlg-close"></a>
+			<div id="dlgDelete-head" class="dlg-head">Delete Torrents</div>
+			<form id="dlgDelete-form" action="">
+				<div class="dlg-body">
+					<h4 id="dlgDelete-caption">Are you sure you want to remove <span class="count">1</span> torrent<span class="plural">s</span>?</h4>
+					<div class="line-cont">
+						<input type="radio" name="dlgDelete-torrent" id="dlgDelete-no-data" value="torrent" checked="checked" />
+						<label for="dlgDelete-no-data">Just delete torrent</label>
+					</div>
+					<div class="line-cont">
+						<input type="radio" name="dlgDelete-torrent" id="dlgDelete-data" value="delete_data" />
+						<label for="dlgDelete-data">Also delete torrent data</label>
+					</div>
+					<!-- <div class="line-cont">
+						<input type="radio" name="dlgDelete-torrent" id="dlgDelete-data" value="keep_torrent" />
+						<label for="dlgDelete-data">Only delete data</label>
+					</div> -->
+				</div>
+				<div class="dlg-foot">
+					<input type="submit" id="DELETE_TORRENT_OK" class="btn" value="OK" />
+					<input type="button" id="DELETE_TORRENT_CANCEL" class="btn" value="Cancel" />
+				</div>
+			</form>
+		</div>
+		<!-- Torrent Delete Dialog */ -->
+
 		<!-- /* Torrent Add URL Dialog -->
 		<div id="dlgAddURL" class="dlg-window">
 			<a href="#" class="dlg-close"></a>
@@ -350,13 +378,16 @@ found in the LICENSE file.
 
 		<!-- /* Settings Dialog -->
 		<div id="dlgSettings" class="dlg-window">
-			<a href="#" class="dlg-close"></a>
-			<div id="dlgSettings-head" class="dlg-head"></div>
+			<!-- <a href="#" class="dlg-close"></a>
+			<div id="dlgSettings-head" class="dlg-head"></div> -->
 			<form id="dlgSettings-form" action="">
 				<div class="dlg-body">
-					<div id="dlgSettings-menuCont"><div class="fll">
-						<ul id="dlgSettings-menu"></ul>
-					</div></div>
+					<div id="dlgSettings-menuCont">
+						<h2 id="DLG_SETTINGS_MENU_TITLE">Settings</h2>
+						<div class="fll">
+							<ul id="dlgSettings-menu"></ul>
+						</div>
+					</div>
 
 					<div id="dlgSettings-General" class="settings-pane">
 						<fieldset>
