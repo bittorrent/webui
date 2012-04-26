@@ -1063,7 +1063,7 @@ function setupSettings() {
 		},
 		"lazyshow": true,
 		"onChange": utWebUI.settingsPaneChange.bind(utWebUI)
-	}).draw().show("dlgSettings-WebUI");
+	}).draw().show("dlgSettings-General");
 
 	// -- General
 
