@@ -903,3 +903,122 @@ ul.folder-tabs.icon li a > span > span {
 }
 
 
+/*! Improved UI */
+
+#tabs_toolbar{
+	overflow: hidden;
+}
+#tabs_toolbar .toolbar-flow {
+	margin-top: 2px;
+}
+#tabs_toolbar .uki-view-Button{
+	margin-left: 2px !important;
+	-webkit-border-radius: 	4px 4px 0 0;
+	-moz-border-radius: 	4px 4px 0 0;
+	-ms-border-radius: 		4px 4px 0 0;
+	-o-border-radius: 		4px 4px 0 0;
+	border-radius: 			4px 4px 0 0;
+}
+
+#tabs_toolbar .active_tab { 
+	background-color: #fff !important;
+	border: 0;
+/*	background-image: -webkit-linear-gradient(top, #fff, #eee 15%, #fff 50%) !important;*/
+	-webkit-box-shadow: 0 0 0 1px #bbb inset;
+	-moz-box-shadow: 	0 0 0 1px #bbb inset;
+	-ms-box-shadow: 	0 0 0 1px #bbb inset;
+	-o-box-shadow: 		0 0 0 1px #bbb inset;
+	box-shadow: 		0 0 0 1px #bbb inset;
+}
+#tabs_toolbar .uki-view-Button .uki-background-CssBox{
+	display: none;
+}
+#tabs_toolbar .uki-view-Button:hover{
+	background-color: #f6f6f6;
+	height: 28px !important;
+}
+#tabs_toolbar .active_tab:hover{
+	height: 31px !important;
+}
+
+#Toolbar{
+/*	top: -1px !important;*/
+	height: 39px !important;
+	border-bottom: 1px solid #ccc;
+	-webkit-box-shadow: 0 2px 0 rgba(255,255,255,0.75) inset !important;
+	-moz-box-shadow: 	0 2px 0 rgba(255,255,255,0.75) inset !important;
+	-ms-box-shadow: 	0 2px 0 rgba(255,255,255,0.75) inset !important;
+	-o-box-shadow: 		0 2px 0 rgba(255,255,255,0.75) inset !important;
+	box-shadow: 		0 2px 0 rgba(255,255,255,0.75) inset !important;
+}
+
+#tabs_toolbar .toolbar-flow{
+	left: 10px !important;
+}
+#tabs_toolbar .uki-view-Button{
+/*	margin-left: 10px;*/
+}
+
+#tabs_toolbar .uki-background-CssBox,
+#statusbar .uki-background-CssBox{
+	-webkit-box-shadow: 0 1px 0 rgba(255,255,255,0.5) inset !important;
+	-moz-box-shadow: 	0 1px 0 rgba(255,255,255,0.5) inset !important;
+	-ms-box-shadow: 	0 1px 0 rgba(255,255,255,0.5) inset !important;
+	-o-box-shadow: 		0 1px 0 rgba(255,255,255,0.5) inset !important;
+	box-shadow: 		0 1px 0 rgba(255,255,255,0.5) inset !important;
+/*
+	background-color: #e8e8e8 !important;
+	background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(0,0,0,0)), to(rgba(0,0,0,0.1))) !important;
+	background-image: -webkit-linear-gradient(top, rgba(0,0,0,0), rgba(0,0,0,0.1)) !important;
+	background-image: -moz-linear-gradient(top, rgba(0,0,0,0), rgba(0,0,0,0.1)) !important;
+	background-image: -ms-linear-gradient(top, rgba(0,0,0,0), rgba(0,0,0,0.1)) !important;
+	background-image: -o-linear-gradient(top, rgba(0,0,0,0), rgba(0,0,0,0.1)) !important;
+	background-image: linear-gradient(top, rgba(0,0,0,0), rgba(0,0,0,0.1)) !important;*/
+}
+#statusbar .uki-background-CssBox{
+	border-top: 1px solid #ccc;
+}
+#tabs_toolbar > .uki-background-CssBox{
+	border-bottom: 1px solid #bbb;
+}
+
+#statusbar_sessions{
+	background: #aaa;
+	color: #fff;
+	text-align: center;
+	font-weight: bold;
+	text-shadow: 0 1px 0 #666;
+	text-transform: lowercase;
+	cursor: pointer !important;
+	-webkit-box-shadow: 0 1px 1px rgba(0,0,0,0.25) inset, 0 1px 0 #fff;
+	-moz-box-shadow: 	0 1px 1px rgba(0,0,0,0.25) inset, 0 1px 0 #fff;
+	-ms-box-shadow: 	0 1px 1px rgba(0,0,0,0.25) inset, 0 1px 0 #fff;
+	-o-box-shadow: 		0 1px 1px rgba(0,0,0,0.25) inset, 0 1px 0 #fff;
+	box-shadow: 		0 1px 1px rgba(0,0,0,0.25) inset, 0 1px 0 #fff;
+	-webkit-border-radius: 	10px;
+	-moz-border-radius: 	10px;
+	-ms-border-radius: 		10px;
+	-o-border-radius: 		10px;
+	border-radius: 			10px;
+}
+#statusbar_sessions:hover{
+	background: #999;
+}
+#statusbar_sessions *{
+	font-size: 11px !important;
+}
+
+.table-list > div > div[style*=background]{
+	background: #d8ebff !important;
+}
+.table-list > div > div[style*=background] div{
+	color: #000 !important;
+}
+
+#categories [class*=selected]{
+/*	background: #39f !important;*/
+	background-color: #BBCEE9;
+}
+#categories [class*=selected] div{
+	color: #000 !important;
+}
