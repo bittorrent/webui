@@ -1083,6 +1083,7 @@ function setupSettings() {
 			, "dlgSettings-Queueing"    : ""
 			, "dlgSettings-Scheduler"   : ""
 			, "dlgSettings-WebUI"       : ""
+			, "dlgSettings-Remote"      : ""
 			, "dlgSettings-Advanced"    : ""
 			, "dlgSettings-UIExtras"    : ""
 			, "dlgSettings-DiskCache"   : ""
@@ -1806,6 +1807,7 @@ function loadSettingStrings() {
 		, "dlgSettings-TransferCap" : L_("ST_CAPT_TRANSFER_CAP")
 		, "dlgSettings-Queueing"    : L_("ST_CAPT_QUEUEING")
 		, "dlgSettings-WebUI"       : L_("ST_CAPT_WEBUI")
+		, "dlgSettings-Remote"      : L_("ST_CAPT_REMOTE")
 		, "dlgSettings-Scheduler"   : L_("ST_CAPT_SCHEDULER")
 		, "dlgSettings-Advanced"    : L_("ST_CAPT_ADVANCED")
 		, "dlgSettings-UIExtras"    : "&nbsp;&nbsp;&nbsp;&nbsp;" + L_("ST_CAPT_UI_EXTRAS") // TODO: Use CSS to indent instead of modifying the string directly...
@@ -1956,6 +1958,17 @@ function loadSettingStrings() {
 		, "MM_OPTIONS_SHOW_DETAIL"
 		, "MM_OPTIONS_SHOW_STATUS"
 		, "MM_OPTIONS_SHOW_TOOLBAR"
+
+		// Remote
+		, "DLG_SETTINGS_D_REMOTE_01"
+		, "DLG_SETTINGS_D_REMOTE_02"
+		, "DLG_SETTINGS_D_REMOTE_03"
+		, "DLG_SETTINGS_D_REMOTE_04"
+		, "DLG_SETTINGS_D_REMOTE_05"
+		, "DLG_SETTINGS_D_REMOTE_06"
+		, "DLG_SETTINGS_D_REMOTE_07"
+		, "DLG_SETTINGS_D_REMOTE_08"
+		, "DLG_SETTINGS_D_REMOTE_09"
 
 		// Advanced
 		, "DLG_SETTINGS_A_ADVANCED_01"
