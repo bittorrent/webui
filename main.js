@@ -1280,6 +1280,10 @@ function setupSettings() {
 		_link(this, 0, ["webui.port"]);
 	});
 
+	$("webui.uconnect_enable").addEvent(linkedEvent, function() {
+		_link(this, 0, ["webui.uconnect_username", "webui.uconnect_password", "DLG_SETTINGS_D_REMOTE_09"]);
+	});
+
 	$("multi_day_transfer_limit_en").addEvent(linkedEvent, function() {
 		_link(this, 0, ["multi_day_transfer_mode", "multi_day_transfer_limit_value", "multi_day_transfer_limit_unit", "multi_day_transfer_limit_span"]);
 	});
