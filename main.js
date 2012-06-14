@@ -935,8 +935,8 @@ function setupDeleteTorrentDialog() {
 		var torrent = utweb.tables.torrent;
 		var rows = utweb.tables.torrent.view.selectedRows();
 		var value = $$('input[name=dlgDelete-torrent]:checked').get('value');
-			
-		torrent.remove_torrents(rows, { delete_data: value === "delete_data" });
+		
+		torrent.remove_torrents(rows, { delete_data: value == "delete_data" });
 	});
 
 	// -- Cancel Button
