@@ -731,7 +731,8 @@ function setupAddTorrentDialog() {
 			+ "&download_dir=" + dir
 			+ "&path=" + sub
 		).submit();
-		// should it hide the dialog now?
+		// should it hide the dialog now? YES
+		DialogManager.hide("Add");
 	});
 
 	// -- Cancel Button (File)
