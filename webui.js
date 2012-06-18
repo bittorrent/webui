@@ -2794,6 +2794,37 @@ var utWebUI = {
 		resizeUI();
 	},
 
+	"registerRemote": function() {
+		var username_control = $("webui.uconnect_username");
+		var password_control = $("webui.uconnect_password");
+		if (!username_control || !password_control)
+			return;
+		var uc_enable = 0;
+		var enable_control = $("webui.uconnect_enable");
+		if (enable_control)
+			uc_enable = enable_control.checked ? 1 : 0;
+		if (0 == uc_enable) {
+			alert("Can't register without enabling remote access");
+			return;
+		}
+		var uc_username = username_control.get("value");
+		var uc_password = password_control.get("value");
+		// Ensure required fields have values
+		if (0 == uc_username.length || 0 == uc_password.length) {
+			alert("Can't register without entering a username and password");
+			return;
+		}
+		// Submit the request
+		var rrcallback = (function(json) {
+			this.presentRemoteRegistrationResults(json, fn);
+		}).bind(this);
+		this.request("action=configremote?u=" + uc_username + "&p=" + uc_password, rrcallback);
+	},
+
+	"presentRemoteRegistrationResults": function(json, fn) {
+		alert("Remote registration not yet ready");
+	},
+
 	"showAbout": function() {
 		DialogManager.show("About");
 	},

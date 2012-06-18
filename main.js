@@ -1221,6 +1221,18 @@ function setupSettings() {
 		}
 	});
 
+	// -- Remote Access
+
+	// Learn more button
+	$("DLG_SETTINGS_D_REMOTE_04").addEvent("click", function() {
+		openURL("https://remote.bittorrent.com/");
+	});
+	
+	// Sign in Button
+	$("DLG_SETTINGS_D_REMOTE_09").addEvent("click", function() {
+		utWebUI.registerRemote();
+	});
+	
 	// -- Advanced Options
 
 	utWebUI.advOptTable.create("dlgSettings-advOptList", utWebUI.advOptColDefs, Object.append({
