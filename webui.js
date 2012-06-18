@@ -2796,7 +2796,7 @@ var utWebUI = {
 
 	"registerRemote": function() {
 		var username_control = $("webui.uconnect_username");
-		var password_control = $("webui.uconnect_password");
+		var password_control = $("proposed_uconnect_password");
 		if (!username_control || !password_control)
 			return;
 		var uc_enable = 0;
@@ -2816,9 +2816,14 @@ var utWebUI = {
 		}
 		// Submit the request
 		var rrcallback = (function(json) {
-			this.presentRemoteRegistrationResults(json, fn);
+			// Enable remote
+			// TODO:  handle errors
+			var crcallback = (function(json) {
+				this.presentRemoteRegistrationResults(json, fn);
+			}).bind(this);
+			this.request("action=setsetting&s=webui.uconnect_enable&v=1", crcallback);
 		}).bind(this);
-		this.request("action=configremote?u=" + uc_username + "&p=" + uc_password, rrcallback);
+		this.request("action=configremote&u=" + uc_username + "&p=" + uc_password, rrcallback);
 	},
 
 	"presentRemoteRegistrationResults": function(json, fn) {
