@@ -1609,6 +1609,8 @@ function loadAboutStrings() {
 		, "DLG_ABOUT_UPNP_EXTERNAL_ADDRESS"
 		, "DLG_ABOUT_UI_REVISION"
 	]);
+	console.warn('RUNNING!!');
+	_loadStrings("text", { "show_about": "about" });
 }
 
 function loadMiscStrings() {

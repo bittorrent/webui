@@ -136,6 +136,22 @@
 
 #dlgAbout {
 	width: 20em;
+	font-family: Helvetica, Arial, sans-serif;
+}
+
+#dlgAbout fieldset{
+	margin: 10px;
+	font-size: 12px;
+	border: 0;
+	border-top: 1px solid #d0d0d0;
+	-webkit-border-radius: 0;
+	-moz-border-radius: 0;
+	-ms-border-radius: 0;
+	-o-border-radius: 0;
+	border-radius: 0;
+}
+#dlgAbout fieldset legend{
+	font-size: 14px;
 }
 
 #dlgAbout .centered-about-body {

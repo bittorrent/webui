@@ -905,6 +905,10 @@ ul.folder-tabs.icon li a > span > span {
 
 /*! Improved UI */
 
+#show_about{
+	text-transform: capitalize;
+}
+
 #tabs_toolbar{
 	overflow: hidden;
 }
