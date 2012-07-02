@@ -469,4 +469,16 @@ var LANG_STR_fallback = [
 	
 	, "Save settings"
 	, "Settings"
+
+	, "BitTorrent Remote"
+	, "BitTorrent Remote is a simple and secure web service that enables access to this BitTorrent client from anywhere on the internet."
+	, "Enable access here by creating a computer name and password, then access BitTorrent anytime from a PC or mobile web browser at remote.bittorrent.com or on your android phone with the BitTorrent Remote app"
+	, "Learn More..."
+	, "Enable BitTorrent Remote Access"
+	, "Set a username and password"
+	, "Username"
+	, "Password"
+	, "Sign in..."
+	, "Remote Access"
+
 ];

@@ -905,6 +905,10 @@ ul.folder-tabs.icon li a > span > span {
 
 /*! Improved UI */
 
+#show_about{
+	text-transform: capitalize;
+}
+
 #tabs_toolbar{
 	overflow: hidden;
 }
@@ -941,9 +945,13 @@ ul.folder-tabs.icon li a > span > span {
 	height: 31px !important;
 }
 
+#Toolbar,
+#ToolbarBG{
+	border-bottom: 1px solid #ccc;
+	height: 39px !important;
+}
 #Toolbar{
 /*	top: -1px !important;*/
-	height: 39px !important;
 	border-bottom: 1px solid #ccc;
 	-webkit-box-shadow: 0 2px 0 rgba(255,255,255,0.75) inset !important;
 	-moz-box-shadow: 	0 2px 0 rgba(255,255,255,0.75) inset !important;

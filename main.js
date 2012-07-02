@@ -731,7 +731,8 @@ function setupAddTorrentDialog() {
 			+ "&download_dir=" + dir
 			+ "&path=" + sub
 		).submit();
-		// should it hide the dialog now?
+		// should it hide the dialog now? YES
+		DialogManager.hide("Add");
 	});
 
 	// -- Cancel Button (File)
@@ -935,8 +936,8 @@ function setupDeleteTorrentDialog() {
 		var torrent = utweb.tables.torrent;
 		var rows = utweb.tables.torrent.view.selectedRows();
 		var value = $$('input[name=dlgDelete-torrent]:checked').get('value');
-			
-		torrent.remove_torrents(rows, { delete_data: value === "delete_data" });
+		
+		torrent.remove_torrents(rows, { delete_data: value == "delete_data" });
 	});
 
 	// -- Cancel Button
@@ -1082,6 +1083,7 @@ function setupSettings() {
 			, "dlgSettings-Queueing"    : ""
 			, "dlgSettings-Scheduler"   : ""
 			, "dlgSettings-WebUI"       : ""
+			, "dlgSettings-Remote"      : ""
 			, "dlgSettings-Advanced"    : ""
 			, "dlgSettings-UIExtras"    : ""
 			, "dlgSettings-DiskCache"   : ""
@@ -1219,6 +1221,18 @@ function setupSettings() {
 		}
 	});
 
+	// -- Remote Access
+
+	// Learn more button
+	$("DLG_SETTINGS_D_REMOTE_04").addEvent("click", function() {
+		openURL("https://remote.bittorrent.com/");
+	});
+	
+	// Sign in Button
+	$("DLG_SETTINGS_D_REMOTE_09").addEvent("click", function() {
+		utWebUI.registerRemote();
+	});
+	
 	// -- Advanced Options
 
 	utWebUI.advOptTable.create("dlgSettings-advOptList", utWebUI.advOptColDefs, Object.append({
@@ -1276,6 +1290,10 @@ function setupSettings() {
 
 	$("webui.enable_listen").addEvent(linkedEvent, function() {
 		_link(this, 0, ["webui.port"]);
+	});
+
+	$("webui.uconnect_enable").addEvent(linkedEvent, function() {
+		_link(this, 0, ["webui.uconnect_username", "proposed_uconnect_password", "DLG_SETTINGS_D_REMOTE_09"]);
 	});
 
 	$("multi_day_transfer_limit_en").addEvent(linkedEvent, function() {
@@ -1608,6 +1626,10 @@ function loadAboutStrings() {
 		, "DLG_ABOUT_UPNP_EXTERNAL_ADDRESS"
 		, "DLG_ABOUT_UI_REVISION"
 	]);
+	_loadStrings("text", {
+		"show_about": "about",
+		"dlgAbout-head": "about"
+	});
 }
 
 function loadMiscStrings() {
@@ -1803,6 +1825,7 @@ function loadSettingStrings() {
 		, "dlgSettings-TransferCap" : L_("ST_CAPT_TRANSFER_CAP")
 		, "dlgSettings-Queueing"    : L_("ST_CAPT_QUEUEING")
 		, "dlgSettings-WebUI"       : L_("ST_CAPT_WEBUI")
+		, "dlgSettings-Remote"      : L_("ST_CAPT_REMOTE")
 		, "dlgSettings-Scheduler"   : L_("ST_CAPT_SCHEDULER")
 		, "dlgSettings-Advanced"    : L_("ST_CAPT_ADVANCED")
 		, "dlgSettings-UIExtras"    : "&nbsp;&nbsp;&nbsp;&nbsp;" + L_("ST_CAPT_UI_EXTRAS") // TODO: Use CSS to indent instead of modifying the string directly...
@@ -1953,6 +1976,17 @@ function loadSettingStrings() {
 		, "MM_OPTIONS_SHOW_DETAIL"
 		, "MM_OPTIONS_SHOW_STATUS"
 		, "MM_OPTIONS_SHOW_TOOLBAR"
+
+		// Remote
+		, "DLG_SETTINGS_D_REMOTE_01"
+		, "DLG_SETTINGS_D_REMOTE_02"
+		, "DLG_SETTINGS_D_REMOTE_03"
+		, "DLG_SETTINGS_D_REMOTE_04"
+		, "DLG_SETTINGS_D_REMOTE_05"
+		, "DLG_SETTINGS_D_REMOTE_06"
+		, "DLG_SETTINGS_D_REMOTE_07"
+		, "DLG_SETTINGS_D_REMOTE_08"
+		, "DLG_SETTINGS_D_REMOTE_09"
 
 		// Advanced
 		, "DLG_SETTINGS_A_ADVANCED_01"
