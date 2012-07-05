@@ -537,6 +537,10 @@
 /*	color: #FFFFFF;*/
 }
 
+#dlgSettings-menu li.hidden {
+	display: none!important;
+}
+
 #dlgSettings .dlg-body {
 	padding: 0;
 }
