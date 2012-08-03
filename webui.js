@@ -2815,19 +2815,46 @@ var utWebUI = {
 			return;
 		}
 		// Submit the request
-		var rrcallback = (function(json) {
-			// Enable remote
-			// TODO:  handle errors
-			var crcallback = (function(json) {
-				this.presentRemoteRegistrationResults(json, fn);
-			}).bind(this);
-			this.request("action=setsetting&s=webui.uconnect_enable&v=1", crcallback);
+		var remote_success_callback = (function(json) {
+			this.presentRemoteSuccessResults(json);
 		}).bind(this);
-		this.request("action=configremote&u=" + uc_username + "&p=" + uc_password, rrcallback);
+
+		var remote_failure_callback = (function(json) {
+			this.presentRemoteFailureResults(json);
+		}).bind(this);
+
+		var qs = "action=configremote&u=" + uc_username + "&p=" + uc_password;
+
+		this.disableRegistrationOptions();
+		getraptor().post_raw( qs, {}, remote_success_callback, remote_failure_callback, {async:true});
+		// this.request("action=configremote&u=" + uc_username + "&p=" + uc_password, remote_result_callback);
 	},
 
-	"presentRemoteRegistrationResults": function(json, fn) {
-		alert("Remote registration not yet ready");
+	"presentRemoteFailureResults": function(json) {
+		alert(json.msg);
+		this.enableRegistrationOptions();
+	},
+
+	"presentRemoteSuccessResults": function(json) {
+		alert(json.message);
+		this.enableRegistrationOptions();
+	},
+
+	"disableRegistrationOptions": function() {
+		$('webui.uconnect_username').set("disabled", "disabled");
+		$('proposed_uconnect_password').set("disabled", "disabled");
+		$('DLG_SETTINGS_D_REMOTE_09').set("value", "Connecting...");
+		$('DLG_SETTINGS_D_REMOTE_09').set("disabled", "disabled");
+		$('webui.uconnect_enable').set("disabled", "disabled");
+	},
+
+	"enableRegistrationOptions": function() {
+		$('webui.uconnect_username').removeAttribute("disabled");
+		$('proposed_uconnect_password').removeAttribute("disabled");
+		$('DLG_SETTINGS_D_REMOTE_09').set("value", "Sign");
+		$('DLG_SETTINGS_D_REMOTE_09').removeAttribute("disabled");
+		$('webui.uconnect_enable').removeAttribute("disabled");
+
 	},
 
 	"showAbout": function() {
