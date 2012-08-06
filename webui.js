@@ -2545,7 +2545,6 @@ var utWebUI = {
 			"seed_time": 0,
 			"ulslots": 0
 		};
-
 		// Advanced settings
 		this.advOptTable.clearSelection();
 		this.advOptSelect();
@@ -2625,8 +2624,8 @@ var utWebUI = {
 		this.toggleSearchBar();
 	},
 
-	"setSettings": function() {
-		var value = null, reload = false, hasChanged = false;
+    "setSettings": function() {         var value = null, reload = false,
+hasChanged = false;
 
 		Logger.setLogDate(this.getAdvSetting("gui.log_date"));
 
@@ -2823,37 +2822,51 @@ var utWebUI = {
 			this.presentRemoteFailureResults(json);
 		}).bind(this);
 
-		var qs = "action=configremote&u=" + uc_username + "&p=" + uc_password;
-
 		this.disableRegistrationOptions();
-		getraptor().post_raw( qs, {}, remote_success_callback, remote_failure_callback, {async:true});
+		this.sendRemoteRegistrationRequest(uc_username, uc_password, remote_success_callback, remote_failure_callback, {async:true});		
+
+		// Rex: old way of sending request. The reason I change this is that I need to pass failure call back into 
+		// post_raw. However in method "request" the "fails" parameter doesn't do what I want to do.
 		// this.request("action=configremote&u=" + uc_username + "&p=" + uc_password, remote_result_callback);
 	},
 
+	"sendRemoteRegistrationRequest": function(username, password, success_cb, fail_cb, options) {
+		var qs = "action=configremote&u=" + username + "&p=" + password;
+		getraptor().post_raw(qs, {}, success_cb, fail_cb, options);
+	},
+
 	"presentRemoteFailureResults": function(json) {
-		alert(json.msg);
+		jQuery("#remote_connection_status").text(json.msg);
+		jQuery("#remote_connection_status").css("color", "red");
 		this.enableRegistrationOptions();
 	},
 
 	"presentRemoteSuccessResults": function(json) {
-		alert(json.message);
+		if (json.code === 0) {
+			jQuery("#remote_connection_status").css("color", "green");
+		} else {
+			jQuery("#remote_connection_status").css("color", "red");
+		}
+		jQuery("#remote_connection_status").text(json.message);
 		this.enableRegistrationOptions();
 	},
 
 	"disableRegistrationOptions": function() {
-		$('webui.uconnect_username').set("disabled", "disabled");
-		$('proposed_uconnect_password').set("disabled", "disabled");
-		$('DLG_SETTINGS_D_REMOTE_09').set("value", "Connecting...");
-		$('DLG_SETTINGS_D_REMOTE_09').set("disabled", "disabled");
-		$('webui.uconnect_enable').set("disabled", "disabled");
+		jQuery("#remote_connection_status").css("color", "black");
+		jQuery("#remote_connection_status").text("Connecting..");
+
+		jQuery("#webui.uconnect_username").attr("disabled", "disabled");
+		jQuery("#proposed_uconnect_password").attr("disabled", "disabled");
+		jQuery("#DLG_SETTINGS_D_REMOTE_09").attr("disabled", "disabled");
+		jQuery("#webui.uconnect_enable").attr("disabled", "disabled");
 	},
 
 	"enableRegistrationOptions": function() {
-		$('webui.uconnect_username').removeAttribute("disabled");
-		$('proposed_uconnect_password').removeAttribute("disabled");
-		$('DLG_SETTINGS_D_REMOTE_09').set("value", "Sign");
-		$('DLG_SETTINGS_D_REMOTE_09').removeAttribute("disabled");
-		$('webui.uconnect_enable').removeAttribute("disabled");
+		jQuery("#webui.uconnect_username").removeAttr("disabled");
+		jQuery("#proposed_uconnect_password").removeAttr("disabled");
+		jQuery("#DLG_SETTINGS_D_REMOTE_09").val("Sign in");
+		jQuery("#DLG_SETTINGS_D_REMOTE_09").removeAttr("disabled");
+		jQuery("#webui.uconnect_enable").removeAttr("disabled");
 
 	},
 
