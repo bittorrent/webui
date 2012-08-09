@@ -2581,6 +2581,9 @@ var utWebUI = {
 			if (Browser.ie) ele.fireEvent("click");
 		}
 
+		// Parse remote access status code into human readable
+		this.showRemoteStatus(this.settings['webui.uconnect_cred_status']);
+
 		// WebUI configuration
 		[
 			"useSysFont",
@@ -2836,38 +2839,78 @@ hasChanged = false;
 	},
 
 	"presentRemoteFailureResults": function(json) {
-		jQuery("#remote_connection_status").text(json.msg);
-		jQuery("#remote_connection_status").css("color", "red");
+		this.showRemoteStatus(json.code);
 		this.enableRegistrationOptions();
 	},
 
 	"presentRemoteSuccessResults": function(json) {
-		if (json.code === 0) {
-			jQuery("#remote_connection_status").css("color", "green");
-		} else {
-			jQuery("#remote_connection_status").css("color", "red");
-		}
-		jQuery("#remote_connection_status").text(json.message);
+		this.showRemoteStatus(json.code);
 		this.enableRegistrationOptions();
 	},
 
 	"disableRegistrationOptions": function() {
-		jQuery("#remote_connection_status").css("color", "black");
-		jQuery("#remote_connection_status").text("Connecting..");
+		this.showRemoteStatus(-1);
 
-		jQuery("#webui.uconnect_username").attr("disabled", "disabled");
+		jQuery("#webui\\.uconnect_username").attr("disabled", "disabled");
 		jQuery("#proposed_uconnect_password").attr("disabled", "disabled");
 		jQuery("#DLG_SETTINGS_D_REMOTE_09").attr("disabled", "disabled");
-		jQuery("#webui.uconnect_enable").attr("disabled", "disabled");
+		jQuery("#webui\\.uconnect_enable").attr("disabled", "disabled");
 	},
 
 	"enableRegistrationOptions": function() {
-		jQuery("#webui.uconnect_username").removeAttr("disabled");
+		jQuery("#webui\\.uconnect_username").removeAttr("disabled");
 		jQuery("#proposed_uconnect_password").removeAttr("disabled");
 		jQuery("#DLG_SETTINGS_D_REMOTE_09").val("Sign in");
 		jQuery("#DLG_SETTINGS_D_REMOTE_09").removeAttr("disabled");
-		jQuery("#webui.uconnect_enable").removeAttr("disabled");
+		jQuery("#webui\\.uconnect_enable").removeAttr("disabled");
 
+	},
+
+	"showRemoteStatus": function(statusCode) {
+		var status_input = jQuery("#webui\\.uconnect_cred_status");
+		switch(statusCode) {
+			case 1: {
+				status_input.css("color", "green");
+				status_input.text("Accessible");
+				break;
+			}
+			case 2: {
+				status_input.css("color", "red");
+				status_input.text("Not accessible (Username not available)");
+				break;
+			}
+			case 3: {
+				status_input.css("color", "red");
+				status_input.text("Not accessible (Peer block)");
+				break;
+			}
+			case 4: {
+				status_input.css("color", "red");
+				status_input.text("Not accessible (No password supplied)");
+				break;
+			}
+			case 5: {
+				status_input.css("color", "red");
+				status_input.text("Not accessible (Security answer doesn't match)");
+				break;
+			}
+			case -1: {
+				status_input.css("color", "black");
+				status_input.text("Connecting...");
+				break;
+			}
+			case undefined: {
+				// When request timed out, there will be no status code provide
+				status_input.css("color", "red");
+				status_input.text("Request failed. Try again.");
+				break;
+			}
+			default: {
+				status_input.css("color", "black");
+				status_input.text("Unknow status");
+				break;
+			}
+		}
 	},
 
 	"showAbout": function() {

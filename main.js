@@ -1293,7 +1293,7 @@ function setupSettings() {
 	});
 
 	$("webui.uconnect_enable").addEvent(linkedEvent, function() {
-		_link(this, 0, ["webui.uconnect_username", "proposed_uconnect_password", "DLG_SETTINGS_D_REMOTE_09", "remote_connection_status"]);
+		_link(this, 0, ["webui.uconnect_username", "proposed_uconnect_password", "DLG_SETTINGS_D_REMOTE_09"]);
 	});
 
 	$("multi_day_transfer_limit_en").addEvent(linkedEvent, function() {
