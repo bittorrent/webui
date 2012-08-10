@@ -2907,7 +2907,7 @@ hasChanged = false;
 			}
 			default: {
 				status_input.css("color", "black");
-				status_input.text("Unknow status");
+				status_input.text("Unknown status");
 				break;
 			}
 		}

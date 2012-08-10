@@ -755,8 +755,8 @@ input[id="gui.dlrate_menu"] {
 	width: auto;
 	min-width: 70px;
 	padding: 0 5px;
-	color: #333;
-	text-shadow: 0 1px #fff;
+/*	color: #333;
+*/	text-shadow: 0 1px #fff;
 	-webkit-border-radius: 4px !important;
 	-moz-border-radius: 4px !important;
 	-ms-border-radius: 4px !important;
@@ -909,3 +909,11 @@ div.CMenu a.sel { background: transparent url(./images/menusel.png) no-repeat sc
 div.CMenu a.check { background: transparent url(./images/menucheck.png) no-repeat scroll 5px center; }
 
 div.CMenu li:hover > a { background-color: #0099FF; color: #FFFFFF; }
+
+
+/****************************************
+Some specific UI tweaks
+****************************************/
+#webui\.uconnect_cred_status.disabled {
+	opacity: 0;
+}

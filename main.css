@@ -117,6 +117,7 @@ input.btn:active {
 input.btn.disabled {
 	background-position: center top;
 	border-color: #D0D0D0;
+	color: #999;
 }
 
 input.tbox {
