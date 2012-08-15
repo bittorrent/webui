@@ -768,6 +768,11 @@ input[id="gui.dlrate_menu"] {
 	-o-box-shadow: 		0 1px 3px rgba(0,0,0,0.1);
 	box-shadow: 		0 1px 3px rgba(0,0,0,0.1);
 }
+#dlgSettings input.btn.disabled:hover {
+	cursor: default;
+	border-color: #AAA;
+}
+
 #dlgSettings input.btn:hover{
 	border-color: #888;
 }
