@@ -2559,7 +2559,7 @@ var utWebUI = {
 				}
 			}
 		}, this);
-
+		console.log(this.settings);
 		// Other settings
 		for (var k in this.settings) {
 			var ele = $(k);
@@ -2580,6 +2580,9 @@ var utWebUI = {
 			ele.fireEvent("change");
 			if (Browser.ie) ele.fireEvent("click");
 		}
+
+		// Parse remote access status code into human readable
+		this.showRemoteStatus(this.settings['webui.uconnect_cred_status']);
 
 		// WebUI configuration
 		[
@@ -2803,16 +2806,28 @@ hasChanged = false;
 		if (enable_control)
 			uc_enable = enable_control.checked ? 1 : 0;
 		if (0 == uc_enable) {
-			alert("Can't register without enabling remote access");
+			// Can't register without enabling remote access
+			this.showRemoteStatus(10);
 			return;
 		}
 		var uc_username = username_control.get("value");
 		var uc_password = password_control.get("value");
 		// Ensure required fields have values
 		if (0 == uc_username.length || 0 == uc_password.length) {
-			alert("Can't register without entering a username and password");
+			// Either username or password is empty
+			this.showRemoteStatus(4);
 			return;
 		}
+
+		if (!this.validUsername(uc_username)) {
+			this.showRemoteStatus(6);
+			return;
+		}
+		if (!this.validPassword(uc_password)) {
+			this.showRemoteStatus(7);
+			return;
+		}
+
 		// Submit the request
 		var remote_success_callback = (function(json) {
 			this.presentRemoteSuccessResults(json);
@@ -2830,46 +2845,134 @@ hasChanged = false;
 		// this.request("action=configremote&u=" + uc_username + "&p=" + uc_password, remote_result_callback);
 	},
 
+	validPassword: function(password) {
+		return this.validateUconnectParamters(password, 128);
+	},
+
+	validUsername: function(username) {
+		return this.validateUconnectParamters(username, 128);
+	},
+
+	validateUconnectParamters: function(text, max_length) {
+		if (text.length > max_length) {
+			return false;
+		}
+
+		for (var i = 0; i < text.length; ++i) {
+			if (text.charCodeAt(i) <= 32 || text.charCodeAt(i) > 126) {
+				return false;
+			}
+		}
+		return true;
+	},
+
 	"sendRemoteRegistrationRequest": function(username, password, success_cb, fail_cb, options) {
 		var qs = "action=configremote&u=" + username + "&p=" + password;
 		getraptor().post_raw(qs, {}, success_cb, fail_cb, options);
 	},
 
 	"presentRemoteFailureResults": function(json) {
-		jQuery("#remote_connection_status").text(json.msg);
-		jQuery("#remote_connection_status").css("color", "red");
+		this.showRemoteStatus(json.code);
 		this.enableRegistrationOptions();
 	},
 
 	"presentRemoteSuccessResults": function(json) {
-		if (json.code === 0) {
-			jQuery("#remote_connection_status").css("color", "green");
-		} else {
-			jQuery("#remote_connection_status").css("color", "red");
-		}
-		jQuery("#remote_connection_status").text(json.message);
+		this.showRemoteStatus(json.code);
 		this.enableRegistrationOptions();
 	},
 
 	"disableRegistrationOptions": function() {
-		jQuery("#remote_connection_status").css("color", "black");
-		jQuery("#remote_connection_status").text("Connecting..");
+		this.showRemoteStatus(-1);
 
-		jQuery("#webui.uconnect_username").attr("disabled", "disabled");
+		jQuery("#webui\\.uconnect_username").attr("disabled", "disabled");
 		jQuery("#proposed_uconnect_password").attr("disabled", "disabled");
 		jQuery("#DLG_SETTINGS_D_REMOTE_09").attr("disabled", "disabled");
-		jQuery("#webui.uconnect_enable").attr("disabled", "disabled");
+		jQuery("#webui\\.uconnect_enable").attr("disabled", "disabled");
 	},
 
 	"enableRegistrationOptions": function() {
-		jQuery("#webui.uconnect_username").removeAttr("disabled");
+		jQuery("#webui\\.uconnect_username").removeAttr("disabled");
 		jQuery("#proposed_uconnect_password").removeAttr("disabled");
 		jQuery("#DLG_SETTINGS_D_REMOTE_09").val("Sign in");
 		jQuery("#DLG_SETTINGS_D_REMOTE_09").removeAttr("disabled");
-		jQuery("#webui.uconnect_enable").removeAttr("disabled");
+		jQuery("#webui\\.uconnect_enable").removeAttr("disabled");
 
 	},
 
+	"showRemoteStatus": function(statusCode) {
+		var status_input = jQuery("#webui\\.uconnect_cred_status");
+		
+		switch(statusCode) {
+			case 1: {
+				status_input.css("color", "green");
+				status_input.text("Accessible");
+				break;
+			}
+			case 2: {
+				status_input.css("color", "red");
+				status_input.text("Username not available");
+				break;
+			}
+			case 3: {
+				status_input.css("color", "red");
+				status_input.text("Peer block");
+				break;
+			}
+			case 4: {
+				status_input.css("color", "red");
+				status_input.text("No username or password supplied");
+				break;
+			}
+			case 5: {
+				status_input.css("color", "red");
+				status_input.text("Security answer doesn't match");
+				break;
+			}
+			case 6: {
+				status_input.css("color", "red");
+				status_input.text("Username is too long or has invalid characters");
+				break;
+			}
+			case 7: {
+				status_input.css("color", "red");
+				status_input.text("Password is too long or has invalid characters");
+				break;
+			}
+			case 8: {
+				status_input.css("color", "red");
+				status_input.text("Another configuration attempt is in progress");
+				break;
+			}
+			case 9: {
+				status_input.css("color", "red");
+				status_input.text("Attempting to configure using authentication that doesn't support configuration");
+				break;
+			}
+			case 10: {
+				status_input.css("color", "red");
+				status_input.text("Can't register without enabling remote access");
+				break;
+			}
+			case -1: {
+				status_input.css("color", "black");
+				status_input.text("Connecting...");
+				break;
+			}
+			case undefined: {
+				// When request timed out, there will be no status code provide
+				status_input.css("color", "red");
+				status_input.text("Request failed. Try again.");
+				break;
+			}
+			default: {
+				status_input.css("color", "black");
+				status_input.text("Not Accessible");
+				break;
+			}
+		}
+	},
+
+	
 	"showAbout": function() {
 		DialogManager.show("About");
 	},
