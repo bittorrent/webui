@@ -336,7 +336,8 @@ var utWebUI = {
 	"init": function() {
 		this.config = Object.merge({}, this.defConfig); // deep copy default config
 		this.config.lang = "";
-
+		this.bindUsernameFieldInputValidation();
+		this.bindPasswordFieldInputValidation();
 		// Calculate index of some columns for ease of reference elsewhere
 		this.trtColDoneIdx = this.trtColDefs.map(function(item) { return (item[0] == "done"); }).indexOf(true);
 		this.trtColStatusIdx = this.trtColDefs.map(function(item) { return (item[0] == "status"); }).indexOf(true);
@@ -2582,7 +2583,7 @@ var utWebUI = {
 		}
 
 		// Parse remote access status code into human readable
-		this.showRemoteStatus(this.settings['webui.uconnect_cred_status']);
+		// this.showRemoteStatus(this.settings['webui.uconnect_cred_status']);
 
 		// WebUI configuration
 		[
@@ -2819,11 +2820,11 @@ hasChanged = false;
 			return;
 		}
 
-		if (!this.validUsername(uc_username)) {
+		if (!this.validUsernameOnSubmit(uc_username)) {
 			this.showRemoteStatus(6);
 			return;
 		}
-		if (!this.validPassword(uc_password)) {
+		if (!this.validPasswordOnSubmit(uc_password)) {
 			this.showRemoteStatus(7);
 			return;
 		}
@@ -2845,11 +2846,60 @@ hasChanged = false;
 		// this.request("action=configremote&u=" + uc_username + "&p=" + uc_password, remote_result_callback);
 	},
 
-	validPassword: function(password) {
+	bindUsernameFieldInputValidation: function() {
+		var parent = this;
+		var username_input = jQuery("#webui\\.uconnect_username");
+		var password_input = jQuery("#proposed_uconnect_password");
+		var submit_btn = jQuery("#DLG_SETTINGS_D_REMOTE_09");
+		var status_input = jQuery("#webui\\.uconnect_cred_status");
+
+		username_input.keyup(function() {
+			if(parent.validateUconnectParamters(username_input.val(), 128)) {
+				status_input.text("");
+				submit_btn.removeAttr("disabled");
+				if (submit_btn.is('.disabled')) {
+					submit_btn.removeClass("disabled");
+				}
+				password_input.removeAttr("disabled");
+			} else {
+				parent.showRemoteStatus(6);
+				submit_btn.attr("disabled", "disabled");
+				submit_btn.addClass("disabled");
+				password_input.attr("disabled", "disabled");
+			}
+		});
+	},
+
+	bindPasswordFieldInputValidation: function() {
+		var parent = this;
+		var username_input = jQuery("#webui\\.uconnect_username");
+		var password_input = jQuery("#proposed_uconnect_password");
+		var submit_btn = jQuery("#DLG_SETTINGS_D_REMOTE_09");
+		var status_input = jQuery("#webui\\.uconnect_cred_status");
+
+		password_input.keyup(function() {
+			if(parent.validateUconnectParamters(password_input.val(), 128)) {
+				status_input.text("");
+				submit_btn.removeAttr("disabled");
+				if (submit_btn.is(".disabled")) {
+					submit_btn.removeClass("disabled");
+				}
+				username_input.removeAttr("disabled");
+			} else {
+				parent.showRemoteStatus(7);
+				submit_btn.attr("disabled", "disabled");
+				submit_btn.addClass("disabled");
+				username_input.attr("disabled", "disabled");
+			}
+		});
+
+	},
+
+	validPasswordOnSubmit: function(password) {
 		return this.validateUconnectParamters(password, 128);
 	},
 
-	validUsername: function(username) {
+	validUsernameOnSubmit: function(username) {
 		return this.validateUconnectParamters(username, 128);
 	},
 
@@ -2872,13 +2922,13 @@ hasChanged = false;
 	},
 
 	"presentRemoteFailureResults": function(json) {
-		this.showRemoteStatus(json.code);
 		this.enableRegistrationOptions();
+		this.showRemoteStatus(json.code);
 	},
 
 	"presentRemoteSuccessResults": function(json) {
-		this.showRemoteStatus(json.code);
 		this.enableRegistrationOptions();
+		this.showRemoteStatus(json.code);
 	},
 
 	"disableRegistrationOptions": function() {
@@ -2887,25 +2937,28 @@ hasChanged = false;
 		jQuery("#webui\\.uconnect_username").attr("disabled", "disabled");
 		jQuery("#proposed_uconnect_password").attr("disabled", "disabled");
 		jQuery("#DLG_SETTINGS_D_REMOTE_09").attr("disabled", "disabled");
+		jQuery("#DLG_SETTINGS_D_REMOTE_09").addClass("disabled");
 		jQuery("#webui\\.uconnect_enable").attr("disabled", "disabled");
 	},
 
 	"enableRegistrationOptions": function() {
 		jQuery("#webui\\.uconnect_username").removeAttr("disabled");
 		jQuery("#proposed_uconnect_password").removeAttr("disabled");
-		jQuery("#DLG_SETTINGS_D_REMOTE_09").val("Sign in");
 		jQuery("#DLG_SETTINGS_D_REMOTE_09").removeAttr("disabled");
+		jQuery("#DLG_SETTINGS_D_REMOTE_09").removeClass("disabled");
 		jQuery("#webui\\.uconnect_enable").removeAttr("disabled");
-
 	},
 
 	"showRemoteStatus": function(statusCode) {
 		var status_input = jQuery("#webui\\.uconnect_cred_status");
-		
+		var signin_btn = jQuery("#DLG_SETTINGS_D_REMOTE_09");
 		switch(statusCode) {
 			case 1: {
 				status_input.css("color", "green");
 				status_input.text("Accessible");
+				signin_btn.addClass("disabled");
+				signin_btn.attr("disabled", "disabled");
+				// $("DLG_SETTINGS_D_REMOTE_09").setAttribute("disabled", "");
 				break;
 			}
 			case 2: {
