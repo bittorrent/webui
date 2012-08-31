@@ -338,6 +338,7 @@ var utWebUI = {
 		this.config.lang = "";
 		this.bindUsernameFieldInputValidation();
 		this.bindPasswordFieldInputValidation();
+		this.bindRemoteSwitch();
 		// Calculate index of some columns for ease of reference elsewhere
 		this.trtColDoneIdx = this.trtColDefs.map(function(item) { return (item[0] == "done"); }).indexOf(true);
 		this.trtColStatusIdx = this.trtColDefs.map(function(item) { return (item[0] == "status"); }).indexOf(true);
@@ -2893,6 +2894,17 @@ hasChanged = false;
 			}
 		});
 
+	},
+
+	bindRemoteSwitch: function() {
+		var remote_switch = jQuery("#webui\\.uconnect_enable");
+		var status_input = jQuery("#webui\\.uconnect_cred_status");
+
+		remote_switch.click(function() {
+			if (!remote_switch.is(":checked")) {
+				status_input.text("");			
+			}
+		});
 	},
 
 	validPasswordOnSubmit: function(password) {
