@@ -336,9 +336,11 @@ var utWebUI = {
 	"init": function() {
 		this.config = Object.merge({}, this.defConfig); // deep copy default config
 		this.config.lang = "";
+		
 		this.bindUsernameFieldInputValidation();
 		this.bindPasswordFieldInputValidation();
 		this.bindRemoteSwitch();
+		
 		// Calculate index of some columns for ease of reference elsewhere
 		this.trtColDoneIdx = this.trtColDefs.map(function(item) { return (item[0] == "done"); }).indexOf(true);
 		this.trtColStatusIdx = this.trtColDefs.map(function(item) { return (item[0] == "status"); }).indexOf(true);
@@ -2629,8 +2631,8 @@ var utWebUI = {
 		this.toggleSearchBar();
 	},
 
-    "setSettings": function() {         var value = null, reload = false,
-hasChanged = false;
+    "setSettings": function() {
+        var value = null, reload = false, hasChanged = false;
 
 		Logger.setLogDate(this.getAdvSetting("gui.log_date"));
 
@@ -2724,6 +2726,8 @@ hasChanged = false;
 		for (var key in this.settings) {
 			var ele = $(key);
 			if (!ele) continue;
+			// Clicking save settings should not log in/out remote
+			if (key === 'webui.uconnect_enable' || key === 'webui.uconnect_username') continue;
 			var v = this.settings[key], nv;
 			if (ele.type == "checkbox") {
 				nv = ele.checked ? 1 : 0;
@@ -2752,7 +2756,6 @@ hasChanged = false;
 				str += "&s=" + key + "&v=" + encodeURIComponent(nv);
 			}
 		}
-
 		for (var key in this.advSettings) {
 			var nv = this.getAdvSetting(key);
 			if (nv === undefined) continue;
@@ -2897,14 +2900,30 @@ hasChanged = false;
 	},
 
 	bindRemoteSwitch: function() {
+		var parent = this;
 		var remote_switch = jQuery("#webui\\.uconnect_enable");
 		var status_input = jQuery("#webui\\.uconnect_cred_status");
+		var password_input = jQuery("#proposed_uconnect_password");
 
 		remote_switch.click(function() {
 			if (!remote_switch.is(":checked")) {
-				status_input.text("");			
+				status_input.text("");	
+				password_input.val("");
+				parent.saveRemoteSignOutStatus();
 			}
 		});
+	},
+
+	saveRemoteEnableStatus: function(username) {
+		var str = "&s=webui.uconnect_enable&v=1&s=webui.uconnect_username&v=" + username;
+		if (username) {
+			this.request("action=setsetting" + str, Function.from(), true);
+		}
+	},
+
+	saveRemoteSignOutStatus: function() {
+		var str = "&s=webui.uconnect_enable&v=0";
+		this.request("action=setsetting" + str, this.presentRemoteSignOutSuccessResults, true);
 	},
 
 	validPasswordOnSubmit: function(password) {
@@ -2939,8 +2958,14 @@ hasChanged = false;
 	},
 
 	"presentRemoteSuccessResults": function(json) {
+		var username = $("webui.uconnect_username").get("value");
+		this.saveRemoteEnableStatus(username);
 		this.enableRegistrationOptions();
 		this.showRemoteStatus(json.code);
+	},
+
+	presentRemoteSignOutSuccessResults: function() {
+		this.showRemoteStatus(-2);
 	},
 
 	"disableRegistrationOptions": function() {
@@ -2970,7 +2995,6 @@ hasChanged = false;
 				status_input.text("Accessible");
 				signin_btn.addClass("disabled");
 				signin_btn.attr("disabled", "disabled");
-				// $("DLG_SETTINGS_D_REMOTE_09").setAttribute("disabled", "");
 				break;
 			}
 			case 2: {
@@ -3021,6 +3045,11 @@ hasChanged = false;
 			case -1: {
 				status_input.css("color", "black");
 				status_input.text("Connecting...");
+				break;
+			}
+			case -2: {
+				status_input.css("color", "black");
+				status_input.text("Not Accessible");
 				break;
 			}
 			case undefined: {
