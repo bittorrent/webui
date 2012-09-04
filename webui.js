@@ -2563,7 +2563,7 @@ var utWebUI = {
 				}
 			}
 		}, this);
-		console.log(this.settings);
+
 		// Other settings
 		for (var k in this.settings) {
 			var ele = $(k);
@@ -2898,6 +2898,7 @@ var utWebUI = {
 		});
 
 	},
+	
 
 	bindRemoteSwitch: function() {
 		var parent = this;
