@@ -438,9 +438,9 @@ var LANG_STR = [
 		"distant", // i.e. uTorrent remote
 		"à propos de",
 		"sessions",
-		"partager",
-		"partager ce torrent",
-		"partager le lien",
+		"Partager",
+		"Partager ce torrent",
+		"Partager le lien",
 		"ajouter",
 		"se déconnecter",
 		"se connecter",
