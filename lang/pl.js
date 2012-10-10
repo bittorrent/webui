@@ -125,7 +125,7 @@ var LANG_STR = [
 	, "Wyłącz DHT przy wyłączaniu"
 	, "Włącz interfejs WWW"
 	, "Uwierzytelnianie"
-	, "Hasło:"
+	, "Użytkownik:"
 	, "Hasło:"
 	, "Włącz konto gościa dla użytkownika o nazwie:"
 	, "Dostępność"
@@ -417,41 +417,71 @@ var LANG_STR = [
 	, "%ds"
 	, "%dw %dd"
 	, "%dy %dw",
-"More Action",
-"Torrenty",
-		"Kanały",
-		"Aplikacja",
-		"kraj",
-		'Szacowane', // i.e. how much time remaining
-		"z", // i.e. 3 of 4 peers
-		"/s", // "per second""
-		"Wklej torrent lub adres URL kanału",
-		"Strona główna",
-		"Wyloguj",
-		"Udostępnianie",
-		"Wszystkie kanały",
-		"prędkość transmisji (w bitach)",
-		"rozdzielczość",
-		"długość",
-		"do strumieniowania",
-		"typ", // i.e. file extension
-		"zdalnie", // i.e. uTorrent remote
-		"informacje",
-		"sesje",
-		"Udostępnij",
-		"Udostępnij ten torrent",
-		"Udostępnij to łącze",
-		"dodaj",
-		"wyloguj",
-		"zaloguj",
-		"dostęp w dowolnym miejscu",
-		"nie wylogowuj",
-		"pobierz",
-		"Twój klient jest obecnie niedostępny. Sprawdź, czy masz połączenie z Internetem.",
-		"Brak komunikacji z Twoim klientem &micro;Torrent. Ten komunikat zniknie automatycznie po ponownym nawiązaniu połączenia.",
-		"Otwórz plik",
-		"Pobierz na dysk komputera",
-		"Otwórz za pomocą VLC Media Player",
-		"Działania",
-		"sezon" // i.e. of a TV show
+	"More Action",
+	"Torrenty",
+	"Kanały",
+	"Aplikacja",
+	"kraj",
+	'Szacowane', // i.e. how much time remaining
+	"z", // i.e. 3 of 4 peers
+	"/s", // "per second""
+	"Wklej torrent lub adres URL kanału",
+	"Strona główna",
+	"Wyloguj",
+	"Udostępnianie",
+	"Wszystkie kanały",
+	"prędkość transmisji (w bitach)",
+	"rozdzielczość",
+	"długość",
+	"do strumieniowania",
+	"typ", // i.e. file extension
+	"zdalnie", // i.e. uTorrent remote
+	"informacje",
+	"sesje",
+	"Udostępnij",
+	"Udostępnij ten torrent",
+	"Udostępnij to łącze",
+	"dodaj",
+	"wyloguj",
+	"zaloguj",
+	"dostęp w dowolnym miejscu",
+	"nie wylogowuj",
+	"pobierz",
+	"Twój klient jest obecnie niedostępny. Sprawdź, czy masz połączenie z Internetem.",
+	"Brak komunikacji z Twoim klientem &micro;Torrent. Ten komunikat zniknie automatycznie po ponownym nawiązaniu połączenia.",
+	"Otwórz plik",
+	"Pobierz na dysk komputera",
+	"Otwórz za pomocą VLC Media Player",
+	"Działania",
+	"sezon", // i.e. of a TV show
+	null,
+	null,
+	null,
+	null,
+	null,
+	null,
+	null,
+	null,
+	null,
+	"Ustawienia",
+	"Dostęp zdalny",
+	"Usługa dostępu zdalnego zapewnia prosty i bezpieczny dostęp do uruchomionego klienta za pośrednictwem przeglądarki internetowej.",
+	"Aktywuj połączenie poniżej, wybierz nazwę komputera i hasło oraz pamiętaj, aby nie wyłączać komputera.",
+	"Dowiedz się więcej",
+	"Aktywuj dostęp zdalny do uTorenta",
+	"Uwierzytelnianie",
+	"Użytkownik:",
+	"Hasło:",
+	"Dodaj",
+	"Dostęp zdalny",
+	"Dostępny",
+	"Łączenie..",
+	"Niedostępny",
+	"Rejestracja nie powiodła się",
+	"Musisz wprowadzić hasło, aby móc korzystać z usługi dostępu zdalnego",
+	"Nie udało się połączyć z usługą dostępu zdalnego w celu rejestracji",
+	"Komputer używający tej nazwy użytkownika już istnieje",
+	"Nazwa użytkownika musi zawierać tylko angielskie znaki",
+	"Hasło musi zawierać tylko angielskie znaki",
+	"Status: "
 ];

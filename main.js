@@ -1293,7 +1293,7 @@ function setupSettings() {
 	});
 
 	$("webui.uconnect_enable").addEvent(linkedEvent, function() {
-		_link(this, 0, ["webui.uconnect_username", "proposed_uconnect_password", "DLG_SETTINGS_D_REMOTE_09", "webui.uconnect_cred_status", "DLG_SETTINGS_D_REMOTE_06", "status-label"]);
+		_link(this, 0, ["webui.uconnect_username", "proposed_uconnect_password", "DLG_SETTINGS_D_REMOTE_09", "webui.uconnect_cred_status", "DLG_SETTINGS_D_REMOTE_06", "STATUS_REMOTE_10"]);
 	});
 
 	$("multi_day_transfer_limit_en").addEvent(linkedEvent, function() {
@@ -2040,10 +2040,15 @@ function loadSettingStrings() {
 		, "DLG_SETTINGS_4_CONN_04" // "Random"
 		, "DLG_SETTINGS_7_TRANSFERCAP_12" // "Reset History"
 		, "DLG_SETTINGS_A_ADVANCED_05" // "Set"
+		, "DLG_SETTINGS_D_REMOTE_04" // "Learn more"
+		, "DLG_SETTINGS_D_REMOTE_09" // "Sign in..."
+
 	]);
 	
 	_loadStrings("text", [
 		  "DLG_SETTINGS_MENU_TITLE" // "Settings"
+		  , "STATUS_REMOTE_10"
+		  , "logout"
 	]);
 
 	// -- Comboboxes

@@ -420,7 +420,6 @@ var LANG_STR_fallback = [
 	, "%dw %dd"
 	, "%dy %dw"
 	, "More actions" ,
-
 	"Torrents",
 	"Feeds",
 	"App",
@@ -457,7 +456,6 @@ var LANG_STR_fallback = [
 	"Open with VLC Media Player",
 	"Actions",
 	"season" // i.e. of a TV show
-
 	, "Client Information"
 	, "Product Version"
 	, "Source Revision"
@@ -466,10 +464,8 @@ var LANG_STR_fallback = [
 	, "User-agent"
 	, "UPnP external address:"
 	, "UI Revision"
-	
 	, "Save settings"
 	, "Settings"
-
 	, "BitTorrent Remote"
 	, "BitTorrent Remote is a simple and secure web service that enables access to this BitTorrent client from anywhere on the internet."
 	, "Enable access here by creating a computer name and password, then access BitTorrent anytime from a PC or mobile web browser at remote.bittorrent.com or on your android phone with the BitTorrent Remote app"
@@ -478,7 +474,16 @@ var LANG_STR_fallback = [
 	, "Set a username and password"
 	, "Username"
 	, "Password"
-	, "Sign in..."
-	, "Remote Access"
-
-];
+	, "Sign in"
+	, "Remote Access",
+	"Accessible",
+	"Connecting..",
+	"Not accessible",
+	"Registration failed",
+	"You must enter a password to use BitTorrent Remote",
+	"Could not contact the BitTorrent Remote service to register",
+	"There is already a computer using the username",
+	"Usernames may not contain non-English characters",
+	"Password may not contain non-English characters",
+	"Status: "
+	];

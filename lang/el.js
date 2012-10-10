@@ -357,7 +357,7 @@ var LANG_STR = [
 	, "Εμφάνιση γραμμής εργαλείων"
 	, "Εικονίδια στις καρτέλες"
 	, "Βοήθεια"
-	, "Ιστοσελίδα μTorrent"
+	, "Ιστοσελίδα µTorrent"
 	, "Κοινότητα του µTorrent"
 	, "Send WebUI Feedback"
 	, "About µTorrent WebUI"
@@ -416,5 +416,62 @@ var LANG_STR = [
 	, "%dm %ds"
 	, "%ds"
 	, "%dw %dd"
-	, "%dy %dw"
+	, "%dy %dw",
+	null,
+	null,
+	null,
+	null,
+	null,
+	null,
+	null,
+	null,
+	null,
+	null,
+	null,
+	null,
+	null,
+	null,
+	null,
+	null,
+	null,
+	null,
+	null,
+	null,
+	null,
+	null,
+	null,
+	null,
+	null,
+	null,
+	null,
+	null,
+	null,
+	null,
+	null,
+	null,
+	null,
+	null,
+	null,
+	null,
+	null,
+	null,
+	null,
+	null,
+	null,
+	null,
+	null,
+	null,
+	null,
+	null,
+	null,
+	"Απομακρυσμένο BitTorrent",
+	"Το µTorrent Remote παρέχει έναν εύκολο και πολύ ασφαλή τρόπο για την πρόσβαση στο πρόγραμμα μέσω προγράμματος περιήγησης.",
+	"Απλώς ενεργοποιείστε τη σύνδεση παρακάτω, επιλέξτε ένα όνομα υπολογιστή, ένα κωδικό και θυμηθείτε να αφήσετε τον υπολογιστή ενεργό.",
+	"Μάθετε περισσότερα",
+	"Ενεργοποίηση της απομακρυσμένης πρόσβασης",
+	"Ταυτοποίηση",
+	"Όνομα χρήστη:",
+	"Κωδικός:",
+	"Αποστολή",
+	"Απομακρυσμένο BitTorrent"
 ];

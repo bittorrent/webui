@@ -418,9 +418,7 @@ var LANG_CONST = [
 	, "TIME_WEEKS_DAYS"
 	, "TIME_YEARS_WEEKS"
 	, "ML_MORE_ACTIONS" ,
-
-	// extra strings
-	"Torrents",
+	"Torrents",// extra strings
 	"Feeds",
 	"App",
 	"country",
@@ -456,9 +454,7 @@ var LANG_CONST = [
 	"Open with VLC Media Player",
 	"Actions",
 	"season" // i.e. of a TV show
-
-	// about dialog, embedded version
-	, "DLG_ABOUT_VERSION_LEGEND"
+	, "DLG_ABOUT_VERSION_LEGEND" 	// about dialog, embedded version
 	, "DLG_ABOUT_VERSION_VERSION"
 	, "DLG_ABOUT_VERSION_REVISION"
 	, "DLG_ABOUT_VERSION_BUILD_DATE"
@@ -466,10 +462,8 @@ var LANG_CONST = [
 	, "DLG_ABOUT_VERSION_USER_AGENT"
 	, "DLG_ABOUT_UPNP_EXTERNAL_ADDRESS"
 	, "DLG_ABOUT_UI_REVISION"
-	
 	, "DLG_SETTINGS_SAVE"
 	, "DLG_SETTINGS_MENU_TITLE"
-
 	, "DLG_SETTINGS_D_REMOTE_01"
 	, "DLG_SETTINGS_D_REMOTE_02"
 	, "DLG_SETTINGS_D_REMOTE_03"
@@ -479,7 +473,17 @@ var LANG_CONST = [
 	, "DLG_SETTINGS_D_REMOTE_07"
 	, "DLG_SETTINGS_D_REMOTE_08"
 	, "DLG_SETTINGS_D_REMOTE_09"
-	, "ST_CAPT_REMOTE"
+	, "ST_CAPT_REMOTE",
+	"STATUS_REMOTE_01",
+	"STATUS_REMOTE_02",
+	"STATUS_REMOTE_03",
+	"STATUS_REMOTE_04",
+	"STATUS_REMOTE_05",
+	"STATUS_REMOTE_06",
+	"STATUS_REMOTE_07",
+	"STATUS_REMOTE_08",
+	"STATUS_REMOTE_09",
+	"STATUS_REMOTE_10"
 
 ].invert();
 

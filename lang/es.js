@@ -417,53 +417,71 @@ var LANG_STR = [
 	, "%ds"
 	, "%dw %dd"
 	, "%dy %dw",
-		"Más acciones",
-		"Torrents",
-		"Feeds",
-		"App",
-		"país",
-		'Tiempo restante', // i.e. how much time remaining
-		"de", // i.e. 3 of 4 peers
-		"/s", // "per second""
-		"Pegar una URL de feed o torrent",
-		"Inicio",
-		"Salir",
-		"Seeding",
-		"Todos los feeds",
-		"velocidad de bits",
-		"resolución",
-		"duración",
-		"transmisión por secuencias posible",
-		"tipo", // i.e. file extension
-		"remoto", // i.e. uTorrent remote
-		"acerca de",
-		"sesiones",
-		"compartir",
-		"Compartir este torrent",
-		"Compartir vínculo",
-		"agregar",
-		"salir",
-		"iniciar sesión",
-		"acceso desde cualquier lugar",
-		"mantenerse conectado",
-		"descargar",
-		"El cliente no está disponible en este momento. Compruebe que está conectado a Internet.",
-		"No se puede comunicar con el cliente de &micro;Torrent. Este mensaje desaparecerá automáticamente cuando se restablezca la conexión.",
-		"Abrir archivo",
-		"Descargar en el equipo",
-		"Abrir con el reproductor multimedia VLC",
-		"Acciones",
-		"temporada" // i.e. of a TV show
-
-		, "Información del Cliente"
-		, "Version del Producto"
-		, "Revisión del Código"
-		, "Fecha de Construcción"
-		, "ID de Peer"
-		, "Agente de Usuario"
-		, "Dirección externa de UPnP:"
-		, "Revisión de UI"
-	
-		, "Guardar ajustes"
-		, "Ajustes"
+	"Más acciones",
+	"Torrents",
+	"Feeds",
+	"App",
+	"país",
+	'Tiempo restante', // i.e. how much time remaining
+	"de", // i.e. 3 of 4 peers
+	"/s", // "per second""
+	"Pegar una URL de feed o torrent",
+	"Inicio",
+	"Salir",
+	"Seeding",
+	"Todos los feeds",
+	"velocidad de bits",
+	"resolución",
+	"duración",
+	"transmisión por secuencias posible",
+	"tipo", // i.e. file extension
+	"remoto", // i.e. uTorrent remote
+	"acerca de",
+	"sesiones",
+	"compartir",
+	"Compartir este torrent",
+	"Compartir vínculo",
+	"agregar",
+	"salir",
+	"iniciar sesión",
+	"acceso desde cualquier lugar",
+	"mantenerse conectado",
+	"descargar",
+	"El cliente no está disponible en este momento. Compruebe que está conectado a Internet.",
+	"No se puede comunicar con el cliente de &micro;Torrent. Este mensaje desaparecerá automáticamente cuando se restablezca la conexión.",
+	"Abrir archivo",
+	"Descargar en el equipo",
+	"Abrir con el reproductor multimedia VLC",
+	"Acciones",
+	"temporada" // i.e. of a TV show
+	, "Información del Cliente"
+	, "Version del Producto"
+	, "Revisión del Código"
+	, "Fecha de Construcción"
+	, "ID de Peer"
+	, "Agente de Usuario"
+	, "Dirección externa de UPnP:"
+	, "Revisión de UI"
+	, "Guardar ajustes"
+	, "Ajustes",
+	"BitTorrent remoto",
+	"BitTorrent remoto proporciona una manera fácil y muy segura de acceder a su cliente a través de un navegador.",
+	"Solamente es necesario activar la conexión de abajo. Elegir el nombre del equipo y contraseña, y recordarlo al salir de este equipo.",
+	"Aprender más",
+	"Activar acceso a BitTorrent remoto",
+	"Autentificación",
+	"Usuario:",
+	"Contraseña:",
+	"Enviar",
+	"BitTorrent remoto",
+	"Accesible",
+	"Conectando..",
+	"No accesible",
+	"Registración errónea",
+	"Debe ingresar una clave para usar BitTorrent Remoto",
+	"No se puede contactar con el servicio BitTorrent Remoto para registrarse",
+	"Ya existe una equipo usando ese nombre",
+	"Los nombres de usuario no puede contener caracteres no ingleses",
+	"La contraseña no puede contener caracteres no ingleses",
+	"Estado: "
 ];

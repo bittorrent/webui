@@ -418,7 +418,6 @@ var LANG_STR = [
 	, "%dw %dd"
 	, "%dy %dw"
 	, "Ekintza Gehiago" ,
-
 	"Torrentak",
 	"Harpidetzak",
 	"Gehigarria",
@@ -455,7 +454,6 @@ var LANG_STR = [
 	"Ireki VLC Multimedia Irakurgailuarekin",
 	"Ekintzak",
 	"Denboraldia" // i.e. of a TV show
-
 	, "Bezero Argibideak"
 	, "Produktuaren Bertsioa"
 	, "Iturburu Ikuskapena"
@@ -463,8 +461,18 @@ var LANG_STR = [
 	, "Hartzaile ID-a"
 	, "Erabiltzaile ordezkaria"
 	, "UPnP kanpoko helbidea:"
-	, "EI Ikuskapena"
+	, "EI Ikuskapena",
+	null,
+	null,
+	"Hurruneko BitTorrent",
+	"Hurruneko BitTorrentek nabigatzailearen bidezko zure bezeroarenganako sarbide erraz eta seguru bat eskaintzen du.",
+	"Gaitu azpiko elkarketa, hautatu ordenagailuarentzako izen bat eta sarhitza eta gogoratu ordenagailu hau piztuta uzteaz.",
+	"Argibide Gehiago",
+	"Gaitu BitTorrent Hurruneko Sarbidea",
+	"Egiaztapena",
+	"Erabiltzaile izena:",
+	"Sarhitza:",
+	"Aurkeztu",
+	"Hurruneko BitTorrent"
 
 ];
-
-/* README : If you add any strings *Please consider updating fallback.js */

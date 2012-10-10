@@ -2553,6 +2553,7 @@ var utWebUI = {
 		this.advOptTable.clearSelection();
 		this.advOptSelect();
 
+
 		$each(this.advSettings, function(val, key) {
 			if (undefined != this.settings[key]) {
 				if (undefined != this.getAdvSetting(key)) {
@@ -2629,6 +2630,9 @@ var utWebUI = {
 			$("mainStatusBar").hide();
 
 		this.toggleSearchBar();
+		// Convert brand name
+		this.convertBrandName();
+
 	},
 
     "setSettings": function() {
@@ -2993,14 +2997,14 @@ var utWebUI = {
 		switch(statusCode) {
 			case 1: {
 				status_input.css("color", "green");
-				status_input.text("Accessible");
+				status_input.text(L_("STATUS_REMOTE_01"));
 				signin_btn.addClass("disabled");
 				signin_btn.attr("disabled", "disabled");
 				break;
 			}
 			case 2: {
 				status_input.css("color", "red");
-				status_input.text("Username not available");
+				status_input.text(L_("STATUS_REMOTE_07"));
 				break;
 			}
 			case 3: {
@@ -3010,7 +3014,7 @@ var utWebUI = {
 			}
 			case 4: {
 				status_input.css("color", "red");
-				status_input.text("No username or password supplied");
+				status_input.text(L_("STATUS_REMOTE_05"));
 				break;
 			}
 			case 5: {
@@ -3020,12 +3024,12 @@ var utWebUI = {
 			}
 			case 6: {
 				status_input.css("color", "red");
-				status_input.text("Username is too long or has invalid characters");
+				status_input.text(L_("STATUS_REMOTE_08"));
 				break;
 			}
 			case 7: {
 				status_input.css("color", "red");
-				status_input.text("Password is too long or has invalid characters");
+				status_input.text(L_("STATUS_REMOTE_09"));
 				break;
 			}
 			case 8: {
@@ -3045,29 +3049,62 @@ var utWebUI = {
 			}
 			case -1: {
 				status_input.css("color", "black");
-				status_input.text("Connecting...");
+				status_input.text(L_("STATUS_REMOTE_02"));
 				break;
 			}
 			case -2: {
 				status_input.css("color", "black");
-				status_input.text("Not Accessible");
+				status_input.text(L_("STATUS_REMOTE_03"));
 				break;
 			}
 			case undefined: {
 				// When request timed out, there will be no status code provide
 				status_input.css("color", "red");
-				status_input.text("Request failed. Try again.");
+				status_input.text(L_("STATUS_REMOTE_04"));
 				break;
 			}
 			default: {
 				status_input.css("color", "black");
-				status_input.text("Not Accessible");
+				status_input.text(L_("STATUS_REMOTE_03"));
 				break;
 			}
 		}
 	},
 
-	
+	"convertBrandName": function() {
+		// Work around to switch between uTorrent and BitTorrent brand name according to the product
+		var id_list = [
+						"tab_title_dlgSettings-Remote",
+						"DLG_SETTINGS_D_REMOTE_02",
+						"DLG_SETTINGS_D_REMOTE_03",
+						"DLG_SETTINGS_D_REMOTE_05",
+						"DLG_SETTINGS_C_ADV_CACHE_02",
+						"DLG_SETTINGS_8_QUEUEING_12"
+						],
+			bt_brand = "BitTorrent",
+			ut_brand = String.fromCharCode(181) + "Torrent",
+			self = this;
+
+		for (var i = 0; i < id_list.length; i++) {
+			var id = id_list[i];
+			var dom_obj = document.getElementById(id);
+			if (document.brand === "ut") {
+				var new_str = self.str_replace(dom_obj.innerHTML, bt_brand, ut_brand);
+				dom_obj.innerHTML = new_str;
+			} else {
+				var new_str = self.str_replace(dom_obj.innerHTML, ut_brand, bt_brand);
+				dom_obj.innerHTML = new_str;
+			}
+		}
+	},
+
+	"str_replace": function(base_str, old_str, new_str) {
+		while (base_str.indexOf(old_str) !== -1) {
+  			base_str = base_str.replace(old_str, new_str);
+  		}
+  		return base_str;
+	},
+
 	"showAbout": function() {
 		DialogManager.show("About");
 	},
@@ -5115,8 +5152,8 @@ var utWebUI = {
 		if (this.config) {
 			this.config.activeSettingsPane = id;
 		}
-		
-		jQuery('#dlgSettings-title').text(jQuery('#tab_' + id).text() || "Web UI");
+
+		jQuery('#dlgSettings-title').text(document.getElementById('tab_title_' + id).innerHTML || L_("ST_CAPT_GENERAL"));
 	},
 
 	"fdFormatRow": function(values, index) {

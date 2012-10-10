@@ -753,8 +753,9 @@ input[id="gui.dlrate_menu"] {
 	cursor: pointer;
 	height: 21px;
 	width: auto;
-	min-width: 70px;
+	min-width: 50px;
 	padding: 0 5px;
+	text-align: center;
 /*	color: #333;
 */	text-shadow: 0 1px #fff;
 	-webkit-border-radius: 4px !important;
