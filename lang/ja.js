@@ -5,483 +5,484 @@ Use of this source code is governed by a BSD-style that can be
 found in the LICENSE file.
 */
 
-var LANG_STR = [
-	  "トレントファイル||*.torrent||全てのファイル (*.*)||*.*||"
-	, "確定"
-	, "取消"
-	, "適用(A)"
-	, "はい"
-	, "いいえ"
-	, "閉じる(C)"
-	, "設定"
-	, "言語設定"
-	, "言語(L):"
-	, "個人情報に関係する設定"
-	, "自動更新チェック(C)"
-	, "ベータ版への更新"
-	, "更新チェック時に匿名情報を送信"
-	, "ダウンロード時の設定"
-	, "未完了ファイル名に.!utを付加(A)"
-	, "全てのファイルを事前確保(R)"
-	, "稼動中のトレントが有る時はスタンバイしない(E)"
-	, "表示設定"
-	, "トレント削除時に確認する(O)"
-	, "トラッカー削除時に確認する(E)"
-	, "プログラム終了時に確認する(H)"
-	, "リストの背景色を交互に変更(L)"
-	, "タイトルバーに使用帯域を表示(T)"
-	, "ステータスバーに帯域制限を表示(O)"
-	, "トレント追加時の設定"
-	, "ダウンロードを自動的に開始しない(D)"
-	, "ウィンドウを前面表示(C)"
-	, "トレント内ファイル一覧ウィンドウを表示(H)"
-	, "トレントリストのダブルクリック時アクション"
-	, "シード中のトレント:"
-	, "ダウンロード中のトレント:"
-	, "ダウンロードファイルの保存場所"
-	, "既定の保存先(P):"
-	, "手動追加時は常に尋ねる(W)"
-	, "ダウンロード完了後の移動先(M):"
-	, "トレントのラベルを追加する(A)"
-	, "既定ダウンロードディレクトリからのみ移動(O)"
-	, ".torrentファイルの場所"
-	, ".torrentファイルの保存先:"
-	, "ジョブ完了後の.torrentファイルの移動先:"
-	, ".torrentファイル自動ロード元(A):"
-	, "ロード済み.torrentファイルを削除(D)"
-	, "監視ポート"
-	, "着信接続用ポート:"
-	, "ランダム"
-	, "起動時にランダムに変更(R)"
-	, "UPnPポートマッピングを使用(U)"
-	, "NAT-PMPポートマッピングを使用(N)"
-	, "プロクシサーバ"
-	, "タイプ(Y):"
-	, "プロクシ(P)"
-	, "ポート(O)"
-	, "認証"
-	, "ユーザ名:"
-	, "パスワード:"
-	, "プロクシを通してホスト名を解決"
-	, "P2P接続用にプロクシサーバを使用"
-	, "ファイアウオール例外に追加(F)"
-	, "プロキシ秘匿設定"
-	, "全てのローカル DNS ルックアップを無効"
-	, "特定される情報を漏らす機能を無効"
-	, "プロキシのサポートしない接続を無効"
-	, "総上り帯域制限"
-	, "最大上り速度 (KB/秒) [0:無制限]"
-	, "自動"
-	, "未ダウンロード時の上り速度 (kB/秒):"
-	, "総下り帯域制限"
-	, "最大下り速度 (kB/秒): [0: 無制限]"
-	, "接続数"
-	, "総最大接続数:"
-	, "1トレントあたりの最大ピア接続数:"
-	, "1トレントあたりの上りスロット数:"
-	, "上り速度 90% 以下で上りスロットを追加"
-	, "総下り帯域幅制限 "
-	, "オーバーヘッドの転送に速度制限を適用"
-	, "uTP 接続に速度制限を適用"
-	, "ビットトレントの基本機能"
-	, "DHTネットを使用(E)"
-	, "トラッカーにスクレイプ情報を要求(A)"
-	, "新規トレントにDHTを使用(E)"
-	, "ピア交換を使用(P)"
-	, "ローカルピア検出を許可(L)"
-	, "ローカルピアへの帯域幅を制限(L)"
-	, "IP/ホスト名をトラッカーに報告:"
-	, "プロトコル暗号化"
-	, "発信:"
-	, "従来の接続方法による着信を許可"
-	, "帯域幅マネジメント[uTP]を使用する"
-	, "UDP トラッカーサポートを使用する"
-	, "転送量制限を使用"
-	, "制限の設定"
-	, "制限タイプ:"
-	, "帯域幅上限:"
-	, "期間 (日数):"
-	, "選択した期間の利用履歴:"
-	, "アップロード量:"
-	, "ダウンロード量:"
-	, "アップ+ダウン:"
-	, "期間:"
-	, "過去%d日間"
-	, "履歴の削除"
-	, "キューの設定"
-	, "最大稼動トレント数(アップロードとダウンロード):"
-	, "最大稼動ダウンロード数:"
-	, "シード期間 [既定値]"
-	, "最小共有比 (%):"
-	, "最短シード時間 (分):"
-	, "シードタスクをダウンロードタスクより高優先度にする(S)"
-	, "シード目標到達時の処理"
-	, "上り帯域幅を制限 (kB/秒): [0: 停止]"
-	, "スケジューラを使用(E)"
-	, "スケジュール表"
-	, "スケジュール設定"
-	, "上り速度制限 (kB/秒):"
-	, "下り速度制限 (kB/秒):"
-	, "停止時DHTを使用しない(D)"
-	, "ウェブUIを使用する(W)"
-	, "認証"
-	, "ユーザ名(U)"
-	, "パスワード(P)"
-	, "ゲスト(ユーザ名:Guest)を許可する:"
-	, "接続"
-	, "代替監視ポート(L) [既定値は接続ポート]:"
-,"これらの IP からのアクセスのみを許可する (複数項目はカンマで区切って記述してください):"
-	, "高度な設定 [警告: 変更しない事!]"
-	, "数値(V)"
-	, "True"
-	, "False"
-	, "設定(S)"
-	, "速度ポップアップリスト[複数の値を\",\"で区切って指定]"
-	, "速度ポップアップのリストを手動設定(O)"
-	, "上り速度リスト:"
-	, "下り速度リスト:"
-	, "既定のラベル設定 [複数のラベルは\"|\"で区切って指定]"
-	, "検索エンジン [名前|URL] (末尾に検索キーワードを付加)"
-	, "キャッシュの基本設定"
-	, "　ディスクキャッシュは頻繁にアクセスされるデータをメモリ中に保持する事でハードディスクへの読み書き回数を減らす事が出来ます。トレントは通常キャッシュを自動的に管理しますが、必要に応じてこれらのふるまいを変更する事ができます。"
-	, "キャッシュサイズの手動設定 [MB] (O):"
-	, "キャッシュ不要時メモリ使用量を減らす(R)"
-	, "高度なキャッシュの設定"
-	, "ディスク書込キャッシュを使用する(W)"
-	, "2分毎にアクセスの無いブロックを書込む(I)"
-	, "直ちに最終ピースを書込む(T)"
-	, "読込みキャッシュを使用する(R)"
-	, "上り速度が低い時読込みキャッシュを使用しない"
-	, "キャッシュから古いブロックを取り除く"
-	, "キャッシュが込み合っている時自動的にキャッシュ容量を増やす"
-	, "Windowsの書込みキャッシュを使用しない(D)"
-	, "Windowsの読込みキャッシュを使用しない(O)"
-	, "プログラムの実行"
-	, "トレント完了時にこのプログラムを実行:"
-	, "トレントの状態が変わる時にこのプログラムを実行"
-	, "以下のコマンドを使用できます:\r\n%F - ダウンロードファイル名 (単一ファイルのトレント)\r\n%D - 保存先フォルダー\r\n%N - トレントの名前\r\n%S - トレントの状態\r\n%L - ラベル\r\n%T - トラッカー\r\n%M - 状態メッセージの文字列 (状態列と同じ)\r\n%I - 16進数ハッシュ値\r\n\r\n状態は次の通り: 開始 = 1, 検査中 = 2, 検査後に開始 = 4,\r\n検査済 = 8, エラー = 16, 一時停止中 = 32, 自動 = 64, 読込み済 = 128"
-	, "トレントのプロパティ"
-	, "トラッカー (空行で層分け)"
-	, "帯域幅の設定"
-	, "最大上り速度 (kB/秒): [0: デフォルト]"
-	, "最大下り速度 (kB/秒): [0: デフォルト]"
-	, "上りスロット数: [0:既定値使用]"
-	, "シード期間"
-	, "このトレント専用の設定(O)"
-	, "最小共有比 (%):"
-	, "最短シード時間 (分):"
-	, "その他の設定"
-	, "初期シード(I)"
-	, "DHTを使用(E)"
-	, "ピア交換(P)"
-	, "フィード"
-	, "フィード URL:"
-	, "別名(C):"
-	, "購読"
-	, "全ての項目を自動ダウンロードしない(N)"
-	, "フィード中の全ての項目を自動ダウンロード(A)"
-	, "スマートエピソードフィルターを使用(S)"
-	, "フィード||ブックマーク||履歴||"
-	, "All Feeds"
-	, "フィルター設定"
-	, "名前:"
-	, "フィルター:"
-	, "除外:"
-	, "保存先:"
-	, "フィード:"
-	, "品質:"
-	, "エピソード番号: [例 1x12-14](E)"
-	, "デコード名ではなく元の名前にフィルターを適用 (F)"
-	, "自動的にダウンロードを開始しない"
-	, "スマートep.フィルター"
-	, "高優先度でダウンロード(G)"
-	, "最小更新間隔(M)"
-	, "新規トレントのラベル:"
-	, "RSS フィードの追加..."
-	, "フィードの編集...(E)"
-	, "フィードを無効(A)"
-	, "フィードを有効(A)"
-	, "フィードの更新(U)"
-	, "フィードの削除(D)"
-	, "ダウンロード(D)"
-	, "URL をブラウザーで開く(B)"
-	, "ブックマークに追加(A)"
-	, "追加(A)"
-	, "削除(D)"
-	, "全て"
-	, "(全て)"
-	, "(常時)||(一度のみ)||12時間||1日||2日||3日||4日||1週間||2週間||3週間||1ヶ月||"
-	, "RSS フィードの追加"
-	, "RSS フィードの編集"
-	, "Remove RSS Feed(s)"
-	, "Really delete the %d selected RSS Feeds?"
-	, "RSS フィード \"%s\" を削除してよろしいですか?"
-	, "フルネーム"
-	, "名前"
-	, "エピソード"
-	, "フォーマット"
-	, "コーデック"
-	, "日付"
-	, "フィード"
-	, "ソース URL"
-	, "IP"
-	, "ポート"
-	, "クライアント"
-	, "フラグ"
-	, "完了度"
-	, "関与度"
-	, "下り速度"
-	, "上り速度"
-	, "要求数"
-	, "待機中"
-	, "アップロード量"
-	, "ダウンロード量"
-	, "ハッシュエラー"
-	, "ピア下り速度"
-	, "最大上り"
-	, "最大下り"
-	, "待機中"
-	, "休止"
-	, "所有"
-	, "先頭ピース"
-	, "名前"
-	, "# ピース数"
-	, "完了度"
-	, "優先度"
-	, "サイズ"
-	, "スキップ"
-	, "低"
-	, "普通"
-	, "高"
-	, "ダウンロード量:"
-	, "アップロード量:"
-	, "シード:"
-	, "残り時間:"
-	, "下り速度:"
-	, "上り速度:"
-	, "ピア数:"
-	, "共有比:"
-	, "保存先:"
-	, "ハッシュ値:"
-	, "一般"
-	, "転送"
-	, "%d / %d 接続中 (同時接続: %d)"
-	, "D:%s U:%s - %s"
-	, "コピー(C)"
-	, "リセット(R)"
-	, "無制限"
-	, "IP解決(R)"
-	, "Get File(s)"
-	, "ダウンロードしない(D)"
-	, "高優先度(H)"
-	, "低優先度(L)"
-	, "普通優先度(N)"
-	, "マグネット URI をコピー(M)"
-	, "ダウンロードデータを削除(L)"
-	, ".torrentファイルを削除(D)"
-	, ".torrentファイルとダウンロードデータを削除(E)"
-	, "強制再チェック(H)"
-	, "強制開始(F)"
-	, "ラベル(L)"
-	, "一時停止(P)"
-	, "プロパティ(E)"
-	, "列の下に移動(D)"
-	, "列の上に移動(U)"
-	, "削除(R)"
-	, "高度な削除(N)"
-	, "開始(S)"
-	, "停止(S)"
-	, "稼動中"
-	, "全てのカテゴリ"
-	, "ダウンロード済"
-	, "ダウンロード中"
-	, "停止中"
-	, "ラベル無し"
-	, "||可用性||可用性"
-	, "付加情報"
-	, "完了日時"
-	, "所有"
-	, "ダウンロード量"
-	, "下り速度"
-	, "予想完了時間"
-	, "ラベル"
-	, "名前"
-	, "番号"
-	, "ピア数"
-	, "残り"
-	, "シード数"
-	, "シード/ピア比"
-	, "共有比"
-	, "サイズ"
-	, "ソース URL"
-	, "状態"
-	, "アップロード量"
-	, "上り速度"
-	, "選択中の %d 件のトレントとその全ての関連データを削除してよろしいですか?"
-	, "選択したトレントと全ての関連データを削除してよろしいですか?"
-	, "選択中の %d 件のトレントを削除してよろしいですか?"
-	, "選択したトレントを削除してよろしいですか?"
-	, "RSS フィルター \"%s\" を削除してよろしいですか?"
-	, "検査中 %:.1d%%"
-	, "ダウンロード中"
-	, "エラー: %s"
-	, "終了"
-	, "一時停止中"
-	, "待機中"
-	, "シード待機中"
-	, "シード中"
-	, "停止"
-	, "ラベルの入力"
-	, "選択したトレントに新規ラベルを入力:"
-	, "新規ラベル..."
-	, "ラベルの除去"
-	, "全般||トラッカー||ピア||ピース||ファイル||速度||ログ||"
-	, "トレントを追加"
-	, "URLからトレントを追加"
-	, "一時停止"
-	, "設定"
-	, "列の下に移動"
-	, "列の上に移動"
-	, "削除"
-	, "RSS ダウンローダー"
-	, "開始"
-	, "停止"
-	, "ファイル(F)"
-	, "トレントの追加(A)..."
-	, "指定 URL からトレントを追加(U)..."
-	, "オプション(O)"
-	, "設定(P)"
-	, "カテゴリーリストを表示(C)"
-	, "詳細な情報を表示(D)"
-	, "ステータスバーを表示(S)"
-	, "ツールバーを表示(T)"
-	, "タブにアイコンを表示(I)"
-	, "ヘルプ(H)"
-	, "µTorrent Web ページ(W)"
-	, "µTorrent フォーラム"
-	, "Send WebUI Feedback"
-	, "About µTorrent WebUI"
-	, "トレント"
-	, "全てのトレントを一時停止(P)"
-	, "全てのトレントを再開(R)"
-	, "D: %s%z/s"
-	, " L: %z/s"
-	, " O: %z/s"
-	, " T: %Z"
-	, "U: %s%z/s"
-	, "B"
-	, "EB"
-	, "GB"
-	, "KB"
-	, "MB"
-	, "PB"
-	, "TB"
-	, "高度な設定"
-	, "帯域幅"
-	, "接続"
-	, "ディスクキャッシュ"
-	, "ディレクトリ"
-	, "一般"
-	, "スケジューラ"
-	, "キュー"
-	, "UI追加設定"
-	, "UI設定"
-	, "ビットトレント"
-	, "ウェブUI"
-	, "転送量制限"
-	, "プログラム実行"
-	, "プロパティの参照||開始/停止||フォルダを開く||ダウンロードバーの表示||"
-	, "使用しない||使用する||強制使用||"
-	, "(無し)||Socks4||Socks5||HTTPS||HTTP||"
-	, "アップロード||ダウンロード||アップロード+ダウンロード||"
-	, "MB||GB||"
-	, "1||2||5||7||10||14||15||20||21||28||30||31||"
-	, "名前"
-	, "值"
-	, "月||火||水||木||金||土||日||"
-	, "月曜||火曜||水曜||木曜||金曜||土曜||日曜||"
-	, "無制限"
-	, "無制限 - 通常の総帯域幅制限を使用します。"
-	, "制限"
-	, "制限 - スケジューラで指定した帯域幅制限を使用します。"
-	, "シードのみ"
-	, "シードのみ - 上りデータのみ使用します。(未完了も含む)"
-	, "停止"
-	, "停止 - 全てのトレントを停止します。ただし強制ではありません。"
-	, "<= %d 時間"
-	, "(無視)"
-	, "<= %d 分"
-	, "%d日と%d時間"
-	, "%d時間%d分"
-	, "%d分%d秒"
-	, "%d秒"
-	, "%d週間と%d日"
-	, "%d年と%d週間",
-	"More Action",
-	"トレント",
-	"フィード",
-	"アプリ",
-	"国",
-	'ETA', // i.e. how much time remaining
-	"/", // i.e. 3 of 4 peers
-	"/秒", // "per second""
-	"トレントをペースト、または URL をフィード",
-	"ホーム",
-	"ログアウト",
-	"シード中",
-	"すべてのフィード",
-	"ビットレート",
-	"解像度",
-	"長さ",
-	"ストリーム可能",
-	"タイプ", // i.e. file extension
-	"リモート", // i.e. uTorrent remote
-	"概要",
-	"セッション",
-	"共有",
-	"このトレントを共有",
-	"リンクを共有",
-	"追加",
-	"ログアウト",
-	"ログイン",
-	"どこからでもアクセス",
-	"サインイン状態を保持",
-	"ダウンロード",
-	"クライアントは現在利用できません。インターネットに接続されていることを確認してください。",
-	"&micro;Torrent クライアントと通信できません。接続が再び確立されると、このメッセージは自動的に消えます。",
-	"ファイルを開く",
-	"コンピューターにダウンロード",
-	"VLC メディア プレイヤーで開く",
-	"アクション",
-	"シーズン", // i.e. of a TV show
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	"設定",
-	"BitTorrent Remote",
-	"BitTorrent Remote は、ブラウザーを通してクライアントにアクセスする、安全性の高い簡単な方法を提供します。",
-	"次の接続を有効にして、コンピューター名とパスワードを選択し、忘れずにこのコンピューターの電源を入れたままにしておくだけです。",
-	"もっと詳しく",
-	"BitTorrent Remote Access を使用する",
-	"認証",
-	"ユーザ名:",
-	"パスワード:",
-	"送信",
-	"BitTorrent Remote",
-	"アクセス可能",
-	"接続しています..",
-	"アクセス不可",
-	"登録に失敗",
-	"BitTorrent Remote を使用するためにパスワードを入力してください。",
-	"BitTorrent Remote サービスへ登録するための接続に失敗しました。",
-	"このユーザー名を使用しているコンピューターがすでに存在します",
-	"ユーザー名に半角英数字と半角記号以外の文字は使用できません。",
-	"パスワードに半角英数字と半角記号以外の文字は使用できません。",
-	"状態: "
-];
+var LANG_STR =
+{
+   "CT_MASK1":"トレントファイル||*.torrent||全てのファイル (*.*)||*.*||",
+   "DLG_BTN_OK":"確定",
+   "DLG_BTN_CANCEL":"取消",
+   "DLG_BTN_APPLY":"適用(A)",
+   "DLG_BTN_YES":"はい",
+   "DLG_BTN_NO":"いいえ",
+   "DLG_BTN_CLOSE":"閉じる(C)",
+   "DLG_SETTINGS_00":"設定",
+   "DLG_SETTINGS_1_GENERAL_01":"言語設定",
+   "DLG_SETTINGS_1_GENERAL_02":"言語(L):",
+   "DLG_SETTINGS_1_GENERAL_10":"個人情報に関係する設定",
+   "DLG_SETTINGS_1_GENERAL_11":"自動更新チェック(C)",
+   "DLG_SETTINGS_1_GENERAL_12":"ベータ版への更新",
+   "DLG_SETTINGS_1_GENERAL_13":"更新チェック時に匿名情報を送信",
+   "DLG_SETTINGS_1_GENERAL_17":"ダウンロード時の設定",
+   "DLG_SETTINGS_1_GENERAL_18":"未完了ファイル名に.!utを付加(A)",
+   "DLG_SETTINGS_1_GENERAL_19":"全てのファイルを事前確保(R)",
+   "DLG_SETTINGS_1_GENERAL_20":"稼動中のトレントが有る時はスタンバイしない(E)",
+   "DLG_SETTINGS_2_UI_01":"表示設定",
+   "DLG_SETTINGS_2_UI_02":"トレント削除時に確認する(O)",
+   "DLG_SETTINGS_2_UI_03":"トラッカー削除時に確認する(E)",
+   "DLG_SETTINGS_2_UI_04":"プログラム終了時に確認する(H)",
+   "DLG_SETTINGS_2_UI_05":"リストの背景色を交互に変更(L)",
+   "DLG_SETTINGS_2_UI_06":"タイトルバーに使用帯域を表示(T)",
+   "DLG_SETTINGS_2_UI_07":"ステータスバーに帯域制限を表示(O)",
+   "DLG_SETTINGS_2_UI_15":"トレント追加時の設定",
+   "DLG_SETTINGS_2_UI_16":"ダウンロードを自動的に開始しない(D)",
+   "DLG_SETTINGS_2_UI_17":"ウィンドウを前面表示(C)",
+   "DLG_SETTINGS_2_UI_18":"トレント内ファイル一覧ウィンドウを表示(H)",
+   "DLG_SETTINGS_2_UI_19":"トレントリストのダブルクリック時アクション",
+   "DLG_SETTINGS_2_UI_20":"シード中のトレント:",
+   "DLG_SETTINGS_2_UI_22":"ダウンロード中のトレント:",
+   "DLG_SETTINGS_3_PATHS_01":"ダウンロードファイルの保存場所",
+   "DLG_SETTINGS_3_PATHS_02":"既定の保存先(P):",
+   "DLG_SETTINGS_3_PATHS_03":"手動追加時は常に尋ねる(W)",
+   "DLG_SETTINGS_3_PATHS_06":"ダウンロード完了後の移動先(M):",
+   "DLG_SETTINGS_3_PATHS_07":"トレントのラベルを追加する(A)",
+   "DLG_SETTINGS_3_PATHS_10":"既定ダウンロードディレクトリからのみ移動(O)",
+   "DLG_SETTINGS_3_PATHS_11":".torrentファイルの場所",
+   "DLG_SETTINGS_3_PATHS_12":".torrentファイルの保存先:",
+   "DLG_SETTINGS_3_PATHS_15":"ジョブ完了後の.torrentファイルの移動先:",
+   "DLG_SETTINGS_3_PATHS_18":".torrentファイル自動ロード元(A):",
+   "DLG_SETTINGS_3_PATHS_19":"ロード済み.torrentファイルを削除(D)",
+   "DLG_SETTINGS_4_CONN_01":"監視ポート",
+   "DLG_SETTINGS_4_CONN_02":"着信接続用ポート:",
+   "DLG_SETTINGS_4_CONN_04":"ランダム",
+   "DLG_SETTINGS_4_CONN_05":"起動時にランダムに変更(R)",
+   "DLG_SETTINGS_4_CONN_06":"UPnPポートマッピングを使用(U)",
+   "DLG_SETTINGS_4_CONN_07":"NAT-PMPポートマッピングを使用(N)",
+   "DLG_SETTINGS_4_CONN_08":"プロクシサーバ",
+   "DLG_SETTINGS_4_CONN_09":"タイプ(Y):",
+   "DLG_SETTINGS_4_CONN_11":"プロクシ(P)",
+   "DLG_SETTINGS_4_CONN_13":"ポート(O)",
+   "DLG_SETTINGS_4_CONN_15":"認証",
+   "DLG_SETTINGS_4_CONN_16":"ユーザ名:",
+   "DLG_SETTINGS_4_CONN_18":"パスワード:",
+   "DLG_SETTINGS_4_CONN_19":"プロクシを通してホスト名を解決",
+   "DLG_SETTINGS_4_CONN_20":"P2P接続用にプロクシサーバを使用",
+   "DLG_SETTINGS_4_CONN_21":"ファイアウオール例外に追加(F)",
+   "DLG_SETTINGS_4_CONN_22":"プロキシ秘匿設定",
+   "DLG_SETTINGS_4_CONN_23":"全てのローカル DNS ルックアップを無効",
+   "DLG_SETTINGS_4_CONN_24":"特定される情報を漏らす機能を無効",
+   "DLG_SETTINGS_4_CONN_25":"プロキシのサポートしない接続を無効",
+   "DLG_SETTINGS_5_BANDWIDTH_01":"総上り帯域制限",
+   "DLG_SETTINGS_5_BANDWIDTH_02":"最大上り速度 (KB/秒) [0:無制限]",
+   "DLG_SETTINGS_5_BANDWIDTH_03":"自動",
+   "DLG_SETTINGS_5_BANDWIDTH_05":"未ダウンロード時の上り速度 (kB/秒):",
+   "DLG_SETTINGS_5_BANDWIDTH_07":"総下り帯域制限",
+   "DLG_SETTINGS_5_BANDWIDTH_08":"最大下り速度 (kB/秒): [0: 無制限]",
+   "DLG_SETTINGS_5_BANDWIDTH_10":"接続数",
+   "DLG_SETTINGS_5_BANDWIDTH_11":"総最大接続数:",
+   "DLG_SETTINGS_5_BANDWIDTH_14":"1トレントあたりの最大ピア接続数:",
+   "DLG_SETTINGS_5_BANDWIDTH_15":"1トレントあたりの上りスロット数:",
+   "DLG_SETTINGS_5_BANDWIDTH_17":"上り速度 90% 以下で上りスロットを追加",
+   "DLG_SETTINGS_5_BANDWIDTH_18":"総下り帯域幅制限 ",
+   "DLG_SETTINGS_5_BANDWIDTH_19":"オーバーヘッドの転送に速度制限を適用",
+   "DLG_SETTINGS_5_BANDWIDTH_20":"uTP 接続に速度制限を適用",
+   "DLG_SETTINGS_6_BITTORRENT_01":"ビットトレントの基本機能",
+   "DLG_SETTINGS_6_BITTORRENT_02":"DHTネットを使用(E)",
+   "DLG_SETTINGS_6_BITTORRENT_03":"トラッカーにスクレイプ情報を要求(A)",
+   "DLG_SETTINGS_6_BITTORRENT_04":"新規トレントにDHTを使用(E)",
+   "DLG_SETTINGS_6_BITTORRENT_05":"ピア交換を使用(P)",
+   "DLG_SETTINGS_6_BITTORRENT_06":"ローカルピア検出を許可(L)",
+   "DLG_SETTINGS_6_BITTORRENT_07":"ローカルピアへの帯域幅を制限(L)",
+   "DLG_SETTINGS_6_BITTORRENT_08":"IP/ホスト名をトラッカーに報告:",
+   "DLG_SETTINGS_6_BITTORRENT_10":"プロトコル暗号化",
+   "DLG_SETTINGS_6_BITTORRENT_11":"発信:",
+   "DLG_SETTINGS_6_BITTORRENT_13":"従来の接続方法による着信を許可",
+   "DLG_SETTINGS_6_BITTORRENT_14":"帯域幅マネジメント[uTP]を使用する",
+   "DLG_SETTINGS_6_BITTORRENT_15":"UDP トラッカーサポートを使用する",
+   "DLG_SETTINGS_7_TRANSFERCAP_01":"転送量制限を使用",
+   "DLG_SETTINGS_7_TRANSFERCAP_02":"制限の設定",
+   "DLG_SETTINGS_7_TRANSFERCAP_03":"制限タイプ:",
+   "DLG_SETTINGS_7_TRANSFERCAP_04":"帯域幅上限:",
+   "DLG_SETTINGS_7_TRANSFERCAP_05":"期間 (日数):",
+   "DLG_SETTINGS_7_TRANSFERCAP_06":"選択した期間の利用履歴:",
+   "DLG_SETTINGS_7_TRANSFERCAP_07":"アップロード量:",
+   "DLG_SETTINGS_7_TRANSFERCAP_08":"ダウンロード量:",
+   "DLG_SETTINGS_7_TRANSFERCAP_09":"アップ+ダウン:",
+   "DLG_SETTINGS_7_TRANSFERCAP_10":"期間:",
+   "DLG_SETTINGS_7_TRANSFERCAP_11":"過去%d日間",
+   "DLG_SETTINGS_7_TRANSFERCAP_12":"履歴の削除",
+   "DLG_SETTINGS_8_QUEUEING_01":"キューの設定",
+   "DLG_SETTINGS_8_QUEUEING_02":"最大稼動トレント数(アップロードとダウンロード):",
+   "DLG_SETTINGS_8_QUEUEING_04":"最大稼動ダウンロード数:",
+   "DLG_SETTINGS_8_QUEUEING_06":"シード期間 [既定値]",
+   "DLG_SETTINGS_8_QUEUEING_07":"最小共有比 (%):",
+   "DLG_SETTINGS_8_QUEUEING_09":"最短シード時間 (分):",
+   "DLG_SETTINGS_8_QUEUEING_11":"シードタスクをダウンロードタスクより高優先度にする(S)",
+   "DLG_SETTINGS_8_QUEUEING_12":"シード目標到達時の処理",
+   "DLG_SETTINGS_8_QUEUEING_13":"上り帯域幅を制限 (kB/秒): [0: 停止]",
+   "DLG_SETTINGS_9_SCHEDULER_01":"スケジューラを使用(E)",
+   "DLG_SETTINGS_9_SCHEDULER_02":"スケジュール表",
+   "DLG_SETTINGS_9_SCHEDULER_04":"スケジュール設定",
+   "DLG_SETTINGS_9_SCHEDULER_05":"上り速度制限 (kB/秒):",
+   "DLG_SETTINGS_9_SCHEDULER_07":"下り速度制限 (kB/秒):",
+   "DLG_SETTINGS_9_SCHEDULER_09":"停止時DHTを使用しない(D)",
+   "DLG_SETTINGS_9_WEBUI_01":"ウェブUIを使用する(W)",
+   "DLG_SETTINGS_9_WEBUI_02":"認証",
+   "DLG_SETTINGS_9_WEBUI_03":"ユーザ名(U)",
+   "DLG_SETTINGS_9_WEBUI_05":"パスワード(P)",
+   "DLG_SETTINGS_9_WEBUI_07":"ゲスト(ユーザ名:Guest)を許可する:",
+   "DLG_SETTINGS_9_WEBUI_09":"接続",
+   "DLG_SETTINGS_9_WEBUI_10":"代替監視ポート(L) [既定値は接続ポート]:",
+   "DLG_SETTINGS_9_WEBUI_12":"これらの IP からのアクセスのみを許可する (複数項目はカンマで区切って記述してください):",
+   "DLG_SETTINGS_A_ADVANCED_01":"高度な設定 [警告: 変更しない事!]",
+   "DLG_SETTINGS_A_ADVANCED_02":"数値(V)",
+   "DLG_SETTINGS_A_ADVANCED_03":"True",
+   "DLG_SETTINGS_A_ADVANCED_04":"False",
+   "DLG_SETTINGS_A_ADVANCED_05":"設定(S)",
+   "DLG_SETTINGS_B_ADV_UI_01":"速度ポップアップリスト[複数の値を\",\"で区切って指定]",
+   "DLG_SETTINGS_B_ADV_UI_02":"速度ポップアップのリストを手動設定(O)",
+   "DLG_SETTINGS_B_ADV_UI_03":"上り速度リスト:",
+   "DLG_SETTINGS_B_ADV_UI_05":"下り速度リスト:",
+   "DLG_SETTINGS_B_ADV_UI_07":"既定のラベル設定 [複数のラベルは\"|\"で区切って指定]",
+   "DLG_SETTINGS_B_ADV_UI_08":"検索エンジン [名前|URL] (末尾に検索キーワードを付加)",
+   "DLG_SETTINGS_C_ADV_CACHE_01":"キャッシュの基本設定",
+   "DLG_SETTINGS_C_ADV_CACHE_02":"　ディスクキャッシュは頻繁にアクセスされるデータをメモリ中に保持する事でハードディスクへの読み書き回数を減らす事が出来ます。トレントは通常キャッシュを自動的に管理しますが、必要に応じてこれらのふるまいを変更する事ができます。",
+   "DLG_SETTINGS_C_ADV_CACHE_03":"キャッシュサイズの手動設定 [MB] (O):",
+   "DLG_SETTINGS_C_ADV_CACHE_05":"キャッシュ不要時メモリ使用量を減らす(R)",
+   "DLG_SETTINGS_C_ADV_CACHE_06":"高度なキャッシュの設定",
+   "DLG_SETTINGS_C_ADV_CACHE_07":"ディスク書込キャッシュを使用する(W)",
+   "DLG_SETTINGS_C_ADV_CACHE_08":"2分毎にアクセスの無いブロックを書込む(I)",
+   "DLG_SETTINGS_C_ADV_CACHE_09":"直ちに最終ピースを書込む(T)",
+   "DLG_SETTINGS_C_ADV_CACHE_10":"読込みキャッシュを使用する(R)",
+   "DLG_SETTINGS_C_ADV_CACHE_11":"上り速度が低い時読込みキャッシュを使用しない",
+   "DLG_SETTINGS_C_ADV_CACHE_12":"キャッシュから古いブロックを取り除く",
+   "DLG_SETTINGS_C_ADV_CACHE_13":"キャッシュが込み合っている時自動的にキャッシュ容量を増やす",
+   "DLG_SETTINGS_C_ADV_CACHE_14":"Windowsの書込みキャッシュを使用しない(D)",
+   "DLG_SETTINGS_C_ADV_CACHE_15":"Windowsの読込みキャッシュを使用しない(O)",
+   "DLG_SETTINGS_C_ADV_RUN_01":"プログラムの実行",
+   "DLG_SETTINGS_C_ADV_RUN_02":"トレント完了時にこのプログラムを実行:",
+   "DLG_SETTINGS_C_ADV_RUN_04":"トレントの状態が変わる時にこのプログラムを実行",
+   "DLG_SETTINGS_C_ADV_RUN_06":"以下のコマンドを使用できます:\r\n%F - ダウンロードファイル名 (単一ファイルのトレント)\r\n%D - 保存先フォルダー\r\n%N - トレントの名前\r\n%S - トレントの状態\r\n%L - ラベル\r\n%T - トラッカー\r\n%M - 状態メッセージの文字列 (状態列と同じ)\r\n%I - 16進数ハッシュ値\r\n\r\n状態は次の通り: 開始 = 1, 検査中 = 2, 検査後に開始 = 4,\r\n検査済 = 8, エラー = 16, 一時停止中 = 32, 自動 = 64, 読込み済 = 128",
+   "DLG_TORRENTPROP_00":"トレントのプロパティ",
+   "DLG_TORRENTPROP_1_GEN_01":"トラッカー (空行で層分け)",
+   "DLG_TORRENTPROP_1_GEN_03":"帯域幅の設定",
+   "DLG_TORRENTPROP_1_GEN_04":"最大上り速度 (kB/秒): [0: デフォルト]",
+   "DLG_TORRENTPROP_1_GEN_06":"最大下り速度 (kB/秒): [0: デフォルト]",
+   "DLG_TORRENTPROP_1_GEN_08":"上りスロット数: [0:既定値使用]",
+   "DLG_TORRENTPROP_1_GEN_10":"シード期間",
+   "DLG_TORRENTPROP_1_GEN_11":"このトレント専用の設定(O)",
+   "DLG_TORRENTPROP_1_GEN_12":"最小共有比 (%):",
+   "DLG_TORRENTPROP_1_GEN_14":"最短シード時間 (分):",
+   "DLG_TORRENTPROP_1_GEN_16":"その他の設定",
+   "DLG_TORRENTPROP_1_GEN_17":"初期シード(I)",
+   "DLG_TORRENTPROP_1_GEN_18":"DHTを使用(E)",
+   "DLG_TORRENTPROP_1_GEN_19":"ピア交換(P)",
+   "DLG_ADDEDITRSSFEED_03":"フィード",
+   "DLG_ADDEDITRSSFEED_04":"フィード URL:",
+   "DLG_ADDEDITRSSFEED_05":"別名(C):",
+   "DLG_ADDEDITRSSFEED_06":"購読",
+   "DLG_ADDEDITRSSFEED_07":"全ての項目を自動ダウンロードしない(N)",
+   "DLG_ADDEDITRSSFEED_08":"フィード中の全ての項目を自動ダウンロード(A)",
+   "DLG_ADDEDITRSSFEED_09":"スマートエピソードフィルターを使用(S)",
+   "DLG_RSSDOWNLOADER_02":"フィード||ブックマーク||履歴||",
+   "DLG_RSSDOWNLOADER_03":"All Feeds",
+   "DLG_RSSDOWNLOADER_04":"フィルター設定",
+   "DLG_RSSDOWNLOADER_05":"名前:",
+   "DLG_RSSDOWNLOADER_06":"フィルター:",
+   "DLG_RSSDOWNLOADER_07":"除外:",
+   "DLG_RSSDOWNLOADER_08":"保存先:",
+   "DLG_RSSDOWNLOADER_09":"フィード:",
+   "DLG_RSSDOWNLOADER_10":"品質:",
+   "DLG_RSSDOWNLOADER_11":"エピソード番号: [例 1x12-14](E)",
+   "DLG_RSSDOWNLOADER_12":"デコード名ではなく元の名前にフィルターを適用 (F)",
+   "DLG_RSSDOWNLOADER_13":"自動的にダウンロードを開始しない",
+   "DLG_RSSDOWNLOADER_14":"スマートep.フィルター",
+   "DLG_RSSDOWNLOADER_15":"高優先度でダウンロード(G)",
+   "DLG_RSSDOWNLOADER_16":"最小更新間隔(M)",
+   "DLG_RSSDOWNLOADER_17":"新規トレントのラベル:",
+   "DLG_RSSDOWNLOADER_18":"RSS フィードの追加...",
+   "DLG_RSSDOWNLOADER_19":"フィードの編集...(E)",
+   "DLG_RSSDOWNLOADER_20":"フィードを無効(A)",
+   "DLG_RSSDOWNLOADER_21":"フィードを有効(A)",
+   "DLG_RSSDOWNLOADER_22":"フィードの更新(U)",
+   "DLG_RSSDOWNLOADER_23":"フィードの削除(D)",
+   "DLG_RSSDOWNLOADER_24":"ダウンロード(D)",
+   "DLG_RSSDOWNLOADER_25":"URL をブラウザーで開く(B)",
+   "DLG_RSSDOWNLOADER_26":"ブックマークに追加(A)",
+   "DLG_RSSDOWNLOADER_27":"追加(A)",
+   "DLG_RSSDOWNLOADER_28":"削除(D)",
+   "DLG_RSSDOWNLOADER_29":"全て",
+   "DLG_RSSDOWNLOADER_30":"(全て)",
+   "DLG_RSSDOWNLOADER_31":"(常時)||(一度のみ)||12時間||1日||2日||3日||4日||1週間||2週間||3週間||1ヶ月||",
+   "DLG_RSSDOWNLOADER_32":"RSS フィードの追加",
+   "DLG_RSSDOWNLOADER_33":"RSS フィードの編集",
+   "DLG_RSSDOWNLOADER_34":"Remove RSS Feed(s)",
+   "DLG_RSSDOWNLOADER_35":"Really delete the %d selected RSS Feeds?",
+   "DLG_RSSDOWNLOADER_36":"RSS フィード \"%s\" を削除してよろしいですか?",
+   "FEED_COL_FULLNAME":"フルネーム",
+   "FEED_COL_NAME":"名前",
+   "FEED_COL_EPISODE":"エピソード",
+   "FEED_COL_FORMAT":"フォーマット",
+   "FEED_COL_CODEC":"コーデック",
+   "FEED_COL_DATE":"日付",
+   "FEED_COL_FEED":"フィード",
+   "FEED_COL_URL":"ソース URL",
+   "PRS_COL_IP":"IP",
+   "PRS_COL_PORT":"ポート",
+   "PRS_COL_CLIENT":"クライアント",
+   "PRS_COL_FLAGS":"フラグ",
+   "PRS_COL_PCNT":"完了度",
+   "PRS_COL_RELEVANCE":"関与度",
+   "PRS_COL_DOWNSPEED":"下り速度",
+   "PRS_COL_UPSPEED":"上り速度",
+   "PRS_COL_REQS":"要求数",
+   "PRS_COL_WAITED":"待機中",
+   "PRS_COL_UPLOADED":"アップロード量",
+   "PRS_COL_DOWNLOADED":"ダウンロード量",
+   "PRS_COL_HASHERR":"ハッシュエラー",
+   "PRS_COL_PEERDL":"ピア下り速度",
+   "PRS_COL_MAXUP":"最大上り",
+   "PRS_COL_MAXDOWN":"最大下り",
+   "PRS_COL_QUEUED":"待機中",
+   "PRS_COL_INACTIVE":"休止",
+   "FI_COL_DONE":"所有",
+   "FI_COL_FIRSTPC":"先頭ピース",
+   "FI_COL_NAME":"名前",
+   "FI_COL_NUMPCS":"# ピース数",
+   "FI_COL_PCNT":"完了度",
+   "FI_COL_PRIO":"優先度",
+   "FI_COL_SIZE":"サイズ",
+   "FI_PRI0":"スキップ",
+   "FI_PRI1":"低",
+   "FI_PRI2":"普通",
+   "FI_PRI3":"高",
+   "GN_TP_01":"ダウンロード量:",
+   "GN_TP_02":"アップロード量:",
+   "GN_TP_03":"シード:",
+   "GN_TP_04":"残り時間:",
+   "GN_TP_05":"下り速度:",
+   "GN_TP_06":"上り速度:",
+   "GN_TP_07":"ピア数:",
+   "GN_TP_08":"共有比:",
+   "GN_TP_09":"保存先:",
+   "GN_TP_10":"ハッシュ値:",
+   "GN_GENERAL":"一般",
+   "GN_TRANSFER":"転送",
+   "GN_XCONN":"%d / %d 接続中 (同時接続: %d)",
+   "MAIN_TITLEBAR_SPEED":"D:%s U:%s - %s",
+   "MENU_COPY":"コピー(C)",
+   "MENU_RESET":"リセット(R)",
+   "MENU_UNLIMITED":"無制限",
+   "MP_RESOLVE_IPS":"IP解決(R)",
+   "MF_GETFILE":"Get File(s)",
+   "MF_DONT":"ダウンロードしない(D)",
+   "MF_HIGH":"高優先度(H)",
+   "MF_LOW":"低優先度(L)",
+   "MF_NORMAL":"普通優先度(N)",
+   "ML_COPY_MAGNETURI":"マグネット URI をコピー(M)",
+   "ML_DELETE_DATA":"ダウンロードデータを削除(L)",
+   "ML_DELETE_TORRENT":".torrentファイルを削除(D)",
+   "ML_DELETE_DATATORRENT":".torrentファイルとダウンロードデータを削除(E)",
+   "ML_FORCE_RECHECK":"強制再チェック(H)",
+   "ML_FORCE_START":"強制開始(F)",
+   "ML_LABEL":"ラベル(L)",
+   "ML_PAUSE":"一時停止(P)",
+   "ML_PROPERTIES":"プロパティ(E)",
+   "ML_QUEUEDOWN":"列の下に移動(D)",
+   "ML_QUEUEUP":"列の上に移動(U)",
+   "ML_REMOVE":"削除(R)",
+   "ML_REMOVE_AND":"高度な削除(N)",
+   "ML_START":"開始(S)",
+   "ML_STOP":"停止(S)",
+   "OV_CAT_ACTIVE":"稼動中",
+   "OV_CAT_ALL":"全てのカテゴリ",
+   "OV_CAT_COMPL":"ダウンロード済",
+   "OV_CAT_DL":"ダウンロード中",
+   "OV_CAT_INACTIVE":"停止中",
+   "OV_CAT_NOLABEL":"ラベル無し",
+   "OV_COL_AVAIL":"||可用性||可用性",
+   "OV_COL_DATE_ADDED":"付加情報",
+   "OV_COL_DATE_COMPLETED":"完了日時",
+   "OV_COL_DONE":"所有",
+   "OV_COL_DOWNLOADED":"ダウンロード量",
+   "OV_COL_DOWNSPD":"下り速度",
+   "OV_COL_ETA":"予想完了時間",
+   "OV_COL_LABEL":"ラベル",
+   "OV_COL_NAME":"名前",
+   "OV_COL_ORDER":"番号",
+   "OV_COL_PEERS":"ピア数",
+   "OV_COL_REMAINING":"残り",
+   "OV_COL_SEEDS":"シード数",
+   "OV_COL_SEEDS_PEERS":"シード/ピア比",
+   "OV_COL_SHARED":"共有比",
+   "OV_COL_SIZE":"サイズ",
+   "OV_COL_SOURCE_URL":"ソース URL",
+   "OV_COL_STATUS":"状態",
+   "OV_COL_UPPED":"アップロード量",
+   "OV_COL_UPSPD":"上り速度",
+   "OV_CONFIRM_DELETEDATA_MULTIPLE":"選択中の %d 件のトレントとその全ての関連データを削除してよろしいですか?",
+   "OV_CONFIRM_DELETEDATA_ONE":"選択したトレントと全ての関連データを削除してよろしいですか?",
+   "OV_CONFIRM_DELETE_MULTIPLE":"選択中の %d 件のトレントを削除してよろしいですか?",
+   "OV_CONFIRM_DELETE_ONE":"選択したトレントを削除してよろしいですか?",
+   "OV_CONFIRM_DELETE_RSSFILTER":"RSS フィルター \"%s\" を削除してよろしいですか?",
+   "OV_FL_CHECKED":"検査中 %:.1d%",
+   "OV_FL_DOWNLOADING":"ダウンロード中",
+   "OV_FL_ERROR":"エラー: %s",
+   "OV_FL_FINISHED":"終了",
+   "OV_FL_PAUSED":"一時停止中",
+   "OV_FL_QUEUED":"待機中",
+   "OV_FL_QUEUED_SEED":"シード待機中",
+   "OV_FL_SEEDING":"シード中",
+   "OV_FL_STOPPED":"停止",
+   "OV_NEWLABEL_CAPTION":"ラベルの入力",
+   "OV_NEWLABEL_TEXT":"選択したトレントに新規ラベルを入力:",
+   "OV_NEW_LABEL":"新規ラベル...",
+   "OV_REMOVE_LABEL":"ラベルの除去",
+   "OV_TABS":"全般||トラッカー||ピア||ピース||ファイル||速度||ログ||",
+   "OV_TB_ADDTORR":"トレントを追加",
+   "OV_TB_ADDURL":"URLからトレントを追加",
+   "OV_TB_PAUSE":"一時停止",
+   "OV_TB_PREF":"設定",
+   "OV_TB_QUEUEDOWN":"列の下に移動",
+   "OV_TB_QUEUEUP":"列の上に移動",
+   "OV_TB_REMOVE":"削除",
+   "OV_TB_RSSDOWNLDR":"RSS ダウンローダー",
+   "OV_TB_START":"開始",
+   "OV_TB_STOP":"停止",
+   "MM_FILE":"ファイル(F)",
+   "MM_FILE_ADD_TORRENT":"トレントの追加(A)...",
+   "MM_FILE_ADD_URL":"指定 URL からトレントを追加(U)...",
+   "MM_OPTIONS":"オプション(O)",
+   "MM_OPTIONS_PREFERENCES":"設定(P)",
+   "MM_OPTIONS_SHOW_CATEGORY":"カテゴリーリストを表示(C)",
+   "MM_OPTIONS_SHOW_DETAIL":"詳細な情報を表示(D)",
+   "MM_OPTIONS_SHOW_STATUS":"ステータスバーを表示(S)",
+   "MM_OPTIONS_SHOW_TOOLBAR":"ツールバーを表示(T)",
+   "MM_OPTIONS_TAB_ICONS":"タブにアイコンを表示(I)",
+   "MM_HELP":"ヘルプ(H)",
+   "MM_HELP_UT_WEBPAGE":"µTorrent Web ページ(W)",
+   "MM_HELP_UT_FORUMS":"µTorrent フォーラム",
+   "MM_HELP_WEBUI_FEEDBACK":"Send WebUI Feedback",
+   "MM_HELP_ABOUT_WEBUI":"About µTorrent WebUI",
+   "STM_TORRENTS":"トレント",
+   "STM_TORRENTS_PAUSEALL":"全てのトレントを一時停止(P)",
+   "STM_TORRENTS_RESUMEALL":"全てのトレントを再開(R)",
+   "SB_DOWNLOAD":"D: %s%z/s",
+   "SB_LOCAL":" L: %z/s",
+   "SB_OVERHEAD":" O: %z/s",
+   "SB_TOTAL":" T: %Z",
+   "SB_UPLOAD":"U: %s%z/s",
+   "SIZE_B":"B",
+   "SIZE_EB":"EB",
+   "SIZE_GB":"GB",
+   "SIZE_KB":"KB",
+   "SIZE_MB":"MB",
+   "SIZE_PB":"PB",
+   "SIZE_TB":"TB",
+   "ST_CAPT_ADVANCED":"高度な設定",
+   "ST_CAPT_BANDWIDTH":"帯域幅",
+   "ST_CAPT_CONNECTION":"接続",
+   "ST_CAPT_DISK_CACHE":"ディスクキャッシュ",
+   "ST_CAPT_FOLDER":"ディレクトリ",
+   "ST_CAPT_GENERAL":"一般",
+   "ST_CAPT_SCHEDULER":"スケジューラ",
+   "ST_CAPT_QUEUEING":"キュー",
+   "ST_CAPT_UI_EXTRAS":"UI追加設定",
+   "ST_CAPT_UI_SETTINGS":"UI設定",
+   "ST_CAPT_BITTORRENT":"ビットトレント",
+   "ST_CAPT_WEBUI":"ウェブUI",
+   "ST_CAPT_TRANSFER_CAP":"転送量制限",
+   "ST_CAPT_RUN_PROGRAM":"プログラム実行",
+   "ST_CBO_UI_DBLCLK_TOR":"プロパティの参照||開始/停止||フォルダを開く||ダウンロードバーの表示||",
+   "ST_CBO_ENCRYPTIONS":"使用しない||使用する||強制使用||",
+   "ST_CBO_PROXY":"(無し)||Socks4||Socks5||HTTPS||HTTP||",
+   "ST_CBO_TCAP_MODES":"アップロード||ダウンロード||アップロード+ダウンロード||",
+   "ST_CBO_TCAP_UNITS":"MB||GB||",
+   "ST_CBO_TCAP_PERIODS":"1||2||5||7||10||14||15||20||21||28||30||31||",
+   "ST_COL_NAME":"名前",
+   "ST_COL_VALUE":"值",
+   "ST_SCH_DAYCODES":"月||火||水||木||金||土||日||",
+   "ST_SCH_DAYNAMES":"月曜||火曜||水曜||木曜||金曜||土曜||日曜||",
+   "ST_SCH_LGND_FULL":"無制限",
+   "ST_SCH_LGND_FULLEX":"無制限 - 通常の総帯域幅制限を使用します。",
+   "ST_SCH_LGND_LIMITED":"制限",
+   "ST_SCH_LGND_LIMITEDEX":"制限 - スケジューラで指定した帯域幅制限を使用します。",
+   "ST_SCH_LGND_SEEDING":"シードのみ",
+   "ST_SCH_LGND_SEEDINGEX":"シードのみ - 上りデータのみ使用します。(未完了も含む)",
+   "ST_SCH_LGND_OFF":"停止",
+   "ST_SCH_LGND_OFFEX":"停止 - 全てのトレントを停止します。ただし強制ではありません。",
+   "ST_SEEDTIMES_HOURS":"<= %d 時間",
+   "ST_SEEDTIMES_IGNORE":"(無視)",
+   "ST_SEEDTIMES_MINUTES":"<= %d 分",
+   "TIME_DAYS_HOURS":"%d日と%d時間",
+   "TIME_HOURS_MINS":"%d時間%d分",
+   "TIME_MINS_SECS":"%d分%d秒",
+   "TIME_SECS":"%d秒",
+   "TIME_WEEKS_DAYS":"%d週間と%d日",
+   "TIME_YEARS_WEEKS":"%d年と%d週間",
+   "ML_MORE_ACTIONS":"More Action",
+   "Torrents":"トレント",
+   "Feeds":"フィード",
+   "App":"アプリ",
+   "country":"国",
+   "ETA":"ETA",
+   "of":"/",
+   "/s":"/秒",
+   "Paste a torrent or feed URL":"トレントをペースト、または URL をフィード",
+   "Home":"ホーム",
+   "Logout":"ログアウト",
+   "Seeding":"シード中",
+   "All Feeds":"すべてのフィード",
+   "bitrate":"ビットレート",
+   "resolution":"解像度",
+   "length":"長さ",
+   "streamable":"ストリーム可能",
+   "type":"タイプ",
+   "remote":"リモート",
+   "about":"概要",
+   "sessions":"セッション",
+   "share":"共有",
+   "Share this torrent":"このトレントを共有",
+   "Share link":"リンクを共有",
+   "add":"追加",
+   "logout":"ログアウト",
+   "log in":"ログイン",
+   "anywhere access":"どこからでもアクセス",
+   "stay signed in":"サインイン状態を保持",
+   "download":"ダウンロード",
+   "Your client is currently not available. Verify that it is connected to the internet.":"クライアントは現在利用できません。インターネットに接続されていることを確認してください。",
+   "Unable to communicate with your &micro;Torrent client. This message will disappear automatically when a connection is re-established.":"&micro;Torrent クライアントと通信できません。接続が再び確立されると、このメッセージは自動的に消えます。",
+   "Open file":"ファイルを開く",
+   "Download to your computer":"コンピューターにダウンロード",
+   "Open with VLC Media Player":"VLC メディア プレイヤーで開く",
+   "Actions":"アクション",
+   "season":"シーズン",
+   "DLG_ABOUT_VERSION_LEGEND":null,
+   "DLG_ABOUT_VERSION_VERSION":null,
+   "DLG_ABOUT_VERSION_REVISION":null,
+   "DLG_ABOUT_VERSION_BUILD_DATE":null,
+   "DLG_ABOUT_VERSION_PEER_ID":null,
+   "DLG_ABOUT_VERSION_USER_AGENT":null,
+   "DLG_ABOUT_UPNP_EXTERNAL_ADDRESS":null,
+   "DLG_ABOUT_UI_REVISION":null,
+   "DLG_SETTINGS_SAVE":null,
+   "DLG_SETTINGS_MENU_TITLE":"設定",
+   "DLG_SETTINGS_D_REMOTE_01":"BitTorrent Remote",
+   "DLG_SETTINGS_D_REMOTE_02":"BitTorrent Remote は、ブラウザーを通してクライアントにアクセスする、安全性の高い簡単な方法を提供します。",
+   "DLG_SETTINGS_D_REMOTE_03":"次の接続を有効にして、コンピューター名とパスワードを選択し、忘れずにこのコンピューターの電源を入れたままにしておくだけです。",
+   "DLG_SETTINGS_D_REMOTE_04":"もっと詳しく",
+   "DLG_SETTINGS_D_REMOTE_05":"BitTorrent Remote Access を使用する",
+   "DLG_SETTINGS_D_REMOTE_06":"認証",
+   "DLG_SETTINGS_D_REMOTE_07":"ユーザ名:",
+   "DLG_SETTINGS_D_REMOTE_08":"パスワード:",
+   "DLG_SETTINGS_D_REMOTE_09":"送信",
+   "ST_CAPT_REMOTE":"BitTorrent Remote",
+   "STATUS_REMOTE_01":"アクセス可能",
+   "STATUS_REMOTE_02":"接続しています..",
+   "STATUS_REMOTE_03":"アクセス不可",
+   "STATUS_REMOTE_04":"登録に失敗",
+   "STATUS_REMOTE_05":"BitTorrent Remote を使用するためにパスワードを入力してください。",
+   "STATUS_REMOTE_06":"BitTorrent Remote サービスへ登録するための接続に失敗しました。",
+   "STATUS_REMOTE_07":"このユーザー名を使用しているコンピューターがすでに存在します",
+   "STATUS_REMOTE_08":"ユーザー名に半角英数字と半角記号以外の文字は使用できません。",
+   "STATUS_REMOTE_09":"パスワードに半角英数字と半角記号以外の文字は使用できません。",
+   "STATUS_REMOTE_10":"状態: "
+}

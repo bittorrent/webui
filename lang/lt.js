@@ -5,416 +5,417 @@ Use of this source code is governed by a BSD-style that can be
 found in the LICENSE file.
 */
 
-var LANG_STR = [
-	  "Torento failai||*.torrent||Visi failai (*.*)||*.*||"
-	, "Gerai"
-	, "Atšaukti"
-	, "Pritaikyti"
-	, "Taip"
-	, "Ne"
-	, "Uždaryti"
-	, "Nustatymai"
-	, "Kalba"
-	, "Kalba"
-	, "Privatumas"
-	, "Automatiškai tikrinti dėl atnaujinimų"
-	, "Naujinti į beta versijas"
-	, "Siųsti anoniminius duomenis, kai ieškoma naujinių"
-	, "Kai siunčiama"
-	, "Pridėti .!ut nebaigtiems failams"
-	, "Iš anksto paskirstyti failus"
-	, "Užkirsti kelią parengčiai, jei yra aktyvių torentų"
-	, "Rodymo pasirinktys"
-	, "Patvirtinti prieš trinant torentus"
-	, "Patvirtinti prieš trinant trakerius"
-	, "Rodyti patvirtinimo dialogą išeinant"
-	, "Papildomai rodyti fono spalvą"
-	, "Rodyti dabartinį greitį pavadinimo juostoje"
-	, "Rodyti greičio ribas būsenos juostoje"
-	, "Kai pridedami torentai"
-	, "Nepradėti siuntimo automatiškai"
-	, "Aktyvuoti programos langą"
-	, "Atverti langą, rodantį failus, esančius torente"
-	, "Veiksmai dvigubam paspaudimui"
-	, "Torentų skleidimui:"
-	, "Torentų siuntimui:"
-	, "Vieta failų atsiuntimui"
-	, "Padėti naujus atsiuntimus į:"
-	, "Rodyti dialogą pridedant"
-	, "Perkelti baigtus siuntimus į:"
-	, "Pridėti torento etiketę"
-	, "Perkelti tik iš numatyto siuntimo katalogo"
-	, "Vieta .torrent failams"
-	, "Laikyti torentus:"
-	, "Perkelti baigtus torentus į:"
-	, "Automatiškai įkrauti torentus iš:"
-	, "Trinti įkrautus torentus"
-	, "Klausymosi prievadas"
-	, "Prievadas, naudojamas įeinantiems sujungimams:"
-	, "Atsitiktinis priev."
-	, "Parinkti atsitiktinį prievadą paleidus"
-	, "Įjungti UPnP prievadų žymėjimą"
-	, "Įjungti NAT-PMP prievado žymėjimą"
-	, "Įgaliotas serveris"
-	, "Tipas:"
-	, "Įgaliojimas:"
-	, "Priev.:"
-	, "Autentifikacija"
-	, "Vartotojas:"
-	, "Slaptažodis:"
-	, "Atpažinti kompiuterių vardus per tarpinį serverį"
-	, "Naudoti įgaliotąjį serverį \"siuntėjas siuntėjui\" sujungimams"
-	, "Pridėti į Windows užkardos išimtis"
-	, "Proxy Privacy"
-	, "Disable all local DNS lookups"
-	, "Disable all features that leak identifying information"
-	, "Disable connections unsupported by the proxy"
-	, "Bendrojo išsiuntimo greičio ribojimas"
-	, "Maks. išsiuntimo greitis (kB/s): [0: neribotas]"
-	, "Automatiškai"
-	, "Papildomas išsiuntimo greitis, kai nesisiunčiama (kB/s):"
-	, "Bendro siuntimo greičio ribojimas"
-	, "Didžiausias siuntimo greitis (kB/s): [0: neribotas]"
-	, "Susijungimų skaičius"
-	, "Bendras susijungimų skaičius:"
-	, "Didžiausias prisijungusių siuntėjų skaičius torentui:"
-	, "Išsiuntimo jungčių skaičius torentui:"
-	, "Naudoti papildomas jungtis, jei išsiuntimo greitis < 90%"
-	, "Global Rate Limit Options"
-	, "Apply rate limit to transport overhead"
-	, "Apply rate limit to uTP connections"
-	, "Pagrindinės BitTorrent savybės"
-	, "Įjungti DHT tinklą"
-	, "Klausti trakerio dėl būs. atnauj."
-	, "Įjungti DHT naujiems torentams"
-	, "Įjungti siuntėjų apsikeitimą"
-	, "Įjungti vietinių siuntėjų paiešką"
-	, "Riboti vietinių siuntėjų aktyvumą"
-	, "IP/kompiuterio adresas pranešti trakeriui:"
-	, "Protokolo apsauga"
-	, "Išeinantys:"
-	, "Leisti įeinančius susijungimus"
-	, "Enable bandwidth management [uTP]"
-	, "Enable UDP tracker support"
-	, "Enable Transfer Cap"
-	, "Cap Settings"
-	, "Limit Type:"
-	, "Bandwidth Cap:"
-	, "Time Period (days):"
-	, "Usage history for selected period:"
-	, "Išsiųsta:"
-	, "Atsiųsta:"
-	, "Išsiųsta + Atsiųsta:"
-	, "Laiko periodas:"
-	, "Last %d days"
-	, "Reset History"
-	, "Eilės nustatymai"
-	, "Didžiausias aktyvių torentų skaičius:"
-	, "Didžiausias aktyvių siuntimų skaičius:"
-	, "Skleisti kol [numatytos reikšmės]"
-	, "Minimum ratio (%):"
-	, "Minimum seeding time (minutes):"
-	, "Skleidimo užduotys svarbesnės už siuntimo užduotis"
-	, "Kai µTorrent pasiekia skleidimo tikslą"
-	, "Riboti išsiuntimą iki (kB/s): [0: stop]"
-	, "Įjungti tvarkaraštį"
-	, "Tvarkaraštis"
-	, "Tvarkaraščio nustatymai"
-	, "Ribotas išsiuntimas (kB/s):"
-	, "Ribotas atsiuntimas (kB/s):"
-	, "Išjungti DHT, kai atsijungiama"
-	, "Įjungti tinklo sąsają"
-	, "Autentifikacija"
-	, "Vartotojas:"
-	, "Slaptažodis:"
-	, "Įjungti svečio anketą su vardu:"
-	, "Jungiamumas"
-	, "Papildomas klausymo prievadas (numatytasis prievadas):"
-	, "Uždrausti priėjimą į šiuos IP (atskirkite atskirus įrašus kableliu):"
-	, "Sudėtingesni nustatymai (ĮSPĖJIMAS: nekeiskite!]"
-	, "Vertė:"
-	, "Teisinga"
-	, "Neteisinga"
-	, "Rinkinys"
-	, "Greitųjų iššokančių langų sąrašas [atskirkite reikšmes kableliu]"
-	, "Panaikinti automatinį iššokančių langų sąrašą"
-	, "Išsiųsti greičio sąrašą:"
-	, "Atsiųsti greičio sąrašą:"
-	, "Nuolatinės etiketės [atskirti etiketes \"|\" ženklu]"
-	, "Paieškos sistemos [Formatas: vardas|URL]"
-	, "Pagrindiniai podėlio nustatymai"
-	, "Disko podėlis naudojamas dažnai naudojamų failų laikymui atmintyje, skaitymų ir rašymų skaičiui į kietąjį diską sumažinti. µTorrent paprastai valdo podėlį automatiškai, bet jūs galite tai pakeisti, keisdami šiuos nustatymus."
-	, "Panaikinti automatinį podėlio dydį ir patikslinti rankiniu būdu (MB):"
-	, "Sumažinti atminties naudojimą, kai podėlis nereikalingas"
-	, "Sudėtingesni podėlio nustatymai"
-	, "Įjungti disko rašymų sandėliavimą"
-	, "Nurašyti nepaliestus blokus kas dvi minutes"
-	, "Nurašyti baigtas dalis nedelsiant"
-	, "Įjungti disko skaitymų sandėliavimą"
-	, "Išjungti skaitymo sandėliavimą jei išsiuntimas lėtas"
-	, "Naikinti senus blokus iš podėlio"
-	, "Didinti automatinį podėlio dydį, kai podėlis lūžinėja"
-	, "Išjungti Windows sandėliavimą disko rašymuose"
-	, "Išjungti Windows sandėliavimą disko skaitymuose"
-	, "Run Program"
-	, "Run this program when a torrent finishes:"
-	, "Run this program when a torrent changes state:"
-	, "You can use these commands:\r\n%F - Name of downloaded file (for single file torrents)\r\n%D - Directory where files are saved\r\n%N - Title of torrent\r\n%S - State of torrent\r\n%L - Label\r\n%T - Tracker\r\n%M - Status message string (same as status column)\r\n%I - hex encoded info-hash\r\n\r\nState is a combination of:\r\nstarted = 1, checking = 2, start-after-check = 4,\r\nchecked = 8, error = 16, paused = 32, auto = 64, loaded = 128"
-	, "Torento savybės"
-	, "Trakeriai (atskirti eiles tarpais)"
-	, "Saugos nustatymai"
-	, "Didžiausias išsiuntimas (kB/s): [0: numatytas]"
-	, "Didžiausias atsiuntimas (kB/s): [0: numatytas]"
-	, "Išsiuntimo jungtys [0: numatytas]"
-	, "Skleisti kol"
-	, "Pakeisti numatytus nustatymus"
-	, "Minimum ratio (%):"
-	, "Minimum seeding time (minutes):"
-	, "Kiti nustatymai"
-	, "Pradinis skleidimas"
-	, "Įjungti DHT"
-	, "Siuntėjų apsikeitimas"
-	, "Srautas"
-	, "Srauto URL:"
-	, "Kitaip dar žinomas:"
-	, "Prenumerata"
-	, "Nesiųsti visko automatiškai"
-	, "Automatiškai atsiųsti viską, kas skelbta tiekime"
-	, "Naudoti pažangesnį epizodų filtrą"
-	, "Feeds||Mėgstamiausi||Istorija||"
-	, "Visi siuntėjai"
-	, "Filtro nustatymai"
-	, "Vardas:"
-	, "Filtras:"
-	, "Ne:"
-	, "Išsaugoti:"
-	, "Srautas:"
-	, "Kokybė:"
-	, "Epizodo numeris: [pvz. 1x12-14]"
-	, "Filtras atitinka pirminį pavadinimą vietoj dešifruoto"
-	, "Nepradėti siuntimų automatiškai"
-	, "Pažangesnis ep. filtras"
-	, "Duoti siuntimui aukščiausią svarbą"
-	, "Mažiausias intervalas:"
-	, "Etiketė naujiems torentams:"
-	, "Pridėti RSS srautą..."
-	, "Redaguoti srautą..."
-	, "Išjungti srautą"
-	, "Įjungti srautą"
-	, "Naujinti srautą"
-	, "Trinti srautą"
-	, "Atsiųsta"
-	, "Atidaryti URL naršyklėje"
-	, "Pridėti prie mėgiamų"
-	, "Pridėti"
-	, "Ištrinti"
-	, "Visi"
-	, "(Visi)"
-	, "(visada taikyti)||(taikyti tik kartą)||12 valandų||1 diena||2 dienos||3 dienos||4 dienos||1 savaitė||2 savaitės||3 savaitės||1 mėnuo||"
-	, "Pridėti RSS srautą"
-	, "Redaguoti RSS srautą"
-	, "Remove RSS Feed(s)"
-	, "Really delete the %d selected RSS Feeds?"
-	, "Ar tikrai ištrinti RSS srautą \"%s\"?"
-	, "Pilnas vardas"
-	, "Vardas"
-	, "Epizodas"
-	, "Formatuoti"
-	, "Kodekas"
-	, "Date"
-	, "Srautas"
-	, "URL"
-	, "IP"
-	, "Prievadas"
-	, "Klientas"
-	, "Vėliavos"
-	, "%"
-	, "Tinkamumas"
-	, "Ats. greitis"
-	, "Išs. greitis"
-	, "Užklausos"
-	, "Laukta"
-	, "Išsiųsta"
-	, "Atsiųsta"
-	, "Hasherr"
-	, "Siuntėjo ats. greitis"
-	, "Maks. išs."
-	, "Maks. ats."
-	, "Eilėje"
-	, "Neaktyvūs"
-	, "Baigta"
-	, "Pirma dalis"
-	, "Vardas"
-	, "# Dalys"
-	, "%"
-	, "Svarba"
-	, "Dydis"
-	, "praleisti"
-	, "žemas"
-	, "normalus"
-	, "aukštas"
-	, "Atsiųsta:"
-	, "Išsiųsta:"
-	, "Skleidėjų:"
-	, "Liko:"
-	, "Atsiuntimo greitis:"
-	, "Išsiuntimo greitis:"
-	, "Siuntėjų:"
-	, "Dalinimosi sant.:"
-	, "Išsaugoti kaip:"
-	, "Hash:"
-	, "Bendra"
-	, "Perkėlimas"
-	, "%d iš %d susijungta (%d grupėje)"
-	, "Ats.:%s Išs:%s - %s"
-	, "Kopijuoti"
-	, "Naujinti"
-	, "Neribojama"
-	, "Išnagrinėti IP adresus"
-	, "Get File(s)"
-	, "Nesiųsti"
-	, "Aukšta svarba"
-	, "Žema svarba"
-	, "Normali svarba"
-	, "Kopijuoti Magnet URI"
-	, "Ištrinti duomenis"
-	, "Ištrinti .torrent"
-	, "Ištrinti .torrent ir duomenis"
-	, "Priverstinai pertikrinti"
-	, "Priverstinai pradėti"
-	, "Etiketė"
-	, "Pauzė"
-	, "Nustatymai"
-	, "Perkelti žemiau"
-	, "Perkelti aukščiau"
-	, "Pašalinti"
-	, "Pašalinti ir"
-	, "Pradėti"
-	, "Sustabdyti"
-	, "Aktyvūs"
-	, "Visi"
-	, "Užbaigta"
-	, "Atsiunčiama"
-	, "Neaktyvūs"
-	, "Be etiketės"
-	, "||Pasiek.||Pasiekiamumas"
-	, "Pridėta"
-	, "Užbaigta"
-	, "Baigta"
-	, "Atsiųsta"
-	, "Ats. greitis"
-	, "Liko"
-	, "Etiketė"
-	, "Vardas"
-	, "#"
-	, "Siuntėjai"
-	, "Liko"
-	, "Skleidėjai"
-	, "Siuntėjų/Gavėjų"
-	, "Santykis"
-	, "Dydis"
-	, "Šaltinio URL"
-	, "Būsena"
-	, "Išsiųsta"
-	, "Išs. greitis"
-	, "Ar tikrai norite ištrinti %d pažymėtus torentus ir visą susijusią informaciją?"
-	, "Ar tikrai norite ištrinti pažymėtą torentą ir visą susijusią informaciją?"
-	, "Ar tikrai norite ištrinti %d pažymėtus torentus?"
-	, "Ar tikrai norite ištrinti pažymėtą torentą?"
-	, "Ar tikrai ištrinti RSS filtrą \"%s\"?"
-	, "Patikrinta %:.1d%%"
-	, "Atsiunčiama"
-	, "Klaida: %s"
-	, "Užbaigta"
-	, "Pauzė"
-	, "Eilėje"
-	, "Skleidimas eilėje"
-	, "Skleidžiama"
-	, "Sustabdyta"
-	, "Įveskite etiketę"
-	, "Įveskite naują etiketę pasirinktiems torentams:"
-	, "Nauja etiketė..."
-	, "Pašalinti etiketę"
-	, "Bendra||Trakeriai||Siuntėjai||Dalys||Failai||Greitis||Žurnalas||"
-	, "Pridėti torentą"
-	, "Pridėti torentą iš URL"
-	, "Pauzė"
-	, "Nustatymai"
-	, "Perkelti žemyn"
-	, "Perkelti aukštyn"
-	, "Pašalinti"
-	, "RSS naujienos"
-	, "Pradėti"
-	, "Sustabdyti"
-	, "Failas"
-	, "Pridėti torentą..."
-	, "Pridėti torentą iš URL..."
-	, "Pasirinktys"
-	, "Nustatymai"
-	, "Rodyti kategorijų sąrašą"
-	, "Rodyti išsamią informaciją"
-	, "Rodyti būsenos juostą"
-	, "Rodyti įrankių juostą"
-	, "Piktogramos kortelėms"
-	, "Žinynas"
-	, "µTorrent tinklapis"
-	, "µTorrent forumai"
-	, "Send WebUI Feedback"
-	, "About µTorrent WebUI"
-	, "Torrents"
-	, "Pauzė visiems torentams"
-	, "Pratęsti visus torentus"
-	, "D: %s%z/s"
-	, " L: %z/s"
-	, " O: %z/s"
-	, " T: %Z"
-	, "U: %s%z/s"
-	, "B"
-	, "EB"
-	, "GB"
-	, "kB"
-	, "MB"
-	, "PB"
-	, "TB"
-	, "Sudėtingiau"
-	, "Apsauga"
-	, "Jungiamumas"
-	, "Disko podėlis"
-	, "Katalogai"
-	, "Bendra"
-	, "Planavimas"
-	, "Eilė"
-	, "Sąsajos priedai"
-	, "Sąsajos nustatymai"
-	, "BitTorrent"
-	, "Tinklo sąsaja"
-	, "Transfer Cap"
-	, "Run Program"
-	, "Rodyti savybes||Pradėti/Sustabdyti||Atverti aplanką||Rodyti siuntimo juostą||"
-	, "Išjungta||Įjungta||Priverstinai||"
-	, "(jokio)||Socks4||Socks5||HTTPS||HTTP||"
-	, "Uploads||Downloads||Uploads + Downloads||"
-	, "MB||GB||"
-	, "1||2||5||7||10||14||15||20||21||28||30||31||"
-	, "Vardas"
-	, "Reikšmė"
-	, "Pir||Ant||Tre||Ket||Pen||Šeš||Sek||"
-	, "Pirmadienis||Antradienis||Trečiadienis||Ketvirtadienis||Penktadienis||Šeštadienis||Sekmadienis||"
-	, "Visas greitis"
-	, "Visas greitis - Naudoja normalius visuotinius apsaugos ribas"
-	, "Apribota"
-	, "Aprobota - Naudoja tvarkaraštį-išsamiai apsaugos ribas"
-	, "Tik skleisti"
-	, "Tik skleisti - Tik įkelia duomenis (įskaitant nebaigtus)"
-	, "Išjungta"
-	, "Išjungti - Sustabdo visus torentus, kurie nepriverstiniai"
-	, "<= %d valandų"
-	, "(Ignoruoti)"
-	, "<= %d minučių"
-	, "%dd %dh"
-	, "%dh %dm"
-	, "%dm %ds"
-	, "%ds"
-	, "%dsav. %dd"
-	, "%dm. %dsav."
-];
+var LANG_STR =
+{
+   "CT_MASK1":"Torento failai||*.torrent||Visi failai (*.*)||*.*||",
+   "DLG_BTN_OK":"Gerai",
+   "DLG_BTN_CANCEL":"Atšaukti",
+   "DLG_BTN_APPLY":"Pritaikyti",
+   "DLG_BTN_YES":"Taip",
+   "DLG_BTN_NO":"Ne",
+   "DLG_BTN_CLOSE":"Uždaryti",
+   "DLG_SETTINGS_00":"Nustatymai",
+   "DLG_SETTINGS_1_GENERAL_01":"Kalba",
+   "DLG_SETTINGS_1_GENERAL_02":"Kalba",
+   "DLG_SETTINGS_1_GENERAL_10":"Privatumas",
+   "DLG_SETTINGS_1_GENERAL_11":"Automatiškai tikrinti dėl atnaujinimų",
+   "DLG_SETTINGS_1_GENERAL_12":"Naujinti į beta versijas",
+   "DLG_SETTINGS_1_GENERAL_13":"Siųsti anoniminius duomenis, kai ieškoma naujinių",
+   "DLG_SETTINGS_1_GENERAL_17":"Kai siunčiama",
+   "DLG_SETTINGS_1_GENERAL_18":"Pridėti .!ut nebaigtiems failams",
+   "DLG_SETTINGS_1_GENERAL_19":"Iš anksto paskirstyti failus",
+   "DLG_SETTINGS_1_GENERAL_20":"Užkirsti kelią parengčiai, jei yra aktyvių torentų",
+   "DLG_SETTINGS_2_UI_01":"Rodymo pasirinktys",
+   "DLG_SETTINGS_2_UI_02":"Patvirtinti prieš trinant torentus",
+   "DLG_SETTINGS_2_UI_03":"Patvirtinti prieš trinant trakerius",
+   "DLG_SETTINGS_2_UI_04":"Rodyti patvirtinimo dialogą išeinant",
+   "DLG_SETTINGS_2_UI_05":"Papildomai rodyti fono spalvą",
+   "DLG_SETTINGS_2_UI_06":"Rodyti dabartinį greitį pavadinimo juostoje",
+   "DLG_SETTINGS_2_UI_07":"Rodyti greičio ribas būsenos juostoje",
+   "DLG_SETTINGS_2_UI_15":"Kai pridedami torentai",
+   "DLG_SETTINGS_2_UI_16":"Nepradėti siuntimo automatiškai",
+   "DLG_SETTINGS_2_UI_17":"Aktyvuoti programos langą",
+   "DLG_SETTINGS_2_UI_18":"Atverti langą, rodantį failus, esančius torente",
+   "DLG_SETTINGS_2_UI_19":"Veiksmai dvigubam paspaudimui",
+   "DLG_SETTINGS_2_UI_20":"Torentų skleidimui:",
+   "DLG_SETTINGS_2_UI_22":"Torentų siuntimui:",
+   "DLG_SETTINGS_3_PATHS_01":"Vieta failų atsiuntimui",
+   "DLG_SETTINGS_3_PATHS_02":"Padėti naujus atsiuntimus į:",
+   "DLG_SETTINGS_3_PATHS_03":"Rodyti dialogą pridedant",
+   "DLG_SETTINGS_3_PATHS_06":"Perkelti baigtus siuntimus į:",
+   "DLG_SETTINGS_3_PATHS_07":"Pridėti torento etiketę",
+   "DLG_SETTINGS_3_PATHS_10":"Perkelti tik iš numatyto siuntimo katalogo",
+   "DLG_SETTINGS_3_PATHS_11":"Vieta .torrent failams",
+   "DLG_SETTINGS_3_PATHS_12":"Laikyti torentus:",
+   "DLG_SETTINGS_3_PATHS_15":"Perkelti baigtus torentus į:",
+   "DLG_SETTINGS_3_PATHS_18":"Automatiškai įkrauti torentus iš:",
+   "DLG_SETTINGS_3_PATHS_19":"Trinti įkrautus torentus",
+   "DLG_SETTINGS_4_CONN_01":"Klausymosi prievadas",
+   "DLG_SETTINGS_4_CONN_02":"Prievadas, naudojamas įeinantiems sujungimams:",
+   "DLG_SETTINGS_4_CONN_04":"Atsitiktinis priev.",
+   "DLG_SETTINGS_4_CONN_05":"Parinkti atsitiktinį prievadą paleidus",
+   "DLG_SETTINGS_4_CONN_06":"Įjungti UPnP prievadų žymėjimą",
+   "DLG_SETTINGS_4_CONN_07":"Įjungti NAT-PMP prievado žymėjimą",
+   "DLG_SETTINGS_4_CONN_08":"Įgaliotas serveris",
+   "DLG_SETTINGS_4_CONN_09":"Tipas:",
+   "DLG_SETTINGS_4_CONN_11":"Įgaliojimas:",
+   "DLG_SETTINGS_4_CONN_13":"Priev.:",
+   "DLG_SETTINGS_4_CONN_15":"Autentifikacija",
+   "DLG_SETTINGS_4_CONN_16":"Vartotojas:",
+   "DLG_SETTINGS_4_CONN_18":"Slaptažodis:",
+   "DLG_SETTINGS_4_CONN_19":"Atpažinti kompiuterių vardus per tarpinį serverį",
+   "DLG_SETTINGS_4_CONN_20":"Naudoti įgaliotąjį serverį \"siuntėjas siuntėjui\" sujungimams",
+   "DLG_SETTINGS_4_CONN_21":"Pridėti į Windows užkardos išimtis",
+   "DLG_SETTINGS_4_CONN_22":"Proxy Privacy",
+   "DLG_SETTINGS_4_CONN_23":"Disable all local DNS lookups",
+   "DLG_SETTINGS_4_CONN_24":"Disable all features that leak identifying information",
+   "DLG_SETTINGS_4_CONN_25":"Disable connections unsupported by the proxy",
+   "DLG_SETTINGS_5_BANDWIDTH_01":"Bendrojo išsiuntimo greičio ribojimas",
+   "DLG_SETTINGS_5_BANDWIDTH_02":"Maks. išsiuntimo greitis (kB/s): [0: neribotas]",
+   "DLG_SETTINGS_5_BANDWIDTH_03":"Automatiškai",
+   "DLG_SETTINGS_5_BANDWIDTH_05":"Papildomas išsiuntimo greitis, kai nesisiunčiama (kB/s):",
+   "DLG_SETTINGS_5_BANDWIDTH_07":"Bendro siuntimo greičio ribojimas",
+   "DLG_SETTINGS_5_BANDWIDTH_08":"Didžiausias siuntimo greitis (kB/s): [0: neribotas]",
+   "DLG_SETTINGS_5_BANDWIDTH_10":"Susijungimų skaičius",
+   "DLG_SETTINGS_5_BANDWIDTH_11":"Bendras susijungimų skaičius:",
+   "DLG_SETTINGS_5_BANDWIDTH_14":"Didžiausias prisijungusių siuntėjų skaičius torentui:",
+   "DLG_SETTINGS_5_BANDWIDTH_15":"Išsiuntimo jungčių skaičius torentui:",
+   "DLG_SETTINGS_5_BANDWIDTH_17":"Naudoti papildomas jungtis, jei išsiuntimo greitis < 90%",
+   "DLG_SETTINGS_5_BANDWIDTH_18":"Global Rate Limit Options",
+   "DLG_SETTINGS_5_BANDWIDTH_19":"Apply rate limit to transport overhead",
+   "DLG_SETTINGS_5_BANDWIDTH_20":"Apply rate limit to uTP connections",
+   "DLG_SETTINGS_6_BITTORRENT_01":"Pagrindinės BitTorrent savybės",
+   "DLG_SETTINGS_6_BITTORRENT_02":"Įjungti DHT tinklą",
+   "DLG_SETTINGS_6_BITTORRENT_03":"Klausti trakerio dėl būs. atnauj.",
+   "DLG_SETTINGS_6_BITTORRENT_04":"Įjungti DHT naujiems torentams",
+   "DLG_SETTINGS_6_BITTORRENT_05":"Įjungti siuntėjų apsikeitimą",
+   "DLG_SETTINGS_6_BITTORRENT_06":"Įjungti vietinių siuntėjų paiešką",
+   "DLG_SETTINGS_6_BITTORRENT_07":"Riboti vietinių siuntėjų aktyvumą",
+   "DLG_SETTINGS_6_BITTORRENT_08":"IP/kompiuterio adresas pranešti trakeriui:",
+   "DLG_SETTINGS_6_BITTORRENT_10":"Protokolo apsauga",
+   "DLG_SETTINGS_6_BITTORRENT_11":"Išeinantys:",
+   "DLG_SETTINGS_6_BITTORRENT_13":"Leisti įeinančius susijungimus",
+   "DLG_SETTINGS_6_BITTORRENT_14":"Enable bandwidth management [uTP]",
+   "DLG_SETTINGS_6_BITTORRENT_15":"Enable UDP tracker support",
+   "DLG_SETTINGS_7_TRANSFERCAP_01":"Enable Transfer Cap",
+   "DLG_SETTINGS_7_TRANSFERCAP_02":"Cap Settings",
+   "DLG_SETTINGS_7_TRANSFERCAP_03":"Limit Type:",
+   "DLG_SETTINGS_7_TRANSFERCAP_04":"Bandwidth Cap:",
+   "DLG_SETTINGS_7_TRANSFERCAP_05":"Time Period (days):",
+   "DLG_SETTINGS_7_TRANSFERCAP_06":"Usage history for selected period:",
+   "DLG_SETTINGS_7_TRANSFERCAP_07":"Išsiųsta:",
+   "DLG_SETTINGS_7_TRANSFERCAP_08":"Atsiųsta:",
+   "DLG_SETTINGS_7_TRANSFERCAP_09":"Išsiųsta + Atsiųsta:",
+   "DLG_SETTINGS_7_TRANSFERCAP_10":"Laiko periodas:",
+   "DLG_SETTINGS_7_TRANSFERCAP_11":"Last %d days",
+   "DLG_SETTINGS_7_TRANSFERCAP_12":"Reset History",
+   "DLG_SETTINGS_8_QUEUEING_01":"Eilės nustatymai",
+   "DLG_SETTINGS_8_QUEUEING_02":"Didžiausias aktyvių torentų skaičius:",
+   "DLG_SETTINGS_8_QUEUEING_04":"Didžiausias aktyvių siuntimų skaičius:",
+   "DLG_SETTINGS_8_QUEUEING_06":"Skleisti kol [numatytos reikšmės]",
+   "DLG_SETTINGS_8_QUEUEING_07":"Minimum ratio (%):",
+   "DLG_SETTINGS_8_QUEUEING_09":"Minimum seeding time (minutes):",
+   "DLG_SETTINGS_8_QUEUEING_11":"Skleidimo užduotys svarbesnės už siuntimo užduotis",
+   "DLG_SETTINGS_8_QUEUEING_12":"Kai µTorrent pasiekia skleidimo tikslą",
+   "DLG_SETTINGS_8_QUEUEING_13":"Riboti išsiuntimą iki (kB/s): [0: stop]",
+   "DLG_SETTINGS_9_SCHEDULER_01":"Įjungti tvarkaraštį",
+   "DLG_SETTINGS_9_SCHEDULER_02":"Tvarkaraštis",
+   "DLG_SETTINGS_9_SCHEDULER_04":"Tvarkaraščio nustatymai",
+   "DLG_SETTINGS_9_SCHEDULER_05":"Ribotas išsiuntimas (kB/s):",
+   "DLG_SETTINGS_9_SCHEDULER_07":"Ribotas atsiuntimas (kB/s):",
+   "DLG_SETTINGS_9_SCHEDULER_09":"Išjungti DHT, kai atsijungiama",
+   "DLG_SETTINGS_9_WEBUI_01":"Įjungti tinklo sąsają",
+   "DLG_SETTINGS_9_WEBUI_02":"Autentifikacija",
+   "DLG_SETTINGS_9_WEBUI_03":"Vartotojas:",
+   "DLG_SETTINGS_9_WEBUI_05":"Slaptažodis:",
+   "DLG_SETTINGS_9_WEBUI_07":"Įjungti svečio anketą su vardu:",
+   "DLG_SETTINGS_9_WEBUI_09":"Jungiamumas",
+   "DLG_SETTINGS_9_WEBUI_10":"Papildomas klausymo prievadas (numatytasis prievadas):",
+   "DLG_SETTINGS_9_WEBUI_12":"Uždrausti priėjimą į šiuos IP (atskirkite atskirus įrašus kableliu):",
+   "DLG_SETTINGS_A_ADVANCED_01":"Sudėtingesni nustatymai (ĮSPĖJIMAS: nekeiskite!]",
+   "DLG_SETTINGS_A_ADVANCED_02":"Vertė:",
+   "DLG_SETTINGS_A_ADVANCED_03":"Teisinga",
+   "DLG_SETTINGS_A_ADVANCED_04":"Neteisinga",
+   "DLG_SETTINGS_A_ADVANCED_05":"Rinkinys",
+   "DLG_SETTINGS_B_ADV_UI_01":"Greitųjų iššokančių langų sąrašas [atskirkite reikšmes kableliu]",
+   "DLG_SETTINGS_B_ADV_UI_02":"Panaikinti automatinį iššokančių langų sąrašą",
+   "DLG_SETTINGS_B_ADV_UI_03":"Išsiųsti greičio sąrašą:",
+   "DLG_SETTINGS_B_ADV_UI_05":"Atsiųsti greičio sąrašą:",
+   "DLG_SETTINGS_B_ADV_UI_07":"Nuolatinės etiketės [atskirti etiketes \"|\" ženklu]",
+   "DLG_SETTINGS_B_ADV_UI_08":"Paieškos sistemos [Formatas: vardas|URL]",
+   "DLG_SETTINGS_C_ADV_CACHE_01":"Pagrindiniai podėlio nustatymai",
+   "DLG_SETTINGS_C_ADV_CACHE_02":"Disko podėlis naudojamas dažnai naudojamų failų laikymui atmintyje, skaitymų ir rašymų skaičiui į kietąjį diską sumažinti. µTorrent paprastai valdo podėlį automatiškai, bet jūs galite tai pakeisti, keisdami šiuos nustatymus.",
+   "DLG_SETTINGS_C_ADV_CACHE_03":"Panaikinti automatinį podėlio dydį ir patikslinti rankiniu būdu (MB):",
+   "DLG_SETTINGS_C_ADV_CACHE_05":"Sumažinti atminties naudojimą, kai podėlis nereikalingas",
+   "DLG_SETTINGS_C_ADV_CACHE_06":"Sudėtingesni podėlio nustatymai",
+   "DLG_SETTINGS_C_ADV_CACHE_07":"Įjungti disko rašymų sandėliavimą",
+   "DLG_SETTINGS_C_ADV_CACHE_08":"Nurašyti nepaliestus blokus kas dvi minutes",
+   "DLG_SETTINGS_C_ADV_CACHE_09":"Nurašyti baigtas dalis nedelsiant",
+   "DLG_SETTINGS_C_ADV_CACHE_10":"Įjungti disko skaitymų sandėliavimą",
+   "DLG_SETTINGS_C_ADV_CACHE_11":"Išjungti skaitymo sandėliavimą jei išsiuntimas lėtas",
+   "DLG_SETTINGS_C_ADV_CACHE_12":"Naikinti senus blokus iš podėlio",
+   "DLG_SETTINGS_C_ADV_CACHE_13":"Didinti automatinį podėlio dydį, kai podėlis lūžinėja",
+   "DLG_SETTINGS_C_ADV_CACHE_14":"Išjungti Windows sandėliavimą disko rašymuose",
+   "DLG_SETTINGS_C_ADV_CACHE_15":"Išjungti Windows sandėliavimą disko skaitymuose",
+   "DLG_SETTINGS_C_ADV_RUN_01":"Run Program",
+   "DLG_SETTINGS_C_ADV_RUN_02":"Run this program when a torrent finishes:",
+   "DLG_SETTINGS_C_ADV_RUN_04":"Run this program when a torrent changes state:",
+   "DLG_SETTINGS_C_ADV_RUN_06":"You can use these commands:\r\n%F - Name of downloaded file (for single file torrents)\r\n%D - Directory where files are saved\r\n%N - Title of torrent\r\n%S - State of torrent\r\n%L - Label\r\n%T - Tracker\r\n%M - Status message string (same as status column)\r\n%I - hex encoded info-hash\r\n\r\nState is a combination of:\r\nstarted = 1, checking = 2, start-after-check = 4,\r\nchecked = 8, error = 16, paused = 32, auto = 64, loaded = 128",
+   "DLG_TORRENTPROP_00":"Torento savybės",
+   "DLG_TORRENTPROP_1_GEN_01":"Trakeriai (atskirti eiles tarpais)",
+   "DLG_TORRENTPROP_1_GEN_03":"Saugos nustatymai",
+   "DLG_TORRENTPROP_1_GEN_04":"Didžiausias išsiuntimas (kB/s): [0: numatytas]",
+   "DLG_TORRENTPROP_1_GEN_06":"Didžiausias atsiuntimas (kB/s): [0: numatytas]",
+   "DLG_TORRENTPROP_1_GEN_08":"Išsiuntimo jungtys [0: numatytas]",
+   "DLG_TORRENTPROP_1_GEN_10":"Skleisti kol",
+   "DLG_TORRENTPROP_1_GEN_11":"Pakeisti numatytus nustatymus",
+   "DLG_TORRENTPROP_1_GEN_12":"Minimum ratio (%):",
+   "DLG_TORRENTPROP_1_GEN_14":"Minimum seeding time (minutes):",
+   "DLG_TORRENTPROP_1_GEN_16":"Kiti nustatymai",
+   "DLG_TORRENTPROP_1_GEN_17":"Pradinis skleidimas",
+   "DLG_TORRENTPROP_1_GEN_18":"Įjungti DHT",
+   "DLG_TORRENTPROP_1_GEN_19":"Siuntėjų apsikeitimas",
+   "DLG_ADDEDITRSSFEED_03":"Srautas",
+   "DLG_ADDEDITRSSFEED_04":"Srauto URL:",
+   "DLG_ADDEDITRSSFEED_05":"Kitaip dar žinomas:",
+   "DLG_ADDEDITRSSFEED_06":"Prenumerata",
+   "DLG_ADDEDITRSSFEED_07":"Nesiųsti visko automatiškai",
+   "DLG_ADDEDITRSSFEED_08":"Automatiškai atsiųsti viską, kas skelbta tiekime",
+   "DLG_ADDEDITRSSFEED_09":"Naudoti pažangesnį epizodų filtrą",
+   "DLG_RSSDOWNLOADER_02":"Feeds||Mėgstamiausi||Istorija||",
+   "DLG_RSSDOWNLOADER_03":"Visi siuntėjai",
+   "DLG_RSSDOWNLOADER_04":"Filtro nustatymai",
+   "DLG_RSSDOWNLOADER_05":"Vardas:",
+   "DLG_RSSDOWNLOADER_06":"Filtras:",
+   "DLG_RSSDOWNLOADER_07":"Ne:",
+   "DLG_RSSDOWNLOADER_08":"Išsaugoti:",
+   "DLG_RSSDOWNLOADER_09":"Srautas:",
+   "DLG_RSSDOWNLOADER_10":"Kokybė:",
+   "DLG_RSSDOWNLOADER_11":"Epizodo numeris: [pvz. 1x12-14]",
+   "DLG_RSSDOWNLOADER_12":"Filtras atitinka pirminį pavadinimą vietoj dešifruoto",
+   "DLG_RSSDOWNLOADER_13":"Nepradėti siuntimų automatiškai",
+   "DLG_RSSDOWNLOADER_14":"Pažangesnis ep. filtras",
+   "DLG_RSSDOWNLOADER_15":"Duoti siuntimui aukščiausią svarbą",
+   "DLG_RSSDOWNLOADER_16":"Mažiausias intervalas:",
+   "DLG_RSSDOWNLOADER_17":"Etiketė naujiems torentams:",
+   "DLG_RSSDOWNLOADER_18":"Pridėti RSS srautą...",
+   "DLG_RSSDOWNLOADER_19":"Redaguoti srautą...",
+   "DLG_RSSDOWNLOADER_20":"Išjungti srautą",
+   "DLG_RSSDOWNLOADER_21":"Įjungti srautą",
+   "DLG_RSSDOWNLOADER_22":"Naujinti srautą",
+   "DLG_RSSDOWNLOADER_23":"Trinti srautą",
+   "DLG_RSSDOWNLOADER_24":"Atsiųsta",
+   "DLG_RSSDOWNLOADER_25":"Atidaryti URL naršyklėje",
+   "DLG_RSSDOWNLOADER_26":"Pridėti prie mėgiamų",
+   "DLG_RSSDOWNLOADER_27":"Pridėti",
+   "DLG_RSSDOWNLOADER_28":"Ištrinti",
+   "DLG_RSSDOWNLOADER_29":"Visi",
+   "DLG_RSSDOWNLOADER_30":"(Visi)",
+   "DLG_RSSDOWNLOADER_31":"(visada taikyti)||(taikyti tik kartą)||12 valandų||1 diena||2 dienos||3 dienos||4 dienos||1 savaitė||2 savaitės||3 savaitės||1 mėnuo||",
+   "DLG_RSSDOWNLOADER_32":"Pridėti RSS srautą",
+   "DLG_RSSDOWNLOADER_33":"Redaguoti RSS srautą",
+   "DLG_RSSDOWNLOADER_34":"Remove RSS Feed(s)",
+   "DLG_RSSDOWNLOADER_35":"Really delete the %d selected RSS Feeds?",
+   "DLG_RSSDOWNLOADER_36":"Ar tikrai ištrinti RSS srautą \"%s\"?",
+   "FEED_COL_FULLNAME":"Pilnas vardas",
+   "FEED_COL_NAME":"Vardas",
+   "FEED_COL_EPISODE":"Epizodas",
+   "FEED_COL_FORMAT":"Formatuoti",
+   "FEED_COL_CODEC":"Kodekas",
+   "FEED_COL_DATE":"Date",
+   "FEED_COL_FEED":"Srautas",
+   "FEED_COL_URL":"URL",
+   "PRS_COL_IP":"IP",
+   "PRS_COL_PORT":"Prievadas",
+   "PRS_COL_CLIENT":"Klientas",
+   "PRS_COL_FLAGS":"Vėliavos",
+   "PRS_COL_PCNT":"%",
+   "PRS_COL_RELEVANCE":"Tinkamumas",
+   "PRS_COL_DOWNSPEED":"Ats. greitis",
+   "PRS_COL_UPSPEED":"Išs. greitis",
+   "PRS_COL_REQS":"Užklausos",
+   "PRS_COL_WAITED":"Laukta",
+   "PRS_COL_UPLOADED":"Išsiųsta",
+   "PRS_COL_DOWNLOADED":"Atsiųsta",
+   "PRS_COL_HASHERR":"Hasherr",
+   "PRS_COL_PEERDL":"Siuntėjo ats. greitis",
+   "PRS_COL_MAXUP":"Maks. išs.",
+   "PRS_COL_MAXDOWN":"Maks. ats.",
+   "PRS_COL_QUEUED":"Eilėje",
+   "PRS_COL_INACTIVE":"Neaktyvūs",
+   "FI_COL_DONE":"Baigta",
+   "FI_COL_FIRSTPC":"Pirma dalis",
+   "FI_COL_NAME":"Vardas",
+   "FI_COL_NUMPCS":"# Dalys",
+   "FI_COL_PCNT":"%",
+   "FI_COL_PRIO":"Svarba",
+   "FI_COL_SIZE":"Dydis",
+   "FI_PRI0":"praleisti",
+   "FI_PRI1":"žemas",
+   "FI_PRI2":"normalus",
+   "FI_PRI3":"aukštas",
+   "GN_TP_01":"Atsiųsta:",
+   "GN_TP_02":"Išsiųsta:",
+   "GN_TP_03":"Skleidėjų:",
+   "GN_TP_04":"Liko:",
+   "GN_TP_05":"Atsiuntimo greitis:",
+   "GN_TP_06":"Išsiuntimo greitis:",
+   "GN_TP_07":"Siuntėjų:",
+   "GN_TP_08":"Dalinimosi sant.:",
+   "GN_TP_09":"Išsaugoti kaip:",
+   "GN_TP_10":"Hash:",
+   "GN_GENERAL":"Bendra",
+   "GN_TRANSFER":"Perkėlimas",
+   "GN_XCONN":"%d iš %d susijungta (%d grupėje)",
+   "MAIN_TITLEBAR_SPEED":"Ats.:%s Išs:%s - %s",
+   "MENU_COPY":"Kopijuoti",
+   "MENU_RESET":"Naujinti",
+   "MENU_UNLIMITED":"Neribojama",
+   "MP_RESOLVE_IPS":"Išnagrinėti IP adresus",
+   "MF_GETFILE":"Get File(s)",
+   "MF_DONT":"Nesiųsti",
+   "MF_HIGH":"Aukšta svarba",
+   "MF_LOW":"Žema svarba",
+   "MF_NORMAL":"Normali svarba",
+   "ML_COPY_MAGNETURI":"Kopijuoti Magnet URI",
+   "ML_DELETE_DATA":"Ištrinti duomenis",
+   "ML_DELETE_TORRENT":"Ištrinti .torrent",
+   "ML_DELETE_DATATORRENT":"Ištrinti .torrent ir duomenis",
+   "ML_FORCE_RECHECK":"Priverstinai pertikrinti",
+   "ML_FORCE_START":"Priverstinai pradėti",
+   "ML_LABEL":"Etiketė",
+   "ML_PAUSE":"Pauzė",
+   "ML_PROPERTIES":"Nustatymai",
+   "ML_QUEUEDOWN":"Perkelti žemiau",
+   "ML_QUEUEUP":"Perkelti aukščiau",
+   "ML_REMOVE":"Pašalinti",
+   "ML_REMOVE_AND":"Pašalinti ir",
+   "ML_START":"Pradėti",
+   "ML_STOP":"Sustabdyti",
+   "OV_CAT_ACTIVE":"Aktyvūs",
+   "OV_CAT_ALL":"Visi",
+   "OV_CAT_COMPL":"Užbaigta",
+   "OV_CAT_DL":"Atsiunčiama",
+   "OV_CAT_INACTIVE":"Neaktyvūs",
+   "OV_CAT_NOLABEL":"Be etiketės",
+   "OV_COL_AVAIL":"||Pasiek.||Pasiekiamumas",
+   "OV_COL_DATE_ADDED":"Pridėta",
+   "OV_COL_DATE_COMPLETED":"Užbaigta",
+   "OV_COL_DONE":"Baigta",
+   "OV_COL_DOWNLOADED":"Atsiųsta",
+   "OV_COL_DOWNSPD":"Ats. greitis",
+   "OV_COL_ETA":"Liko",
+   "OV_COL_LABEL":"Etiketė",
+   "OV_COL_NAME":"Vardas",
+   "OV_COL_ORDER":"#",
+   "OV_COL_PEERS":"Siuntėjai",
+   "OV_COL_REMAINING":"Liko",
+   "OV_COL_SEEDS":"Skleidėjai",
+   "OV_COL_SEEDS_PEERS":"Siuntėjų/Gavėjų",
+   "OV_COL_SHARED":"Santykis",
+   "OV_COL_SIZE":"Dydis",
+   "OV_COL_SOURCE_URL":"Šaltinio URL",
+   "OV_COL_STATUS":"Būsena",
+   "OV_COL_UPPED":"Išsiųsta",
+   "OV_COL_UPSPD":"Išs. greitis",
+   "OV_CONFIRM_DELETEDATA_MULTIPLE":"Ar tikrai norite ištrinti %d pažymėtus torentus ir visą susijusią informaciją?",
+   "OV_CONFIRM_DELETEDATA_ONE":"Ar tikrai norite ištrinti pažymėtą torentą ir visą susijusią informaciją?",
+   "OV_CONFIRM_DELETE_MULTIPLE":"Ar tikrai norite ištrinti %d pažymėtus torentus?",
+   "OV_CONFIRM_DELETE_ONE":"Ar tikrai norite ištrinti pažymėtą torentą?",
+   "OV_CONFIRM_DELETE_RSSFILTER":"Ar tikrai ištrinti RSS filtrą \"%s\"?",
+   "OV_FL_CHECKED":"Patikrinta %:.1d%",
+   "OV_FL_DOWNLOADING":"Atsiunčiama",
+   "OV_FL_ERROR":"Klaida: %s",
+   "OV_FL_FINISHED":"Užbaigta",
+   "OV_FL_PAUSED":"Pauzė",
+   "OV_FL_QUEUED":"Eilėje",
+   "OV_FL_QUEUED_SEED":"Skleidimas eilėje",
+   "OV_FL_SEEDING":"Skleidžiama",
+   "OV_FL_STOPPED":"Sustabdyta",
+   "OV_NEWLABEL_CAPTION":"Įveskite etiketę",
+   "OV_NEWLABEL_TEXT":"Įveskite naują etiketę pasirinktiems torentams:",
+   "OV_NEW_LABEL":"Nauja etiketė...",
+   "OV_REMOVE_LABEL":"Pašalinti etiketę",
+   "OV_TABS":"Bendra||Trakeriai||Siuntėjai||Dalys||Failai||Greitis||Žurnalas||",
+   "OV_TB_ADDTORR":"Pridėti torentą",
+   "OV_TB_ADDURL":"Pridėti torentą iš URL",
+   "OV_TB_PAUSE":"Pauzė",
+   "OV_TB_PREF":"Nustatymai",
+   "OV_TB_QUEUEDOWN":"Perkelti žemyn",
+   "OV_TB_QUEUEUP":"Perkelti aukštyn",
+   "OV_TB_REMOVE":"Pašalinti",
+   "OV_TB_RSSDOWNLDR":"RSS naujienos",
+   "OV_TB_START":"Pradėti",
+   "OV_TB_STOP":"Sustabdyti",
+   "MM_FILE":"Failas",
+   "MM_FILE_ADD_TORRENT":"Pridėti torentą...",
+   "MM_FILE_ADD_URL":"Pridėti torentą iš URL...",
+   "MM_OPTIONS":"Pasirinktys",
+   "MM_OPTIONS_PREFERENCES":"Nustatymai",
+   "MM_OPTIONS_SHOW_CATEGORY":"Rodyti kategorijų sąrašą",
+   "MM_OPTIONS_SHOW_DETAIL":"Rodyti išsamią informaciją",
+   "MM_OPTIONS_SHOW_STATUS":"Rodyti būsenos juostą",
+   "MM_OPTIONS_SHOW_TOOLBAR":"Rodyti įrankių juostą",
+   "MM_OPTIONS_TAB_ICONS":"Piktogramos kortelėms",
+   "MM_HELP":"Žinynas",
+   "MM_HELP_UT_WEBPAGE":"µTorrent tinklapis",
+   "MM_HELP_UT_FORUMS":"µTorrent forumai",
+   "MM_HELP_WEBUI_FEEDBACK":"Send WebUI Feedback",
+   "MM_HELP_ABOUT_WEBUI":"About µTorrent WebUI",
+   "STM_TORRENTS":"Torrents",
+   "STM_TORRENTS_PAUSEALL":"Pauzė visiems torentams",
+   "STM_TORRENTS_RESUMEALL":"Pratęsti visus torentus",
+   "SB_DOWNLOAD":"D: %s%z/s",
+   "SB_LOCAL":" L: %z/s",
+   "SB_OVERHEAD":" O: %z/s",
+   "SB_TOTAL":" T: %Z",
+   "SB_UPLOAD":"U: %s%z/s",
+   "SIZE_B":"B",
+   "SIZE_EB":"EB",
+   "SIZE_GB":"GB",
+   "SIZE_KB":"kB",
+   "SIZE_MB":"MB",
+   "SIZE_PB":"PB",
+   "SIZE_TB":"TB",
+   "ST_CAPT_ADVANCED":"Sudėtingiau",
+   "ST_CAPT_BANDWIDTH":"Apsauga",
+   "ST_CAPT_CONNECTION":"Jungiamumas",
+   "ST_CAPT_DISK_CACHE":"Disko podėlis",
+   "ST_CAPT_FOLDER":"Katalogai",
+   "ST_CAPT_GENERAL":"Bendra",
+   "ST_CAPT_SCHEDULER":"Planavimas",
+   "ST_CAPT_QUEUEING":"Eilė",
+   "ST_CAPT_UI_EXTRAS":"Sąsajos priedai",
+   "ST_CAPT_UI_SETTINGS":"Sąsajos nustatymai",
+   "ST_CAPT_BITTORRENT":"BitTorrent",
+   "ST_CAPT_WEBUI":"Tinklo sąsaja",
+   "ST_CAPT_TRANSFER_CAP":"Transfer Cap",
+   "ST_CAPT_RUN_PROGRAM":"Run Program",
+   "ST_CBO_UI_DBLCLK_TOR":"Rodyti savybes||Pradėti/Sustabdyti||Atverti aplanką||Rodyti siuntimo juostą||",
+   "ST_CBO_ENCRYPTIONS":"Išjungta||Įjungta||Priverstinai||",
+   "ST_CBO_PROXY":"(jokio)||Socks4||Socks5||HTTPS||HTTP||",
+   "ST_CBO_TCAP_MODES":"Uploads||Downloads||Uploads + Downloads||",
+   "ST_CBO_TCAP_UNITS":"MB||GB||",
+   "ST_CBO_TCAP_PERIODS":"1||2||5||7||10||14||15||20||21||28||30||31||",
+   "ST_COL_NAME":"Vardas",
+   "ST_COL_VALUE":"Reikšmė",
+   "ST_SCH_DAYCODES":"Pir||Ant||Tre||Ket||Pen||Šeš||Sek||",
+   "ST_SCH_DAYNAMES":"Pirmadienis||Antradienis||Trečiadienis||Ketvirtadienis||Penktadienis||Šeštadienis||Sekmadienis||",
+   "ST_SCH_LGND_FULL":"Visas greitis",
+   "ST_SCH_LGND_FULLEX":"Visas greitis - Naudoja normalius visuotinius apsaugos ribas",
+   "ST_SCH_LGND_LIMITED":"Apribota",
+   "ST_SCH_LGND_LIMITEDEX":"Aprobota - Naudoja tvarkaraštį-išsamiai apsaugos ribas",
+   "ST_SCH_LGND_SEEDING":"Tik skleisti",
+   "ST_SCH_LGND_SEEDINGEX":"Tik skleisti - Tik įkelia duomenis (įskaitant nebaigtus)",
+   "ST_SCH_LGND_OFF":"Išjungta",
+   "ST_SCH_LGND_OFFEX":"Išjungti - Sustabdo visus torentus, kurie nepriverstiniai",
+   "ST_SEEDTIMES_HOURS":"<= %d valandų",
+   "ST_SEEDTIMES_IGNORE":"(Ignoruoti)",
+   "ST_SEEDTIMES_MINUTES":"<= %d minučių",
+   "TIME_DAYS_HOURS":"%dd %dh",
+   "TIME_HOURS_MINS":"%dh %dm",
+   "TIME_MINS_SECS":"%dm %ds",
+   "TIME_SECS":"%ds",
+   "TIME_WEEKS_DAYS":"%dsav. %dd",
+   "TIME_YEARS_WEEKS":"%dm. %dsav."
+}

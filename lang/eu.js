@@ -5,474 +5,474 @@ Use of this source code is governed by a BSD-style that can be
 found in the LICENSE file.
 */
 
-var LANG_STR = [
-	  "Torrent agiriak||*.torrent||Agiri denak (*.*)||*.*||"
-	, "Ongi"
-	, "Ezeztatu"
-	, "Ezarri"
-	, "Bai"
-	, "Ez"
-	, "Itxi"
-	, "Hobespenak"
-	, "Hizkuntza"
-	, "Hizkuntza:"
-	, "Pribatutasuna"
-	, "Berezgaitasunez egiaztatu eguneraketak"
-	, "Eguneratu beta bertsioetara"
-	, "Bidali izengabeko argibideak eguneraketak egiaztatzerakoan"
-	, "Jeisterakoan"
-	, "Erantsi .!ut osatugabeko agiriei"
-	, "AurrePre-esleitu agiri denak"
-	, "Sahiestu egonean gelditzea torrentak eraginda badaude"
-	, "Erakutsi Aukerak"
-	, "Baieztatu torrentak ezabatzerakoan"
-	, "Baieztatu aztarnariak ezabatzerakoan"
-	, "Erakusi baieztapen elkarrizketa irtetzerakoan"
-	, "Aldatu zerrendaren barreneko margoa"
-	, "Erakutsi uneko abiadura izenburu barran"
-	, "Erakutsi abiadura mugak egoera barran"
-	, "Torrentak Gehitzerakoan"
-	, "Ez hasi jeisketak berezgaitasunez"
-	, "Eragin programaren leihoa"
-	, "Erakutsi leiho bat torrentaren barneko agiriak erakutsiz"
-	, "Klik Bikoitzaren Ekintzak"
-	, "Torrent emaritzan:"
-	, "Torrent jeisketan"
-	, "Jeitsitako Agirien Kokalekua"
-	, "Jarri jeisketa berriak hemen:"
-	, "Betik erakutsi elkarrizketa eskuzko gehiketan"
-	, "Mugitu osatutako jeisketak hona:"
-	, "Erantsi torrentaren etiketa"
-	, "Mugitu bakarrik berezko jeisketa zuzenbidetik"
-	, ".torrenten kokalekua"
-	, "Biltegiratu .torrentak hemen:"
-	, "Mugitu amaitutako lanen .torrentak hona:"
-	, "Berezgaitasunez gertatu .torrentak hemendik:"
-	, "Ezabatu gertatutako .torrentak"
-	, "Aditze Ataka"
-	, "Barrurako elkarketentzako erabiltzeko ataka:"
-	, "Zorizko ataka"
-	, "Zorizkotu ataka hasiera bakoitzean"
-	, "Gaitu UPnP ataka mapaketa"
-	, "Gaitu NAT-PMP ataka mapaketa"
-	, "Proxy Zerbitzaria"
-	, "Mota:"
-	, "Proxya:"
-	, "Ataka:"
-	, "Egiaztapena"
-	, "Erabiltzaile-izena:"
-	, "Sarhitza:"
-	, "Ebatsi hostalari-izenak proxyaren bidez"
-	, "Erabili proxy zerbitzaria P2P elkarketentzat"
-	, "Gehitu Windows Suhesi salbuespena"
-	, "Proxyaren Pribatutasuna"
-	, "Ezgaitu tokiko DNS bilaketadenak"
-	, "Ezgaitu nortasun argibide ihesak dituzten ezaugarriak"
-	, "Ezgaitu proxyak sostengatzen ez dituen elkarketak"
-	, "Igoera Neurri Muga Orokorra"
-	, "Gehienezko igoera neurria (kB/s): [0: mugagabea]"
-	, "Berezgaitasunez"
-	, "Aldizkatu igoera neurria jeisten ez denean (kB/s):"
-	, "Jeisketa Neurri Muga Orokorra"
-	, "Gehienezko jeisketa neurria (kB/s): [0: mugagabea]"
-	, "Elkarketa Zenbatekoa"
-	, "Gehienezko elkarketa zenbatekoa orokorrean:"
-	, "Gehinezeko hartzaile elkarketaturik torrent bakoitzeko:"
-	, "Igoera ahol torrent bakoitzeko:"
-	, "Erabili igoera aho gehigarriak igoera abiadura < %90 bada"
-	, "Neurri Muga Orokor Aukerak"
-	, "Ezarri neurri muga burugain garraiorako"
-	, "Ezarri neurri muga uTP elkarketentzat"
-	, "Ohinarrizko BitTorrent Ezaugarriak"
-	, "Gaitu DHT Sarea"
-	, "Galdetu aztarnariari zuriketa argibideak"
-	, "Gaitu DHT-a torrent berrientzat"
-	, "Gaitu Hartzaile Aldaketa"
-	, "Gaitu Tokiko Hartzaile Aurkikuntza"
-	, "Mugatu tokiko hartzaile banadazabalera"
-	, "IP/Hostalari-izena aztarnariari jakinarazteko:"
-	, "Protokolo Enkriptazioa"
-	, "Kanporantz:"
-	, "Ahalbidetu dauden barrurako elkarketak"
-	, "Gaitu bandazabalera kudeaketa [uTP]"
-	, "Gaitu UDP aztarnari sostengua"
-	, "Gaitu Eskualdaketa Muga"
-	, "Muga Ezarpenak"
-	, "Muga Mota:"
-	, "Bandazabalera Muga:"
-	, "Denbora Aldia (egunak):"
-	, "Hautatutako aldirako erabilitako historia:"
-	, "Igota:"
-	, "Jeitsita:"
-	, "Igota + Jeitsita:"
-	, "Denbora epea:"
-	, "Azken %d egunak"
-	, "Berrezarri Historia"
-	, "Lerrokapen Ezarpenak"
-	, "Gehienezko torrent zenbatekoa eraginda (igotzen edo jeisten):"
-	, "Gehienezko jeisketa zenbatekoa eraginda:"
-	, "Emairatzan [Berezko balioak]"
-	, "Gutxienezko maila (%):"
-	, "Gutxienezko emaritza denbora (minutu):"
-	, "Emaletza eginkizunek jeisketa eginkizunek baino lehentasun handiagoa dute."
-	, "µTorrent Emaritza Helmuga Erdiesten duenean"
-	, "Mugatu igoera neurria (kB/s): [0 = gelditu]"
-	, "Gaitu Egitarautzailea"
-	, "Egitarautzaile Taula"
-	, "Egitarautzaile Ezarpenak"
-	, "Mugatutako igoera neurria (kB/s)"
-	, "Mugatutako jeisketa neurria (kB/s)"
-	, "Ezgaitu DHT-a itzaltzerakoan"
-	, "Gaitu Web EI"
-	, "Egiaztapena"
-	, "Erabiltzaile-izena:"
-	, "Sarhitza:"
-	, "Gaitu Gonbidatu kontua erabiltzaile-izen honekin:"
-	, "Elkarketagarritasuna"
-	, "Aukerazko aditze ataka (berezkoa elkarketa ataka da):"
-	, "Ahalbidetu sarbidea IP hauetatik bakarrik (banandu sarrera anitz kakotxekin):"
-	, "Aukera Aurreratuak [KONTUZ: Ez aldatu!]"
-	, "Balioa:"
-	, "Egia"
-	, "Faltsua"
-	, "Ezarri"
-	, "Abiadura Oharleiho Zerrenda [Banandu balio anitz kakotxa batez]"
-	, "Indargabetu berezgaitasunezko abiadura oharleiho zerrenda"
-	, "Igoera abiadura zerrenda:"
-	, "Jeisketa abiadura zerrenda:"
-	, "Etiketa Iraunkorrak [ | erabili etiketa anitz bereizteko]"
-	, "Bilaketa Tresnak [Heuskarria: izena|URL]"
-	, "Ohinarrizko Katxe Ezarpenak"
-	, "Diskaren katxea maiz erabiltzen diren datuak oroimenean gordetzeko behar da, diskaren irakurketa-idazketak murrizteko. Arrunt, µTorrentek katxea berezgait. kudeatzen du, baina jokabide hau alda dezakezu ezarpen hauek aldatuz."
-	, "Indargabetu berezgait. katxe neurria eta adierazi eskuz (MB):"
-	, "Murriztu oroimen erabilera katxea beharrezkoa ez denean"
-	, "Katxearen Ezarpen Aurreratuak"
-	, "Gaitu diska idazketen katxea"
-	, "Idatzi ikutugabeko blokeak 2 minututik behin"
-	, "Idatzi amaitutako atalak berehala"
-	, "Gaitu di&ska irakurketen katxea"
-	, "Itzali irakurketa katxea igoera abiadura motela bada"
-	, "Ezabatu katxetik bloke zaharrak"
-	, "Handitu berezgaitasunezko katxe neurria zabor katxearekin aritzean"
-	, "Ezgaitu &Windowsen katxea diska idazketarako"
-	, "Windowsen katxea ezgaitu diska irakurketarako"
-	, "Ekin Programa"
-	, "Ekin programa hau torrentak amaitzean:"
-	, "Ekin programa hau torrentak egoeraz aldatzen duenean:"
-	, "Komando hauek erabili ditzakezu:\r\n%F - Jeitsitako agiriaren izena (agiri bakarreko torrententzat)\r\n%D - Agiriak gordeta dauden zuzenbidea\r\n%N - Torrentaren Izenburua\r\n%S - Torrentaren egoera\r\n%L - Etiketa\r\n%T - Aztarnaria\r\n%M - Mezu kate egoera (egoera zutabea bezala)\r\n%I - hex kodeaketa info-hasha\r\n\r\nEgoera nahasketa bat da:\r\nhasita = 1, egiaztatzen = 2, hasi-egiaztatu-ondoren = 4,\r\negiaztatuta = 8, akatsa = 16, pausatuta = 32, berez = 64, gertatuta = 128"
-	, "Torrentaren Ezaugarriak"
-	, "Aztarnariak (lerro huts bat erabili bereizteko)"
-	, "Bandazabalera Ezarpenak"
-	, "Gehienezko igoera neurria (kB/s): [0: berezkoa]"
-	, "Gehienezko jeisketa neurria (kB/s): [0: berezkoa]"
-	, "Igoera aho zenbatekoa: [0: berezkoa]"
-	, "Emaritzan"
-	, "Indargabetu berezko ezarpenak"
-	, "Gutxieneko maila (%):"
-	, "Gutxieneko emaritza denbora (minutuak)"
-	, "Beste Ezarpenak"
-	, "Hasierako Emaritza"
-	, "Gaitu DHT-a"
-	, "Hartzaile Aldaketa"
-	, "Harpidetza"
-	, "Harpidetu URL-a:"
-	, "Egile Izenordea:"
-	, "Harpidetza"
-	, "Ez jeitsi berezgaitasunez gai guztiak"
-	, "Berezgaitasunez jeitsi harpidetzan argitaratutako gai guztiak"
-	, "Erabili atal adimentsu iragazkia"
-	, "Harpidetzak|||Gogokoenak||Historia||"
-	, "Harpidetza Guztiak"
-	, "Iragazki Ezarpenak"
-	, "Izena:"
-	, "Iragazkia:"
-	, "Ez:"
-	, "Gorde hemen:"
-	, "Harpidetza:"
-	, "Ontasuna:"
-	, "Atal Zenbakia: [ex. 1x12-14]"
-	, "Iragazkiak jatorrizko izena bilatzen dekodeatako izenaren ordez"
-	, "Ez hasi jeisketak berezgaitasunez"
-	, "Atal adim. iragazkia"
-	, "Eman jeisketari lehentasun handiena"
-	, "Gutxieneko tartea:"
-	, "Label for new torrents:"
-	, "Gehitu RSS Harpidetza..."
-	, "Editatu Harpidetza..."
-	, "Ezgaitu Harpidetza"
-	, "Gaitu Harpidetza"
-	, "Eguneratu Harpidetza"
-	, "Ezabatu Harpidetza"
-	, "Jeitsi"
-	, "Ireki URL-a Bilatzailean"
-	, "Gehitu Gogokoenetara"
-	, "Gehitu"
-	, "Ezabatu"
-	, "DENAK"
-	, "(Denak)"
-	, "(bat dator betik)||(bat dator behin bakarrik)||12 ordu||1 egun||2 egun||3 egun||4 egun||1 aste||2 aste||3 aste||1 hilabete||"
-	, "Gehitu RSS Harpidetza"
-	, "Editatu RSS Harpidetza"
-	, "Kendu RSS Harpidetza(k)"
-	, "Egitan ezabatu hautatutako %d RSS Harpidetzak?"
-	, "Egitan ezabatu \"%s\" RSS Harpidetza?"
-	, "Izen Osoa"
-	, "Izena"
-	, "Atala"
-	, "Heuskarria"
-	, "Kodeka"
-	, "Eguna"
-	, "Harpidetza"
-	, "Iturburu URL-a"
-	, "IP-a"
-	, "Ataka"
-	, "Bezeroa"
-	, "Ikurrak"
-	, "%"
-	, "Garrantzia"
-	, "Jeisketa Abiadura"
-	, "Igoera Abiadura"
-	, "Eskab."
-	, "Itxaroten"
-	, "Igota"
-	, "Jeitsita"
-	, "Hash akatsa"
-	, "Hartzaile Jeisk."
-	, "Geh. Igoera"
-	, "Geh. Jeisketa"
-	, "Lerrokatuta"
-	, "Jarduera gabe"
-	, "Eginda"
-	, "Lehen Atala"
-	, "Izena"
-	, "Atal Zenb."
-	, "%"
-	, "Lehentasuna"
-	, "Neurria"
-	, "jauzi"
-	, "apala"
-	, "arrunta"
-	, "handia"
-	, "Jeitsita:"
-	, "Igota:"
-	, "Emaritzan:"
-	, "Gelditzen da:"
-	, "Jeisketa Abiadura:"
-	, "Igoera Abiadura:"
-	, "Hartzaileak:"
-	, "Elkarbanatze Maila:"
-	, "Gorde Honeal:"
-	, "Hasha:"
-	, "Orokorra"
-	, "Eskualdaketa"
-	, "%d elkarketatuta %d-tik (%d erletaldean)"
-	, "J:%s I:%s - %s"
-	, "Kopiatu"
-	, "Berrezarri"
-	, "Mugagabea"
-	, "Ebatsi IP-ak"
-	, "Lortu Agiria(k)"
-	, "Ez Jeitsi"
-	, "Lehentasun Handia"
-	, "Lehentasun Apala"
-	, "Lehentasun Arrunta"
-	, "Kopiatu Magnet URI-a"
-	, "Ezabatu Datuak"
-	, "Ezabatu .torrenta"
-	, "Ezabatu .torrenta + Datuak"
-	, "Behartu Berregiaztapena"
-	, "Behartu Hastera"
-	, "Etiketa"
-	, "Pausatu"
-	, "Ezaugarriak"
-	, "Mugitu Lerroa Behera"
-	, "Mugitu Lerroa Gora"
-	, "Kendu"
-	, "Kendu Eta"
-	, "Hasi"
-	, "Gelditu"
-	, "Jardunean"
-	, "Denak"
-	, "Osatuta"
-	, "Jeisten"
-	, "Jarduera gabe"
-	, "Etiketarik Ez"
-	, "||Eskurag.||Eskuragarritasuna"
-	, "Gehituta"
-	, "Osatuta"
-	, "Egoera"
-	, "Jeitsita"
-	, "Jeisketa Abiadura"
-	, "UED"
-	, "Etiketa"
-	, "Izena"
-	, "Zenbakia"
-	, "Hartzaileak"
-	, "Gelditzen da"
-	, "Emaleak"
-	, "Emaleak/Hartzaileak"
-	, "Maila"
-	, "Neurria"
-	, "Iturburu URL-a"
-	, "Egoera"
-	, "Igota"
-	, "Igoera Abiadura"
-	, "Zihur zaude hautatuako %d torrentak eta elkarturiko datu guztiak kentzea nahi dituzula?"
-	, "Zihur zaude hautatuako torrenta eta elkarturiko datuak kentzea nahi dituzula?"
-	, "Zihur zaude hautatuako %d torrentak kentzea nahi dituzula?"
-	, "Zihur zaude hautatuako torrenta kentzea nahi duzula?"
-	, "Egitan ezabatu \"%s\ RSS Iragazkia?"
-	, "Egiaztatuta %:.1d%%"
-	, "Jeisten"
-	, "Akatsa: %s"
-	, "Amaituta"
-	, "Pausatuta"
-	, "Lerrokatuta"
-	, "Lerrokatutako Emaritza"
-	, "Emaritzan"
-	, "Geldituta"
-	, "Sartu Etiketa"
-	, "Sartu etiketa berri bat hautatutako torrententzat:"
-	, "Etiketa Berria..."
-	, "Kendu Etiketa"
-	, "Orokorra||Aztarnariak||Hartzaileak||Atalak||Agiriak||Abiadura||Oharrak||"
-	, "Gehitu Torrenta"
-	, "Gehitu Torrenta URL-tik"
-	, "Pausatu"
-	, "Hobespenak"
-	, "Mugitu Behera Lerroan"
-	, "Mugitu Gora Lerroan"
-	, "Kendu"
-	, "RSS Jeistzailea"
-	, "Hasi"
-	, "Gelditu"
-	, "Agiria"
-	, "Gehitu Torrenta..."
-	, "Gehitu Torrenta URL-tik..."
-	, "Aukerak"
-	, "Hobespenak"
-	, "Erakutsi Kategoria Zerrenda"
-	, "Erakutsi Argibide Xeheak"
-	, "Erakutsi Egoera Barra"
-	, "Erakutsi Tresnabarra"
-	, "Ikurrak Hegatsetan"
-	, "Laguntza"
-	, "µTorrent Webgunea"
-	, "µTorrent Eztabaidaguneak"
-	, "Bidali WebEI Erantzuna"
-	, "µTorrent WebEI-ri buruz"
-	, "Torrentak"
-	, "Pausatu torrent guztiak"
-	, "Berrekin torrent guztiak"
-	, "J: %s%z/s"
-	, " Gt: %z/s"
-	, " Ir: %z/s"
-	, " G: %Z"
-	, "I: %s%z/s"
-	, "B"
-	, "EB"
-	, "GB"
-	, "kB"
-	, "MB"
-	, "PB"
-	, "TB"
-	, "Aurreratua"
-	, "Bandazabalera"
-	, "Elkarketa"
-	, "Diska Katxea"
-	, "Zuzenbideak"
-	, "Orokorra"
-	, "Egitarautzailea"
-	, "Lerrokapena"
-	, "EI Gehigarriak"
-	, "EI Ezarpenak"
-	, "BitTorrent"
-	, "Web EI"
-	, "Eskualdaketa Muga"
-	, "Ekin Programa"
-	, "Erakutsi Ezaugarriak||Hasi/Gelditu||Ireki Agiritegia||Erakutsi Jeisketa Barra||"
-	, "Ezgaituta||Gaituta||Behartuta||"
-	, "(Bat ere ez)||Socks4||Socks5||HTTPS||HTTP||"
-	, "Igoerak||Jeisketak||Igoerak + Jeisketak||"
-	, "MB||GB||"
-	, "1||2||5||7||10||14||15||20||21||28||30||31||"
-	, "Izena"
-	, "Balioa"
-	, "Ast||Astr||Astz||Ost||Ostr||Lar||Iga||"
-	, "Astelehena||Asteartea||Asteazkena||Osteguna||Ostirala||Larunbatean||Igandea||"
-	, "Abiadura osoa"
-	, "Abiadura osoa - Bandazabalera muga arruntak erabiltzen ditu"
-	, "Mugatuta"
-	, "Mugatuta - Egitarautzaileak adierazitako bandazabalera mugak erabiltzen ditu"
-	, "Emaritzan bakarrik"
-	, "Emaritzan bakarrik - Datuak bakarrik igotzen ditu (osatugabeak barne)"
-	, "Itzali"
-	, "Itzali - Behartuta ez dauden torrent guztiak gelditzen ditu"
-	, "<= %d ordu"
-	, "(Ezikusi)"
-	, "<= %d minutu"
-	, "%dd %dh"
-	, "%dh %dm"
-	, "%dm %ds"
-	, "%ds"
-	, "%dw %dd"
-	, "%dy %dw"
-	, "Ekintza Gehiago" ,
-	"Torrentak",
-	"Harpidetzak",
-	"Gehigarria",
-	"Herrialdea",
-	'UED', // i.e. how much time remaining
-	"->", // i.e. 3 of 4 peers
-	"/s", // "per second""
-	"Itsatsi torrent bat edo harpidetza URL-a",
-	"Etxea",
-	"Amaitu saiao",
-	"Emaritza",
-	"Harpidetza Guztiak",
-	"bitneurria",
-	"bereizmena",
-	"luzera",
-	"jariogarria",
-	"mota", // i.e. file extension
-	"hurrunekoa", // i.e. uTorrent remote
-	"honi buruz",
-	"saioak",
-	"Elkarbanatu",
-	"Elkarbanatu torrent hau",
-	"Elkarbanatu lotura",
-	"gehitu",
-	"saioa amaitu",
-	"saioa hasi",
-	"edonongo sarbidea",
-	"eduki saioa hasita",
-	"jeisketa",
-	"Zure bezeroa une honetan ez dago eskuragarri. Egiaztatu internetera elkarketatuta dagoela.",
-	"Ezinezkoa zure &mikro;Torrent bezeroarekin harremantzea. Mezu hau berezgaitasunez ezagertuko da elkarketa berrezartzen denean..",
-	"Lortu agiria",
-	"Jeitsi zure ordenagailura",
-	"Ireki VLC Multimedia Irakurgailuarekin",
-	"Ekintzak",
-	"Denboraldia" // i.e. of a TV show
-	, "Bezero Argibideak"
-	, "Produktuaren Bertsioa"
-	, "Iturburu Ikuskapena"
-	, "Eraiketa Eguna"
-	, "Hartzaile ID-a"
-	, "Erabiltzaile ordezkaria"
-	, "UPnP kanpoko helbidea:"
-	, "EI Ikuskapena",
-	null,
-	null,
-	"Hurruneko BitTorrent",
-	"Hurruneko BitTorrentek nabigatzailearen bidezko zure bezeroarenganako sarbide erraz eta seguru bat eskaintzen du.",
-	"Gaitu azpiko elkarketa, hautatu ordenagailuarentzako izen bat eta sarhitza eta gogoratu ordenagailu hau piztuta uzteaz.",
-	"Argibide Gehiago",
-	"Gaitu BitTorrent Hurruneko Sarbidea",
-	"Egiaztapena",
-	"Erabiltzaile izena:",
-	"Sarhitza:",
-	"Aurkeztu",
-	"Hurruneko BitTorrent"
-
-];
+var LANG_STR =
+{
+   "CT_MASK1":"Torrent agiriak||*.torrent||Agiri denak (*.*)||*.*||",
+   "DLG_BTN_OK":"Ongi",
+   "DLG_BTN_CANCEL":"Ezeztatu",
+   "DLG_BTN_APPLY":"Ezarri",
+   "DLG_BTN_YES":"Bai",
+   "DLG_BTN_NO":"Ez",
+   "DLG_BTN_CLOSE":"Itxi",
+   "DLG_SETTINGS_00":"Hobespenak",
+   "DLG_SETTINGS_1_GENERAL_01":"Hizkuntza",
+   "DLG_SETTINGS_1_GENERAL_02":"Hizkuntza:",
+   "DLG_SETTINGS_1_GENERAL_10":"Pribatutasuna",
+   "DLG_SETTINGS_1_GENERAL_11":"Berezgaitasunez egiaztatu eguneraketak",
+   "DLG_SETTINGS_1_GENERAL_12":"Eguneratu beta bertsioetara",
+   "DLG_SETTINGS_1_GENERAL_13":"Bidali izengabeko argibideak eguneraketak egiaztatzerakoan",
+   "DLG_SETTINGS_1_GENERAL_17":"Jeisterakoan",
+   "DLG_SETTINGS_1_GENERAL_18":"Erantsi .!ut osatugabeko agiriei",
+   "DLG_SETTINGS_1_GENERAL_19":"AurrePre-esleitu agiri denak",
+   "DLG_SETTINGS_1_GENERAL_20":"Sahiestu egonean gelditzea torrentak eraginda badaude",
+   "DLG_SETTINGS_2_UI_01":"Erakutsi Aukerak",
+   "DLG_SETTINGS_2_UI_02":"Baieztatu torrentak ezabatzerakoan",
+   "DLG_SETTINGS_2_UI_03":"Baieztatu aztarnariak ezabatzerakoan",
+   "DLG_SETTINGS_2_UI_04":"Erakusi baieztapen elkarrizketa irtetzerakoan",
+   "DLG_SETTINGS_2_UI_05":"Aldatu zerrendaren barreneko margoa",
+   "DLG_SETTINGS_2_UI_06":"Erakutsi uneko abiadura izenburu barran",
+   "DLG_SETTINGS_2_UI_07":"Erakutsi abiadura mugak egoera barran",
+   "DLG_SETTINGS_2_UI_15":"Torrentak Gehitzerakoan",
+   "DLG_SETTINGS_2_UI_16":"Ez hasi jeisketak berezgaitasunez",
+   "DLG_SETTINGS_2_UI_17":"Eragin programaren leihoa",
+   "DLG_SETTINGS_2_UI_18":"Erakutsi leiho bat torrentaren barneko agiriak erakutsiz",
+   "DLG_SETTINGS_2_UI_19":"Klik Bikoitzaren Ekintzak",
+   "DLG_SETTINGS_2_UI_20":"Torrent emaritzan:",
+   "DLG_SETTINGS_2_UI_22":"Torrent jeisketan",
+   "DLG_SETTINGS_3_PATHS_01":"Jeitsitako Agirien Kokalekua",
+   "DLG_SETTINGS_3_PATHS_02":"Jarri jeisketa berriak hemen:",
+   "DLG_SETTINGS_3_PATHS_03":"Betik erakutsi elkarrizketa eskuzko gehiketan",
+   "DLG_SETTINGS_3_PATHS_06":"Mugitu osatutako jeisketak hona:",
+   "DLG_SETTINGS_3_PATHS_07":"Erantsi torrentaren etiketa",
+   "DLG_SETTINGS_3_PATHS_10":"Mugitu bakarrik berezko jeisketa zuzenbidetik",
+   "DLG_SETTINGS_3_PATHS_11":".torrenten kokalekua",
+   "DLG_SETTINGS_3_PATHS_12":"Biltegiratu .torrentak hemen:",
+   "DLG_SETTINGS_3_PATHS_15":"Mugitu amaitutako lanen .torrentak hona:",
+   "DLG_SETTINGS_3_PATHS_18":"Berezgaitasunez gertatu .torrentak hemendik:",
+   "DLG_SETTINGS_3_PATHS_19":"Ezabatu gertatutako .torrentak",
+   "DLG_SETTINGS_4_CONN_01":"Aditze Ataka",
+   "DLG_SETTINGS_4_CONN_02":"Barrurako elkarketentzako erabiltzeko ataka:",
+   "DLG_SETTINGS_4_CONN_04":"Zorizko ataka",
+   "DLG_SETTINGS_4_CONN_05":"Zorizkotu ataka hasiera bakoitzean",
+   "DLG_SETTINGS_4_CONN_06":"Gaitu UPnP ataka mapaketa",
+   "DLG_SETTINGS_4_CONN_07":"Gaitu NAT-PMP ataka mapaketa",
+   "DLG_SETTINGS_4_CONN_08":"Proxy Zerbitzaria",
+   "DLG_SETTINGS_4_CONN_09":"Mota:",
+   "DLG_SETTINGS_4_CONN_11":"Proxya:",
+   "DLG_SETTINGS_4_CONN_13":"Ataka:",
+   "DLG_SETTINGS_4_CONN_15":"Egiaztapena",
+   "DLG_SETTINGS_4_CONN_16":"Erabiltzaile-izena:",
+   "DLG_SETTINGS_4_CONN_18":"Sarhitza:",
+   "DLG_SETTINGS_4_CONN_19":"Ebatsi hostalari-izenak proxyaren bidez",
+   "DLG_SETTINGS_4_CONN_20":"Erabili proxy zerbitzaria P2P elkarketentzat",
+   "DLG_SETTINGS_4_CONN_21":"Gehitu Windows Suhesi salbuespena",
+   "DLG_SETTINGS_4_CONN_22":"Proxyaren Pribatutasuna",
+   "DLG_SETTINGS_4_CONN_23":"Ezgaitu tokiko DNS bilaketadenak",
+   "DLG_SETTINGS_4_CONN_24":"Ezgaitu nortasun argibide ihesak dituzten ezaugarriak",
+   "DLG_SETTINGS_4_CONN_25":"Ezgaitu proxyak sostengatzen ez dituen elkarketak",
+   "DLG_SETTINGS_5_BANDWIDTH_01":"Igoera Neurri Muga Orokorra",
+   "DLG_SETTINGS_5_BANDWIDTH_02":"Gehienezko igoera neurria (kB/s): [0: mugagabea]",
+   "DLG_SETTINGS_5_BANDWIDTH_03":"Berezgaitasunez",
+   "DLG_SETTINGS_5_BANDWIDTH_05":"Aldizkatu igoera neurria jeisten ez denean (kB/s):",
+   "DLG_SETTINGS_5_BANDWIDTH_07":"Jeisketa Neurri Muga Orokorra",
+   "DLG_SETTINGS_5_BANDWIDTH_08":"Gehienezko jeisketa neurria (kB/s): [0: mugagabea]",
+   "DLG_SETTINGS_5_BANDWIDTH_10":"Elkarketa Zenbatekoa",
+   "DLG_SETTINGS_5_BANDWIDTH_11":"Gehienezko elkarketa zenbatekoa orokorrean:",
+   "DLG_SETTINGS_5_BANDWIDTH_14":"Gehinezeko hartzaile elkarketaturik torrent bakoitzeko:",
+   "DLG_SETTINGS_5_BANDWIDTH_15":"Igoera ahol torrent bakoitzeko:",
+   "DLG_SETTINGS_5_BANDWIDTH_17":"Erabili igoera aho gehigarriak igoera abiadura < %90 bada",
+   "DLG_SETTINGS_5_BANDWIDTH_18":"Neurri Muga Orokor Aukerak",
+   "DLG_SETTINGS_5_BANDWIDTH_19":"Ezarri neurri muga burugain garraiorako",
+   "DLG_SETTINGS_5_BANDWIDTH_20":"Ezarri neurri muga uTP elkarketentzat",
+   "DLG_SETTINGS_6_BITTORRENT_01":"Ohinarrizko BitTorrent Ezaugarriak",
+   "DLG_SETTINGS_6_BITTORRENT_02":"Gaitu DHT Sarea",
+   "DLG_SETTINGS_6_BITTORRENT_03":"Galdetu aztarnariari zuriketa argibideak",
+   "DLG_SETTINGS_6_BITTORRENT_04":"Gaitu DHT-a torrent berrientzat",
+   "DLG_SETTINGS_6_BITTORRENT_05":"Gaitu Hartzaile Aldaketa",
+   "DLG_SETTINGS_6_BITTORRENT_06":"Gaitu Tokiko Hartzaile Aurkikuntza",
+   "DLG_SETTINGS_6_BITTORRENT_07":"Mugatu tokiko hartzaile banadazabalera",
+   "DLG_SETTINGS_6_BITTORRENT_08":"IP/Hostalari-izena aztarnariari jakinarazteko:",
+   "DLG_SETTINGS_6_BITTORRENT_10":"Protokolo Enkriptazioa",
+   "DLG_SETTINGS_6_BITTORRENT_11":"Kanporantz:",
+   "DLG_SETTINGS_6_BITTORRENT_13":"Ahalbidetu dauden barrurako elkarketak",
+   "DLG_SETTINGS_6_BITTORRENT_14":"Gaitu bandazabalera kudeaketa [uTP]",
+   "DLG_SETTINGS_6_BITTORRENT_15":"Gaitu UDP aztarnari sostengua",
+   "DLG_SETTINGS_7_TRANSFERCAP_01":"Gaitu Eskualdaketa Muga",
+   "DLG_SETTINGS_7_TRANSFERCAP_02":"Muga Ezarpenak",
+   "DLG_SETTINGS_7_TRANSFERCAP_03":"Muga Mota:",
+   "DLG_SETTINGS_7_TRANSFERCAP_04":"Bandazabalera Muga:",
+   "DLG_SETTINGS_7_TRANSFERCAP_05":"Denbora Aldia (egunak):",
+   "DLG_SETTINGS_7_TRANSFERCAP_06":"Hautatutako aldirako erabilitako historia:",
+   "DLG_SETTINGS_7_TRANSFERCAP_07":"Igota:",
+   "DLG_SETTINGS_7_TRANSFERCAP_08":"Jeitsita:",
+   "DLG_SETTINGS_7_TRANSFERCAP_09":"Igota + Jeitsita:",
+   "DLG_SETTINGS_7_TRANSFERCAP_10":"Denbora epea:",
+   "DLG_SETTINGS_7_TRANSFERCAP_11":"Azken %d egunak",
+   "DLG_SETTINGS_7_TRANSFERCAP_12":"Berrezarri Historia",
+   "DLG_SETTINGS_8_QUEUEING_01":"Lerrokapen Ezarpenak",
+   "DLG_SETTINGS_8_QUEUEING_02":"Gehienezko torrent zenbatekoa eraginda (igotzen edo jeisten):",
+   "DLG_SETTINGS_8_QUEUEING_04":"Gehienezko jeisketa zenbatekoa eraginda:",
+   "DLG_SETTINGS_8_QUEUEING_06":"Emairatzan [Berezko balioak]",
+   "DLG_SETTINGS_8_QUEUEING_07":"Gutxienezko maila (%):",
+   "DLG_SETTINGS_8_QUEUEING_09":"Gutxienezko emaritza denbora (minutu):",
+   "DLG_SETTINGS_8_QUEUEING_11":"Emaletza eginkizunek jeisketa eginkizunek baino lehentasun handiagoa dute.",
+   "DLG_SETTINGS_8_QUEUEING_12":"µTorrent Emaritza Helmuga Erdiesten duenean",
+   "DLG_SETTINGS_8_QUEUEING_13":"Mugatu igoera neurria (kB/s): [0 = gelditu]",
+   "DLG_SETTINGS_9_SCHEDULER_01":"Gaitu Egitarautzailea",
+   "DLG_SETTINGS_9_SCHEDULER_02":"Egitarautzaile Taula",
+   "DLG_SETTINGS_9_SCHEDULER_04":"Egitarautzaile Ezarpenak",
+   "DLG_SETTINGS_9_SCHEDULER_05":"Mugatutako igoera neurria (kB/s)",
+   "DLG_SETTINGS_9_SCHEDULER_07":"Mugatutako jeisketa neurria (kB/s)",
+   "DLG_SETTINGS_9_SCHEDULER_09":"Ezgaitu DHT-a itzaltzerakoan",
+   "DLG_SETTINGS_9_WEBUI_01":"Gaitu Web EI",
+   "DLG_SETTINGS_9_WEBUI_02":"Egiaztapena",
+   "DLG_SETTINGS_9_WEBUI_03":"Erabiltzaile-izena:",
+   "DLG_SETTINGS_9_WEBUI_05":"Sarhitza:",
+   "DLG_SETTINGS_9_WEBUI_07":"Gaitu Gonbidatu kontua erabiltzaile-izen honekin:",
+   "DLG_SETTINGS_9_WEBUI_09":"Elkarketagarritasuna",
+   "DLG_SETTINGS_9_WEBUI_10":"Aukerazko aditze ataka (berezkoa elkarketa ataka da):",
+   "DLG_SETTINGS_9_WEBUI_12":"Ahalbidetu sarbidea IP hauetatik bakarrik (banandu sarrera anitz kakotxekin):",
+   "DLG_SETTINGS_A_ADVANCED_01":"Aukera Aurreratuak [KONTUZ: Ez aldatu!]",
+   "DLG_SETTINGS_A_ADVANCED_02":"Balioa:",
+   "DLG_SETTINGS_A_ADVANCED_03":"Egia",
+   "DLG_SETTINGS_A_ADVANCED_04":"Faltsua",
+   "DLG_SETTINGS_A_ADVANCED_05":"Ezarri",
+   "DLG_SETTINGS_B_ADV_UI_01":"Abiadura Oharleiho Zerrenda [Banandu balio anitz kakotxa batez]",
+   "DLG_SETTINGS_B_ADV_UI_02":"Indargabetu berezgaitasunezko abiadura oharleiho zerrenda",
+   "DLG_SETTINGS_B_ADV_UI_03":"Igoera abiadura zerrenda:",
+   "DLG_SETTINGS_B_ADV_UI_05":"Jeisketa abiadura zerrenda:",
+   "DLG_SETTINGS_B_ADV_UI_07":"Etiketa Iraunkorrak [ | erabili etiketa anitz bereizteko]",
+   "DLG_SETTINGS_B_ADV_UI_08":"Bilaketa Tresnak [Heuskarria: izena|URL]",
+   "DLG_SETTINGS_C_ADV_CACHE_01":"Ohinarrizko Katxe Ezarpenak",
+   "DLG_SETTINGS_C_ADV_CACHE_02":"Diskaren katxea maiz erabiltzen diren datuak oroimenean gordetzeko behar da, diskaren irakurketa-idazketak murrizteko. Arrunt, µTorrentek katxea berezgait. kudeatzen du, baina jokabide hau alda dezakezu ezarpen hauek aldatuz.",
+   "DLG_SETTINGS_C_ADV_CACHE_03":"Indargabetu berezgait. katxe neurria eta adierazi eskuz (MB):",
+   "DLG_SETTINGS_C_ADV_CACHE_05":"Murriztu oroimen erabilera katxea beharrezkoa ez denean",
+   "DLG_SETTINGS_C_ADV_CACHE_06":"Katxearen Ezarpen Aurreratuak",
+   "DLG_SETTINGS_C_ADV_CACHE_07":"Gaitu diska idazketen katxea",
+   "DLG_SETTINGS_C_ADV_CACHE_08":"Idatzi ikutugabeko blokeak 2 minututik behin",
+   "DLG_SETTINGS_C_ADV_CACHE_09":"Idatzi amaitutako atalak berehala",
+   "DLG_SETTINGS_C_ADV_CACHE_10":"Gaitu di&ska irakurketen katxea",
+   "DLG_SETTINGS_C_ADV_CACHE_11":"Itzali irakurketa katxea igoera abiadura motela bada",
+   "DLG_SETTINGS_C_ADV_CACHE_12":"Ezabatu katxetik bloke zaharrak",
+   "DLG_SETTINGS_C_ADV_CACHE_13":"Handitu berezgaitasunezko katxe neurria zabor katxearekin aritzean",
+   "DLG_SETTINGS_C_ADV_CACHE_14":"Ezgaitu &Windowsen katxea diska idazketarako",
+   "DLG_SETTINGS_C_ADV_CACHE_15":"Windowsen katxea ezgaitu diska irakurketarako",
+   "DLG_SETTINGS_C_ADV_RUN_01":"Ekin Programa",
+   "DLG_SETTINGS_C_ADV_RUN_02":"Ekin programa hau torrentak amaitzean:",
+   "DLG_SETTINGS_C_ADV_RUN_04":"Ekin programa hau torrentak egoeraz aldatzen duenean:",
+   "DLG_SETTINGS_C_ADV_RUN_06":"Komando hauek erabili ditzakezu:\r\n%F - Jeitsitako agiriaren izena (agiri bakarreko torrententzat)\r\n%D - Agiriak gordeta dauden zuzenbidea\r\n%N - Torrentaren Izenburua\r\n%S - Torrentaren egoera\r\n%L - Etiketa\r\n%T - Aztarnaria\r\n%M - Mezu kate egoera (egoera zutabea bezala)\r\n%I - hex kodeaketa info-hasha\r\n\r\nEgoera nahasketa bat da:\r\nhasita = 1, egiaztatzen = 2, hasi-egiaztatu-ondoren = 4,\r\negiaztatuta = 8, akatsa = 16, pausatuta = 32, berez = 64, gertatuta = 128",
+   "DLG_TORRENTPROP_00":"Torrentaren Ezaugarriak",
+   "DLG_TORRENTPROP_1_GEN_01":"Aztarnariak (lerro huts bat erabili bereizteko)",
+   "DLG_TORRENTPROP_1_GEN_03":"Bandazabalera Ezarpenak",
+   "DLG_TORRENTPROP_1_GEN_04":"Gehienezko igoera neurria (kB/s): [0: berezkoa]",
+   "DLG_TORRENTPROP_1_GEN_06":"Gehienezko jeisketa neurria (kB/s): [0: berezkoa]",
+   "DLG_TORRENTPROP_1_GEN_08":"Igoera aho zenbatekoa: [0: berezkoa]",
+   "DLG_TORRENTPROP_1_GEN_10":"Emaritzan",
+   "DLG_TORRENTPROP_1_GEN_11":"Indargabetu berezko ezarpenak",
+   "DLG_TORRENTPROP_1_GEN_12":"Gutxieneko maila (%):",
+   "DLG_TORRENTPROP_1_GEN_14":"Gutxieneko emaritza denbora (minutuak)",
+   "DLG_TORRENTPROP_1_GEN_16":"Beste Ezarpenak",
+   "DLG_TORRENTPROP_1_GEN_17":"Hasierako Emaritza",
+   "DLG_TORRENTPROP_1_GEN_18":"Gaitu DHT-a",
+   "DLG_TORRENTPROP_1_GEN_19":"Hartzaile Aldaketa",
+   "DLG_ADDEDITRSSFEED_03":"Harpidetza",
+   "DLG_ADDEDITRSSFEED_04":"Harpidetu URL-a:",
+   "DLG_ADDEDITRSSFEED_05":"Egile Izenordea:",
+   "DLG_ADDEDITRSSFEED_06":"Harpidetza",
+   "DLG_ADDEDITRSSFEED_07":"Ez jeitsi berezgaitasunez gai guztiak",
+   "DLG_ADDEDITRSSFEED_08":"Berezgaitasunez jeitsi harpidetzan argitaratutako gai guztiak",
+   "DLG_ADDEDITRSSFEED_09":"Erabili atal adimentsu iragazkia",
+   "DLG_RSSDOWNLOADER_02":"Harpidetzak|||Gogokoenak||Historia||",
+   "DLG_RSSDOWNLOADER_03":"Harpidetza Guztiak",
+   "DLG_RSSDOWNLOADER_04":"Iragazki Ezarpenak",
+   "DLG_RSSDOWNLOADER_05":"Izena:",
+   "DLG_RSSDOWNLOADER_06":"Iragazkia:",
+   "DLG_RSSDOWNLOADER_07":"Ez:",
+   "DLG_RSSDOWNLOADER_08":"Gorde hemen:",
+   "DLG_RSSDOWNLOADER_09":"Harpidetza:",
+   "DLG_RSSDOWNLOADER_10":"Ontasuna:",
+   "DLG_RSSDOWNLOADER_11":"Atal Zenbakia: [ex. 1x12-14]",
+   "DLG_RSSDOWNLOADER_12":"Iragazkiak jatorrizko izena bilatzen dekodeatako izenaren ordez",
+   "DLG_RSSDOWNLOADER_13":"Ez hasi jeisketak berezgaitasunez",
+   "DLG_RSSDOWNLOADER_14":"Atal adim. iragazkia",
+   "DLG_RSSDOWNLOADER_15":"Eman jeisketari lehentasun handiena",
+   "DLG_RSSDOWNLOADER_16":"Gutxieneko tartea:",
+   "DLG_RSSDOWNLOADER_17":"Label for new torrents:",
+   "DLG_RSSDOWNLOADER_18":"Gehitu RSS Harpidetza...",
+   "DLG_RSSDOWNLOADER_19":"Editatu Harpidetza...",
+   "DLG_RSSDOWNLOADER_20":"Ezgaitu Harpidetza",
+   "DLG_RSSDOWNLOADER_21":"Gaitu Harpidetza",
+   "DLG_RSSDOWNLOADER_22":"Eguneratu Harpidetza",
+   "DLG_RSSDOWNLOADER_23":"Ezabatu Harpidetza",
+   "DLG_RSSDOWNLOADER_24":"Jeitsi",
+   "DLG_RSSDOWNLOADER_25":"Ireki URL-a Bilatzailean",
+   "DLG_RSSDOWNLOADER_26":"Gehitu Gogokoenetara",
+   "DLG_RSSDOWNLOADER_27":"Gehitu",
+   "DLG_RSSDOWNLOADER_28":"Ezabatu",
+   "DLG_RSSDOWNLOADER_29":"DENAK",
+   "DLG_RSSDOWNLOADER_30":"(Denak)",
+   "DLG_RSSDOWNLOADER_31":"(bat dator betik)||(bat dator behin bakarrik)||12 ordu||1 egun||2 egun||3 egun||4 egun||1 aste||2 aste||3 aste||1 hilabete||",
+   "DLG_RSSDOWNLOADER_32":"Gehitu RSS Harpidetza",
+   "DLG_RSSDOWNLOADER_33":"Editatu RSS Harpidetza",
+   "DLG_RSSDOWNLOADER_34":"Kendu RSS Harpidetza(k)",
+   "DLG_RSSDOWNLOADER_35":"Egitan ezabatu hautatutako %d RSS Harpidetzak?",
+   "DLG_RSSDOWNLOADER_36":"Egitan ezabatu \"%s\" RSS Harpidetza?",
+   "FEED_COL_FULLNAME":"Izen Osoa",
+   "FEED_COL_NAME":"Izena",
+   "FEED_COL_EPISODE":"Atala",
+   "FEED_COL_FORMAT":"Heuskarria",
+   "FEED_COL_CODEC":"Kodeka",
+   "FEED_COL_DATE":"Eguna",
+   "FEED_COL_FEED":"Harpidetza",
+   "FEED_COL_URL":"Iturburu URL-a",
+   "PRS_COL_IP":"IP-a",
+   "PRS_COL_PORT":"Ataka",
+   "PRS_COL_CLIENT":"Bezeroa",
+   "PRS_COL_FLAGS":"Ikurrak",
+   "PRS_COL_PCNT":"%",
+   "PRS_COL_RELEVANCE":"Garrantzia",
+   "PRS_COL_DOWNSPEED":"Jeisketa Abiadura",
+   "PRS_COL_UPSPEED":"Igoera Abiadura",
+   "PRS_COL_REQS":"Eskab.",
+   "PRS_COL_WAITED":"Itxaroten",
+   "PRS_COL_UPLOADED":"Igota",
+   "PRS_COL_DOWNLOADED":"Jeitsita",
+   "PRS_COL_HASHERR":"Hash akatsa",
+   "PRS_COL_PEERDL":"Hartzaile Jeisk.",
+   "PRS_COL_MAXUP":"Geh. Igoera",
+   "PRS_COL_MAXDOWN":"Geh. Jeisketa",
+   "PRS_COL_QUEUED":"Lerrokatuta",
+   "PRS_COL_INACTIVE":"Jarduera gabe",
+   "FI_COL_DONE":"Eginda",
+   "FI_COL_FIRSTPC":"Lehen Atala",
+   "FI_COL_NAME":"Izena",
+   "FI_COL_NUMPCS":"Atal Zenb.",
+   "FI_COL_PCNT":"%",
+   "FI_COL_PRIO":"Lehentasuna",
+   "FI_COL_SIZE":"Neurria",
+   "FI_PRI0":"jauzi",
+   "FI_PRI1":"apala",
+   "FI_PRI2":"arrunta",
+   "FI_PRI3":"handia",
+   "GN_TP_01":"Jeitsita:",
+   "GN_TP_02":"Igota:",
+   "GN_TP_03":"Emaritzan:",
+   "GN_TP_04":"Gelditzen da:",
+   "GN_TP_05":"Jeisketa Abiadura:",
+   "GN_TP_06":"Igoera Abiadura:",
+   "GN_TP_07":"Hartzaileak:",
+   "GN_TP_08":"Elkarbanatze Maila:",
+   "GN_TP_09":"Gorde Honeal:",
+   "GN_TP_10":"Hasha:",
+   "GN_GENERAL":"Orokorra",
+   "GN_TRANSFER":"Eskualdaketa",
+   "GN_XCONN":"%d elkarketatuta %d-tik (%d erletaldean)",
+   "MAIN_TITLEBAR_SPEED":"J:%s I:%s - %s",
+   "MENU_COPY":"Kopiatu",
+   "MENU_RESET":"Berrezarri",
+   "MENU_UNLIMITED":"Mugagabea",
+   "MP_RESOLVE_IPS":"Ebatsi IP-ak",
+   "MF_GETFILE":"Lortu Agiria(k)",
+   "MF_DONT":"Ez Jeitsi",
+   "MF_HIGH":"Lehentasun Handia",
+   "MF_LOW":"Lehentasun Apala",
+   "MF_NORMAL":"Lehentasun Arrunta",
+   "ML_COPY_MAGNETURI":"Kopiatu Magnet URI-a",
+   "ML_DELETE_DATA":"Ezabatu Datuak",
+   "ML_DELETE_TORRENT":"Ezabatu .torrenta",
+   "ML_DELETE_DATATORRENT":"Ezabatu .torrenta + Datuak",
+   "ML_FORCE_RECHECK":"Behartu Berregiaztapena",
+   "ML_FORCE_START":"Behartu Hastera",
+   "ML_LABEL":"Etiketa",
+   "ML_PAUSE":"Pausatu",
+   "ML_PROPERTIES":"Ezaugarriak",
+   "ML_QUEUEDOWN":"Mugitu Lerroa Behera",
+   "ML_QUEUEUP":"Mugitu Lerroa Gora",
+   "ML_REMOVE":"Kendu",
+   "ML_REMOVE_AND":"Kendu Eta",
+   "ML_START":"Hasi",
+   "ML_STOP":"Gelditu",
+   "OV_CAT_ACTIVE":"Jardunean",
+   "OV_CAT_ALL":"Denak",
+   "OV_CAT_COMPL":"Osatuta",
+   "OV_CAT_DL":"Jeisten",
+   "OV_CAT_INACTIVE":"Jarduera gabe",
+   "OV_CAT_NOLABEL":"Etiketarik Ez",
+   "OV_COL_AVAIL":"||Eskurag.||Eskuragarritasuna",
+   "OV_COL_DATE_ADDED":"Gehituta",
+   "OV_COL_DATE_COMPLETED":"Osatuta",
+   "OV_COL_DONE":"Egoera",
+   "OV_COL_DOWNLOADED":"Jeitsita",
+   "OV_COL_DOWNSPD":"Jeisketa Abiadura",
+   "OV_COL_ETA":"UED",
+   "OV_COL_LABEL":"Etiketa",
+   "OV_COL_NAME":"Izena",
+   "OV_COL_ORDER":"Zenbakia",
+   "OV_COL_PEERS":"Hartzaileak",
+   "OV_COL_REMAINING":"Gelditzen da",
+   "OV_COL_SEEDS":"Emaleak",
+   "OV_COL_SEEDS_PEERS":"Emaleak/Hartzaileak",
+   "OV_COL_SHARED":"Maila",
+   "OV_COL_SIZE":"Neurria",
+   "OV_COL_SOURCE_URL":"Iturburu URL-a",
+   "OV_COL_STATUS":"Egoera",
+   "OV_COL_UPPED":"Igota",
+   "OV_COL_UPSPD":"Igoera Abiadura",
+   "OV_CONFIRM_DELETEDATA_MULTIPLE":"Zihur zaude hautatuako %d torrentak eta elkarturiko datu guztiak kentzea nahi dituzula?",
+   "OV_CONFIRM_DELETEDATA_ONE":"Zihur zaude hautatuako torrenta eta elkarturiko datuak kentzea nahi dituzula?",
+   "OV_CONFIRM_DELETE_MULTIPLE":"Zihur zaude hautatuako %d torrentak kentzea nahi dituzula?",
+   "OV_CONFIRM_DELETE_ONE":"Zihur zaude hautatuako torrenta kentzea nahi duzula?",
+   "OV_CONFIRM_DELETE_RSSFILTER":"Egitan ezabatu \"%s RSS Iragazkia?",
+   "OV_FL_CHECKED":"Egiaztatuta %:.1d%",
+   "OV_FL_DOWNLOADING":"Jeisten",
+   "OV_FL_ERROR":"Akatsa: %s",
+   "OV_FL_FINISHED":"Amaituta",
+   "OV_FL_PAUSED":"Pausatuta",
+   "OV_FL_QUEUED":"Lerrokatuta",
+   "OV_FL_QUEUED_SEED":"Lerrokatutako Emaritza",
+   "OV_FL_SEEDING":"Emaritzan",
+   "OV_FL_STOPPED":"Geldituta",
+   "OV_NEWLABEL_CAPTION":"Sartu Etiketa",
+   "OV_NEWLABEL_TEXT":"Sartu etiketa berri bat hautatutako torrententzat:",
+   "OV_NEW_LABEL":"Etiketa Berria...",
+   "OV_REMOVE_LABEL":"Kendu Etiketa",
+   "OV_TABS":"Orokorra||Aztarnariak||Hartzaileak||Atalak||Agiriak||Abiadura||Oharrak||",
+   "OV_TB_ADDTORR":"Gehitu Torrenta",
+   "OV_TB_ADDURL":"Gehitu Torrenta URL-tik",
+   "OV_TB_PAUSE":"Pausatu",
+   "OV_TB_PREF":"Hobespenak",
+   "OV_TB_QUEUEDOWN":"Mugitu Behera Lerroan",
+   "OV_TB_QUEUEUP":"Mugitu Gora Lerroan",
+   "OV_TB_REMOVE":"Kendu",
+   "OV_TB_RSSDOWNLDR":"RSS Jeistzailea",
+   "OV_TB_START":"Hasi",
+   "OV_TB_STOP":"Gelditu",
+   "MM_FILE":"Agiria",
+   "MM_FILE_ADD_TORRENT":"Gehitu Torrenta...",
+   "MM_FILE_ADD_URL":"Gehitu Torrenta URL-tik...",
+   "MM_OPTIONS":"Aukerak",
+   "MM_OPTIONS_PREFERENCES":"Hobespenak",
+   "MM_OPTIONS_SHOW_CATEGORY":"Erakutsi Kategoria Zerrenda",
+   "MM_OPTIONS_SHOW_DETAIL":"Erakutsi Argibide Xeheak",
+   "MM_OPTIONS_SHOW_STATUS":"Erakutsi Egoera Barra",
+   "MM_OPTIONS_SHOW_TOOLBAR":"Erakutsi Tresnabarra",
+   "MM_OPTIONS_TAB_ICONS":"Ikurrak Hegatsetan",
+   "MM_HELP":"Laguntza",
+   "MM_HELP_UT_WEBPAGE":"µTorrent Webgunea",
+   "MM_HELP_UT_FORUMS":"µTorrent Eztabaidaguneak",
+   "MM_HELP_WEBUI_FEEDBACK":"Bidali WebEI Erantzuna",
+   "MM_HELP_ABOUT_WEBUI":"µTorrent WebEI-ri buruz",
+   "STM_TORRENTS":"Torrentak",
+   "STM_TORRENTS_PAUSEALL":"Pausatu torrent guztiak",
+   "STM_TORRENTS_RESUMEALL":"Berrekin torrent guztiak",
+   "SB_DOWNLOAD":"J: %s%z/s",
+   "SB_LOCAL":" Gt: %z/s",
+   "SB_OVERHEAD":" Ir: %z/s",
+   "SB_TOTAL":" G: %Z",
+   "SB_UPLOAD":"I: %s%z/s",
+   "SIZE_B":"B",
+   "SIZE_EB":"EB",
+   "SIZE_GB":"GB",
+   "SIZE_KB":"kB",
+   "SIZE_MB":"MB",
+   "SIZE_PB":"PB",
+   "SIZE_TB":"TB",
+   "ST_CAPT_ADVANCED":"Aurreratua",
+   "ST_CAPT_BANDWIDTH":"Bandazabalera",
+   "ST_CAPT_CONNECTION":"Elkarketa",
+   "ST_CAPT_DISK_CACHE":"Diska Katxea",
+   "ST_CAPT_FOLDER":"Zuzenbideak",
+   "ST_CAPT_GENERAL":"Orokorra",
+   "ST_CAPT_SCHEDULER":"Egitarautzailea",
+   "ST_CAPT_QUEUEING":"Lerrokapena",
+   "ST_CAPT_UI_EXTRAS":"EI Gehigarriak",
+   "ST_CAPT_UI_SETTINGS":"EI Ezarpenak",
+   "ST_CAPT_BITTORRENT":"BitTorrent",
+   "ST_CAPT_WEBUI":"Web EI",
+   "ST_CAPT_TRANSFER_CAP":"Eskualdaketa Muga",
+   "ST_CAPT_RUN_PROGRAM":"Ekin Programa",
+   "ST_CBO_UI_DBLCLK_TOR":"Erakutsi Ezaugarriak||Hasi/Gelditu||Ireki Agiritegia||Erakutsi Jeisketa Barra||",
+   "ST_CBO_ENCRYPTIONS":"Ezgaituta||Gaituta||Behartuta||",
+   "ST_CBO_PROXY":"(Bat ere ez)||Socks4||Socks5||HTTPS||HTTP||",
+   "ST_CBO_TCAP_MODES":"Igoerak||Jeisketak||Igoerak + Jeisketak||",
+   "ST_CBO_TCAP_UNITS":"MB||GB||",
+   "ST_CBO_TCAP_PERIODS":"1||2||5||7||10||14||15||20||21||28||30||31||",
+   "ST_COL_NAME":"Izena",
+   "ST_COL_VALUE":"Balioa",
+   "ST_SCH_DAYCODES":"Ast||Astr||Astz||Ost||Ostr||Lar||Iga||",
+   "ST_SCH_DAYNAMES":"Astelehena||Asteartea||Asteazkena||Osteguna||Ostirala||Larunbatean||Igandea||",
+   "ST_SCH_LGND_FULL":"Abiadura osoa",
+   "ST_SCH_LGND_FULLEX":"Abiadura osoa - Bandazabalera muga arruntak erabiltzen ditu",
+   "ST_SCH_LGND_LIMITED":"Mugatuta",
+   "ST_SCH_LGND_LIMITEDEX":"Mugatuta - Egitarautzaileak adierazitako bandazabalera mugak erabiltzen ditu",
+   "ST_SCH_LGND_SEEDING":"Emaritzan bakarrik",
+   "ST_SCH_LGND_SEEDINGEX":"Emaritzan bakarrik - Datuak bakarrik igotzen ditu (osatugabeak barne)",
+   "ST_SCH_LGND_OFF":"Itzali",
+   "ST_SCH_LGND_OFFEX":"Itzali - Behartuta ez dauden torrent guztiak gelditzen ditu",
+   "ST_SEEDTIMES_HOURS":"<= %d ordu",
+   "ST_SEEDTIMES_IGNORE":"(Ezikusi)",
+   "ST_SEEDTIMES_MINUTES":"<= %d minutu",
+   "TIME_DAYS_HOURS":"%dd %dh",
+   "TIME_HOURS_MINS":"%dh %dm",
+   "TIME_MINS_SECS":"%dm %ds",
+   "TIME_SECS":"%ds",
+   "TIME_WEEKS_DAYS":"%dw %dd",
+   "TIME_YEARS_WEEKS":"%dy %dw",
+   "ML_MORE_ACTIONS":"Ekintza Gehiago",
+   "Torrents":"Torrentak",
+   "Feeds":"Harpidetzak",
+   "App":"Gehigarria",
+   "country":"Herrialdea",
+   "ETA":"UED",
+   "of":"->",
+   "/s":"/s",
+   "Paste a torrent or feed URL":"Itsatsi torrent bat edo harpidetza URL-a",
+   "Home":"Etxea",
+   "Logout":"Amaitu saiao",
+   "Seeding":"Emaritza",
+   "All Feeds":"Harpidetza Guztiak",
+   "bitrate":"bitneurria",
+   "resolution":"bereizmena",
+   "length":"luzera",
+   "streamable":"jariogarria",
+   "type":"mota",
+   "remote":"hurrunekoa",
+   "about":"honi buruz",
+   "sessions":"saioak",
+   "share":"Elkarbanatu",
+   "Share this torrent":"Elkarbanatu torrent hau",
+   "Share link":"Elkarbanatu lotura",
+   "add":"gehitu",
+   "logout":"saioa amaitu",
+   "log in":"saioa hasi",
+   "anywhere access":"edonongo sarbidea",
+   "stay signed in":"eduki saioa hasita",
+   "download":"jeisketa",
+   "Your client is currently not available. Verify that it is connected to the internet.":"Zure bezeroa une honetan ez dago eskuragarri. Egiaztatu internetera elkarketatuta dagoela.",
+   "Unable to communicate with your &micro;Torrent client. This message will disappear automatically when a connection is re-established.":"Ezinezkoa zure &mikro;Torrent bezeroarekin harremantzea. Mezu hau berezgaitasunez ezagertuko da elkarketa berrezartzen denean..",
+   "Open file":"Lortu agiria",
+   "Download to your computer":"Jeitsi zure ordenagailura",
+   "Open with VLC Media Player":"Ireki VLC Multimedia Irakurgailuarekin",
+   "Actions":"Ekintzak",
+   "season":"Denboraldia",
+   "DLG_ABOUT_VERSION_LEGEND":"Bezero Argibideak",
+   "DLG_ABOUT_VERSION_VERSION":"Produktuaren Bertsioa",
+   "DLG_ABOUT_VERSION_REVISION":"Iturburu Ikuskapena",
+   "DLG_ABOUT_VERSION_BUILD_DATE":"Eraiketa Eguna",
+   "DLG_ABOUT_VERSION_PEER_ID":"Hartzaile ID-a",
+   "DLG_ABOUT_VERSION_USER_AGENT":"Erabiltzaile ordezkaria",
+   "DLG_ABOUT_UPNP_EXTERNAL_ADDRESS":"UPnP kanpoko helbidea:",
+   "DLG_ABOUT_UI_REVISION":"EI Ikuskapena",
+   "DLG_SETTINGS_SAVE":null,
+   "DLG_SETTINGS_MENU_TITLE":null,
+   "DLG_SETTINGS_D_REMOTE_01":"Hurruneko BitTorrent",
+   "DLG_SETTINGS_D_REMOTE_02":"Hurruneko BitTorrentek nabigatzailearen bidezko zure bezeroarenganako sarbide erraz eta seguru bat eskaintzen du.",
+   "DLG_SETTINGS_D_REMOTE_03":"Gaitu azpiko elkarketa, hautatu ordenagailuarentzako izen bat eta sarhitza eta gogoratu ordenagailu hau piztuta uzteaz.",
+   "DLG_SETTINGS_D_REMOTE_04":"Argibide Gehiago",
+   "DLG_SETTINGS_D_REMOTE_05":"Gaitu BitTorrent Hurruneko Sarbidea",
+   "DLG_SETTINGS_D_REMOTE_06":"Egiaztapena",
+   "DLG_SETTINGS_D_REMOTE_07":"Erabiltzaile izena:",
+   "DLG_SETTINGS_D_REMOTE_08":"Sarhitza:",
+   "DLG_SETTINGS_D_REMOTE_09":"Aurkeztu",
+   "ST_CAPT_REMOTE":"Hurruneko BitTorrent"
+}

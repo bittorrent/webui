@@ -5,416 +5,417 @@ Use of this source code is governed by a BSD-style that can be
 found in the LICENSE file.
 */
 
-var LANG_STR = [
-	  "Torrent triemen||*.torrent||Alle triemen (*.*)||*.*||"
-	, "Okee"
-	, "Ofbrekke"
-	, "Tapasse"
-	, "Yes"
-	, "No"
-	, "Slúte"
-	, "Ynstellings"
-	, "Taal"
-	, "Taal:"
-	, "Privacy"
-	, "Kontrolear automatysk nei updates"
-	, "Fernije nei beta ferzjes"
-	, "Stjoer anonyme ynformaasje by it kontrolearen nei fernijngs"
-	, "Wylst Ynladen"
-	, "Foech .!ut ta oan ynkomplete triemen"
-	, "Reservear romte foar alle triemen"
-	, "Kom stand-by te foar at der aktive torrents binne"
-	, "Werjefte opsjes"
-	, "Befêstig by it wissen fan data"
-	, "Befêstig by it wissen fan trackers"
-	, "Lit in befêstiging sjen by it ôfslúten"
-	, "Alternative achtergrûnkleur fan list"
-	, "Lit hjoeddeiske faasje sjen yn titel balke"
-	, "Lit faasje limyt yn 'e steatbalke sjen"
-	, "Wylst Torrents Tafoege wurde"
-	, "Begjin de ynlaad net automatysk"
-	, "Aktivear it programma finster"
-	, "Lit in finster sjen dat de triemen yn'e torrent werjout"
-	, "Aksjes foar dûbelklik"
-	, "Foar seeding fan torrents:"
-	, "Foar ynladen fan torrents:"
-	, "Lokaasje fan de ynladen triemen"
-	, "Pleats nije ynladings nei:"
-	, "Altiid finster sjen litte by mei de hân tafoechjen"
-	, "Ferpleats foltôge triemen nei:"
-	, "Foech it label fan'e torrent ta"
-	, "Ferpleats allinne fan standert ynlaad map"
-	, "Lokaasje fan .torrents"
-	, "Sla .torrents op yn:"
-	, "Ferpleats .torrents fan foltôge taken nei:"
-	, "Automatysk .torrents lade út:"
-	, "Wis laden .torrents"
-	, "Harkjende Poarte"
-	, "Poarte foar ynkommende ferbinings:"
-	, "Samar in poarte"
-	, "Samar in poarte eltse opstart"
-	, "Poarten tawize troch UPnP"
-	, "Poarten tawize troch NAT-PMP"
-	, "Proxy Server"
-	, "Type:"
-	, "Proxy:"
-	, "Poarte:"
-	, "Autentikaasje"
-	, "Brûkersnamme:"
-	, "Wachtwurd:"
-	, "Hostnammen via proxy útsykje"
-	, "Brûk proxy server foar peer-nei-peer ferbinings"
-	, "Foech Windows Brânmuorre eksepsje ta"
-	, "Proxy Privacy"
-	, "Disable all local DNS lookups"
-	, "Disable all features that leak identifying information"
-	, "Disable connections unsupported by the proxy"
-	, "Globale Utlaad Feart Limytaasje"
-	, "Maksimum útlaad faasje (kB/s): [0: unbeheind]"
-	, "Automatysk"
-	, "Plakferfangende útlaad feart by gjin ynlaad (kB/s):"
-	, "Globale Ynlaad Feart Limytaasje"
-	, "Maksimale ynlaad faasje (kB/s): [0: ûnbeheind]"
-	, "Oantal ferbinings"
-	, "Globaal maksimum oantal ferbinings:"
-	, "Maksimum oantal ferbûne peers per torrent:"
-	, "Oantal útlaadplakken per torrent:"
-	, "Mear útlaadplakken brûke as útlaad faasje < 90%"
-	, "Global Rate Limit Options"
-	, "Apply rate limit to transport overhead"
-	, "Apply rate limit to uTP connections"
-	, "Basis BitTorrent Mooglikheden"
-	, "DHT Netwurk Ynskeakelje"
-	, "Freechje tracker nei scrape ynformaasje"
-	, "DHT ynskeakelje foar nije torrents"
-	, "Peer Utwisseling Ynskeakelje"
-	, "Lokale Peer Untdekke Ynskeakelje"
-	, "Bergrinzje lokale peer bânbreedte"
-	, "Rapportear IP/Hostnamme oan tracker:"
-	, "Protokol Fersifering"
-	, "Utgeand:"
-	, "Ynkommende legacy ferbinings tastean"
-	, "Enable bandwidth management [uTP]"
-	, "Enable UDP tracker support"
-	, "Enable Transfer Cap"
-	, "Cap Settings"
-	, "Limit Type:"
-	, "Bandwidth Cap:"
-	, "Time Period (days):"
-	, "Usage history for selected period:"
-	, "Uploaded:"
-	, "Downloaded:"
-	, "Uploaded + Downloaded:"
-	, "Time period:"
-	, "Last %d days"
-	, "Reset History"
-	, "Wachtrige Ynstellings"
-	, "Maksimum oantal aktive torrents (útlaad of ynlaad):"
-	, "Maksimum oantal aktive ynladings:"
-	, "Seed Wylst [Standert wearden]"
-	, "Minimum ratio (%):"
-	, "Minimum seeding time (minutes):"
-	, "Seed taken hawwe hegere prioriteit as ynlaad taken"
-	, "As µTorrent It Seeding Doel Berikt Hat"
-	, "Bergrinzje útlaad faasje nei [0: stoppe]:"
-	, "Skeakel Planner Yn"
-	, "Planningtabel"
-	, "Planner Opsjes"
-	, "Limiteare útlaadfaasje (kB/s):"
-	, "Limiteare ynlaadfaasje (kB/s):"
-	, "DHT útsette by ôfslúten"
-	, "Skeakelje Web UI yn"
-	, "Autentikaasje"
-	, "Brûkersnamme:"
-	, "Wachtwurd:"
-	, "Skeakel Gast abonnemint yn mei brûkersnamme:"
-	, "Ferbining"
-	, "Oare hark poarte (standert is de ferbiningspoarte):"
-	, "Beheint tagong foar de neikommende IPs (skied ferskate ynjeftes mei in komma):"
-	, "Avansearre Opsjes [WARSKÔGING: Net oanpasse!]"
-	, "Wearde:"
-	, "Wier"
-	, "Falsk"
-	, "Ynstelle"
-	, "Faasje Popup List [Skied ferskate wearden mei in komma]"
-	, "Automatyske faasje popup list negerje"
-	, "Utlaad faasje list:"
-	, "Ynlaad faasje list:"
-	, "Bliuwende Labels [Skied mearfâldiche labels mei in | teken"
-	, "Sykmasines [Formaat: namme|URL]"
-	, "Basis Cache Ynstellings"
-	, "It lyts ûnthâld fan de skiif wurd brûkt om data dat gauris opfrege wurdt yn it ûnthâld te setten dat sadwaande it oantal lês- en skriuwbewurkingen nei de hurde skiif beheind wurd. Yn 'e regel wurd it automatysk troch µTorrent dien, mar it hâlden en dragen kin oanpast wurde troch dizze ynstellings te feroarjen."
-	, "Oerwâldzje automatyske lyts ûnthâld grutte en spesifisear de grutte sels (MB):"
-	, "Ferminderje ûnthâld gebrûk at it lyts ûnthâld net nedich is."
-	, "Avansearre Lyts Unthâld Ynstellings"
-	, "Skeakelje lyst ûnthald gebrûk fan skiif skriuwen yn"
-	, "Skriuw ûnoantaaste blokken eltse 2 minúten út"
-	, "Skriuw foltôge parten fuortendaliks út"
-	, "Skeakelje lyst ûnthâld foar skiif lêzen yn"
-	, "Lyts ûnthâld lêzen útskeakelje as de útlaad faasje stadich is"
-	, "Ferwider âlde blokken út it lyts ûnthâld"
-	, "Ferheegje automatyske cache grutte by cache bedobjen"
-	, "Skeakelje Windows caching fan skiif skriuwen út"
-	, "Skeakelje Windows caching fan skiif lêzen út"
-	, "Run Program"
-	, "Run this program when a torrent finishes:"
-	, "Run this program when a torrent changes state:"
-	, "You can use these commands:\r\n%F - Name of downloaded file (for single file torrents)\r\n%D - Directory where files are saved\r\n%N - Title of torrent\r\n%S - State of torrent\r\n%L - Label\r\n%T - Tracker\r\n%M - Status message string (same as status column)\r\n%I - hex encoded info-hash\r\n\r\nState is a combination of:\r\nstarted = 1, checking = 2, start-after-check = 4,\r\nchecked = 8, error = 16, paused = 32, auto = 64, loaded = 128"
-	, "Torrent Eigenskippen"
-	, "Trackers (skied tiers mei in lege rige)"
-	, "Bânbreedte Ynstellings"
-	, "Maksimum útlaad faasje (kB/s): [0: standert]"
-	, "Maksimum ynlaad faasje (kB/s): [0: standert]"
-	, "Oantal útlaadplakken: [leech: standert]"
-	, "Seed Wylst"
-	, "Oerskriuw standert ynstellings"
-	, "Minimum ratio (%):"
-	, "Minimum seeding time (minutes):"
-	, "Oare Ynstellings"
-	, "Earste Seeding"
-	, "DHT Ynskeakelje"
-	, "Peer Utwisseling"
-	, "Feed"
-	, "Feed URL:"
-	, "Oanpaste Alias:"
-	, "Abonnemint"
-	, "Net automatysk alle items ynlade"
-	, "Automatysk alle items ynlade dy publiseard binne yn'e feed"
-	, "Brûk tûk episoade filter"
-	, "Feeds||Favoriten||Skiednis||"
-	, "Alle Feeds"
-	, "Filter Ynstellings"
-	, "Namme:"
-	, "Filter:"
-	, "Net:"
-	, "Bewarje yn:"
-	, "Feed:"
-	, "Kwaliteit:"
-	, "Episode Nûmer: [bg. 1x12-14]"
-	, "Filter is lyk as originele namme ynstee decodearre namme"
-	, "Begjin net automatysk te ynladen"
-	, "Tûk ep. filter"
-	, "Jou ynlaad de heechste prioriteit"
-	, "Minimum ynterfal:"
-	, "Label foar nije torrents:"
-	, "Foech RSS Feed ta..."
-	, "Bewurkje Feed..."
-	, "Feed Utskeakelje"
-	, "Feed Ynskeakelje"
-	, "Feed Fernije"
-	, "Wis Feed"
-	, "Ynlaad"
-	, "Iepen URL yn Browser"
-	, "Tafoegje oan Favoriten"
-	, "Foech ta"
-	, "Wisse"
-	, "ALLE"
-	, "(Alle)"
-	, "(altiid lykstelle)||(ien kear lykstelle)||12 oeren||1 dei||2 dagen||3 dagen||4 dagen||1 wike||2 wiken||3 wiken||1 moanne||"
-	, "Foech RSS Feed ta"
-	, "Bewurkje RSS Feed"
-	, "Remove RSS Feed(s)"
-	, "Really delete the %d selected RSS Feeds?"
-	, "Wier RSS Feed \"%s\" wisse?"
-	, "Hiele Namme"
-	, "Namme"
-	, "Episoade"
-	, "Formaat"
-	, "Codec"
-	, "Date"
-	, "Feed"
-	, "URL"
-	, "IP"
-	, "Poarte"
-	, "Kliënt"
-	, "Flaggen"
-	, "%"
-	, "Relevânsje"
-	, "Yn Faasje"
-	, "Út Faasje"
-	, "Fers"
-	, "Wachtsjend"
-	, "Utladen"
-	, "Ynladen"
-	, "Hashflater"
-	, "Peer yl."
-	, "MaksUp"
-	, "MaksDel"
-	, "Yn Wachtrige"
-	, "Net aktyf"
-	, "Dien"
-	, "Earste Part"
-	, "Namme"
-	, "# Parten"
-	, "%"
-	, "Prioriteit"
-	, "Grutte"
-	, "oerslaan"
-	, "leech"
-	, "normaal"
-	, "heech"
-	, "Ynladen:"
-	, "Utladen:"
-	, "Seeds:"
-	, "Oer:"
-	, "Ynlaad Faasje:"
-	, "Utlaad Faasje:"
-	, "Peers:"
-	, "Dielferhâlding:"
-	, "Bewarje as:"
-	, "Hash:"
-	, "Algemien"
-	, "Oerdracht"
-	, "%d fan %d ferbûn (%d yn swerm)"
-	, "Y:%s U:%s - %s"
-	, "Kopieare"
-	, "Reset"
-	, "Unbeheind"
-	, "IPs Útsykje"
-	, "Get File(s)"
-	, "Net Ynlade"
-	, "Hege Prioriteit"
-	, "Lege Prioriteit"
-	, "Normale Prioriteit"
-	, "Kopiear Magnet URI"
-	, "Wis Data"
-	, "Wis .torrent"
-	, "Wis .torrent + Data"
-	, "Forsear Her-Kontrôle"
-	, "Forsear Start"
-	, "Label"
-	, "Skoft"
-	, "Eigenskippen"
-	, "Achterút yn wachtrige"
-	, "Foarút yn wachtrige"
-	, "Ferwider"
-	, "Ferwider En"
-	, "Start"
-	, "Stop"
-	, "Aktyf"
-	, "Alle"
-	, "Net aktyf"
-	, "Oan't ynladen"
-	, "Net aktyf"
-	, "Gjin Label"
-	, "||Besk.||Beskikberens"
-	, "Tafoege Op"
-	, "Foltôge Op"
-	, "Dien"
-	, "Ynladen"
-	, "Yn Faasje"
-	, "ETA"
-	, "Label"
-	, "Namme"
-	, "#"
-	, "Peers"
-	, "Oerblieuwend"
-	, "Seeds"
-	, "Seeds/Peers"
-	, "Ratio"
-	, "Grutte"
-	, "Boarne URL"
-	, "Tastân"
-	, "Utladen"
-	, "Út Faasje"
-	, "Binne jo wis dat jo de %d sselekteare torrents ferwiderje wolle en alle assosjeare data?"
-	, "Binne jo wis dat jo de selekteare torrent ferwiderje wolle en alle assosjeare data?"
-	, "Binne jo wis dat jo de %d selekteare torrents ferwiderje wolle?"
-	, "Binne jo wis dat jo de selekteare torrent ferwiderje wolle?"
-	, "Wier RSS Filter \"%s\" wisse?Wier RSS Filter \"%s\" wisse?Wier RSS Filter \"%s\" wisse?Wier RSS Filter \"%s\" wisse?Wier RSS Filter \"%s\" wisse?Wier RSS Filter \"%s\" wisse?"
-	, "Kontrolearre %:.1d%%"
-	, "Ynladen"
-	, "Flater: %s"
-	, "Klear"
-	, "Pauseard"
-	, "Yn Wachtrige"
-	, "Seed yn Wachtrige"
-	, "Klear"
-	, "Stoppe"
-	, "Jou label yn"
-	, "Fier it nije label foar selektearre torrents yn:"
-	, "Nij Label..."
-	, "Ferwider label"
-	, "Algemien||Trackers||Peers||Parten||Triemen||Faasje||Logger||"
-	, "Torrent tafoechje"
-	, "Foech Torrent ta troch URL"
-	, "Skoft"
-	, "Ynstellings"
-	, "Achterút yn wachtrige"
-	, "Foarút yn wachtrige"
-	, "Wis"
-	, "RSS Ynlader"
-	, "Start"
-	, "Stop"
-	, "Triem"
-	, "Torrent tafoechje..."
-	, "Foech Torrent ta troch URL..."
-	, "Opsjes"
-	, "Ynstellings"
-	, "Lit Kategory List sjen"
-	, "Lit Detailleaerre Ynfo Sjen"
-	, "Lit Steatbalke Sjen"
-	, "Lit Arkbalke sjen"
-	, "Ikoantsjes op Tabs"
-	, "Help"
-	, "µTorrent Webside"
-	, "µTorrent Foarums"
-	, "Send WebUI Feedback"
-	, "About µTorrent WebUI"
-	, "Torrents"
-	, "Skoftsje alle torrents"
-	, "Ferfetsje alle torrents"
-	, "Y: %s%z/s"
-	, " L: %z/s"
-	, " O: %z/s"
-	, " T: %Z"
-	, "U: %s%z/s"
-	, "B"
-	, "EB"
-	, "GB"
-	, "kB"
-	, "MB"
-	, "PB"
-	, "TB"
-	, "Avansearre"
-	, "Bânbreedte"
-	, "Ferbining"
-	, "Skiif Cache"
-	, "Mappen"
-	, "Algemien"
-	, "Planner"
-	, "Yn wachtrige"
-	, "UI Extras"
-	, "UI Ynstelings"
-	, "BitTorrent"
-	, "Web UI"
-	, "Transfer Cap"
-	, "Run Program"
-	, "Lit Eigenskippen sjen||Begjin/Stop||Map Iepenje||Lit Ynlaadbalke Sjen||"
-	, "Útskeakeld||Ynskeakeld||Forsearre||"
-	, "(gjin)||Socks4||Socks5||HTTPS||HTTP||"
-	, "Uploads||Downloads||Uploads + Downloads||"
-	, "MB||GB||"
-	, "1||2||5||7||10||14||15||20||21||28||30||31||"
-	, "Namme"
-	, "Wearde"
-	, "Mo||Ti||Wo||To||Fr||Sneon||Snein||"
-	, "Moandei||Tiisdei||Woansdei||Tongersdei||Freed||Sneon||Snein||"
-	, "Rap"
-	, "Rap - Brûkt normale globale bânbreedte limyt"
-	, "Limiteare"
-	, "Limiteare - Brûkt planner-spesifiseare bânbreedte limyt"
-	, "Allinne seed"
-	, "Allinne seed - Alinne útladings data (inclusief ynkomplete)"
-	, "Utsette"
-	, "Utsette - Stopt alletorrents dy't net forseard binne"
-	, "<= %d oeren"
-	, "(Negerje)"
-	, "<= %d minúten"
-	, "%dd %do"
-	, "%do %dm"
-	, "%dm %ds"
-	, "%ds"
-	, "%dw %dd"
-	, "%dj %dw"
-];
+var LANG_STR =
+{
+   "CT_MASK1":"Torrent triemen||*.torrent||Alle triemen (*.*)||*.*||",
+   "DLG_BTN_OK":"Okee",
+   "DLG_BTN_CANCEL":"Ofbrekke",
+   "DLG_BTN_APPLY":"Tapasse",
+   "DLG_BTN_YES":"Yes",
+   "DLG_BTN_NO":"No",
+   "DLG_BTN_CLOSE":"Slúte",
+   "DLG_SETTINGS_00":"Ynstellings",
+   "DLG_SETTINGS_1_GENERAL_01":"Taal",
+   "DLG_SETTINGS_1_GENERAL_02":"Taal:",
+   "DLG_SETTINGS_1_GENERAL_10":"Privacy",
+   "DLG_SETTINGS_1_GENERAL_11":"Kontrolear automatysk nei updates",
+   "DLG_SETTINGS_1_GENERAL_12":"Fernije nei beta ferzjes",
+   "DLG_SETTINGS_1_GENERAL_13":"Stjoer anonyme ynformaasje by it kontrolearen nei fernijngs",
+   "DLG_SETTINGS_1_GENERAL_17":"Wylst Ynladen",
+   "DLG_SETTINGS_1_GENERAL_18":"Foech .!ut ta oan ynkomplete triemen",
+   "DLG_SETTINGS_1_GENERAL_19":"Reservear romte foar alle triemen",
+   "DLG_SETTINGS_1_GENERAL_20":"Kom stand-by te foar at der aktive torrents binne",
+   "DLG_SETTINGS_2_UI_01":"Werjefte opsjes",
+   "DLG_SETTINGS_2_UI_02":"Befêstig by it wissen fan data",
+   "DLG_SETTINGS_2_UI_03":"Befêstig by it wissen fan trackers",
+   "DLG_SETTINGS_2_UI_04":"Lit in befêstiging sjen by it ôfslúten",
+   "DLG_SETTINGS_2_UI_05":"Alternative achtergrûnkleur fan list",
+   "DLG_SETTINGS_2_UI_06":"Lit hjoeddeiske faasje sjen yn titel balke",
+   "DLG_SETTINGS_2_UI_07":"Lit faasje limyt yn 'e steatbalke sjen",
+   "DLG_SETTINGS_2_UI_15":"Wylst Torrents Tafoege wurde",
+   "DLG_SETTINGS_2_UI_16":"Begjin de ynlaad net automatysk",
+   "DLG_SETTINGS_2_UI_17":"Aktivear it programma finster",
+   "DLG_SETTINGS_2_UI_18":"Lit in finster sjen dat de triemen yn'e torrent werjout",
+   "DLG_SETTINGS_2_UI_19":"Aksjes foar dûbelklik",
+   "DLG_SETTINGS_2_UI_20":"Foar seeding fan torrents:",
+   "DLG_SETTINGS_2_UI_22":"Foar ynladen fan torrents:",
+   "DLG_SETTINGS_3_PATHS_01":"Lokaasje fan de ynladen triemen",
+   "DLG_SETTINGS_3_PATHS_02":"Pleats nije ynladings nei:",
+   "DLG_SETTINGS_3_PATHS_03":"Altiid finster sjen litte by mei de hân tafoechjen",
+   "DLG_SETTINGS_3_PATHS_06":"Ferpleats foltôge triemen nei:",
+   "DLG_SETTINGS_3_PATHS_07":"Foech it label fan'e torrent ta",
+   "DLG_SETTINGS_3_PATHS_10":"Ferpleats allinne fan standert ynlaad map",
+   "DLG_SETTINGS_3_PATHS_11":"Lokaasje fan .torrents",
+   "DLG_SETTINGS_3_PATHS_12":"Sla .torrents op yn:",
+   "DLG_SETTINGS_3_PATHS_15":"Ferpleats .torrents fan foltôge taken nei:",
+   "DLG_SETTINGS_3_PATHS_18":"Automatysk .torrents lade út:",
+   "DLG_SETTINGS_3_PATHS_19":"Wis laden .torrents",
+   "DLG_SETTINGS_4_CONN_01":"Harkjende Poarte",
+   "DLG_SETTINGS_4_CONN_02":"Poarte foar ynkommende ferbinings:",
+   "DLG_SETTINGS_4_CONN_04":"Samar in poarte",
+   "DLG_SETTINGS_4_CONN_05":"Samar in poarte eltse opstart",
+   "DLG_SETTINGS_4_CONN_06":"Poarten tawize troch UPnP",
+   "DLG_SETTINGS_4_CONN_07":"Poarten tawize troch NAT-PMP",
+   "DLG_SETTINGS_4_CONN_08":"Proxy Server",
+   "DLG_SETTINGS_4_CONN_09":"Type:",
+   "DLG_SETTINGS_4_CONN_11":"Proxy:",
+   "DLG_SETTINGS_4_CONN_13":"Poarte:",
+   "DLG_SETTINGS_4_CONN_15":"Autentikaasje",
+   "DLG_SETTINGS_4_CONN_16":"Brûkersnamme:",
+   "DLG_SETTINGS_4_CONN_18":"Wachtwurd:",
+   "DLG_SETTINGS_4_CONN_19":"Hostnammen via proxy útsykje",
+   "DLG_SETTINGS_4_CONN_20":"Brûk proxy server foar peer-nei-peer ferbinings",
+   "DLG_SETTINGS_4_CONN_21":"Foech Windows Brânmuorre eksepsje ta",
+   "DLG_SETTINGS_4_CONN_22":"Proxy Privacy",
+   "DLG_SETTINGS_4_CONN_23":"Disable all local DNS lookups",
+   "DLG_SETTINGS_4_CONN_24":"Disable all features that leak identifying information",
+   "DLG_SETTINGS_4_CONN_25":"Disable connections unsupported by the proxy",
+   "DLG_SETTINGS_5_BANDWIDTH_01":"Globale Utlaad Feart Limytaasje",
+   "DLG_SETTINGS_5_BANDWIDTH_02":"Maksimum útlaad faasje (kB/s): [0: unbeheind]",
+   "DLG_SETTINGS_5_BANDWIDTH_03":"Automatysk",
+   "DLG_SETTINGS_5_BANDWIDTH_05":"Plakferfangende útlaad feart by gjin ynlaad (kB/s):",
+   "DLG_SETTINGS_5_BANDWIDTH_07":"Globale Ynlaad Feart Limytaasje",
+   "DLG_SETTINGS_5_BANDWIDTH_08":"Maksimale ynlaad faasje (kB/s): [0: ûnbeheind]",
+   "DLG_SETTINGS_5_BANDWIDTH_10":"Oantal ferbinings",
+   "DLG_SETTINGS_5_BANDWIDTH_11":"Globaal maksimum oantal ferbinings:",
+   "DLG_SETTINGS_5_BANDWIDTH_14":"Maksimum oantal ferbûne peers per torrent:",
+   "DLG_SETTINGS_5_BANDWIDTH_15":"Oantal útlaadplakken per torrent:",
+   "DLG_SETTINGS_5_BANDWIDTH_17":"Mear útlaadplakken brûke as útlaad faasje < 90%",
+   "DLG_SETTINGS_5_BANDWIDTH_18":"Global Rate Limit Options",
+   "DLG_SETTINGS_5_BANDWIDTH_19":"Apply rate limit to transport overhead",
+   "DLG_SETTINGS_5_BANDWIDTH_20":"Apply rate limit to uTP connections",
+   "DLG_SETTINGS_6_BITTORRENT_01":"Basis BitTorrent Mooglikheden",
+   "DLG_SETTINGS_6_BITTORRENT_02":"DHT Netwurk Ynskeakelje",
+   "DLG_SETTINGS_6_BITTORRENT_03":"Freechje tracker nei scrape ynformaasje",
+   "DLG_SETTINGS_6_BITTORRENT_04":"DHT ynskeakelje foar nije torrents",
+   "DLG_SETTINGS_6_BITTORRENT_05":"Peer Utwisseling Ynskeakelje",
+   "DLG_SETTINGS_6_BITTORRENT_06":"Lokale Peer Untdekke Ynskeakelje",
+   "DLG_SETTINGS_6_BITTORRENT_07":"Bergrinzje lokale peer bânbreedte",
+   "DLG_SETTINGS_6_BITTORRENT_08":"Rapportear IP/Hostnamme oan tracker:",
+   "DLG_SETTINGS_6_BITTORRENT_10":"Protokol Fersifering",
+   "DLG_SETTINGS_6_BITTORRENT_11":"Utgeand:",
+   "DLG_SETTINGS_6_BITTORRENT_13":"Ynkommende legacy ferbinings tastean",
+   "DLG_SETTINGS_6_BITTORRENT_14":"Enable bandwidth management [uTP]",
+   "DLG_SETTINGS_6_BITTORRENT_15":"Enable UDP tracker support",
+   "DLG_SETTINGS_7_TRANSFERCAP_01":"Enable Transfer Cap",
+   "DLG_SETTINGS_7_TRANSFERCAP_02":"Cap Settings",
+   "DLG_SETTINGS_7_TRANSFERCAP_03":"Limit Type:",
+   "DLG_SETTINGS_7_TRANSFERCAP_04":"Bandwidth Cap:",
+   "DLG_SETTINGS_7_TRANSFERCAP_05":"Time Period (days):",
+   "DLG_SETTINGS_7_TRANSFERCAP_06":"Usage history for selected period:",
+   "DLG_SETTINGS_7_TRANSFERCAP_07":"Uploaded:",
+   "DLG_SETTINGS_7_TRANSFERCAP_08":"Downloaded:",
+   "DLG_SETTINGS_7_TRANSFERCAP_09":"Uploaded + Downloaded:",
+   "DLG_SETTINGS_7_TRANSFERCAP_10":"Time period:",
+   "DLG_SETTINGS_7_TRANSFERCAP_11":"Last %d days",
+   "DLG_SETTINGS_7_TRANSFERCAP_12":"Reset History",
+   "DLG_SETTINGS_8_QUEUEING_01":"Wachtrige Ynstellings",
+   "DLG_SETTINGS_8_QUEUEING_02":"Maksimum oantal aktive torrents (útlaad of ynlaad):",
+   "DLG_SETTINGS_8_QUEUEING_04":"Maksimum oantal aktive ynladings:",
+   "DLG_SETTINGS_8_QUEUEING_06":"Seed Wylst [Standert wearden]",
+   "DLG_SETTINGS_8_QUEUEING_07":"Minimum ratio (%):",
+   "DLG_SETTINGS_8_QUEUEING_09":"Minimum seeding time (minutes):",
+   "DLG_SETTINGS_8_QUEUEING_11":"Seed taken hawwe hegere prioriteit as ynlaad taken",
+   "DLG_SETTINGS_8_QUEUEING_12":"As µTorrent It Seeding Doel Berikt Hat",
+   "DLG_SETTINGS_8_QUEUEING_13":"Bergrinzje útlaad faasje nei [0: stoppe]:",
+   "DLG_SETTINGS_9_SCHEDULER_01":"Skeakel Planner Yn",
+   "DLG_SETTINGS_9_SCHEDULER_02":"Planningtabel",
+   "DLG_SETTINGS_9_SCHEDULER_04":"Planner Opsjes",
+   "DLG_SETTINGS_9_SCHEDULER_05":"Limiteare útlaadfaasje (kB/s):",
+   "DLG_SETTINGS_9_SCHEDULER_07":"Limiteare ynlaadfaasje (kB/s):",
+   "DLG_SETTINGS_9_SCHEDULER_09":"DHT útsette by ôfslúten",
+   "DLG_SETTINGS_9_WEBUI_01":"Skeakelje Web UI yn",
+   "DLG_SETTINGS_9_WEBUI_02":"Autentikaasje",
+   "DLG_SETTINGS_9_WEBUI_03":"Brûkersnamme:",
+   "DLG_SETTINGS_9_WEBUI_05":"Wachtwurd:",
+   "DLG_SETTINGS_9_WEBUI_07":"Skeakel Gast abonnemint yn mei brûkersnamme:",
+   "DLG_SETTINGS_9_WEBUI_09":"Ferbining",
+   "DLG_SETTINGS_9_WEBUI_10":"Oare hark poarte (standert is de ferbiningspoarte):",
+   "DLG_SETTINGS_9_WEBUI_12":"Beheint tagong foar de neikommende IPs (skied ferskate ynjeftes mei in komma):",
+   "DLG_SETTINGS_A_ADVANCED_01":"Avansearre Opsjes [WARSKÔGING: Net oanpasse!]",
+   "DLG_SETTINGS_A_ADVANCED_02":"Wearde:",
+   "DLG_SETTINGS_A_ADVANCED_03":"Wier",
+   "DLG_SETTINGS_A_ADVANCED_04":"Falsk",
+   "DLG_SETTINGS_A_ADVANCED_05":"Ynstelle",
+   "DLG_SETTINGS_B_ADV_UI_01":"Faasje Popup List [Skied ferskate wearden mei in komma]",
+   "DLG_SETTINGS_B_ADV_UI_02":"Automatyske faasje popup list negerje",
+   "DLG_SETTINGS_B_ADV_UI_03":"Utlaad faasje list:",
+   "DLG_SETTINGS_B_ADV_UI_05":"Ynlaad faasje list:",
+   "DLG_SETTINGS_B_ADV_UI_07":"Bliuwende Labels [Skied mearfâldiche labels mei in | teken",
+   "DLG_SETTINGS_B_ADV_UI_08":"Sykmasines [Formaat: namme|URL]",
+   "DLG_SETTINGS_C_ADV_CACHE_01":"Basis Cache Ynstellings",
+   "DLG_SETTINGS_C_ADV_CACHE_02":"It lyts ûnthâld fan de skiif wurd brûkt om data dat gauris opfrege wurdt yn it ûnthâld te setten dat sadwaande it oantal lês- en skriuwbewurkingen nei de hurde skiif beheind wurd. Yn 'e regel wurd it automatysk troch µTorrent dien, mar it hâlden en dragen kin oanpast wurde troch dizze ynstellings te feroarjen.",
+   "DLG_SETTINGS_C_ADV_CACHE_03":"Oerwâldzje automatyske lyts ûnthâld grutte en spesifisear de grutte sels (MB):",
+   "DLG_SETTINGS_C_ADV_CACHE_05":"Ferminderje ûnthâld gebrûk at it lyts ûnthâld net nedich is.",
+   "DLG_SETTINGS_C_ADV_CACHE_06":"Avansearre Lyts Unthâld Ynstellings",
+   "DLG_SETTINGS_C_ADV_CACHE_07":"Skeakelje lyst ûnthald gebrûk fan skiif skriuwen yn",
+   "DLG_SETTINGS_C_ADV_CACHE_08":"Skriuw ûnoantaaste blokken eltse 2 minúten út",
+   "DLG_SETTINGS_C_ADV_CACHE_09":"Skriuw foltôge parten fuortendaliks út",
+   "DLG_SETTINGS_C_ADV_CACHE_10":"Skeakelje lyst ûnthâld foar skiif lêzen yn",
+   "DLG_SETTINGS_C_ADV_CACHE_11":"Lyts ûnthâld lêzen útskeakelje as de útlaad faasje stadich is",
+   "DLG_SETTINGS_C_ADV_CACHE_12":"Ferwider âlde blokken út it lyts ûnthâld",
+   "DLG_SETTINGS_C_ADV_CACHE_13":"Ferheegje automatyske cache grutte by cache bedobjen",
+   "DLG_SETTINGS_C_ADV_CACHE_14":"Skeakelje Windows caching fan skiif skriuwen út",
+   "DLG_SETTINGS_C_ADV_CACHE_15":"Skeakelje Windows caching fan skiif lêzen út",
+   "DLG_SETTINGS_C_ADV_RUN_01":"Run Program",
+   "DLG_SETTINGS_C_ADV_RUN_02":"Run this program when a torrent finishes:",
+   "DLG_SETTINGS_C_ADV_RUN_04":"Run this program when a torrent changes state:",
+   "DLG_SETTINGS_C_ADV_RUN_06":"You can use these commands:\r\n%F - Name of downloaded file (for single file torrents)\r\n%D - Directory where files are saved\r\n%N - Title of torrent\r\n%S - State of torrent\r\n%L - Label\r\n%T - Tracker\r\n%M - Status message string (same as status column)\r\n%I - hex encoded info-hash\r\n\r\nState is a combination of:\r\nstarted = 1, checking = 2, start-after-check = 4,\r\nchecked = 8, error = 16, paused = 32, auto = 64, loaded = 128",
+   "DLG_TORRENTPROP_00":"Torrent Eigenskippen",
+   "DLG_TORRENTPROP_1_GEN_01":"Trackers (skied tiers mei in lege rige)",
+   "DLG_TORRENTPROP_1_GEN_03":"Bânbreedte Ynstellings",
+   "DLG_TORRENTPROP_1_GEN_04":"Maksimum útlaad faasje (kB/s): [0: standert]",
+   "DLG_TORRENTPROP_1_GEN_06":"Maksimum ynlaad faasje (kB/s): [0: standert]",
+   "DLG_TORRENTPROP_1_GEN_08":"Oantal útlaadplakken: [leech: standert]",
+   "DLG_TORRENTPROP_1_GEN_10":"Seed Wylst",
+   "DLG_TORRENTPROP_1_GEN_11":"Oerskriuw standert ynstellings",
+   "DLG_TORRENTPROP_1_GEN_12":"Minimum ratio (%):",
+   "DLG_TORRENTPROP_1_GEN_14":"Minimum seeding time (minutes):",
+   "DLG_TORRENTPROP_1_GEN_16":"Oare Ynstellings",
+   "DLG_TORRENTPROP_1_GEN_17":"Earste Seeding",
+   "DLG_TORRENTPROP_1_GEN_18":"DHT Ynskeakelje",
+   "DLG_TORRENTPROP_1_GEN_19":"Peer Utwisseling",
+   "DLG_ADDEDITRSSFEED_03":"Feed",
+   "DLG_ADDEDITRSSFEED_04":"Feed URL:",
+   "DLG_ADDEDITRSSFEED_05":"Oanpaste Alias:",
+   "DLG_ADDEDITRSSFEED_06":"Abonnemint",
+   "DLG_ADDEDITRSSFEED_07":"Net automatysk alle items ynlade",
+   "DLG_ADDEDITRSSFEED_08":"Automatysk alle items ynlade dy publiseard binne yn'e feed",
+   "DLG_ADDEDITRSSFEED_09":"Brûk tûk episoade filter",
+   "DLG_RSSDOWNLOADER_02":"Feeds||Favoriten||Skiednis||",
+   "DLG_RSSDOWNLOADER_03":"Alle Feeds",
+   "DLG_RSSDOWNLOADER_04":"Filter Ynstellings",
+   "DLG_RSSDOWNLOADER_05":"Namme:",
+   "DLG_RSSDOWNLOADER_06":"Filter:",
+   "DLG_RSSDOWNLOADER_07":"Net:",
+   "DLG_RSSDOWNLOADER_08":"Bewarje yn:",
+   "DLG_RSSDOWNLOADER_09":"Feed:",
+   "DLG_RSSDOWNLOADER_10":"Kwaliteit:",
+   "DLG_RSSDOWNLOADER_11":"Episode Nûmer: [bg. 1x12-14]",
+   "DLG_RSSDOWNLOADER_12":"Filter is lyk as originele namme ynstee decodearre namme",
+   "DLG_RSSDOWNLOADER_13":"Begjin net automatysk te ynladen",
+   "DLG_RSSDOWNLOADER_14":"Tûk ep. filter",
+   "DLG_RSSDOWNLOADER_15":"Jou ynlaad de heechste prioriteit",
+   "DLG_RSSDOWNLOADER_16":"Minimum ynterfal:",
+   "DLG_RSSDOWNLOADER_17":"Label foar nije torrents:",
+   "DLG_RSSDOWNLOADER_18":"Foech RSS Feed ta...",
+   "DLG_RSSDOWNLOADER_19":"Bewurkje Feed...",
+   "DLG_RSSDOWNLOADER_20":"Feed Utskeakelje",
+   "DLG_RSSDOWNLOADER_21":"Feed Ynskeakelje",
+   "DLG_RSSDOWNLOADER_22":"Feed Fernije",
+   "DLG_RSSDOWNLOADER_23":"Wis Feed",
+   "DLG_RSSDOWNLOADER_24":"Ynlaad",
+   "DLG_RSSDOWNLOADER_25":"Iepen URL yn Browser",
+   "DLG_RSSDOWNLOADER_26":"Tafoegje oan Favoriten",
+   "DLG_RSSDOWNLOADER_27":"Foech ta",
+   "DLG_RSSDOWNLOADER_28":"Wisse",
+   "DLG_RSSDOWNLOADER_29":"ALLE",
+   "DLG_RSSDOWNLOADER_30":"(Alle)",
+   "DLG_RSSDOWNLOADER_31":"(altiid lykstelle)||(ien kear lykstelle)||12 oeren||1 dei||2 dagen||3 dagen||4 dagen||1 wike||2 wiken||3 wiken||1 moanne||",
+   "DLG_RSSDOWNLOADER_32":"Foech RSS Feed ta",
+   "DLG_RSSDOWNLOADER_33":"Bewurkje RSS Feed",
+   "DLG_RSSDOWNLOADER_34":"Remove RSS Feed(s)",
+   "DLG_RSSDOWNLOADER_35":"Really delete the %d selected RSS Feeds?",
+   "DLG_RSSDOWNLOADER_36":"Wier RSS Feed \"%s\" wisse?",
+   "FEED_COL_FULLNAME":"Hiele Namme",
+   "FEED_COL_NAME":"Namme",
+   "FEED_COL_EPISODE":"Episoade",
+   "FEED_COL_FORMAT":"Formaat",
+   "FEED_COL_CODEC":"Codec",
+   "FEED_COL_DATE":"Date",
+   "FEED_COL_FEED":"Feed",
+   "FEED_COL_URL":"URL",
+   "PRS_COL_IP":"IP",
+   "PRS_COL_PORT":"Poarte",
+   "PRS_COL_CLIENT":"Kliënt",
+   "PRS_COL_FLAGS":"Flaggen",
+   "PRS_COL_PCNT":"%",
+   "PRS_COL_RELEVANCE":"Relevânsje",
+   "PRS_COL_DOWNSPEED":"Yn Faasje",
+   "PRS_COL_UPSPEED":"Út Faasje",
+   "PRS_COL_REQS":"Fers",
+   "PRS_COL_WAITED":"Wachtsjend",
+   "PRS_COL_UPLOADED":"Utladen",
+   "PRS_COL_DOWNLOADED":"Ynladen",
+   "PRS_COL_HASHERR":"Hashflater",
+   "PRS_COL_PEERDL":"Peer yl.",
+   "PRS_COL_MAXUP":"MaksUp",
+   "PRS_COL_MAXDOWN":"MaksDel",
+   "PRS_COL_QUEUED":"Yn Wachtrige",
+   "PRS_COL_INACTIVE":"Net aktyf",
+   "FI_COL_DONE":"Dien",
+   "FI_COL_FIRSTPC":"Earste Part",
+   "FI_COL_NAME":"Namme",
+   "FI_COL_NUMPCS":"# Parten",
+   "FI_COL_PCNT":"%",
+   "FI_COL_PRIO":"Prioriteit",
+   "FI_COL_SIZE":"Grutte",
+   "FI_PRI0":"oerslaan",
+   "FI_PRI1":"leech",
+   "FI_PRI2":"normaal",
+   "FI_PRI3":"heech",
+   "GN_TP_01":"Ynladen:",
+   "GN_TP_02":"Utladen:",
+   "GN_TP_03":"Seeds:",
+   "GN_TP_04":"Oer:",
+   "GN_TP_05":"Ynlaad Faasje:",
+   "GN_TP_06":"Utlaad Faasje:",
+   "GN_TP_07":"Peers:",
+   "GN_TP_08":"Dielferhâlding:",
+   "GN_TP_09":"Bewarje as:",
+   "GN_TP_10":"Hash:",
+   "GN_GENERAL":"Algemien",
+   "GN_TRANSFER":"Oerdracht",
+   "GN_XCONN":"%d fan %d ferbûn (%d yn swerm)",
+   "MAIN_TITLEBAR_SPEED":"Y:%s U:%s - %s",
+   "MENU_COPY":"Kopieare",
+   "MENU_RESET":"Reset",
+   "MENU_UNLIMITED":"Unbeheind",
+   "MP_RESOLVE_IPS":"IPs Útsykje",
+   "MF_GETFILE":"Get File(s)",
+   "MF_DONT":"Net Ynlade",
+   "MF_HIGH":"Hege Prioriteit",
+   "MF_LOW":"Lege Prioriteit",
+   "MF_NORMAL":"Normale Prioriteit",
+   "ML_COPY_MAGNETURI":"Kopiear Magnet URI",
+   "ML_DELETE_DATA":"Wis Data",
+   "ML_DELETE_TORRENT":"Wis .torrent",
+   "ML_DELETE_DATATORRENT":"Wis .torrent + Data",
+   "ML_FORCE_RECHECK":"Forsear Her-Kontrôle",
+   "ML_FORCE_START":"Forsear Start",
+   "ML_LABEL":"Label",
+   "ML_PAUSE":"Skoft",
+   "ML_PROPERTIES":"Eigenskippen",
+   "ML_QUEUEDOWN":"Achterút yn wachtrige",
+   "ML_QUEUEUP":"Foarút yn wachtrige",
+   "ML_REMOVE":"Ferwider",
+   "ML_REMOVE_AND":"Ferwider En",
+   "ML_START":"Start",
+   "ML_STOP":"Stop",
+   "OV_CAT_ACTIVE":"Aktyf",
+   "OV_CAT_ALL":"Alle",
+   "OV_CAT_COMPL":"Net aktyf",
+   "OV_CAT_DL":"Oan't ynladen",
+   "OV_CAT_INACTIVE":"Net aktyf",
+   "OV_CAT_NOLABEL":"Gjin Label",
+   "OV_COL_AVAIL":"||Besk.||Beskikberens",
+   "OV_COL_DATE_ADDED":"Tafoege Op",
+   "OV_COL_DATE_COMPLETED":"Foltôge Op",
+   "OV_COL_DONE":"Dien",
+   "OV_COL_DOWNLOADED":"Ynladen",
+   "OV_COL_DOWNSPD":"Yn Faasje",
+   "OV_COL_ETA":"ETA",
+   "OV_COL_LABEL":"Label",
+   "OV_COL_NAME":"Namme",
+   "OV_COL_ORDER":"#",
+   "OV_COL_PEERS":"Peers",
+   "OV_COL_REMAINING":"Oerblieuwend",
+   "OV_COL_SEEDS":"Seeds",
+   "OV_COL_SEEDS_PEERS":"Seeds/Peers",
+   "OV_COL_SHARED":"Ratio",
+   "OV_COL_SIZE":"Grutte",
+   "OV_COL_SOURCE_URL":"Boarne URL",
+   "OV_COL_STATUS":"Tastân",
+   "OV_COL_UPPED":"Utladen",
+   "OV_COL_UPSPD":"Út Faasje",
+   "OV_CONFIRM_DELETEDATA_MULTIPLE":"Binne jo wis dat jo de %d sselekteare torrents ferwiderje wolle en alle assosjeare data?",
+   "OV_CONFIRM_DELETEDATA_ONE":"Binne jo wis dat jo de selekteare torrent ferwiderje wolle en alle assosjeare data?",
+   "OV_CONFIRM_DELETE_MULTIPLE":"Binne jo wis dat jo de %d selekteare torrents ferwiderje wolle?",
+   "OV_CONFIRM_DELETE_ONE":"Binne jo wis dat jo de selekteare torrent ferwiderje wolle?",
+   "OV_CONFIRM_DELETE_RSSFILTER":"Wier RSS Filter \"%s\" wisse?Wier RSS Filter \"%s\" wisse?Wier RSS Filter \"%s\" wisse?Wier RSS Filter \"%s\" wisse?Wier RSS Filter \"%s\" wisse?Wier RSS Filter \"%s\" wisse?",
+   "OV_FL_CHECKED":"Kontrolearre %:.1d%",
+   "OV_FL_DOWNLOADING":"Ynladen",
+   "OV_FL_ERROR":"Flater: %s",
+   "OV_FL_FINISHED":"Klear",
+   "OV_FL_PAUSED":"Pauseard",
+   "OV_FL_QUEUED":"Yn Wachtrige",
+   "OV_FL_QUEUED_SEED":"Seed yn Wachtrige",
+   "OV_FL_SEEDING":"Klear",
+   "OV_FL_STOPPED":"Stoppe",
+   "OV_NEWLABEL_CAPTION":"Jou label yn",
+   "OV_NEWLABEL_TEXT":"Fier it nije label foar selektearre torrents yn:",
+   "OV_NEW_LABEL":"Nij Label...",
+   "OV_REMOVE_LABEL":"Ferwider label",
+   "OV_TABS":"Algemien||Trackers||Peers||Parten||Triemen||Faasje||Logger||",
+   "OV_TB_ADDTORR":"Torrent tafoechje",
+   "OV_TB_ADDURL":"Foech Torrent ta troch URL",
+   "OV_TB_PAUSE":"Skoft",
+   "OV_TB_PREF":"Ynstellings",
+   "OV_TB_QUEUEDOWN":"Achterút yn wachtrige",
+   "OV_TB_QUEUEUP":"Foarút yn wachtrige",
+   "OV_TB_REMOVE":"Wis",
+   "OV_TB_RSSDOWNLDR":"RSS Ynlader",
+   "OV_TB_START":"Start",
+   "OV_TB_STOP":"Stop",
+   "MM_FILE":"Triem",
+   "MM_FILE_ADD_TORRENT":"Torrent tafoechje...",
+   "MM_FILE_ADD_URL":"Foech Torrent ta troch URL...",
+   "MM_OPTIONS":"Opsjes",
+   "MM_OPTIONS_PREFERENCES":"Ynstellings",
+   "MM_OPTIONS_SHOW_CATEGORY":"Lit Kategory List sjen",
+   "MM_OPTIONS_SHOW_DETAIL":"Lit Detailleaerre Ynfo Sjen",
+   "MM_OPTIONS_SHOW_STATUS":"Lit Steatbalke Sjen",
+   "MM_OPTIONS_SHOW_TOOLBAR":"Lit Arkbalke sjen",
+   "MM_OPTIONS_TAB_ICONS":"Ikoantsjes op Tabs",
+   "MM_HELP":"Help",
+   "MM_HELP_UT_WEBPAGE":"µTorrent Webside",
+   "MM_HELP_UT_FORUMS":"µTorrent Foarums",
+   "MM_HELP_WEBUI_FEEDBACK":"Send WebUI Feedback",
+   "MM_HELP_ABOUT_WEBUI":"About µTorrent WebUI",
+   "STM_TORRENTS":"Torrents",
+   "STM_TORRENTS_PAUSEALL":"Skoftsje alle torrents",
+   "STM_TORRENTS_RESUMEALL":"Ferfetsje alle torrents",
+   "SB_DOWNLOAD":"Y: %s%z/s",
+   "SB_LOCAL":" L: %z/s",
+   "SB_OVERHEAD":" O: %z/s",
+   "SB_TOTAL":" T: %Z",
+   "SB_UPLOAD":"U: %s%z/s",
+   "SIZE_B":"B",
+   "SIZE_EB":"EB",
+   "SIZE_GB":"GB",
+   "SIZE_KB":"kB",
+   "SIZE_MB":"MB",
+   "SIZE_PB":"PB",
+   "SIZE_TB":"TB",
+   "ST_CAPT_ADVANCED":"Avansearre",
+   "ST_CAPT_BANDWIDTH":"Bânbreedte",
+   "ST_CAPT_CONNECTION":"Ferbining",
+   "ST_CAPT_DISK_CACHE":"Skiif Cache",
+   "ST_CAPT_FOLDER":"Mappen",
+   "ST_CAPT_GENERAL":"Algemien",
+   "ST_CAPT_SCHEDULER":"Planner",
+   "ST_CAPT_QUEUEING":"Yn wachtrige",
+   "ST_CAPT_UI_EXTRAS":"UI Extras",
+   "ST_CAPT_UI_SETTINGS":"UI Ynstelings",
+   "ST_CAPT_BITTORRENT":"BitTorrent",
+   "ST_CAPT_WEBUI":"Web UI",
+   "ST_CAPT_TRANSFER_CAP":"Transfer Cap",
+   "ST_CAPT_RUN_PROGRAM":"Run Program",
+   "ST_CBO_UI_DBLCLK_TOR":"Lit Eigenskippen sjen||Begjin/Stop||Map Iepenje||Lit Ynlaadbalke Sjen||",
+   "ST_CBO_ENCRYPTIONS":"Útskeakeld||Ynskeakeld||Forsearre||",
+   "ST_CBO_PROXY":"(gjin)||Socks4||Socks5||HTTPS||HTTP||",
+   "ST_CBO_TCAP_MODES":"Uploads||Downloads||Uploads + Downloads||",
+   "ST_CBO_TCAP_UNITS":"MB||GB||",
+   "ST_CBO_TCAP_PERIODS":"1||2||5||7||10||14||15||20||21||28||30||31||",
+   "ST_COL_NAME":"Namme",
+   "ST_COL_VALUE":"Wearde",
+   "ST_SCH_DAYCODES":"Mo||Ti||Wo||To||Fr||Sneon||Snein||",
+   "ST_SCH_DAYNAMES":"Moandei||Tiisdei||Woansdei||Tongersdei||Freed||Sneon||Snein||",
+   "ST_SCH_LGND_FULL":"Rap",
+   "ST_SCH_LGND_FULLEX":"Rap - Brûkt normale globale bânbreedte limyt",
+   "ST_SCH_LGND_LIMITED":"Limiteare",
+   "ST_SCH_LGND_LIMITEDEX":"Limiteare - Brûkt planner-spesifiseare bânbreedte limyt",
+   "ST_SCH_LGND_SEEDING":"Allinne seed",
+   "ST_SCH_LGND_SEEDINGEX":"Allinne seed - Alinne útladings data (inclusief ynkomplete)",
+   "ST_SCH_LGND_OFF":"Utsette",
+   "ST_SCH_LGND_OFFEX":"Utsette - Stopt alletorrents dy't net forseard binne",
+   "ST_SEEDTIMES_HOURS":"<= %d oeren",
+   "ST_SEEDTIMES_IGNORE":"(Negerje)",
+   "ST_SEEDTIMES_MINUTES":"<= %d minúten",
+   "TIME_DAYS_HOURS":"%dd %do",
+   "TIME_HOURS_MINS":"%do %dm",
+   "TIME_MINS_SECS":"%dm %ds",
+   "TIME_SECS":"%ds",
+   "TIME_WEEKS_DAYS":"%dw %dd",
+   "TIME_YEARS_WEEKS":"%dj %dw"
+}

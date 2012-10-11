@@ -5,473 +5,474 @@ Use of this source code is governed by a BSD-style that can be
 found in the LICENSE file.
 */
 
-var LANG_STR = [
-	  "Tập tin torrent||*.torrent||Tất cả tập tin (*.*)||*.*||"
-	, "OK"
-	, "Ngừng"
-	, "Áp dụng"
-	, "Đồng ý"
-	, "Không"
-	, "Đóng"
-	, "Cài đặt"
-	, "Ngôn ngữ"
-	, "Ngôn ngữ:"
-	, "Cá Nhân"
-	, "Tự động cập nhật"
-	, "Cập nhật phiên bản beta"
-	, "Gửi thông tin giả khi kiểm tra cập nhật"
-	, "Khi đang tải xuống"
-	, "Thêm đuôi .!ut vào các tập tin chưa hoàn thành"
-	, "Chuẩn bị sẵn bộ nhớ"
-	, "Không chuyển sang standby khi có torrent hoạt động"
-	, "Hiển thị"
-	, "Hỏi lại khi xóa torrent"
-	, "Hỏi lại khi xóa máy theo dõi"
-	, "Hỏi lại khi ấn thoát"
-	, "Xen kẽ màu nều danh sách"
-	, "Hiện tốc độ hiện thời ở title bar"
-	, "Hiện tốc độ giới hạn ở thanh tình trạng"
-	, "Khi đang thêm Torrent"
-	, "Không tự động tải về"
-	, "Mở của sổ chương trình"
-	, "Hiện cửa sổ thông báo về tất cả các tệp có trong torrent"
-	, "Chạy khi Double Click"
-	, "Với torrent đang tạo nguồn"
-	, "Với torrent đang tải xuống"
-	, "Vị trí của các tập tin đã tải về"
-	, "Đang tải về đặt tại:"
-	, "Luôn hiện bảng thông báo khi thêm tay"
-	, "Sau khi đã tải về đầy đủ chuyển đến:"
-	, "Gắn thêm nhãn của torrent"
-	, "Chỉ di chuyển từ thư mục tải về mặc định"
-	, "Vị trí của tập tin .torrent"
-	, "Chứa tập tin .torrent tại:"
-	, "Sau khi đã hoàn thành chuyển đến:"
-	, "Tự động chạy những tâp tin .torrent tại:"
-	, "Xóa tập tin .torrent đã tải xong"
-	, "Cổng mạng"
-	, "Cổng cho kết nối đến:"
-	, "Cổng bất kì"
-	, "Chọn một cổng bất kì khi khởi động"
-	, "Tự mở cổng UPnP"
-	, "Tự mở cổng NAT-PMP"
-	, "Proxy Server"
-	, "Dạng:"
-	, "Proxy:"
-	, "Cổng:"
-	, "Xác thực"
-	, "Tên:"
-	, "Mật mã:"
-	, "Phân tích tên miền qua proxy"
-	, "Sử dụng proxy cho kết nối máy tới máy"
-	, "Vượt tường lửa của Windows"
-	, "Máy phụ bảo mật"
-	, "Vô hiệu hóa tất cả tra cứu DSN nội bộ"
-	, "Vô hiệu hóa tính năng nhận dạng rò rỉ thông tin"
-	, "Vô hiệu hóa kết nối không được hỗ trợ bởi máy phụ"
-	, "Giới hạn tốc độ tải lên"
-	, "Tôc độ tải lên tối đa (kB/s): [0: không giới hạn]"
-	, "Tự động"
-	, "Tốc độ tải lên khi không tải xuống (kB/s):"
-	, "Giới hạn tốc độ tải xuống"
-	, "Tốc độ tải xuống tối đa (kB/s): [0: không giới hạn]"
-	, "Số lương kết nối"
-	, "Số lượng kết nối quôc tế tối đa:"
-	, "Số lượng kết nối đối vơi từng  torrent:"
-	, "Số lượng kết nối tải lên mỗi torrent:"
-	, "Thêm kết nối tải lên nếu tốc độ tải lên < 90%"
-	, "Global Rate Limit Options"
-	, "Áp dụng tốc độ giới hạn cho truyền tải quá hạn"
-	, "Áp dụng tốc độ giới hạn cho kết nối uTP"
-	, "Những tính năng căn bản của BitTorrent"
-	, "Dùng mạng DHT"
-	, "Hỏi tracker để có thêm thông tin"
-	, "Dùng DHT cho những torrent mới"
-	, "Chấp nhận trao đổi"
-	, "Tìm các Peer Cục Bộ"
-	, "Giới hạn tốc độ đối với máy cục bộ"
-	, "IP/Hostname để thông báo lên tracker:"
-	, "Giao thức mã hóa"
-	, "Kết nối ra:"
-	, "Cho phép các nối đến đã biết"
-	, "Bật quản lý băng thông [uTP]"
-	, "Mở hỗ trợ cho máy theo dõi UDP"
-	, "Enable Transfer Cap"
-	, "Cap Settings"
-	, "Kiểu giới hạn:"
-	, "Lưu lượng băng thông:"
-	, "Thời kì (ngày):"
-	, "Cách sử dụng lịch sử cho thời gian đã chọn:"
-	, "Tải lên:"
-	, "Tải xuống:"
-	, "Tải lên  Tải xuống:"
-	, "Thời gian:"
-	, "Cuối %d ngày"
-	, "Cài lại Lịch sử"
-	, "Sắp xếp"
-	, "Số lượng torrent hoạt động tối đa (tải lên và tải về):"
-	, "Số lượng hoạt động tải về tối đa:"
-	, "Seed tới khi [Giá trị căn bản]"
-	, "Tỉ lệ tối thiểu (%):"
-	, "Thời gian tìm nguồn tối thiểu (phút):"
-	, "Ưu tiên nhiệm vụ seed hơn nhiệm vụ tải"
-	, "Khi µTorrent đã chia sẽ đạt mục tiêu"
-	, "Giới hạn tốc độ tải lên (kB/s): [0: dừng]"
-	, "Lên kế hoạch"
-	, "Bảng kế hoạch"
-	, "Thiết lập kế hoạch"
-	, "Giới hạn tải lên (kB/s):"
-	, "Giới hạn tải xuống (kB/s):"
-	, "Bỏ DHT khi tắt"
-	, "Dùng giao diện Web"
-	, "Nhận dạng"
-	, "Tên đăng nhập:"
-	, "Mã đăng nhập:"
-	, "Sử dụng tài khoản khách với tên đăng nhập:"
-	, "Kết nối"
-	, "Chọn cổng lắng nghe (thông thường chính là cổng kết nối):"
-	, "Hạn chế kết nối với các địa chỉ IP: (dùng dấu phẩy phân cách):"
-	, "Điều chỉnh cao cấp [KHÔNG NÊN THAY ĐỔI!]"
-	, "Giá trị:"
-	, "Có"
-	, "Không"
-	, "Đặt"
-	, "Bảng thông báo tốc độ [Phân cách bởi dấu phẩy]"
-	, "Tự động thay đổi bảng thông báo tốc độ"
-	, "Bảng tốc độ tải lên:"
-	, "Bảng tốc độ tải xuống:"
-	, "Nhãn cố định [ nếu sử dụng nhiều nhãn thì phân cách bằng một dấu  | ]"
-	, "Tìm kiếm [Dạng: tên|URL]"
-	, "Điều chỉnh bộ đệm cơ bản"
-	, "Bộ đệm dùng để giữ kết nối thường liên tục đến dữ liệu của bộ nhớ để làm giảm việc đọc và ghi trên ổ cứng. µTorrent bình thường sẽ tự đông điều chỉnh bộ đệm, nhưng bạn có thể điều chỉnh việc này bằng cách thay đổi những thiết lâp này."
-	, "Tự động ghi đè kích thước bộ đệm và chỉ định kích thước bằng tay(MB):"
-	, "Giảm bộ nhớ sử dụng nếu tập tin đệm không cần thiết"
-	, "Điều chỉnh bộ đệm cao cấp"
-	, "Sử dụng bộ đệm khi ghi"
-	, "Viết ra những khối không dùng 2 phút một lần"
-	, "Viết ra những mảnh đã hoàn thành ngay lập tức"
-	, "Sử dụng bộ đệm khi đọc"
-	, "Bỏ bộ đệm đọc nếu tốc độ tải lên thấp"
-	, "Loại các khối cũ ra khỏi bộ đệm"
-	, "Tự động tăng kịch thước bộ đệm nếu không đủ"
-	, "Tắt bộ đệm ghi của Window"
-	, "Tắt bộ đệm đọc của Window"
-	, "Chạy chương trình"
-	, "Chạy chương trình này khi torrent hoàn thành:"
-	, "Chạy chương trình này khi torrent đổi trạng thái:"
-	, "Bạn có thể dùng những lệnh này:\r\n%F - Tên của tệp đã tải xuống (cho tệp torrent đơn)\r\n%D - Thư mục nơi tệp được lưu\r\n%N - Tiêu đề của torrent\r\n%S - Trạng thái của torrent\r\n%L - Nhãn\r\n%T - Máy theo dõi\r\n%M - Chuỗi tin nhắn trạng thái (giống như cột trạng thái)\r\n%I - thông tin phân mảnh mã hóa thập lục phân\r\n\r\nTrạng thái là sự kết hợp của:\r\nđã bắt đầu =1, đang kiểm tra = 2, bắt đầu sau khi kiểm tra = 4,\r\nđã kiểm tra = 8, lỗi = 16, đã tạm dừng = 32, tự động = 64, đã nạp = 128"
-	, "Thuộc tính của torrent"
-	, "Tracker (phân cách bẳng một khoảng trống)"
-	, "Điều chỉnh băng thông"
-	, "Tốc độ tải lên tối đa (kB/s): [0: cơ bản]"
-	, "Tốc độ tải về tối đa (kB/s): [0: cơ bản]"
-	, "Số kết nối tải lên: [0: cơ bản]"
-	, "Mục tiêu Seed"
-	, "Chuyển lại thiết lập cơ bản"
-	, "Tỉ lệ tối thiểu (%):"
-	, "Thời gian tìm nguồn tối thiểu (phút):"
-	, "Các thiệt lập khác"
-	, "Siêu Seed"
-	, "Sử dụng DHT"
-	, "Trao đổi"
-	, "Nguồn"
-	, "Nguồn URL"
-	, "Bí danh:"
-	, "Điều chỉnh"
-	, "Không tự động tải về tất cả các mục"
-	, "Tự động tải về tất cả các mục được xuất bản trong nguồn"
-	, "Sử dụng bộ lọc thông minh"
-	, "Nguồn||Ưa thích||Lịch sử||"
-	, "All Feeds"
-	, "Cài đặt bộ lọc"
-	, "Tên:"
-	, "Bộ lọc:"
-	, "Không:"
-	, "Ghi lại vào:"
-	, "Nguồn:"
-	, "Chất lượng:"
-	, "Vị trí: [vd. 1x12-14]"
-	, "Bộ lọc khớp với tên thật thay vì tên mã"
-	, "Không bắt đầu tải xuống tự động"
-	, "Bộ lọc thông minh"
-	, "Ưu tiên tải về mức tối đa"
-	, "Khoảng tối thiểu:"
-	, "Nhãn cho torrent mới:"
-	, "Thêm nguồn RSS..."
-	, "Điều chỉnh nguổn..."
-	, "Vộ hiệu hóa nguồn"
-	, "Sử dụng nguồn"
-	, "Cập nhật"
-	, "Xóa nguồn"
-	, "Tải về"
-	, "Mở URL trên Trình duyệt"
-	, "Thêm vào phần Ưa thích"
-	, "Thêm"
-	, "Xóa"
-	, "Tất cả"
-	, "(Tất cả)"
-	, "(luôn khớp)||(chỉ khớp một lần)||12 giờ||1 ngày||2 ngày||3 ngày||4 ngày||1 tuần||2 tuần||3 tuần||1 tháng||"
-	, "Thêm nguồn RSS"
-	, "Điều chỉnh nguổn RSS"
-	, "Remove RSS Feed(s)"
-	, "Really delete the %d selected RSS Feeds?"
-	, "Xóa nguồn của RSS \"%s\"?"
-	, "Tên đầy đủ"
-	, "Tên"
-	, "Khoảng"
-	, "Định dạng"
-	, "Mã"
-	, "Date"
-	, "Nguồn"
-	, "Nguôn URL"
-	, "IP"
-	, "Cổng"
-	, "Chương trình"
-	, "Tình trạng"
-	, "%"
-	, "Liên quan"
-	, "Tốc Độ Tải"
-	, "Tốc độ Tải lên"
-	, "Đăng kí"
-	, "Đợi"
-	, "Đã tải lên"
-	, "Đã tải về"
-	, "Chia nhỏ"
-	, "T.độ t.về M.khách"
-	, "Tải lên tối đa"
-	, "Tải về tối đa"
-	, "Chờ"
-	, "Không hoạt động"
-	, "Hoàn thành"
-	, "Mảnh đầu tiên"
-	, "Tên"
-	, "# Mảnh"
-	, "%"
-	, "Ưu tiên"
-	, "Kích thước"
-	, "bỏ qua"
-	, "thấp"
-	, "bình thường"
-	, "ưu tiên"
-	, "Đã tải về:"
-	, "Đã tải lên:"
-	, "Seed:"
-	, "Còn lại:"
-	, "Tốc độ tải về:"
-	, "Tốc độ tải lên:"
-	, "Peer:"
-	, "Tỉ lệ chia sẻ:"
-	, "Lưu lại với:"
-	, "Hash:"
-	, "Tổng quát"
-	, "Hoạt động"
-	, "%d của %d đã kết nối (%d trong tâp thể)"
-	, "TV:%s TL:%s - %s"
-	, "Sao chép"
-	, "Xác lập lại"
-	, "Không giới hạn"
-	, "Xác định rõ IP"
-	, "Get File(s)"
-	, "Không Tải Về"
-	, "Ưu Tiên"
-	, "Hạn Chế"
-	, "Bình Thường"
-	, "Sao URI từ tính"
-	, "Xóa Dữ Liệu"
-	, "Xóa .torrent"
-	, "Xóa .torrent + Dữ Liệu"
-	, "Kiểm tra lỗi [Bắt buộc]"
-	, "Bắt đầu [Bắt buộc]"
-	, "Nhãn"
-	, "Tạm dừng"
-	, "Đặc điểm"
-	, "Chuyển xuống"
-	, "Chuyển lên"
-	, "Xóa"
-	, "Xóa Và"
-	, "Bắt đầu"
-	, "Dừng"
-	, "Hoạt động"
-	, "Tất cả"
-	, "Đă hoàn thành"
-	, "Đang tải"
-	, "Không hoạt động"
-	, "Không nhãn"
-	, "||Khả Năng||Khả Năng"
-	, "Thêm vào"
-	, "Hoàn thành vào"
-	, "Hoàn thành"
-	, "Đă tải về"
-	, "Tốc Độ Tải"
-	, "ETA"
-	, "Nhãn"
-	, "Tên"
-	, "#"
-	, "Peer"
-	, "Còn lại"
-	, "Seed"
-	, "Seeds/Peers"
-	, "Tỉ lệ"
-	, "Kích thước"
-	, "Nguôn URL"
-	, "Tình trạng"
-	, "Đã tải lên"
-	, "Tốc độ Up"
-	, "Bạn thực sự muốn xóa %d torrent đã chọn cũng những đự liệu liên quan?"
-	, "Bạn thực sự muốn xóa torrent đã chọn và tất cả những dữ liệu liên quan"
-	, "Bạn có thực sự muốn xóa các %d torrent đã chọn?"
-	, "Bạn có thực sự muốn xóa các torrent đã chọn?"
-	, "Xóa lọc RSS \"%s\"?"
-	, "Kiểm tra %:.1d%%"
-	, "Đang tải"
-	, "Lỗi: %s"
-	, "Tải xong"
-	, "Tạm dừng"
-	, "Chờ"
-	, "Chờ để seed"
-	, "Đang seed"
-	, "Đã dừng"
-	, "Nhập nhãn"
-	, "Nhập nhãn mới cho torrent được chọn:"
-	, "Nhãn mới..."
-	, "Xóa nhãn"
-	, "Tổng quan||Tracker||Peer||Mảnh||Tập tin||Tốc độ||Nhật kí||"
-	, "Thêm torrent"
-	, "Thêm Torrent từ URL"
-	, "Tạm dừng"
-	, "Cài đặt"
-	, "Chuyển xuống"
-	, "Chuyển lên"
-	, "Xóa"
-	, "Tải bằng RSS"
-	, "Bắt đầu"
-	, "Dừng"
-	, "Chương trình"
-	, "Thêm torrent..."
-	, "Thêm torrent từ URL..."
-	, "Tuỳ chọn"
-	, "Điều chỉnh"
-	, "Hiện các nhóm"
-	, "Hiện thông tin chi tiết"
-	, "Mở thanh trạng thái"
-	, "Mở thanh công cụ"
-	, "Biểu tượng trên Thẻ"
-	, "Trợ giúp"
-	, "Trang chủ µTorrent"
-	, "Diễn đàn µTorrent"
-	, "Send WebUI Feedback"
-	, "About µTorrent WebUI"
-	, "Torrent"
-	, "Tạm dừng tất cả torrent"
-	, "Tiếp tục tất cả torrent"
-	, "TX: %s%z/s"
-	, " L: %z/s"
-	, " O: %z/s"
-	, " Tổng: %Z"
-	, "TL: %s%z/s"
-	, "B"
-	, "EB"
-	, "GB"
-	, "kB"
-	, "MB"
-	, "PB"
-	, "TB"
-	, "Nâng cao"
-	, "Băng thông"
-	, "Kết nối"
-	, "Bộ đệm"
-	, "Đường dẫn"
-	, "Tổng quan"
-	, "Kế hoạch"
-	, "Đang chờ"
-	, "Mở rộng"
-	, "Giao diện"
-	, "BitTorrent"
-	, "Giao diện Web"
-	, "Transfer Cap"
-	, "Chạy chương trình"
-	, "Hiện Đặc tính||Chạy/Dừng||Thư mục mở||Hiện thanh Tải xuống||"
-	, "Tắt||Bật||Bắt buộc||"
-	, "(không)||Socks4||Socks5||HTTPS||HTTP||"
-	, "Uploads||Downloads||Uploads + Downloads||"
-	, "MB||GB||"
-	, "1||2||5||7||10||14||15||20||21||28||30||31||"
-	, "Tên"
-	, "Giá trị"
-	, "THai||TBa||TTư||TNăm||TSáu||TBảy||CN||"
-	, "Thứ Hai||Thứ Ba||Thứ Tư||Thứ Năm||Thứ Sáu||Thứ Bảy||Chủ Nhật||"
-	, "Tốc độ tối đa"
-	, "Tốc độ tối đa - Sử dụng giới hạn băng thông quốc tế"
-	, "Hạn chế"
-	, "Giới Hạn - Uses scheduler-specified Giới hạn băng thông"
-	, "Chỉ Seed"
-	, "Chỉ Seed - Chỉ upload (bao gồm cả những file chưa hoàn thành)"
-	, "Tắt"
-	, "Tắt - Dừng mọi hoạt động những hoạt đông không bắt buộc chạy"
-	, "<= %d giờ"
-	, "(Bỏ qua)"
-	, "<= %d phút"
-	, "%dn %dt"
-	, "%dt %dp"
-	, "%dp %dg"
-	, "%dg"
-	, "%dt %dn"
-	, "%dn %dt"
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	"BitTorrent Remote",
-	"BitTorrent Remote provides an easy and highly secure way of accessing your client through a browser.",
-	"Just enable the connection below, choose a computer name and password and remember to leave this computer on.",
-	"Xem thêm",
-	"Enable BitTorrent Remote Access",
-	"Xác thực",
-	"Tên dùng:",
-	"Mật khẩu:",
-	"Gửi",
-	"BitTorrent Remote"
-];
+var LANG_STR =
+{
+   "CT_MASK1":"Tập tin torrent||*.torrent||Tất cả tập tin (*.*)||*.*||",
+   "DLG_BTN_OK":"OK",
+   "DLG_BTN_CANCEL":"Ngừng",
+   "DLG_BTN_APPLY":"Áp dụng",
+   "DLG_BTN_YES":"Đồng ý",
+   "DLG_BTN_NO":"Không",
+   "DLG_BTN_CLOSE":"Đóng",
+   "DLG_SETTINGS_00":"Cài đặt",
+   "DLG_SETTINGS_1_GENERAL_01":"Ngôn ngữ",
+   "DLG_SETTINGS_1_GENERAL_02":"Ngôn ngữ:",
+   "DLG_SETTINGS_1_GENERAL_10":"Cá Nhân",
+   "DLG_SETTINGS_1_GENERAL_11":"Tự động cập nhật",
+   "DLG_SETTINGS_1_GENERAL_12":"Cập nhật phiên bản beta",
+   "DLG_SETTINGS_1_GENERAL_13":"Gửi thông tin giả khi kiểm tra cập nhật",
+   "DLG_SETTINGS_1_GENERAL_17":"Khi đang tải xuống",
+   "DLG_SETTINGS_1_GENERAL_18":"Thêm đuôi .!ut vào các tập tin chưa hoàn thành",
+   "DLG_SETTINGS_1_GENERAL_19":"Chuẩn bị sẵn bộ nhớ",
+   "DLG_SETTINGS_1_GENERAL_20":"Không chuyển sang standby khi có torrent hoạt động",
+   "DLG_SETTINGS_2_UI_01":"Hiển thị",
+   "DLG_SETTINGS_2_UI_02":"Hỏi lại khi xóa torrent",
+   "DLG_SETTINGS_2_UI_03":"Hỏi lại khi xóa máy theo dõi",
+   "DLG_SETTINGS_2_UI_04":"Hỏi lại khi ấn thoát",
+   "DLG_SETTINGS_2_UI_05":"Xen kẽ màu nều danh sách",
+   "DLG_SETTINGS_2_UI_06":"Hiện tốc độ hiện thời ở title bar",
+   "DLG_SETTINGS_2_UI_07":"Hiện tốc độ giới hạn ở thanh tình trạng",
+   "DLG_SETTINGS_2_UI_15":"Khi đang thêm Torrent",
+   "DLG_SETTINGS_2_UI_16":"Không tự động tải về",
+   "DLG_SETTINGS_2_UI_17":"Mở của sổ chương trình",
+   "DLG_SETTINGS_2_UI_18":"Hiện cửa sổ thông báo về tất cả các tệp có trong torrent",
+   "DLG_SETTINGS_2_UI_19":"Chạy khi Double Click",
+   "DLG_SETTINGS_2_UI_20":"Với torrent đang tạo nguồn",
+   "DLG_SETTINGS_2_UI_22":"Với torrent đang tải xuống",
+   "DLG_SETTINGS_3_PATHS_01":"Vị trí của các tập tin đã tải về",
+   "DLG_SETTINGS_3_PATHS_02":"Đang tải về đặt tại:",
+   "DLG_SETTINGS_3_PATHS_03":"Luôn hiện bảng thông báo khi thêm tay",
+   "DLG_SETTINGS_3_PATHS_06":"Sau khi đã tải về đầy đủ chuyển đến:",
+   "DLG_SETTINGS_3_PATHS_07":"Gắn thêm nhãn của torrent",
+   "DLG_SETTINGS_3_PATHS_10":"Chỉ di chuyển từ thư mục tải về mặc định",
+   "DLG_SETTINGS_3_PATHS_11":"Vị trí của tập tin .torrent",
+   "DLG_SETTINGS_3_PATHS_12":"Chứa tập tin .torrent tại:",
+   "DLG_SETTINGS_3_PATHS_15":"Sau khi đã hoàn thành chuyển đến:",
+   "DLG_SETTINGS_3_PATHS_18":"Tự động chạy những tâp tin .torrent tại:",
+   "DLG_SETTINGS_3_PATHS_19":"Xóa tập tin .torrent đã tải xong",
+   "DLG_SETTINGS_4_CONN_01":"Cổng mạng",
+   "DLG_SETTINGS_4_CONN_02":"Cổng cho kết nối đến:",
+   "DLG_SETTINGS_4_CONN_04":"Cổng bất kì",
+   "DLG_SETTINGS_4_CONN_05":"Chọn một cổng bất kì khi khởi động",
+   "DLG_SETTINGS_4_CONN_06":"Tự mở cổng UPnP",
+   "DLG_SETTINGS_4_CONN_07":"Tự mở cổng NAT-PMP",
+   "DLG_SETTINGS_4_CONN_08":"Proxy Server",
+   "DLG_SETTINGS_4_CONN_09":"Dạng:",
+   "DLG_SETTINGS_4_CONN_11":"Proxy:",
+   "DLG_SETTINGS_4_CONN_13":"Cổng:",
+   "DLG_SETTINGS_4_CONN_15":"Xác thực",
+   "DLG_SETTINGS_4_CONN_16":"Tên:",
+   "DLG_SETTINGS_4_CONN_18":"Mật mã:",
+   "DLG_SETTINGS_4_CONN_19":"Phân tích tên miền qua proxy",
+   "DLG_SETTINGS_4_CONN_20":"Sử dụng proxy cho kết nối máy tới máy",
+   "DLG_SETTINGS_4_CONN_21":"Vượt tường lửa của Windows",
+   "DLG_SETTINGS_4_CONN_22":"Máy phụ bảo mật",
+   "DLG_SETTINGS_4_CONN_23":"Vô hiệu hóa tất cả tra cứu DSN nội bộ",
+   "DLG_SETTINGS_4_CONN_24":"Vô hiệu hóa tính năng nhận dạng rò rỉ thông tin",
+   "DLG_SETTINGS_4_CONN_25":"Vô hiệu hóa kết nối không được hỗ trợ bởi máy phụ",
+   "DLG_SETTINGS_5_BANDWIDTH_01":"Giới hạn tốc độ tải lên",
+   "DLG_SETTINGS_5_BANDWIDTH_02":"Tôc độ tải lên tối đa (kB/s): [0: không giới hạn]",
+   "DLG_SETTINGS_5_BANDWIDTH_03":"Tự động",
+   "DLG_SETTINGS_5_BANDWIDTH_05":"Tốc độ tải lên khi không tải xuống (kB/s):",
+   "DLG_SETTINGS_5_BANDWIDTH_07":"Giới hạn tốc độ tải xuống",
+   "DLG_SETTINGS_5_BANDWIDTH_08":"Tốc độ tải xuống tối đa (kB/s): [0: không giới hạn]",
+   "DLG_SETTINGS_5_BANDWIDTH_10":"Số lương kết nối",
+   "DLG_SETTINGS_5_BANDWIDTH_11":"Số lượng kết nối quôc tế tối đa:",
+   "DLG_SETTINGS_5_BANDWIDTH_14":"Số lượng kết nối đối vơi từng torrent:",
+   "DLG_SETTINGS_5_BANDWIDTH_15":"Số lượng kết nối tải lên mỗi torrent:",
+   "DLG_SETTINGS_5_BANDWIDTH_17":"Thêm kết nối tải lên nếu tốc độ tải lên < 90%",
+   "DLG_SETTINGS_5_BANDWIDTH_18":"Global Rate Limit Options",
+   "DLG_SETTINGS_5_BANDWIDTH_19":"Áp dụng tốc độ giới hạn cho truyền tải quá hạn",
+   "DLG_SETTINGS_5_BANDWIDTH_20":"Áp dụng tốc độ giới hạn cho kết nối uTP",
+   "DLG_SETTINGS_6_BITTORRENT_01":"Những tính năng căn bản của BitTorrent",
+   "DLG_SETTINGS_6_BITTORRENT_02":"Dùng mạng DHT",
+   "DLG_SETTINGS_6_BITTORRENT_03":"Hỏi tracker để có thêm thông tin",
+   "DLG_SETTINGS_6_BITTORRENT_04":"Dùng DHT cho những torrent mới",
+   "DLG_SETTINGS_6_BITTORRENT_05":"Chấp nhận trao đổi",
+   "DLG_SETTINGS_6_BITTORRENT_06":"Tìm các Peer Cục Bộ",
+   "DLG_SETTINGS_6_BITTORRENT_07":"Giới hạn tốc độ đối với máy cục bộ",
+   "DLG_SETTINGS_6_BITTORRENT_08":"IP/Hostname để thông báo lên tracker:",
+   "DLG_SETTINGS_6_BITTORRENT_10":"Giao thức mã hóa",
+   "DLG_SETTINGS_6_BITTORRENT_11":"Kết nối ra:",
+   "DLG_SETTINGS_6_BITTORRENT_13":"Cho phép các nối đến đã biết",
+   "DLG_SETTINGS_6_BITTORRENT_14":"Bật quản lý băng thông [uTP]",
+   "DLG_SETTINGS_6_BITTORRENT_15":"Mở hỗ trợ cho máy theo dõi UDP",
+   "DLG_SETTINGS_7_TRANSFERCAP_01":"Enable Transfer Cap",
+   "DLG_SETTINGS_7_TRANSFERCAP_02":"Cap Settings",
+   "DLG_SETTINGS_7_TRANSFERCAP_03":"Kiểu giới hạn:",
+   "DLG_SETTINGS_7_TRANSFERCAP_04":"Lưu lượng băng thông:",
+   "DLG_SETTINGS_7_TRANSFERCAP_05":"Thời kì (ngày):",
+   "DLG_SETTINGS_7_TRANSFERCAP_06":"Cách sử dụng lịch sử cho thời gian đã chọn:",
+   "DLG_SETTINGS_7_TRANSFERCAP_07":"Tải lên:",
+   "DLG_SETTINGS_7_TRANSFERCAP_08":"Tải xuống:",
+   "DLG_SETTINGS_7_TRANSFERCAP_09":"Tải lên Tải xuống:",
+   "DLG_SETTINGS_7_TRANSFERCAP_10":"Thời gian:",
+   "DLG_SETTINGS_7_TRANSFERCAP_11":"Cuối %d ngày",
+   "DLG_SETTINGS_7_TRANSFERCAP_12":"Cài lại Lịch sử",
+   "DLG_SETTINGS_8_QUEUEING_01":"Sắp xếp",
+   "DLG_SETTINGS_8_QUEUEING_02":"Số lượng torrent hoạt động tối đa (tải lên và tải về):",
+   "DLG_SETTINGS_8_QUEUEING_04":"Số lượng hoạt động tải về tối đa:",
+   "DLG_SETTINGS_8_QUEUEING_06":"Seed tới khi [Giá trị căn bản]",
+   "DLG_SETTINGS_8_QUEUEING_07":"Tỉ lệ tối thiểu (%):",
+   "DLG_SETTINGS_8_QUEUEING_09":"Thời gian tìm nguồn tối thiểu (phút):",
+   "DLG_SETTINGS_8_QUEUEING_11":"Ưu tiên nhiệm vụ seed hơn nhiệm vụ tải",
+   "DLG_SETTINGS_8_QUEUEING_12":"Khi µTorrent đã chia sẽ đạt mục tiêu",
+   "DLG_SETTINGS_8_QUEUEING_13":"Giới hạn tốc độ tải lên (kB/s): [0: dừng]",
+   "DLG_SETTINGS_9_SCHEDULER_01":"Lên kế hoạch",
+   "DLG_SETTINGS_9_SCHEDULER_02":"Bảng kế hoạch",
+   "DLG_SETTINGS_9_SCHEDULER_04":"Thiết lập kế hoạch",
+   "DLG_SETTINGS_9_SCHEDULER_05":"Giới hạn tải lên (kB/s):",
+   "DLG_SETTINGS_9_SCHEDULER_07":"Giới hạn tải xuống (kB/s):",
+   "DLG_SETTINGS_9_SCHEDULER_09":"Bỏ DHT khi tắt",
+   "DLG_SETTINGS_9_WEBUI_01":"Dùng giao diện Web",
+   "DLG_SETTINGS_9_WEBUI_02":"Nhận dạng",
+   "DLG_SETTINGS_9_WEBUI_03":"Tên đăng nhập:",
+   "DLG_SETTINGS_9_WEBUI_05":"Mã đăng nhập:",
+   "DLG_SETTINGS_9_WEBUI_07":"Sử dụng tài khoản khách với tên đăng nhập:",
+   "DLG_SETTINGS_9_WEBUI_09":"Kết nối",
+   "DLG_SETTINGS_9_WEBUI_10":"Chọn cổng lắng nghe (thông thường chính là cổng kết nối):",
+   "DLG_SETTINGS_9_WEBUI_12":"Hạn chế kết nối với các địa chỉ IP: (dùng dấu phẩy phân cách):",
+   "DLG_SETTINGS_A_ADVANCED_01":"Điều chỉnh cao cấp [KHÔNG NÊN THAY ĐỔI!]",
+   "DLG_SETTINGS_A_ADVANCED_02":"Giá trị:",
+   "DLG_SETTINGS_A_ADVANCED_03":"Có",
+   "DLG_SETTINGS_A_ADVANCED_04":"Không",
+   "DLG_SETTINGS_A_ADVANCED_05":"Đặt",
+   "DLG_SETTINGS_B_ADV_UI_01":"Bảng thông báo tốc độ [Phân cách bởi dấu phẩy]",
+   "DLG_SETTINGS_B_ADV_UI_02":"Tự động thay đổi bảng thông báo tốc độ",
+   "DLG_SETTINGS_B_ADV_UI_03":"Bảng tốc độ tải lên:",
+   "DLG_SETTINGS_B_ADV_UI_05":"Bảng tốc độ tải xuống:",
+   "DLG_SETTINGS_B_ADV_UI_07":"Nhãn cố định [ nếu sử dụng nhiều nhãn thì phân cách bằng một dấu | ]",
+   "DLG_SETTINGS_B_ADV_UI_08":"Tìm kiếm [Dạng: tên|URL]",
+   "DLG_SETTINGS_C_ADV_CACHE_01":"Điều chỉnh bộ đệm cơ bản",
+   "DLG_SETTINGS_C_ADV_CACHE_02":"Bộ đệm dùng để giữ kết nối thường liên tục đến dữ liệu của bộ nhớ để làm giảm việc đọc và ghi trên ổ cứng. µTorrent bình thường sẽ tự đông điều chỉnh bộ đệm, nhưng bạn có thể điều chỉnh việc này bằng cách thay đổi những thiết lâp này.",
+   "DLG_SETTINGS_C_ADV_CACHE_03":"Tự động ghi đè kích thước bộ đệm và chỉ định kích thước bằng tay(MB):",
+   "DLG_SETTINGS_C_ADV_CACHE_05":"Giảm bộ nhớ sử dụng nếu tập tin đệm không cần thiết",
+   "DLG_SETTINGS_C_ADV_CACHE_06":"Điều chỉnh bộ đệm cao cấp",
+   "DLG_SETTINGS_C_ADV_CACHE_07":"Sử dụng bộ đệm khi ghi",
+   "DLG_SETTINGS_C_ADV_CACHE_08":"Viết ra những khối không dùng 2 phút một lần",
+   "DLG_SETTINGS_C_ADV_CACHE_09":"Viết ra những mảnh đã hoàn thành ngay lập tức",
+   "DLG_SETTINGS_C_ADV_CACHE_10":"Sử dụng bộ đệm khi đọc",
+   "DLG_SETTINGS_C_ADV_CACHE_11":"Bỏ bộ đệm đọc nếu tốc độ tải lên thấp",
+   "DLG_SETTINGS_C_ADV_CACHE_12":"Loại các khối cũ ra khỏi bộ đệm",
+   "DLG_SETTINGS_C_ADV_CACHE_13":"Tự động tăng kịch thước bộ đệm nếu không đủ",
+   "DLG_SETTINGS_C_ADV_CACHE_14":"Tắt bộ đệm ghi của Window",
+   "DLG_SETTINGS_C_ADV_CACHE_15":"Tắt bộ đệm đọc của Window",
+   "DLG_SETTINGS_C_ADV_RUN_01":"Chạy chương trình",
+   "DLG_SETTINGS_C_ADV_RUN_02":"Chạy chương trình này khi torrent hoàn thành:",
+   "DLG_SETTINGS_C_ADV_RUN_04":"Chạy chương trình này khi torrent đổi trạng thái:",
+   "DLG_SETTINGS_C_ADV_RUN_06":"Bạn có thể dùng những lệnh này:\r\n%F - Tên của tệp đã tải xuống (cho tệp torrent đơn)\r\n%D - Thư mục nơi tệp được lưu\r\n%N - Tiêu đề của torrent\r\n%S - Trạng thái của torrent\r\n%L - Nhãn\r\n%T - Máy theo dõi\r\n%M - Chuỗi tin nhắn trạng thái (giống như cột trạng thái)\r\n%I - thông tin phân mảnh mã hóa thập lục phân\r\n\r\nTrạng thái là sự kết hợp của:\r\nđã bắt đầu =1, đang kiểm tra = 2, bắt đầu sau khi kiểm tra = 4,\r\nđã kiểm tra = 8, lỗi = 16, đã tạm dừng = 32, tự động = 64, đã nạp = 128",
+   "DLG_TORRENTPROP_00":"Thuộc tính của torrent",
+   "DLG_TORRENTPROP_1_GEN_01":"Tracker (phân cách bẳng một khoảng trống)",
+   "DLG_TORRENTPROP_1_GEN_03":"Điều chỉnh băng thông",
+   "DLG_TORRENTPROP_1_GEN_04":"Tốc độ tải lên tối đa (kB/s): [0: cơ bản]",
+   "DLG_TORRENTPROP_1_GEN_06":"Tốc độ tải về tối đa (kB/s): [0: cơ bản]",
+   "DLG_TORRENTPROP_1_GEN_08":"Số kết nối tải lên: [0: cơ bản]",
+   "DLG_TORRENTPROP_1_GEN_10":"Mục tiêu Seed",
+   "DLG_TORRENTPROP_1_GEN_11":"Chuyển lại thiết lập cơ bản",
+   "DLG_TORRENTPROP_1_GEN_12":"Tỉ lệ tối thiểu (%):",
+   "DLG_TORRENTPROP_1_GEN_14":"Thời gian tìm nguồn tối thiểu (phút):",
+   "DLG_TORRENTPROP_1_GEN_16":"Các thiệt lập khác",
+   "DLG_TORRENTPROP_1_GEN_17":"Siêu Seed",
+   "DLG_TORRENTPROP_1_GEN_18":"Sử dụng DHT",
+   "DLG_TORRENTPROP_1_GEN_19":"Trao đổi",
+   "DLG_ADDEDITRSSFEED_03":"Nguồn",
+   "DLG_ADDEDITRSSFEED_04":"Nguồn URL",
+   "DLG_ADDEDITRSSFEED_05":"Bí danh:",
+   "DLG_ADDEDITRSSFEED_06":"Điều chỉnh",
+   "DLG_ADDEDITRSSFEED_07":"Không tự động tải về tất cả các mục",
+   "DLG_ADDEDITRSSFEED_08":"Tự động tải về tất cả các mục được xuất bản trong nguồn",
+   "DLG_ADDEDITRSSFEED_09":"Sử dụng bộ lọc thông minh",
+   "DLG_RSSDOWNLOADER_02":"Nguồn||Ưa thích||Lịch sử||",
+   "DLG_RSSDOWNLOADER_03":"All Feeds",
+   "DLG_RSSDOWNLOADER_04":"Cài đặt bộ lọc",
+   "DLG_RSSDOWNLOADER_05":"Tên:",
+   "DLG_RSSDOWNLOADER_06":"Bộ lọc:",
+   "DLG_RSSDOWNLOADER_07":"Không:",
+   "DLG_RSSDOWNLOADER_08":"Ghi lại vào:",
+   "DLG_RSSDOWNLOADER_09":"Nguồn:",
+   "DLG_RSSDOWNLOADER_10":"Chất lượng:",
+   "DLG_RSSDOWNLOADER_11":"Vị trí: [vd. 1x12-14]",
+   "DLG_RSSDOWNLOADER_12":"Bộ lọc khớp với tên thật thay vì tên mã",
+   "DLG_RSSDOWNLOADER_13":"Không bắt đầu tải xuống tự động",
+   "DLG_RSSDOWNLOADER_14":"Bộ lọc thông minh",
+   "DLG_RSSDOWNLOADER_15":"Ưu tiên tải về mức tối đa",
+   "DLG_RSSDOWNLOADER_16":"Khoảng tối thiểu:",
+   "DLG_RSSDOWNLOADER_17":"Nhãn cho torrent mới:",
+   "DLG_RSSDOWNLOADER_18":"Thêm nguồn RSS...",
+   "DLG_RSSDOWNLOADER_19":"Điều chỉnh nguổn...",
+   "DLG_RSSDOWNLOADER_20":"Vộ hiệu hóa nguồn",
+   "DLG_RSSDOWNLOADER_21":"Sử dụng nguồn",
+   "DLG_RSSDOWNLOADER_22":"Cập nhật",
+   "DLG_RSSDOWNLOADER_23":"Xóa nguồn",
+   "DLG_RSSDOWNLOADER_24":"Tải về",
+   "DLG_RSSDOWNLOADER_25":"Mở URL trên Trình duyệt",
+   "DLG_RSSDOWNLOADER_26":"Thêm vào phần Ưa thích",
+   "DLG_RSSDOWNLOADER_27":"Thêm",
+   "DLG_RSSDOWNLOADER_28":"Xóa",
+   "DLG_RSSDOWNLOADER_29":"Tất cả",
+   "DLG_RSSDOWNLOADER_30":"(Tất cả)",
+   "DLG_RSSDOWNLOADER_31":"(luôn khớp)||(chỉ khớp một lần)||12 giờ||1 ngày||2 ngày||3 ngày||4 ngày||1 tuần||2 tuần||3 tuần||1 tháng||",
+   "DLG_RSSDOWNLOADER_32":"Thêm nguồn RSS",
+   "DLG_RSSDOWNLOADER_33":"Điều chỉnh nguổn RSS",
+   "DLG_RSSDOWNLOADER_34":"Remove RSS Feed(s)",
+   "DLG_RSSDOWNLOADER_35":"Really delete the %d selected RSS Feeds?",
+   "DLG_RSSDOWNLOADER_36":"Xóa nguồn của RSS \"%s\"?",
+   "FEED_COL_FULLNAME":"Tên đầy đủ",
+   "FEED_COL_NAME":"Tên",
+   "FEED_COL_EPISODE":"Khoảng",
+   "FEED_COL_FORMAT":"Định dạng",
+   "FEED_COL_CODEC":"Mã",
+   "FEED_COL_DATE":"Date",
+   "FEED_COL_FEED":"Nguồn",
+   "FEED_COL_URL":"Nguôn URL",
+   "PRS_COL_IP":"IP",
+   "PRS_COL_PORT":"Cổng",
+   "PRS_COL_CLIENT":"Chương trình",
+   "PRS_COL_FLAGS":"Tình trạng",
+   "PRS_COL_PCNT":"%",
+   "PRS_COL_RELEVANCE":"Liên quan",
+   "PRS_COL_DOWNSPEED":"Tốc Độ Tải",
+   "PRS_COL_UPSPEED":"Tốc độ Tải lên",
+   "PRS_COL_REQS":"Đăng kí",
+   "PRS_COL_WAITED":"Đợi",
+   "PRS_COL_UPLOADED":"Đã tải lên",
+   "PRS_COL_DOWNLOADED":"Đã tải về",
+   "PRS_COL_HASHERR":"Chia nhỏ",
+   "PRS_COL_PEERDL":"T.độ t.về M.khách",
+   "PRS_COL_MAXUP":"Tải lên tối đa",
+   "PRS_COL_MAXDOWN":"Tải về tối đa",
+   "PRS_COL_QUEUED":"Chờ",
+   "PRS_COL_INACTIVE":"Không hoạt động",
+   "FI_COL_DONE":"Hoàn thành",
+   "FI_COL_FIRSTPC":"Mảnh đầu tiên",
+   "FI_COL_NAME":"Tên",
+   "FI_COL_NUMPCS":"# Mảnh",
+   "FI_COL_PCNT":"%",
+   "FI_COL_PRIO":"Ưu tiên",
+   "FI_COL_SIZE":"Kích thước",
+   "FI_PRI0":"bỏ qua",
+   "FI_PRI1":"thấp",
+   "FI_PRI2":"bình thường",
+   "FI_PRI3":"ưu tiên",
+   "GN_TP_01":"Đã tải về:",
+   "GN_TP_02":"Đã tải lên:",
+   "GN_TP_03":"Seed:",
+   "GN_TP_04":"Còn lại:",
+   "GN_TP_05":"Tốc độ tải về:",
+   "GN_TP_06":"Tốc độ tải lên:",
+   "GN_TP_07":"Peer:",
+   "GN_TP_08":"Tỉ lệ chia sẻ:",
+   "GN_TP_09":"Lưu lại với:",
+   "GN_TP_10":"Hash:",
+   "GN_GENERAL":"Tổng quát",
+   "GN_TRANSFER":"Hoạt động",
+   "GN_XCONN":"%d của %d đã kết nối (%d trong tâp thể)",
+   "MAIN_TITLEBAR_SPEED":"TV:%s TL:%s - %s",
+   "MENU_COPY":"Sao chép",
+   "MENU_RESET":"Xác lập lại",
+   "MENU_UNLIMITED":"Không giới hạn",
+   "MP_RESOLVE_IPS":"Xác định rõ IP",
+   "MF_GETFILE":"Get File(s)",
+   "MF_DONT":"Không Tải Về",
+   "MF_HIGH":"Ưu Tiên",
+   "MF_LOW":"Hạn Chế",
+   "MF_NORMAL":"Bình Thường",
+   "ML_COPY_MAGNETURI":"Sao URI từ tính",
+   "ML_DELETE_DATA":"Xóa Dữ Liệu",
+   "ML_DELETE_TORRENT":"Xóa .torrent",
+   "ML_DELETE_DATATORRENT":"Xóa .torrent + Dữ Liệu",
+   "ML_FORCE_RECHECK":"Kiểm tra lỗi [Bắt buộc]",
+   "ML_FORCE_START":"Bắt đầu [Bắt buộc]",
+   "ML_LABEL":"Nhãn",
+   "ML_PAUSE":"Tạm dừng",
+   "ML_PROPERTIES":"Đặc điểm",
+   "ML_QUEUEDOWN":"Chuyển xuống",
+   "ML_QUEUEUP":"Chuyển lên",
+   "ML_REMOVE":"Xóa",
+   "ML_REMOVE_AND":"Xóa Và",
+   "ML_START":"Bắt đầu",
+   "ML_STOP":"Dừng",
+   "OV_CAT_ACTIVE":"Hoạt động",
+   "OV_CAT_ALL":"Tất cả",
+   "OV_CAT_COMPL":"Đă hoàn thành",
+   "OV_CAT_DL":"Đang tải",
+   "OV_CAT_INACTIVE":"Không hoạt động",
+   "OV_CAT_NOLABEL":"Không nhãn",
+   "OV_COL_AVAIL":"||Khả Năng||Khả Năng",
+   "OV_COL_DATE_ADDED":"Thêm vào",
+   "OV_COL_DATE_COMPLETED":"Hoàn thành vào",
+   "OV_COL_DONE":"Hoàn thành",
+   "OV_COL_DOWNLOADED":"Đă tải về",
+   "OV_COL_DOWNSPD":"Tốc Độ Tải",
+   "OV_COL_ETA":"ETA",
+   "OV_COL_LABEL":"Nhãn",
+   "OV_COL_NAME":"Tên",
+   "OV_COL_ORDER":"#",
+   "OV_COL_PEERS":"Peer",
+   "OV_COL_REMAINING":"Còn lại",
+   "OV_COL_SEEDS":"Seed",
+   "OV_COL_SEEDS_PEERS":"Seeds/Peers",
+   "OV_COL_SHARED":"Tỉ lệ",
+   "OV_COL_SIZE":"Kích thước",
+   "OV_COL_SOURCE_URL":"Nguôn URL",
+   "OV_COL_STATUS":"Tình trạng",
+   "OV_COL_UPPED":"Đã tải lên",
+   "OV_COL_UPSPD":"Tốc độ Up",
+   "OV_CONFIRM_DELETEDATA_MULTIPLE":"Bạn thực sự muốn xóa %d torrent đã chọn cũng những đự liệu liên quan?",
+   "OV_CONFIRM_DELETEDATA_ONE":"Bạn thực sự muốn xóa torrent đã chọn và tất cả những dữ liệu liên quan",
+   "OV_CONFIRM_DELETE_MULTIPLE":"Bạn có thực sự muốn xóa các %d torrent đã chọn?",
+   "OV_CONFIRM_DELETE_ONE":"Bạn có thực sự muốn xóa các torrent đã chọn?",
+   "OV_CONFIRM_DELETE_RSSFILTER":"Xóa lọc RSS \"%s\"?",
+   "OV_FL_CHECKED":"Kiểm tra %:.1d%",
+   "OV_FL_DOWNLOADING":"Đang tải",
+   "OV_FL_ERROR":"Lỗi: %s",
+   "OV_FL_FINISHED":"Tải xong",
+   "OV_FL_PAUSED":"Tạm dừng",
+   "OV_FL_QUEUED":"Chờ",
+   "OV_FL_QUEUED_SEED":"Chờ để seed",
+   "OV_FL_SEEDING":"Đang seed",
+   "OV_FL_STOPPED":"Đã dừng",
+   "OV_NEWLABEL_CAPTION":"Nhập nhãn",
+   "OV_NEWLABEL_TEXT":"Nhập nhãn mới cho torrent được chọn:",
+   "OV_NEW_LABEL":"Nhãn mới...",
+   "OV_REMOVE_LABEL":"Xóa nhãn",
+   "OV_TABS":"Tổng quan||Tracker||Peer||Mảnh||Tập tin||Tốc độ||Nhật kí||",
+   "OV_TB_ADDTORR":"Thêm torrent",
+   "OV_TB_ADDURL":"Thêm Torrent từ URL",
+   "OV_TB_PAUSE":"Tạm dừng",
+   "OV_TB_PREF":"Cài đặt",
+   "OV_TB_QUEUEDOWN":"Chuyển xuống",
+   "OV_TB_QUEUEUP":"Chuyển lên",
+   "OV_TB_REMOVE":"Xóa",
+   "OV_TB_RSSDOWNLDR":"Tải bằng RSS",
+   "OV_TB_START":"Bắt đầu",
+   "OV_TB_STOP":"Dừng",
+   "MM_FILE":"Chương trình",
+   "MM_FILE_ADD_TORRENT":"Thêm torrent...",
+   "MM_FILE_ADD_URL":"Thêm torrent từ URL...",
+   "MM_OPTIONS":"Tuỳ chọn",
+   "MM_OPTIONS_PREFERENCES":"Điều chỉnh",
+   "MM_OPTIONS_SHOW_CATEGORY":"Hiện các nhóm",
+   "MM_OPTIONS_SHOW_DETAIL":"Hiện thông tin chi tiết",
+   "MM_OPTIONS_SHOW_STATUS":"Mở thanh trạng thái",
+   "MM_OPTIONS_SHOW_TOOLBAR":"Mở thanh công cụ",
+   "MM_OPTIONS_TAB_ICONS":"Biểu tượng trên Thẻ",
+   "MM_HELP":"Trợ giúp",
+   "MM_HELP_UT_WEBPAGE":"Trang chủ µTorrent",
+   "MM_HELP_UT_FORUMS":"Diễn đàn µTorrent",
+   "MM_HELP_WEBUI_FEEDBACK":"Send WebUI Feedback",
+   "MM_HELP_ABOUT_WEBUI":"About µTorrent WebUI",
+   "STM_TORRENTS":"Torrent",
+   "STM_TORRENTS_PAUSEALL":"Tạm dừng tất cả torrent",
+   "STM_TORRENTS_RESUMEALL":"Tiếp tục tất cả torrent",
+   "SB_DOWNLOAD":"TX: %s%z/s",
+   "SB_LOCAL":" L: %z/s",
+   "SB_OVERHEAD":" O: %z/s",
+   "SB_TOTAL":" Tổng: %Z",
+   "SB_UPLOAD":"TL: %s%z/s",
+   "SIZE_B":"B",
+   "SIZE_EB":"EB",
+   "SIZE_GB":"GB",
+   "SIZE_KB":"kB",
+   "SIZE_MB":"MB",
+   "SIZE_PB":"PB",
+   "SIZE_TB":"TB",
+   "ST_CAPT_ADVANCED":"Nâng cao",
+   "ST_CAPT_BANDWIDTH":"Băng thông",
+   "ST_CAPT_CONNECTION":"Kết nối",
+   "ST_CAPT_DISK_CACHE":"Bộ đệm",
+   "ST_CAPT_FOLDER":"Đường dẫn",
+   "ST_CAPT_GENERAL":"Tổng quan",
+   "ST_CAPT_SCHEDULER":"Kế hoạch",
+   "ST_CAPT_QUEUEING":"Đang chờ",
+   "ST_CAPT_UI_EXTRAS":"Mở rộng",
+   "ST_CAPT_UI_SETTINGS":"Giao diện",
+   "ST_CAPT_BITTORRENT":"BitTorrent",
+   "ST_CAPT_WEBUI":"Giao diện Web",
+   "ST_CAPT_TRANSFER_CAP":"Transfer Cap",
+   "ST_CAPT_RUN_PROGRAM":"Chạy chương trình",
+   "ST_CBO_UI_DBLCLK_TOR":"Hiện Đặc tính||Chạy/Dừng||Thư mục mở||Hiện thanh Tải xuống||",
+   "ST_CBO_ENCRYPTIONS":"Tắt||Bật||Bắt buộc||",
+   "ST_CBO_PROXY":"(không)||Socks4||Socks5||HTTPS||HTTP||",
+   "ST_CBO_TCAP_MODES":"Uploads||Downloads||Uploads + Downloads||",
+   "ST_CBO_TCAP_UNITS":"MB||GB||",
+   "ST_CBO_TCAP_PERIODS":"1||2||5||7||10||14||15||20||21||28||30||31||",
+   "ST_COL_NAME":"Tên",
+   "ST_COL_VALUE":"Giá trị",
+   "ST_SCH_DAYCODES":"THai||TBa||TTư||TNăm||TSáu||TBảy||CN||",
+   "ST_SCH_DAYNAMES":"Thứ Hai||Thứ Ba||Thứ Tư||Thứ Năm||Thứ Sáu||Thứ Bảy||Chủ Nhật||",
+   "ST_SCH_LGND_FULL":"Tốc độ tối đa",
+   "ST_SCH_LGND_FULLEX":"Tốc độ tối đa - Sử dụng giới hạn băng thông quốc tế",
+   "ST_SCH_LGND_LIMITED":"Hạn chế",
+   "ST_SCH_LGND_LIMITEDEX":"Giới Hạn - Uses scheduler-specified Giới hạn băng thông",
+   "ST_SCH_LGND_SEEDING":"Chỉ Seed",
+   "ST_SCH_LGND_SEEDINGEX":"Chỉ Seed - Chỉ upload (bao gồm cả những file chưa hoàn thành)",
+   "ST_SCH_LGND_OFF":"Tắt",
+   "ST_SCH_LGND_OFFEX":"Tắt - Dừng mọi hoạt động những hoạt đông không bắt buộc chạy",
+   "ST_SEEDTIMES_HOURS":"<= %d giờ",
+   "ST_SEEDTIMES_IGNORE":"(Bỏ qua)",
+   "ST_SEEDTIMES_MINUTES":"<= %d phút",
+   "TIME_DAYS_HOURS":"%dn %dt",
+   "TIME_HOURS_MINS":"%dt %dp",
+   "TIME_MINS_SECS":"%dp %dg",
+   "TIME_SECS":"%dg",
+   "TIME_WEEKS_DAYS":"%dt %dn",
+   "TIME_YEARS_WEEKS":"%dn %dt",
+   "ML_MORE_ACTIONS":null,
+   "Torrents":null,
+   "Feeds":null,
+   "App":null,
+   "country":null,
+   "ETA":null,
+   "of":null,
+   "/s":null,
+   "Paste a torrent or feed URL":null,
+   "Home":null,
+   "Logout":null,
+   "Seeding":null,
+   "All Feeds":null,
+   "bitrate":null,
+   "resolution":null,
+   "length":null,
+   "streamable":null,
+   "type":null,
+   "remote":null,
+   "about":null,
+   "sessions":null,
+   "share":null,
+   "Share this torrent":null,
+   "Share link":null,
+   "add":null,
+   "logout":null,
+   "log in":null,
+   "anywhere access":null,
+   "stay signed in":null,
+   "download":null,
+   "Your client is currently not available. Verify that it is connected to the internet.":null,
+   "Unable to communicate with your &micro;Torrent client. This message will disappear automatically when a connection is re-established.":null,
+   "Open file":null,
+   "Download to your computer":null,
+   "Open with VLC Media Player":null,
+   "Actions":null,
+   "season":null,
+   "DLG_ABOUT_VERSION_LEGEND":null,
+   "DLG_ABOUT_VERSION_VERSION":null,
+   "DLG_ABOUT_VERSION_REVISION":null,
+   "DLG_ABOUT_VERSION_BUILD_DATE":null,
+   "DLG_ABOUT_VERSION_PEER_ID":null,
+   "DLG_ABOUT_VERSION_USER_AGENT":null,
+   "DLG_ABOUT_UPNP_EXTERNAL_ADDRESS":null,
+   "DLG_ABOUT_UI_REVISION":null,
+   "DLG_SETTINGS_SAVE":null,
+   "DLG_SETTINGS_MENU_TITLE":null,
+   "DLG_SETTINGS_D_REMOTE_01":"BitTorrent Remote",
+   "DLG_SETTINGS_D_REMOTE_02":"BitTorrent Remote provides an easy and highly secure way of accessing your client through a browser.",
+   "DLG_SETTINGS_D_REMOTE_03":"Just enable the connection below, choose a computer name and password and remember to leave this computer on.",
+   "DLG_SETTINGS_D_REMOTE_04":"Xem thêm",
+   "DLG_SETTINGS_D_REMOTE_05":"Enable BitTorrent Remote Access",
+   "DLG_SETTINGS_D_REMOTE_06":"Xác thực",
+   "DLG_SETTINGS_D_REMOTE_07":"Tên dùng:",
+   "DLG_SETTINGS_D_REMOTE_08":"Mật khẩu:",
+   "DLG_SETTINGS_D_REMOTE_09":"Gửi",
+   "ST_CAPT_REMOTE":"BitTorrent Remote"
+}

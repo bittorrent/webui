@@ -7,483 +7,484 @@ found in the LICENSE file.
 
 /* List of the strings where any language could fallback is there was no translation yet */
 
-var LANG_STR_fallback = [
-	  "Torrent files||*.torrent||All files (*.*)||*.*||"
-	, "OK"
-	, "Cancel"
-	, "Apply"
-	, "Yes"
-	, "No"
-	, "Close"
-	, "Preferences"
-	, "Language"
-	, "Language:"
-	, "Privacy"
-	, "Check for updates automatically"
-	, "Update to beta versions"
-	, "Send anonymous information when checking for updates"
-	, "When Downloading"
-	, "Append .!ut to incomplete files"
-	, "Pre-allocate all files"
-	, "Prevent standby if there are active torrents"
-	, "Display Options"
-	, "Confirm when deleting torrents"
-	, "Confirm when deleting trackers"
-	, "Show confirmation dialog on exit"
-	, "Alternate list background color"
-	, "Show current speed in the title bar"
-	, "Show speed limits in the status bar"
-	, "When Adding Torrents"
-	, "Don't start the download automatically"
-	, "Activate the program window"
-	, "Show a window that displays the files inside the torrent"
-	, "Actions for Double Click"
-	, "For seeding torrents:"
-	, "For downloading torrents:"
-	, "Location of Downloaded Files"
-	, "Put new downloads in:"
-	, "Always show dialog on manual add"
-	, "Move completed downloads to:"
-	, "Append the torrent's label"
-	, "Only move from the default download directory"
-	, "Location of .torrents"
-	, "Store .torrents in:"
-	, "Move .torrents for finished jobs to:"
-	, "Automatically load .torrents from:"
-	, "Delete loaded .torrents"
-	, "Listening Port"
-	, "Port used for incoming connections:"
-	, "Random port"
-	, "Randomize port each start"
-	, "Enable UPnP port mapping"
-	, "Enable NAT-PMP port mapping"
-	, "Proxy Server"
-	, "Type:"
-	, "Proxy:"
-	, "Port:"
-	, "Authentication"
-	, "Username:"
-	, "Password:"
-	, "Resolve hostnames through proxy"
-	, "Use proxy server for peer-to-peer connections"
-	, "Add Windows Firewall exception"
-	, "Proxy Privacy"
-	, "Disable all local DNS lookups"
-	, "Disable features that leak identifying information"
-	, "Disable connections unsupported by the proxy"
-	, "Global Upload Rate Limiting"
-	, "Maximum upload rate (kB/s): [0: unlimited]"
-	, "Automatic"
-	, "Alternate upload rate when not downloading (kB/s):"
-	, "Global Download Rate Limiting"
-	, "Maximum download rate (kB/s): [0: unlimited]"
-	, "Number of Connections"
-	, "Global maximum number of connections:"
-	, "Maximum number of connected peers per torrent:"
-	, "Number of upload slots per torrent:"
-	, "Use additional upload slots if upload speed < 90%"
-	, "Global Rate Limit Options"
-	, "Apply rate limit to transport overhead"
-	, "Apply rate limit to uTP connections"
-	, "Basic BitTorrent Features"
-	, "Enable DHT Network"
-	, "Ask tracker for scrape information"
-	, "Enable DHT for new torrents"
-	, "Enable Peer Exchange"
-	, "Enable Local Peer Discovery"
-	, "Limit local peer bandwidth"
-	, "IP/Hostname to report to tracker:"
-	, "Protocol Encryption"
-	, "Outgoing:"
-	, "Allow incoming legacy connections"
-	, "Enable bandwidth management [uTP]"
-	, "Enable UDP tracker support"
-	, "Enable Transfer Cap"
-	, "Cap Settings"
-	, "Limit Type:"
-	, "Bandwidth Cap:"
-	, "Time Period (days):"
-	, "Usage history for selected period:"
-	, "Uploaded:"
-	, "Downloaded:"
-	, "Uploaded + Downloaded:"
-	, "Time period:"
-	, "Last %d days"
-	, "Reset History"
-	, "Queue Settings"
-	, "Maximum number of active torrents (upload or download):"
-	, "Maximum number of active downloads:"
-	, "Seed While [Default values]"
-	, "Minimum ratio (%):"
-	, "Minimum seeding time (minutes):"
-	, "Seeding tasks have higher priority than downloading tasks"
-	, "When µTorrent Reaches the Seeding Goal"
-	, "Limit the upload rate to (kB/s): [0: stop]"
-	, "Enable Scheduler"
-	, "Scheduler Table"
-	, "Scheduler Settings"
-	, "Limited upload rate (kB/s):"
-	, "Limited download rate (kB/s):"
-	, "Disable DHT when turning off"
-	, "Enable Web UI"
-	, "Authentication"
-	, "Username:"
-	, "Password:"
-	, "Enable Guest account with username:"
-	, "Connectivity"
-	, "Alternative listening port (default is the connection port):"
-	, "Allow access only from these IPs (separate multiple entries with a comma):"
-	, "Advanced Options [WARNING: Do not modify!]"
-	, "Value:"
-	, "True"
-	, "False"
-	, "Set"
-	, "Speed Popup List [Separate multiple values with a comma]"
-	, "Override automatic speed popup list"
-	, "Upload speed list:"
-	, "Download speed list:"
-	, "Persistent Labels [Separate multiple labels with a | character]"
-	, "Search Engines [Format: name|URL]"
-	, "Basic Cache Settings"
-	, "The disk cache is used to keep frequently accessed data in memory to reduce the number of reads and writes to the hard drive. µTorrent normally manages the cache automatically, but you may change its behavior by modifying these settings."
-	, "Override automatic cache size and specify the size manually (MB):"
-	, "Reduce memory usage when the cache is not needed"
-	, "Advanced Cache Settings"
-	, "Enable caching of disk writes"
-	, "Write out untouched blocks every 2 minutes"
-	, "Write out finished pieces immediately"
-	, "Enable caching of disk reads"
-	, "Turn off read caching if the upload speed is slow"
-	, "Remove old blocks from the cache"
-	, "Increase automatic cache size when cache thrashing"
-	, "Disable Windows caching of disk writes"
-	, "Disable Windows caching of disk reads"
-	, "Run Program"
-	, "Run this program when a torrent finishes:"
-	, "Run this program when a torrent changes state:"
-	, "You can use these commands:\r\n%F - Name of downloaded file (for single file torrents)\r\n%D - Directory where files are saved\r\n%N - Title of torrent\r\n%S - State of torrent\r\n%L - Label\r\n%T - Tracker\r\n%M - Status message string (same as status column)\r\n%I - hex encoded info-hash\r\n\r\nState is a combination of:\r\nstarted = 1, checking = 2, start-after-check = 4,\r\nchecked = 8, error = 16, paused = 32, auto = 64, loaded = 128"
-	, "Torrent Properties"
-	, "Trackers (separate tiers with an empty line)"
-	, "Bandwidth Settings"
-	, "Maximum upload rate (kB/s): [0: default]"
-	, "Maximum download rate (kB/s): [0: default]"
-	, "Number of upload slots: [0: default]"
-	, "Seed While"
-	, "Override default settings"
-	, "Minimum ratio (%):"
-	, "Minimum seeding time (minutes):"
-	, "Other Settings"
-	, "Initial Seeding"
-	, "Enable DHT"
-	, "Peer Exchange"
-	, "Feed"
-	, "Feed URL:"
-	, "Custom Alias:"
-	, "Subscription"
-	, "Do not automatically download all items"
-	, "Automatically download all items published in feed"
-	, "Use smart episode filter"
-	, "Feeds||Favorites||History||"
-	, "All Feeds"
-	, "Filter Settings"
-	, "Name:"
-	, "Filter:"
-	, "Not:"
-	, "Save in:"
-	, "Feed:"
-	, "Quality:"
-	, "Episode Number: [ex. 1x12-14]"
-	, "Filter matches original name instead of decoded name"
-	, "Don't start downloads automatically"
-	, "Smart ep. filter"
-	, "Give download highest priority"
-	, "Minimum interval:"
-	, "Label for new torrents:"
-	, "Add RSS Feed..."
-	, "Edit Feed..."
-	, "Disable Feed"
-	, "Enable Feed"
-	, "Update Feed"
-	, "Delete Feed"
-	, "Download"
-	, "Open URL in Browser"
-	, "Add to Favorites"
-	, "Add"
-	, "Delete"
-	, "ALL"
-	, "(All)"
-	, "(match always)||(match only once)||12 hours||1 day||2 days||3 days||4 days||1 week||2 weeks||3 weeks||1 month||"
-	, "Add RSS Feed"
-	, "Edit RSS Feed"
-	, "Remove RSS Feed(s)"
-	, "Really delete the %d selected RSS Feeds?"
-	, "Really delete RSS Feed \"%s\"?"
-	, "Full Name"
-	, "Name"
-	, "Episode"
-	, "Format"
-	, "Codec"
-	, "Date"
-	, "Feed"
-	, "Source URL"
-	, "IP"
-	, "Port"
-	, "Client"
-	, "Flags"
-	, "%"
-	, "Relevance"
-	, "Down Speed"
-	, "Up Speed"
-	, "Reqs"
-	, "Waited"
-	, "Uploaded"
-	, "Downloaded"
-	, "Hasherr"
-	, "Peer dl."
-	, "MaxUp"
-	, "MaxDown"
-	, "Queued"
-	, "Inactive"
-	, "Done"
-	, "First Piece"
-	, "Name"
-	, "# Pieces"
-	, "%"
-	, "Priority"
-	, "Size"
-	, "skip"
-	, "low"
-	, "normal"
-	, "high"
-	, "Downloaded:"
-	, "Uploaded:"
-	, "Seeds:"
-	, "Remaining:"
-	, "Download Speed:"
-	, "Upload Speed:"
-	, "Peers:"
-	, "Share Ratio:"
-	, "Save As:"
-	, "Hash:"
-	, "General"
-	, "Transfer"
-	, "%d of %d connected (%d in swarm)"
-	, "D:%s U:%s - %s"
-	, "Copy"
-	, "Reset"
-	, "Unlimited"
-	, "Resolve IPs"
-	, "Get File(s)"
-	, "Don't Download"
-	, "High Priority"
-	, "Low Priority"
-	, "Normal Priority"
-	, "Copy Magnet URI"
-	, "Delete Data"
-	, "Delete .torrent"
-	, "Delete .torrent + Data"
-	, "Force Re-Check"
-	, "Force Start"
-	, "Label"
-	, "Pause"
-	, "Properties"
-	, "Move Down Queue"
-	, "Move Up Queue"
-	, "Remove"
-	, "Remove And"
-	, "Start"
-	, "Stop"
-	, "Active"
-	, "All"
-	, "Completed"
-	, "Downloading"
-	, "Inactive"
-	, "No Label"
-	, "||Avail.||Availability"
-	, "Added"
-	, "Completed On"
-	, "Status"
-	, "Downloaded"
-	, "Down Speed"
-	, "ETA"
-	, "Label"
-	, "Name"
-	, "#"
-	, "Peers"
-	, "Remaining"
-	, "Seeds"
-	, "Seeds/Peers"
-	, "Ratio"
-	, "Size"
-	, "Source URL"
-	, "Status"
-	, "Uploaded"
-	, "Up Speed"
-	, "Are you sure you want to remove the %d selected torrents and all associated data?"
-	, "Are you sure you want to remove the selected torrent and all associated data?"
-	, "Are you sure you want to remove the %d selected torrents?"
-	, "Are you sure you want to remove the selected torrent?"
-	, "Really delete RSS Filter \"%s\"?"
-	, "Checked %:.1d%%"
-	, "Downloading"
-	, "Error: %s"
-	, "Finished"
-	, "Paused"
-	, "Queued"
-	, "Queued Seed"
-	, "Seeding"
-	, "Stopped"
-	, "Enter label"
-	, "Enter the new label for the selected torrents:"
-	, "New Label..."
-	, "Remove Label"
-	, "General||Trackers||Peers||Pieces||Files||Speed||Logger||"
-	, "Add Torrent"
-	, "Add Torrent from URL"
-	, "Pause"
-	, "Preferences"
-	, "Move Down Queue"
-	, "Move Up Queue"
-	, "Remove"
-	, "RSS Downloader"
-	, "Start"
-	, "Stop"
-	, "File"
-	, "Add Torrent..."
-	, "Add Torrent from URL..."
-	, "Options"
-	, "Preferences"
-	, "Show Category List"
-	, "Show Detailed Info"
-	, "Show Status Bar"
-	, "Show Toolbar"
-	, "Icons on Tabs"
-	, "Help"
-	, "µTorrent Webpage"
-	, "µTorrent Forums"
-	, "Send WebUI Feedback"
-	, "About µTorrent WebUI"
-	, "Torrents"
-	, "Pause all torrents"
-	, "Resume all torrents"
-	, "D: %s%z/s"
-	, " L: %z/s"
-	, " O: %z/s"
-	, " T: %Z"
-	, "U: %s%z/s"
-	, "B"
-	, "EB"
-	, "GB"
-	, "kB"
-	, "MB"
-	, "PB"
-	, "TB"
-	, "Advanced"
-	, "Bandwidth"
-	, "Connection"
-	, "Disk Cache"
-	, "Directories"
-	, "General"
-	, "Scheduler"
-	, "Queueing"
-	, "UI Extras"
-	, "UI Settings"
-	, "BitTorrent"
-	, "Web UI"
-	, "Transfer Cap"
-	, "Run Program"
-	, "Show Properties||Start/Stop||Open Folder||Show Download Bar||"
-	, "Disabled||Enabled||Forced||"
-	, "(none)||Socks4||Socks5||HTTPS||HTTP||"
-	, "Uploads||Downloads||Uploads + Downloads||"
-	, "MB||GB||"
-	, "1||2||5||7||10||14||15||20||21||28||30||31||"
-	, "Name"
-	, "Value"
-	, "Mon||Tue||Wed||Thu||Fri||Sat||Sun||"
-	, "Monday||Tuesday||Wednesday||Thursday||Friday||Saturday||Sunday||"
-	, "Full speed"
-	, "Full speed - Uses normal global bandwidth limits"
-	, "Limited"
-	, "Limited - Uses scheduler-specified bandwidth limits"
-	, "Seeding only"
-	, "Seeding only - Only uploads data (including incomplete)"
-	, "Turn off"
-	, "Turn off - Stops all torrents that are not forced"
-	, "<= %d hours"
-	, "(Ignore)"
-	, "<= %d minutes"
-	, "%dd %dh"
-	, "%dh %dm"
-	, "%dm %ds"
-	, "%ds"
-	, "%dw %dd"
-	, "%dy %dw"
-	, "More actions" ,
-	"Torrents",
-	"Feeds",
-	"App",
-	"country",
-	'ETA', // i.e. how much time remaining
-	"of", // i.e. 3 of 4 peers
-	"/s", // "per second""
-	"Paste a torrent or feed URL",
-	"Home",
-	"Logout",
-	"Seeding",
-	"All Feeds",
-	"bitrate",
-	"resolution",
-	"length",
-	"streamable",
-	"type", // i.e. file extension
-	"remote", // i.e. uTorrent remote
-	"about",
-	"sessions",
-	"Share",
-	"Share this torrent",
-	"Share link",
-	"add",
-	"logout",
-	"log in",
-	"anywhere access",
-	"stay signed in",
-	"download",
-	"Your client is currently not available. Verify that it is connected to the internet.",
-	"Unable to communicate with your &micro;Torrent client. This message will disappear automatically when a connection is re-established.",
-	"Get file",
-	"Download to your computer",
-	"Open with VLC Media Player",
-	"Actions",
-	"season" // i.e. of a TV show
-	, "Client Information"
-	, "Product Version"
-	, "Source Revision"
-	, "Build Date"
-	, "Peer ID"
-	, "User-agent"
-	, "UPnP external address:"
-	, "UI Revision"
-	, "Save settings"
-	, "Settings"
-	, "BitTorrent Remote"
-	, "BitTorrent Remote is a simple and secure web service that enables access to this BitTorrent client from anywhere on the internet."
-	, "Enable access here by creating a computer name and password, then access BitTorrent anytime from a PC or mobile web browser at remote.bittorrent.com or on your android phone with the BitTorrent Remote app"
-	, "Learn More..."
-	, "Enable BitTorrent Remote Access"
-	, "Set a username and password"
-	, "Username"
-	, "Password"
-	, "Sign in"
-	, "Remote Access",
-	"Accessible",
-	"Connecting..",
-	"Not accessible",
-	"Registration failed",
-	"You must enter a password to use BitTorrent Remote",
-	"Could not contact the BitTorrent Remote service to register",
-	"There is already a computer using the username",
-	"Usernames may not contain non-English characters",
-	"Password may not contain non-English characters",
-	"Status: "
-	];
+var LANG_STR_fallback = 
+{
+   "CT_MASK1":"Torrent files||*.torrent||All files (*.*)||*.*||",
+   "DLG_BTN_OK":"OK",
+   "DLG_BTN_CANCEL":"Cancel",
+   "DLG_BTN_APPLY":"Apply",
+   "DLG_BTN_YES":"Yes",
+   "DLG_BTN_NO":"No",
+   "DLG_BTN_CLOSE":"Close",
+   "DLG_SETTINGS_00":"Preferences",
+   "DLG_SETTINGS_1_GENERAL_01":"Language",
+   "DLG_SETTINGS_1_GENERAL_02":"Language:",
+   "DLG_SETTINGS_1_GENERAL_10":"Privacy",
+   "DLG_SETTINGS_1_GENERAL_11":"Check for updates automatically",
+   "DLG_SETTINGS_1_GENERAL_12":"Update to beta versions",
+   "DLG_SETTINGS_1_GENERAL_13":"Send anonymous information when checking for updates",
+   "DLG_SETTINGS_1_GENERAL_17":"When Downloading",
+   "DLG_SETTINGS_1_GENERAL_18":"Append .!ut to incomplete files",
+   "DLG_SETTINGS_1_GENERAL_19":"Pre-allocate all files",
+   "DLG_SETTINGS_1_GENERAL_20":"Prevent standby if there are active torrents",
+   "DLG_SETTINGS_2_UI_01":"Display Options",
+   "DLG_SETTINGS_2_UI_02":"Confirm when deleting torrents",
+   "DLG_SETTINGS_2_UI_03":"Confirm when deleting trackers",
+   "DLG_SETTINGS_2_UI_04":"Show confirmation dialog on exit",
+   "DLG_SETTINGS_2_UI_05":"Alternate list background color",
+   "DLG_SETTINGS_2_UI_06":"Show current speed in the title bar",
+   "DLG_SETTINGS_2_UI_07":"Show speed limits in the status bar",
+   "DLG_SETTINGS_2_UI_15":"When Adding Torrents",
+   "DLG_SETTINGS_2_UI_16":"Don't start the download automatically",
+   "DLG_SETTINGS_2_UI_17":"Activate the program window",
+   "DLG_SETTINGS_2_UI_18":"Show a window that displays the files inside the torrent",
+   "DLG_SETTINGS_2_UI_19":"Actions for Double Click",
+   "DLG_SETTINGS_2_UI_20":"For seeding torrents:",
+   "DLG_SETTINGS_2_UI_22":"For downloading torrents:",
+   "DLG_SETTINGS_3_PATHS_01":"Location of Downloaded Files",
+   "DLG_SETTINGS_3_PATHS_02":"Put new downloads in:",
+   "DLG_SETTINGS_3_PATHS_03":"Always show dialog on manual add",
+   "DLG_SETTINGS_3_PATHS_06":"Move completed downloads to:",
+   "DLG_SETTINGS_3_PATHS_07":"Append the torrent's label",
+   "DLG_SETTINGS_3_PATHS_10":"Only move from the default download directory",
+   "DLG_SETTINGS_3_PATHS_11":"Location of .torrents",
+   "DLG_SETTINGS_3_PATHS_12":"Store .torrents in:",
+   "DLG_SETTINGS_3_PATHS_15":"Move .torrents for finished jobs to:",
+   "DLG_SETTINGS_3_PATHS_18":"Automatically load .torrents from:",
+   "DLG_SETTINGS_3_PATHS_19":"Delete loaded .torrents",
+   "DLG_SETTINGS_4_CONN_01":"Listening Port",
+   "DLG_SETTINGS_4_CONN_02":"Port used for incoming connections:",
+   "DLG_SETTINGS_4_CONN_04":"Random port",
+   "DLG_SETTINGS_4_CONN_05":"Randomize port each start",
+   "DLG_SETTINGS_4_CONN_06":"Enable UPnP port mapping",
+   "DLG_SETTINGS_4_CONN_07":"Enable NAT-PMP port mapping",
+   "DLG_SETTINGS_4_CONN_08":"Proxy Server",
+   "DLG_SETTINGS_4_CONN_09":"Type:",
+   "DLG_SETTINGS_4_CONN_11":"Proxy:",
+   "DLG_SETTINGS_4_CONN_13":"Port:",
+   "DLG_SETTINGS_4_CONN_15":"Authentication",
+   "DLG_SETTINGS_4_CONN_16":"Username:",
+   "DLG_SETTINGS_4_CONN_18":"Password:",
+   "DLG_SETTINGS_4_CONN_19":"Resolve hostnames through proxy",
+   "DLG_SETTINGS_4_CONN_20":"Use proxy server for peer-to-peer connections",
+   "DLG_SETTINGS_4_CONN_21":"Add Windows Firewall exception",
+   "DLG_SETTINGS_4_CONN_22":"Proxy Privacy",
+   "DLG_SETTINGS_4_CONN_23":"Disable all local DNS lookups",
+   "DLG_SETTINGS_4_CONN_24":"Disable features that leak identifying information",
+   "DLG_SETTINGS_4_CONN_25":"Disable connections unsupported by the proxy",
+   "DLG_SETTINGS_5_BANDWIDTH_01":"Global Upload Rate Limiting",
+   "DLG_SETTINGS_5_BANDWIDTH_02":"Maximum upload rate (kB/s): [0: unlimited]",
+   "DLG_SETTINGS_5_BANDWIDTH_03":"Automatic",
+   "DLG_SETTINGS_5_BANDWIDTH_05":"Alternate upload rate when not downloading (kB/s):",
+   "DLG_SETTINGS_5_BANDWIDTH_07":"Global Download Rate Limiting",
+   "DLG_SETTINGS_5_BANDWIDTH_08":"Maximum download rate (kB/s): [0: unlimited]",
+   "DLG_SETTINGS_5_BANDWIDTH_10":"Number of Connections",
+   "DLG_SETTINGS_5_BANDWIDTH_11":"Global maximum number of connections:",
+   "DLG_SETTINGS_5_BANDWIDTH_14":"Maximum number of connected peers per torrent:",
+   "DLG_SETTINGS_5_BANDWIDTH_15":"Number of upload slots per torrent:",
+   "DLG_SETTINGS_5_BANDWIDTH_17":"Use additional upload slots if upload speed < 90%",
+   "DLG_SETTINGS_5_BANDWIDTH_18":"Global Rate Limit Options",
+   "DLG_SETTINGS_5_BANDWIDTH_19":"Apply rate limit to transport overhead",
+   "DLG_SETTINGS_5_BANDWIDTH_20":"Apply rate limit to uTP connections",
+   "DLG_SETTINGS_6_BITTORRENT_01":"Basic BitTorrent Features",
+   "DLG_SETTINGS_6_BITTORRENT_02":"Enable DHT Network",
+   "DLG_SETTINGS_6_BITTORRENT_03":"Ask tracker for scrape information",
+   "DLG_SETTINGS_6_BITTORRENT_04":"Enable DHT for new torrents",
+   "DLG_SETTINGS_6_BITTORRENT_05":"Enable Peer Exchange",
+   "DLG_SETTINGS_6_BITTORRENT_06":"Enable Local Peer Discovery",
+   "DLG_SETTINGS_6_BITTORRENT_07":"Limit local peer bandwidth",
+   "DLG_SETTINGS_6_BITTORRENT_08":"IP/Hostname to report to tracker:",
+   "DLG_SETTINGS_6_BITTORRENT_10":"Protocol Encryption",
+   "DLG_SETTINGS_6_BITTORRENT_11":"Outgoing:",
+   "DLG_SETTINGS_6_BITTORRENT_13":"Allow incoming legacy connections",
+   "DLG_SETTINGS_6_BITTORRENT_14":"Enable bandwidth management [uTP]",
+   "DLG_SETTINGS_6_BITTORRENT_15":"Enable UDP tracker support",
+   "DLG_SETTINGS_7_TRANSFERCAP_01":"Enable Transfer Cap",
+   "DLG_SETTINGS_7_TRANSFERCAP_02":"Cap Settings",
+   "DLG_SETTINGS_7_TRANSFERCAP_03":"Limit Type:",
+   "DLG_SETTINGS_7_TRANSFERCAP_04":"Bandwidth Cap:",
+   "DLG_SETTINGS_7_TRANSFERCAP_05":"Time Period (days):",
+   "DLG_SETTINGS_7_TRANSFERCAP_06":"Usage history for selected period:",
+   "DLG_SETTINGS_7_TRANSFERCAP_07":"Uploaded:",
+   "DLG_SETTINGS_7_TRANSFERCAP_08":"Downloaded:",
+   "DLG_SETTINGS_7_TRANSFERCAP_09":"Uploaded + Downloaded:",
+   "DLG_SETTINGS_7_TRANSFERCAP_10":"Time period:",
+   "DLG_SETTINGS_7_TRANSFERCAP_11":"Last %d days",
+   "DLG_SETTINGS_7_TRANSFERCAP_12":"Reset History",
+   "DLG_SETTINGS_8_QUEUEING_01":"Queue Settings",
+   "DLG_SETTINGS_8_QUEUEING_02":"Maximum number of active torrents (upload or download):",
+   "DLG_SETTINGS_8_QUEUEING_04":"Maximum number of active downloads:",
+   "DLG_SETTINGS_8_QUEUEING_06":"Seed While [Default values]",
+   "DLG_SETTINGS_8_QUEUEING_07":"Minimum ratio (%):",
+   "DLG_SETTINGS_8_QUEUEING_09":"Minimum seeding time (minutes):",
+   "DLG_SETTINGS_8_QUEUEING_11":"Seeding tasks have higher priority than downloading tasks",
+   "DLG_SETTINGS_8_QUEUEING_12":"When µTorrent Reaches the Seeding Goal",
+   "DLG_SETTINGS_8_QUEUEING_13":"Limit the upload rate to (kB/s): [0: stop]",
+   "DLG_SETTINGS_9_SCHEDULER_01":"Enable Scheduler",
+   "DLG_SETTINGS_9_SCHEDULER_02":"Scheduler Table",
+   "DLG_SETTINGS_9_SCHEDULER_04":"Scheduler Settings",
+   "DLG_SETTINGS_9_SCHEDULER_05":"Limited upload rate (kB/s):",
+   "DLG_SETTINGS_9_SCHEDULER_07":"Limited download rate (kB/s):",
+   "DLG_SETTINGS_9_SCHEDULER_09":"Disable DHT when turning off",
+   "DLG_SETTINGS_9_WEBUI_01":"Enable Web UI",
+   "DLG_SETTINGS_9_WEBUI_02":"Authentication",
+   "DLG_SETTINGS_9_WEBUI_03":"Username:",
+   "DLG_SETTINGS_9_WEBUI_05":"Password:",
+   "DLG_SETTINGS_9_WEBUI_07":"Enable Guest account with username:",
+   "DLG_SETTINGS_9_WEBUI_09":"Connectivity",
+   "DLG_SETTINGS_9_WEBUI_10":"Alternative listening port (default is the connection port):",
+   "DLG_SETTINGS_9_WEBUI_12":"Allow access only from these IPs (separate multiple entries with a comma):",
+   "DLG_SETTINGS_A_ADVANCED_01":"Advanced Options [WARNING: Do not modify!]",
+   "DLG_SETTINGS_A_ADVANCED_02":"Value:",
+   "DLG_SETTINGS_A_ADVANCED_03":"True",
+   "DLG_SETTINGS_A_ADVANCED_04":"False",
+   "DLG_SETTINGS_A_ADVANCED_05":"Set",
+   "DLG_SETTINGS_B_ADV_UI_01":"Speed Popup List [Separate multiple values with a comma]",
+   "DLG_SETTINGS_B_ADV_UI_02":"Override automatic speed popup list",
+   "DLG_SETTINGS_B_ADV_UI_03":"Upload speed list:",
+   "DLG_SETTINGS_B_ADV_UI_05":"Download speed list:",
+   "DLG_SETTINGS_B_ADV_UI_07":"Persistent Labels [Separate multiple labels with a | character]",
+   "DLG_SETTINGS_B_ADV_UI_08":"Search Engines [Format: name|URL]",
+   "DLG_SETTINGS_C_ADV_CACHE_01":"Basic Cache Settings",
+   "DLG_SETTINGS_C_ADV_CACHE_02":"The disk cache is used to keep frequently accessed data in memory to reduce the number of reads and writes to the hard drive. µTorrent normally manages the cache automatically, but you may change its behavior by modifying these settings.",
+   "DLG_SETTINGS_C_ADV_CACHE_03":"Override automatic cache size and specify the size manually (MB):",
+   "DLG_SETTINGS_C_ADV_CACHE_05":"Reduce memory usage when the cache is not needed",
+   "DLG_SETTINGS_C_ADV_CACHE_06":"Advanced Cache Settings",
+   "DLG_SETTINGS_C_ADV_CACHE_07":"Enable caching of disk writes",
+   "DLG_SETTINGS_C_ADV_CACHE_08":"Write out untouched blocks every 2 minutes",
+   "DLG_SETTINGS_C_ADV_CACHE_09":"Write out finished pieces immediately",
+   "DLG_SETTINGS_C_ADV_CACHE_10":"Enable caching of disk reads",
+   "DLG_SETTINGS_C_ADV_CACHE_11":"Turn off read caching if the upload speed is slow",
+   "DLG_SETTINGS_C_ADV_CACHE_12":"Remove old blocks from the cache",
+   "DLG_SETTINGS_C_ADV_CACHE_13":"Increase automatic cache size when cache thrashing",
+   "DLG_SETTINGS_C_ADV_CACHE_14":"Disable Windows caching of disk writes",
+   "DLG_SETTINGS_C_ADV_CACHE_15":"Disable Windows caching of disk reads",
+   "DLG_SETTINGS_C_ADV_RUN_01":"Run Program",
+   "DLG_SETTINGS_C_ADV_RUN_02":"Run this program when a torrent finishes:",
+   "DLG_SETTINGS_C_ADV_RUN_04":"Run this program when a torrent changes state:",
+   "DLG_SETTINGS_C_ADV_RUN_06":"You can use these commands:\r\n%F - Name of downloaded file (for single file torrents)\r\n%D - Directory where files are saved\r\n%N - Title of torrent\r\n%S - State of torrent\r\n%L - Label\r\n%T - Tracker\r\n%M - Status message string (same as status column)\r\n%I - hex encoded info-hash\r\n\r\nState is a combination of:\r\nstarted = 1, checking = 2, start-after-check = 4,\r\nchecked = 8, error = 16, paused = 32, auto = 64, loaded = 128",
+   "DLG_TORRENTPROP_00":"Torrent Properties",
+   "DLG_TORRENTPROP_1_GEN_01":"Trackers (separate tiers with an empty line)",
+   "DLG_TORRENTPROP_1_GEN_03":"Bandwidth Settings",
+   "DLG_TORRENTPROP_1_GEN_04":"Maximum upload rate (kB/s): [0: default]",
+   "DLG_TORRENTPROP_1_GEN_06":"Maximum download rate (kB/s): [0: default]",
+   "DLG_TORRENTPROP_1_GEN_08":"Number of upload slots: [0: default]",
+   "DLG_TORRENTPROP_1_GEN_10":"Seed While",
+   "DLG_TORRENTPROP_1_GEN_11":"Override default settings",
+   "DLG_TORRENTPROP_1_GEN_12":"Minimum ratio (%):",
+   "DLG_TORRENTPROP_1_GEN_14":"Minimum seeding time (minutes):",
+   "DLG_TORRENTPROP_1_GEN_16":"Other Settings",
+   "DLG_TORRENTPROP_1_GEN_17":"Initial Seeding",
+   "DLG_TORRENTPROP_1_GEN_18":"Enable DHT",
+   "DLG_TORRENTPROP_1_GEN_19":"Peer Exchange",
+   "DLG_ADDEDITRSSFEED_03":"Feed",
+   "DLG_ADDEDITRSSFEED_04":"Feed URL:",
+   "DLG_ADDEDITRSSFEED_05":"Custom Alias:",
+   "DLG_ADDEDITRSSFEED_06":"Subscription",
+   "DLG_ADDEDITRSSFEED_07":"Do not automatically download all items",
+   "DLG_ADDEDITRSSFEED_08":"Automatically download all items published in feed",
+   "DLG_ADDEDITRSSFEED_09":"Use smart episode filter",
+   "DLG_RSSDOWNLOADER_02":"Feeds||Favorites||History||",
+   "DLG_RSSDOWNLOADER_03":"All Feeds",
+   "DLG_RSSDOWNLOADER_04":"Filter Settings",
+   "DLG_RSSDOWNLOADER_05":"Name:",
+   "DLG_RSSDOWNLOADER_06":"Filter:",
+   "DLG_RSSDOWNLOADER_07":"Not:",
+   "DLG_RSSDOWNLOADER_08":"Save in:",
+   "DLG_RSSDOWNLOADER_09":"Feed:",
+   "DLG_RSSDOWNLOADER_10":"Quality:",
+   "DLG_RSSDOWNLOADER_11":"Episode Number: [ex. 1x12-14]",
+   "DLG_RSSDOWNLOADER_12":"Filter matches original name instead of decoded name",
+   "DLG_RSSDOWNLOADER_13":"Don't start downloads automatically",
+   "DLG_RSSDOWNLOADER_14":"Smart ep. filter",
+   "DLG_RSSDOWNLOADER_15":"Give download highest priority",
+   "DLG_RSSDOWNLOADER_16":"Minimum interval:",
+   "DLG_RSSDOWNLOADER_17":"Label for new torrents:",
+   "DLG_RSSDOWNLOADER_18":"Add RSS Feed...",
+   "DLG_RSSDOWNLOADER_19":"Edit Feed...",
+   "DLG_RSSDOWNLOADER_20":"Disable Feed",
+   "DLG_RSSDOWNLOADER_21":"Enable Feed",
+   "DLG_RSSDOWNLOADER_22":"Update Feed",
+   "DLG_RSSDOWNLOADER_23":"Delete Feed",
+   "DLG_RSSDOWNLOADER_24":"Download",
+   "DLG_RSSDOWNLOADER_25":"Open URL in Browser",
+   "DLG_RSSDOWNLOADER_26":"Add to Favorites",
+   "DLG_RSSDOWNLOADER_27":"Add",
+   "DLG_RSSDOWNLOADER_28":"Delete",
+   "DLG_RSSDOWNLOADER_29":"ALL",
+   "DLG_RSSDOWNLOADER_30":"(All)",
+   "DLG_RSSDOWNLOADER_31":"(match always)||(match only once)||12 hours||1 day||2 days||3 days||4 days||1 week||2 weeks||3 weeks||1 month||",
+   "DLG_RSSDOWNLOADER_32":"Add RSS Feed",
+   "DLG_RSSDOWNLOADER_33":"Edit RSS Feed",
+   "DLG_RSSDOWNLOADER_34":"Remove RSS Feed(s)",
+   "DLG_RSSDOWNLOADER_35":"Really delete the %d selected RSS Feeds?",
+   "DLG_RSSDOWNLOADER_36":"Really delete RSS Feed \"%s\"?",
+   "FEED_COL_FULLNAME":"Full Name",
+   "FEED_COL_NAME":"Name",
+   "FEED_COL_EPISODE":"Episode",
+   "FEED_COL_FORMAT":"Format",
+   "FEED_COL_CODEC":"Codec",
+   "FEED_COL_DATE":"Date",
+   "FEED_COL_FEED":"Feed",
+   "FEED_COL_URL":"Source URL",
+   "PRS_COL_IP":"IP",
+   "PRS_COL_PORT":"Port",
+   "PRS_COL_CLIENT":"Client",
+   "PRS_COL_FLAGS":"Flags",
+   "PRS_COL_PCNT":"%",
+   "PRS_COL_RELEVANCE":"Relevance",
+   "PRS_COL_DOWNSPEED":"Down Speed",
+   "PRS_COL_UPSPEED":"Up Speed",
+   "PRS_COL_REQS":"Reqs",
+   "PRS_COL_WAITED":"Waited",
+   "PRS_COL_UPLOADED":"Uploaded",
+   "PRS_COL_DOWNLOADED":"Downloaded",
+   "PRS_COL_HASHERR":"Hasherr",
+   "PRS_COL_PEERDL":"Peer dl.",
+   "PRS_COL_MAXUP":"MaxUp",
+   "PRS_COL_MAXDOWN":"MaxDown",
+   "PRS_COL_QUEUED":"Queued",
+   "PRS_COL_INACTIVE":"Inactive",
+   "FI_COL_DONE":"Done",
+   "FI_COL_FIRSTPC":"First Piece",
+   "FI_COL_NAME":"Name",
+   "FI_COL_NUMPCS":"# Pieces",
+   "FI_COL_PCNT":"%",
+   "FI_COL_PRIO":"Priority",
+   "FI_COL_SIZE":"Size",
+   "FI_PRI0":"skip",
+   "FI_PRI1":"low",
+   "FI_PRI2":"normal",
+   "FI_PRI3":"high",
+   "GN_TP_01":"Downloaded:",
+   "GN_TP_02":"Uploaded:",
+   "GN_TP_03":"Seeds:",
+   "GN_TP_04":"Remaining:",
+   "GN_TP_05":"Download Speed:",
+   "GN_TP_06":"Upload Speed:",
+   "GN_TP_07":"Peers:",
+   "GN_TP_08":"Share Ratio:",
+   "GN_TP_09":"Save As:",
+   "GN_TP_10":"Hash:",
+   "GN_GENERAL":"General",
+   "GN_TRANSFER":"Transfer",
+   "GN_XCONN":"%d of %d connected (%d in swarm)",
+   "MAIN_TITLEBAR_SPEED":"D:%s U:%s - %s",
+   "MENU_COPY":"Copy",
+   "MENU_RESET":"Reset",
+   "MENU_UNLIMITED":"Unlimited",
+   "MP_RESOLVE_IPS":"Resolve IPs",
+   "MF_GETFILE":"Get File(s)",
+   "MF_DONT":"Don't Download",
+   "MF_HIGH":"High Priority",
+   "MF_LOW":"Low Priority",
+   "MF_NORMAL":"Normal Priority",
+   "ML_COPY_MAGNETURI":"Copy Magnet URI",
+   "ML_DELETE_DATA":"Delete Data",
+   "ML_DELETE_TORRENT":"Delete .torrent",
+   "ML_DELETE_DATATORRENT":"Delete .torrent + Data",
+   "ML_FORCE_RECHECK":"Force Re-Check",
+   "ML_FORCE_START":"Force Start",
+   "ML_LABEL":"Label",
+   "ML_PAUSE":"Pause",
+   "ML_PROPERTIES":"Properties",
+   "ML_QUEUEDOWN":"Move Down Queue",
+   "ML_QUEUEUP":"Move Up Queue",
+   "ML_REMOVE":"Remove",
+   "ML_REMOVE_AND":"Remove And",
+   "ML_START":"Start",
+   "ML_STOP":"Stop",
+   "OV_CAT_ACTIVE":"Active",
+   "OV_CAT_ALL":"All",
+   "OV_CAT_COMPL":"Completed",
+   "OV_CAT_DL":"Downloading",
+   "OV_CAT_INACTIVE":"Inactive",
+   "OV_CAT_NOLABEL":"No Label",
+   "OV_COL_AVAIL":"||Avail.||Availability",
+   "OV_COL_DATE_ADDED":"Added",
+   "OV_COL_DATE_COMPLETED":"Completed On",
+   "OV_COL_DONE":"Status",
+   "OV_COL_DOWNLOADED":"Downloaded",
+   "OV_COL_DOWNSPD":"Down Speed",
+   "OV_COL_ETA":"ETA",
+   "OV_COL_LABEL":"Label",
+   "OV_COL_NAME":"Name",
+   "OV_COL_ORDER":"#",
+   "OV_COL_PEERS":"Peers",
+   "OV_COL_REMAINING":"Remaining",
+   "OV_COL_SEEDS":"Seeds",
+   "OV_COL_SEEDS_PEERS":"Seeds/Peers",
+   "OV_COL_SHARED":"Ratio",
+   "OV_COL_SIZE":"Size",
+   "OV_COL_SOURCE_URL":"Source URL",
+   "OV_COL_STATUS":"Status",
+   "OV_COL_UPPED":"Uploaded",
+   "OV_COL_UPSPD":"Up Speed",
+   "OV_CONFIRM_DELETEDATA_MULTIPLE":"Are you sure you want to remove the %d selected torrents and all associated data?",
+   "OV_CONFIRM_DELETEDATA_ONE":"Are you sure you want to remove the selected torrent and all associated data?",
+   "OV_CONFIRM_DELETE_MULTIPLE":"Are you sure you want to remove the %d selected torrents?",
+   "OV_CONFIRM_DELETE_ONE":"Are you sure you want to remove the selected torrent?",
+   "OV_CONFIRM_DELETE_RSSFILTER":"Really delete RSS Filter \"%s\"?",
+   "OV_FL_CHECKED":"Checked %:.1d%",
+   "OV_FL_DOWNLOADING":"Downloading",
+   "OV_FL_ERROR":"Error: %s",
+   "OV_FL_FINISHED":"Finished",
+   "OV_FL_PAUSED":"Paused",
+   "OV_FL_QUEUED":"Queued",
+   "OV_FL_QUEUED_SEED":"Queued Seed",
+   "OV_FL_SEEDING":"Seeding",
+   "OV_FL_STOPPED":"Stopped",
+   "OV_NEWLABEL_CAPTION":"Enter label",
+   "OV_NEWLABEL_TEXT":"Enter the new label for the selected torrents:",
+   "OV_NEW_LABEL":"New Label...",
+   "OV_REMOVE_LABEL":"Remove Label",
+   "OV_TABS":"General||Trackers||Peers||Pieces||Files||Speed||Logger||",
+   "OV_TB_ADDTORR":"Add Torrent",
+   "OV_TB_ADDURL":"Add Torrent from URL",
+   "OV_TB_PAUSE":"Pause",
+   "OV_TB_PREF":"Preferences",
+   "OV_TB_QUEUEDOWN":"Move Down Queue",
+   "OV_TB_QUEUEUP":"Move Up Queue",
+   "OV_TB_REMOVE":"Remove",
+   "OV_TB_RSSDOWNLDR":"RSS Downloader",
+   "OV_TB_START":"Start",
+   "OV_TB_STOP":"Stop",
+   "MM_FILE":"File",
+   "MM_FILE_ADD_TORRENT":"Add Torrent...",
+   "MM_FILE_ADD_URL":"Add Torrent from URL...",
+   "MM_OPTIONS":"Options",
+   "MM_OPTIONS_PREFERENCES":"Preferences",
+   "MM_OPTIONS_SHOW_CATEGORY":"Show Category List",
+   "MM_OPTIONS_SHOW_DETAIL":"Show Detailed Info",
+   "MM_OPTIONS_SHOW_STATUS":"Show Status Bar",
+   "MM_OPTIONS_SHOW_TOOLBAR":"Show Toolbar",
+   "MM_OPTIONS_TAB_ICONS":"Icons on Tabs",
+   "MM_HELP":"Help",
+   "MM_HELP_UT_WEBPAGE":"µTorrent Webpage",
+   "MM_HELP_UT_FORUMS":"µTorrent Forums",
+   "MM_HELP_WEBUI_FEEDBACK":"Send WebUI Feedback",
+   "MM_HELP_ABOUT_WEBUI":"About µTorrent WebUI",
+   "STM_TORRENTS":"Torrents",
+   "STM_TORRENTS_PAUSEALL":"Pause all torrents",
+   "STM_TORRENTS_RESUMEALL":"Resume all torrents",
+   "SB_DOWNLOAD":"D: %s%z/s",
+   "SB_LOCAL":" L: %z/s",
+   "SB_OVERHEAD":" O: %z/s",
+   "SB_TOTAL":" T: %Z",
+   "SB_UPLOAD":"U: %s%z/s",
+   "SIZE_B":"B",
+   "SIZE_EB":"EB",
+   "SIZE_GB":"GB",
+   "SIZE_KB":"kB",
+   "SIZE_MB":"MB",
+   "SIZE_PB":"PB",
+   "SIZE_TB":"TB",
+   "ST_CAPT_ADVANCED":"Advanced",
+   "ST_CAPT_BANDWIDTH":"Bandwidth",
+   "ST_CAPT_CONNECTION":"Connection",
+   "ST_CAPT_DISK_CACHE":"Disk Cache",
+   "ST_CAPT_FOLDER":"Directories",
+   "ST_CAPT_GENERAL":"General",
+   "ST_CAPT_SCHEDULER":"Scheduler",
+   "ST_CAPT_QUEUEING":"Queueing",
+   "ST_CAPT_UI_EXTRAS":"UI Extras",
+   "ST_CAPT_UI_SETTINGS":"UI Settings",
+   "ST_CAPT_BITTORRENT":"BitTorrent",
+   "ST_CAPT_WEBUI":"Web UI",
+   "ST_CAPT_TRANSFER_CAP":"Transfer Cap",
+   "ST_CAPT_RUN_PROGRAM":"Run Program",
+   "ST_CBO_UI_DBLCLK_TOR":"Show Properties||Start/Stop||Open Folder||Show Download Bar||",
+   "ST_CBO_ENCRYPTIONS":"Disabled||Enabled||Forced||",
+   "ST_CBO_PROXY":"(none)||Socks4||Socks5||HTTPS||HTTP||",
+   "ST_CBO_TCAP_MODES":"Uploads||Downloads||Uploads + Downloads||",
+   "ST_CBO_TCAP_UNITS":"MB||GB||",
+   "ST_CBO_TCAP_PERIODS":"1||2||5||7||10||14||15||20||21||28||30||31||",
+   "ST_COL_NAME":"Name",
+   "ST_COL_VALUE":"Value",
+   "ST_SCH_DAYCODES":"Mon||Tue||Wed||Thu||Fri||Sat||Sun||",
+   "ST_SCH_DAYNAMES":"Monday||Tuesday||Wednesday||Thursday||Friday||Saturday||Sunday||",
+   "ST_SCH_LGND_FULL":"Full speed",
+   "ST_SCH_LGND_FULLEX":"Full speed - Uses normal global bandwidth limits",
+   "ST_SCH_LGND_LIMITED":"Limited",
+   "ST_SCH_LGND_LIMITEDEX":"Limited - Uses scheduler-specified bandwidth limits",
+   "ST_SCH_LGND_SEEDING":"Seeding only",
+   "ST_SCH_LGND_SEEDINGEX":"Seeding only - Only uploads data (including incomplete)",
+   "ST_SCH_LGND_OFF":"Turn off",
+   "ST_SCH_LGND_OFFEX":"Turn off - Stops all torrents that are not forced",
+   "ST_SEEDTIMES_HOURS":"<= %d hours",
+   "ST_SEEDTIMES_IGNORE":"(Ignore)",
+   "ST_SEEDTIMES_MINUTES":"<= %d minutes",
+   "TIME_DAYS_HOURS":"%dd %dh",
+   "TIME_HOURS_MINS":"%dh %dm",
+   "TIME_MINS_SECS":"%dm %ds",
+   "TIME_SECS":"%ds",
+   "TIME_WEEKS_DAYS":"%dw %dd",
+   "TIME_YEARS_WEEKS":"%dy %dw",
+   "ML_MORE_ACTIONS":"More Actions",
+   "Torrents":"Torrents",
+   "Feeds":"Feeds",
+   "App":"App",
+   "country":"country",
+   "ETA":"ETA",
+   "of":"of",
+   "/s":"/s",
+   "Paste a torrent or feed URL":"Paste a torrent or feed URL",
+   "Home":"Home",
+   "Logout":"Logout",
+   "Seeding":"Seeding",
+   "All Feeds":"All Feeds",
+   "bitrate":"bitrate",
+   "resolution":"resolution",
+   "length":"length",
+   "streamable":"streamable",
+   "type":"type",
+   "remote":"remote",
+   "about":"about",
+   "sessions":"sessions",
+   "share":"Share",
+   "Share this torrent":"Share this torrent",
+   "Share link":"Share link",
+   "add":"add",
+   "logout":"logout",
+   "log in":"log in",
+   "anywhere access":"anywhere access",
+   "stay signed in":"stay signed in",
+   "download":"download",
+   "Your client is currently not available. Verify that it is connected to the internet.":"Your client is currently not available. Verify that it is connected to the internet.",
+   "Unable to communicate with your &micro;Torrent client. This message will disappear automatically when a connection is re-established.":"Unable to communicate with your &micro;Torrent client. This message will disappear automatically when a connection is re-established.",
+   "Open file":"Get file",
+   "Download to your computer":"Download to your computer",
+   "Open with VLC Media Player":"Open with VLC Media Player",
+   "Actions":"Actions",
+   "season":"season",
+   "DLG_ABOUT_VERSION_LEGEND":"Client Information",
+   "DLG_ABOUT_VERSION_VERSION":"Product Version",
+   "DLG_ABOUT_VERSION_REVISION":"Source Revision",
+   "DLG_ABOUT_VERSION_BUILD_DATE":"Build Date",
+   "DLG_ABOUT_VERSION_PEER_ID":"Peer ID",
+   "DLG_ABOUT_VERSION_USER_AGENT":"User-agent",
+   "DLG_ABOUT_UPNP_EXTERNAL_ADDRESS":"UPnP external address:",
+   "DLG_ABOUT_UI_REVISION":"UI Revision",
+   "DLG_SETTINGS_SAVE":"Save settings",
+   "DLG_SETTINGS_MENU_TITLE":"Settings",
+   "DLG_SETTINGS_D_REMOTE_01":"BitTorrent Remote",
+   "DLG_SETTINGS_D_REMOTE_02":"BitTorrent Remote is a simple and secure web service that enables access to this BitTorrent client from anywhere on the internet.",
+   "DLG_SETTINGS_D_REMOTE_03":"Enable access here by creating a computer name and password, then access BitTorrent anytime from a PC or mobile web browser at remote.bittorrent.com or on your android phone with the BitTorrent Remote app",
+   "DLG_SETTINGS_D_REMOTE_04":"Learn More...",
+   "DLG_SETTINGS_D_REMOTE_05":"Enable BitTorrent Remote Access",
+   "DLG_SETTINGS_D_REMOTE_06":"Set a username and password",
+   "DLG_SETTINGS_D_REMOTE_07":"Username",
+   "DLG_SETTINGS_D_REMOTE_08":"Password",
+   "DLG_SETTINGS_D_REMOTE_09":"Sign in",
+   "ST_CAPT_REMOTE":"Remote Access",
+   "STATUS_REMOTE_01":"Accessible",
+   "STATUS_REMOTE_02":"Connecting..",
+   "STATUS_REMOTE_03":"Not accessible",
+   "STATUS_REMOTE_04":"Registration failed",
+   "STATUS_REMOTE_05":"You must enter a password to use BitTorrent Remote",
+   "STATUS_REMOTE_06":"Could not contact the BitTorrent Remote service to register",
+   "STATUS_REMOTE_07":"There is already a computer using the username",
+   "STATUS_REMOTE_08":"Usernames may not contain non-English characters",
+   "STATUS_REMOTE_09":"Password may not contain non-English characters",
+   "STATUS_REMOTE_10":"Status: "
+}

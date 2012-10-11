@@ -5,483 +5,484 @@ Use of this source code is governed by a BSD-style that can be
 found in the LICENSE file.
 */
 
-var LANG_STR = [
-	  "Pliki torrent||*.torrent||Wszystkie pliki (*.*)||*.*||"
-	, "OK"
-	, "Anuluj"
-	, "Zastosuj"
-	, "Tak"
-	, "Nie"
-	, "Zamknij"
-	, "Preferencje"
-	, "Język"
-	, "Język:"
-	, "Prywatność"
-	, "Automatycznie sprawdzaj aktualizacje"
-	, "Uaktualniaj do wersji beta"
-	, "Wysyłaj anonimowe zapytania o dostępność nowej wersji"
-	, "Podczas pobierania"
-	, "Dodaj .!ut do nazw nieukończonych plików"
-	, "Zawsze rezerwuj miejsce"
-	, "Nie przechodź do stanu wstrzymania, jeśli aktywny"
-	, "Opcje wyświetlania"
-	, "Potwierdzaj usunięcie torrentów"
-	, "Potwierdzaj usunięcie trackerów"
-	, "Potwierdzaj przy wyjściu"
-	, "Alternatywny kolor tła listy"
-	, "Pokazuj prędkość na pasku tytułu"
-	, "Pokazuj limity na pasku statusu"
-	, "Przy dodaniu torrentów"
-	, "Nie pobieraj automatycznie"
-	, "Aktywuj okno programu"
-	, "Pokazuj okno z plikami torrenta"
-	, "Zachowanie przy podwójnym kliknięciu"
-	, "Dla udostępnianych torrentów:"
-	, "Dla pobieranych torrentów:"
-	, "Miejsce pobranych plików"
-	, "Zapisz nowe zadania w:"
-	, "Zawsze pokazuj okno przy ręcznym dodawaniu"
-	, "Przenieś zakończone zadania do:"
-	, "Dołącz etykietę torrenta"
-	, "Przenoś tylko z domyślnego katalogu pobierania"
-	, "Lokalizacja plików .torrent"
-	, "Przechowuj pliki .torrent w:"
-	, "Przenieś pliki .torrent ukończonych zadań do:"
-	, "Automatycznie ładuj zadania z:"
-	, "Usuń pliki .torrent po załadowaniu"
-	, "Port nasłuchu"
-	, "Port dla połączeń przychodzących:"
-	, "Losuj port"
-	, "Losuj port przy starcie programu"
-	, "Włącz mapowanie portów UPnP"
-	, "Włącz mapowanie portów NAT-PMP"
-	, "Serwer proxy"
-	, "Typ:"
-	, "Proxy:"
-	, "Port:"
-	, "Uwierzytelnianie"
-	, "Użytkownik:"
-	, "Hasło:"
-	, "Uzyskuj nazwy hostów przez proxy"
-	, "Użyj serwera proxy dla połączeń peer-to-peer"
-	, "Dodaj wyjątek do Zapory Wind."
-	, "Prywatność proxy"
-	, "Wyłącz wszystkie lokalne odwołania DNS"
-	, "Wyłącz cechy, z których wyciekają dane identyfikacyjne"
-	, "Nie zezwalaj na połączenia nieobsługiwane przez proxy"
-	, "Globalny limit wysyłania"
-	, "Maksymalna predkość (kB/s): [0: bez limitu]"
-	, "Automatycznie"
-	, "Zmień limit wysyłania, gdy nie pobierasz (kB/s):"
-	, "Globalny limit pobierania"
-	, "Maksymalna prędkość (kB/s): [0: bez limitu]"
-	, "Liczba połączeń"
-	, "Maksymalna całkowita liczba połączeń:"
-	, "Maksymalna liczba połączonych peerów na torrent:"
-	, "Liczba slotów wysyłania na torrent:"
-	, "Otwórz dodatkowy slot, gdy prędkość wysyłania < 90%"
-	, "Globalne ustawienia przepustowości"
-	, "Zastosuj limit prędkości do całości ruchu (razem z overhead)"
-	, "Zastosuj ograniczenia do połączeń uTP"
-	, "Dodatkowe funkcje BitTorrent"
-	, "Włącz sieć DHT"
-	, "Odpytaj tracker listę peerów"
-	, "Włącz DHT dla nowych torrentów"
-	, "Włącz wymianę peerów"
-	, "Wykrywanie peerów lokalnych"
-	, "Ogranicz transfery lokalne"
-	, "IP/Nazwa hosta wysyłana do trackera:"
-	, "Szyfrowanie"
-	, "Wychodzące:"
-	, "Akceptuj nieszyfrowane połączenia"
-	, "Aktywuj zarządzanie pasmem [uTP]"
-	, "Aktywuj wsparcie dla trackerów UDP"
-	, "Włącz limit transferu"
-	, "Ustawienia limitu transferu"
-	, "Typ limitu:"
-	, "Limit transferu:"
-	, "Okres (dni):"
-	, "Historia wykorzystania łącza dla wybranego okresu:"
-	, "Wysłano:"
-	, "Pobrano:"
-	, "Wysłano + pobrano:"
-	, "Zakres czasu:"
-	, "%d dni"
-	, "Wyczyść"
-	, "Kolejka"
-	, "Maksymalna liczba aktywnych zadań (wysyłania lub pobierania):"
-	, "Maksymalna liczba aktywnych pobierań:"
-	, "Udostępniaj dopóki [wartości domyślne]"
-	, "Minimalne ratio (%):"
-	, "Minimalny czas udostępniania (minuty):"
-	, "Ustaw wyższy priorytet udostępniania niż pobierania"
-	, "Po wysłaniu określonej ilości danych przez zadanie"
-	, "Ogranicz prędkość wysyłania do: [0, aby zatrzymać]"
-	, "Włącz harmonogram"
-	, "Tabela harmonogramu"
-	, "Ustawienia harmonogramu"
-	, "Limit wysyłania (kB/s):"
-	, "Limit pobierania (kB/s):"
-	, "Wyłącz DHT przy wyłączaniu"
-	, "Włącz interfejs WWW"
-	, "Uwierzytelnianie"
-	, "Użytkownik:"
-	, "Hasło:"
-	, "Włącz konto gościa dla użytkownika o nazwie:"
-	, "Dostępność"
-	, "Alternatywny port nasłuchu (domyślnie = port protokołu):"
-,"Zezwalaj na dostęp tylko z tych adresów IP (w przypadku wielu wpisów odziel je przecinkiem):"
-	, "Opcje zaawansowane [UWAGA: Modyfikujesz na własne ryzyko!]"
-	, "Wartość:"
-	, "Tak"
-	, "Nie"
-	, "Ustaw"
-	, "Okno limitów prędkości [muszą być oddzielone przecinkami]"
-	, "Ustaw wartości ręcznie"
-	, "Limity wysyłania:"
-	, "Limity pobierania:"
-	, "Trwałe etykiety [muszą być oddzielone znakiem | ]"
-	, "Wyszukiwarki [format: nazwa|adres]"
-	, "Ustawienia podstawowe"
-	, "Bufor dysku przechowuje w pamięci często używane dane w celu ograniczenia liczby operacji zapisu/odczytu. µTorrent zarządza buforem automatycznie, jednak można zdefiniować własne ustawienia."
-	, "Określ rozmiar bufora (MB):"
-	, "Ogranicz użycie pamięci, jeśli nie istnieje potrzeba buforowania"
-	, "Ustawienia zaawansowane"
-	, "Włącz buforowanie zapisu"
-	, "Zapisz nieużywane bloki co 2 minuty"
-	, "Zapisz natychmiast zakończone fragmenty"
-	, "Włącz buforowanie odczytu"
-	, "Wyłącz buforowanie odczytu przy niskiej prędkości wysyłania"
-	, "Usuń stare bloki z bufora"
-	, "Automatycznie zwiększ rozmiar bufora przy błędach"
-	, "Wyłącz buforowanie zapisu przez Windows"
-	, "Wyłącz buforowanie odczytu przez Windows"
-	, "Uruchom program"
-	, "Uruchom ten program, gdy torrent zostanie ukończony:"
-	, "Uruchom ten program, gdy torrent zmieni stan:"
-	, "Można użyć następujących poleceń:\r\n%F - nazwa pobranego pliku (dla torrentów z jednym plikiem)\r\n%D - katalog, do którego zapisywane są pliki\r\n%N - nazwa torrenta\r\n%S - stan torrenta\r\n%L - etykieta\r\n%T - tracker\r\n%M - Wiadomość statusu (taka jak w kolumnie status)\r\n%I - hash w postaci hex\r\n\r\nStan jest kombinacją:\r\nuruchomiony = 1, sprawdzanie = 2, uruchom po sprawdzeniu = 4,\r\nsprawdzony = 8, błąd = 16, zatrzymany = 32, auto = 64, uruchomiony = 128"
-	, "Właściwości torrentów"
-	, "Trackery (muszą być oddzielone pustą linią)"
-	, "Ustawienia łącza"
-	, "Limit wysyłania (kB/s): [0: domyślnie]"
-	, "Limit pobierania (kB/s): [0: domyślnie]"
-	, "Liczba slotów: [0: domyślnie]"
-	, "Udostępniaj dopóki"
-	, "Nadpisz domyślne ustawienia"
-	, "Minimalne ratio (%):"
-	, "Minimalny czas udostępniania (w minutach):"
-	, "Inne ustawienia"
-	, "Tryb initial seeding"
-	, "Włącz DHT"
-	, "Wymiana peerów"
-	, "Kanał"
-	, "Adres kanału:"
-	, "Własna nazwa"
-	, "Subskrypcja"
-	, "Nie pobieraj torrentów automatycznie"
-	, "Automatycznie pobieraj torrenty udostępnione w kanale"
-	, "Użyj inteligentnego filtra odcinków"
-	, "Kanały||Ulubione||Historia||"
-	, "All Feeds"
-	, "Ustawienia filtra"
-	, "Nazwa:"
-	, "Zawiera:"
-	, "Nie zaw.:"
-	, "Zapisz w:"
-	, "Kanał:"
-	, "Jakość:"
-	, "Numer odcinka: [np. 1x12-14]"
-	, "Filtr sprawdza oryginalną nazwę zamiast rozkodowanej"
-	, "Nie pobieraj automatycznie"
-	, "Intelig. filtr odc."
-	, "Najwyższy priorytet dla zadania"
-	, "Sprawdzaj co:"
-	, "Etykieta dla nowych:"
-	, "Dodaj kanał RSS..."
-	, "Edytuj kanał"
-	, "Wyłącz kanał"
-	, "Aktywuj kanał"
-	, "Aktualizuj kanał"
-	, "Usuń kanał"
-	, "Pobieranie"
-	, "Otwórz URL w Przeglądarce"
-	, "Dodaj do Ulubionych"
-	, "Dodaj"
-	, "Usuń"
-	, "WSZYSTKIE"
-	, "(Wszystkie)"
-	, "(zawsze)||(tylko raz)||12 godzin||1 dzień||2 dni||3 dni||4 dni||1 tydzień||2 tygodnie||3 tygodnie||1 miesiąc||"
-	, "Dodaj kanał RSS"
-	, "Edytuj kanał RSS"
-	, "Remove RSS Feed(s)"
-	, "Really delete the %d selected RSS Feeds?"
-	, "Czy chcesz usunąć kanał RSS \"%s\"?"
-	, "Pełna nazwa"
-	, "Nazwa"
-	, "Odcinek"
-	, "Format"
-	, "Kodek"
-	, "Data"
-	, "Kanał"
-	, "URL źrodłowy"
-	, "IP"
-	, "Port"
-	, "Klient"
-	, "Flagi"
-	, "%"
-	, "Trafność"
-	, "Pobieranie"
-	, "Wysyłanie"
-	, "Zapytania"
-	, "Czekanie"
-	, "Wysłano"
-	, "Pobrano"
-	, "Hasherr"
-	, "Prędkość"
-	, "Maks. wysyłania"
-	, "Maks. pobierania"
-	, "W kolejce"
-	, "Nieaktywne"
-	, "Ukończono"
-	, "Pierwszy fragment"
-	, "Nazwa"
-	, "# fragmentów"
-	, "%"
-	, "Priorytet"
-	, "Rozmiar"
-	, "pomiń"
-	, "niski"
-	, "normalny"
-	, "wysoki"
-	, "Pobrano:"
-	, "Wysłano:"
-	, "Seedów:"
-	, "Pozostało:"
-	, "Prędk. pobierania:"
-	, "Prędk. wysyłania:"
-	, "Peerów:"
-	, "Ratio:"
-	, "Zapisany w:"
-	, "Suma kontrolna:"
-	, "Ogólne"
-	, "Transfer"
-	, "%d z %d połączonych (%d w kolejce)"
-	, "D:%s U:%s - %s"
-	, "Kopiuj"
-	, "Resetuj"
-	, "Bez limitu"
-	, "Pokazuj nazwy hostów zamiast IP"
-	, "Get File(s)"
-	, "Nie pobieraj"
-	, "Wysoki priorytet"
-	, "Niski priorytet"
-	, "Normalny priorytet"
-	, "Kopiuj magnet-link"
-	, "Usuń dane"
-	, "Usuń plik .torrent"
-	, "Usuń plik .torrent i dane"
-	, "Ponowne sprawdzenie"
-	, "Wymuś start"
-	, "Etykieta"
-	, "Pauza"
-	, "Właściwości"
-	, "Przesuń do dołu"
-	, "Przesuń do góry"
-	, "Usuń"
-	, "Usuń..."
-	, "Start"
-	, "Stop"
-	, "Aktywne"
-	, "Wszystkie"
-	, "Ukończone"
-	, "Pobierane"
-	, "Nieaktywne"
-	, "Bez etykiety"
-	, "||Dost.||Dostępność"
-	, "Dodany"
-	, "Data i czas ukończenia"
-	, "Postęp"
-	, "Pobrano"
-	, "Pobieranie"
-	, "Szacowane"
-	, "Etykieta"
-	, "Nazwa"
-	, "#"
-	, "Peerów"
-	, "Pozostało"
-	, "Seedów"
-	, "Seedy/Peery"
-	, "Ratio"
-	, "Rozmiar"
-	, "URL źrodłowy"
-	, "Status"
-	, "Wysłano"
-	, "Wysyłanie"
-	, "Czy na pewno chcesz usunąć %d zaznaczone torrenty i wszystkie pobrane dane?"
-	, "Czy na pewno chcesz usunąć zaznaczony torrent i wszystkie pobrane dane?"
-	, "Czy na pewno chcesz usunąć %d zaznaczone zadania?"
-	, "Czy na pewno chcesz usunąć zaznaczone zadanie?"
-	, "Czy chcesz usunąć filtr \"%s\"?"
-	, "Sprawdzanie %:.1d%%"
-	, "Pobieranie"
-	, "Błąd: %s"
-	, "Ukończono"
-	, "Pauza"
-	, "W kolejce"
-	, "Seed w kolejce"
-	, "Udostępnianie"
-	, "Zatrzymano"
-	, "Wprowadź etykietę"
-	, "Wprowadź nową etykietę dla wybranych torrentów:"
-	, "Nowa etykieta..."
-	, "Usuń etykietę"
-	, "Ogólne||Trackery||Połączenia||Fragmenty||Pliki||Prędkość||Log||"
-	, "Dodaj torrent"
-	, "Dodaj torrent z adresu"
-	, "Pauza"
-	, "Ustawienia"
-	, "Przesuń do dołu"
-	, "Przesuń do góry"
-	, "Usuń"
-	, "Czytnik RSS"
-	, "Start"
-	, "Stop"
-	, "Plik"
-	, "Dodaj torrent..."
-	, "Dodaj torrent z adresu..."
-	, "Opcje"
-	, "Ustawienia"
-	, "Pokaż listę kategorii"
-	, "Pokaż szczegółowe informacje"
-	, "Pokaż pasek stanu"
-	, "Pokaż pasek narzędzi"
-	, "Ikony w tytułach zakładek"
-	, "Pomoc"
-	, "Strona internetowa"
-	, "Forum µTorrent"
-	, "Send WebUI Feedback"
-	, "About µTorrent WebUI"
-	, "Torrenty"
-	, "Zatrzymaj wszystkie pliki"
-	, "Uruchom wszystkie pliki"
-	, "D: %s%z/s"
-	, " L: %z/s"
-	, " O: %z/s"
-	, " T: %Z"
-	, "U: %s%z/s"
-	, "B"
-	, "KB"
-	, "GB"
-	, "kB"
-	, "MB"
-	, "PB"
-	, "TB"
-	, "Zaawansowane"
-	, "Ustawienia łącza"
-	, "Połączenie"
-	, "Bufor dysku"
-	, "Katalogi"
-	, "Główne"
-	, "Harmonogram"
-	, "Kolejkowanie"
-	, "Dodatkowe ustawienia interfejsu"
-	, "Interfejs"
-	, "Protokół BitTorrent"
-	, "Interfejs WWW"
-	, "Limit transferu"
-	, "Uruchom program"
-	, "Pokaż właściwości||Uruchom/Zatrzymaj||Otwórz katalog||Pokaż pasek pobierania||"
-	, "Wyłączone||Włączone||Wymuszone||"
-	, "(brak)||Socks4||Socks5||HTTPS||HTTP||"
-	, "wysyłanie||pobieranie||wysyłanie + pobieranie||"
-	, "MB||GB||"
-	, "1||2||5||7||10||14||15||20||21||28||30||31||"
-	, "Nazwa"
-	, "Wartość"
-	, "pn.||wt.||śr.||czw.||pt.||sob.||ndz.||"
-	, "Poniedziałek||Wtorek||Środa||Czwartek||Piątek||Sobota||Niedziela||"
-	, "Bez limitu"
-	, "Pełna szybkość - Używa globalnych limitów"
-	, "Limitowany"
-	, "Ograniczone - Używa zdefiniowanych ograniczeń"
-	, "Tylko seedowanie"
-	, "Tylko seedowanie -Tylko uploady (z uwzględnieniem niekompletnych)"
-	, "Wyłącz"
-	, "Wyłącz - Wyłącza wszystkie niewymuszone torrenty"
-	, "<= %d godzin"
-	, "(Ignoruj)"
-	, "<= %d minut"
-	, "%dd %dh"
-	, "%dh %dm"
-	, "%dm %ds"
-	, "%ds"
-	, "%dw %dd"
-	, "%dy %dw",
-	"More Action",
-	"Torrenty",
-	"Kanały",
-	"Aplikacja",
-	"kraj",
-	'Szacowane', // i.e. how much time remaining
-	"z", // i.e. 3 of 4 peers
-	"/s", // "per second""
-	"Wklej torrent lub adres URL kanału",
-	"Strona główna",
-	"Wyloguj",
-	"Udostępnianie",
-	"Wszystkie kanały",
-	"prędkość transmisji (w bitach)",
-	"rozdzielczość",
-	"długość",
-	"do strumieniowania",
-	"typ", // i.e. file extension
-	"zdalnie", // i.e. uTorrent remote
-	"informacje",
-	"sesje",
-	"Udostępnij",
-	"Udostępnij ten torrent",
-	"Udostępnij to łącze",
-	"dodaj",
-	"wyloguj",
-	"zaloguj",
-	"dostęp w dowolnym miejscu",
-	"nie wylogowuj",
-	"pobierz",
-	"Twój klient jest obecnie niedostępny. Sprawdź, czy masz połączenie z Internetem.",
-	"Brak komunikacji z Twoim klientem &micro;Torrent. Ten komunikat zniknie automatycznie po ponownym nawiązaniu połączenia.",
-	"Otwórz plik",
-	"Pobierz na dysk komputera",
-	"Otwórz za pomocą VLC Media Player",
-	"Działania",
-	"sezon", // i.e. of a TV show
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	"Ustawienia",
-	"Dostęp zdalny",
-	"Usługa dostępu zdalnego zapewnia prosty i bezpieczny dostęp do uruchomionego klienta za pośrednictwem przeglądarki internetowej.",
-	"Aktywuj połączenie poniżej, wybierz nazwę komputera i hasło oraz pamiętaj, aby nie wyłączać komputera.",
-	"Dowiedz się więcej",
-	"Aktywuj dostęp zdalny do uTorenta",
-	"Uwierzytelnianie",
-	"Użytkownik:",
-	"Hasło:",
-	"Dodaj",
-	"Dostęp zdalny",
-	"Dostępny",
-	"Łączenie..",
-	"Niedostępny",
-	"Rejestracja nie powiodła się",
-	"Musisz wprowadzić hasło, aby móc korzystać z usługi dostępu zdalnego",
-	"Nie udało się połączyć z usługą dostępu zdalnego w celu rejestracji",
-	"Komputer używający tej nazwy użytkownika już istnieje",
-	"Nazwa użytkownika musi zawierać tylko angielskie znaki",
-	"Hasło musi zawierać tylko angielskie znaki",
-	"Status: "
-];
+var LANG_STR =
+{
+   "CT_MASK1":"Pliki torrent||*.torrent||Wszystkie pliki (*.*)||*.*||",
+   "DLG_BTN_OK":"OK",
+   "DLG_BTN_CANCEL":"Anuluj",
+   "DLG_BTN_APPLY":"Zastosuj",
+   "DLG_BTN_YES":"Tak",
+   "DLG_BTN_NO":"Nie",
+   "DLG_BTN_CLOSE":"Zamknij",
+   "DLG_SETTINGS_00":"Preferencje",
+   "DLG_SETTINGS_1_GENERAL_01":"Język",
+   "DLG_SETTINGS_1_GENERAL_02":"Język:",
+   "DLG_SETTINGS_1_GENERAL_10":"Prywatność",
+   "DLG_SETTINGS_1_GENERAL_11":"Automatycznie sprawdzaj aktualizacje",
+   "DLG_SETTINGS_1_GENERAL_12":"Uaktualniaj do wersji beta",
+   "DLG_SETTINGS_1_GENERAL_13":"Wysyłaj anonimowe zapytania o dostępność nowej wersji",
+   "DLG_SETTINGS_1_GENERAL_17":"Podczas pobierania",
+   "DLG_SETTINGS_1_GENERAL_18":"Dodaj .!ut do nazw nieukończonych plików",
+   "DLG_SETTINGS_1_GENERAL_19":"Zawsze rezerwuj miejsce",
+   "DLG_SETTINGS_1_GENERAL_20":"Nie przechodź do stanu wstrzymania, jeśli aktywny",
+   "DLG_SETTINGS_2_UI_01":"Opcje wyświetlania",
+   "DLG_SETTINGS_2_UI_02":"Potwierdzaj usunięcie torrentów",
+   "DLG_SETTINGS_2_UI_03":"Potwierdzaj usunięcie trackerów",
+   "DLG_SETTINGS_2_UI_04":"Potwierdzaj przy wyjściu",
+   "DLG_SETTINGS_2_UI_05":"Alternatywny kolor tła listy",
+   "DLG_SETTINGS_2_UI_06":"Pokazuj prędkość na pasku tytułu",
+   "DLG_SETTINGS_2_UI_07":"Pokazuj limity na pasku statusu",
+   "DLG_SETTINGS_2_UI_15":"Przy dodaniu torrentów",
+   "DLG_SETTINGS_2_UI_16":"Nie pobieraj automatycznie",
+   "DLG_SETTINGS_2_UI_17":"Aktywuj okno programu",
+   "DLG_SETTINGS_2_UI_18":"Pokazuj okno z plikami torrenta",
+   "DLG_SETTINGS_2_UI_19":"Zachowanie przy podwójnym kliknięciu",
+   "DLG_SETTINGS_2_UI_20":"Dla udostępnianych torrentów:",
+   "DLG_SETTINGS_2_UI_22":"Dla pobieranych torrentów:",
+   "DLG_SETTINGS_3_PATHS_01":"Miejsce pobranych plików",
+   "DLG_SETTINGS_3_PATHS_02":"Zapisz nowe zadania w:",
+   "DLG_SETTINGS_3_PATHS_03":"Zawsze pokazuj okno przy ręcznym dodawaniu",
+   "DLG_SETTINGS_3_PATHS_06":"Przenieś zakończone zadania do:",
+   "DLG_SETTINGS_3_PATHS_07":"Dołącz etykietę torrenta",
+   "DLG_SETTINGS_3_PATHS_10":"Przenoś tylko z domyślnego katalogu pobierania",
+   "DLG_SETTINGS_3_PATHS_11":"Lokalizacja plików .torrent",
+   "DLG_SETTINGS_3_PATHS_12":"Przechowuj pliki .torrent w:",
+   "DLG_SETTINGS_3_PATHS_15":"Przenieś pliki .torrent ukończonych zadań do:",
+   "DLG_SETTINGS_3_PATHS_18":"Automatycznie ładuj zadania z:",
+   "DLG_SETTINGS_3_PATHS_19":"Usuń pliki .torrent po załadowaniu",
+   "DLG_SETTINGS_4_CONN_01":"Port nasłuchu",
+   "DLG_SETTINGS_4_CONN_02":"Port dla połączeń przychodzących:",
+   "DLG_SETTINGS_4_CONN_04":"Losuj port",
+   "DLG_SETTINGS_4_CONN_05":"Losuj port przy starcie programu",
+   "DLG_SETTINGS_4_CONN_06":"Włącz mapowanie portów UPnP",
+   "DLG_SETTINGS_4_CONN_07":"Włącz mapowanie portów NAT-PMP",
+   "DLG_SETTINGS_4_CONN_08":"Serwer proxy",
+   "DLG_SETTINGS_4_CONN_09":"Typ:",
+   "DLG_SETTINGS_4_CONN_11":"Proxy:",
+   "DLG_SETTINGS_4_CONN_13":"Port:",
+   "DLG_SETTINGS_4_CONN_15":"Uwierzytelnianie",
+   "DLG_SETTINGS_4_CONN_16":"Użytkownik:",
+   "DLG_SETTINGS_4_CONN_18":"Hasło:",
+   "DLG_SETTINGS_4_CONN_19":"Uzyskuj nazwy hostów przez proxy",
+   "DLG_SETTINGS_4_CONN_20":"Użyj serwera proxy dla połączeń peer-to-peer",
+   "DLG_SETTINGS_4_CONN_21":"Dodaj wyjątek do Zapory Wind.",
+   "DLG_SETTINGS_4_CONN_22":"Prywatność proxy",
+   "DLG_SETTINGS_4_CONN_23":"Wyłącz wszystkie lokalne odwołania DNS",
+   "DLG_SETTINGS_4_CONN_24":"Wyłącz cechy, z których wyciekają dane identyfikacyjne",
+   "DLG_SETTINGS_4_CONN_25":"Nie zezwalaj na połączenia nieobsługiwane przez proxy",
+   "DLG_SETTINGS_5_BANDWIDTH_01":"Globalny limit wysyłania",
+   "DLG_SETTINGS_5_BANDWIDTH_02":"Maksymalna predkość (kB/s): [0: bez limitu]",
+   "DLG_SETTINGS_5_BANDWIDTH_03":"Automatycznie",
+   "DLG_SETTINGS_5_BANDWIDTH_05":"Zmień limit wysyłania, gdy nie pobierasz (kB/s):",
+   "DLG_SETTINGS_5_BANDWIDTH_07":"Globalny limit pobierania",
+   "DLG_SETTINGS_5_BANDWIDTH_08":"Maksymalna prędkość (kB/s): [0: bez limitu]",
+   "DLG_SETTINGS_5_BANDWIDTH_10":"Liczba połączeń",
+   "DLG_SETTINGS_5_BANDWIDTH_11":"Maksymalna całkowita liczba połączeń:",
+   "DLG_SETTINGS_5_BANDWIDTH_14":"Maksymalna liczba połączonych peerów na torrent:",
+   "DLG_SETTINGS_5_BANDWIDTH_15":"Liczba slotów wysyłania na torrent:",
+   "DLG_SETTINGS_5_BANDWIDTH_17":"Otwórz dodatkowy slot, gdy prędkość wysyłania < 90%",
+   "DLG_SETTINGS_5_BANDWIDTH_18":"Globalne ustawienia przepustowości",
+   "DLG_SETTINGS_5_BANDWIDTH_19":"Zastosuj limit prędkości do całości ruchu (razem z overhead)",
+   "DLG_SETTINGS_5_BANDWIDTH_20":"Zastosuj ograniczenia do połączeń uTP",
+   "DLG_SETTINGS_6_BITTORRENT_01":"Dodatkowe funkcje BitTorrent",
+   "DLG_SETTINGS_6_BITTORRENT_02":"Włącz sieć DHT",
+   "DLG_SETTINGS_6_BITTORRENT_03":"Odpytaj tracker listę peerów",
+   "DLG_SETTINGS_6_BITTORRENT_04":"Włącz DHT dla nowych torrentów",
+   "DLG_SETTINGS_6_BITTORRENT_05":"Włącz wymianę peerów",
+   "DLG_SETTINGS_6_BITTORRENT_06":"Wykrywanie peerów lokalnych",
+   "DLG_SETTINGS_6_BITTORRENT_07":"Ogranicz transfery lokalne",
+   "DLG_SETTINGS_6_BITTORRENT_08":"IP/Nazwa hosta wysyłana do trackera:",
+   "DLG_SETTINGS_6_BITTORRENT_10":"Szyfrowanie",
+   "DLG_SETTINGS_6_BITTORRENT_11":"Wychodzące:",
+   "DLG_SETTINGS_6_BITTORRENT_13":"Akceptuj nieszyfrowane połączenia",
+   "DLG_SETTINGS_6_BITTORRENT_14":"Aktywuj zarządzanie pasmem [uTP]",
+   "DLG_SETTINGS_6_BITTORRENT_15":"Aktywuj wsparcie dla trackerów UDP",
+   "DLG_SETTINGS_7_TRANSFERCAP_01":"Włącz limit transferu",
+   "DLG_SETTINGS_7_TRANSFERCAP_02":"Ustawienia limitu transferu",
+   "DLG_SETTINGS_7_TRANSFERCAP_03":"Typ limitu:",
+   "DLG_SETTINGS_7_TRANSFERCAP_04":"Limit transferu:",
+   "DLG_SETTINGS_7_TRANSFERCAP_05":"Okres (dni):",
+   "DLG_SETTINGS_7_TRANSFERCAP_06":"Historia wykorzystania łącza dla wybranego okresu:",
+   "DLG_SETTINGS_7_TRANSFERCAP_07":"Wysłano:",
+   "DLG_SETTINGS_7_TRANSFERCAP_08":"Pobrano:",
+   "DLG_SETTINGS_7_TRANSFERCAP_09":"Wysłano + pobrano:",
+   "DLG_SETTINGS_7_TRANSFERCAP_10":"Zakres czasu:",
+   "DLG_SETTINGS_7_TRANSFERCAP_11":"%d dni",
+   "DLG_SETTINGS_7_TRANSFERCAP_12":"Wyczyść",
+   "DLG_SETTINGS_8_QUEUEING_01":"Kolejka",
+   "DLG_SETTINGS_8_QUEUEING_02":"Maksymalna liczba aktywnych zadań (wysyłania lub pobierania):",
+   "DLG_SETTINGS_8_QUEUEING_04":"Maksymalna liczba aktywnych pobierań:",
+   "DLG_SETTINGS_8_QUEUEING_06":"Udostępniaj dopóki [wartości domyślne]",
+   "DLG_SETTINGS_8_QUEUEING_07":"Minimalne ratio (%):",
+   "DLG_SETTINGS_8_QUEUEING_09":"Minimalny czas udostępniania (minuty):",
+   "DLG_SETTINGS_8_QUEUEING_11":"Ustaw wyższy priorytet udostępniania niż pobierania",
+   "DLG_SETTINGS_8_QUEUEING_12":"Po wysłaniu określonej ilości danych przez zadanie",
+   "DLG_SETTINGS_8_QUEUEING_13":"Ogranicz prędkość wysyłania do: [0, aby zatrzymać]",
+   "DLG_SETTINGS_9_SCHEDULER_01":"Włącz harmonogram",
+   "DLG_SETTINGS_9_SCHEDULER_02":"Tabela harmonogramu",
+   "DLG_SETTINGS_9_SCHEDULER_04":"Ustawienia harmonogramu",
+   "DLG_SETTINGS_9_SCHEDULER_05":"Limit wysyłania (kB/s):",
+   "DLG_SETTINGS_9_SCHEDULER_07":"Limit pobierania (kB/s):",
+   "DLG_SETTINGS_9_SCHEDULER_09":"Wyłącz DHT przy wyłączaniu",
+   "DLG_SETTINGS_9_WEBUI_01":"Włącz interfejs WWW",
+   "DLG_SETTINGS_9_WEBUI_02":"Uwierzytelnianie",
+   "DLG_SETTINGS_9_WEBUI_03":"Użytkownik:",
+   "DLG_SETTINGS_9_WEBUI_05":"Hasło:",
+   "DLG_SETTINGS_9_WEBUI_07":"Włącz konto gościa dla użytkownika o nazwie:",
+   "DLG_SETTINGS_9_WEBUI_09":"Dostępność",
+   "DLG_SETTINGS_9_WEBUI_10":"Alternatywny port nasłuchu (domyślnie = port protokołu):",
+   "DLG_SETTINGS_9_WEBUI_12":"Zezwalaj na dostęp tylko z tych adresów IP (w przypadku wielu wpisów odziel je przecinkiem):",
+   "DLG_SETTINGS_A_ADVANCED_01":"Opcje zaawansowane [UWAGA: Modyfikujesz na własne ryzyko!]",
+   "DLG_SETTINGS_A_ADVANCED_02":"Wartość:",
+   "DLG_SETTINGS_A_ADVANCED_03":"Tak",
+   "DLG_SETTINGS_A_ADVANCED_04":"Nie",
+   "DLG_SETTINGS_A_ADVANCED_05":"Ustaw",
+   "DLG_SETTINGS_B_ADV_UI_01":"Okno limitów prędkości [muszą być oddzielone przecinkami]",
+   "DLG_SETTINGS_B_ADV_UI_02":"Ustaw wartości ręcznie",
+   "DLG_SETTINGS_B_ADV_UI_03":"Limity wysyłania:",
+   "DLG_SETTINGS_B_ADV_UI_05":"Limity pobierania:",
+   "DLG_SETTINGS_B_ADV_UI_07":"Trwałe etykiety [muszą być oddzielone znakiem | ]",
+   "DLG_SETTINGS_B_ADV_UI_08":"Wyszukiwarki [format: nazwa|adres]",
+   "DLG_SETTINGS_C_ADV_CACHE_01":"Ustawienia podstawowe",
+   "DLG_SETTINGS_C_ADV_CACHE_02":"Bufor dysku przechowuje w pamięci często używane dane w celu ograniczenia liczby operacji zapisu/odczytu. µTorrent zarządza buforem automatycznie, jednak można zdefiniować własne ustawienia.",
+   "DLG_SETTINGS_C_ADV_CACHE_03":"Określ rozmiar bufora (MB):",
+   "DLG_SETTINGS_C_ADV_CACHE_05":"Ogranicz użycie pamięci, jeśli nie istnieje potrzeba buforowania",
+   "DLG_SETTINGS_C_ADV_CACHE_06":"Ustawienia zaawansowane",
+   "DLG_SETTINGS_C_ADV_CACHE_07":"Włącz buforowanie zapisu",
+   "DLG_SETTINGS_C_ADV_CACHE_08":"Zapisz nieużywane bloki co 2 minuty",
+   "DLG_SETTINGS_C_ADV_CACHE_09":"Zapisz natychmiast zakończone fragmenty",
+   "DLG_SETTINGS_C_ADV_CACHE_10":"Włącz buforowanie odczytu",
+   "DLG_SETTINGS_C_ADV_CACHE_11":"Wyłącz buforowanie odczytu przy niskiej prędkości wysyłania",
+   "DLG_SETTINGS_C_ADV_CACHE_12":"Usuń stare bloki z bufora",
+   "DLG_SETTINGS_C_ADV_CACHE_13":"Automatycznie zwiększ rozmiar bufora przy błędach",
+   "DLG_SETTINGS_C_ADV_CACHE_14":"Wyłącz buforowanie zapisu przez Windows",
+   "DLG_SETTINGS_C_ADV_CACHE_15":"Wyłącz buforowanie odczytu przez Windows",
+   "DLG_SETTINGS_C_ADV_RUN_01":"Uruchom program",
+   "DLG_SETTINGS_C_ADV_RUN_02":"Uruchom ten program, gdy torrent zostanie ukończony:",
+   "DLG_SETTINGS_C_ADV_RUN_04":"Uruchom ten program, gdy torrent zmieni stan:",
+   "DLG_SETTINGS_C_ADV_RUN_06":"Można użyć następujących poleceń:\r\n%F - nazwa pobranego pliku (dla torrentów z jednym plikiem)\r\n%D - katalog, do którego zapisywane są pliki\r\n%N - nazwa torrenta\r\n%S - stan torrenta\r\n%L - etykieta\r\n%T - tracker\r\n%M - Wiadomość statusu (taka jak w kolumnie status)\r\n%I - hash w postaci hex\r\n\r\nStan jest kombinacją:\r\nuruchomiony = 1, sprawdzanie = 2, uruchom po sprawdzeniu = 4,\r\nsprawdzony = 8, błąd = 16, zatrzymany = 32, auto = 64, uruchomiony = 128",
+   "DLG_TORRENTPROP_00":"Właściwości torrentów",
+   "DLG_TORRENTPROP_1_GEN_01":"Trackery (muszą być oddzielone pustą linią)",
+   "DLG_TORRENTPROP_1_GEN_03":"Ustawienia łącza",
+   "DLG_TORRENTPROP_1_GEN_04":"Limit wysyłania (kB/s): [0: domyślnie]",
+   "DLG_TORRENTPROP_1_GEN_06":"Limit pobierania (kB/s): [0: domyślnie]",
+   "DLG_TORRENTPROP_1_GEN_08":"Liczba slotów: [0: domyślnie]",
+   "DLG_TORRENTPROP_1_GEN_10":"Udostępniaj dopóki",
+   "DLG_TORRENTPROP_1_GEN_11":"Nadpisz domyślne ustawienia",
+   "DLG_TORRENTPROP_1_GEN_12":"Minimalne ratio (%):",
+   "DLG_TORRENTPROP_1_GEN_14":"Minimalny czas udostępniania (w minutach):",
+   "DLG_TORRENTPROP_1_GEN_16":"Inne ustawienia",
+   "DLG_TORRENTPROP_1_GEN_17":"Tryb initial seeding",
+   "DLG_TORRENTPROP_1_GEN_18":"Włącz DHT",
+   "DLG_TORRENTPROP_1_GEN_19":"Wymiana peerów",
+   "DLG_ADDEDITRSSFEED_03":"Kanał",
+   "DLG_ADDEDITRSSFEED_04":"Adres kanału:",
+   "DLG_ADDEDITRSSFEED_05":"Własna nazwa",
+   "DLG_ADDEDITRSSFEED_06":"Subskrypcja",
+   "DLG_ADDEDITRSSFEED_07":"Nie pobieraj torrentów automatycznie",
+   "DLG_ADDEDITRSSFEED_08":"Automatycznie pobieraj torrenty udostępnione w kanale",
+   "DLG_ADDEDITRSSFEED_09":"Użyj inteligentnego filtra odcinków",
+   "DLG_RSSDOWNLOADER_02":"Kanały||Ulubione||Historia||",
+   "DLG_RSSDOWNLOADER_03":"All Feeds",
+   "DLG_RSSDOWNLOADER_04":"Ustawienia filtra",
+   "DLG_RSSDOWNLOADER_05":"Nazwa:",
+   "DLG_RSSDOWNLOADER_06":"Zawiera:",
+   "DLG_RSSDOWNLOADER_07":"Nie zaw.:",
+   "DLG_RSSDOWNLOADER_08":"Zapisz w:",
+   "DLG_RSSDOWNLOADER_09":"Kanał:",
+   "DLG_RSSDOWNLOADER_10":"Jakość:",
+   "DLG_RSSDOWNLOADER_11":"Numer odcinka: [np. 1x12-14]",
+   "DLG_RSSDOWNLOADER_12":"Filtr sprawdza oryginalną nazwę zamiast rozkodowanej",
+   "DLG_RSSDOWNLOADER_13":"Nie pobieraj automatycznie",
+   "DLG_RSSDOWNLOADER_14":"Intelig. filtr odc.",
+   "DLG_RSSDOWNLOADER_15":"Najwyższy priorytet dla zadania",
+   "DLG_RSSDOWNLOADER_16":"Sprawdzaj co:",
+   "DLG_RSSDOWNLOADER_17":"Etykieta dla nowych:",
+   "DLG_RSSDOWNLOADER_18":"Dodaj kanał RSS...",
+   "DLG_RSSDOWNLOADER_19":"Edytuj kanał",
+   "DLG_RSSDOWNLOADER_20":"Wyłącz kanał",
+   "DLG_RSSDOWNLOADER_21":"Aktywuj kanał",
+   "DLG_RSSDOWNLOADER_22":"Aktualizuj kanał",
+   "DLG_RSSDOWNLOADER_23":"Usuń kanał",
+   "DLG_RSSDOWNLOADER_24":"Pobieranie",
+   "DLG_RSSDOWNLOADER_25":"Otwórz URL w Przeglądarce",
+   "DLG_RSSDOWNLOADER_26":"Dodaj do Ulubionych",
+   "DLG_RSSDOWNLOADER_27":"Dodaj",
+   "DLG_RSSDOWNLOADER_28":"Usuń",
+   "DLG_RSSDOWNLOADER_29":"WSZYSTKIE",
+   "DLG_RSSDOWNLOADER_30":"(Wszystkie)",
+   "DLG_RSSDOWNLOADER_31":"(zawsze)||(tylko raz)||12 godzin||1 dzień||2 dni||3 dni||4 dni||1 tydzień||2 tygodnie||3 tygodnie||1 miesiąc||",
+   "DLG_RSSDOWNLOADER_32":"Dodaj kanał RSS",
+   "DLG_RSSDOWNLOADER_33":"Edytuj kanał RSS",
+   "DLG_RSSDOWNLOADER_34":"Remove RSS Feed(s)",
+   "DLG_RSSDOWNLOADER_35":"Really delete the %d selected RSS Feeds?",
+   "DLG_RSSDOWNLOADER_36":"Czy chcesz usunąć kanał RSS \"%s\"?",
+   "FEED_COL_FULLNAME":"Pełna nazwa",
+   "FEED_COL_NAME":"Nazwa",
+   "FEED_COL_EPISODE":"Odcinek",
+   "FEED_COL_FORMAT":"Format",
+   "FEED_COL_CODEC":"Kodek",
+   "FEED_COL_DATE":"Data",
+   "FEED_COL_FEED":"Kanał",
+   "FEED_COL_URL":"URL źrodłowy",
+   "PRS_COL_IP":"IP",
+   "PRS_COL_PORT":"Port",
+   "PRS_COL_CLIENT":"Klient",
+   "PRS_COL_FLAGS":"Flagi",
+   "PRS_COL_PCNT":"%",
+   "PRS_COL_RELEVANCE":"Trafność",
+   "PRS_COL_DOWNSPEED":"Pobieranie",
+   "PRS_COL_UPSPEED":"Wysyłanie",
+   "PRS_COL_REQS":"Zapytania",
+   "PRS_COL_WAITED":"Czekanie",
+   "PRS_COL_UPLOADED":"Wysłano",
+   "PRS_COL_DOWNLOADED":"Pobrano",
+   "PRS_COL_HASHERR":"Hasherr",
+   "PRS_COL_PEERDL":"Prędkość",
+   "PRS_COL_MAXUP":"Maks. wysyłania",
+   "PRS_COL_MAXDOWN":"Maks. pobierania",
+   "PRS_COL_QUEUED":"W kolejce",
+   "PRS_COL_INACTIVE":"Nieaktywne",
+   "FI_COL_DONE":"Ukończono",
+   "FI_COL_FIRSTPC":"Pierwszy fragment",
+   "FI_COL_NAME":"Nazwa",
+   "FI_COL_NUMPCS":"# fragmentów",
+   "FI_COL_PCNT":"%",
+   "FI_COL_PRIO":"Priorytet",
+   "FI_COL_SIZE":"Rozmiar",
+   "FI_PRI0":"pomiń",
+   "FI_PRI1":"niski",
+   "FI_PRI2":"normalny",
+   "FI_PRI3":"wysoki",
+   "GN_TP_01":"Pobrano:",
+   "GN_TP_02":"Wysłano:",
+   "GN_TP_03":"Seedów:",
+   "GN_TP_04":"Pozostało:",
+   "GN_TP_05":"Prędk. pobierania:",
+   "GN_TP_06":"Prędk. wysyłania:",
+   "GN_TP_07":"Peerów:",
+   "GN_TP_08":"Ratio:",
+   "GN_TP_09":"Zapisany w:",
+   "GN_TP_10":"Suma kontrolna:",
+   "GN_GENERAL":"Ogólne",
+   "GN_TRANSFER":"Transfer",
+   "GN_XCONN":"%d z %d połączonych (%d w kolejce)",
+   "MAIN_TITLEBAR_SPEED":"D:%s U:%s - %s",
+   "MENU_COPY":"Kopiuj",
+   "MENU_RESET":"Resetuj",
+   "MENU_UNLIMITED":"Bez limitu",
+   "MP_RESOLVE_IPS":"Pokazuj nazwy hostów zamiast IP",
+   "MF_GETFILE":"Get File(s)",
+   "MF_DONT":"Nie pobieraj",
+   "MF_HIGH":"Wysoki priorytet",
+   "MF_LOW":"Niski priorytet",
+   "MF_NORMAL":"Normalny priorytet",
+   "ML_COPY_MAGNETURI":"Kopiuj magnet-link",
+   "ML_DELETE_DATA":"Usuń dane",
+   "ML_DELETE_TORRENT":"Usuń plik .torrent",
+   "ML_DELETE_DATATORRENT":"Usuń plik .torrent i dane",
+   "ML_FORCE_RECHECK":"Ponowne sprawdzenie",
+   "ML_FORCE_START":"Wymuś start",
+   "ML_LABEL":"Etykieta",
+   "ML_PAUSE":"Pauza",
+   "ML_PROPERTIES":"Właściwości",
+   "ML_QUEUEDOWN":"Przesuń do dołu",
+   "ML_QUEUEUP":"Przesuń do góry",
+   "ML_REMOVE":"Usuń",
+   "ML_REMOVE_AND":"Usuń...",
+   "ML_START":"Start",
+   "ML_STOP":"Stop",
+   "OV_CAT_ACTIVE":"Aktywne",
+   "OV_CAT_ALL":"Wszystkie",
+   "OV_CAT_COMPL":"Ukończone",
+   "OV_CAT_DL":"Pobierane",
+   "OV_CAT_INACTIVE":"Nieaktywne",
+   "OV_CAT_NOLABEL":"Bez etykiety",
+   "OV_COL_AVAIL":"||Dost.||Dostępność",
+   "OV_COL_DATE_ADDED":"Dodany",
+   "OV_COL_DATE_COMPLETED":"Data i czas ukończenia",
+   "OV_COL_DONE":"Postęp",
+   "OV_COL_DOWNLOADED":"Pobrano",
+   "OV_COL_DOWNSPD":"Pobieranie",
+   "OV_COL_ETA":"Szacowane",
+   "OV_COL_LABEL":"Etykieta",
+   "OV_COL_NAME":"Nazwa",
+   "OV_COL_ORDER":"#",
+   "OV_COL_PEERS":"Peerów",
+   "OV_COL_REMAINING":"Pozostało",
+   "OV_COL_SEEDS":"Seedów",
+   "OV_COL_SEEDS_PEERS":"Seedy/Peery",
+   "OV_COL_SHARED":"Ratio",
+   "OV_COL_SIZE":"Rozmiar",
+   "OV_COL_SOURCE_URL":"URL źrodłowy",
+   "OV_COL_STATUS":"Status",
+   "OV_COL_UPPED":"Wysłano",
+   "OV_COL_UPSPD":"Wysyłanie",
+   "OV_CONFIRM_DELETEDATA_MULTIPLE":"Czy na pewno chcesz usunąć %d zaznaczone torrenty i wszystkie pobrane dane?",
+   "OV_CONFIRM_DELETEDATA_ONE":"Czy na pewno chcesz usunąć zaznaczony torrent i wszystkie pobrane dane?",
+   "OV_CONFIRM_DELETE_MULTIPLE":"Czy na pewno chcesz usunąć %d zaznaczone zadania?",
+   "OV_CONFIRM_DELETE_ONE":"Czy na pewno chcesz usunąć zaznaczone zadanie?",
+   "OV_CONFIRM_DELETE_RSSFILTER":"Czy chcesz usunąć filtr \"%s\"?",
+   "OV_FL_CHECKED":"Sprawdzanie %:.1d%",
+   "OV_FL_DOWNLOADING":"Pobieranie",
+   "OV_FL_ERROR":"Błąd: %s",
+   "OV_FL_FINISHED":"Ukończono",
+   "OV_FL_PAUSED":"Pauza",
+   "OV_FL_QUEUED":"W kolejce",
+   "OV_FL_QUEUED_SEED":"Seed w kolejce",
+   "OV_FL_SEEDING":"Udostępnianie",
+   "OV_FL_STOPPED":"Zatrzymano",
+   "OV_NEWLABEL_CAPTION":"Wprowadź etykietę",
+   "OV_NEWLABEL_TEXT":"Wprowadź nową etykietę dla wybranych torrentów:",
+   "OV_NEW_LABEL":"Nowa etykieta...",
+   "OV_REMOVE_LABEL":"Usuń etykietę",
+   "OV_TABS":"Ogólne||Trackery||Połączenia||Fragmenty||Pliki||Prędkość||Log||",
+   "OV_TB_ADDTORR":"Dodaj torrent",
+   "OV_TB_ADDURL":"Dodaj torrent z adresu",
+   "OV_TB_PAUSE":"Pauza",
+   "OV_TB_PREF":"Ustawienia",
+   "OV_TB_QUEUEDOWN":"Przesuń do dołu",
+   "OV_TB_QUEUEUP":"Przesuń do góry",
+   "OV_TB_REMOVE":"Usuń",
+   "OV_TB_RSSDOWNLDR":"Czytnik RSS",
+   "OV_TB_START":"Start",
+   "OV_TB_STOP":"Stop",
+   "MM_FILE":"Plik",
+   "MM_FILE_ADD_TORRENT":"Dodaj torrent...",
+   "MM_FILE_ADD_URL":"Dodaj torrent z adresu...",
+   "MM_OPTIONS":"Opcje",
+   "MM_OPTIONS_PREFERENCES":"Ustawienia",
+   "MM_OPTIONS_SHOW_CATEGORY":"Pokaż listę kategorii",
+   "MM_OPTIONS_SHOW_DETAIL":"Pokaż szczegółowe informacje",
+   "MM_OPTIONS_SHOW_STATUS":"Pokaż pasek stanu",
+   "MM_OPTIONS_SHOW_TOOLBAR":"Pokaż pasek narzędzi",
+   "MM_OPTIONS_TAB_ICONS":"Ikony w tytułach zakładek",
+   "MM_HELP":"Pomoc",
+   "MM_HELP_UT_WEBPAGE":"Strona internetowa",
+   "MM_HELP_UT_FORUMS":"Forum µTorrent",
+   "MM_HELP_WEBUI_FEEDBACK":"Send WebUI Feedback",
+   "MM_HELP_ABOUT_WEBUI":"About µTorrent WebUI",
+   "STM_TORRENTS":"Torrenty",
+   "STM_TORRENTS_PAUSEALL":"Zatrzymaj wszystkie pliki",
+   "STM_TORRENTS_RESUMEALL":"Uruchom wszystkie pliki",
+   "SB_DOWNLOAD":"D: %s%z/s",
+   "SB_LOCAL":" L: %z/s",
+   "SB_OVERHEAD":" O: %z/s",
+   "SB_TOTAL":" T: %Z",
+   "SB_UPLOAD":"U: %s%z/s",
+   "SIZE_B":"B",
+   "SIZE_EB":"KB",
+   "SIZE_GB":"GB",
+   "SIZE_KB":"kB",
+   "SIZE_MB":"MB",
+   "SIZE_PB":"PB",
+   "SIZE_TB":"TB",
+   "ST_CAPT_ADVANCED":"Zaawansowane",
+   "ST_CAPT_BANDWIDTH":"Ustawienia łącza",
+   "ST_CAPT_CONNECTION":"Połączenie",
+   "ST_CAPT_DISK_CACHE":"Bufor dysku",
+   "ST_CAPT_FOLDER":"Katalogi",
+   "ST_CAPT_GENERAL":"Główne",
+   "ST_CAPT_SCHEDULER":"Harmonogram",
+   "ST_CAPT_QUEUEING":"Kolejkowanie",
+   "ST_CAPT_UI_EXTRAS":"Dodatkowe ustawienia interfejsu",
+   "ST_CAPT_UI_SETTINGS":"Interfejs",
+   "ST_CAPT_BITTORRENT":"Protokół BitTorrent",
+   "ST_CAPT_WEBUI":"Interfejs WWW",
+   "ST_CAPT_TRANSFER_CAP":"Limit transferu",
+   "ST_CAPT_RUN_PROGRAM":"Uruchom program",
+   "ST_CBO_UI_DBLCLK_TOR":"Pokaż właściwości||Uruchom/Zatrzymaj||Otwórz katalog||Pokaż pasek pobierania||",
+   "ST_CBO_ENCRYPTIONS":"Wyłączone||Włączone||Wymuszone||",
+   "ST_CBO_PROXY":"(brak)||Socks4||Socks5||HTTPS||HTTP||",
+   "ST_CBO_TCAP_MODES":"wysyłanie||pobieranie||wysyłanie + pobieranie||",
+   "ST_CBO_TCAP_UNITS":"MB||GB||",
+   "ST_CBO_TCAP_PERIODS":"1||2||5||7||10||14||15||20||21||28||30||31||",
+   "ST_COL_NAME":"Nazwa",
+   "ST_COL_VALUE":"Wartość",
+   "ST_SCH_DAYCODES":"pn.||wt.||śr.||czw.||pt.||sob.||ndz.||",
+   "ST_SCH_DAYNAMES":"Poniedziałek||Wtorek||Środa||Czwartek||Piątek||Sobota||Niedziela||",
+   "ST_SCH_LGND_FULL":"Bez limitu",
+   "ST_SCH_LGND_FULLEX":"Pełna szybkość - Używa globalnych limitów",
+   "ST_SCH_LGND_LIMITED":"Limitowany",
+   "ST_SCH_LGND_LIMITEDEX":"Ograniczone - Używa zdefiniowanych ograniczeń",
+   "ST_SCH_LGND_SEEDING":"Tylko seedowanie",
+   "ST_SCH_LGND_SEEDINGEX":"Tylko seedowanie -Tylko uploady (z uwzględnieniem niekompletnych)",
+   "ST_SCH_LGND_OFF":"Wyłącz",
+   "ST_SCH_LGND_OFFEX":"Wyłącz - Wyłącza wszystkie niewymuszone torrenty",
+   "ST_SEEDTIMES_HOURS":"<= %d godzin",
+   "ST_SEEDTIMES_IGNORE":"(Ignoruj)",
+   "ST_SEEDTIMES_MINUTES":"<= %d minut",
+   "TIME_DAYS_HOURS":"%dd %dh",
+   "TIME_HOURS_MINS":"%dh %dm",
+   "TIME_MINS_SECS":"%dm %ds",
+   "TIME_SECS":"%ds",
+   "TIME_WEEKS_DAYS":"%dw %dd",
+   "TIME_YEARS_WEEKS":"%dy %dw",
+   "ML_MORE_ACTIONS":"More Action",
+   "Torrents":"Torrenty",
+   "Feeds":"Kanały",
+   "App":"Aplikacja",
+   "country":"kraj",
+   "ETA":"Szacowane",
+   "of":"z",
+   "/s":"/s",
+   "Paste a torrent or feed URL":"Wklej torrent lub adres URL kanału",
+   "Home":"Strona główna",
+   "Logout":"Wyloguj",
+   "Seeding":"Udostępnianie",
+   "All Feeds":"Wszystkie kanały",
+   "bitrate":"prędkość transmisji (w bitach)",
+   "resolution":"rozdzielczość",
+   "length":"długość",
+   "streamable":"do strumieniowania",
+   "type":"typ",
+   "remote":"zdalnie",
+   "about":"informacje",
+   "sessions":"sesje",
+   "share":"Udostępnij",
+   "Share this torrent":"Udostępnij ten torrent",
+   "Share link":"Udostępnij to łącze",
+   "add":"dodaj",
+   "logout":"wyloguj",
+   "log in":"zaloguj",
+   "anywhere access":"dostęp w dowolnym miejscu",
+   "stay signed in":"nie wylogowuj",
+   "download":"pobierz",
+   "Your client is currently not available. Verify that it is connected to the internet.":"Twój klient jest obecnie niedostępny. Sprawdź, czy masz połączenie z Internetem.",
+   "Unable to communicate with your &micro;Torrent client. This message will disappear automatically when a connection is re-established.":"Brak komunikacji z Twoim klientem &micro;Torrent. Ten komunikat zniknie automatycznie po ponownym nawiązaniu połączenia.",
+   "Open file":"Otwórz plik",
+   "Download to your computer":"Pobierz na dysk komputera",
+   "Open with VLC Media Player":"Otwórz za pomocą VLC Media Player",
+   "Actions":"Działania",
+   "season":"sezon",
+   "DLG_ABOUT_VERSION_LEGEND":null,
+   "DLG_ABOUT_VERSION_VERSION":null,
+   "DLG_ABOUT_VERSION_REVISION":null,
+   "DLG_ABOUT_VERSION_BUILD_DATE":null,
+   "DLG_ABOUT_VERSION_PEER_ID":null,
+   "DLG_ABOUT_VERSION_USER_AGENT":null,
+   "DLG_ABOUT_UPNP_EXTERNAL_ADDRESS":null,
+   "DLG_ABOUT_UI_REVISION":null,
+   "DLG_SETTINGS_SAVE":null,
+   "DLG_SETTINGS_MENU_TITLE":"Ustawienia",
+   "DLG_SETTINGS_D_REMOTE_01":"Dostęp zdalny",
+   "DLG_SETTINGS_D_REMOTE_02":"Usługa dostępu zdalnego zapewnia prosty i bezpieczny dostęp do uruchomionego klienta za pośrednictwem przeglądarki internetowej.",
+   "DLG_SETTINGS_D_REMOTE_03":"Aktywuj połączenie poniżej, wybierz nazwę komputera i hasło oraz pamiętaj, aby nie wyłączać komputera.",
+   "DLG_SETTINGS_D_REMOTE_04":"Dowiedz się więcej",
+   "DLG_SETTINGS_D_REMOTE_05":"Aktywuj dostęp zdalny do uTorenta",
+   "DLG_SETTINGS_D_REMOTE_06":"Uwierzytelnianie",
+   "DLG_SETTINGS_D_REMOTE_07":"Użytkownik:",
+   "DLG_SETTINGS_D_REMOTE_08":"Hasło:",
+   "DLG_SETTINGS_D_REMOTE_09":"Dodaj",
+   "ST_CAPT_REMOTE":"Dostęp zdalny",
+   "STATUS_REMOTE_01":"Dostępny",
+   "STATUS_REMOTE_02":"Łączenie..",
+   "STATUS_REMOTE_03":"Niedostępny",
+   "STATUS_REMOTE_04":"Rejestracja nie powiodła się",
+   "STATUS_REMOTE_05":"Musisz wprowadzić hasło, aby móc korzystać z usługi dostępu zdalnego",
+   "STATUS_REMOTE_06":"Nie udało się połączyć z usługą dostępu zdalnego w celu rejestracji",
+   "STATUS_REMOTE_07":"Komputer używający tej nazwy użytkownika już istnieje",
+   "STATUS_REMOTE_08":"Nazwa użytkownika musi zawierać tylko angielskie znaki",
+   "STATUS_REMOTE_09":"Hasło musi zawierać tylko angielskie znaki",
+   "STATUS_REMOTE_10":"Status: "
+}

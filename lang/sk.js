@@ -5,473 +5,474 @@ Use of this source code is governed by a BSD-style that can be
 found in the LICENSE file.
 */
 
-var LANG_STR = [
-	  "Súbory torrentov||*.torrent||Všetky súbory (*.*)||*.*||"
-	, "OK"
-	, "Zrušiť"
-	, "Použiť"
-	, "Áno"
-	, "Nie"
-	, "Zatvoriť"
-	, "Možnosti"
-	, "Jazyk programu"
-	, "Jazyk:"
-	, "Súkromie"
-	, "Automaticky kontrolovať aktualizácie"
-	, "Aktualizovať na beta verzie"
-	, "Odoslať anonymné informácie pri kontrole aktualizácie"
-	, "Pri sťahovaní"
-	, "Pridať .!ut k nekompletným súborom"
-	, "Alokovať miesto pre všetky súbory"
-	, "Zakázať vypnutie aktívnym torrentom"
-	, "Možnosti zobrazenia"
-	, "Potvrdiť odobratie torrentu"
-	, "Potvrdiť vymazanie trackera"
-	, "Potvrdiť ukončenie programu"
-	, "Pozadie pre každý druhý riadok"
-	, "Zobraziť akt. rýchlosť v záhlaví okna"
-	, "Zobraziť limity rýchl. v lište stavov"
-	, "Pri pridaní torrentov"
-	, "Nespustiť sťahovanie automaticky"
-	, "Aktivovať okno programu"
-	, "Zobraziť okno so súbormi torrentu"
-	, "Akcie pri dvojkliku myšou"
-	, "Pre seedované torrenty:"
-	, "Pre sťahované torrenty:"
-	, "Umiestnenie sťahovaných súborov"
-	, "Nové sťahovanie do:"
-	, "Pri pridaní zobraziť vždy dialóg"
-	, "Kompletne stiahnuté presunúť do:"
-	, "Pripojiť kategóriu torrentu"
-	, "Presúvať súbory len z predvolenej zložky na sťahovanie"
-	, "Umiestnenie torrentov"
-	, "Uložiť torrenty do:"
-	, "Presunúť dokončené torrenty do:"
-	, "Automaticky načítať torrenty z:"
-	, "Vymazať načítané torrenty"
-	, "Naslúchací port"
-	, "Port pre prichádzajúce spojenie:"
-	, "Náhodný port"
-	, "Náhodný port vždy pri spustení"
-	, "Povoliť mapovanie portu UPnP"
-	, "Povoliť mapovanie portu NAT-PMP"
-	, "Proxy server"
-	, "Typ:"
-	, "Proxy:"
-	, "Port:"
-	, "Autorizácia"
-	, "Meno:"
-	, "Heslo:"
-	, "Názvy hostiteľov zisťovať cez proxy"
-	, "Použiť proxy server pre peer-to-peer spojenia"
-	, "Dať do výnimiek Windows Firewall"
-	, "Súkromie proxy"
-	, "Zakázať všetky miestne DNS vyhľadávania"
-	, "Zakázať funkcie, ktoré poskytujú identifikačné údaje"
-	, "Zakázať spojenia, ktoré nepodporujú proxy"
-	, "Celkové rýchlostné limity odosielania"
-	, "Max. odosielanie (kB/s): [0: neobmedzené]"
-	, "Automaticky"
-	, "Limit odosielania, keď nie je sťahovanie (kB/s):"
-	, "Celkové rýchlostné limity sťahovania"
-	, "Max. sťahovanie (kB/s): [0: neobmedzené]"
-	, "Počet spojení"
-	, "Maximálny počet všetkých spojení:"
-	, "Maximálny počet pripojených peerov na torrent:"
-	, "Počet odosielacích slotov na torrent:"
-	, "Použiť ďalší slot, ak je rýchlosť odosielania < 90%"
-	, "Global Rate Limit Options"
-	, "Použiť limit rýchlosti pre prenos dát komunikácie"
-	, "Použiť limit rýchlosti pre uTP spojenia"
-	, "Základné funkcie BitTorrentu"
-	, "Povoliť sieť DHT"
-	, "Žiadať tracker o scrape informácií"
-	, "Povoliť DHT pre nové torrenty"
-	, "Povoliť Peer Exchange"
-	, "Povoliť odhalenie miestnych peerov"
-	, "Limit šírky pásma miestnych peerov"
-	, "IP/Hostname odoslaný trackeru:"
-	, "Kódovanie prenosu"
-	, "Odchádzajúce:"
-	, "Povoliť nekódované prich. spojenia"
-	, "Povoliť správu šírky pásma uTP"
-	, "Povoliť podporu UDP trackerov"
-	, "Povoliť limit prenosu"
-	, "Nastavenie"
-	, "Typ limitu:"
-	, "Dátový limit:"
-	, "Obdobie (dni):"
-	, "Štatistika prenosu za vybraté obdobie"
-	, "Odoslané:"
-	, "Stiahnuté:"
-	, "Celkovo:"
-	, "Obdobie:"
-	, "za %d dní"
-	, "Reset"
-	, "Nastavenie čakania v poradí"
-	, "Maximálny počet aktívnych torrentov (odosielanie/sťahovanie):"
-	, "Maximálny počet aktívnych sťahovaní:"
-	, "Seedovať, ak [Predvolené hodnoty]"
-	, "Minimálne ratio (%):"
-	, "Minimálny čas seedovania (minúty):"
-	, "Seedovanie má vyššiu prioritu ako sťahovanie"
-	, "Odosielanie po dosiahnutí hodnoty Ratio alebo času seedovania"
-	, "Limit rýchlosti odosielania v (kB/s): [0: stop]"
-	, "Povoliť plánovanie"
-	, "Tabuľka  plánovania"
-	, "Nastavenie plánovania"
-	, "Limit rýchlosti odosielania (kB/s):"
-	, "Limit rýchlosti sťahovania (kB/s):"
-	, "Vypnúť DHT v režime Vypnuté"
-	, "Povoliť Web UI"
-	, "Autorizácia"
-	, "Meno:"
-	, "Heslo:"
-	, "Povoliť účet Guest s menom:"
-	, "Pripojiteľnosť"
-	, "Alternatívny naslúchací port (predvolený je port pripojenia):"
-	, "Prístup k WebUI je možný len z týchto IP adries (IP adresy oddeľujte čiarkou ,):"
-	, "Rozšírené nastavenia [VAROVANIE: Úpravy na vlastné riziko!]"
-	, "Hodnota:"
-	, "True"
-	, "False"
-	, "Nastaviť"
-	, "Zoznam rýchlostí v menu [oddeľujte čiarkou ,]"
-	, "Prideliť vlastnú rýchlosť v menu"
-	, "Rýchlosť odosielania:"
-	, "Rýchlosť sťahovania:"
-	, "Trvalé kategórie [Kategórie oddeľujte znakom | Alt+124]"
-	, "Vyhľadávače [Formát: názov|URL]"
-	, "Základné nastavenia cache"
-	, "Cache disku si ukladá do pamäte často používané data pre zníženie počtu čítaní a zápisov na harddisk. µTorrent spravuje cache automaticky, ale vy môžete zmeniť jej správanie úpravou týchto nastavení."
-	, "Nepoužiť automatickú veľkosť cache, ale nastaviť ju manuálne (MB):"
-	, "Obmedziť používanie pamäte, ak cache nie je potrebná"
-	, "Rozšírené nastavenie cache"
-	, "Povoliť cache zapisovať na disk"
-	, "Zapisovať nedotknuté bloky každé 2 minúty"
-	, "Zapisovať dokončené časti okamžite"
-	, "Povoliť cache čítať z disku"
-	, "Vypnúť čítanie z cache, ak rýchlosť odosielania je pomalá"
-	, "Odstrániť staré bloky z cache"
-	, "Zväčšiť automatickú cache pri problémoch"
-	, "Vypnúť cache Windows pre zápis na disk"
-	, "Vypnúť cache Windows pre čítanie z disku"
-	, "Spustenie"
-	, "Spustiť program po dokončení sťahovania:"
-	, "Spustiť program, keď torrent zmení stav:"
-	, "Môžete tiež použiť príkazy:\r\n%F - Názov stiahnutého súboru (torrenty s jedným súborom)\r\n%D - Adresár na uloženie súborov\r\n%N - Názov torrentu\r\n%S - Stav torrentu\r\n%L - Kategória\r\n%T - Tracker\r\n%M - Správa o stave torrentu (stĺpec Stav)\r\n%I - Reťazec hash\r\n\r\nStav je kombinácia:\r\nspustené =1, kontrolované = 2, spustiť po kontrole = 4,\r\nskontrolované = 8, chyba = 16, pozastavené = 32,\nautomaticky = 64, načítané = 128"
-	, "Vlastnosti torrentu"
-	, "Trackery (oddelujte prázdnym riadkom)"
-	, "Nastavenie prenosu"
-	, "Max. rýchlosť odosielania (kB/s): [0: predvolené]"
-	, "Max. rýchlosť sťahovania (kB/s): [0: predvolené]"
-	, "Počet odosielacích slotov: [0: predvolené]"
-	, "Seedovanie, ak"
-	, "Ignorovať predvolené nastavenia"
-	, "Minimálne ratio (%):"
-	, "Minimálny čas seedovania (minúty):"
-	, "Ďalšie nastavenia"
-	, "Počiatočný seed"
-	, "Povoliť DHT"
-	, "Peer Exchange"
-	, "Zdroj"
-	, "URL zdroja:"
-	, "Vlastný alias:"
-	, "Odber RSS"
-	, "Nesťahovať všetky položky automaticky"
-	, "Automaticky sťahovať všetky položky zo zdroja"
-	, "Použiť rýchly filter epizód"
-	, "Zdroje||Obľúbené||História||"
-	, "All Feeds"
-	, "Nastavenie filtra"
-	, "Názov:"
-	, "Stiahnuť:"
-	, "Okrem:"
-	, "Uložiť do:"
-	, "Zdroj:"
-	, "Kvalita:"
-	, "Číslo epizódy: [napr. 1x12-14]"
-	, "Filter porovná originálny názov namiesto dekódovaného"
-	, "Nesťahovať automaticky"
-	, "Rýchly filter epizód"
-	, "Sťahovať s najvyššou prioritou"
-	, "Minimálny interval:"
-	, "Zaradiť do kategórie:"
-	, "Pridať RSS zdroj..."
-	, "Upraviť zdroj..."
-	, "Zakázať zdroj"
-	, "Povoliť zdroj"
-	, "Aktualizovať zdroj"
-	, "Vymazať zdroj"
-	, "Stiahnuť"
-	, "Otvoriť URL v prehliadači"
-	, "Pridať do obľúbených"
-	, "Pridať"
-	, "Vymazať"
-	, "Všetky"
-	, "(Všetky)"
-	, "Vždy porovnať||Porovnať len raz||12 hodín||1 deň||2 dni||3 dni||4 dni||1 týždeň||2 týždne||3 týždne||1 mesiac||"
-	, "Pridanie RSS zdroja"
-	, "Úprava RSS zdroja"
-	, "Remove RSS Feed(s)"
-	, "Really delete the %d selected RSS Feeds?"
-	, "Určite vymazať RSS zdroj \"%s\"?"
-	, "Celý názov"
-	, "Názov"
-	, "Epizóda"
-	, "Formát"
-	, "Kodek"
-	, "Date"
-	, "Zdroj"
-	, "Zdroj URL"
-	, "IP"
-	, "Port"
-	, "Program"
-	, "Smer"
-	, "Percent"
-	, "Dôležitosť"
-	, "Rýchlosť sťahovania"
-	, "Rýchlosť odosielania"
-	, "Požiadavky"
-	, "Čakanie"
-	, "Odoslané"
-	, "Stiahnuté"
-	, "Chyby hash"
-	, "Sťahovanie peera"
-	, "Max odosielanie"
-	, "Max sťahovanie"
-	, "V poradí"
-	, "Neaktívny"
-	, "Dokončené"
-	, "Prvá časť"
-	, "Názov"
-	, "Počet častí"
-	, "Percent"
-	, "Priorita"
-	, "Veľkosť"
-	, "preskočiť"
-	, "Nízka"
-	, "Normálna"
-	, "Vysoká"
-	, "Stiahnuté:"
-	, "Odoslané:"
-	, "Seederov:"
-	, "Zostáva:"
-	, "Sťahovanie:"
-	, "Odosielanie:"
-	, "Peerov:"
-	, "Ratio:"
-	, "Uložiť ako:"
-	, "Hash:"
-	, "Hlavné"
-	, "Prenos"
-	, "%d z %d pripojených (vo swarme: %d)"
-	, "D:%s U:%s - %s"
-	, "Kopírovať"
-	, "Reset"
-	, "Neobmedzene"
-	, "Preložiť IP adresy"
-	, "Get File(s)"
-	, "Nesťahovať"
-	, "Vysoká priorita"
-	, "Nízka priorita"
-	, "Normálna priorita"
-	, "Kopírovať Magnet URI"
-	, "Vymazať data"
-	, "Vymazať torrent"
-	, "Vymazať torrent + dáta"
-	, "Hash kontrola"
-	, "Vynútený štart"
-	, "Kategória"
-	, "Pauza"
-	, "Vlastnosti"
-	, "Presunúť dolu"
-	, "Presunúť hore"
-	, "Odobrať úlohu"
-	, "Odobrať úlohu a..."
-	, "Štart"
-	, "Stop"
-	, "Aktívne"
-	, "Všetky"
-	, "Dokončené"
-	, "Sťahované"
-	, "Neaktívne"
-	, "Bez kategórie"
-	, "||Dostupnosť||Dostupnosť"
-	, "Pridané dňa"
-	, "Dokončené dňa"
-	, "Percent"
-	, "Stiahnuté"
-	, "Sťahovanie"
-	, "Odhadovaný čas"
-	, "Kategória"
-	, "Názov"
-	, "#"
-	, "Peerov"
-	, "Zostáva"
-	, "Seederov"
-	, "Seederi/Peeri"
-	, "Ratio"
-	, "Veľkosť"
-	, "Zdroj URL"
-	, "Stav"
-	, "Odoslané"
-	, "Odosielanie"
-	, "Určite chcete odstrániť vybraté torrenty (%d) a všetky pridružené data?"
-	, "Určite chcete odstrániť vybratý torrent a všetky pridružené data?"
-	, "Určite chcete odstrániť vybraté torrenty (%d) ?"
-	, "Určite chcete odstrániť vybratý torrent?"
-	, "Určite vymazať RSS filter \"%s\"?"
-	, "Skontrolované %:.1d%%"
-	, "Sťahovanie"
-	, "Chyba: %s"
-	, "Stop"
-	, "Pauza"
-	, "V poradí"
-	, "Seedovanie v poradí"
-	, "Seedovanie"
-	, "Stop"
-	, "Zadanie kategórie"
-	, "Zadajte novú kategóriu pre vybraté torrenty:"
-	, "Nová kategória..."
-	, "Odobrať kategóriu"
-	, "Hlavné||Trackery||Užívatelia||Časti||Súbory||Rýchlosť||Záznamy||"
-	, "Pridať torrent"
-	, "Pridať torrent z URL"
-	, "Pauza"
-	, "Možnosti"
-	, "Presunúť dolu"
-	, "Presunúť hore"
-	, "Odobrať"
-	, "RSS sťahovač"
-	, "Štart"
-	, "Stop"
-	, "Súbor"
-	, "Pridať torrent..."
-	, "Pridať torrent z URL..."
-	, "Nastavenia"
-	, "Možnosti"
-	, "Zobraziť bočný panel"
-	, "Zobraziť podrobnosti"
-	, "Zobraziť lištu stavov"
-	, "Zobraziť lištu nástrojov"
-	, "Ikony na záložkách"
-	, "Pomoc"
-	, "Web stránka"
-	, "Fórum"
-	, "Send WebUI Feedback"
-	, "About µTorrent WebUI"
-	, "Torrenty"
-	, "Pozastaviť všetky torrenty"
-	, "Obnoviť všetky torrenty"
-	, "D: %s%z/s"
-	, " L: %z/s"
-	, " O: %z/s"
-	, " C: %Z"
-	, "U: %s%z/s"
-	, "B"
-	, "EB"
-	, "GB"
-	, "KB"
-	, "MB"
-	, "PB"
-	, "TB"
-	, "Rozšírené"
-	, "Rýchlosti"
-	, "Pripojenie"
-	, "Cache"
-	, "Adresáre"
-	, "Hlavné"
-	, "Plánovač"
-	, "Poradie"
-	, "Extra UI"
-	, "Rozhranie"
-	, "BitTorrent"
-	, "Web UI"
-	, "Limit prenosu"
-	, "Spustenie"
-	, "Zobraziť vlastnosti||Štart/Stop||Otvoriť adresár||Zobraziť lištu sťahovania||"
-	, "Zakázané||Povolené||Vynútené||"
-	, "(žiadny)||Socks4||Socks5||HTTPS||HTTP||"
-	, "odosielanie||sťahovanie||odosielanie + sťahovanie||"
-	, "MB||GB||"
-	, "1||2||5||7||10||14||15||20||21||28||30||31||"
-	, "Názov"
-	, "Hodnota"
-	, "Po||Ut||St||Št||Pi||So||Ne||"
-	, "Pondelok||Utorok||Streda||Štvrtok||Piatok||Sobota||Nedeľa||"
-	, "Najrýchlejšie"
-	, "Najrýchlejšie - Plná rýchlosť daná celkovými rýchlostnými limitmi"
-	, "Obmedzené"
-	, "Obmedzené - Obmedzená rýchlosť daná nastavením v plánovači"
-	, "Len seedovanie"
-	, "Len seedovanie - Len odosielanie dát (vrátane nedokončených)"
-	, "Zastavené"
-	, "Zastavené - Zastaví všetky torrenty, ktoré nie sú vynútené"
-	, "<= %d hodín"
-	, "(Ignorovať)"
-	, "<= %d minút"
-	, "%dd %dh"
-	, "%dh %dm"
-	, "%dm %ds"
-	, "%ds"
-	, "%dt %dd"
-	, "%dr %dt"
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	"BitTorrent Remote",
-	"BitTorrent Remote poskytuje jednoduchý a bezpečný spôsob prístupu ku klientovi cez prehliadač.",
-	"Povoľte pripojenie nižšie, zadajte názov počítača a heslo. Nezabudnite nechať počítač zapnutý.",
-	"Viac informácií",
-	"Povoliť BitTorrent Remote",
-	"Autorizácia",
-	"Meno:",
-	"Heslo:",
-	"Odoslať",
-	"BitTorrent Remote"
-];
+var LANG_STR =
+{
+   "CT_MASK1":"Súbory torrentov||*.torrent||Všetky súbory (*.*)||*.*||",
+   "DLG_BTN_OK":"OK",
+   "DLG_BTN_CANCEL":"Zrušiť",
+   "DLG_BTN_APPLY":"Použiť",
+   "DLG_BTN_YES":"Áno",
+   "DLG_BTN_NO":"Nie",
+   "DLG_BTN_CLOSE":"Zatvoriť",
+   "DLG_SETTINGS_00":"Možnosti",
+   "DLG_SETTINGS_1_GENERAL_01":"Jazyk programu",
+   "DLG_SETTINGS_1_GENERAL_02":"Jazyk:",
+   "DLG_SETTINGS_1_GENERAL_10":"Súkromie",
+   "DLG_SETTINGS_1_GENERAL_11":"Automaticky kontrolovať aktualizácie",
+   "DLG_SETTINGS_1_GENERAL_12":"Aktualizovať na beta verzie",
+   "DLG_SETTINGS_1_GENERAL_13":"Odoslať anonymné informácie pri kontrole aktualizácie",
+   "DLG_SETTINGS_1_GENERAL_17":"Pri sťahovaní",
+   "DLG_SETTINGS_1_GENERAL_18":"Pridať .!ut k nekompletným súborom",
+   "DLG_SETTINGS_1_GENERAL_19":"Alokovať miesto pre všetky súbory",
+   "DLG_SETTINGS_1_GENERAL_20":"Zakázať vypnutie aktívnym torrentom",
+   "DLG_SETTINGS_2_UI_01":"Možnosti zobrazenia",
+   "DLG_SETTINGS_2_UI_02":"Potvrdiť odobratie torrentu",
+   "DLG_SETTINGS_2_UI_03":"Potvrdiť vymazanie trackera",
+   "DLG_SETTINGS_2_UI_04":"Potvrdiť ukončenie programu",
+   "DLG_SETTINGS_2_UI_05":"Pozadie pre každý druhý riadok",
+   "DLG_SETTINGS_2_UI_06":"Zobraziť akt. rýchlosť v záhlaví okna",
+   "DLG_SETTINGS_2_UI_07":"Zobraziť limity rýchl. v lište stavov",
+   "DLG_SETTINGS_2_UI_15":"Pri pridaní torrentov",
+   "DLG_SETTINGS_2_UI_16":"Nespustiť sťahovanie automaticky",
+   "DLG_SETTINGS_2_UI_17":"Aktivovať okno programu",
+   "DLG_SETTINGS_2_UI_18":"Zobraziť okno so súbormi torrentu",
+   "DLG_SETTINGS_2_UI_19":"Akcie pri dvojkliku myšou",
+   "DLG_SETTINGS_2_UI_20":"Pre seedované torrenty:",
+   "DLG_SETTINGS_2_UI_22":"Pre sťahované torrenty:",
+   "DLG_SETTINGS_3_PATHS_01":"Umiestnenie sťahovaných súborov",
+   "DLG_SETTINGS_3_PATHS_02":"Nové sťahovanie do:",
+   "DLG_SETTINGS_3_PATHS_03":"Pri pridaní zobraziť vždy dialóg",
+   "DLG_SETTINGS_3_PATHS_06":"Kompletne stiahnuté presunúť do:",
+   "DLG_SETTINGS_3_PATHS_07":"Pripojiť kategóriu torrentu",
+   "DLG_SETTINGS_3_PATHS_10":"Presúvať súbory len z predvolenej zložky na sťahovanie",
+   "DLG_SETTINGS_3_PATHS_11":"Umiestnenie torrentov",
+   "DLG_SETTINGS_3_PATHS_12":"Uložiť torrenty do:",
+   "DLG_SETTINGS_3_PATHS_15":"Presunúť dokončené torrenty do:",
+   "DLG_SETTINGS_3_PATHS_18":"Automaticky načítať torrenty z:",
+   "DLG_SETTINGS_3_PATHS_19":"Vymazať načítané torrenty",
+   "DLG_SETTINGS_4_CONN_01":"Naslúchací port",
+   "DLG_SETTINGS_4_CONN_02":"Port pre prichádzajúce spojenie:",
+   "DLG_SETTINGS_4_CONN_04":"Náhodný port",
+   "DLG_SETTINGS_4_CONN_05":"Náhodný port vždy pri spustení",
+   "DLG_SETTINGS_4_CONN_06":"Povoliť mapovanie portu UPnP",
+   "DLG_SETTINGS_4_CONN_07":"Povoliť mapovanie portu NAT-PMP",
+   "DLG_SETTINGS_4_CONN_08":"Proxy server",
+   "DLG_SETTINGS_4_CONN_09":"Typ:",
+   "DLG_SETTINGS_4_CONN_11":"Proxy:",
+   "DLG_SETTINGS_4_CONN_13":"Port:",
+   "DLG_SETTINGS_4_CONN_15":"Autorizácia",
+   "DLG_SETTINGS_4_CONN_16":"Meno:",
+   "DLG_SETTINGS_4_CONN_18":"Heslo:",
+   "DLG_SETTINGS_4_CONN_19":"Názvy hostiteľov zisťovať cez proxy",
+   "DLG_SETTINGS_4_CONN_20":"Použiť proxy server pre peer-to-peer spojenia",
+   "DLG_SETTINGS_4_CONN_21":"Dať do výnimiek Windows Firewall",
+   "DLG_SETTINGS_4_CONN_22":"Súkromie proxy",
+   "DLG_SETTINGS_4_CONN_23":"Zakázať všetky miestne DNS vyhľadávania",
+   "DLG_SETTINGS_4_CONN_24":"Zakázať funkcie, ktoré poskytujú identifikačné údaje",
+   "DLG_SETTINGS_4_CONN_25":"Zakázať spojenia, ktoré nepodporujú proxy",
+   "DLG_SETTINGS_5_BANDWIDTH_01":"Celkové rýchlostné limity odosielania",
+   "DLG_SETTINGS_5_BANDWIDTH_02":"Max. odosielanie (kB/s): [0: neobmedzené]",
+   "DLG_SETTINGS_5_BANDWIDTH_03":"Automaticky",
+   "DLG_SETTINGS_5_BANDWIDTH_05":"Limit odosielania, keď nie je sťahovanie (kB/s):",
+   "DLG_SETTINGS_5_BANDWIDTH_07":"Celkové rýchlostné limity sťahovania",
+   "DLG_SETTINGS_5_BANDWIDTH_08":"Max. sťahovanie (kB/s): [0: neobmedzené]",
+   "DLG_SETTINGS_5_BANDWIDTH_10":"Počet spojení",
+   "DLG_SETTINGS_5_BANDWIDTH_11":"Maximálny počet všetkých spojení:",
+   "DLG_SETTINGS_5_BANDWIDTH_14":"Maximálny počet pripojených peerov na torrent:",
+   "DLG_SETTINGS_5_BANDWIDTH_15":"Počet odosielacích slotov na torrent:",
+   "DLG_SETTINGS_5_BANDWIDTH_17":"Použiť ďalší slot, ak je rýchlosť odosielania < 90%",
+   "DLG_SETTINGS_5_BANDWIDTH_18":"Global Rate Limit Options",
+   "DLG_SETTINGS_5_BANDWIDTH_19":"Použiť limit rýchlosti pre prenos dát komunikácie",
+   "DLG_SETTINGS_5_BANDWIDTH_20":"Použiť limit rýchlosti pre uTP spojenia",
+   "DLG_SETTINGS_6_BITTORRENT_01":"Základné funkcie BitTorrentu",
+   "DLG_SETTINGS_6_BITTORRENT_02":"Povoliť sieť DHT",
+   "DLG_SETTINGS_6_BITTORRENT_03":"Žiadať tracker o scrape informácií",
+   "DLG_SETTINGS_6_BITTORRENT_04":"Povoliť DHT pre nové torrenty",
+   "DLG_SETTINGS_6_BITTORRENT_05":"Povoliť Peer Exchange",
+   "DLG_SETTINGS_6_BITTORRENT_06":"Povoliť odhalenie miestnych peerov",
+   "DLG_SETTINGS_6_BITTORRENT_07":"Limit šírky pásma miestnych peerov",
+   "DLG_SETTINGS_6_BITTORRENT_08":"IP/Hostname odoslaný trackeru:",
+   "DLG_SETTINGS_6_BITTORRENT_10":"Kódovanie prenosu",
+   "DLG_SETTINGS_6_BITTORRENT_11":"Odchádzajúce:",
+   "DLG_SETTINGS_6_BITTORRENT_13":"Povoliť nekódované prich. spojenia",
+   "DLG_SETTINGS_6_BITTORRENT_14":"Povoliť správu šírky pásma uTP",
+   "DLG_SETTINGS_6_BITTORRENT_15":"Povoliť podporu UDP trackerov",
+   "DLG_SETTINGS_7_TRANSFERCAP_01":"Povoliť limit prenosu",
+   "DLG_SETTINGS_7_TRANSFERCAP_02":"Nastavenie",
+   "DLG_SETTINGS_7_TRANSFERCAP_03":"Typ limitu:",
+   "DLG_SETTINGS_7_TRANSFERCAP_04":"Dátový limit:",
+   "DLG_SETTINGS_7_TRANSFERCAP_05":"Obdobie (dni):",
+   "DLG_SETTINGS_7_TRANSFERCAP_06":"Štatistika prenosu za vybraté obdobie",
+   "DLG_SETTINGS_7_TRANSFERCAP_07":"Odoslané:",
+   "DLG_SETTINGS_7_TRANSFERCAP_08":"Stiahnuté:",
+   "DLG_SETTINGS_7_TRANSFERCAP_09":"Celkovo:",
+   "DLG_SETTINGS_7_TRANSFERCAP_10":"Obdobie:",
+   "DLG_SETTINGS_7_TRANSFERCAP_11":"za %d dní",
+   "DLG_SETTINGS_7_TRANSFERCAP_12":"Reset",
+   "DLG_SETTINGS_8_QUEUEING_01":"Nastavenie čakania v poradí",
+   "DLG_SETTINGS_8_QUEUEING_02":"Maximálny počet aktívnych torrentov (odosielanie/sťahovanie):",
+   "DLG_SETTINGS_8_QUEUEING_04":"Maximálny počet aktívnych sťahovaní:",
+   "DLG_SETTINGS_8_QUEUEING_06":"Seedovať, ak [Predvolené hodnoty]",
+   "DLG_SETTINGS_8_QUEUEING_07":"Minimálne ratio (%):",
+   "DLG_SETTINGS_8_QUEUEING_09":"Minimálny čas seedovania (minúty):",
+   "DLG_SETTINGS_8_QUEUEING_11":"Seedovanie má vyššiu prioritu ako sťahovanie",
+   "DLG_SETTINGS_8_QUEUEING_12":"Odosielanie po dosiahnutí hodnoty Ratio alebo času seedovania",
+   "DLG_SETTINGS_8_QUEUEING_13":"Limit rýchlosti odosielania v (kB/s): [0: stop]",
+   "DLG_SETTINGS_9_SCHEDULER_01":"Povoliť plánovanie",
+   "DLG_SETTINGS_9_SCHEDULER_02":"Tabuľka plánovania",
+   "DLG_SETTINGS_9_SCHEDULER_04":"Nastavenie plánovania",
+   "DLG_SETTINGS_9_SCHEDULER_05":"Limit rýchlosti odosielania (kB/s):",
+   "DLG_SETTINGS_9_SCHEDULER_07":"Limit rýchlosti sťahovania (kB/s):",
+   "DLG_SETTINGS_9_SCHEDULER_09":"Vypnúť DHT v režime Vypnuté",
+   "DLG_SETTINGS_9_WEBUI_01":"Povoliť Web UI",
+   "DLG_SETTINGS_9_WEBUI_02":"Autorizácia",
+   "DLG_SETTINGS_9_WEBUI_03":"Meno:",
+   "DLG_SETTINGS_9_WEBUI_05":"Heslo:",
+   "DLG_SETTINGS_9_WEBUI_07":"Povoliť účet Guest s menom:",
+   "DLG_SETTINGS_9_WEBUI_09":"Pripojiteľnosť",
+   "DLG_SETTINGS_9_WEBUI_10":"Alternatívny naslúchací port (predvolený je port pripojenia):",
+   "DLG_SETTINGS_9_WEBUI_12":"Prístup k WebUI je možný len z týchto IP adries (IP adresy oddeľujte čiarkou ,):",
+   "DLG_SETTINGS_A_ADVANCED_01":"Rozšírené nastavenia [VAROVANIE: Úpravy na vlastné riziko!]",
+   "DLG_SETTINGS_A_ADVANCED_02":"Hodnota:",
+   "DLG_SETTINGS_A_ADVANCED_03":"True",
+   "DLG_SETTINGS_A_ADVANCED_04":"False",
+   "DLG_SETTINGS_A_ADVANCED_05":"Nastaviť",
+   "DLG_SETTINGS_B_ADV_UI_01":"Zoznam rýchlostí v menu [oddeľujte čiarkou ,]",
+   "DLG_SETTINGS_B_ADV_UI_02":"Prideliť vlastnú rýchlosť v menu",
+   "DLG_SETTINGS_B_ADV_UI_03":"Rýchlosť odosielania:",
+   "DLG_SETTINGS_B_ADV_UI_05":"Rýchlosť sťahovania:",
+   "DLG_SETTINGS_B_ADV_UI_07":"Trvalé kategórie [Kategórie oddeľujte znakom | Alt+124]",
+   "DLG_SETTINGS_B_ADV_UI_08":"Vyhľadávače [Formát: názov|URL]",
+   "DLG_SETTINGS_C_ADV_CACHE_01":"Základné nastavenia cache",
+   "DLG_SETTINGS_C_ADV_CACHE_02":"Cache disku si ukladá do pamäte často používané data pre zníženie počtu čítaní a zápisov na harddisk. µTorrent spravuje cache automaticky, ale vy môžete zmeniť jej správanie úpravou týchto nastavení.",
+   "DLG_SETTINGS_C_ADV_CACHE_03":"Nepoužiť automatickú veľkosť cache, ale nastaviť ju manuálne (MB):",
+   "DLG_SETTINGS_C_ADV_CACHE_05":"Obmedziť používanie pamäte, ak cache nie je potrebná",
+   "DLG_SETTINGS_C_ADV_CACHE_06":"Rozšírené nastavenie cache",
+   "DLG_SETTINGS_C_ADV_CACHE_07":"Povoliť cache zapisovať na disk",
+   "DLG_SETTINGS_C_ADV_CACHE_08":"Zapisovať nedotknuté bloky každé 2 minúty",
+   "DLG_SETTINGS_C_ADV_CACHE_09":"Zapisovať dokončené časti okamžite",
+   "DLG_SETTINGS_C_ADV_CACHE_10":"Povoliť cache čítať z disku",
+   "DLG_SETTINGS_C_ADV_CACHE_11":"Vypnúť čítanie z cache, ak rýchlosť odosielania je pomalá",
+   "DLG_SETTINGS_C_ADV_CACHE_12":"Odstrániť staré bloky z cache",
+   "DLG_SETTINGS_C_ADV_CACHE_13":"Zväčšiť automatickú cache pri problémoch",
+   "DLG_SETTINGS_C_ADV_CACHE_14":"Vypnúť cache Windows pre zápis na disk",
+   "DLG_SETTINGS_C_ADV_CACHE_15":"Vypnúť cache Windows pre čítanie z disku",
+   "DLG_SETTINGS_C_ADV_RUN_01":"Spustenie",
+   "DLG_SETTINGS_C_ADV_RUN_02":"Spustiť program po dokončení sťahovania:",
+   "DLG_SETTINGS_C_ADV_RUN_04":"Spustiť program, keď torrent zmení stav:",
+   "DLG_SETTINGS_C_ADV_RUN_06":"Môžete tiež použiť príkazy:\r\n%F - Názov stiahnutého súboru (torrenty s jedným súborom)\r\n%D - Adresár na uloženie súborov\r\n%N - Názov torrentu\r\n%S - Stav torrentu\r\n%L - Kategória\r\n%T - Tracker\r\n%M - Správa o stave torrentu (stĺpec Stav)\r\n%I - Reťazec hash\r\n\r\nStav je kombinácia:\r\nspustené =1, kontrolované = 2, spustiť po kontrole = 4,\r\nskontrolované = 8, chyba = 16, pozastavené = 32,\nautomaticky = 64, načítané = 128",
+   "DLG_TORRENTPROP_00":"Vlastnosti torrentu",
+   "DLG_TORRENTPROP_1_GEN_01":"Trackery (oddelujte prázdnym riadkom)",
+   "DLG_TORRENTPROP_1_GEN_03":"Nastavenie prenosu",
+   "DLG_TORRENTPROP_1_GEN_04":"Max. rýchlosť odosielania (kB/s): [0: predvolené]",
+   "DLG_TORRENTPROP_1_GEN_06":"Max. rýchlosť sťahovania (kB/s): [0: predvolené]",
+   "DLG_TORRENTPROP_1_GEN_08":"Počet odosielacích slotov: [0: predvolené]",
+   "DLG_TORRENTPROP_1_GEN_10":"Seedovanie, ak",
+   "DLG_TORRENTPROP_1_GEN_11":"Ignorovať predvolené nastavenia",
+   "DLG_TORRENTPROP_1_GEN_12":"Minimálne ratio (%):",
+   "DLG_TORRENTPROP_1_GEN_14":"Minimálny čas seedovania (minúty):",
+   "DLG_TORRENTPROP_1_GEN_16":"Ďalšie nastavenia",
+   "DLG_TORRENTPROP_1_GEN_17":"Počiatočný seed",
+   "DLG_TORRENTPROP_1_GEN_18":"Povoliť DHT",
+   "DLG_TORRENTPROP_1_GEN_19":"Peer Exchange",
+   "DLG_ADDEDITRSSFEED_03":"Zdroj",
+   "DLG_ADDEDITRSSFEED_04":"URL zdroja:",
+   "DLG_ADDEDITRSSFEED_05":"Vlastný alias:",
+   "DLG_ADDEDITRSSFEED_06":"Odber RSS",
+   "DLG_ADDEDITRSSFEED_07":"Nesťahovať všetky položky automaticky",
+   "DLG_ADDEDITRSSFEED_08":"Automaticky sťahovať všetky položky zo zdroja",
+   "DLG_ADDEDITRSSFEED_09":"Použiť rýchly filter epizód",
+   "DLG_RSSDOWNLOADER_02":"Zdroje||Obľúbené||História||",
+   "DLG_RSSDOWNLOADER_03":"All Feeds",
+   "DLG_RSSDOWNLOADER_04":"Nastavenie filtra",
+   "DLG_RSSDOWNLOADER_05":"Názov:",
+   "DLG_RSSDOWNLOADER_06":"Stiahnuť:",
+   "DLG_RSSDOWNLOADER_07":"Okrem:",
+   "DLG_RSSDOWNLOADER_08":"Uložiť do:",
+   "DLG_RSSDOWNLOADER_09":"Zdroj:",
+   "DLG_RSSDOWNLOADER_10":"Kvalita:",
+   "DLG_RSSDOWNLOADER_11":"Číslo epizódy: [napr. 1x12-14]",
+   "DLG_RSSDOWNLOADER_12":"Filter porovná originálny názov namiesto dekódovaného",
+   "DLG_RSSDOWNLOADER_13":"Nesťahovať automaticky",
+   "DLG_RSSDOWNLOADER_14":"Rýchly filter epizód",
+   "DLG_RSSDOWNLOADER_15":"Sťahovať s najvyššou prioritou",
+   "DLG_RSSDOWNLOADER_16":"Minimálny interval:",
+   "DLG_RSSDOWNLOADER_17":"Zaradiť do kategórie:",
+   "DLG_RSSDOWNLOADER_18":"Pridať RSS zdroj...",
+   "DLG_RSSDOWNLOADER_19":"Upraviť zdroj...",
+   "DLG_RSSDOWNLOADER_20":"Zakázať zdroj",
+   "DLG_RSSDOWNLOADER_21":"Povoliť zdroj",
+   "DLG_RSSDOWNLOADER_22":"Aktualizovať zdroj",
+   "DLG_RSSDOWNLOADER_23":"Vymazať zdroj",
+   "DLG_RSSDOWNLOADER_24":"Stiahnuť",
+   "DLG_RSSDOWNLOADER_25":"Otvoriť URL v prehliadači",
+   "DLG_RSSDOWNLOADER_26":"Pridať do obľúbených",
+   "DLG_RSSDOWNLOADER_27":"Pridať",
+   "DLG_RSSDOWNLOADER_28":"Vymazať",
+   "DLG_RSSDOWNLOADER_29":"Všetky",
+   "DLG_RSSDOWNLOADER_30":"(Všetky)",
+   "DLG_RSSDOWNLOADER_31":"Vždy porovnať||Porovnať len raz||12 hodín||1 deň||2 dni||3 dni||4 dni||1 týždeň||2 týždne||3 týždne||1 mesiac||",
+   "DLG_RSSDOWNLOADER_32":"Pridanie RSS zdroja",
+   "DLG_RSSDOWNLOADER_33":"Úprava RSS zdroja",
+   "DLG_RSSDOWNLOADER_34":"Remove RSS Feed(s)",
+   "DLG_RSSDOWNLOADER_35":"Really delete the %d selected RSS Feeds?",
+   "DLG_RSSDOWNLOADER_36":"Určite vymazať RSS zdroj \"%s\"?",
+   "FEED_COL_FULLNAME":"Celý názov",
+   "FEED_COL_NAME":"Názov",
+   "FEED_COL_EPISODE":"Epizóda",
+   "FEED_COL_FORMAT":"Formát",
+   "FEED_COL_CODEC":"Kodek",
+   "FEED_COL_DATE":"Date",
+   "FEED_COL_FEED":"Zdroj",
+   "FEED_COL_URL":"Zdroj URL",
+   "PRS_COL_IP":"IP",
+   "PRS_COL_PORT":"Port",
+   "PRS_COL_CLIENT":"Program",
+   "PRS_COL_FLAGS":"Smer",
+   "PRS_COL_PCNT":"Percent",
+   "PRS_COL_RELEVANCE":"Dôležitosť",
+   "PRS_COL_DOWNSPEED":"Rýchlosť sťahovania",
+   "PRS_COL_UPSPEED":"Rýchlosť odosielania",
+   "PRS_COL_REQS":"Požiadavky",
+   "PRS_COL_WAITED":"Čakanie",
+   "PRS_COL_UPLOADED":"Odoslané",
+   "PRS_COL_DOWNLOADED":"Stiahnuté",
+   "PRS_COL_HASHERR":"Chyby hash",
+   "PRS_COL_PEERDL":"Sťahovanie peera",
+   "PRS_COL_MAXUP":"Max odosielanie",
+   "PRS_COL_MAXDOWN":"Max sťahovanie",
+   "PRS_COL_QUEUED":"V poradí",
+   "PRS_COL_INACTIVE":"Neaktívny",
+   "FI_COL_DONE":"Dokončené",
+   "FI_COL_FIRSTPC":"Prvá časť",
+   "FI_COL_NAME":"Názov",
+   "FI_COL_NUMPCS":"Počet častí",
+   "FI_COL_PCNT":"Percent",
+   "FI_COL_PRIO":"Priorita",
+   "FI_COL_SIZE":"Veľkosť",
+   "FI_PRI0":"preskočiť",
+   "FI_PRI1":"Nízka",
+   "FI_PRI2":"Normálna",
+   "FI_PRI3":"Vysoká",
+   "GN_TP_01":"Stiahnuté:",
+   "GN_TP_02":"Odoslané:",
+   "GN_TP_03":"Seederov:",
+   "GN_TP_04":"Zostáva:",
+   "GN_TP_05":"Sťahovanie:",
+   "GN_TP_06":"Odosielanie:",
+   "GN_TP_07":"Peerov:",
+   "GN_TP_08":"Ratio:",
+   "GN_TP_09":"Uložiť ako:",
+   "GN_TP_10":"Hash:",
+   "GN_GENERAL":"Hlavné",
+   "GN_TRANSFER":"Prenos",
+   "GN_XCONN":"%d z %d pripojených (vo swarme: %d)",
+   "MAIN_TITLEBAR_SPEED":"D:%s U:%s - %s",
+   "MENU_COPY":"Kopírovať",
+   "MENU_RESET":"Reset",
+   "MENU_UNLIMITED":"Neobmedzene",
+   "MP_RESOLVE_IPS":"Preložiť IP adresy",
+   "MF_GETFILE":"Get File(s)",
+   "MF_DONT":"Nesťahovať",
+   "MF_HIGH":"Vysoká priorita",
+   "MF_LOW":"Nízka priorita",
+   "MF_NORMAL":"Normálna priorita",
+   "ML_COPY_MAGNETURI":"Kopírovať Magnet URI",
+   "ML_DELETE_DATA":"Vymazať data",
+   "ML_DELETE_TORRENT":"Vymazať torrent",
+   "ML_DELETE_DATATORRENT":"Vymazať torrent + dáta",
+   "ML_FORCE_RECHECK":"Hash kontrola",
+   "ML_FORCE_START":"Vynútený štart",
+   "ML_LABEL":"Kategória",
+   "ML_PAUSE":"Pauza",
+   "ML_PROPERTIES":"Vlastnosti",
+   "ML_QUEUEDOWN":"Presunúť dolu",
+   "ML_QUEUEUP":"Presunúť hore",
+   "ML_REMOVE":"Odobrať úlohu",
+   "ML_REMOVE_AND":"Odobrať úlohu a...",
+   "ML_START":"Štart",
+   "ML_STOP":"Stop",
+   "OV_CAT_ACTIVE":"Aktívne",
+   "OV_CAT_ALL":"Všetky",
+   "OV_CAT_COMPL":"Dokončené",
+   "OV_CAT_DL":"Sťahované",
+   "OV_CAT_INACTIVE":"Neaktívne",
+   "OV_CAT_NOLABEL":"Bez kategórie",
+   "OV_COL_AVAIL":"||Dostupnosť||Dostupnosť",
+   "OV_COL_DATE_ADDED":"Pridané dňa",
+   "OV_COL_DATE_COMPLETED":"Dokončené dňa",
+   "OV_COL_DONE":"Percent",
+   "OV_COL_DOWNLOADED":"Stiahnuté",
+   "OV_COL_DOWNSPD":"Sťahovanie",
+   "OV_COL_ETA":"Odhadovaný čas",
+   "OV_COL_LABEL":"Kategória",
+   "OV_COL_NAME":"Názov",
+   "OV_COL_ORDER":"#",
+   "OV_COL_PEERS":"Peerov",
+   "OV_COL_REMAINING":"Zostáva",
+   "OV_COL_SEEDS":"Seederov",
+   "OV_COL_SEEDS_PEERS":"Seederi/Peeri",
+   "OV_COL_SHARED":"Ratio",
+   "OV_COL_SIZE":"Veľkosť",
+   "OV_COL_SOURCE_URL":"Zdroj URL",
+   "OV_COL_STATUS":"Stav",
+   "OV_COL_UPPED":"Odoslané",
+   "OV_COL_UPSPD":"Odosielanie",
+   "OV_CONFIRM_DELETEDATA_MULTIPLE":"Určite chcete odstrániť vybraté torrenty (%d) a všetky pridružené data?",
+   "OV_CONFIRM_DELETEDATA_ONE":"Určite chcete odstrániť vybratý torrent a všetky pridružené data?",
+   "OV_CONFIRM_DELETE_MULTIPLE":"Určite chcete odstrániť vybraté torrenty (%d) ?",
+   "OV_CONFIRM_DELETE_ONE":"Určite chcete odstrániť vybratý torrent?",
+   "OV_CONFIRM_DELETE_RSSFILTER":"Určite vymazať RSS filter \"%s\"?",
+   "OV_FL_CHECKED":"Skontrolované %:.1d%",
+   "OV_FL_DOWNLOADING":"Sťahovanie",
+   "OV_FL_ERROR":"Chyba: %s",
+   "OV_FL_FINISHED":"Stop",
+   "OV_FL_PAUSED":"Pauza",
+   "OV_FL_QUEUED":"V poradí",
+   "OV_FL_QUEUED_SEED":"Seedovanie v poradí",
+   "OV_FL_SEEDING":"Seedovanie",
+   "OV_FL_STOPPED":"Stop",
+   "OV_NEWLABEL_CAPTION":"Zadanie kategórie",
+   "OV_NEWLABEL_TEXT":"Zadajte novú kategóriu pre vybraté torrenty:",
+   "OV_NEW_LABEL":"Nová kategória...",
+   "OV_REMOVE_LABEL":"Odobrať kategóriu",
+   "OV_TABS":"Hlavné||Trackery||Užívatelia||Časti||Súbory||Rýchlosť||Záznamy||",
+   "OV_TB_ADDTORR":"Pridať torrent",
+   "OV_TB_ADDURL":"Pridať torrent z URL",
+   "OV_TB_PAUSE":"Pauza",
+   "OV_TB_PREF":"Možnosti",
+   "OV_TB_QUEUEDOWN":"Presunúť dolu",
+   "OV_TB_QUEUEUP":"Presunúť hore",
+   "OV_TB_REMOVE":"Odobrať",
+   "OV_TB_RSSDOWNLDR":"RSS sťahovač",
+   "OV_TB_START":"Štart",
+   "OV_TB_STOP":"Stop",
+   "MM_FILE":"Súbor",
+   "MM_FILE_ADD_TORRENT":"Pridať torrent...",
+   "MM_FILE_ADD_URL":"Pridať torrent z URL...",
+   "MM_OPTIONS":"Nastavenia",
+   "MM_OPTIONS_PREFERENCES":"Možnosti",
+   "MM_OPTIONS_SHOW_CATEGORY":"Zobraziť bočný panel",
+   "MM_OPTIONS_SHOW_DETAIL":"Zobraziť podrobnosti",
+   "MM_OPTIONS_SHOW_STATUS":"Zobraziť lištu stavov",
+   "MM_OPTIONS_SHOW_TOOLBAR":"Zobraziť lištu nástrojov",
+   "MM_OPTIONS_TAB_ICONS":"Ikony na záložkách",
+   "MM_HELP":"Pomoc",
+   "MM_HELP_UT_WEBPAGE":"Web stránka",
+   "MM_HELP_UT_FORUMS":"Fórum",
+   "MM_HELP_WEBUI_FEEDBACK":"Send WebUI Feedback",
+   "MM_HELP_ABOUT_WEBUI":"About µTorrent WebUI",
+   "STM_TORRENTS":"Torrenty",
+   "STM_TORRENTS_PAUSEALL":"Pozastaviť všetky torrenty",
+   "STM_TORRENTS_RESUMEALL":"Obnoviť všetky torrenty",
+   "SB_DOWNLOAD":"D: %s%z/s",
+   "SB_LOCAL":" L: %z/s",
+   "SB_OVERHEAD":" O: %z/s",
+   "SB_TOTAL":" C: %Z",
+   "SB_UPLOAD":"U: %s%z/s",
+   "SIZE_B":"B",
+   "SIZE_EB":"EB",
+   "SIZE_GB":"GB",
+   "SIZE_KB":"KB",
+   "SIZE_MB":"MB",
+   "SIZE_PB":"PB",
+   "SIZE_TB":"TB",
+   "ST_CAPT_ADVANCED":"Rozšírené",
+   "ST_CAPT_BANDWIDTH":"Rýchlosti",
+   "ST_CAPT_CONNECTION":"Pripojenie",
+   "ST_CAPT_DISK_CACHE":"Cache",
+   "ST_CAPT_FOLDER":"Adresáre",
+   "ST_CAPT_GENERAL":"Hlavné",
+   "ST_CAPT_SCHEDULER":"Plánovač",
+   "ST_CAPT_QUEUEING":"Poradie",
+   "ST_CAPT_UI_EXTRAS":"Extra UI",
+   "ST_CAPT_UI_SETTINGS":"Rozhranie",
+   "ST_CAPT_BITTORRENT":"BitTorrent",
+   "ST_CAPT_WEBUI":"Web UI",
+   "ST_CAPT_TRANSFER_CAP":"Limit prenosu",
+   "ST_CAPT_RUN_PROGRAM":"Spustenie",
+   "ST_CBO_UI_DBLCLK_TOR":"Zobraziť vlastnosti||Štart/Stop||Otvoriť adresár||Zobraziť lištu sťahovania||",
+   "ST_CBO_ENCRYPTIONS":"Zakázané||Povolené||Vynútené||",
+   "ST_CBO_PROXY":"(žiadny)||Socks4||Socks5||HTTPS||HTTP||",
+   "ST_CBO_TCAP_MODES":"odosielanie||sťahovanie||odosielanie + sťahovanie||",
+   "ST_CBO_TCAP_UNITS":"MB||GB||",
+   "ST_CBO_TCAP_PERIODS":"1||2||5||7||10||14||15||20||21||28||30||31||",
+   "ST_COL_NAME":"Názov",
+   "ST_COL_VALUE":"Hodnota",
+   "ST_SCH_DAYCODES":"Po||Ut||St||Št||Pi||So||Ne||",
+   "ST_SCH_DAYNAMES":"Pondelok||Utorok||Streda||Štvrtok||Piatok||Sobota||Nedeľa||",
+   "ST_SCH_LGND_FULL":"Najrýchlejšie",
+   "ST_SCH_LGND_FULLEX":"Najrýchlejšie - Plná rýchlosť daná celkovými rýchlostnými limitmi",
+   "ST_SCH_LGND_LIMITED":"Obmedzené",
+   "ST_SCH_LGND_LIMITEDEX":"Obmedzené - Obmedzená rýchlosť daná nastavením v plánovači",
+   "ST_SCH_LGND_SEEDING":"Len seedovanie",
+   "ST_SCH_LGND_SEEDINGEX":"Len seedovanie - Len odosielanie dát (vrátane nedokončených)",
+   "ST_SCH_LGND_OFF":"Zastavené",
+   "ST_SCH_LGND_OFFEX":"Zastavené - Zastaví všetky torrenty, ktoré nie sú vynútené",
+   "ST_SEEDTIMES_HOURS":"<= %d hodín",
+   "ST_SEEDTIMES_IGNORE":"(Ignorovať)",
+   "ST_SEEDTIMES_MINUTES":"<= %d minút",
+   "TIME_DAYS_HOURS":"%dd %dh",
+   "TIME_HOURS_MINS":"%dh %dm",
+   "TIME_MINS_SECS":"%dm %ds",
+   "TIME_SECS":"%ds",
+   "TIME_WEEKS_DAYS":"%dt %dd",
+   "TIME_YEARS_WEEKS":"%dr %dt",
+   "ML_MORE_ACTIONS":null,
+   "Torrents":null,
+   "Feeds":null,
+   "App":null,
+   "country":null,
+   "ETA":null,
+   "of":null,
+   "/s":null,
+   "Paste a torrent or feed URL":null,
+   "Home":null,
+   "Logout":null,
+   "Seeding":null,
+   "All Feeds":null,
+   "bitrate":null,
+   "resolution":null,
+   "length":null,
+   "streamable":null,
+   "type":null,
+   "remote":null,
+   "about":null,
+   "sessions":null,
+   "share":null,
+   "Share this torrent":null,
+   "Share link":null,
+   "add":null,
+   "logout":null,
+   "log in":null,
+   "anywhere access":null,
+   "stay signed in":null,
+   "download":null,
+   "Your client is currently not available. Verify that it is connected to the internet.":null,
+   "Unable to communicate with your &micro;Torrent client. This message will disappear automatically when a connection is re-established.":null,
+   "Open file":null,
+   "Download to your computer":null,
+   "Open with VLC Media Player":null,
+   "Actions":null,
+   "season":null,
+   "DLG_ABOUT_VERSION_LEGEND":null,
+   "DLG_ABOUT_VERSION_VERSION":null,
+   "DLG_ABOUT_VERSION_REVISION":null,
+   "DLG_ABOUT_VERSION_BUILD_DATE":null,
+   "DLG_ABOUT_VERSION_PEER_ID":null,
+   "DLG_ABOUT_VERSION_USER_AGENT":null,
+   "DLG_ABOUT_UPNP_EXTERNAL_ADDRESS":null,
+   "DLG_ABOUT_UI_REVISION":null,
+   "DLG_SETTINGS_SAVE":null,
+   "DLG_SETTINGS_MENU_TITLE":null,
+   "DLG_SETTINGS_D_REMOTE_01":"BitTorrent Remote",
+   "DLG_SETTINGS_D_REMOTE_02":"BitTorrent Remote poskytuje jednoduchý a bezpečný spôsob prístupu ku klientovi cez prehliadač.",
+   "DLG_SETTINGS_D_REMOTE_03":"Povoľte pripojenie nižšie, zadajte názov počítača a heslo. Nezabudnite nechať počítač zapnutý.",
+   "DLG_SETTINGS_D_REMOTE_04":"Viac informácií",
+   "DLG_SETTINGS_D_REMOTE_05":"Povoliť BitTorrent Remote",
+   "DLG_SETTINGS_D_REMOTE_06":"Autorizácia",
+   "DLG_SETTINGS_D_REMOTE_07":"Meno:",
+   "DLG_SETTINGS_D_REMOTE_08":"Heslo:",
+   "DLG_SETTINGS_D_REMOTE_09":"Odoslať",
+   "ST_CAPT_REMOTE":"BitTorrent Remote"
+}

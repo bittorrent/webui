@@ -5,473 +5,474 @@ Use of this source code is governed by a BSD-style that can be
 found in the LICENSE file.
 */
 
-var LANG_STR = [
-	  "Torrent állományok||*.torrent||Összes állomány (*.*)||*.*||"
-	, "OK"
-	, "Mégse"
-	, "Alkalmaz"
-	, "Igen"
-	, "Nem"
-	, "Bezárás"
-	, "Beállítások"
-	, "Nyelv"
-	, "Nyelv:"
-	, "Adatbiztonság"
-	, "Frissítések automatikus keresése"
-	, "Frissítés béta verziókra"
-	, "Névtelen információk küldése új verzió keresésnél"
-	, "Letöltésnél"
-	, ".!ut hozzáfűzése a félkész állományokhoz"
-	, "Állományok előre lefoglalása"
-	, "Készenlét tiltása, ha  van aktív torrent"
-	, "Megjelenítési Beállítások"
-	, "Torrent törlés megerősítése"
-	, "Megerősítés kérése tracker törlésnél"
-	, "Megerősítés kérése kilépésnél"
-	, "Másodlagos lista háttérszín"
-	, "Aktuális sebesség a cím sávban"
-	, "Sebesség korlátok az állapot sávban"
-	, "Torrent hozzáadáskor"
-	, "Ne induljanak automatikusan a letöltések"
-	, "Program ablak aktiválása"
-	, "Ablak mutatása a torrentben lévő állományokról"
-	, "Dupla kattintás tevékenységei"
-	, "Megosztott torrenteknél:"
-	, "Torrentek letöltéséhez:"
-	, "Letöltött állományok helye"
-	, "Új letöltések helye:"
-	, "Kézi hozzáadásnál mindig ablak mutatása"
-	, "Letöltött fájlok mozgatása ide:"
-	, "Torrent címke hozzáfűzése"
-	, "Csak az alapértelmezett mappából történik mozgatás"
-	, ".torrent-ek helye"
-	, ".torrent-ek tárolása:"
-	, ".torrent-el"
-	, ".torrent-ek automatikus betöltése innen:"
-	, "Betöltött .torrent-ek törlése"
-	, "Figyelő port"
-	, "Bejövő kapcsolatoknál használt port:"
-	, "Véletlen port"
-	, "Véletlen port minden indításnál"
-	, "UPnP port hozzárendelés"
-	, "NAT-PMP port hozzárendelés"
-	, "Proxy kiszolgáló"
-	, "Típus:"
-	, "Proxy:"
-	, "Port:"
-	, "Hitelesítés"
-	, "Felh.név:"
-	, "Jelszó:"
-	, "Gépnév feloldása proxy-n keresztül"
-	, "Proxy kiszolgáló használata peer-to-peer kapcsolatoknál"
-	, "Hozzáadás a Windows tűzfal kivételekhez"
-	, "Proxy adatvédelem"
-	, "Összes helyi DNS lekérés tiltása"
-	, "Azonosítási információkat kiadó funkciók tiltása"
-	, "Nem támogatott proxy kapcsolatok tiltása"
-	, "Globális feltöltés korlátozása"
-	, "Maximum feltöltése seb (kB/s): [0: korlátlan]"
-	, "Automatikus"
-	, "Más feltöltése sebesség, ha nincs letöltés (kB/s):"
-	, "Globális letöltési korlátozás"
-	, "Maximum letöltés (kB/s): [0: korlátlan]"
-	, "Kapcsolatok száma"
-	, "Kapcsolatok maximális száma összesen:"
-	, "Kapcsolódott letöltők maximális száma torrentenként:"
-	, "Feltöltések száma torrentenként:"
-	, "További feltöltési szálak, ha a feltöltési seb.<90%"
-	, "Global Rate Limit Options"
-	, "Sebesség korlátozás a vezérlési adatokra"
-	, "Sebesség korlátozás az uTP kapcsolatokra"
-	, "Alap BitTorrent tulajdonságok"
-	, "DHT hálózat engedése"
-	, "Tracker kérdezése scrape információkról"
-	, "DHT engedése új torrenteknél"
-	, "Letöltő kicserélés engedése"
-	, "Helyi peer-ek keresése"
-	, "Helyi peer-ek sávszélesség korlátozása"
-	, "IP/gépnév jelentése a tracker-nek:"
-	, "Protokoll titkosítás"
-	, "Kimenő:"
-	, "Titkosítatlan bejövő kapcsolatok engedése"
-	, "Sebesség korlátozás alkalmazása [uTP]"
-	, "UDP tracker támogatás engedése"
-	, "Enable Transfer Cap"
-	, "Cap Settings"
-	, "Limit típus:"
-	, "Sávszélesség korlát:"
-	, "Idő intervallum (nap):"
-	, "Használati napló erre az időszakra:"
-	, "Feltöltve:"
-	, "Letöltve:"
-	, "Feltöltve + Letöltve:"
-	, "Időszak:"
-	, "Utolsó %d nap"
-	, "Napló törlése"
-	, "Sor beállítások"
-	, "Aktív torrentek maximális száma (fel- vagy letöltés):"
-	, "Aktív letöltések maximális száma:"
-	, "Megosztás amíg [Alapértelmezés]"
-	, "Minimum arány (%):"
-	, "Minimum seed idő (perc):"
-	, "A feltöltési feladatoknak magasabb prioritása van a letöltéseknél"
-	, "Amikor a µTorrent elére a megosztási célt"
-	, "Feltöltés korlátozása (kB/s): [0: megáll]"
-	, "Ütemező engedése"
-	, "Ütemező tábla"
-	, "Ütemező beállítások"
-	, "A korlátozott feltöltés (kB/s):"
-	, "Lekorlátozott letöltése seb. (kB/s):"
-	, "DHT tiltása kikapcsolásnál"
-	, "Wb UI engedélyezése"
-	, "Hitelesítés"
-	, "Felh.név:"
-	, "Jelszó:"
-	, "Vendég hozzáférés engedése ezzel a névvel:"
-	, "Kapcsolatok"
-	, "Másodlagos listening port (a kapcsolódási port az alapértelmezett):"
-	, "Megadott IP címekre való korlátozás (több címet vesszővel választhat el):"
-	, "Speciális Beállítások [FIGYELEM: Ne módosítsa!]"
-	, "Érték:"
-	, "Igaz"
-	, "Hamis"
-	, "Állít"
-	, "Sebesség felugró lista [több értéket vesszővel választhat el]"
-	, "Automatikus sebesség felugró lista felülbírálása"
-	, "Feltöltési seb. lista:"
-	, "Leltöltési seb. lista:"
-	, "Állandó címkék [Több címkét a | karakterrel választhat el]"
-	, "Kereső motorok [formátum: név|URL]"
-	, "Alapvető gyorsítótár beállítások"
-	, "A lemez gyorsítótár a gyakran használt adatokat a memóriában tartja, hogy csökkentse a merevlemez műveletek számát. A µTorrent automatikusan szabályozza a gyorsítótárat, de a paraméterek itt kézileg is megadhatók."
-	, "Automatikus gyorsítótár méret felülbírálás, a méret kézi megadása (MB):"
-	, "Memória használat csökkentése, ha nincs szükség gyorsítótárra"
-	, "Speciális gyorsítótár beállítások"
-	, "Lemezre írás gyorsítótárazásának engedése"
-	, "Nem módosított blokkok kiírása 2 percenként"
-	, "Elkészült szeletek kiírása azonnal"
-	, "Lemezről olvasás gyorsítótárazásának engedése"
-	, "Olvasás gyorsítótárazásának tiltása, ha a feltöltés lassú"
-	, "Régi blokkok törlése gyorsítótárból"
-	, "Automata gyorsítótár növelése cache thrashing-nél"
-	, "Windows lemezre írási gyorsítótárazás tiltása"
-	, "Windows lemezről olvasási gyorsítótárazás tiltása"
-	, "Program futtatás"
-	, "Program futtatása torrent befejezéskor:"
-	, "Program futtatása torrent állapot változásnál:"
-	, "Használható parancsok:\r\n%F - Letöltött fájl neve (egy fájlos torrentekhez)\r\n%D - Fájlok mentési mappája\r\n%N - Torrent címe\r\n%S - Torrent állapota\r\n%L - Címke\r\n%T - Tracker\r\n%M - állapot üzenet szöveg (mint az állapot oszlop)\r\n%I - hexa kódolt info-hash\r\n\r\nAz állapot ezek kombinációja:\r\nelindítva =1, ellenőrzés = 2, ellenőrzés-utáni-indítás = 4,\r\nellenőrizve = 8, hiba = 16, szünetel = 32, auto = 64, betöltve = 128"
-	, "Torrent Tulajdonságok"
-	, "Tracker-ek (több elválasztása üres sorral)"
-	, "Sávszélesség Beállítások"
-	, "Maximális feltöltési seb.(kB/s): [0: alapért.]"
-	, "Minimális letöltési seb.(kB/s): [0: alapért.]"
-	, "Feltöltési szálak: [0: alapért.]"
-	, "Osztás amíg"
-	, "Alapértelmezések felülbírálása"
-	, "Minimum arány (%):"
-	, "Minimum seed idő (perc):"
-	, "Egyéb Beállítások"
-	, "Kezdő megosztás"
-	, "DHT engedése"
-	, "Peer kicserélés"
-	, "Feed"
-	, "Feed URL:"
-	, "Egyedi álnév:"
-	, "Előfizetés"
-	, "Ne töltődjön le minden elem automatikusan"
-	, "Összes elem letöltése automatikusan a közzétett feedből"
-	, "Fejlett epizód szűrő használata"
-	, "Feedek||Kedvencek||Előzmények||"
-	, "All Feeds"
-	, "Szűrők beállítása"
-	, "Név:"
-	, "Szűrő:"
-	, "Nem:"
-	, "Mentés ide:"
-	, "Feed:"
-	, "Minőség:"
-	, "Epizód szám: [pl. 1x12-14]"
-	, "A szűrő az eredeti névre vonatkozik a dekódolt helyett"
-	, "Ne induljanak automatikusan a letöltések"
-	, "Fejlett ep. szűrő"
-	, "Letöltések legmagasabb prioritáson"
-	, "Minimum intervallum:"
-	, "Új torrentek címkéje:"
-	, "RSS Feed hozzáadása..."
-	, "Feed szerk..."
-	, "Feed tiltása"
-	, "Feed használata"
-	, "Feed frissítése"
-	, "Feed törlése"
-	, "Letöltés"
-	, "URL megnyitása böngészőben"
-	, "Kedvencekhez ad"
-	, "Hozzáadás"
-	, "Törlés"
-	, "ÖSSZ"
-	, "(Össz)"
-	, "(mind egyezik)||(csak egy egyezik)||12 óra||1 nap||2 nap||3 nap||4 nap||1 hét||2 hét||3 hét||1 hónap||"
-	, "RSS hozzáadása"
-	, "RSS Feed szerk."
-	, "Remove RSS Feed(s)"
-	, "Really delete the %d selected RSS Feeds?"
-	, "Biztos törlöd a \"%s\" feedet?"
-	, "Teljes név"
-	, "Név"
-	, "Epizód"
-	, "Formátum"
-	, "Codec"
-	, "Date"
-	, "Feed"
-	, "Forrás URL"
-	, "IP"
-	, "Port"
-	, "Kliens"
-	, "Jelzők"
-	, "%"
-	, "Fontosság"
-	, "Letöltés"
-	, "Feltöltés"
-	, "Kérve"
-	, "Várakozik"
-	, "Feltöltve"
-	, "Letöltve"
-	, "Hasherr"
-	, "Peer le."
-	, "MaxFel"
-	, "MaxLe"
-	, "Sorbanáll"
-	, "Inaktív"
-	, "Kész"
-	, "Első szelet"
-	, "Név"
-	, "szelet db."
-	, "%"
-	, "Prioritás"
-	, "Méret"
-	, "kihagyás"
-	, "alacsony"
-	, "normál"
-	, "magas"
-	, "Letöltve:"
-	, "Feltöltve:"
-	, "Megosztók:"
-	, "Hátravan:"
-	, "Letöltési seb.:"
-	, "Feltöltési seb.:"
-	, "Letöltők:"
-	, "Arány:"
-	, "Mentés helye:"
-	, "Ellenőrző-összeg:"
-	, "Általános"
-	, "Átvitel"
-	, "Kapcsolódva: %d Összes: %d (%d a bolyban)"
-	, "L:%s F:%s - %s"
-	, "Másolás"
-	, "Nulláz"
-	, "Korlátlan"
-	, "Gépnév megállapítása"
-	, "Get File(s)"
-	, "Kihagyás"
-	, "Magas prioritás"
-	, "Alacsony prioritás"
-	, "Normál prioritás"
-	, "Magnet URI másolása"
-	, "Adat törlése"
-	, ".torrent törlése"
-	, "Adat ÉS .torrent törlése"
-	, "Kényszerített újraellenőrzés"
-	, "Kényszerített indítás"
-	, "Címke"
-	, "Szüneteltet"
-	, "Tulajdonságok"
-	, "Sor mozgatása le"
-	, "Sor mozgatása fel"
-	, "Törlés"
-	, "Törlés és"
-	, "Indítás"
-	, "Leállítás"
-	, "Aktív"
-	, "Összes"
-	, "Kész"
-	, "Letöltés"
-	, "Inaktív"
-	, "Nincs cimke"
-	, "||Elérh.||Elérhetőség"
-	, "Hozzáadva"
-	, "Elkészült"
-	, "Kész"
-	, "Letöltve"
-	, "Letöltés"
-	, "Hátravan"
-	, "Címke"
-	, "Név"
-	, "#"
-	, "Letöltők"
-	, "Hátravan"
-	, "Megosztók"
-	, "Megosztók/Letöltők"
-	, "Arány"
-	, "Méret"
-	, "Forrás URL"
-	, "Állapot"
-	, "Feltöltve"
-	, "Feltöltés"
-	, "Biztos benne, hogy eltávolítja a %d kiválasztott torrentet és az összes csatlakozó adatot?"
-	, "Biztos benne, hogy eltávolítja a kiválasztott torrenteket és az összes csatlakozó adatot?"
-	, "Biztos benne, hogy eltávolítja a %d kiválasztott torrentet?"
-	, "Biztos benne, hogy eltávolítja a kiválasztott torrenteket?"
-	, "Biztos törlöd a \"%s\" RSS szűrőt?"
-	, "Ellenőrizve %:.1d%%"
-	, "Letöltés"
-	, "Hiba: %s"
-	, "Kész"
-	, "Szünetel"
-	, "Sorban áll"
-	, "Seedhez sorban áll"
-	, "Megosztás"
-	, "Leállítva"
-	, "Címke megadása"
-	, "Adja meg az új címkét a kiválasztott torrentekhez:"
-	, "Új címke..."
-	, "Címke törlése"
-	, "Általános||Tracker-ek||Peer-ek||Szeletek||Állományok||Sebesség||Napló||"
-	, "Torrent hozzáadás"
-	, "Torrent hozzáadása URL-ből"
-	, "Szünet"
-	, "Beállítások"
-	, "Sor lejjebb helyezése"
-	, "Sor feljebb helyezése"
-	, "Törlés"
-	, "Újdonság-letöltő"
-	, "Indítás"
-	, "Leállítás"
-	, "Fájl"
-	, "Torrent hozzáadása..."
-	, "Torrent hozzáadása URL-ből..."
-	, "Beállítások"
-	, "Beállítások"
-	, "Kategória lista mutatása"
-	, "Részletes infók"
-	, "Állapotsáv mutatása"
-	, "Eszköztár mutatása"
-	, "Ikon a füleken"
-	, "Súgó"
-	, "µTorrent Honlap"
-	, "µTorrent fórumok"
-	, "Send WebUI Feedback"
-	, "About µTorrent WebUI"
-	, "Torrentek"
-	, "Összes torrent szüneteltetése"
-	, "Összes torrent folytatása"
-	, "L: %s%z/s"
-	, " H: %z/s"
-	, " O: %z/s"
-	, " O: %Z"
-	, "F: %s%z/s"
-	, "B"
-	, "EB"
-	, "GB"
-	, "kB"
-	, "MB"
-	, "PB"
-	, "TB"
-	, "Haladó"
-	, "Sávszélesség"
-	, "Kapcsolat"
-	, "Lemez Cache"
-	, "Mappák"
-	, "Általános"
-	, "Ütemező"
-	, "Sorbaállítás"
-	, "UI extrák"
-	, "UI beállítások"
-	, "BitTorrent"
-	, "Web UI"
-	, "Transfer Cap"
-	, "Program futtatás"
-	, "Tulajdonságok||Start/Stop||Mappa Megnyitás||Letöltési csík mutatása||"
-	, "Tiltva||Engedve||Eröltetve||"
-	, "(nincs)||Socks4||Socks5||HTTPS||HTTP||"
-	, "Uploads||Downloads||Uploads + Downloads||"
-	, "MB||GB||"
-	, "1||2||5||7||10||14||15||20||21||28||30||31||"
-	, "Név"
-	, "Érték"
-	, "Hét||Ked||Sze||Csü||Pén||Szo||Vas||"
-	, "Hétfő||Kedd||Szerda||Csütörtök||Péntek||Szombat||Vasárnap||"
-	, "Teljes seb."
-	, "Teljes sebesség - Normál globális sávszélesség korlátok"
-	, "Korlátozott"
-	, "Korlátozott - Ütemező sávszélesség korlátok használata"
-	, "Csak megosztás"
-	, "Csak megosztás - Csak adatfeltölés (félkészeket beleértve)"
-	, "Leállítás"
-	, "Kikapcsolás - Összes torrent leállítása amelyek nem kényszerítettek"
-	, "<= %d óra"
-	, "(Mellőz)"
-	, "<= %d perc"
-	, "%dd %dh"
-	, "%dh %dm"
-	, "%dm %ds"
-	, "%ds"
-	, "%dw %dd"
-	, "%dy %dw",
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	"BitTorrent Remote",
-	"Az BitTorrent Remote-on keresztül könnyen és biztonságosan el lehet érni a klienst böngészője segítségével.",
-	"Csak engedélyezze a kapcsolatot alul, válasszon egy számítógépnevet és egy jelszót, és hagyja bekacsolva a számítógépet.",
-	"Tudjon meg többet",
-	"Engedélyezze az BitTorrent távoli hozzáférést",
-	"Hitelesítés",
-	"Név:",
-	"Jelszó:",
-	"Elküld",
-	"BitTorrent Remote"
-];
+var LANG_STR =
+{
+   "CT_MASK1":"Torrent állományok||*.torrent||Összes állomány (*.*)||*.*||",
+   "DLG_BTN_OK":"OK",
+   "DLG_BTN_CANCEL":"Mégse",
+   "DLG_BTN_APPLY":"Alkalmaz",
+   "DLG_BTN_YES":"Igen",
+   "DLG_BTN_NO":"Nem",
+   "DLG_BTN_CLOSE":"Bezárás",
+   "DLG_SETTINGS_00":"Beállítások",
+   "DLG_SETTINGS_1_GENERAL_01":"Nyelv",
+   "DLG_SETTINGS_1_GENERAL_02":"Nyelv:",
+   "DLG_SETTINGS_1_GENERAL_10":"Adatbiztonság",
+   "DLG_SETTINGS_1_GENERAL_11":"Frissítések automatikus keresése",
+   "DLG_SETTINGS_1_GENERAL_12":"Frissítés béta verziókra",
+   "DLG_SETTINGS_1_GENERAL_13":"Névtelen információk küldése új verzió keresésnél",
+   "DLG_SETTINGS_1_GENERAL_17":"Letöltésnél",
+   "DLG_SETTINGS_1_GENERAL_18":".!ut hozzáfűzése a félkész állományokhoz",
+   "DLG_SETTINGS_1_GENERAL_19":"Állományok előre lefoglalása",
+   "DLG_SETTINGS_1_GENERAL_20":"Készenlét tiltása, ha van aktív torrent",
+   "DLG_SETTINGS_2_UI_01":"Megjelenítési Beállítások",
+   "DLG_SETTINGS_2_UI_02":"Torrent törlés megerősítése",
+   "DLG_SETTINGS_2_UI_03":"Megerősítés kérése tracker törlésnél",
+   "DLG_SETTINGS_2_UI_04":"Megerősítés kérése kilépésnél",
+   "DLG_SETTINGS_2_UI_05":"Másodlagos lista háttérszín",
+   "DLG_SETTINGS_2_UI_06":"Aktuális sebesség a cím sávban",
+   "DLG_SETTINGS_2_UI_07":"Sebesség korlátok az állapot sávban",
+   "DLG_SETTINGS_2_UI_15":"Torrent hozzáadáskor",
+   "DLG_SETTINGS_2_UI_16":"Ne induljanak automatikusan a letöltések",
+   "DLG_SETTINGS_2_UI_17":"Program ablak aktiválása",
+   "DLG_SETTINGS_2_UI_18":"Ablak mutatása a torrentben lévő állományokról",
+   "DLG_SETTINGS_2_UI_19":"Dupla kattintás tevékenységei",
+   "DLG_SETTINGS_2_UI_20":"Megosztott torrenteknél:",
+   "DLG_SETTINGS_2_UI_22":"Torrentek letöltéséhez:",
+   "DLG_SETTINGS_3_PATHS_01":"Letöltött állományok helye",
+   "DLG_SETTINGS_3_PATHS_02":"Új letöltések helye:",
+   "DLG_SETTINGS_3_PATHS_03":"Kézi hozzáadásnál mindig ablak mutatása",
+   "DLG_SETTINGS_3_PATHS_06":"Letöltött fájlok mozgatása ide:",
+   "DLG_SETTINGS_3_PATHS_07":"Torrent címke hozzáfűzése",
+   "DLG_SETTINGS_3_PATHS_10":"Csak az alapértelmezett mappából történik mozgatás",
+   "DLG_SETTINGS_3_PATHS_11":".torrent-ek helye",
+   "DLG_SETTINGS_3_PATHS_12":".torrent-ek tárolása:",
+   "DLG_SETTINGS_3_PATHS_15":".torrent-el",
+   "DLG_SETTINGS_3_PATHS_18":".torrent-ek automatikus betöltése innen:",
+   "DLG_SETTINGS_3_PATHS_19":"Betöltött .torrent-ek törlése",
+   "DLG_SETTINGS_4_CONN_01":"Figyelő port",
+   "DLG_SETTINGS_4_CONN_02":"Bejövő kapcsolatoknál használt port:",
+   "DLG_SETTINGS_4_CONN_04":"Véletlen port",
+   "DLG_SETTINGS_4_CONN_05":"Véletlen port minden indításnál",
+   "DLG_SETTINGS_4_CONN_06":"UPnP port hozzárendelés",
+   "DLG_SETTINGS_4_CONN_07":"NAT-PMP port hozzárendelés",
+   "DLG_SETTINGS_4_CONN_08":"Proxy kiszolgáló",
+   "DLG_SETTINGS_4_CONN_09":"Típus:",
+   "DLG_SETTINGS_4_CONN_11":"Proxy:",
+   "DLG_SETTINGS_4_CONN_13":"Port:",
+   "DLG_SETTINGS_4_CONN_15":"Hitelesítés",
+   "DLG_SETTINGS_4_CONN_16":"Felh.név:",
+   "DLG_SETTINGS_4_CONN_18":"Jelszó:",
+   "DLG_SETTINGS_4_CONN_19":"Gépnév feloldása proxy-n keresztül",
+   "DLG_SETTINGS_4_CONN_20":"Proxy kiszolgáló használata peer-to-peer kapcsolatoknál",
+   "DLG_SETTINGS_4_CONN_21":"Hozzáadás a Windows tűzfal kivételekhez",
+   "DLG_SETTINGS_4_CONN_22":"Proxy adatvédelem",
+   "DLG_SETTINGS_4_CONN_23":"Összes helyi DNS lekérés tiltása",
+   "DLG_SETTINGS_4_CONN_24":"Azonosítási információkat kiadó funkciók tiltása",
+   "DLG_SETTINGS_4_CONN_25":"Nem támogatott proxy kapcsolatok tiltása",
+   "DLG_SETTINGS_5_BANDWIDTH_01":"Globális feltöltés korlátozása",
+   "DLG_SETTINGS_5_BANDWIDTH_02":"Maximum feltöltése seb (kB/s): [0: korlátlan]",
+   "DLG_SETTINGS_5_BANDWIDTH_03":"Automatikus",
+   "DLG_SETTINGS_5_BANDWIDTH_05":"Más feltöltése sebesség, ha nincs letöltés (kB/s):",
+   "DLG_SETTINGS_5_BANDWIDTH_07":"Globális letöltési korlátozás",
+   "DLG_SETTINGS_5_BANDWIDTH_08":"Maximum letöltés (kB/s): [0: korlátlan]",
+   "DLG_SETTINGS_5_BANDWIDTH_10":"Kapcsolatok száma",
+   "DLG_SETTINGS_5_BANDWIDTH_11":"Kapcsolatok maximális száma összesen:",
+   "DLG_SETTINGS_5_BANDWIDTH_14":"Kapcsolódott letöltők maximális száma torrentenként:",
+   "DLG_SETTINGS_5_BANDWIDTH_15":"Feltöltések száma torrentenként:",
+   "DLG_SETTINGS_5_BANDWIDTH_17":"További feltöltési szálak, ha a feltöltési seb.<90%",
+   "DLG_SETTINGS_5_BANDWIDTH_18":"Global Rate Limit Options",
+   "DLG_SETTINGS_5_BANDWIDTH_19":"Sebesség korlátozás a vezérlési adatokra",
+   "DLG_SETTINGS_5_BANDWIDTH_20":"Sebesség korlátozás az uTP kapcsolatokra",
+   "DLG_SETTINGS_6_BITTORRENT_01":"Alap BitTorrent tulajdonságok",
+   "DLG_SETTINGS_6_BITTORRENT_02":"DHT hálózat engedése",
+   "DLG_SETTINGS_6_BITTORRENT_03":"Tracker kérdezése scrape információkról",
+   "DLG_SETTINGS_6_BITTORRENT_04":"DHT engedése új torrenteknél",
+   "DLG_SETTINGS_6_BITTORRENT_05":"Letöltő kicserélés engedése",
+   "DLG_SETTINGS_6_BITTORRENT_06":"Helyi peer-ek keresése",
+   "DLG_SETTINGS_6_BITTORRENT_07":"Helyi peer-ek sávszélesség korlátozása",
+   "DLG_SETTINGS_6_BITTORRENT_08":"IP/gépnév jelentése a tracker-nek:",
+   "DLG_SETTINGS_6_BITTORRENT_10":"Protokoll titkosítás",
+   "DLG_SETTINGS_6_BITTORRENT_11":"Kimenő:",
+   "DLG_SETTINGS_6_BITTORRENT_13":"Titkosítatlan bejövő kapcsolatok engedése",
+   "DLG_SETTINGS_6_BITTORRENT_14":"Sebesség korlátozás alkalmazása [uTP]",
+   "DLG_SETTINGS_6_BITTORRENT_15":"UDP tracker támogatás engedése",
+   "DLG_SETTINGS_7_TRANSFERCAP_01":"Enable Transfer Cap",
+   "DLG_SETTINGS_7_TRANSFERCAP_02":"Cap Settings",
+   "DLG_SETTINGS_7_TRANSFERCAP_03":"Limit típus:",
+   "DLG_SETTINGS_7_TRANSFERCAP_04":"Sávszélesség korlát:",
+   "DLG_SETTINGS_7_TRANSFERCAP_05":"Idő intervallum (nap):",
+   "DLG_SETTINGS_7_TRANSFERCAP_06":"Használati napló erre az időszakra:",
+   "DLG_SETTINGS_7_TRANSFERCAP_07":"Feltöltve:",
+   "DLG_SETTINGS_7_TRANSFERCAP_08":"Letöltve:",
+   "DLG_SETTINGS_7_TRANSFERCAP_09":"Feltöltve + Letöltve:",
+   "DLG_SETTINGS_7_TRANSFERCAP_10":"Időszak:",
+   "DLG_SETTINGS_7_TRANSFERCAP_11":"Utolsó %d nap",
+   "DLG_SETTINGS_7_TRANSFERCAP_12":"Napló törlése",
+   "DLG_SETTINGS_8_QUEUEING_01":"Sor beállítások",
+   "DLG_SETTINGS_8_QUEUEING_02":"Aktív torrentek maximális száma (fel- vagy letöltés):",
+   "DLG_SETTINGS_8_QUEUEING_04":"Aktív letöltések maximális száma:",
+   "DLG_SETTINGS_8_QUEUEING_06":"Megosztás amíg [Alapértelmezés]",
+   "DLG_SETTINGS_8_QUEUEING_07":"Minimum arány (%):",
+   "DLG_SETTINGS_8_QUEUEING_09":"Minimum seed idő (perc):",
+   "DLG_SETTINGS_8_QUEUEING_11":"A feltöltési feladatoknak magasabb prioritása van a letöltéseknél",
+   "DLG_SETTINGS_8_QUEUEING_12":"Amikor a µTorrent elére a megosztási célt",
+   "DLG_SETTINGS_8_QUEUEING_13":"Feltöltés korlátozása (kB/s): [0: megáll]",
+   "DLG_SETTINGS_9_SCHEDULER_01":"Ütemező engedése",
+   "DLG_SETTINGS_9_SCHEDULER_02":"Ütemező tábla",
+   "DLG_SETTINGS_9_SCHEDULER_04":"Ütemező beállítások",
+   "DLG_SETTINGS_9_SCHEDULER_05":"A korlátozott feltöltés (kB/s):",
+   "DLG_SETTINGS_9_SCHEDULER_07":"Lekorlátozott letöltése seb. (kB/s):",
+   "DLG_SETTINGS_9_SCHEDULER_09":"DHT tiltása kikapcsolásnál",
+   "DLG_SETTINGS_9_WEBUI_01":"Wb UI engedélyezése",
+   "DLG_SETTINGS_9_WEBUI_02":"Hitelesítés",
+   "DLG_SETTINGS_9_WEBUI_03":"Felh.név:",
+   "DLG_SETTINGS_9_WEBUI_05":"Jelszó:",
+   "DLG_SETTINGS_9_WEBUI_07":"Vendég hozzáférés engedése ezzel a névvel:",
+   "DLG_SETTINGS_9_WEBUI_09":"Kapcsolatok",
+   "DLG_SETTINGS_9_WEBUI_10":"Másodlagos listening port (a kapcsolódási port az alapértelmezett):",
+   "DLG_SETTINGS_9_WEBUI_12":"Megadott IP címekre való korlátozás (több címet vesszővel választhat el):",
+   "DLG_SETTINGS_A_ADVANCED_01":"Speciális Beállítások [FIGYELEM: Ne módosítsa!]",
+   "DLG_SETTINGS_A_ADVANCED_02":"Érték:",
+   "DLG_SETTINGS_A_ADVANCED_03":"Igaz",
+   "DLG_SETTINGS_A_ADVANCED_04":"Hamis",
+   "DLG_SETTINGS_A_ADVANCED_05":"Állít",
+   "DLG_SETTINGS_B_ADV_UI_01":"Sebesség felugró lista [több értéket vesszővel választhat el]",
+   "DLG_SETTINGS_B_ADV_UI_02":"Automatikus sebesség felugró lista felülbírálása",
+   "DLG_SETTINGS_B_ADV_UI_03":"Feltöltési seb. lista:",
+   "DLG_SETTINGS_B_ADV_UI_05":"Leltöltési seb. lista:",
+   "DLG_SETTINGS_B_ADV_UI_07":"Állandó címkék [Több címkét a | karakterrel választhat el]",
+   "DLG_SETTINGS_B_ADV_UI_08":"Kereső motorok [formátum: név|URL]",
+   "DLG_SETTINGS_C_ADV_CACHE_01":"Alapvető gyorsítótár beállítások",
+   "DLG_SETTINGS_C_ADV_CACHE_02":"A lemez gyorsítótár a gyakran használt adatokat a memóriában tartja, hogy csökkentse a merevlemez műveletek számát. A µTorrent automatikusan szabályozza a gyorsítótárat, de a paraméterek itt kézileg is megadhatók.",
+   "DLG_SETTINGS_C_ADV_CACHE_03":"Automatikus gyorsítótár méret felülbírálás, a méret kézi megadása (MB):",
+   "DLG_SETTINGS_C_ADV_CACHE_05":"Memória használat csökkentése, ha nincs szükség gyorsítótárra",
+   "DLG_SETTINGS_C_ADV_CACHE_06":"Speciális gyorsítótár beállítások",
+   "DLG_SETTINGS_C_ADV_CACHE_07":"Lemezre írás gyorsítótárazásának engedése",
+   "DLG_SETTINGS_C_ADV_CACHE_08":"Nem módosított blokkok kiírása 2 percenként",
+   "DLG_SETTINGS_C_ADV_CACHE_09":"Elkészült szeletek kiírása azonnal",
+   "DLG_SETTINGS_C_ADV_CACHE_10":"Lemezről olvasás gyorsítótárazásának engedése",
+   "DLG_SETTINGS_C_ADV_CACHE_11":"Olvasás gyorsítótárazásának tiltása, ha a feltöltés lassú",
+   "DLG_SETTINGS_C_ADV_CACHE_12":"Régi blokkok törlése gyorsítótárból",
+   "DLG_SETTINGS_C_ADV_CACHE_13":"Automata gyorsítótár növelése cache thrashing-nél",
+   "DLG_SETTINGS_C_ADV_CACHE_14":"Windows lemezre írási gyorsítótárazás tiltása",
+   "DLG_SETTINGS_C_ADV_CACHE_15":"Windows lemezről olvasási gyorsítótárazás tiltása",
+   "DLG_SETTINGS_C_ADV_RUN_01":"Program futtatás",
+   "DLG_SETTINGS_C_ADV_RUN_02":"Program futtatása torrent befejezéskor:",
+   "DLG_SETTINGS_C_ADV_RUN_04":"Program futtatása torrent állapot változásnál:",
+   "DLG_SETTINGS_C_ADV_RUN_06":"Használható parancsok:\r\n%F - Letöltött fájl neve (egy fájlos torrentekhez)\r\n%D - Fájlok mentési mappája\r\n%N - Torrent címe\r\n%S - Torrent állapota\r\n%L - Címke\r\n%T - Tracker\r\n%M - állapot üzenet szöveg (mint az állapot oszlop)\r\n%I - hexa kódolt info-hash\r\n\r\nAz állapot ezek kombinációja:\r\nelindítva =1, ellenőrzés = 2, ellenőrzés-utáni-indítás = 4,\r\nellenőrizve = 8, hiba = 16, szünetel = 32, auto = 64, betöltve = 128",
+   "DLG_TORRENTPROP_00":"Torrent Tulajdonságok",
+   "DLG_TORRENTPROP_1_GEN_01":"Tracker-ek (több elválasztása üres sorral)",
+   "DLG_TORRENTPROP_1_GEN_03":"Sávszélesség Beállítások",
+   "DLG_TORRENTPROP_1_GEN_04":"Maximális feltöltési seb.(kB/s): [0: alapért.]",
+   "DLG_TORRENTPROP_1_GEN_06":"Minimális letöltési seb.(kB/s): [0: alapért.]",
+   "DLG_TORRENTPROP_1_GEN_08":"Feltöltési szálak: [0: alapért.]",
+   "DLG_TORRENTPROP_1_GEN_10":"Osztás amíg",
+   "DLG_TORRENTPROP_1_GEN_11":"Alapértelmezések felülbírálása",
+   "DLG_TORRENTPROP_1_GEN_12":"Minimum arány (%):",
+   "DLG_TORRENTPROP_1_GEN_14":"Minimum seed idő (perc):",
+   "DLG_TORRENTPROP_1_GEN_16":"Egyéb Beállítások",
+   "DLG_TORRENTPROP_1_GEN_17":"Kezdő megosztás",
+   "DLG_TORRENTPROP_1_GEN_18":"DHT engedése",
+   "DLG_TORRENTPROP_1_GEN_19":"Peer kicserélés",
+   "DLG_ADDEDITRSSFEED_03":"Feed",
+   "DLG_ADDEDITRSSFEED_04":"Feed URL:",
+   "DLG_ADDEDITRSSFEED_05":"Egyedi álnév:",
+   "DLG_ADDEDITRSSFEED_06":"Előfizetés",
+   "DLG_ADDEDITRSSFEED_07":"Ne töltődjön le minden elem automatikusan",
+   "DLG_ADDEDITRSSFEED_08":"Összes elem letöltése automatikusan a közzétett feedből",
+   "DLG_ADDEDITRSSFEED_09":"Fejlett epizód szűrő használata",
+   "DLG_RSSDOWNLOADER_02":"Feedek||Kedvencek||Előzmények||",
+   "DLG_RSSDOWNLOADER_03":"All Feeds",
+   "DLG_RSSDOWNLOADER_04":"Szűrők beállítása",
+   "DLG_RSSDOWNLOADER_05":"Név:",
+   "DLG_RSSDOWNLOADER_06":"Szűrő:",
+   "DLG_RSSDOWNLOADER_07":"Nem:",
+   "DLG_RSSDOWNLOADER_08":"Mentés ide:",
+   "DLG_RSSDOWNLOADER_09":"Feed:",
+   "DLG_RSSDOWNLOADER_10":"Minőség:",
+   "DLG_RSSDOWNLOADER_11":"Epizód szám: [pl. 1x12-14]",
+   "DLG_RSSDOWNLOADER_12":"A szűrő az eredeti névre vonatkozik a dekódolt helyett",
+   "DLG_RSSDOWNLOADER_13":"Ne induljanak automatikusan a letöltések",
+   "DLG_RSSDOWNLOADER_14":"Fejlett ep. szűrő",
+   "DLG_RSSDOWNLOADER_15":"Letöltések legmagasabb prioritáson",
+   "DLG_RSSDOWNLOADER_16":"Minimum intervallum:",
+   "DLG_RSSDOWNLOADER_17":"Új torrentek címkéje:",
+   "DLG_RSSDOWNLOADER_18":"RSS Feed hozzáadása...",
+   "DLG_RSSDOWNLOADER_19":"Feed szerk...",
+   "DLG_RSSDOWNLOADER_20":"Feed tiltása",
+   "DLG_RSSDOWNLOADER_21":"Feed használata",
+   "DLG_RSSDOWNLOADER_22":"Feed frissítése",
+   "DLG_RSSDOWNLOADER_23":"Feed törlése",
+   "DLG_RSSDOWNLOADER_24":"Letöltés",
+   "DLG_RSSDOWNLOADER_25":"URL megnyitása böngészőben",
+   "DLG_RSSDOWNLOADER_26":"Kedvencekhez ad",
+   "DLG_RSSDOWNLOADER_27":"Hozzáadás",
+   "DLG_RSSDOWNLOADER_28":"Törlés",
+   "DLG_RSSDOWNLOADER_29":"ÖSSZ",
+   "DLG_RSSDOWNLOADER_30":"(Össz)",
+   "DLG_RSSDOWNLOADER_31":"(mind egyezik)||(csak egy egyezik)||12 óra||1 nap||2 nap||3 nap||4 nap||1 hét||2 hét||3 hét||1 hónap||",
+   "DLG_RSSDOWNLOADER_32":"RSS hozzáadása",
+   "DLG_RSSDOWNLOADER_33":"RSS Feed szerk.",
+   "DLG_RSSDOWNLOADER_34":"Remove RSS Feed(s)",
+   "DLG_RSSDOWNLOADER_35":"Really delete the %d selected RSS Feeds?",
+   "DLG_RSSDOWNLOADER_36":"Biztos törlöd a \"%s\" feedet?",
+   "FEED_COL_FULLNAME":"Teljes név",
+   "FEED_COL_NAME":"Név",
+   "FEED_COL_EPISODE":"Epizód",
+   "FEED_COL_FORMAT":"Formátum",
+   "FEED_COL_CODEC":"Codec",
+   "FEED_COL_DATE":"Date",
+   "FEED_COL_FEED":"Feed",
+   "FEED_COL_URL":"Forrás URL",
+   "PRS_COL_IP":"IP",
+   "PRS_COL_PORT":"Port",
+   "PRS_COL_CLIENT":"Kliens",
+   "PRS_COL_FLAGS":"Jelzők",
+   "PRS_COL_PCNT":"%",
+   "PRS_COL_RELEVANCE":"Fontosság",
+   "PRS_COL_DOWNSPEED":"Letöltés",
+   "PRS_COL_UPSPEED":"Feltöltés",
+   "PRS_COL_REQS":"Kérve",
+   "PRS_COL_WAITED":"Várakozik",
+   "PRS_COL_UPLOADED":"Feltöltve",
+   "PRS_COL_DOWNLOADED":"Letöltve",
+   "PRS_COL_HASHERR":"Hasherr",
+   "PRS_COL_PEERDL":"Peer le.",
+   "PRS_COL_MAXUP":"MaxFel",
+   "PRS_COL_MAXDOWN":"MaxLe",
+   "PRS_COL_QUEUED":"Sorbanáll",
+   "PRS_COL_INACTIVE":"Inaktív",
+   "FI_COL_DONE":"Kész",
+   "FI_COL_FIRSTPC":"Első szelet",
+   "FI_COL_NAME":"Név",
+   "FI_COL_NUMPCS":"szelet db.",
+   "FI_COL_PCNT":"%",
+   "FI_COL_PRIO":"Prioritás",
+   "FI_COL_SIZE":"Méret",
+   "FI_PRI0":"kihagyás",
+   "FI_PRI1":"alacsony",
+   "FI_PRI2":"normál",
+   "FI_PRI3":"magas",
+   "GN_TP_01":"Letöltve:",
+   "GN_TP_02":"Feltöltve:",
+   "GN_TP_03":"Megosztók:",
+   "GN_TP_04":"Hátravan:",
+   "GN_TP_05":"Letöltési seb.:",
+   "GN_TP_06":"Feltöltési seb.:",
+   "GN_TP_07":"Letöltők:",
+   "GN_TP_08":"Arány:",
+   "GN_TP_09":"Mentés helye:",
+   "GN_TP_10":"Ellenőrző-összeg:",
+   "GN_GENERAL":"Általános",
+   "GN_TRANSFER":"Átvitel",
+   "GN_XCONN":"Kapcsolódva: %d Összes: %d (%d a bolyban)",
+   "MAIN_TITLEBAR_SPEED":"L:%s F:%s - %s",
+   "MENU_COPY":"Másolás",
+   "MENU_RESET":"Nulláz",
+   "MENU_UNLIMITED":"Korlátlan",
+   "MP_RESOLVE_IPS":"Gépnév megállapítása",
+   "MF_GETFILE":"Get File(s)",
+   "MF_DONT":"Kihagyás",
+   "MF_HIGH":"Magas prioritás",
+   "MF_LOW":"Alacsony prioritás",
+   "MF_NORMAL":"Normál prioritás",
+   "ML_COPY_MAGNETURI":"Magnet URI másolása",
+   "ML_DELETE_DATA":"Adat törlése",
+   "ML_DELETE_TORRENT":".torrent törlése",
+   "ML_DELETE_DATATORRENT":"Adat ÉS .torrent törlése",
+   "ML_FORCE_RECHECK":"Kényszerített újraellenőrzés",
+   "ML_FORCE_START":"Kényszerített indítás",
+   "ML_LABEL":"Címke",
+   "ML_PAUSE":"Szüneteltet",
+   "ML_PROPERTIES":"Tulajdonságok",
+   "ML_QUEUEDOWN":"Sor mozgatása le",
+   "ML_QUEUEUP":"Sor mozgatása fel",
+   "ML_REMOVE":"Törlés",
+   "ML_REMOVE_AND":"Törlés és",
+   "ML_START":"Indítás",
+   "ML_STOP":"Leállítás",
+   "OV_CAT_ACTIVE":"Aktív",
+   "OV_CAT_ALL":"Összes",
+   "OV_CAT_COMPL":"Kész",
+   "OV_CAT_DL":"Letöltés",
+   "OV_CAT_INACTIVE":"Inaktív",
+   "OV_CAT_NOLABEL":"Nincs cimke",
+   "OV_COL_AVAIL":"||Elérh.||Elérhetőség",
+   "OV_COL_DATE_ADDED":"Hozzáadva",
+   "OV_COL_DATE_COMPLETED":"Elkészült",
+   "OV_COL_DONE":"Kész",
+   "OV_COL_DOWNLOADED":"Letöltve",
+   "OV_COL_DOWNSPD":"Letöltés",
+   "OV_COL_ETA":"Hátravan",
+   "OV_COL_LABEL":"Címke",
+   "OV_COL_NAME":"Név",
+   "OV_COL_ORDER":"#",
+   "OV_COL_PEERS":"Letöltők",
+   "OV_COL_REMAINING":"Hátravan",
+   "OV_COL_SEEDS":"Megosztók",
+   "OV_COL_SEEDS_PEERS":"Megosztók/Letöltők",
+   "OV_COL_SHARED":"Arány",
+   "OV_COL_SIZE":"Méret",
+   "OV_COL_SOURCE_URL":"Forrás URL",
+   "OV_COL_STATUS":"Állapot",
+   "OV_COL_UPPED":"Feltöltve",
+   "OV_COL_UPSPD":"Feltöltés",
+   "OV_CONFIRM_DELETEDATA_MULTIPLE":"Biztos benne, hogy eltávolítja a %d kiválasztott torrentet és az összes csatlakozó adatot?",
+   "OV_CONFIRM_DELETEDATA_ONE":"Biztos benne, hogy eltávolítja a kiválasztott torrenteket és az összes csatlakozó adatot?",
+   "OV_CONFIRM_DELETE_MULTIPLE":"Biztos benne, hogy eltávolítja a %d kiválasztott torrentet?",
+   "OV_CONFIRM_DELETE_ONE":"Biztos benne, hogy eltávolítja a kiválasztott torrenteket?",
+   "OV_CONFIRM_DELETE_RSSFILTER":"Biztos törlöd a \"%s\" RSS szűrőt?",
+   "OV_FL_CHECKED":"Ellenőrizve %:.1d%",
+   "OV_FL_DOWNLOADING":"Letöltés",
+   "OV_FL_ERROR":"Hiba: %s",
+   "OV_FL_FINISHED":"Kész",
+   "OV_FL_PAUSED":"Szünetel",
+   "OV_FL_QUEUED":"Sorban áll",
+   "OV_FL_QUEUED_SEED":"Seedhez sorban áll",
+   "OV_FL_SEEDING":"Megosztás",
+   "OV_FL_STOPPED":"Leállítva",
+   "OV_NEWLABEL_CAPTION":"Címke megadása",
+   "OV_NEWLABEL_TEXT":"Adja meg az új címkét a kiválasztott torrentekhez:",
+   "OV_NEW_LABEL":"Új címke...",
+   "OV_REMOVE_LABEL":"Címke törlése",
+   "OV_TABS":"Általános||Tracker-ek||Peer-ek||Szeletek||Állományok||Sebesség||Napló||",
+   "OV_TB_ADDTORR":"Torrent hozzáadás",
+   "OV_TB_ADDURL":"Torrent hozzáadása URL-ből",
+   "OV_TB_PAUSE":"Szünet",
+   "OV_TB_PREF":"Beállítások",
+   "OV_TB_QUEUEDOWN":"Sor lejjebb helyezése",
+   "OV_TB_QUEUEUP":"Sor feljebb helyezése",
+   "OV_TB_REMOVE":"Törlés",
+   "OV_TB_RSSDOWNLDR":"Újdonság-letöltő",
+   "OV_TB_START":"Indítás",
+   "OV_TB_STOP":"Leállítás",
+   "MM_FILE":"Fájl",
+   "MM_FILE_ADD_TORRENT":"Torrent hozzáadása...",
+   "MM_FILE_ADD_URL":"Torrent hozzáadása URL-ből...",
+   "MM_OPTIONS":"Beállítások",
+   "MM_OPTIONS_PREFERENCES":"Beállítások",
+   "MM_OPTIONS_SHOW_CATEGORY":"Kategória lista mutatása",
+   "MM_OPTIONS_SHOW_DETAIL":"Részletes infók",
+   "MM_OPTIONS_SHOW_STATUS":"Állapotsáv mutatása",
+   "MM_OPTIONS_SHOW_TOOLBAR":"Eszköztár mutatása",
+   "MM_OPTIONS_TAB_ICONS":"Ikon a füleken",
+   "MM_HELP":"Súgó",
+   "MM_HELP_UT_WEBPAGE":"µTorrent Honlap",
+   "MM_HELP_UT_FORUMS":"µTorrent fórumok",
+   "MM_HELP_WEBUI_FEEDBACK":"Send WebUI Feedback",
+   "MM_HELP_ABOUT_WEBUI":"About µTorrent WebUI",
+   "STM_TORRENTS":"Torrentek",
+   "STM_TORRENTS_PAUSEALL":"Összes torrent szüneteltetése",
+   "STM_TORRENTS_RESUMEALL":"Összes torrent folytatása",
+   "SB_DOWNLOAD":"L: %s%z/s",
+   "SB_LOCAL":" H: %z/s",
+   "SB_OVERHEAD":" O: %z/s",
+   "SB_TOTAL":" O: %Z",
+   "SB_UPLOAD":"F: %s%z/s",
+   "SIZE_B":"B",
+   "SIZE_EB":"EB",
+   "SIZE_GB":"GB",
+   "SIZE_KB":"kB",
+   "SIZE_MB":"MB",
+   "SIZE_PB":"PB",
+   "SIZE_TB":"TB",
+   "ST_CAPT_ADVANCED":"Haladó",
+   "ST_CAPT_BANDWIDTH":"Sávszélesség",
+   "ST_CAPT_CONNECTION":"Kapcsolat",
+   "ST_CAPT_DISK_CACHE":"Lemez Cache",
+   "ST_CAPT_FOLDER":"Mappák",
+   "ST_CAPT_GENERAL":"Általános",
+   "ST_CAPT_SCHEDULER":"Ütemező",
+   "ST_CAPT_QUEUEING":"Sorbaállítás",
+   "ST_CAPT_UI_EXTRAS":"UI extrák",
+   "ST_CAPT_UI_SETTINGS":"UI beállítások",
+   "ST_CAPT_BITTORRENT":"BitTorrent",
+   "ST_CAPT_WEBUI":"Web UI",
+   "ST_CAPT_TRANSFER_CAP":"Transfer Cap",
+   "ST_CAPT_RUN_PROGRAM":"Program futtatás",
+   "ST_CBO_UI_DBLCLK_TOR":"Tulajdonságok||Start/Stop||Mappa Megnyitás||Letöltési csík mutatása||",
+   "ST_CBO_ENCRYPTIONS":"Tiltva||Engedve||Eröltetve||",
+   "ST_CBO_PROXY":"(nincs)||Socks4||Socks5||HTTPS||HTTP||",
+   "ST_CBO_TCAP_MODES":"Uploads||Downloads||Uploads + Downloads||",
+   "ST_CBO_TCAP_UNITS":"MB||GB||",
+   "ST_CBO_TCAP_PERIODS":"1||2||5||7||10||14||15||20||21||28||30||31||",
+   "ST_COL_NAME":"Név",
+   "ST_COL_VALUE":"Érték",
+   "ST_SCH_DAYCODES":"Hét||Ked||Sze||Csü||Pén||Szo||Vas||",
+   "ST_SCH_DAYNAMES":"Hétfő||Kedd||Szerda||Csütörtök||Péntek||Szombat||Vasárnap||",
+   "ST_SCH_LGND_FULL":"Teljes seb.",
+   "ST_SCH_LGND_FULLEX":"Teljes sebesség - Normál globális sávszélesség korlátok",
+   "ST_SCH_LGND_LIMITED":"Korlátozott",
+   "ST_SCH_LGND_LIMITEDEX":"Korlátozott - Ütemező sávszélesség korlátok használata",
+   "ST_SCH_LGND_SEEDING":"Csak megosztás",
+   "ST_SCH_LGND_SEEDINGEX":"Csak megosztás - Csak adatfeltölés (félkészeket beleértve)",
+   "ST_SCH_LGND_OFF":"Leállítás",
+   "ST_SCH_LGND_OFFEX":"Kikapcsolás - Összes torrent leállítása amelyek nem kényszerítettek",
+   "ST_SEEDTIMES_HOURS":"<= %d óra",
+   "ST_SEEDTIMES_IGNORE":"(Mellőz)",
+   "ST_SEEDTIMES_MINUTES":"<= %d perc",
+   "TIME_DAYS_HOURS":"%dd %dh",
+   "TIME_HOURS_MINS":"%dh %dm",
+   "TIME_MINS_SECS":"%dm %ds",
+   "TIME_SECS":"%ds",
+   "TIME_WEEKS_DAYS":"%dw %dd",
+   "TIME_YEARS_WEEKS":"%dy %dw",
+   "ML_MORE_ACTIONS":null,
+   "Torrents":null,
+   "Feeds":null,
+   "App":null,
+   "country":null,
+   "ETA":null,
+   "of":null,
+   "/s":null,
+   "Paste a torrent or feed URL":null,
+   "Home":null,
+   "Logout":null,
+   "Seeding":null,
+   "All Feeds":null,
+   "bitrate":null,
+   "resolution":null,
+   "length":null,
+   "streamable":null,
+   "type":null,
+   "remote":null,
+   "about":null,
+   "sessions":null,
+   "share":null,
+   "Share this torrent":null,
+   "Share link":null,
+   "add":null,
+   "logout":null,
+   "log in":null,
+   "anywhere access":null,
+   "stay signed in":null,
+   "download":null,
+   "Your client is currently not available. Verify that it is connected to the internet.":null,
+   "Unable to communicate with your &micro;Torrent client. This message will disappear automatically when a connection is re-established.":null,
+   "Open file":null,
+   "Download to your computer":null,
+   "Open with VLC Media Player":null,
+   "Actions":null,
+   "season":null,
+   "DLG_ABOUT_VERSION_LEGEND":null,
+   "DLG_ABOUT_VERSION_VERSION":null,
+   "DLG_ABOUT_VERSION_REVISION":null,
+   "DLG_ABOUT_VERSION_BUILD_DATE":null,
+   "DLG_ABOUT_VERSION_PEER_ID":null,
+   "DLG_ABOUT_VERSION_USER_AGENT":null,
+   "DLG_ABOUT_UPNP_EXTERNAL_ADDRESS":null,
+   "DLG_ABOUT_UI_REVISION":null,
+   "DLG_SETTINGS_SAVE":null,
+   "DLG_SETTINGS_MENU_TITLE":null,
+   "DLG_SETTINGS_D_REMOTE_01":"BitTorrent Remote",
+   "DLG_SETTINGS_D_REMOTE_02":"Az BitTorrent Remote-on keresztül könnyen és biztonságosan el lehet érni a klienst böngészője segítségével.",
+   "DLG_SETTINGS_D_REMOTE_03":"Csak engedélyezze a kapcsolatot alul, válasszon egy számítógépnevet és egy jelszót, és hagyja bekacsolva a számítógépet.",
+   "DLG_SETTINGS_D_REMOTE_04":"Tudjon meg többet",
+   "DLG_SETTINGS_D_REMOTE_05":"Engedélyezze az BitTorrent távoli hozzáférést",
+   "DLG_SETTINGS_D_REMOTE_06":"Hitelesítés",
+   "DLG_SETTINGS_D_REMOTE_07":"Név:",
+   "DLG_SETTINGS_D_REMOTE_08":"Jelszó:",
+   "DLG_SETTINGS_D_REMOTE_09":"Elküld",
+   "ST_CAPT_REMOTE":"BitTorrent Remote"
+}

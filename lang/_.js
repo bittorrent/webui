@@ -539,5 +539,5 @@ var LANG_LIST = {
 };
 
 function L_(id) {
-	return (LANG_STR[LANG_CONST[id]] || LANG_STR_fallback[LANG_CONST[id]]);
+	return (LANG_STR[id] || LANG_STR_fallback[id]);
 }

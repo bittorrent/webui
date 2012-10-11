@@ -5,473 +5,474 @@ Use of this source code is governed by a BSD-style that can be
 found in the LICENSE file.
 */
 
-var LANG_STR = [
-	  "Torrent filer||*.torrent||Alle filer (*.*)||*.*||"
-	, "OK"
-	, "Annullér"
-	, "Anvend"
-	, "Ja"
-	, "Nej"
-	, "Luk"
-	, "Indstillinger"
-	, "Sprog"
-	, "Sprog:"
-	, "Privatliv"
-	, "Check automatisk for updateringer"
-	, "Updater til beta versioner"
-	, "Send anonyme informationer, når der checkes for opdateringer"
-	, "Ved downloading"
-	, "Tilføj .!ut til ukomplette filer"
-	, "Præ allokér alle filer"
-	, "Undgå standby hvis der er aktive torrents"
-	, "Visningsindstillinger"
-	, "Bekræft sletning af torrents"
-	, "Bekræft sletning af trackere"
-	, "Bekræft lukning af µTorrent"
-	, "Alternativ liste baggrundsfarve"
-	, "Vis aktuel hastighed i titel baren"
-	, "Vis hastighedsbegr. i statuslinjen"
-	, "Når torrents tilføjes"
-	, "Start ikke download automatisk"
-	, "Aktivér programvinduet"
-	, "Åbn et vindue, der viser indholdet af torrenten"
-	, "Handlinger ved dobbeltklik"
-	, "Ved torrents, der seedes:"
-	, "Ved torrents, der hentes:"
-	, "Lokation for downloadede filer"
-	, "Gem nye downloads i:"
-	, "Vis altid dialogboks v. manuel tilføjelse"
-	, "Flyt færdige downloads til:"
-	, "Tilføj etiket fra torrent"
-	, "Flyt kun fra standard download mappe"
-	, "Lokation af .torrents"
-	, "Gem .torrents i:"
-	, "Flyt færdige .torrents til:"
-	, "Indlæs automatisk .torrents fra:"
-	, "Slet indlæste .torrents"
-	, "Port, der lyttes på"
-	, "Port, der bruges til indkomne forbindelser:"
-	, "Tilfældig port"
-	, "Vælg en tilfældig port ved hver programstart"
-	, "Aktivér UPnP kortlægning"
-	, "Aktivér NAT-PMP port kortlægning"
-	, "Proxy Server"
-	, "Type:"
-	, "Proxy:"
-	, "Port:"
-	, "Identifikation"
-	, "Brugernavn:"
-	, "Kodeord:"
-	, "Oversæt værtsnavne via proxy"
-	, "Brug proxy server ved peer-to-peer forbindelser"
-	, "Tilføj Windows Firewall undtagelse"
-	, "Proxy privatliv"
-	, "Deaktiver alle lokale DNS opslag"
-	, "Deaktiver funktioner, der kan gøre det muligt at identificere dig"
-	, "Deaktiver forbindelser som ikke understøttes af proxy"
-	, "Global upload hastighedsbegrænsning"
-	, "Maksimal upload hastighed (kB/s): [0: ubegrænset]"
-	, "Automatisk"
-	, "Særlig upload hastighed, når der ikke downloades (kB/s):"
-	, "Global download hastighedsbegrænsning"
-	, "Maksimal download hastighed (kB/s): [0: ubegrænset]"
-	, "Antal forbindelser"
-	, "Globalt maksimalt antal forbindelser:"
-	, "Maksimale antal forbundne peers pr. torrent:"
-	, "Antal upload slots pr. torrent:"
-	, "Brug yderligere upload slots hvis upload hastighed < 90%"
-	, "Global Rate Limit Options"
-	, "Begrænsningen gælder også transportdata (overhead)"
-	, "Gælder også for uTP forbindelser"
-	, "Grundlæggende BitTorrent egenskaber"
-	, "Aktivér DHT netværk"
-	, "Bed tracker om scrape information"
-	, "Aktivér DHT for nye torrents"
-	, "Aktivér peer udveksling"
-	, "Aktivér %lokal peer opdagelse"
-	, "Begræns lokal peer båndbredde"
-	, "IP/værtsnavn rapporteret til tracker:"
-	, "Protokol kryptering"
-	, "Udgående:"
-	, "Tillad ældre indkommende forbindelser"
-	, "Aktivér båndbreddehåndtering [uTP]"
-	, "Aktivér UDP tracker understøttelse"
-	, "Aktivér overførselsgrænse"
-	, "Grænseindstillinger"
-	, "Begrænsning af:"
-	, "Datamængde:"
-	, "Tidsperiode (dage):"
-	, "Trafik i den valgte periode:"
-	, "Sendt:"
-	, "Modtaget:"
-	, "Sendt + modtaget:"
-	, "Tidsperiode:"
-	, "Sidste %d dage"
-	, "Nulstil historik"
-	, "Kø indstillinger"
-	, "Maksimale antal af aktive torrents (upload eller download):"
-	, "Maksimale antal af aktive downloads:"
-	, "Seed så længe [standard værdier]"
-	, "Minimum deleforhold (%):"
-	, "Minimum seed tid (minutter):"
-	, "Uploads har højere prioritet end downloads"
-	, "Når µTorrent når seeding målet"
-	, "Begræns upload hastighed til (kB/s): [0: stop]"
-	, "Aktivér planlægning"
-	, "Planlægningsskema"
-	, "Planlægingsindstillinger"
-	, "Begrænset upload hastighed (kB/s):"
-	, "Begrænset download hastighed (kB/s):"
-	, "Deaktivér DHT ved afbrydelse"
-	, "Aktivér Web UI"
-	, "Identifikation"
-	, "Brugernavn:"
-	, "Kodeord:"
-	, "Aktivér Gæst konto med brugernavn:"
-	, "Forbindelse"
-	, "Alternativ port, der lyttes på (standard er forbindelsesport):"
-	, "Begræns adgang til følgende IP adresser (separer med komma):"
-	, "Avancerede indstillinger [ADVARSEL: Bør ikke ændres!]"
-	, "Værdi"
-	, "Sand"
-	, "Falsk"
-	, "Gem"
-	, "Hastighedspopup-liste [adskil flere værdier med komma]"
-	, "Tilsidesæt automatisk hastighedspopup-liste"
-	, "Sendehastighedsliste:"
-	, "Modtagehastighedsliste:"
-	, "Vedvarende etiketter [separer med |]"
-	, "Søgemaskiner [Format: navn|URL]"
-	, "Grundlæggende cache indstillinger"
-	, "Disk cachen benyttes til at gemme data i hukommelsen, som ofte forespørges. Dette reducerer antallet af læse og skrive kommandoer til harddisken. Normalt håndterer µTorrent automatisk disk cachen, men du kan ændre disk cachens opførsel ved at ændre i indstillingerne herunder."
-	, "Tilsidesæt automatisk cache størrelse og angiv en manuel størrelse (MB):"
-	, "Reducer hukommelsesforbrug når cachen ikke behøves"
-	, "Avancerede cache indstillinger"
-	, "Aktivér cache for disk skrivning"
-	, "Skriv ubenyttede blokke hver 2 minutter"
-	, "Skriv straks færdige dele"
-	, "Aktivér cache for disk læsning"
-	, "Deaktivér læse cache hvis upload hastigheden er lav"
-	, "Fjern gamle blokke fra cachen"
-	, "Forøg automatisk cache størrelsen hvis den fyldes op"
-	, "Deaktivér Windows cache for disk skrivning"
-	, "Deaktivér Windows cache for disk læsning"
-	, "Kør program"
-	, "Kør dette program når en torrent er færdig:"
-	, "Kør dette program når en torrent skifter status:"
-	, "Du kan bruge disse kommandoer:\r\n%F - Navn på hentet fil (for torrents med én fil)\r\n%D - Mappe hvor filerne er gemt\r\n%N - Torrent titel\r\n%S - Torrent status\r\n%L - Etiket\r\n%T - Tracker\r\n%M - Status meddelelse (samme som status kolonne)\r\n%I - hex kodet info-hash\r\n\r\nStatus er en kombination af:\r\nstartet = 1, tjekker = 2, start-efter-tjek = 4,\r\ntjekket = 8, fejl = 16, pausesat = 32, auto = 64, indlæst = 128"
-	, "Torrent egenskaber"
-	, "Trackere (separer med en tom linie)"
-	, "Båndbredde indstilliner"
-	, "Maksimal upload hastighed (kB/s): [0: standard]"
-	, "Maksimal download hastighed (kB/s): [0: standard]"
-	, "Antal upload slots: [0: standard]"
-	, "Seed mens"
-	, "Tilsidesæt standard indstillinger"
-	, "Minimum deleforhold (%):"
-	, "Minimum seed tid (minutter):"
-	, "Andre indstillinger"
-	, "Start seed"
-	, "Aktivér DHT"
-	, "Peer udveksling"
-	, "Feed"
-	, "Feed-URL:"
-	, "Bruger alias:"
-	, "Abonnement"
-	, "Hent ikke automatisk alle emner"
-	, "Hent automatisk alle udgivne emner i feed"
-	, "Brug smart episode filter"
-	, "Feeds||Favoritter||Historik||"
-	, "All Feeds"
-	, "Filteropsætning"
-	, "Navn:"
-	, "Filter:"
-	, "Ikke:"
-	, "Gem i:"
-	, "Feed:"
-	, "Kvalitet:"
-	, "Episodenummer: [f.eks. 1x12-14]"
-	, "Filter matcher det originale navn, ikke det afkodede"
-	, "Hent ikke automatisk"
-	, "Smart ep. filter"
-	, "Giv højeste prioritet til at hente"
-	, "Minimum interval:"
-	, "Etiket for nye torrents:"
-	, "Tilføj RSS-feed..."
-	, "Rediger feed..."
-	, "Deaktiver feed"
-	, "Aktiver feed"
-	, "Opdater feed"
-	, "Slet feed"
-	, "Hent"
-	, "Åbn URL i browser"
-	, "Tilføj til favoritter"
-	, "Tilføj"
-	, "Slet"
-	, "ALLE"
-	, "(Alle)"
-	, "(match altid)||(match kun én gang)||12 timer||1 dag||2 dage||3 dage||4 dage||1 uge||2 uger||3 uger||1 måned||"
-	, "Tilføj RSS-feed"
-	, "Rediger RSS-feed"
-	, "Remove RSS Feed(s)"
-	, "Really delete the %d selected RSS Feeds?"
-	, "Er du sikker på at du vil slette RSS-feed \"%s\"?"
-	, "Fulde navn"
-	, "Navn"
-	, "Episode"
-	, "Format"
-	, "Codec"
-	, "Date"
-	, "Feed"
-	, "Kilde URL"
-	, "IP"
-	, "Port"
-	, "Klient"
-	, "Status"
-	, "%"
-	, "Interesse"
-	, "Hast. ned"
-	, "Hast. op"
-	, "Foresp."
-	, "Ventet"
-	, "Sendt"
-	, "Modtaget"
-	, "Hashfejl"
-	, "Peer modt."
-	, "Maks. op"
-	, "Maks. ned"
-	, "I kø"
-	, "Inaktiv"
-	, "Færdig"
-	, "Første del"
-	, "Navn"
-	, "Antal dele"
-	, "%"
-	, "Prioritet"
-	, "Størrelse"
-	, "spring over"
-	, "lav"
-	, "normal"
-	, "høj"
-	, "Downloaded:"
-	, "Uploaded:"
-	, "Seeds:"
-	, "Tid tilbage:"
-	, "Kb/s ned:"
-	, "Kb/s op:"
-	, "Peers:"
-	, "Dele forhold:"
-	, "Gem som:"
-	, "Hash:"
-	, "Generel"
-	, "Overfør"
-	, "%d af %d forbundet (%d i sværm)"
-	, "N:%s O:%s - %s"
-	, "Kopier"
-	, "Nulstil"
-	, "Ubegrænset"
-	, "Oversæt IP'er"
-	, "Get File(s)"
-	, "Download ikke"
-	, "Høj prioritet"
-	, "Lav prioritet"
-	, "Normal prioritet"
-	, "Kopièr Magnet URI"
-	, "Slet data"
-	, "Slet .torrent"
-	, "Slet .torrent + data"
-	, "Gennemtving tjek"
-	, "Tvunget start"
-	, "Etiket"
-	, "Pause"
-	, "Indstillinger"
-	, "Flyt ned i køen"
-	, "Flyt op i køen"
-	, "Fjern"
-	, "Fjern og"
-	, "Start"
-	, "Stop"
-	, "Aktiv"
-	, "Alle"
-	, "Færdig"
-	, "Downloader"
-	, "Inaktiv"
-	, "Ingen etiket"
-	, "||Tilg.||Tilgængelighed"
-	, "Tilføjet den"
-	, "Færdig den"
-	, "Færdig"
-	, "Downloaded"
-	, "DL hast."
-	, "ETA"
-	, "Etiket"
-	, "Navn"
-	, "#"
-	, "Peers"
-	, "Tilbage"
-	, "Seeds"
-	, "Seeds/Peers"
-	, "Deleforhold"
-	, "Størrelse"
-	, "Kilde URL"
-	, "Status"
-	, "Uploaded"
-	, "UL hast."
-	, "Er du sikker på at du vil fjerne de %d valgte torrents og alle tilhørende filer?"
-	, "Er du sikker på at du vil fjerne den valgte torrent og alle tilhørende filer?"
-	, "Er du sikker på at du vil fjerne de %d valgte torrents?"
-	, "Er du sikker på at du vil fjerne den valgte torrent?"
-	, "Er du sikker på, at du vil du slette RSS filteret \"%s\"?"
-	, "Tjekket %:.1d%%"
-	, "Downloader"
-	, "Fejl: %s"
-	, "Færdig"
-	, "Pause"
-	, "I kø"
-	, "Seed i kø"
-	, "Seeding"
-	, "Stoppet"
-	, "Skriv etiket"
-	, "Skriv navnet på etiketten, for den valgte torrent:"
-	, "Ny etiket..."
-	, "Fjern etiket"
-	, "Generelt||Trackers||Peers||Dele||Filer||Hastighed||Log||"
-	, "Tilføj torrent"
-	, "Tilføj torrent fra URL"
-	, "Pause"
-	, "Indstillinger"
-	, "Flyt ned i kø"
-	, "Flyt op i kø"
-	, "Fjern"
-	, "RSS henter"
-	, "Start"
-	, "Stop"
-	, "Filer"
-	, "Tilføj torrent..."
-	, "Tilføj torrent fra URL..."
-	, "Funktioner"
-	, "Indstillinger"
-	, "Vis kategoriliste"
-	, "Vis detaljeret info"
-	, "Vis statuslinje"
-	, "Vis værktøjslinje"
-	, "Vis ikoner på fanblade"
-	, "Hjælp"
-	, "µTorrent hjemmeside"
-	, "µTorrent forum"
-	, "Send WebUI Feedback"
-	, "About µTorrent WebUI"
-	, "Torrents"
-	, "Paus alle torrents"
-	, "Fortsæt alle torrents"
-	, "N: %s%z/s"
-	, " L: %z/s"
-	, " O: %z/s"
-	, " T: %Z"
-	, "O: %s%z/s"
-	, "B"
-	, "EB"
-	, "GB"
-	, "kB"
-	, "MB"
-	, "PB"
-	, "TB"
-	, "Avanceret"
-	, "Båndbredde"
-	, "Forbindelse"
-	, "Disk cache"
-	, "Mapper"
-	, "Generelt"
-	, "Planlægning"
-	, "Kø"
-	, "UI ekstra"
-	, "UI-indstillinger"
-	, "BitTorrent"
-	, "Web UI"
-	, "Overførselsgrænse"
-	, "Kør program"
-	, "Vis egenskaber||Start/Stop||Åbn mappe||Vis downloadlinje||"
-	, "Deaktiveret||Aktiveret||Tvunget||"
-	, "(ingen)||Socks4||Socks5||HTTPS||HTTP||"
-	, "Sendt||Modtaget||Sendt + modtaget||"
-	, "MB||GB||"
-	, "1||2||5||7||10||14||15||20||21||28||30||31||"
-	, "Navn"
-	, "Værdi"
-	, "Man||Tir||Ons||Tor||Fre||Lør||Søn||"
-	, "Mandag||Tirsdag||Onsdag||Torsdag||Fredag||Lørdag||Søndag||"
-	, "Fuld hastighed"
-	, "Fuld hastighed - Bruger global standard båndbredde"
-	, "Begrænset"
-	, "Begrænset - Bruger planlægning båndbredde"
-	, "Kun seed"
-	, "Kun seed - Sender kun data (inklusive uafsluttede)"
-	, "Afbryd"
-	, "Afbryd - Stopper alle torrents, der ikke er tvunget"
-	, "<= %d timer"
-	, "(Ignorér)"
-	, "<= %d minutter"
-	, "%dd %dh"
-	, "%dh %dm"
-	, "%dm %ds"
-	, "%ds"
-	, "%dw %dd"
-	, "%dy %dw",
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	"BitTorrent Remote",
-	"BitTorrent Remote giver en nem og særdeles sikker måde at tilgå din klient via en browser.",
-	"Slå forbindelsen herunder til, vælg et computernavn og kodeord og husk at lade denne computer stå tændt.",
-	"Lær mere (engelsk)",
-	"Aktiver BitTorrent Remote-adgang",
-	"Identifikation",
-	"Brugernavn:",
-	"Kodeord:",
-	"Indsend",
-	"BitTorrent Remote"
-];
+var LANG_STR =
+{
+   "CT_MASK1":"Torrent filer||*.torrent||Alle filer (*.*)||*.*||",
+   "DLG_BTN_OK":"OK",
+   "DLG_BTN_CANCEL":"Annullér",
+   "DLG_BTN_APPLY":"Anvend",
+   "DLG_BTN_YES":"Ja",
+   "DLG_BTN_NO":"Nej",
+   "DLG_BTN_CLOSE":"Luk",
+   "DLG_SETTINGS_00":"Indstillinger",
+   "DLG_SETTINGS_1_GENERAL_01":"Sprog",
+   "DLG_SETTINGS_1_GENERAL_02":"Sprog:",
+   "DLG_SETTINGS_1_GENERAL_10":"Privatliv",
+   "DLG_SETTINGS_1_GENERAL_11":"Check automatisk for updateringer",
+   "DLG_SETTINGS_1_GENERAL_12":"Updater til beta versioner",
+   "DLG_SETTINGS_1_GENERAL_13":"Send anonyme informationer, når der checkes for opdateringer",
+   "DLG_SETTINGS_1_GENERAL_17":"Ved downloading",
+   "DLG_SETTINGS_1_GENERAL_18":"Tilføj .!ut til ukomplette filer",
+   "DLG_SETTINGS_1_GENERAL_19":"Præ allokér alle filer",
+   "DLG_SETTINGS_1_GENERAL_20":"Undgå standby hvis der er aktive torrents",
+   "DLG_SETTINGS_2_UI_01":"Visningsindstillinger",
+   "DLG_SETTINGS_2_UI_02":"Bekræft sletning af torrents",
+   "DLG_SETTINGS_2_UI_03":"Bekræft sletning af trackere",
+   "DLG_SETTINGS_2_UI_04":"Bekræft lukning af µTorrent",
+   "DLG_SETTINGS_2_UI_05":"Alternativ liste baggrundsfarve",
+   "DLG_SETTINGS_2_UI_06":"Vis aktuel hastighed i titel baren",
+   "DLG_SETTINGS_2_UI_07":"Vis hastighedsbegr. i statuslinjen",
+   "DLG_SETTINGS_2_UI_15":"Når torrents tilføjes",
+   "DLG_SETTINGS_2_UI_16":"Start ikke download automatisk",
+   "DLG_SETTINGS_2_UI_17":"Aktivér programvinduet",
+   "DLG_SETTINGS_2_UI_18":"Åbn et vindue, der viser indholdet af torrenten",
+   "DLG_SETTINGS_2_UI_19":"Handlinger ved dobbeltklik",
+   "DLG_SETTINGS_2_UI_20":"Ved torrents, der seedes:",
+   "DLG_SETTINGS_2_UI_22":"Ved torrents, der hentes:",
+   "DLG_SETTINGS_3_PATHS_01":"Lokation for downloadede filer",
+   "DLG_SETTINGS_3_PATHS_02":"Gem nye downloads i:",
+   "DLG_SETTINGS_3_PATHS_03":"Vis altid dialogboks v. manuel tilføjelse",
+   "DLG_SETTINGS_3_PATHS_06":"Flyt færdige downloads til:",
+   "DLG_SETTINGS_3_PATHS_07":"Tilføj etiket fra torrent",
+   "DLG_SETTINGS_3_PATHS_10":"Flyt kun fra standard download mappe",
+   "DLG_SETTINGS_3_PATHS_11":"Lokation af .torrents",
+   "DLG_SETTINGS_3_PATHS_12":"Gem .torrents i:",
+   "DLG_SETTINGS_3_PATHS_15":"Flyt færdige .torrents til:",
+   "DLG_SETTINGS_3_PATHS_18":"Indlæs automatisk .torrents fra:",
+   "DLG_SETTINGS_3_PATHS_19":"Slet indlæste .torrents",
+   "DLG_SETTINGS_4_CONN_01":"Port, der lyttes på",
+   "DLG_SETTINGS_4_CONN_02":"Port, der bruges til indkomne forbindelser:",
+   "DLG_SETTINGS_4_CONN_04":"Tilfældig port",
+   "DLG_SETTINGS_4_CONN_05":"Vælg en tilfældig port ved hver programstart",
+   "DLG_SETTINGS_4_CONN_06":"Aktivér UPnP kortlægning",
+   "DLG_SETTINGS_4_CONN_07":"Aktivér NAT-PMP port kortlægning",
+   "DLG_SETTINGS_4_CONN_08":"Proxy Server",
+   "DLG_SETTINGS_4_CONN_09":"Type:",
+   "DLG_SETTINGS_4_CONN_11":"Proxy:",
+   "DLG_SETTINGS_4_CONN_13":"Port:",
+   "DLG_SETTINGS_4_CONN_15":"Identifikation",
+   "DLG_SETTINGS_4_CONN_16":"Brugernavn:",
+   "DLG_SETTINGS_4_CONN_18":"Kodeord:",
+   "DLG_SETTINGS_4_CONN_19":"Oversæt værtsnavne via proxy",
+   "DLG_SETTINGS_4_CONN_20":"Brug proxy server ved peer-to-peer forbindelser",
+   "DLG_SETTINGS_4_CONN_21":"Tilføj Windows Firewall undtagelse",
+   "DLG_SETTINGS_4_CONN_22":"Proxy privatliv",
+   "DLG_SETTINGS_4_CONN_23":"Deaktiver alle lokale DNS opslag",
+   "DLG_SETTINGS_4_CONN_24":"Deaktiver funktioner, der kan gøre det muligt at identificere dig",
+   "DLG_SETTINGS_4_CONN_25":"Deaktiver forbindelser som ikke understøttes af proxy",
+   "DLG_SETTINGS_5_BANDWIDTH_01":"Global upload hastighedsbegrænsning",
+   "DLG_SETTINGS_5_BANDWIDTH_02":"Maksimal upload hastighed (kB/s): [0: ubegrænset]",
+   "DLG_SETTINGS_5_BANDWIDTH_03":"Automatisk",
+   "DLG_SETTINGS_5_BANDWIDTH_05":"Særlig upload hastighed, når der ikke downloades (kB/s):",
+   "DLG_SETTINGS_5_BANDWIDTH_07":"Global download hastighedsbegrænsning",
+   "DLG_SETTINGS_5_BANDWIDTH_08":"Maksimal download hastighed (kB/s): [0: ubegrænset]",
+   "DLG_SETTINGS_5_BANDWIDTH_10":"Antal forbindelser",
+   "DLG_SETTINGS_5_BANDWIDTH_11":"Globalt maksimalt antal forbindelser:",
+   "DLG_SETTINGS_5_BANDWIDTH_14":"Maksimale antal forbundne peers pr. torrent:",
+   "DLG_SETTINGS_5_BANDWIDTH_15":"Antal upload slots pr. torrent:",
+   "DLG_SETTINGS_5_BANDWIDTH_17":"Brug yderligere upload slots hvis upload hastighed < 90%",
+   "DLG_SETTINGS_5_BANDWIDTH_18":"Global Rate Limit Options",
+   "DLG_SETTINGS_5_BANDWIDTH_19":"Begrænsningen gælder også transportdata (overhead)",
+   "DLG_SETTINGS_5_BANDWIDTH_20":"Gælder også for uTP forbindelser",
+   "DLG_SETTINGS_6_BITTORRENT_01":"Grundlæggende BitTorrent egenskaber",
+   "DLG_SETTINGS_6_BITTORRENT_02":"Aktivér DHT netværk",
+   "DLG_SETTINGS_6_BITTORRENT_03":"Bed tracker om scrape information",
+   "DLG_SETTINGS_6_BITTORRENT_04":"Aktivér DHT for nye torrents",
+   "DLG_SETTINGS_6_BITTORRENT_05":"Aktivér peer udveksling",
+   "DLG_SETTINGS_6_BITTORRENT_06":"Aktivér %lokal peer opdagelse",
+   "DLG_SETTINGS_6_BITTORRENT_07":"Begræns lokal peer båndbredde",
+   "DLG_SETTINGS_6_BITTORRENT_08":"IP/værtsnavn rapporteret til tracker:",
+   "DLG_SETTINGS_6_BITTORRENT_10":"Protokol kryptering",
+   "DLG_SETTINGS_6_BITTORRENT_11":"Udgående:",
+   "DLG_SETTINGS_6_BITTORRENT_13":"Tillad ældre indkommende forbindelser",
+   "DLG_SETTINGS_6_BITTORRENT_14":"Aktivér båndbreddehåndtering [uTP]",
+   "DLG_SETTINGS_6_BITTORRENT_15":"Aktivér UDP tracker understøttelse",
+   "DLG_SETTINGS_7_TRANSFERCAP_01":"Aktivér overførselsgrænse",
+   "DLG_SETTINGS_7_TRANSFERCAP_02":"Grænseindstillinger",
+   "DLG_SETTINGS_7_TRANSFERCAP_03":"Begrænsning af:",
+   "DLG_SETTINGS_7_TRANSFERCAP_04":"Datamængde:",
+   "DLG_SETTINGS_7_TRANSFERCAP_05":"Tidsperiode (dage):",
+   "DLG_SETTINGS_7_TRANSFERCAP_06":"Trafik i den valgte periode:",
+   "DLG_SETTINGS_7_TRANSFERCAP_07":"Sendt:",
+   "DLG_SETTINGS_7_TRANSFERCAP_08":"Modtaget:",
+   "DLG_SETTINGS_7_TRANSFERCAP_09":"Sendt + modtaget:",
+   "DLG_SETTINGS_7_TRANSFERCAP_10":"Tidsperiode:",
+   "DLG_SETTINGS_7_TRANSFERCAP_11":"Sidste %d dage",
+   "DLG_SETTINGS_7_TRANSFERCAP_12":"Nulstil historik",
+   "DLG_SETTINGS_8_QUEUEING_01":"Kø indstillinger",
+   "DLG_SETTINGS_8_QUEUEING_02":"Maksimale antal af aktive torrents (upload eller download):",
+   "DLG_SETTINGS_8_QUEUEING_04":"Maksimale antal af aktive downloads:",
+   "DLG_SETTINGS_8_QUEUEING_06":"Seed så længe [standard værdier]",
+   "DLG_SETTINGS_8_QUEUEING_07":"Minimum deleforhold (%):",
+   "DLG_SETTINGS_8_QUEUEING_09":"Minimum seed tid (minutter):",
+   "DLG_SETTINGS_8_QUEUEING_11":"Uploads har højere prioritet end downloads",
+   "DLG_SETTINGS_8_QUEUEING_12":"Når µTorrent når seeding målet",
+   "DLG_SETTINGS_8_QUEUEING_13":"Begræns upload hastighed til (kB/s): [0: stop]",
+   "DLG_SETTINGS_9_SCHEDULER_01":"Aktivér planlægning",
+   "DLG_SETTINGS_9_SCHEDULER_02":"Planlægningsskema",
+   "DLG_SETTINGS_9_SCHEDULER_04":"Planlægingsindstillinger",
+   "DLG_SETTINGS_9_SCHEDULER_05":"Begrænset upload hastighed (kB/s):",
+   "DLG_SETTINGS_9_SCHEDULER_07":"Begrænset download hastighed (kB/s):",
+   "DLG_SETTINGS_9_SCHEDULER_09":"Deaktivér DHT ved afbrydelse",
+   "DLG_SETTINGS_9_WEBUI_01":"Aktivér Web UI",
+   "DLG_SETTINGS_9_WEBUI_02":"Identifikation",
+   "DLG_SETTINGS_9_WEBUI_03":"Brugernavn:",
+   "DLG_SETTINGS_9_WEBUI_05":"Kodeord:",
+   "DLG_SETTINGS_9_WEBUI_07":"Aktivér Gæst konto med brugernavn:",
+   "DLG_SETTINGS_9_WEBUI_09":"Forbindelse",
+   "DLG_SETTINGS_9_WEBUI_10":"Alternativ port, der lyttes på (standard er forbindelsesport):",
+   "DLG_SETTINGS_9_WEBUI_12":"Begræns adgang til følgende IP adresser (separer med komma):",
+   "DLG_SETTINGS_A_ADVANCED_01":"Avancerede indstillinger [ADVARSEL: Bør ikke ændres!]",
+   "DLG_SETTINGS_A_ADVANCED_02":"Værdi",
+   "DLG_SETTINGS_A_ADVANCED_03":"Sand",
+   "DLG_SETTINGS_A_ADVANCED_04":"Falsk",
+   "DLG_SETTINGS_A_ADVANCED_05":"Gem",
+   "DLG_SETTINGS_B_ADV_UI_01":"Hastighedspopup-liste [adskil flere værdier med komma]",
+   "DLG_SETTINGS_B_ADV_UI_02":"Tilsidesæt automatisk hastighedspopup-liste",
+   "DLG_SETTINGS_B_ADV_UI_03":"Sendehastighedsliste:",
+   "DLG_SETTINGS_B_ADV_UI_05":"Modtagehastighedsliste:",
+   "DLG_SETTINGS_B_ADV_UI_07":"Vedvarende etiketter [separer med |]",
+   "DLG_SETTINGS_B_ADV_UI_08":"Søgemaskiner [Format: navn|URL]",
+   "DLG_SETTINGS_C_ADV_CACHE_01":"Grundlæggende cache indstillinger",
+   "DLG_SETTINGS_C_ADV_CACHE_02":"Disk cachen benyttes til at gemme data i hukommelsen, som ofte forespørges. Dette reducerer antallet af læse og skrive kommandoer til harddisken. Normalt håndterer µTorrent automatisk disk cachen, men du kan ændre disk cachens opførsel ved at ændre i indstillingerne herunder.",
+   "DLG_SETTINGS_C_ADV_CACHE_03":"Tilsidesæt automatisk cache størrelse og angiv en manuel størrelse (MB):",
+   "DLG_SETTINGS_C_ADV_CACHE_05":"Reducer hukommelsesforbrug når cachen ikke behøves",
+   "DLG_SETTINGS_C_ADV_CACHE_06":"Avancerede cache indstillinger",
+   "DLG_SETTINGS_C_ADV_CACHE_07":"Aktivér cache for disk skrivning",
+   "DLG_SETTINGS_C_ADV_CACHE_08":"Skriv ubenyttede blokke hver 2 minutter",
+   "DLG_SETTINGS_C_ADV_CACHE_09":"Skriv straks færdige dele",
+   "DLG_SETTINGS_C_ADV_CACHE_10":"Aktivér cache for disk læsning",
+   "DLG_SETTINGS_C_ADV_CACHE_11":"Deaktivér læse cache hvis upload hastigheden er lav",
+   "DLG_SETTINGS_C_ADV_CACHE_12":"Fjern gamle blokke fra cachen",
+   "DLG_SETTINGS_C_ADV_CACHE_13":"Forøg automatisk cache størrelsen hvis den fyldes op",
+   "DLG_SETTINGS_C_ADV_CACHE_14":"Deaktivér Windows cache for disk skrivning",
+   "DLG_SETTINGS_C_ADV_CACHE_15":"Deaktivér Windows cache for disk læsning",
+   "DLG_SETTINGS_C_ADV_RUN_01":"Kør program",
+   "DLG_SETTINGS_C_ADV_RUN_02":"Kør dette program når en torrent er færdig:",
+   "DLG_SETTINGS_C_ADV_RUN_04":"Kør dette program når en torrent skifter status:",
+   "DLG_SETTINGS_C_ADV_RUN_06":"Du kan bruge disse kommandoer:\r\n%F - Navn på hentet fil (for torrents med én fil)\r\n%D - Mappe hvor filerne er gemt\r\n%N - Torrent titel\r\n%S - Torrent status\r\n%L - Etiket\r\n%T - Tracker\r\n%M - Status meddelelse (samme som status kolonne)\r\n%I - hex kodet info-hash\r\n\r\nStatus er en kombination af:\r\nstartet = 1, tjekker = 2, start-efter-tjek = 4,\r\ntjekket = 8, fejl = 16, pausesat = 32, auto = 64, indlæst = 128",
+   "DLG_TORRENTPROP_00":"Torrent egenskaber",
+   "DLG_TORRENTPROP_1_GEN_01":"Trackere (separer med en tom linie)",
+   "DLG_TORRENTPROP_1_GEN_03":"Båndbredde indstilliner",
+   "DLG_TORRENTPROP_1_GEN_04":"Maksimal upload hastighed (kB/s): [0: standard]",
+   "DLG_TORRENTPROP_1_GEN_06":"Maksimal download hastighed (kB/s): [0: standard]",
+   "DLG_TORRENTPROP_1_GEN_08":"Antal upload slots: [0: standard]",
+   "DLG_TORRENTPROP_1_GEN_10":"Seed mens",
+   "DLG_TORRENTPROP_1_GEN_11":"Tilsidesæt standard indstillinger",
+   "DLG_TORRENTPROP_1_GEN_12":"Minimum deleforhold (%):",
+   "DLG_TORRENTPROP_1_GEN_14":"Minimum seed tid (minutter):",
+   "DLG_TORRENTPROP_1_GEN_16":"Andre indstillinger",
+   "DLG_TORRENTPROP_1_GEN_17":"Start seed",
+   "DLG_TORRENTPROP_1_GEN_18":"Aktivér DHT",
+   "DLG_TORRENTPROP_1_GEN_19":"Peer udveksling",
+   "DLG_ADDEDITRSSFEED_03":"Feed",
+   "DLG_ADDEDITRSSFEED_04":"Feed-URL:",
+   "DLG_ADDEDITRSSFEED_05":"Bruger alias:",
+   "DLG_ADDEDITRSSFEED_06":"Abonnement",
+   "DLG_ADDEDITRSSFEED_07":"Hent ikke automatisk alle emner",
+   "DLG_ADDEDITRSSFEED_08":"Hent automatisk alle udgivne emner i feed",
+   "DLG_ADDEDITRSSFEED_09":"Brug smart episode filter",
+   "DLG_RSSDOWNLOADER_02":"Feeds||Favoritter||Historik||",
+   "DLG_RSSDOWNLOADER_03":"All Feeds",
+   "DLG_RSSDOWNLOADER_04":"Filteropsætning",
+   "DLG_RSSDOWNLOADER_05":"Navn:",
+   "DLG_RSSDOWNLOADER_06":"Filter:",
+   "DLG_RSSDOWNLOADER_07":"Ikke:",
+   "DLG_RSSDOWNLOADER_08":"Gem i:",
+   "DLG_RSSDOWNLOADER_09":"Feed:",
+   "DLG_RSSDOWNLOADER_10":"Kvalitet:",
+   "DLG_RSSDOWNLOADER_11":"Episodenummer: [f.eks. 1x12-14]",
+   "DLG_RSSDOWNLOADER_12":"Filter matcher det originale navn, ikke det afkodede",
+   "DLG_RSSDOWNLOADER_13":"Hent ikke automatisk",
+   "DLG_RSSDOWNLOADER_14":"Smart ep. filter",
+   "DLG_RSSDOWNLOADER_15":"Giv højeste prioritet til at hente",
+   "DLG_RSSDOWNLOADER_16":"Minimum interval:",
+   "DLG_RSSDOWNLOADER_17":"Etiket for nye torrents:",
+   "DLG_RSSDOWNLOADER_18":"Tilføj RSS-feed...",
+   "DLG_RSSDOWNLOADER_19":"Rediger feed...",
+   "DLG_RSSDOWNLOADER_20":"Deaktiver feed",
+   "DLG_RSSDOWNLOADER_21":"Aktiver feed",
+   "DLG_RSSDOWNLOADER_22":"Opdater feed",
+   "DLG_RSSDOWNLOADER_23":"Slet feed",
+   "DLG_RSSDOWNLOADER_24":"Hent",
+   "DLG_RSSDOWNLOADER_25":"Åbn URL i browser",
+   "DLG_RSSDOWNLOADER_26":"Tilføj til favoritter",
+   "DLG_RSSDOWNLOADER_27":"Tilføj",
+   "DLG_RSSDOWNLOADER_28":"Slet",
+   "DLG_RSSDOWNLOADER_29":"ALLE",
+   "DLG_RSSDOWNLOADER_30":"(Alle)",
+   "DLG_RSSDOWNLOADER_31":"(match altid)||(match kun én gang)||12 timer||1 dag||2 dage||3 dage||4 dage||1 uge||2 uger||3 uger||1 måned||",
+   "DLG_RSSDOWNLOADER_32":"Tilføj RSS-feed",
+   "DLG_RSSDOWNLOADER_33":"Rediger RSS-feed",
+   "DLG_RSSDOWNLOADER_34":"Remove RSS Feed(s)",
+   "DLG_RSSDOWNLOADER_35":"Really delete the %d selected RSS Feeds?",
+   "DLG_RSSDOWNLOADER_36":"Er du sikker på at du vil slette RSS-feed \"%s\"?",
+   "FEED_COL_FULLNAME":"Fulde navn",
+   "FEED_COL_NAME":"Navn",
+   "FEED_COL_EPISODE":"Episode",
+   "FEED_COL_FORMAT":"Format",
+   "FEED_COL_CODEC":"Codec",
+   "FEED_COL_DATE":"Date",
+   "FEED_COL_FEED":"Feed",
+   "FEED_COL_URL":"Kilde URL",
+   "PRS_COL_IP":"IP",
+   "PRS_COL_PORT":"Port",
+   "PRS_COL_CLIENT":"Klient",
+   "PRS_COL_FLAGS":"Status",
+   "PRS_COL_PCNT":"%",
+   "PRS_COL_RELEVANCE":"Interesse",
+   "PRS_COL_DOWNSPEED":"Hast. ned",
+   "PRS_COL_UPSPEED":"Hast. op",
+   "PRS_COL_REQS":"Foresp.",
+   "PRS_COL_WAITED":"Ventet",
+   "PRS_COL_UPLOADED":"Sendt",
+   "PRS_COL_DOWNLOADED":"Modtaget",
+   "PRS_COL_HASHERR":"Hashfejl",
+   "PRS_COL_PEERDL":"Peer modt.",
+   "PRS_COL_MAXUP":"Maks. op",
+   "PRS_COL_MAXDOWN":"Maks. ned",
+   "PRS_COL_QUEUED":"I kø",
+   "PRS_COL_INACTIVE":"Inaktiv",
+   "FI_COL_DONE":"Færdig",
+   "FI_COL_FIRSTPC":"Første del",
+   "FI_COL_NAME":"Navn",
+   "FI_COL_NUMPCS":"Antal dele",
+   "FI_COL_PCNT":"%",
+   "FI_COL_PRIO":"Prioritet",
+   "FI_COL_SIZE":"Størrelse",
+   "FI_PRI0":"spring over",
+   "FI_PRI1":"lav",
+   "FI_PRI2":"normal",
+   "FI_PRI3":"høj",
+   "GN_TP_01":"Downloaded:",
+   "GN_TP_02":"Uploaded:",
+   "GN_TP_03":"Seeds:",
+   "GN_TP_04":"Tid tilbage:",
+   "GN_TP_05":"Kb/s ned:",
+   "GN_TP_06":"Kb/s op:",
+   "GN_TP_07":"Peers:",
+   "GN_TP_08":"Dele forhold:",
+   "GN_TP_09":"Gem som:",
+   "GN_TP_10":"Hash:",
+   "GN_GENERAL":"Generel",
+   "GN_TRANSFER":"Overfør",
+   "GN_XCONN":"%d af %d forbundet (%d i sværm)",
+   "MAIN_TITLEBAR_SPEED":"N:%s O:%s - %s",
+   "MENU_COPY":"Kopier",
+   "MENU_RESET":"Nulstil",
+   "MENU_UNLIMITED":"Ubegrænset",
+   "MP_RESOLVE_IPS":"Oversæt IP'er",
+   "MF_GETFILE":"Get File(s)",
+   "MF_DONT":"Download ikke",
+   "MF_HIGH":"Høj prioritet",
+   "MF_LOW":"Lav prioritet",
+   "MF_NORMAL":"Normal prioritet",
+   "ML_COPY_MAGNETURI":"Kopièr Magnet URI",
+   "ML_DELETE_DATA":"Slet data",
+   "ML_DELETE_TORRENT":"Slet .torrent",
+   "ML_DELETE_DATATORRENT":"Slet .torrent + data",
+   "ML_FORCE_RECHECK":"Gennemtving tjek",
+   "ML_FORCE_START":"Tvunget start",
+   "ML_LABEL":"Etiket",
+   "ML_PAUSE":"Pause",
+   "ML_PROPERTIES":"Indstillinger",
+   "ML_QUEUEDOWN":"Flyt ned i køen",
+   "ML_QUEUEUP":"Flyt op i køen",
+   "ML_REMOVE":"Fjern",
+   "ML_REMOVE_AND":"Fjern og",
+   "ML_START":"Start",
+   "ML_STOP":"Stop",
+   "OV_CAT_ACTIVE":"Aktiv",
+   "OV_CAT_ALL":"Alle",
+   "OV_CAT_COMPL":"Færdig",
+   "OV_CAT_DL":"Downloader",
+   "OV_CAT_INACTIVE":"Inaktiv",
+   "OV_CAT_NOLABEL":"Ingen etiket",
+   "OV_COL_AVAIL":"||Tilg.||Tilgængelighed",
+   "OV_COL_DATE_ADDED":"Tilføjet den",
+   "OV_COL_DATE_COMPLETED":"Færdig den",
+   "OV_COL_DONE":"Færdig",
+   "OV_COL_DOWNLOADED":"Downloaded",
+   "OV_COL_DOWNSPD":"DL hast.",
+   "OV_COL_ETA":"ETA",
+   "OV_COL_LABEL":"Etiket",
+   "OV_COL_NAME":"Navn",
+   "OV_COL_ORDER":"#",
+   "OV_COL_PEERS":"Peers",
+   "OV_COL_REMAINING":"Tilbage",
+   "OV_COL_SEEDS":"Seeds",
+   "OV_COL_SEEDS_PEERS":"Seeds/Peers",
+   "OV_COL_SHARED":"Deleforhold",
+   "OV_COL_SIZE":"Størrelse",
+   "OV_COL_SOURCE_URL":"Kilde URL",
+   "OV_COL_STATUS":"Status",
+   "OV_COL_UPPED":"Uploaded",
+   "OV_COL_UPSPD":"UL hast.",
+   "OV_CONFIRM_DELETEDATA_MULTIPLE":"Er du sikker på at du vil fjerne de %d valgte torrents og alle tilhørende filer?",
+   "OV_CONFIRM_DELETEDATA_ONE":"Er du sikker på at du vil fjerne den valgte torrent og alle tilhørende filer?",
+   "OV_CONFIRM_DELETE_MULTIPLE":"Er du sikker på at du vil fjerne de %d valgte torrents?",
+   "OV_CONFIRM_DELETE_ONE":"Er du sikker på at du vil fjerne den valgte torrent?",
+   "OV_CONFIRM_DELETE_RSSFILTER":"Er du sikker på, at du vil du slette RSS filteret \"%s\"?",
+   "OV_FL_CHECKED":"Tjekket %:.1d%",
+   "OV_FL_DOWNLOADING":"Downloader",
+   "OV_FL_ERROR":"Fejl: %s",
+   "OV_FL_FINISHED":"Færdig",
+   "OV_FL_PAUSED":"Pause",
+   "OV_FL_QUEUED":"I kø",
+   "OV_FL_QUEUED_SEED":"Seed i kø",
+   "OV_FL_SEEDING":"Seeding",
+   "OV_FL_STOPPED":"Stoppet",
+   "OV_NEWLABEL_CAPTION":"Skriv etiket",
+   "OV_NEWLABEL_TEXT":"Skriv navnet på etiketten, for den valgte torrent:",
+   "OV_NEW_LABEL":"Ny etiket...",
+   "OV_REMOVE_LABEL":"Fjern etiket",
+   "OV_TABS":"Generelt||Trackers||Peers||Dele||Filer||Hastighed||Log||",
+   "OV_TB_ADDTORR":"Tilføj torrent",
+   "OV_TB_ADDURL":"Tilføj torrent fra URL",
+   "OV_TB_PAUSE":"Pause",
+   "OV_TB_PREF":"Indstillinger",
+   "OV_TB_QUEUEDOWN":"Flyt ned i kø",
+   "OV_TB_QUEUEUP":"Flyt op i kø",
+   "OV_TB_REMOVE":"Fjern",
+   "OV_TB_RSSDOWNLDR":"RSS henter",
+   "OV_TB_START":"Start",
+   "OV_TB_STOP":"Stop",
+   "MM_FILE":"Filer",
+   "MM_FILE_ADD_TORRENT":"Tilføj torrent...",
+   "MM_FILE_ADD_URL":"Tilføj torrent fra URL...",
+   "MM_OPTIONS":"Funktioner",
+   "MM_OPTIONS_PREFERENCES":"Indstillinger",
+   "MM_OPTIONS_SHOW_CATEGORY":"Vis kategoriliste",
+   "MM_OPTIONS_SHOW_DETAIL":"Vis detaljeret info",
+   "MM_OPTIONS_SHOW_STATUS":"Vis statuslinje",
+   "MM_OPTIONS_SHOW_TOOLBAR":"Vis værktøjslinje",
+   "MM_OPTIONS_TAB_ICONS":"Vis ikoner på fanblade",
+   "MM_HELP":"Hjælp",
+   "MM_HELP_UT_WEBPAGE":"µTorrent hjemmeside",
+   "MM_HELP_UT_FORUMS":"µTorrent forum",
+   "MM_HELP_WEBUI_FEEDBACK":"Send WebUI Feedback",
+   "MM_HELP_ABOUT_WEBUI":"About µTorrent WebUI",
+   "STM_TORRENTS":"Torrents",
+   "STM_TORRENTS_PAUSEALL":"Paus alle torrents",
+   "STM_TORRENTS_RESUMEALL":"Fortsæt alle torrents",
+   "SB_DOWNLOAD":"N: %s%z/s",
+   "SB_LOCAL":" L: %z/s",
+   "SB_OVERHEAD":" O: %z/s",
+   "SB_TOTAL":" T: %Z",
+   "SB_UPLOAD":"O: %s%z/s",
+   "SIZE_B":"B",
+   "SIZE_EB":"EB",
+   "SIZE_GB":"GB",
+   "SIZE_KB":"kB",
+   "SIZE_MB":"MB",
+   "SIZE_PB":"PB",
+   "SIZE_TB":"TB",
+   "ST_CAPT_ADVANCED":"Avanceret",
+   "ST_CAPT_BANDWIDTH":"Båndbredde",
+   "ST_CAPT_CONNECTION":"Forbindelse",
+   "ST_CAPT_DISK_CACHE":"Disk cache",
+   "ST_CAPT_FOLDER":"Mapper",
+   "ST_CAPT_GENERAL":"Generelt",
+   "ST_CAPT_SCHEDULER":"Planlægning",
+   "ST_CAPT_QUEUEING":"Kø",
+   "ST_CAPT_UI_EXTRAS":"UI ekstra",
+   "ST_CAPT_UI_SETTINGS":"UI-indstillinger",
+   "ST_CAPT_BITTORRENT":"BitTorrent",
+   "ST_CAPT_WEBUI":"Web UI",
+   "ST_CAPT_TRANSFER_CAP":"Overførselsgrænse",
+   "ST_CAPT_RUN_PROGRAM":"Kør program",
+   "ST_CBO_UI_DBLCLK_TOR":"Vis egenskaber||Start/Stop||Åbn mappe||Vis downloadlinje||",
+   "ST_CBO_ENCRYPTIONS":"Deaktiveret||Aktiveret||Tvunget||",
+   "ST_CBO_PROXY":"(ingen)||Socks4||Socks5||HTTPS||HTTP||",
+   "ST_CBO_TCAP_MODES":"Sendt||Modtaget||Sendt + modtaget||",
+   "ST_CBO_TCAP_UNITS":"MB||GB||",
+   "ST_CBO_TCAP_PERIODS":"1||2||5||7||10||14||15||20||21||28||30||31||",
+   "ST_COL_NAME":"Navn",
+   "ST_COL_VALUE":"Værdi",
+   "ST_SCH_DAYCODES":"Man||Tir||Ons||Tor||Fre||Lør||Søn||",
+   "ST_SCH_DAYNAMES":"Mandag||Tirsdag||Onsdag||Torsdag||Fredag||Lørdag||Søndag||",
+   "ST_SCH_LGND_FULL":"Fuld hastighed",
+   "ST_SCH_LGND_FULLEX":"Fuld hastighed - Bruger global standard båndbredde",
+   "ST_SCH_LGND_LIMITED":"Begrænset",
+   "ST_SCH_LGND_LIMITEDEX":"Begrænset - Bruger planlægning båndbredde",
+   "ST_SCH_LGND_SEEDING":"Kun seed",
+   "ST_SCH_LGND_SEEDINGEX":"Kun seed - Sender kun data (inklusive uafsluttede)",
+   "ST_SCH_LGND_OFF":"Afbryd",
+   "ST_SCH_LGND_OFFEX":"Afbryd - Stopper alle torrents, der ikke er tvunget",
+   "ST_SEEDTIMES_HOURS":"<= %d timer",
+   "ST_SEEDTIMES_IGNORE":"(Ignorér)",
+   "ST_SEEDTIMES_MINUTES":"<= %d minutter",
+   "TIME_DAYS_HOURS":"%dd %dh",
+   "TIME_HOURS_MINS":"%dh %dm",
+   "TIME_MINS_SECS":"%dm %ds",
+   "TIME_SECS":"%ds",
+   "TIME_WEEKS_DAYS":"%dw %dd",
+   "TIME_YEARS_WEEKS":"%dy %dw",
+   "ML_MORE_ACTIONS":null,
+   "Torrents":null,
+   "Feeds":null,
+   "App":null,
+   "country":null,
+   "ETA":null,
+   "of":null,
+   "/s":null,
+   "Paste a torrent or feed URL":null,
+   "Home":null,
+   "Logout":null,
+   "Seeding":null,
+   "All Feeds":null,
+   "bitrate":null,
+   "resolution":null,
+   "length":null,
+   "streamable":null,
+   "type":null,
+   "remote":null,
+   "about":null,
+   "sessions":null,
+   "share":null,
+   "Share this torrent":null,
+   "Share link":null,
+   "add":null,
+   "logout":null,
+   "log in":null,
+   "anywhere access":null,
+   "stay signed in":null,
+   "download":null,
+   "Your client is currently not available. Verify that it is connected to the internet.":null,
+   "Unable to communicate with your &micro;Torrent client. This message will disappear automatically when a connection is re-established.":null,
+   "Open file":null,
+   "Download to your computer":null,
+   "Open with VLC Media Player":null,
+   "Actions":null,
+   "season":null,
+   "DLG_ABOUT_VERSION_LEGEND":null,
+   "DLG_ABOUT_VERSION_VERSION":null,
+   "DLG_ABOUT_VERSION_REVISION":null,
+   "DLG_ABOUT_VERSION_BUILD_DATE":null,
+   "DLG_ABOUT_VERSION_PEER_ID":null,
+   "DLG_ABOUT_VERSION_USER_AGENT":null,
+   "DLG_ABOUT_UPNP_EXTERNAL_ADDRESS":null,
+   "DLG_ABOUT_UI_REVISION":null,
+   "DLG_SETTINGS_SAVE":null,
+   "DLG_SETTINGS_MENU_TITLE":null,
+   "DLG_SETTINGS_D_REMOTE_01":"BitTorrent Remote",
+   "DLG_SETTINGS_D_REMOTE_02":"BitTorrent Remote giver en nem og særdeles sikker måde at tilgå din klient via en browser.",
+   "DLG_SETTINGS_D_REMOTE_03":"Slå forbindelsen herunder til, vælg et computernavn og kodeord og husk at lade denne computer stå tændt.",
+   "DLG_SETTINGS_D_REMOTE_04":"Lær mere (engelsk)",
+   "DLG_SETTINGS_D_REMOTE_05":"Aktiver BitTorrent Remote-adgang",
+   "DLG_SETTINGS_D_REMOTE_06":"Identifikation",
+   "DLG_SETTINGS_D_REMOTE_07":"Brugernavn:",
+   "DLG_SETTINGS_D_REMOTE_08":"Kodeord:",
+   "DLG_SETTINGS_D_REMOTE_09":"Indsend",
+   "ST_CAPT_REMOTE":"BitTorrent Remote"
+}

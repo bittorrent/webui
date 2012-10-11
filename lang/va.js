@@ -5,416 +5,417 @@ Use of this source code is governed by a BSD-style that can be
 found in the LICENSE file.
 */
 
-var LANG_STR = [
-	  "Torrents||*.torrent||Tots els archius (*.*)||*.*||"
-	, "Acceptar"
-	, "Cancelar"
-	, "Aplicar"
-	, "Yes"
-	, "No"
-	, "Tancar"
-	, "Preferències"
-	, "Idioma"
-	, "Idioma:"
-	, "Privacitat"
-	, "Buscar actualisacions automàticament"
-	, "Actualisar a versions beta"
-	, "Enviar informació anònima en la comprovació de les actualisacions"
-	, "Quan finalise la descàrrega"
-	, "Afegir .!ut als archius incomplets"
-	, "Preasignar tots els archius"
-	, "Previndre standby si hi han torrents actius"
-	, "Opcions de Pantalla"
-	, "Confirmar quan es borren torrents"
-	, "Confirmar quan es borren torrents"
-	, "Mostrar confirmació per a eixir"
-	, "Alternar el color del fondo de la llista"
-	, "Mostrar la vel. en la barra de títul"
-	, "Mostrar llímit de vel. en la barra d'estat"
-	, "A l'afegir Torrents"
-	, "No començar la transferència automàticament"
-	, "Activar la finestra del programa"
-	, "Mostrar una finestra en els archius continguts en el torrent"
-	, "Accions per al Doble clic"
-	, "Per a torrents compartint:"
-	, "Per a torrents descarregant:"
-	, "Carpeta d'archius descarregats"
-	, "Posar les descàrregues en:"
-	, "Mostrar sempre el dialec d'agregació manual"
-	, "Moure descàrreges completes a:"
-	, "Afegir l'etiqueta del torrent"
-	, "Només moure des de la carpeta de descàrregues per defecte"
-	, "Ubicació dels .torrents"
-	, "Guardar .torrents en:"
-	, "Moure .torrents de faenes acabades a:"
-	, "Carregar automàticament .torrents desde:"
-	, "Borrar .torrents carregats"
-	, "Escoltar Port"
-	, "Port utilisat per a conexions entrants:"
-	, "Port aleatori"
-	, "Seleccionar un port aleatori cuan inicies"
-	, "Activar UPnP port mapping"
-	, "Activar NAT-PMP port mapping"
-	, "Servidor Proxy"
-	, "Tipo:"
-	, "Proxy:"
-	, "Port:"
-	, "Autentificació"
-	, "Usuari:"
-	, "Contrasenya:"
-	, "Resoldre els hostnames a través del proxy"
-	, "Utilisar un servidor proxy per a les conexions p2p"
-	, "Afegir com excepció al Firewall de Windows"
-	, "Proxy Privacy"
-	, "Disable all local DNS lookups"
-	, "Disable all features that leak identifying information"
-	, "Disable connections unsupported by the proxy"
-	, "Llimitació de velocitat de pujada"
-	, "Velocitat màxima de pujada (kB/s): [0: illimitat]"
-	, "Automàtic"
-	, "Alternar vel. de pujada quan no descarreges (kB/s):"
-	, "Llimitació de velocitat de baixada"
-	, "Vel. màx. de descàrrega (kB/s): [0: illimitat]"
-	, "Número de Conexions:"
-	, "Número màxim de conexions globals:"
-	, "Número màxim de conexions per torrent:"
-	, "Número de slots de pujada per torrent:"
-	, "Utilisar slots extra si la velocitat de pujada es < 90%"
-	, "Global Rate Limit Options"
-	, "Apply rate limit to transport overhead"
-	, "Apply rate limit to uTP connections"
-	, "Característiques basiques de Bittorrent"
-	, "Activar xàrcia DHT"
-	, "Demanar al tracker info. de scrape"
-	, "Activar DHT per als nous torrents"
-	, "Activar Intercanvi de Parelles"
-	, "Activar Descobriment de Parelles Locals"
-	, "Llímit d'ample de banda entre parelles locals"
-	, "Informar de la IP/Hostname al tracker:"
-	, "Protocol d'Encriptació"
-	, "Ixent:"
-	, "Permetre conexions entrants heredades"
-	, "Enable bandwidth management [uTP]"
-	, "Enable UDP tracker support"
-	, "Enable Transfer Cap"
-	, "Cap Settings"
-	, "Limit Type:"
-	, "Bandwidth Cap:"
-	, "Time Period (days):"
-	, "Usage history for selected period:"
-	, "Uploaded:"
-	, "Downloaded:"
-	, "Uploaded + Downloaded:"
-	, "Time period:"
-	, "Last %d days"
-	, "Reset History"
-	, "Config. de la coa"
-	, "Número màxim de torrents actius (pujada o descàrrega):"
-	, "Número màxim de descàrregues actives:"
-	, "Compartir mentres [valors predeterminats]"
-	, "Minimum ratio (%):"
-	, "Minimum seeding time (minutes):"
-	, "Faenes de compartició en més prioritat que les de descàrrega"
-	, "Cuant µTorrent acabe de compartir"
-	, "Llímit de vel. de pujada a: [0: parat]"
-	, "Activar planificador"
-	, "Taula de planificació"
-	, "Preferències planificador"
-	, "Velocitat de pujada (kB/s):"
-	, "Velocitat de descàrrega (kB/s):"
-	, "Desactivar DHT a l'apagar"
-	, "Activar Web UI"
-	, "Autentificació"
-	, "Usuari:"
-	, "Contrasenya:"
-	, "Activar conte Convidat en nom d'usuari:"
-	, "Conectivitat"
-	, "Port d'escolta alternatiu (per defecte el port de conexió):"
-	, "Restringir accés a les següents IP's (Separar entrades multiples en ,)"
-	, "Opcions avançades [Atenció: No modificar!]"
-	, "Valor:"
-	, "Verdader"
-	, "Fals"
-	, "Establir"
-	, "Llista de velocitats emergent [Separar valors en una coma]"
-	, "Sobreescriure la llista de velocitats emergent"
-	, "Llista de pujada:"
-	, "Llista de descàrrega:"
-	, "Etiquetes [Separa-les en un |]"
-	, "Motor de Busca [Format: nom|URL]"
-	, "Configuració basica de Cache"
-	, "La cache de disc s'utilisa per a mantindre les senyes accedides constantment en la memòria per a reduir el número de llectures i escritures en el disc. µTorrent sol administrar la cache automàticament, pero pot canviar-ho des d'ací."
-	, "Especificar un tamany de cache manualment:"
-	, "Reduir l'us de memòria quan no se necessita la cache"
-	, "Configuració Avançada de  Cache"
-	, "Activar cache d'escritures de disc"
-	, "Escriure blocs intactes cada 2 minuts"
-	, "Escriure peces acabades inmediatament"
-	, "Activar cache de llectures de disc"
-	, "Apagar cache de llectura si la velocitat de pujada es baixa"
-	, "Eliminar blocs vells de la cache"
-	, "Aumentar el tamany de la cache automàticament quan se necessite"
-	, "Desactivar finestra cache d'escritures de disc"
-	, "Desactivar finestra cache de llectures de disc"
-	, "Run Program"
-	, "Run this program when a torrent finishes:"
-	, "Run this program when a torrent changes state:"
-	, "You can use these commands:\r\n%F - Name of downloaded file (for single file torrents)\r\n%D - Directory where files are saved\r\n%N - Title of torrent\r\n%S - State of torrent\r\n%L - Label\r\n%T - Tracker\r\n%M - Status message string (same as status column)\r\n%I - hex encoded info-hash\r\n\r\nState is a combination of:\r\nstarted = 1, checking = 2, start-after-check = 4,\r\nchecked = 8, error = 16, paused = 32, auto = 64, loaded = 128"
-	, "Propietats del Torrent"
-	, "Trackers (Separa'ls posant una llínia buida)"
-	, "Ajusts de l'Ample de Banda"
-	, "Vel. Màxima de Pujada (kB/s): [0: defecte]"
-	, "Vel. Màxima de Descàrrega (kB/s): [0: defecte]"
-	, "Número de slots de pujada: [blanc: defecte]"
-	, "Compartir mentres"
-	, "Invalidar ajusts per defecte"
-	, "Minimum ratio (%):"
-	, "Minimum seeding time (minutes):"
-	, "Atres Ajusts"
-	, "Compartició Inicial"
-	, "Activar DHT"
-	, "Intercanvi de Parelles"
-	, "Feed"
-	, "Feed URL:"
-	, "Personalisar Àlies:"
-	, "Subscripció"
-	, "No descarregar automàticament tots els artículs"
-	, "Descarregar automàticament tots els artículs publicats en el feed"
-	, "Utilisa el filtre de cap. inteligent"
-	, "Feeds||Favorits||Història||"
-	, "Tots els Feeds"
-	, "Configuració dels filtres"
-	, "Nom:"
-	, "Filtre:"
-	, "No:"
-	, "Guardar en:"
-	, "Feed:"
-	, "Calitat:"
-	, "Capítul número: [eix. 1x12-14]"
-	, "El filtre junta el nom original en més del nom descifrat."
-	, "No començar les descarregues automàticament"
-	, "Filtre Smart cap."
-	, "Donar a la descàrrega la màx. prioritat"
-	, "Interval mínim:"
-	, "Etiqueta per als nous torrents:"
-	, "Afegir RSS Feed..."
-	, "Editar Feed..."
-	, "Desactivar Feed"
-	, "Activar Feed"
-	, "Actualisar Feed"
-	, "Borrar Feed"
-	, "Descàrrega"
-	, "Obrir URL en Navegador"
-	, "Afegir a Favorits"
-	, "Afegir"
-	, "Borrar"
-	, "TOT"
-	, "(Tot)"
-	, "(Coincidir Sempre)||(Coincidir una volta)||12 Hores||1 Dia||2 Dies||3 Dies||4 Dies||1 Semana||2 Semanes||3 Semanes||1 Mes||"
-	, "Afegir RSS Feed"
-	, "Editar RSS Feed"
-	, "Remove RSS Feed(s)"
-	, "Really delete the %d selected RSS Feeds?"
-	, "¿Realment vols borrar RSS Feed \"%s\"?"
-	, "Nom sancer"
-	, "Nom"
-	, "Episodi"
-	, "Format"
-	, "Codec"
-	, "Date"
-	, "Feed"
-	, "URL"
-	, "IP"
-	, "Port"
-	, "Client"
-	, "Banderes"
-	, "%"
-	, "Importància"
-	, "Vel. Descàrrega"
-	, "Vel. Pujada"
-	, "Respostes"
-	, "Esperat"
-	, "Pujat"
-	, "Descarregat"
-	, "Hasherr"
-	, "Vel. Descàrrega"
-	, "PujaMàx"
-	, "DescMàx"
-	, "En Coa"
-	, "Inactiu"
-	, "Fet"
-	, "Primera Peça"
-	, "Nom"
-	, "# Peces"
-	, "%"
-	, "Prioritat"
-	, "Tamany"
-	, "Botar"
-	, "Baixa"
-	, "Normal"
-	, "Alta"
-	, "Descarregat:"
-	, "Pujat:"
-	, "Origens:"
-	, "Esperant:"
-	, "Vel. Descàrrega:"
-	, "Vel. Pujada:"
-	, "Parelles:"
-	, "Ratio:"
-	, "Archiu:"
-	, "Hash:"
-	, "General"
-	, "Transferència"
-	, "%d de %d conectats (%d en l'eixam)"
-	, "D:%s P:%s - %s"
-	, "Copiar"
-	, "Reset"
-	, "Illimitat"
-	, "Resoldre IPs"
-	, "Get File(s)"
-	, "No Descarregar"
-	, "Prioritat Alta"
-	, "Prioritat Baixa"
-	, "Prioritat Normal"
-	, "Copiar Imant URI"
-	, "Eliminar Senyes"
-	, "Borrar .torrent"
-	, "Eliminar .torrent + Senyes"
-	, "Forçar Comprovació"
-	, "Forçar Inici"
-	, "Etiqueta"
-	, "Pausa"
-	, "Propietats"
-	, "Moure Avall"
-	, "Moure Amunt"
-	, "Eliminar"
-	, "Eliminar i"
-	, "Començar"
-	, "Parar"
-	, "Actiu"
-	, "Tots"
-	, "Completat"
-	, "Descarregant"
-	, "Inactiu"
-	, "Sense Etiqueta"
-	, "||Dispon.||Disponibilitat"
-	, "Afegit a"
-	, "Complet a"
-	, "Fet"
-	, "Descarregat"
-	, "Vel. Descàrrega"
-	, "Temps restant"
-	, "Etiqueta"
-	, "Nom"
-	, "#"
-	, "Parelles"
-	, "Esperant"
-	, "Origens"
-	, "Origens/Parelles"
-	, "Ratio"
-	, "Tamany"
-	, "URL orige"
-	, "Estat"
-	, "Pujat"
-	, "Vel. Pujada"
-	, "¿Estàs segur que vols eliminar els %d torrents seleccionats i les seues senyes?"
-	, "¿Estàs segur que vols eliminar el torrent seleccionat i les seues senyes?"
-	, "¿Estàs segur que vols eliminar els %d torrents seleccionats?"
-	, "¿Estàs segur que vols eliminar el torrent seleccionat?"
-	, "¿Segur que vols borrar el filtre RSS \"%s\"?"
-	, "Comprovat%:.1d%%"
-	, "Descarregant"
-	, "Error: %s"
-	, "Acabat"
-	, "Pausat"
-	, "En Coa"
-	, "Orige en coa"
-	, "Compartint"
-	, "Parat"
-	, "Pose una Etiqueta"
-	, "Pose una nova etiqueta per als torrents seleccionats:"
-	, "Nova Etiqueta..."
-	, "Eliminar Etiqueta"
-	, "General||Trackers||Parelles||Peces||Archius||Velocitat||Registrar||"
-	, "Afegir torrent"
-	, "Afegir torrent des de URL"
-	, "Pausa"
-	, "Preferències"
-	, "Moure Avall"
-	, "Moure Amunt"
-	, "Eliminar"
-	, "Descarregar RSS"
-	, "Començar"
-	, "Parar"
-	, "Archiu"
-	, "Afegir Torrent..."
-	, "Afegir Torrent des de URL..."
-	, "Opcions"
-	, "Preferències"
-	, "Mostrar Llista de Categories"
-	, "Mostrar Llista Detallada"
-	, "Mostrar Barra d'Estat"
-	, "Mostrar Toolbar"
-	, "Icons en Pestanyes"
-	, "Ajuda"
-	, "Plana Web µTorrent"
-	, "Fòrums µTorrent"
-	, "Send WebUI Feedback"
-	, "About µTorrent WebUI"
-	, "Torrents"
-	, "Pausar tots els torrents"
-	, "Reprendre tots els torrents"
-	, "D: %s%z/s"
-	, " C: %z/s"
-	, " O: %z/s"
-	, " T: %Z"
-	, "P: %s%z/s"
-	, "B"
-	, "EB"
-	, "GB"
-	, "kB"
-	, "MB"
-	, "PB"
-	, "TB"
-	, "Avançat"
-	, "Ample de banda"
-	, "Conexió"
-	, "Cache de Disc"
-	, "Directoris"
-	, "General"
-	, "Planificador"
-	, "En Coa"
-	, "Extres UI"
-	, "Configuració UI"
-	, "BitTorrent"
-	, "Web UI"
-	, "Transfer Cap"
-	, "Run Program"
-	, "Mostrar Propietats||Iniciar/Parar||Obrir Carpeta||Mostrar Barra de Desc.||"
-	, "Desactivat||Activat||Forçat||"
-	, "(Cap)||Socks4||Socks5||HTTPS||HTTP||"
-	, "Uploads||Downloads||Uploads + Downloads||"
-	, "MB||GB||"
-	, "1||2||5||7||10||14||15||20||21||28||30||31||"
-	, "Nom"
-	, "Valor"
-	, "Dil||Dima||Dime||Dij||Div||Dis||Dum||"
-	, "Dilluns||Dimarts||Dimecres||Dijous||Divendres||Dissabte||Dumenge||"
-	, "Vel. Compl."
-	, "Vel. Màxima - Utilisar llímits d'ample de banda globals"
-	, "Llimitada"
-	, "Llimitat- Utilisar llímits d'ample de banda especificats en el planificador"
-	, "Només compartir"
-	, "Només compartir - Només pujar senyes (inclosos els incomplets)"
-	, "Apagar"
-	, "Apagar - Parar tots els torrents que no estiguen forçats"
-	, "<= %d hores"
-	, "(Ignorar)"
-	, "<= %d minuts"
-	, "%dd %dh"
-	, "%dh %dm"
-	, "%dm %ds"
-	, "%ds"
-	, "%dw %dd"
-	, "%dy %dw"
-];
+var LANG_STR =
+{
+   "CT_MASK1":"Torrents||*.torrent||Tots els archius (*.*)||*.*||",
+   "DLG_BTN_OK":"Acceptar",
+   "DLG_BTN_CANCEL":"Cancelar",
+   "DLG_BTN_APPLY":"Aplicar",
+   "DLG_BTN_YES":"Yes",
+   "DLG_BTN_NO":"No",
+   "DLG_BTN_CLOSE":"Tancar",
+   "DLG_SETTINGS_00":"Preferències",
+   "DLG_SETTINGS_1_GENERAL_01":"Idioma",
+   "DLG_SETTINGS_1_GENERAL_02":"Idioma:",
+   "DLG_SETTINGS_1_GENERAL_10":"Privacitat",
+   "DLG_SETTINGS_1_GENERAL_11":"Buscar actualisacions automàticament",
+   "DLG_SETTINGS_1_GENERAL_12":"Actualisar a versions beta",
+   "DLG_SETTINGS_1_GENERAL_13":"Enviar informació anònima en la comprovació de les actualisacions",
+   "DLG_SETTINGS_1_GENERAL_17":"Quan finalise la descàrrega",
+   "DLG_SETTINGS_1_GENERAL_18":"Afegir .!ut als archius incomplets",
+   "DLG_SETTINGS_1_GENERAL_19":"Preasignar tots els archius",
+   "DLG_SETTINGS_1_GENERAL_20":"Previndre standby si hi han torrents actius",
+   "DLG_SETTINGS_2_UI_01":"Opcions de Pantalla",
+   "DLG_SETTINGS_2_UI_02":"Confirmar quan es borren torrents",
+   "DLG_SETTINGS_2_UI_03":"Confirmar quan es borren torrents",
+   "DLG_SETTINGS_2_UI_04":"Mostrar confirmació per a eixir",
+   "DLG_SETTINGS_2_UI_05":"Alternar el color del fondo de la llista",
+   "DLG_SETTINGS_2_UI_06":"Mostrar la vel. en la barra de títul",
+   "DLG_SETTINGS_2_UI_07":"Mostrar llímit de vel. en la barra d'estat",
+   "DLG_SETTINGS_2_UI_15":"A l'afegir Torrents",
+   "DLG_SETTINGS_2_UI_16":"No començar la transferència automàticament",
+   "DLG_SETTINGS_2_UI_17":"Activar la finestra del programa",
+   "DLG_SETTINGS_2_UI_18":"Mostrar una finestra en els archius continguts en el torrent",
+   "DLG_SETTINGS_2_UI_19":"Accions per al Doble clic",
+   "DLG_SETTINGS_2_UI_20":"Per a torrents compartint:",
+   "DLG_SETTINGS_2_UI_22":"Per a torrents descarregant:",
+   "DLG_SETTINGS_3_PATHS_01":"Carpeta d'archius descarregats",
+   "DLG_SETTINGS_3_PATHS_02":"Posar les descàrregues en:",
+   "DLG_SETTINGS_3_PATHS_03":"Mostrar sempre el dialec d'agregació manual",
+   "DLG_SETTINGS_3_PATHS_06":"Moure descàrreges completes a:",
+   "DLG_SETTINGS_3_PATHS_07":"Afegir l'etiqueta del torrent",
+   "DLG_SETTINGS_3_PATHS_10":"Només moure des de la carpeta de descàrregues per defecte",
+   "DLG_SETTINGS_3_PATHS_11":"Ubicació dels .torrents",
+   "DLG_SETTINGS_3_PATHS_12":"Guardar .torrents en:",
+   "DLG_SETTINGS_3_PATHS_15":"Moure .torrents de faenes acabades a:",
+   "DLG_SETTINGS_3_PATHS_18":"Carregar automàticament .torrents desde:",
+   "DLG_SETTINGS_3_PATHS_19":"Borrar .torrents carregats",
+   "DLG_SETTINGS_4_CONN_01":"Escoltar Port",
+   "DLG_SETTINGS_4_CONN_02":"Port utilisat per a conexions entrants:",
+   "DLG_SETTINGS_4_CONN_04":"Port aleatori",
+   "DLG_SETTINGS_4_CONN_05":"Seleccionar un port aleatori cuan inicies",
+   "DLG_SETTINGS_4_CONN_06":"Activar UPnP port mapping",
+   "DLG_SETTINGS_4_CONN_07":"Activar NAT-PMP port mapping",
+   "DLG_SETTINGS_4_CONN_08":"Servidor Proxy",
+   "DLG_SETTINGS_4_CONN_09":"Tipo:",
+   "DLG_SETTINGS_4_CONN_11":"Proxy:",
+   "DLG_SETTINGS_4_CONN_13":"Port:",
+   "DLG_SETTINGS_4_CONN_15":"Autentificació",
+   "DLG_SETTINGS_4_CONN_16":"Usuari:",
+   "DLG_SETTINGS_4_CONN_18":"Contrasenya:",
+   "DLG_SETTINGS_4_CONN_19":"Resoldre els hostnames a través del proxy",
+   "DLG_SETTINGS_4_CONN_20":"Utilisar un servidor proxy per a les conexions p2p",
+   "DLG_SETTINGS_4_CONN_21":"Afegir com excepció al Firewall de Windows",
+   "DLG_SETTINGS_4_CONN_22":"Proxy Privacy",
+   "DLG_SETTINGS_4_CONN_23":"Disable all local DNS lookups",
+   "DLG_SETTINGS_4_CONN_24":"Disable all features that leak identifying information",
+   "DLG_SETTINGS_4_CONN_25":"Disable connections unsupported by the proxy",
+   "DLG_SETTINGS_5_BANDWIDTH_01":"Llimitació de velocitat de pujada",
+   "DLG_SETTINGS_5_BANDWIDTH_02":"Velocitat màxima de pujada (kB/s): [0: illimitat]",
+   "DLG_SETTINGS_5_BANDWIDTH_03":"Automàtic",
+   "DLG_SETTINGS_5_BANDWIDTH_05":"Alternar vel. de pujada quan no descarreges (kB/s):",
+   "DLG_SETTINGS_5_BANDWIDTH_07":"Llimitació de velocitat de baixada",
+   "DLG_SETTINGS_5_BANDWIDTH_08":"Vel. màx. de descàrrega (kB/s): [0: illimitat]",
+   "DLG_SETTINGS_5_BANDWIDTH_10":"Número de Conexions:",
+   "DLG_SETTINGS_5_BANDWIDTH_11":"Número màxim de conexions globals:",
+   "DLG_SETTINGS_5_BANDWIDTH_14":"Número màxim de conexions per torrent:",
+   "DLG_SETTINGS_5_BANDWIDTH_15":"Número de slots de pujada per torrent:",
+   "DLG_SETTINGS_5_BANDWIDTH_17":"Utilisar slots extra si la velocitat de pujada es < 90%",
+   "DLG_SETTINGS_5_BANDWIDTH_18":"Global Rate Limit Options",
+   "DLG_SETTINGS_5_BANDWIDTH_19":"Apply rate limit to transport overhead",
+   "DLG_SETTINGS_5_BANDWIDTH_20":"Apply rate limit to uTP connections",
+   "DLG_SETTINGS_6_BITTORRENT_01":"Característiques basiques de Bittorrent",
+   "DLG_SETTINGS_6_BITTORRENT_02":"Activar xàrcia DHT",
+   "DLG_SETTINGS_6_BITTORRENT_03":"Demanar al tracker info. de scrape",
+   "DLG_SETTINGS_6_BITTORRENT_04":"Activar DHT per als nous torrents",
+   "DLG_SETTINGS_6_BITTORRENT_05":"Activar Intercanvi de Parelles",
+   "DLG_SETTINGS_6_BITTORRENT_06":"Activar Descobriment de Parelles Locals",
+   "DLG_SETTINGS_6_BITTORRENT_07":"Llímit d'ample de banda entre parelles locals",
+   "DLG_SETTINGS_6_BITTORRENT_08":"Informar de la IP/Hostname al tracker:",
+   "DLG_SETTINGS_6_BITTORRENT_10":"Protocol d'Encriptació",
+   "DLG_SETTINGS_6_BITTORRENT_11":"Ixent:",
+   "DLG_SETTINGS_6_BITTORRENT_13":"Permetre conexions entrants heredades",
+   "DLG_SETTINGS_6_BITTORRENT_14":"Enable bandwidth management [uTP]",
+   "DLG_SETTINGS_6_BITTORRENT_15":"Enable UDP tracker support",
+   "DLG_SETTINGS_7_TRANSFERCAP_01":"Enable Transfer Cap",
+   "DLG_SETTINGS_7_TRANSFERCAP_02":"Cap Settings",
+   "DLG_SETTINGS_7_TRANSFERCAP_03":"Limit Type:",
+   "DLG_SETTINGS_7_TRANSFERCAP_04":"Bandwidth Cap:",
+   "DLG_SETTINGS_7_TRANSFERCAP_05":"Time Period (days):",
+   "DLG_SETTINGS_7_TRANSFERCAP_06":"Usage history for selected period:",
+   "DLG_SETTINGS_7_TRANSFERCAP_07":"Uploaded:",
+   "DLG_SETTINGS_7_TRANSFERCAP_08":"Downloaded:",
+   "DLG_SETTINGS_7_TRANSFERCAP_09":"Uploaded + Downloaded:",
+   "DLG_SETTINGS_7_TRANSFERCAP_10":"Time period:",
+   "DLG_SETTINGS_7_TRANSFERCAP_11":"Last %d days",
+   "DLG_SETTINGS_7_TRANSFERCAP_12":"Reset History",
+   "DLG_SETTINGS_8_QUEUEING_01":"Config. de la coa",
+   "DLG_SETTINGS_8_QUEUEING_02":"Número màxim de torrents actius (pujada o descàrrega):",
+   "DLG_SETTINGS_8_QUEUEING_04":"Número màxim de descàrregues actives:",
+   "DLG_SETTINGS_8_QUEUEING_06":"Compartir mentres [valors predeterminats]",
+   "DLG_SETTINGS_8_QUEUEING_07":"Minimum ratio (%):",
+   "DLG_SETTINGS_8_QUEUEING_09":"Minimum seeding time (minutes):",
+   "DLG_SETTINGS_8_QUEUEING_11":"Faenes de compartició en més prioritat que les de descàrrega",
+   "DLG_SETTINGS_8_QUEUEING_12":"Cuant µTorrent acabe de compartir",
+   "DLG_SETTINGS_8_QUEUEING_13":"Llímit de vel. de pujada a: [0: parat]",
+   "DLG_SETTINGS_9_SCHEDULER_01":"Activar planificador",
+   "DLG_SETTINGS_9_SCHEDULER_02":"Taula de planificació",
+   "DLG_SETTINGS_9_SCHEDULER_04":"Preferències planificador",
+   "DLG_SETTINGS_9_SCHEDULER_05":"Velocitat de pujada (kB/s):",
+   "DLG_SETTINGS_9_SCHEDULER_07":"Velocitat de descàrrega (kB/s):",
+   "DLG_SETTINGS_9_SCHEDULER_09":"Desactivar DHT a l'apagar",
+   "DLG_SETTINGS_9_WEBUI_01":"Activar Web UI",
+   "DLG_SETTINGS_9_WEBUI_02":"Autentificació",
+   "DLG_SETTINGS_9_WEBUI_03":"Usuari:",
+   "DLG_SETTINGS_9_WEBUI_05":"Contrasenya:",
+   "DLG_SETTINGS_9_WEBUI_07":"Activar conte Convidat en nom d'usuari:",
+   "DLG_SETTINGS_9_WEBUI_09":"Conectivitat",
+   "DLG_SETTINGS_9_WEBUI_10":"Port d'escolta alternatiu (per defecte el port de conexió):",
+   "DLG_SETTINGS_9_WEBUI_12":"Restringir accés a les següents IP's (Separar entrades multiples en ,)",
+   "DLG_SETTINGS_A_ADVANCED_01":"Opcions avançades [Atenció: No modificar!]",
+   "DLG_SETTINGS_A_ADVANCED_02":"Valor:",
+   "DLG_SETTINGS_A_ADVANCED_03":"Verdader",
+   "DLG_SETTINGS_A_ADVANCED_04":"Fals",
+   "DLG_SETTINGS_A_ADVANCED_05":"Establir",
+   "DLG_SETTINGS_B_ADV_UI_01":"Llista de velocitats emergent [Separar valors en una coma]",
+   "DLG_SETTINGS_B_ADV_UI_02":"Sobreescriure la llista de velocitats emergent",
+   "DLG_SETTINGS_B_ADV_UI_03":"Llista de pujada:",
+   "DLG_SETTINGS_B_ADV_UI_05":"Llista de descàrrega:",
+   "DLG_SETTINGS_B_ADV_UI_07":"Etiquetes [Separa-les en un |]",
+   "DLG_SETTINGS_B_ADV_UI_08":"Motor de Busca [Format: nom|URL]",
+   "DLG_SETTINGS_C_ADV_CACHE_01":"Configuració basica de Cache",
+   "DLG_SETTINGS_C_ADV_CACHE_02":"La cache de disc s'utilisa per a mantindre les senyes accedides constantment en la memòria per a reduir el número de llectures i escritures en el disc. µTorrent sol administrar la cache automàticament, pero pot canviar-ho des d'ací.",
+   "DLG_SETTINGS_C_ADV_CACHE_03":"Especificar un tamany de cache manualment:",
+   "DLG_SETTINGS_C_ADV_CACHE_05":"Reduir l'us de memòria quan no se necessita la cache",
+   "DLG_SETTINGS_C_ADV_CACHE_06":"Configuració Avançada de Cache",
+   "DLG_SETTINGS_C_ADV_CACHE_07":"Activar cache d'escritures de disc",
+   "DLG_SETTINGS_C_ADV_CACHE_08":"Escriure blocs intactes cada 2 minuts",
+   "DLG_SETTINGS_C_ADV_CACHE_09":"Escriure peces acabades inmediatament",
+   "DLG_SETTINGS_C_ADV_CACHE_10":"Activar cache de llectures de disc",
+   "DLG_SETTINGS_C_ADV_CACHE_11":"Apagar cache de llectura si la velocitat de pujada es baixa",
+   "DLG_SETTINGS_C_ADV_CACHE_12":"Eliminar blocs vells de la cache",
+   "DLG_SETTINGS_C_ADV_CACHE_13":"Aumentar el tamany de la cache automàticament quan se necessite",
+   "DLG_SETTINGS_C_ADV_CACHE_14":"Desactivar finestra cache d'escritures de disc",
+   "DLG_SETTINGS_C_ADV_CACHE_15":"Desactivar finestra cache de llectures de disc",
+   "DLG_SETTINGS_C_ADV_RUN_01":"Run Program",
+   "DLG_SETTINGS_C_ADV_RUN_02":"Run this program when a torrent finishes:",
+   "DLG_SETTINGS_C_ADV_RUN_04":"Run this program when a torrent changes state:",
+   "DLG_SETTINGS_C_ADV_RUN_06":"You can use these commands:\r\n%F - Name of downloaded file (for single file torrents)\r\n%D - Directory where files are saved\r\n%N - Title of torrent\r\n%S - State of torrent\r\n%L - Label\r\n%T - Tracker\r\n%M - Status message string (same as status column)\r\n%I - hex encoded info-hash\r\n\r\nState is a combination of:\r\nstarted = 1, checking = 2, start-after-check = 4,\r\nchecked = 8, error = 16, paused = 32, auto = 64, loaded = 128",
+   "DLG_TORRENTPROP_00":"Propietats del Torrent",
+   "DLG_TORRENTPROP_1_GEN_01":"Trackers (Separa'ls posant una llínia buida)",
+   "DLG_TORRENTPROP_1_GEN_03":"Ajusts de l'Ample de Banda",
+   "DLG_TORRENTPROP_1_GEN_04":"Vel. Màxima de Pujada (kB/s): [0: defecte]",
+   "DLG_TORRENTPROP_1_GEN_06":"Vel. Màxima de Descàrrega (kB/s): [0: defecte]",
+   "DLG_TORRENTPROP_1_GEN_08":"Número de slots de pujada: [blanc: defecte]",
+   "DLG_TORRENTPROP_1_GEN_10":"Compartir mentres",
+   "DLG_TORRENTPROP_1_GEN_11":"Invalidar ajusts per defecte",
+   "DLG_TORRENTPROP_1_GEN_12":"Minimum ratio (%):",
+   "DLG_TORRENTPROP_1_GEN_14":"Minimum seeding time (minutes):",
+   "DLG_TORRENTPROP_1_GEN_16":"Atres Ajusts",
+   "DLG_TORRENTPROP_1_GEN_17":"Compartició Inicial",
+   "DLG_TORRENTPROP_1_GEN_18":"Activar DHT",
+   "DLG_TORRENTPROP_1_GEN_19":"Intercanvi de Parelles",
+   "DLG_ADDEDITRSSFEED_03":"Feed",
+   "DLG_ADDEDITRSSFEED_04":"Feed URL:",
+   "DLG_ADDEDITRSSFEED_05":"Personalisar Àlies:",
+   "DLG_ADDEDITRSSFEED_06":"Subscripció",
+   "DLG_ADDEDITRSSFEED_07":"No descarregar automàticament tots els artículs",
+   "DLG_ADDEDITRSSFEED_08":"Descarregar automàticament tots els artículs publicats en el feed",
+   "DLG_ADDEDITRSSFEED_09":"Utilisa el filtre de cap. inteligent",
+   "DLG_RSSDOWNLOADER_02":"Feeds||Favorits||Història||",
+   "DLG_RSSDOWNLOADER_03":"Tots els Feeds",
+   "DLG_RSSDOWNLOADER_04":"Configuració dels filtres",
+   "DLG_RSSDOWNLOADER_05":"Nom:",
+   "DLG_RSSDOWNLOADER_06":"Filtre:",
+   "DLG_RSSDOWNLOADER_07":"No:",
+   "DLG_RSSDOWNLOADER_08":"Guardar en:",
+   "DLG_RSSDOWNLOADER_09":"Feed:",
+   "DLG_RSSDOWNLOADER_10":"Calitat:",
+   "DLG_RSSDOWNLOADER_11":"Capítul número: [eix. 1x12-14]",
+   "DLG_RSSDOWNLOADER_12":"El filtre junta el nom original en més del nom descifrat.",
+   "DLG_RSSDOWNLOADER_13":"No començar les descarregues automàticament",
+   "DLG_RSSDOWNLOADER_14":"Filtre Smart cap.",
+   "DLG_RSSDOWNLOADER_15":"Donar a la descàrrega la màx. prioritat",
+   "DLG_RSSDOWNLOADER_16":"Interval mínim:",
+   "DLG_RSSDOWNLOADER_17":"Etiqueta per als nous torrents:",
+   "DLG_RSSDOWNLOADER_18":"Afegir RSS Feed...",
+   "DLG_RSSDOWNLOADER_19":"Editar Feed...",
+   "DLG_RSSDOWNLOADER_20":"Desactivar Feed",
+   "DLG_RSSDOWNLOADER_21":"Activar Feed",
+   "DLG_RSSDOWNLOADER_22":"Actualisar Feed",
+   "DLG_RSSDOWNLOADER_23":"Borrar Feed",
+   "DLG_RSSDOWNLOADER_24":"Descàrrega",
+   "DLG_RSSDOWNLOADER_25":"Obrir URL en Navegador",
+   "DLG_RSSDOWNLOADER_26":"Afegir a Favorits",
+   "DLG_RSSDOWNLOADER_27":"Afegir",
+   "DLG_RSSDOWNLOADER_28":"Borrar",
+   "DLG_RSSDOWNLOADER_29":"TOT",
+   "DLG_RSSDOWNLOADER_30":"(Tot)",
+   "DLG_RSSDOWNLOADER_31":"(Coincidir Sempre)||(Coincidir una volta)||12 Hores||1 Dia||2 Dies||3 Dies||4 Dies||1 Semana||2 Semanes||3 Semanes||1 Mes||",
+   "DLG_RSSDOWNLOADER_32":"Afegir RSS Feed",
+   "DLG_RSSDOWNLOADER_33":"Editar RSS Feed",
+   "DLG_RSSDOWNLOADER_34":"Remove RSS Feed(s)",
+   "DLG_RSSDOWNLOADER_35":"Really delete the %d selected RSS Feeds?",
+   "DLG_RSSDOWNLOADER_36":"¿Realment vols borrar RSS Feed \"%s\"?",
+   "FEED_COL_FULLNAME":"Nom sancer",
+   "FEED_COL_NAME":"Nom",
+   "FEED_COL_EPISODE":"Episodi",
+   "FEED_COL_FORMAT":"Format",
+   "FEED_COL_CODEC":"Codec",
+   "FEED_COL_DATE":"Date",
+   "FEED_COL_FEED":"Feed",
+   "FEED_COL_URL":"URL",
+   "PRS_COL_IP":"IP",
+   "PRS_COL_PORT":"Port",
+   "PRS_COL_CLIENT":"Client",
+   "PRS_COL_FLAGS":"Banderes",
+   "PRS_COL_PCNT":"%",
+   "PRS_COL_RELEVANCE":"Importància",
+   "PRS_COL_DOWNSPEED":"Vel. Descàrrega",
+   "PRS_COL_UPSPEED":"Vel. Pujada",
+   "PRS_COL_REQS":"Respostes",
+   "PRS_COL_WAITED":"Esperat",
+   "PRS_COL_UPLOADED":"Pujat",
+   "PRS_COL_DOWNLOADED":"Descarregat",
+   "PRS_COL_HASHERR":"Hasherr",
+   "PRS_COL_PEERDL":"Vel. Descàrrega",
+   "PRS_COL_MAXUP":"PujaMàx",
+   "PRS_COL_MAXDOWN":"DescMàx",
+   "PRS_COL_QUEUED":"En Coa",
+   "PRS_COL_INACTIVE":"Inactiu",
+   "FI_COL_DONE":"Fet",
+   "FI_COL_FIRSTPC":"Primera Peça",
+   "FI_COL_NAME":"Nom",
+   "FI_COL_NUMPCS":"# Peces",
+   "FI_COL_PCNT":"%",
+   "FI_COL_PRIO":"Prioritat",
+   "FI_COL_SIZE":"Tamany",
+   "FI_PRI0":"Botar",
+   "FI_PRI1":"Baixa",
+   "FI_PRI2":"Normal",
+   "FI_PRI3":"Alta",
+   "GN_TP_01":"Descarregat:",
+   "GN_TP_02":"Pujat:",
+   "GN_TP_03":"Origens:",
+   "GN_TP_04":"Esperant:",
+   "GN_TP_05":"Vel. Descàrrega:",
+   "GN_TP_06":"Vel. Pujada:",
+   "GN_TP_07":"Parelles:",
+   "GN_TP_08":"Ratio:",
+   "GN_TP_09":"Archiu:",
+   "GN_TP_10":"Hash:",
+   "GN_GENERAL":"General",
+   "GN_TRANSFER":"Transferència",
+   "GN_XCONN":"%d de %d conectats (%d en l'eixam)",
+   "MAIN_TITLEBAR_SPEED":"D:%s P:%s - %s",
+   "MENU_COPY":"Copiar",
+   "MENU_RESET":"Reset",
+   "MENU_UNLIMITED":"Illimitat",
+   "MP_RESOLVE_IPS":"Resoldre IPs",
+   "MF_GETFILE":"Get File(s)",
+   "MF_DONT":"No Descarregar",
+   "MF_HIGH":"Prioritat Alta",
+   "MF_LOW":"Prioritat Baixa",
+   "MF_NORMAL":"Prioritat Normal",
+   "ML_COPY_MAGNETURI":"Copiar Imant URI",
+   "ML_DELETE_DATA":"Eliminar Senyes",
+   "ML_DELETE_TORRENT":"Borrar .torrent",
+   "ML_DELETE_DATATORRENT":"Eliminar .torrent + Senyes",
+   "ML_FORCE_RECHECK":"Forçar Comprovació",
+   "ML_FORCE_START":"Forçar Inici",
+   "ML_LABEL":"Etiqueta",
+   "ML_PAUSE":"Pausa",
+   "ML_PROPERTIES":"Propietats",
+   "ML_QUEUEDOWN":"Moure Avall",
+   "ML_QUEUEUP":"Moure Amunt",
+   "ML_REMOVE":"Eliminar",
+   "ML_REMOVE_AND":"Eliminar i",
+   "ML_START":"Començar",
+   "ML_STOP":"Parar",
+   "OV_CAT_ACTIVE":"Actiu",
+   "OV_CAT_ALL":"Tots",
+   "OV_CAT_COMPL":"Completat",
+   "OV_CAT_DL":"Descarregant",
+   "OV_CAT_INACTIVE":"Inactiu",
+   "OV_CAT_NOLABEL":"Sense Etiqueta",
+   "OV_COL_AVAIL":"||Dispon.||Disponibilitat",
+   "OV_COL_DATE_ADDED":"Afegit a",
+   "OV_COL_DATE_COMPLETED":"Complet a",
+   "OV_COL_DONE":"Fet",
+   "OV_COL_DOWNLOADED":"Descarregat",
+   "OV_COL_DOWNSPD":"Vel. Descàrrega",
+   "OV_COL_ETA":"Temps restant",
+   "OV_COL_LABEL":"Etiqueta",
+   "OV_COL_NAME":"Nom",
+   "OV_COL_ORDER":"#",
+   "OV_COL_PEERS":"Parelles",
+   "OV_COL_REMAINING":"Esperant",
+   "OV_COL_SEEDS":"Origens",
+   "OV_COL_SEEDS_PEERS":"Origens/Parelles",
+   "OV_COL_SHARED":"Ratio",
+   "OV_COL_SIZE":"Tamany",
+   "OV_COL_SOURCE_URL":"URL orige",
+   "OV_COL_STATUS":"Estat",
+   "OV_COL_UPPED":"Pujat",
+   "OV_COL_UPSPD":"Vel. Pujada",
+   "OV_CONFIRM_DELETEDATA_MULTIPLE":"¿Estàs segur que vols eliminar els %d torrents seleccionats i les seues senyes?",
+   "OV_CONFIRM_DELETEDATA_ONE":"¿Estàs segur que vols eliminar el torrent seleccionat i les seues senyes?",
+   "OV_CONFIRM_DELETE_MULTIPLE":"¿Estàs segur que vols eliminar els %d torrents seleccionats?",
+   "OV_CONFIRM_DELETE_ONE":"¿Estàs segur que vols eliminar el torrent seleccionat?",
+   "OV_CONFIRM_DELETE_RSSFILTER":"¿Segur que vols borrar el filtre RSS \"%s\"?",
+   "OV_FL_CHECKED":"Comprovat%:.1d%",
+   "OV_FL_DOWNLOADING":"Descarregant",
+   "OV_FL_ERROR":"Error: %s",
+   "OV_FL_FINISHED":"Acabat",
+   "OV_FL_PAUSED":"Pausat",
+   "OV_FL_QUEUED":"En Coa",
+   "OV_FL_QUEUED_SEED":"Orige en coa",
+   "OV_FL_SEEDING":"Compartint",
+   "OV_FL_STOPPED":"Parat",
+   "OV_NEWLABEL_CAPTION":"Pose una Etiqueta",
+   "OV_NEWLABEL_TEXT":"Pose una nova etiqueta per als torrents seleccionats:",
+   "OV_NEW_LABEL":"Nova Etiqueta...",
+   "OV_REMOVE_LABEL":"Eliminar Etiqueta",
+   "OV_TABS":"General||Trackers||Parelles||Peces||Archius||Velocitat||Registrar||",
+   "OV_TB_ADDTORR":"Afegir torrent",
+   "OV_TB_ADDURL":"Afegir torrent des de URL",
+   "OV_TB_PAUSE":"Pausa",
+   "OV_TB_PREF":"Preferències",
+   "OV_TB_QUEUEDOWN":"Moure Avall",
+   "OV_TB_QUEUEUP":"Moure Amunt",
+   "OV_TB_REMOVE":"Eliminar",
+   "OV_TB_RSSDOWNLDR":"Descarregar RSS",
+   "OV_TB_START":"Començar",
+   "OV_TB_STOP":"Parar",
+   "MM_FILE":"Archiu",
+   "MM_FILE_ADD_TORRENT":"Afegir Torrent...",
+   "MM_FILE_ADD_URL":"Afegir Torrent des de URL...",
+   "MM_OPTIONS":"Opcions",
+   "MM_OPTIONS_PREFERENCES":"Preferències",
+   "MM_OPTIONS_SHOW_CATEGORY":"Mostrar Llista de Categories",
+   "MM_OPTIONS_SHOW_DETAIL":"Mostrar Llista Detallada",
+   "MM_OPTIONS_SHOW_STATUS":"Mostrar Barra d'Estat",
+   "MM_OPTIONS_SHOW_TOOLBAR":"Mostrar Toolbar",
+   "MM_OPTIONS_TAB_ICONS":"Icons en Pestanyes",
+   "MM_HELP":"Ajuda",
+   "MM_HELP_UT_WEBPAGE":"Plana Web µTorrent",
+   "MM_HELP_UT_FORUMS":"Fòrums µTorrent",
+   "MM_HELP_WEBUI_FEEDBACK":"Send WebUI Feedback",
+   "MM_HELP_ABOUT_WEBUI":"About µTorrent WebUI",
+   "STM_TORRENTS":"Torrents",
+   "STM_TORRENTS_PAUSEALL":"Pausar tots els torrents",
+   "STM_TORRENTS_RESUMEALL":"Reprendre tots els torrents",
+   "SB_DOWNLOAD":"D: %s%z/s",
+   "SB_LOCAL":" C: %z/s",
+   "SB_OVERHEAD":" O: %z/s",
+   "SB_TOTAL":" T: %Z",
+   "SB_UPLOAD":"P: %s%z/s",
+   "SIZE_B":"B",
+   "SIZE_EB":"EB",
+   "SIZE_GB":"GB",
+   "SIZE_KB":"kB",
+   "SIZE_MB":"MB",
+   "SIZE_PB":"PB",
+   "SIZE_TB":"TB",
+   "ST_CAPT_ADVANCED":"Avançat",
+   "ST_CAPT_BANDWIDTH":"Ample de banda",
+   "ST_CAPT_CONNECTION":"Conexió",
+   "ST_CAPT_DISK_CACHE":"Cache de Disc",
+   "ST_CAPT_FOLDER":"Directoris",
+   "ST_CAPT_GENERAL":"General",
+   "ST_CAPT_SCHEDULER":"Planificador",
+   "ST_CAPT_QUEUEING":"En Coa",
+   "ST_CAPT_UI_EXTRAS":"Extres UI",
+   "ST_CAPT_UI_SETTINGS":"Configuració UI",
+   "ST_CAPT_BITTORRENT":"BitTorrent",
+   "ST_CAPT_WEBUI":"Web UI",
+   "ST_CAPT_TRANSFER_CAP":"Transfer Cap",
+   "ST_CAPT_RUN_PROGRAM":"Run Program",
+   "ST_CBO_UI_DBLCLK_TOR":"Mostrar Propietats||Iniciar/Parar||Obrir Carpeta||Mostrar Barra de Desc.||",
+   "ST_CBO_ENCRYPTIONS":"Desactivat||Activat||Forçat||",
+   "ST_CBO_PROXY":"(Cap)||Socks4||Socks5||HTTPS||HTTP||",
+   "ST_CBO_TCAP_MODES":"Uploads||Downloads||Uploads + Downloads||",
+   "ST_CBO_TCAP_UNITS":"MB||GB||",
+   "ST_CBO_TCAP_PERIODS":"1||2||5||7||10||14||15||20||21||28||30||31||",
+   "ST_COL_NAME":"Nom",
+   "ST_COL_VALUE":"Valor",
+   "ST_SCH_DAYCODES":"Dil||Dima||Dime||Dij||Div||Dis||Dum||",
+   "ST_SCH_DAYNAMES":"Dilluns||Dimarts||Dimecres||Dijous||Divendres||Dissabte||Dumenge||",
+   "ST_SCH_LGND_FULL":"Vel. Compl.",
+   "ST_SCH_LGND_FULLEX":"Vel. Màxima - Utilisar llímits d'ample de banda globals",
+   "ST_SCH_LGND_LIMITED":"Llimitada",
+   "ST_SCH_LGND_LIMITEDEX":"Llimitat- Utilisar llímits d'ample de banda especificats en el planificador",
+   "ST_SCH_LGND_SEEDING":"Només compartir",
+   "ST_SCH_LGND_SEEDINGEX":"Només compartir - Només pujar senyes (inclosos els incomplets)",
+   "ST_SCH_LGND_OFF":"Apagar",
+   "ST_SCH_LGND_OFFEX":"Apagar - Parar tots els torrents que no estiguen forçats",
+   "ST_SEEDTIMES_HOURS":"<= %d hores",
+   "ST_SEEDTIMES_IGNORE":"(Ignorar)",
+   "ST_SEEDTIMES_MINUTES":"<= %d minuts",
+   "TIME_DAYS_HOURS":"%dd %dh",
+   "TIME_HOURS_MINS":"%dh %dm",
+   "TIME_MINS_SECS":"%dm %ds",
+   "TIME_SECS":"%ds",
+   "TIME_WEEKS_DAYS":"%dw %dd",
+   "TIME_YEARS_WEEKS":"%dy %dw"
+}

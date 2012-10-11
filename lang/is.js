@@ -5,416 +5,417 @@ Use of this source code is governed by a BSD-style that can be
 found in the LICENSE file.
 */
 
-var LANG_STR = [
-	  "Deiliskrár||*.torrent||Allar skrár (*.*)||*.*||"
-	, "Í lagi"
-	, "Hætta við"
-	, "Staðfesta"
-	, "Já"
-	, "Enginn"
-	, "Loka"
-	, "Stilligar"
-	, "Tungumál"
-	, "Tungumál:"
-	, "Notendaupplýsingar"
-	, "Athuga að uppfærslum sjálfkrafa"
-	, "Uppfæra að beta útgáfu"
-	, "Senda nafnlaus gögn þegar athugað er eftir uppfærslum"
-	, "Þegar Niðurhalað Er"
-	, "Bæta við .!ut aftan við óklárað"
-	, "Úthluta svæði fyrir skrár"
-	, "Koma í veg fyrir reiðuham ef torrent eru virk"
-	, "Stillingar Yfirlits"
-	, "Staðfesta við eyðingu á torrent skrá"
-	, "Staðfesta eyðingu gagnabeina"
-	, "Sýna staðfestingarglugga við lokun"
-	, "Auka listi fyrir bakgrunnsliti"
-	, "Sýna núverandi hraða í titills-stiku"
-	, "Sýna takmörkun hraða í stöðu-stiku"
-	, "Þegar Bætt er Við Torrentum"
-	, "Ekki hefja niðurhal sjálfkrafa"
-	, "Færa forrit fremst"
-	, "Sýna yfirlit skráa innan torrent skráar"
-	, "Aðgerðir fyrir Tvísmell"
-	, "Torrent sem eru í deilingu:"
-	, "Torrent sem er verið að sækja:"
-	, "Staðsetning Fyrir Niðurhalaðar Skrár"
-	, "Staðsetning fyrir nýjar skrár:"
-	, "Ávalt sýna glugga fyrir ný niðurhöl"
-	, "Færa kláruð niðurhöl til:"
-	, "Bæta við merki torrent skráar"
-	, "Einungis færa frá gefinni staðsetningu fyrir niðurhöl"
-	, "Staðsetning .torrent Skráa"
-	, "Geyma .torrent skrár í:"
-	, "Færa kláraðar .torrent skrár í:"
-	, "Sækja .torrent skrár sjálfkrafa frá:"
-	, "Eyða sóttar .torrent skrár"
-	, "Port"
-	, "Port sem nota skal fyrir utanaðkomandi tengingar:"
-	, "Handahóf val"
-	, "Velja af handahófi við keyrslu"
-	, "Virkja UPnP port færslur"
-	, "Virkja NAT-PMP port færslur"
-	, "Proxy Þjónn"
-	, "Tegund:"
-	, "Þjónn:"
-	, "Port:"
-	, "Sannvottun"
-	, "Notandi:"
-	, "Lykilorð:"
-	, "Nafngreina ip tölur í gegnum proxy þjón"
-	, "Nota proxy þjón fyrir P2P tengingar"
-	, "Windows Firewall undantekning"
-	, "Proxy Friðhelgi"
-	, "Afvirkja allar staðbundnar DNS uppflettingar"
-	, "Afvirkja fítusa sem gefa frá sér auðkennandi upplýsingar"
-	, "Afvirkja tengingar sem proxy styður ekki"
-	, "Takmörkun Hraða Frá Þér"
-	, "Hámarks hraði frá  (kB/s): [0: ótakmarkað]"
-	, "Sjálfstillt"
-	, "Hraði upp þegar ekki er verið að sækja (kB/s):"
-	, "Takmörkun Hraða Til Þín"
-	, "Hámarks hraði til þín (kB/s): [0: ótakmarkað]"
-	, "Fjöldi Tenginga"
-	, "Hámarks fjöldi tenginga fyrir öll torrent:"
-	, "Hámarks fjöldi tenginga fyrir hvert torrent:"
-	, "Hámarks fjöldi tenginga til sendingar á torrent:"
-	, "Hækka fjölda tenginga til sendingar ef hraði er undir 90%"
-	, "Global Rate Limit Options"
-	, "Apply rate limit to transport overhead"
-	, "Apply rate limit to uTP connections"
-	, "Grunnstillingar BitTorrents"
-	, "Virkja DHT"
-	, "Biðja gagnabeini um scrape upplýsingar"
-	, "Virkja DHT fyrir ný torrent"
-	, "Virkja Jafnokaskipti"
-	, "Virkja Staðbundna Leit af Jafnokum"
-	, "Takmarka hraða jafnoka á staðarneti"
-	, "IP/Vélarnafn sem tilkynna skal gagnabeini:"
-	, "Dulkóðun Samskipta"
-	, "Frá þér:"
-	, "Leyfa utanaðkomandi legacy tengingar"
-	, "Enable bandwidth management [uTP]"
-	, "Enable UDP tracker support"
-	, "Virkja Þak"
-	, "Stillingar á Þaki"
-	, "Tegund Takmörkunar:"
-	, "Hámarks gagnaumferð:"
-	, "Tímabil (dagar):"
-	, "Notkun bandvíddar á þessu tímabili:"
-	, "Upphalað:"
-	, "Niðurhalað:"
-	, "Upphalað + Niðurhalað:"
-	, "Yfir tíma:"
-	, "Síðustu %d daga"
-	, "Núllstilla"
-	, "Stillingar Forgangsröðunar"
-	, "Hámarks leyfilegur virkra torrenta (frá eða til):"
-	, "Hámarks leyfilegur fjöldi virkra niðurhala:"
-	, "Deila á Meðan [Sjálfgefin gildi]"
-	, "Lágmarks hlutfall (%):"
-	, "Lágmarks deilitími (mínútur):"
-	, "Deiling hefur hærri forgangsröðun en niðurhal"
-	, "Þegar µTorrent Hefur Náð Settu Marki"
-	, "Takmarka hraða upphals að (kB/s): [0: stopp]"
-	, "Virkja Áætlun"
-	, "Áætlun"
-	, "Stillingar fyrir Áætlun"
-	, "Takmarka hraða upphals (kB/s):"
-	, "Takmarka hraða niðurhals (kB/s):"
-	, "Afvirkja DHT þegar slökkt er"
-	, "Virkja Vefviðmót"
-	, "Sannvottun"
-	, "Notandi:"
-	, "Lykilorð"
-	, "Virkja aðgang Gesta með notendanafni:"
-	, "Tengingar"
-	, "Auka port (port fyrir utanaðkomandi tengingar sjálfgefið):"
-	, "Takmarka tengingar við eftirfarandi IP tölur (aðskilið fleiri en eina með kommu):"
-	, "Nánari Stillingar [AÐVÖRUN: Ekki breyta!]"
-	, "Gildi:"
-	, "Satt"
-	, "Ósatt"
-	, "Stilla"
-	, "Valmöguleikar Hraða [Aðskilið fleiri en einn hraða með kommu]"
-	, "Hnekkja á sjálfgefnum valmöguleikum fyrir hraða"
-	, "Listi fyrir hraða frá þér:"
-	, "Listi fyrir hraða til þín:"
-	, "Viðvarandi Merkingar [Aðskilið fleiri en eitt merki með pípu [|])"
-	, "Leitarvélar [Form: nafn|slóð]"
-	, "Grunnstillingar Skyndiminnis"
-	, "Skyndiminni disks er notað af µTorrent til að minnka álag á harða diskinn. Yfirliett sér µTorrent sjálft um þetta svæði, en þú getur breytt hegðun þess með því að breyta þessum stillingum."
-	, "Hnekkja á sjálfgefni stærð skyndiminnis og nota eftirfarandi stærð (MB):"
-	, "Minnka notkun á minni meðan forrit þarfnast ekki skyndiminnis"
-	, "Nánari Stillingar Skyndiminnis"
-	, "Virkja skyndiminni fyrir skrif"
-	, "Skrifa út ósnertar minnisblokkið á 2 mínútna fresti"
-	, "Skrifa út kláraða búa strax"
-	, "Virkja skyndiminni fyrir lestur"
-	, "Afvirkja skyndiminni fyrir lestur ef hraði upphals er hægur"
-	, "Eyða út gömlum blokkum frá skyndiminni"
-	, "Auka sjálfvirka skyndiminnis stærðarákvörðun við skyndiminnis eyðingu"
-	, "Afvirkja aðferð Windows skrifun á disk"
-	, "Afvirkja aðferð Windows lestur á disk"
-	, "Keyrsla Forrita"
-	, "Keyra þetta forrit þegar torrent klárast:"
-	, "Keyra þetta forrit þegar torrent breytir um stöðu:"
-	, "You can use these commands:\r\n%F - Name of downloaded file (for single file torrents)\r\n%D - Directory where files are saved\r\n%N - Title of torrent\r\n%S - State of torrent\r\n%L - Label\r\n%T - Tracker\r\n%M - Status message string (same as status column)\r\n%I - hex encoded info-hash\r\n\r\nState is a combination of:\r\nstarted = 1, checking = 2, start-after-check = 4,\r\nchecked = 8, error = 16, paused = 32, auto = 64, loaded = 128"
-	, "Stillingar deiliskráar"
-	, "Gagnabeinar (aðskilið flokka með tómri línu)"
-	, "Stillingar Bandvíddar"
-	, "Hámarks hraði upphals (kB/s): [0: sjálfgefið]"
-	, "Hámarks hraði niðurhals (kB/s): [0: sjálfgefið]"
-	, "Fjöldi hólfa til sendingar: [0: sjálfgefið]"
-	, "Deila á Meðan"
-	, "Hnekkja á sjálfgefnum stillingar"
-	, "Minimum ratio (%):"
-	, "Minimum seeding time (minutes):"
-	, "Aðrar Stillingar"
-	, "Upphaflegur Deilandi"
-	, "Virkja DHT"
-	, "Jafnokaskipti"
-	, "Straumur"
-	, "Slóð Straums:"
-	, "Valið Nafn:"
-	, "Áskriftir"
-	, "Ekki sækja allt sjálfkrafa frá straumi"
-	, "Sækja allt sjálfkrafa frá straumi"
-	, "Nota snjallsíu fyrir þætti"
-	, "Veitur||Uppáhöld||Saga||"
-	, "All Feeds"
-	, "Stillingar Síu"
-	, "Nafn:"
-	, "Sía:"
-	, "Ekki:"
-	, "Vista í:"
-	, "Straumur:"
-	, "Gæði:"
-	, "Þátta númer: [td. 1x12-14]"
-	, "Sía niðurstöður út frá upprunalegu nafni í stað afruglaðs"
-	, "Ekki hefja niðurhöl sjálfkrafa"
-	, "Snjallsía"
-	, "Gefa niðurhölum hæðsta forgang"
-	, "Minnsta þrep:"
-	, "Merki fyrir ný torrent:"
-	, "Bæta við RSS Straumi..."
-	, "Breyta Straumi..."
-	, "Afvirkja Straum"
-	, "Virkja Straum"
-	, "Uppfæra Straum"
-	, "Eyða Straumi"
-	, "Niðurhala"
-	, "Opna slóð í vafrara"
-	, "Bæta við í uppáhald"
-	, "Bæta við"
-	, "Eyða"
-	, "Allt"
-	, "(Öllum)"
-	, "(ávalt finna)||(finna einu sinni)||12 tímar||1 dagur||2 dagar||3 dagar||4 dagar||1 vika||2 vikur||3 vikur||1 mánuður||"
-	, "Bæta við RSS straum"
-	, "Breyta RSS Straumi"
-	, "Remove RSS Feed(s)"
-	, "Really delete the %d selected RSS Feeds?"
-	, "Á að eyða RSS slóðinni \"%s\"?"
-	, "Fullt Nafn"
-	, "Nafn"
-	, "Þáttur"
-	, "Snið"
-	, "Codec"
-	, "Date"
-	, "Slóð"
-	, "Upptök slóðar"
-	, "IP"
-	, "Port"
-	, "Forrit"
-	, "Kennimerki"
-	, "%"
-	, "Mikilvægi"
-	, "Hraði Til"
-	, "Hraði Frá"
-	, "Beiðnir"
-	, "Beðið"
-	, "Sent"
-	, "Sótt"
-	, "Hash villa"
-	, "Hraði J."
-	, "MestUpp"
-	, "MestNiður"
-	, "Röð"
-	, "Síðasta Tenging"
-	, "Lokið"
-	, "Fyrsta Brot"
-	, "Nafn"
-	, "Fjöldi Brota"
-	, "%"
-	, "Forgangsröð"
-	, "Stærð"
-	, "sleppir"
-	, "Lág"
-	, "Eðlileg"
-	, "Há"
-	, "Samtals Sótt:"
-	, "Samtals Sent:"
-	, "Deilendur:"
-	, "Tími Eftir:"
-	, "Hraði Niðurhals:"
-	, "Hraði Upphals:"
-	, "Jafnokar:"
-	, "Hlutfall:"
-	, "Vistað sem:"
-	, "Tætisumma:"
-	, "Almennt"
-	, "Umferð"
-	, "%d af %d tengdir (af samtals %d)"
-	, "N:%s S:%s - %s"
-	, "Afrita"
-	, "Endurstilla"
-	, "Ótakmarkað"
-	, "Nafngreina IP tölur"
-	, "Get File(s)"
-	, "Ekki Sækja"
-	, "Há Forgangsröðun"
-	, "Lág Forgangsröðun"
-	, "Eðlileg Forgangsröðun"
-	, "Afrita Magnet slóð"
-	, "...eyða gögnum"
-	, "...eyða deiliskrá"
-	, "...eyða deiliskrá + gögnum"
-	, "Endurskoða"
-	, "Þrýsta á"
-	, "Merki"
-	, "Hlé"
-	, "Stillingar"
-	, "Færa Neðar í Forgangsröð"
-	, "Færa Ofar í Forgangsröð"
-	, "Eyða"
-	, "Eyða og..."
-	, "Byrja"
-	, "Stöðva"
-	, "Virk"
-	, "Allt"
-	, "Lokið"
-	, "Verið að ná í"
-	, "Óvirkt"
-	, "Ekkert merki"
-	, "||Aðg.||Aðgengi"
-	, "Bætt við þann"
-	, "Lokið þann"
-	, "Klárað"
-	, "Sótt"
-	, "Hraði Til"
-	, "Tími eftir"
-	, "Merkt"
-	, "Nafn"
-	, "#"
-	, "Jafnokar"
-	, "Eftir"
-	, "Deilendur"
-	, "Deila/Sækja"
-	, "Hlutfall"
-	, "Stærð"
-	, "Upptök slóðar"
-	, "Staða"
-	, "Sent"
-	, "Hraði Frá"
-	, "Eruð þér viss um að eyða skuli þeim %d völdum torrent skrám og öllum tengdum gögnum?"
-	, "Eruð þér viss um að eyða skal valinni torrent skrá og öllum tengdum gögnum?"
-	, "Eruð þér viss um að eyða skal þeim %d völdum torrentum?"
-	, "Eruð þér viss um að eyða skal völdu torrenti?"
-	, "Á að eyða \"%s\" RSS síunni?"
-	, "%:.1d%% endurskoðað"
-	, "Að Sækja"
-	, "Villa: %s"
-	, "Lokið"
-	, "Hlé"
-	, "Raðað"
-	, "Deiling sett í röð"
-	, "Að Deila"
-	, "Stöðvað"
-	, "Nafn merkis"
-	, "Nýtt merki fyrir valin deiliskrár:"
-	, "Nýtt merki..."
-	, "Eyða merki"
-	, "Almennt||Gagnabeinar||Jafnokar||Bútar||Skrár||Hraði||Aðgerðaskrá||"
-	, "Bæta við deiliskrá"
-	, "Bæta við deiliskrá frá slóð"
-	, "Hlé"
-	, "Stillingar"
-	, "Færa Neðar í Forgangsröð"
-	, "Færa Ofar í Forgangsröð"
-	, "Eyða"
-	, "RSS Straumar"
-	, "Byrja"
-	, "Stöðva"
-	, "Skrá"
-	, "Bæta við deiliskrá..."
-	, "Bæta við deiliskrá frá slóð..."
-	, "Valmöguleikar"
-	, "Stillingar"
-	, "Listi Yfir Flokka"
-	, "Nákvæmar Upplýsingar"
-	, "Sýna Upplýsinga-stiku"
-	, "Sýna Tækja-stiku"
-	, "Táknmyndir á Flipum"
-	, "Hjálp"
-	, "Vefsíða µTorrents"
-	, "µTorrent Spjallborðið"
-	, "Send WebUI Feedback"
-	, "About µTorrent WebUI"
-	, "Torrent"
-	, "Hlé"
-	, "halda áfram"
-	, "D: %s%z/s"
-	, " L: %z/s"
-	, " O: %z/s"
-	, " T: %Z"
-	, "U: %s%z/s"
-	, "B"
-	, "EB"
-	, "GB"
-	, "kB"
-	, "MB"
-	, "PB"
-	, "TB"
-	, "Nánar"
-	, "Bandvídd"
-	, "Tenging"
-	, "Geymsla á disk"
-	, "Staðsetningar"
-	, "Almennt"
-	, "Áætlun"
-	, "Biðröð"
-	, "Aukahlutir viðmóts"
-	, "Viðmót"
-	, "BitTorrent"
-	, "Vefviðmót"
-	, "Þak"
-	, "Keyra Forrit"
-	, "Sýna stillingar||Byrja/Stöðva||Opna Möppu||Sýna Framgang Niðurhals||"
-	, "Óvirk||Virk||Þrýst||"
-	, "(engin)||Socks4||Socks5||HTTPS||HTTP||"
-	, "upphal||niðurhal||upphal og niðurhal||"
-	, "MB||GB||"
-	, "1||2||5||7||10||14||15||20||21||28||30||31||"
-	, "Nafn"
-	, "Gildi"
-	, "Mán||Þri||Mið||Fim||Fös||Lau||Sun||"
-	, "Mánudagur||Þriðjudagur||Miðvikudagur||Fimmtudagur||Föstudagur||Laugardagur||Sunnudagur||"
-	, "Full nýting hraða"
-	, "Hámarks hraði - Nota eðlilegar takmarkanir á bandvídd"
-	, "Takmarkað"
-	, "Takmarkað - Nota áætlunina fyrir takmörkun bandvíddar"
-	, "Einungis deila"
-	, "Einungis deila - Sendir bara gögn (þar með talið óklárað)"
-	, "Slökkt á"
-	, "Slökkva - Stöðvar allar torrent skrár sem ekki er þrýst á"
-	, "<= %d klukkutímar"
-	, "(Ekki tilgreint)"
-	, "<= %d mínútur"
-	, "%dd %dk"
-	, "%dk %dm"
-	, "%dm %ds"
-	, "%ds"
-	, "%dv %dd"
-	, "%dá %dv"
-];
+var LANG_STR =
+{
+   "CT_MASK1":"Deiliskrár||*.torrent||Allar skrár (*.*)||*.*||",
+   "DLG_BTN_OK":"Í lagi",
+   "DLG_BTN_CANCEL":"Hætta við",
+   "DLG_BTN_APPLY":"Staðfesta",
+   "DLG_BTN_YES":"Já",
+   "DLG_BTN_NO":"Enginn",
+   "DLG_BTN_CLOSE":"Loka",
+   "DLG_SETTINGS_00":"Stilligar",
+   "DLG_SETTINGS_1_GENERAL_01":"Tungumál",
+   "DLG_SETTINGS_1_GENERAL_02":"Tungumál:",
+   "DLG_SETTINGS_1_GENERAL_10":"Notendaupplýsingar",
+   "DLG_SETTINGS_1_GENERAL_11":"Athuga að uppfærslum sjálfkrafa",
+   "DLG_SETTINGS_1_GENERAL_12":"Uppfæra að beta útgáfu",
+   "DLG_SETTINGS_1_GENERAL_13":"Senda nafnlaus gögn þegar athugað er eftir uppfærslum",
+   "DLG_SETTINGS_1_GENERAL_17":"Þegar Niðurhalað Er",
+   "DLG_SETTINGS_1_GENERAL_18":"Bæta við .!ut aftan við óklárað",
+   "DLG_SETTINGS_1_GENERAL_19":"Úthluta svæði fyrir skrár",
+   "DLG_SETTINGS_1_GENERAL_20":"Koma í veg fyrir reiðuham ef torrent eru virk",
+   "DLG_SETTINGS_2_UI_01":"Stillingar Yfirlits",
+   "DLG_SETTINGS_2_UI_02":"Staðfesta við eyðingu á torrent skrá",
+   "DLG_SETTINGS_2_UI_03":"Staðfesta eyðingu gagnabeina",
+   "DLG_SETTINGS_2_UI_04":"Sýna staðfestingarglugga við lokun",
+   "DLG_SETTINGS_2_UI_05":"Auka listi fyrir bakgrunnsliti",
+   "DLG_SETTINGS_2_UI_06":"Sýna núverandi hraða í titills-stiku",
+   "DLG_SETTINGS_2_UI_07":"Sýna takmörkun hraða í stöðu-stiku",
+   "DLG_SETTINGS_2_UI_15":"Þegar Bætt er Við Torrentum",
+   "DLG_SETTINGS_2_UI_16":"Ekki hefja niðurhal sjálfkrafa",
+   "DLG_SETTINGS_2_UI_17":"Færa forrit fremst",
+   "DLG_SETTINGS_2_UI_18":"Sýna yfirlit skráa innan torrent skráar",
+   "DLG_SETTINGS_2_UI_19":"Aðgerðir fyrir Tvísmell",
+   "DLG_SETTINGS_2_UI_20":"Torrent sem eru í deilingu:",
+   "DLG_SETTINGS_2_UI_22":"Torrent sem er verið að sækja:",
+   "DLG_SETTINGS_3_PATHS_01":"Staðsetning Fyrir Niðurhalaðar Skrár",
+   "DLG_SETTINGS_3_PATHS_02":"Staðsetning fyrir nýjar skrár:",
+   "DLG_SETTINGS_3_PATHS_03":"Ávalt sýna glugga fyrir ný niðurhöl",
+   "DLG_SETTINGS_3_PATHS_06":"Færa kláruð niðurhöl til:",
+   "DLG_SETTINGS_3_PATHS_07":"Bæta við merki torrent skráar",
+   "DLG_SETTINGS_3_PATHS_10":"Einungis færa frá gefinni staðsetningu fyrir niðurhöl",
+   "DLG_SETTINGS_3_PATHS_11":"Staðsetning .torrent Skráa",
+   "DLG_SETTINGS_3_PATHS_12":"Geyma .torrent skrár í:",
+   "DLG_SETTINGS_3_PATHS_15":"Færa kláraðar .torrent skrár í:",
+   "DLG_SETTINGS_3_PATHS_18":"Sækja .torrent skrár sjálfkrafa frá:",
+   "DLG_SETTINGS_3_PATHS_19":"Eyða sóttar .torrent skrár",
+   "DLG_SETTINGS_4_CONN_01":"Port",
+   "DLG_SETTINGS_4_CONN_02":"Port sem nota skal fyrir utanaðkomandi tengingar:",
+   "DLG_SETTINGS_4_CONN_04":"Handahóf val",
+   "DLG_SETTINGS_4_CONN_05":"Velja af handahófi við keyrslu",
+   "DLG_SETTINGS_4_CONN_06":"Virkja UPnP port færslur",
+   "DLG_SETTINGS_4_CONN_07":"Virkja NAT-PMP port færslur",
+   "DLG_SETTINGS_4_CONN_08":"Proxy Þjónn",
+   "DLG_SETTINGS_4_CONN_09":"Tegund:",
+   "DLG_SETTINGS_4_CONN_11":"Þjónn:",
+   "DLG_SETTINGS_4_CONN_13":"Port:",
+   "DLG_SETTINGS_4_CONN_15":"Sannvottun",
+   "DLG_SETTINGS_4_CONN_16":"Notandi:",
+   "DLG_SETTINGS_4_CONN_18":"Lykilorð:",
+   "DLG_SETTINGS_4_CONN_19":"Nafngreina ip tölur í gegnum proxy þjón",
+   "DLG_SETTINGS_4_CONN_20":"Nota proxy þjón fyrir P2P tengingar",
+   "DLG_SETTINGS_4_CONN_21":"Windows Firewall undantekning",
+   "DLG_SETTINGS_4_CONN_22":"Proxy Friðhelgi",
+   "DLG_SETTINGS_4_CONN_23":"Afvirkja allar staðbundnar DNS uppflettingar",
+   "DLG_SETTINGS_4_CONN_24":"Afvirkja fítusa sem gefa frá sér auðkennandi upplýsingar",
+   "DLG_SETTINGS_4_CONN_25":"Afvirkja tengingar sem proxy styður ekki",
+   "DLG_SETTINGS_5_BANDWIDTH_01":"Takmörkun Hraða Frá Þér",
+   "DLG_SETTINGS_5_BANDWIDTH_02":"Hámarks hraði frá (kB/s): [0: ótakmarkað]",
+   "DLG_SETTINGS_5_BANDWIDTH_03":"Sjálfstillt",
+   "DLG_SETTINGS_5_BANDWIDTH_05":"Hraði upp þegar ekki er verið að sækja (kB/s):",
+   "DLG_SETTINGS_5_BANDWIDTH_07":"Takmörkun Hraða Til Þín",
+   "DLG_SETTINGS_5_BANDWIDTH_08":"Hámarks hraði til þín (kB/s): [0: ótakmarkað]",
+   "DLG_SETTINGS_5_BANDWIDTH_10":"Fjöldi Tenginga",
+   "DLG_SETTINGS_5_BANDWIDTH_11":"Hámarks fjöldi tenginga fyrir öll torrent:",
+   "DLG_SETTINGS_5_BANDWIDTH_14":"Hámarks fjöldi tenginga fyrir hvert torrent:",
+   "DLG_SETTINGS_5_BANDWIDTH_15":"Hámarks fjöldi tenginga til sendingar á torrent:",
+   "DLG_SETTINGS_5_BANDWIDTH_17":"Hækka fjölda tenginga til sendingar ef hraði er undir 90%",
+   "DLG_SETTINGS_5_BANDWIDTH_18":"Global Rate Limit Options",
+   "DLG_SETTINGS_5_BANDWIDTH_19":"Apply rate limit to transport overhead",
+   "DLG_SETTINGS_5_BANDWIDTH_20":"Apply rate limit to uTP connections",
+   "DLG_SETTINGS_6_BITTORRENT_01":"Grunnstillingar BitTorrents",
+   "DLG_SETTINGS_6_BITTORRENT_02":"Virkja DHT",
+   "DLG_SETTINGS_6_BITTORRENT_03":"Biðja gagnabeini um scrape upplýsingar",
+   "DLG_SETTINGS_6_BITTORRENT_04":"Virkja DHT fyrir ný torrent",
+   "DLG_SETTINGS_6_BITTORRENT_05":"Virkja Jafnokaskipti",
+   "DLG_SETTINGS_6_BITTORRENT_06":"Virkja Staðbundna Leit af Jafnokum",
+   "DLG_SETTINGS_6_BITTORRENT_07":"Takmarka hraða jafnoka á staðarneti",
+   "DLG_SETTINGS_6_BITTORRENT_08":"IP/Vélarnafn sem tilkynna skal gagnabeini:",
+   "DLG_SETTINGS_6_BITTORRENT_10":"Dulkóðun Samskipta",
+   "DLG_SETTINGS_6_BITTORRENT_11":"Frá þér:",
+   "DLG_SETTINGS_6_BITTORRENT_13":"Leyfa utanaðkomandi legacy tengingar",
+   "DLG_SETTINGS_6_BITTORRENT_14":"Enable bandwidth management [uTP]",
+   "DLG_SETTINGS_6_BITTORRENT_15":"Enable UDP tracker support",
+   "DLG_SETTINGS_7_TRANSFERCAP_01":"Virkja Þak",
+   "DLG_SETTINGS_7_TRANSFERCAP_02":"Stillingar á Þaki",
+   "DLG_SETTINGS_7_TRANSFERCAP_03":"Tegund Takmörkunar:",
+   "DLG_SETTINGS_7_TRANSFERCAP_04":"Hámarks gagnaumferð:",
+   "DLG_SETTINGS_7_TRANSFERCAP_05":"Tímabil (dagar):",
+   "DLG_SETTINGS_7_TRANSFERCAP_06":"Notkun bandvíddar á þessu tímabili:",
+   "DLG_SETTINGS_7_TRANSFERCAP_07":"Upphalað:",
+   "DLG_SETTINGS_7_TRANSFERCAP_08":"Niðurhalað:",
+   "DLG_SETTINGS_7_TRANSFERCAP_09":"Upphalað + Niðurhalað:",
+   "DLG_SETTINGS_7_TRANSFERCAP_10":"Yfir tíma:",
+   "DLG_SETTINGS_7_TRANSFERCAP_11":"Síðustu %d daga",
+   "DLG_SETTINGS_7_TRANSFERCAP_12":"Núllstilla",
+   "DLG_SETTINGS_8_QUEUEING_01":"Stillingar Forgangsröðunar",
+   "DLG_SETTINGS_8_QUEUEING_02":"Hámarks leyfilegur virkra torrenta (frá eða til):",
+   "DLG_SETTINGS_8_QUEUEING_04":"Hámarks leyfilegur fjöldi virkra niðurhala:",
+   "DLG_SETTINGS_8_QUEUEING_06":"Deila á Meðan [Sjálfgefin gildi]",
+   "DLG_SETTINGS_8_QUEUEING_07":"Lágmarks hlutfall (%):",
+   "DLG_SETTINGS_8_QUEUEING_09":"Lágmarks deilitími (mínútur):",
+   "DLG_SETTINGS_8_QUEUEING_11":"Deiling hefur hærri forgangsröðun en niðurhal",
+   "DLG_SETTINGS_8_QUEUEING_12":"Þegar µTorrent Hefur Náð Settu Marki",
+   "DLG_SETTINGS_8_QUEUEING_13":"Takmarka hraða upphals að (kB/s): [0: stopp]",
+   "DLG_SETTINGS_9_SCHEDULER_01":"Virkja Áætlun",
+   "DLG_SETTINGS_9_SCHEDULER_02":"Áætlun",
+   "DLG_SETTINGS_9_SCHEDULER_04":"Stillingar fyrir Áætlun",
+   "DLG_SETTINGS_9_SCHEDULER_05":"Takmarka hraða upphals (kB/s):",
+   "DLG_SETTINGS_9_SCHEDULER_07":"Takmarka hraða niðurhals (kB/s):",
+   "DLG_SETTINGS_9_SCHEDULER_09":"Afvirkja DHT þegar slökkt er",
+   "DLG_SETTINGS_9_WEBUI_01":"Virkja Vefviðmót",
+   "DLG_SETTINGS_9_WEBUI_02":"Sannvottun",
+   "DLG_SETTINGS_9_WEBUI_03":"Notandi:",
+   "DLG_SETTINGS_9_WEBUI_05":"Lykilorð",
+   "DLG_SETTINGS_9_WEBUI_07":"Virkja aðgang Gesta með notendanafni:",
+   "DLG_SETTINGS_9_WEBUI_09":"Tengingar",
+   "DLG_SETTINGS_9_WEBUI_10":"Auka port (port fyrir utanaðkomandi tengingar sjálfgefið):",
+   "DLG_SETTINGS_9_WEBUI_12":"Takmarka tengingar við eftirfarandi IP tölur (aðskilið fleiri en eina með kommu):",
+   "DLG_SETTINGS_A_ADVANCED_01":"Nánari Stillingar [AÐVÖRUN: Ekki breyta!]",
+   "DLG_SETTINGS_A_ADVANCED_02":"Gildi:",
+   "DLG_SETTINGS_A_ADVANCED_03":"Satt",
+   "DLG_SETTINGS_A_ADVANCED_04":"Ósatt",
+   "DLG_SETTINGS_A_ADVANCED_05":"Stilla",
+   "DLG_SETTINGS_B_ADV_UI_01":"Valmöguleikar Hraða [Aðskilið fleiri en einn hraða með kommu]",
+   "DLG_SETTINGS_B_ADV_UI_02":"Hnekkja á sjálfgefnum valmöguleikum fyrir hraða",
+   "DLG_SETTINGS_B_ADV_UI_03":"Listi fyrir hraða frá þér:",
+   "DLG_SETTINGS_B_ADV_UI_05":"Listi fyrir hraða til þín:",
+   "DLG_SETTINGS_B_ADV_UI_07":"Viðvarandi Merkingar [Aðskilið fleiri en eitt merki með pípu [|])",
+   "DLG_SETTINGS_B_ADV_UI_08":"Leitarvélar [Form: nafn|slóð]",
+   "DLG_SETTINGS_C_ADV_CACHE_01":"Grunnstillingar Skyndiminnis",
+   "DLG_SETTINGS_C_ADV_CACHE_02":"Skyndiminni disks er notað af µTorrent til að minnka álag á harða diskinn. Yfirliett sér µTorrent sjálft um þetta svæði, en þú getur breytt hegðun þess með því að breyta þessum stillingum.",
+   "DLG_SETTINGS_C_ADV_CACHE_03":"Hnekkja á sjálfgefni stærð skyndiminnis og nota eftirfarandi stærð (MB):",
+   "DLG_SETTINGS_C_ADV_CACHE_05":"Minnka notkun á minni meðan forrit þarfnast ekki skyndiminnis",
+   "DLG_SETTINGS_C_ADV_CACHE_06":"Nánari Stillingar Skyndiminnis",
+   "DLG_SETTINGS_C_ADV_CACHE_07":"Virkja skyndiminni fyrir skrif",
+   "DLG_SETTINGS_C_ADV_CACHE_08":"Skrifa út ósnertar minnisblokkið á 2 mínútna fresti",
+   "DLG_SETTINGS_C_ADV_CACHE_09":"Skrifa út kláraða búa strax",
+   "DLG_SETTINGS_C_ADV_CACHE_10":"Virkja skyndiminni fyrir lestur",
+   "DLG_SETTINGS_C_ADV_CACHE_11":"Afvirkja skyndiminni fyrir lestur ef hraði upphals er hægur",
+   "DLG_SETTINGS_C_ADV_CACHE_12":"Eyða út gömlum blokkum frá skyndiminni",
+   "DLG_SETTINGS_C_ADV_CACHE_13":"Auka sjálfvirka skyndiminnis stærðarákvörðun við skyndiminnis eyðingu",
+   "DLG_SETTINGS_C_ADV_CACHE_14":"Afvirkja aðferð Windows skrifun á disk",
+   "DLG_SETTINGS_C_ADV_CACHE_15":"Afvirkja aðferð Windows lestur á disk",
+   "DLG_SETTINGS_C_ADV_RUN_01":"Keyrsla Forrita",
+   "DLG_SETTINGS_C_ADV_RUN_02":"Keyra þetta forrit þegar torrent klárast:",
+   "DLG_SETTINGS_C_ADV_RUN_04":"Keyra þetta forrit þegar torrent breytir um stöðu:",
+   "DLG_SETTINGS_C_ADV_RUN_06":"You can use these commands:\r\n%F - Name of downloaded file (for single file torrents)\r\n%D - Directory where files are saved\r\n%N - Title of torrent\r\n%S - State of torrent\r\n%L - Label\r\n%T - Tracker\r\n%M - Status message string (same as status column)\r\n%I - hex encoded info-hash\r\n\r\nState is a combination of:\r\nstarted = 1, checking = 2, start-after-check = 4,\r\nchecked = 8, error = 16, paused = 32, auto = 64, loaded = 128",
+   "DLG_TORRENTPROP_00":"Stillingar deiliskráar",
+   "DLG_TORRENTPROP_1_GEN_01":"Gagnabeinar (aðskilið flokka með tómri línu)",
+   "DLG_TORRENTPROP_1_GEN_03":"Stillingar Bandvíddar",
+   "DLG_TORRENTPROP_1_GEN_04":"Hámarks hraði upphals (kB/s): [0: sjálfgefið]",
+   "DLG_TORRENTPROP_1_GEN_06":"Hámarks hraði niðurhals (kB/s): [0: sjálfgefið]",
+   "DLG_TORRENTPROP_1_GEN_08":"Fjöldi hólfa til sendingar: [0: sjálfgefið]",
+   "DLG_TORRENTPROP_1_GEN_10":"Deila á Meðan",
+   "DLG_TORRENTPROP_1_GEN_11":"Hnekkja á sjálfgefnum stillingar",
+   "DLG_TORRENTPROP_1_GEN_12":"Minimum ratio (%):",
+   "DLG_TORRENTPROP_1_GEN_14":"Minimum seeding time (minutes):",
+   "DLG_TORRENTPROP_1_GEN_16":"Aðrar Stillingar",
+   "DLG_TORRENTPROP_1_GEN_17":"Upphaflegur Deilandi",
+   "DLG_TORRENTPROP_1_GEN_18":"Virkja DHT",
+   "DLG_TORRENTPROP_1_GEN_19":"Jafnokaskipti",
+   "DLG_ADDEDITRSSFEED_03":"Straumur",
+   "DLG_ADDEDITRSSFEED_04":"Slóð Straums:",
+   "DLG_ADDEDITRSSFEED_05":"Valið Nafn:",
+   "DLG_ADDEDITRSSFEED_06":"Áskriftir",
+   "DLG_ADDEDITRSSFEED_07":"Ekki sækja allt sjálfkrafa frá straumi",
+   "DLG_ADDEDITRSSFEED_08":"Sækja allt sjálfkrafa frá straumi",
+   "DLG_ADDEDITRSSFEED_09":"Nota snjallsíu fyrir þætti",
+   "DLG_RSSDOWNLOADER_02":"Veitur||Uppáhöld||Saga||",
+   "DLG_RSSDOWNLOADER_03":"All Feeds",
+   "DLG_RSSDOWNLOADER_04":"Stillingar Síu",
+   "DLG_RSSDOWNLOADER_05":"Nafn:",
+   "DLG_RSSDOWNLOADER_06":"Sía:",
+   "DLG_RSSDOWNLOADER_07":"Ekki:",
+   "DLG_RSSDOWNLOADER_08":"Vista í:",
+   "DLG_RSSDOWNLOADER_09":"Straumur:",
+   "DLG_RSSDOWNLOADER_10":"Gæði:",
+   "DLG_RSSDOWNLOADER_11":"Þátta númer: [td. 1x12-14]",
+   "DLG_RSSDOWNLOADER_12":"Sía niðurstöður út frá upprunalegu nafni í stað afruglaðs",
+   "DLG_RSSDOWNLOADER_13":"Ekki hefja niðurhöl sjálfkrafa",
+   "DLG_RSSDOWNLOADER_14":"Snjallsía",
+   "DLG_RSSDOWNLOADER_15":"Gefa niðurhölum hæðsta forgang",
+   "DLG_RSSDOWNLOADER_16":"Minnsta þrep:",
+   "DLG_RSSDOWNLOADER_17":"Merki fyrir ný torrent:",
+   "DLG_RSSDOWNLOADER_18":"Bæta við RSS Straumi...",
+   "DLG_RSSDOWNLOADER_19":"Breyta Straumi...",
+   "DLG_RSSDOWNLOADER_20":"Afvirkja Straum",
+   "DLG_RSSDOWNLOADER_21":"Virkja Straum",
+   "DLG_RSSDOWNLOADER_22":"Uppfæra Straum",
+   "DLG_RSSDOWNLOADER_23":"Eyða Straumi",
+   "DLG_RSSDOWNLOADER_24":"Niðurhala",
+   "DLG_RSSDOWNLOADER_25":"Opna slóð í vafrara",
+   "DLG_RSSDOWNLOADER_26":"Bæta við í uppáhald",
+   "DLG_RSSDOWNLOADER_27":"Bæta við",
+   "DLG_RSSDOWNLOADER_28":"Eyða",
+   "DLG_RSSDOWNLOADER_29":"Allt",
+   "DLG_RSSDOWNLOADER_30":"(Öllum)",
+   "DLG_RSSDOWNLOADER_31":"(ávalt finna)||(finna einu sinni)||12 tímar||1 dagur||2 dagar||3 dagar||4 dagar||1 vika||2 vikur||3 vikur||1 mánuður||",
+   "DLG_RSSDOWNLOADER_32":"Bæta við RSS straum",
+   "DLG_RSSDOWNLOADER_33":"Breyta RSS Straumi",
+   "DLG_RSSDOWNLOADER_34":"Remove RSS Feed(s)",
+   "DLG_RSSDOWNLOADER_35":"Really delete the %d selected RSS Feeds?",
+   "DLG_RSSDOWNLOADER_36":"Á að eyða RSS slóðinni \"%s\"?",
+   "FEED_COL_FULLNAME":"Fullt Nafn",
+   "FEED_COL_NAME":"Nafn",
+   "FEED_COL_EPISODE":"Þáttur",
+   "FEED_COL_FORMAT":"Snið",
+   "FEED_COL_CODEC":"Codec",
+   "FEED_COL_DATE":"Date",
+   "FEED_COL_FEED":"Slóð",
+   "FEED_COL_URL":"Upptök slóðar",
+   "PRS_COL_IP":"IP",
+   "PRS_COL_PORT":"Port",
+   "PRS_COL_CLIENT":"Forrit",
+   "PRS_COL_FLAGS":"Kennimerki",
+   "PRS_COL_PCNT":"%",
+   "PRS_COL_RELEVANCE":"Mikilvægi",
+   "PRS_COL_DOWNSPEED":"Hraði Til",
+   "PRS_COL_UPSPEED":"Hraði Frá",
+   "PRS_COL_REQS":"Beiðnir",
+   "PRS_COL_WAITED":"Beðið",
+   "PRS_COL_UPLOADED":"Sent",
+   "PRS_COL_DOWNLOADED":"Sótt",
+   "PRS_COL_HASHERR":"Hash villa",
+   "PRS_COL_PEERDL":"Hraði J.",
+   "PRS_COL_MAXUP":"MestUpp",
+   "PRS_COL_MAXDOWN":"MestNiður",
+   "PRS_COL_QUEUED":"Röð",
+   "PRS_COL_INACTIVE":"Síðasta Tenging",
+   "FI_COL_DONE":"Lokið",
+   "FI_COL_FIRSTPC":"Fyrsta Brot",
+   "FI_COL_NAME":"Nafn",
+   "FI_COL_NUMPCS":"Fjöldi Brota",
+   "FI_COL_PCNT":"%",
+   "FI_COL_PRIO":"Forgangsröð",
+   "FI_COL_SIZE":"Stærð",
+   "FI_PRI0":"sleppir",
+   "FI_PRI1":"Lág",
+   "FI_PRI2":"Eðlileg",
+   "FI_PRI3":"Há",
+   "GN_TP_01":"Samtals Sótt:",
+   "GN_TP_02":"Samtals Sent:",
+   "GN_TP_03":"Deilendur:",
+   "GN_TP_04":"Tími Eftir:",
+   "GN_TP_05":"Hraði Niðurhals:",
+   "GN_TP_06":"Hraði Upphals:",
+   "GN_TP_07":"Jafnokar:",
+   "GN_TP_08":"Hlutfall:",
+   "GN_TP_09":"Vistað sem:",
+   "GN_TP_10":"Tætisumma:",
+   "GN_GENERAL":"Almennt",
+   "GN_TRANSFER":"Umferð",
+   "GN_XCONN":"%d af %d tengdir (af samtals %d)",
+   "MAIN_TITLEBAR_SPEED":"N:%s S:%s - %s",
+   "MENU_COPY":"Afrita",
+   "MENU_RESET":"Endurstilla",
+   "MENU_UNLIMITED":"Ótakmarkað",
+   "MP_RESOLVE_IPS":"Nafngreina IP tölur",
+   "MF_GETFILE":"Get File(s)",
+   "MF_DONT":"Ekki Sækja",
+   "MF_HIGH":"Há Forgangsröðun",
+   "MF_LOW":"Lág Forgangsröðun",
+   "MF_NORMAL":"Eðlileg Forgangsröðun",
+   "ML_COPY_MAGNETURI":"Afrita Magnet slóð",
+   "ML_DELETE_DATA":"...eyða gögnum",
+   "ML_DELETE_TORRENT":"...eyða deiliskrá",
+   "ML_DELETE_DATATORRENT":"...eyða deiliskrá + gögnum",
+   "ML_FORCE_RECHECK":"Endurskoða",
+   "ML_FORCE_START":"Þrýsta á",
+   "ML_LABEL":"Merki",
+   "ML_PAUSE":"Hlé",
+   "ML_PROPERTIES":"Stillingar",
+   "ML_QUEUEDOWN":"Færa Neðar í Forgangsröð",
+   "ML_QUEUEUP":"Færa Ofar í Forgangsröð",
+   "ML_REMOVE":"Eyða",
+   "ML_REMOVE_AND":"Eyða og...",
+   "ML_START":"Byrja",
+   "ML_STOP":"Stöðva",
+   "OV_CAT_ACTIVE":"Virk",
+   "OV_CAT_ALL":"Allt",
+   "OV_CAT_COMPL":"Lokið",
+   "OV_CAT_DL":"Verið að ná í",
+   "OV_CAT_INACTIVE":"Óvirkt",
+   "OV_CAT_NOLABEL":"Ekkert merki",
+   "OV_COL_AVAIL":"||Aðg.||Aðgengi",
+   "OV_COL_DATE_ADDED":"Bætt við þann",
+   "OV_COL_DATE_COMPLETED":"Lokið þann",
+   "OV_COL_DONE":"Klárað",
+   "OV_COL_DOWNLOADED":"Sótt",
+   "OV_COL_DOWNSPD":"Hraði Til",
+   "OV_COL_ETA":"Tími eftir",
+   "OV_COL_LABEL":"Merkt",
+   "OV_COL_NAME":"Nafn",
+   "OV_COL_ORDER":"#",
+   "OV_COL_PEERS":"Jafnokar",
+   "OV_COL_REMAINING":"Eftir",
+   "OV_COL_SEEDS":"Deilendur",
+   "OV_COL_SEEDS_PEERS":"Deila/Sækja",
+   "OV_COL_SHARED":"Hlutfall",
+   "OV_COL_SIZE":"Stærð",
+   "OV_COL_SOURCE_URL":"Upptök slóðar",
+   "OV_COL_STATUS":"Staða",
+   "OV_COL_UPPED":"Sent",
+   "OV_COL_UPSPD":"Hraði Frá",
+   "OV_CONFIRM_DELETEDATA_MULTIPLE":"Eruð þér viss um að eyða skuli þeim %d völdum torrent skrám og öllum tengdum gögnum?",
+   "OV_CONFIRM_DELETEDATA_ONE":"Eruð þér viss um að eyða skal valinni torrent skrá og öllum tengdum gögnum?",
+   "OV_CONFIRM_DELETE_MULTIPLE":"Eruð þér viss um að eyða skal þeim %d völdum torrentum?",
+   "OV_CONFIRM_DELETE_ONE":"Eruð þér viss um að eyða skal völdu torrenti?",
+   "OV_CONFIRM_DELETE_RSSFILTER":"Á að eyða \"%s\" RSS síunni?",
+   "OV_FL_CHECKED":"%:.1d% endurskoðað",
+   "OV_FL_DOWNLOADING":"Að Sækja",
+   "OV_FL_ERROR":"Villa: %s",
+   "OV_FL_FINISHED":"Lokið",
+   "OV_FL_PAUSED":"Hlé",
+   "OV_FL_QUEUED":"Raðað",
+   "OV_FL_QUEUED_SEED":"Deiling sett í röð",
+   "OV_FL_SEEDING":"Að Deila",
+   "OV_FL_STOPPED":"Stöðvað",
+   "OV_NEWLABEL_CAPTION":"Nafn merkis",
+   "OV_NEWLABEL_TEXT":"Nýtt merki fyrir valin deiliskrár:",
+   "OV_NEW_LABEL":"Nýtt merki...",
+   "OV_REMOVE_LABEL":"Eyða merki",
+   "OV_TABS":"Almennt||Gagnabeinar||Jafnokar||Bútar||Skrár||Hraði||Aðgerðaskrá||",
+   "OV_TB_ADDTORR":"Bæta við deiliskrá",
+   "OV_TB_ADDURL":"Bæta við deiliskrá frá slóð",
+   "OV_TB_PAUSE":"Hlé",
+   "OV_TB_PREF":"Stillingar",
+   "OV_TB_QUEUEDOWN":"Færa Neðar í Forgangsröð",
+   "OV_TB_QUEUEUP":"Færa Ofar í Forgangsröð",
+   "OV_TB_REMOVE":"Eyða",
+   "OV_TB_RSSDOWNLDR":"RSS Straumar",
+   "OV_TB_START":"Byrja",
+   "OV_TB_STOP":"Stöðva",
+   "MM_FILE":"Skrá",
+   "MM_FILE_ADD_TORRENT":"Bæta við deiliskrá...",
+   "MM_FILE_ADD_URL":"Bæta við deiliskrá frá slóð...",
+   "MM_OPTIONS":"Valmöguleikar",
+   "MM_OPTIONS_PREFERENCES":"Stillingar",
+   "MM_OPTIONS_SHOW_CATEGORY":"Listi Yfir Flokka",
+   "MM_OPTIONS_SHOW_DETAIL":"Nákvæmar Upplýsingar",
+   "MM_OPTIONS_SHOW_STATUS":"Sýna Upplýsinga-stiku",
+   "MM_OPTIONS_SHOW_TOOLBAR":"Sýna Tækja-stiku",
+   "MM_OPTIONS_TAB_ICONS":"Táknmyndir á Flipum",
+   "MM_HELP":"Hjálp",
+   "MM_HELP_UT_WEBPAGE":"Vefsíða µTorrents",
+   "MM_HELP_UT_FORUMS":"µTorrent Spjallborðið",
+   "MM_HELP_WEBUI_FEEDBACK":"Send WebUI Feedback",
+   "MM_HELP_ABOUT_WEBUI":"About µTorrent WebUI",
+   "STM_TORRENTS":"Torrent",
+   "STM_TORRENTS_PAUSEALL":"Hlé",
+   "STM_TORRENTS_RESUMEALL":"halda áfram",
+   "SB_DOWNLOAD":"D: %s%z/s",
+   "SB_LOCAL":" L: %z/s",
+   "SB_OVERHEAD":" O: %z/s",
+   "SB_TOTAL":" T: %Z",
+   "SB_UPLOAD":"U: %s%z/s",
+   "SIZE_B":"B",
+   "SIZE_EB":"EB",
+   "SIZE_GB":"GB",
+   "SIZE_KB":"kB",
+   "SIZE_MB":"MB",
+   "SIZE_PB":"PB",
+   "SIZE_TB":"TB",
+   "ST_CAPT_ADVANCED":"Nánar",
+   "ST_CAPT_BANDWIDTH":"Bandvídd",
+   "ST_CAPT_CONNECTION":"Tenging",
+   "ST_CAPT_DISK_CACHE":"Geymsla á disk",
+   "ST_CAPT_FOLDER":"Staðsetningar",
+   "ST_CAPT_GENERAL":"Almennt",
+   "ST_CAPT_SCHEDULER":"Áætlun",
+   "ST_CAPT_QUEUEING":"Biðröð",
+   "ST_CAPT_UI_EXTRAS":"Aukahlutir viðmóts",
+   "ST_CAPT_UI_SETTINGS":"Viðmót",
+   "ST_CAPT_BITTORRENT":"BitTorrent",
+   "ST_CAPT_WEBUI":"Vefviðmót",
+   "ST_CAPT_TRANSFER_CAP":"Þak",
+   "ST_CAPT_RUN_PROGRAM":"Keyra Forrit",
+   "ST_CBO_UI_DBLCLK_TOR":"Sýna stillingar||Byrja/Stöðva||Opna Möppu||Sýna Framgang Niðurhals||",
+   "ST_CBO_ENCRYPTIONS":"Óvirk||Virk||Þrýst||",
+   "ST_CBO_PROXY":"(engin)||Socks4||Socks5||HTTPS||HTTP||",
+   "ST_CBO_TCAP_MODES":"upphal||niðurhal||upphal og niðurhal||",
+   "ST_CBO_TCAP_UNITS":"MB||GB||",
+   "ST_CBO_TCAP_PERIODS":"1||2||5||7||10||14||15||20||21||28||30||31||",
+   "ST_COL_NAME":"Nafn",
+   "ST_COL_VALUE":"Gildi",
+   "ST_SCH_DAYCODES":"Mán||Þri||Mið||Fim||Fös||Lau||Sun||",
+   "ST_SCH_DAYNAMES":"Mánudagur||Þriðjudagur||Miðvikudagur||Fimmtudagur||Föstudagur||Laugardagur||Sunnudagur||",
+   "ST_SCH_LGND_FULL":"Full nýting hraða",
+   "ST_SCH_LGND_FULLEX":"Hámarks hraði - Nota eðlilegar takmarkanir á bandvídd",
+   "ST_SCH_LGND_LIMITED":"Takmarkað",
+   "ST_SCH_LGND_LIMITEDEX":"Takmarkað - Nota áætlunina fyrir takmörkun bandvíddar",
+   "ST_SCH_LGND_SEEDING":"Einungis deila",
+   "ST_SCH_LGND_SEEDINGEX":"Einungis deila - Sendir bara gögn (þar með talið óklárað)",
+   "ST_SCH_LGND_OFF":"Slökkt á",
+   "ST_SCH_LGND_OFFEX":"Slökkva - Stöðvar allar torrent skrár sem ekki er þrýst á",
+   "ST_SEEDTIMES_HOURS":"<= %d klukkutímar",
+   "ST_SEEDTIMES_IGNORE":"(Ekki tilgreint)",
+   "ST_SEEDTIMES_MINUTES":"<= %d mínútur",
+   "TIME_DAYS_HOURS":"%dd %dk",
+   "TIME_HOURS_MINS":"%dk %dm",
+   "TIME_MINS_SECS":"%dm %ds",
+   "TIME_SECS":"%ds",
+   "TIME_WEEKS_DAYS":"%dv %dd",
+   "TIME_YEARS_WEEKS":"%dá %dv"
+}

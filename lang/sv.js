@@ -5,473 +5,474 @@ Use of this source code is governed by a BSD-style that can be
 found in the LICENSE file.
 */
 
-var LANG_STR = [
-	  "Torrentfiler||*.torrent||Alla filer (*.*)||*.*||"
-	, "OK"
-	, "Avbryt"
-	, "Verkställ"
-	, "Ja"
-	, "Nej"
-	, "Stäng"
-	, "Inställningar"
-	, "Språk"
-	, "Språk:"
-	, "Privat"
-	, "Kolla automatiskt efter uppdateringar"
-	, "Uppdatera även till beta-versioner"
-	, "Skicka anonym information vid koll av uppdateringar"
-	, "Vid nedladdning"
-	, "Lägg till .!ut till ofullständiga filer"
-	, "Förallokera alla filer"
-	, "Förhindra viloläge om det finns aktiva torrents"
-	, "Visa alternativ"
-	, "Bekräfta radering av torrents"
-	, "Bekräfta radering av tracker"
-	, "Visa bekräftelsedialog vid avslut"
-	, "Växlande bakgrundsfärg i lista"
-	, "Visa laddningshastigheter i titelrad"
-	, "Visa hast. gränser i statusraden"
-	, "När torrents läggs till"
-	, "Starta inte nedladdning automatiskt"
-	, "Aktivera programfönster"
-	, "Visa fönster som visar filen i torrenten"
-	, "Händelse vid dubbelklick"
-	, "Uppladdande/klara torrents:"
-	, "Nedladdande torrents:"
-	, "Placering av nedladdade filer"
-	, "Lägg nya nedladdningar i:"
-	, "Visa dialog vid lägga till manuellt"
-	, "Flytta färdiga nedladdningar till:"
-	, "Lägg till torrentens etikett"
-	, "Flytta endast från förutbestämd katalog"
-	, "Placering av torrents"
-	, "Lagra torrent i:"
-	, "Flytta färdiga .torrent-filer till:"
-	, "Ladda torrents automatiskt från:"
-	, "Radera startade torrents"
-	, "Lyssningsport"
-	, "Port för inkommande anslutningar:"
-	, "Slumpa port"
-	, "Slumpa port vid varje start"
-	, "Aktivera UPnP portmappning"
-	, "Aktivera NAT-PMP portmappning"
-	, "Proxyserver"
-	, "Typ:"
-	, "Proxy:"
-	, "Port"
-	, "Autentisiering"
-	, "Användare:"
-	, "Lösenord:"
-	, "Bestäm värddatornamn genom proxy"
-	, "Använda proxyserver för peer-to-peer anslutningar"
-	, "Lägg till undantag i Windows brandvägg"
-	, "Proxy integritet"
-	, "Inaktivera alla lokala DNS-uppslagningar"
-	, "Inaktivera funktioner som läcker privat information"
-	, "Inaktivera anslutningar som inte stödjs av proxy"
-	, "Global uppl. begränsning"
-	, "Max uppladdning (kB/s): [0: obegränsat]"
-	, "Automatisk"
-	, "Annan uppladdningshast. när inga nedladdningar sker (kB/s):"
-	, "Global begränsning av nedladdningshast."
-	, "Max. nedl.hast. (kB/s): [0: obegränsat]"
-	, "Antal anslutningar"
-	, "Globalt max antal anslutningar:"
-	, "Max. antal anslutna klienter/torrent:"
-	, "Antal uppl.slottar/torrent:"
-	, "Öka antalet uppl.slottar om uppl.hastighet < 90 %"
-	, "Global Rate Limit Options"
-	, "Tillämpa hastighetsbegränsning på overheadtrafik"
-	, "Tillämpa hastighetsbegränsning på uTP-anslutningar"
-	, "Grundläggande bittorrent-inställningar"
-	, "Aktivera DHT-nätverk"
-	, "Fråga trackern efter skrap-info"
-	, "Aktivera DHT för ny torrents"
-	, "Aktivera klientutbyte"
-	, "Aktivera upptäckt av lokala klienter"
-	, "Begränsa bandbredd till lokal klient"
-	, "IP/värdnamn att rapportera till trackern:"
-	, "Protokollskryptering"
-	, "Utgående:"
-	, "Tillåt äldre inkommande anslutningar"
-	, "Aktivera bandbreddshantering [uTP]"
-	, "Aktivera stöd för UDP-tracker"
-	, "Aktiv. datamängdstak"
-	, "Inställningar för datamängdstak"
-	, "Begränsningstyp"
-	, "Bandbreddsbegränsning:"
-	, "Tidsperiod (dagar):"
-	, "Datamängdshistorik för vald period"
-	, "Uppladdat:"
-	, "Nedladdat:"
-	, "Upp- och nedladdat:"
-	, "Tidsperiod:"
-	, "Senaste %d dagarna"
-	, "Rensa historik"
-	, "Köinställningar"
-	, "Max antal aktiva torrents (upp- eller nedladdning):"
-	, "Max antal aktiva nedladdningar:"
-	, "Uppladdning tills [Standardvärde]"
-	, "Minsta kvot(ratio) i (procent %):"
-	, "Minsta uppladdningstid (minutes):"
-	, "Uppladdning större prioritet än nedladdning"
-	, "När µTorrent når uppladdningsmålet"
-	, "Begränsa uppladd.hastighet till (kB/s): [0: stop]"
-	, "Aktivera schemaläggaren"
-	, "Schema"
-	, "Schemainställningar"
-	, "Begränsad uppl.hastighet kB/s:"
-	, "Begränsad nedl.hastighet (kB/s):"
-	, "Stäng av DHT vid avslutning"
-	, "Aktivera Webgrännsnitt (Web UI)"
-	, "Autentisiering"
-	, "Användare:"
-	, "Lösenord:"
-	, "Tillåt gästkonto med följande användarnamn:"
-	, "Anslutning"
-	, "Alternativ lyssningsport (standard är anslutningsporten):"
-	, "Begränsa åtkomsten till följande IP-adresser (dela flera IP med komma-tecken):"
-	, "Avancerade inställningar [VARNING: Ändra inget!]"
-	, "Värde:"
-	, "Sant"
-	, "Falskt"
-	, "Ställ in"
-	, "Popup-hastighetslista [dela på flera värden med ett komma]"
-	, "Åsidosätt automatisk popup-hastighetslista"
-	, "Ladda upp hastighetslista:"
-	, "Ladda ned hastighetslista:"
-	, "Bestående etiketter [Dela flera etiketter med |-tecken]"
-	, "Sökmotorer [Format: namn|URL]"
-	, "Grundinställningar för cache"
-	, "Cachen används till att lägga ofta använd data till RAM-minnet för att minska läsning och skrivning till hårddisk. µTorrent klarar att hantera detta automatiskt. Vill du dock ändra på något kan du göra det nedan."
-	, "Åsidosätt automatisk cachestorlek. Ställ storlek manuellt till  (MB):"
-	, "Minska minnesåtgång när cachen inte används"
-	, "Avancerade cache-inställningar"
-	, "Starta skriv-cachning till disk"
-	, "Skriv orörda block varje 2 minuter"
-	, "Skriv färdiga delar omedelbart"
-	, "Starta läs-cachning till disk"
-	, "Stäng av läs-cachning om uppladdning är långsam"
-	, "Avlägsna gamla block från cachen"
-	, "Öka cache-storlek automatiskt"
-	, "Inaktivera Windows skriv-cachning till disk"
-	, "Inaktivera Windows läs-cachning till disk"
-	, "Kör program"
-	, "Kör detta program när en torrent är klar:"
-	, "Kör detta program när en torrent ändrar tillstånd:"
-	, "Du kan använda dessa kommandon:\r\n%F - Namnet på nedladdad fil (för torrents med en fil)\r\n%D - Katalog där filerna sparas\r\n%N - Titeln på torrenten\r\n%S - Torrentens tillstånd\r\n%L - Etikett\r\n%T - Tracker\r\n%M - Statusmeddelande sträng (samma som statuskolumn)\r\n%I - hexkodad info-hash\r\n\r\nTillståndet är en kombination av:\r\nstartad = 1, kontrollerar = 2, start-efter-kontroll = 4,\r\nkontrollerad = 8, fel = 16, pausad = 32, auto = 64, laddad = 128"
-	, "Torrentegenskaper"
-	, "Trackrar (dela rader med tom rad)"
-	, "Bandbreddsinställningar"
-	, "Max. uppladdning (kB/s): [0: normalt]"
-	, "Max. nedladdning (kB/s): [0: normalt]"
-	, "Antal uppladdnings-slottar: [0: normalt]"
-	, "Ladda upp medan"
-	, "Åsidosätt standardinställningar"
-	, "Minsta kvot (procent %)"
-	, "Minsta uppladdningstid (minuter):"
-	, "Andra inställingar"
-	, "Inledande uppl."
-	, "Starta DHT"
-	, "Klientutbyte"
-	, "Flöde"
-	, "RSS-URL:"
-	, "Egna alias:"
-	, "Prenumeration"
-	, "Ladda inte ned allt automatiskt"
-	, "Ladda automatiskt ned allt från flöden"
-	, "Använd smart episodfilter"
-	, "Flöden||Favoriter||Historik||"
-	, "All Feeds"
-	, "Filterinställningar"
-	, "Namn:"
-	, "Filtrera:"
-	, "Icke:"
-	, "Spara till:"
-	, "Flöde:"
-	, "Kvalitet:"
-	, "Episodnummer: [tex. 1x12-14]"
-	, "Filter matchar filnamnet istället för avkodat namn"
-	, "Starta inte nedladdningar automatiskt"
-	, "Smart ep.-filter"
-	, "Ge nedladdningar högsta prioritet"
-	, "Minsta intervall:"
-	, "Etikett för nya torrents:"
-	, "Lägg till RSS-flöde..."
-	, "Redigera flöden..."
-	, "Avsluta flöden"
-	, "Starta flöde"
-	, "Uppdatera flöde"
-	, "Radera flöden"
-	, "Ladda ned"
-	, "Öppna URL i webbläsare"
-	, "Lägg till i favoriter"
-	, "Lägg till"
-	, "Radera"
-	, "ALLA"
-	, "(Alla)"
-	, "(jämför alltid)||(jämför en gång)||12 timmar||1 dag||2 dagar||3 dagar||4 dagar||1 vecka||2 veckor||3 veckor||1 månad||"
-	, "Lägg till RSS-flöde"
-	, "Redigera RSS-flöden"
-	, "Remove RSS Feed(s)"
-	, "Really delete the %d selected RSS Feeds?"
-	, "Vill du verkligen ta bort RSS-flödet \"%s\"?"
-	, "Komplett namn"
-	, "Filnamn"
-	, "Episod"
-	, "Format"
-	, "Codec"
-	, "Date"
-	, "Flöde"
-	, "Käll-URL"
-	, "IP"
-	, "Port"
-	, "Klient"
-	, "Flaggor"
-	, "%"
-	, "Relevans"
-	, "Nedl-hastighet"
-	, "Uppl-hastighet"
-	, "Förfrågan"
-	, "Väntar"
-	, "Uppladdat"
-	, "Nedladdat"
-	, "Hash-fel"
-	, "Klient nedl."
-	, "Max.upp"
-	, "Max.ned"
-	, "Köad"
-	, "Inaktiv"
-	, "Klart"
-	, "Första delen"
-	, "Filnamn"
-	, "Antal delar"
-	, "%"
-	, "Prioritet"
-	, "Storlek"
-	, "ladda inte ner"
-	, "låg"
-	, "normal"
-	, "hög"
-	, "Nedladdat:"
-	, "Uppladdat:"
-	, "Källor:"
-	, "Återstående:"
-	, "Ned.hastighet:"
-	, "Upp.hastighet:"
-	, "Klienter:"
-	, "Utdelad kvot:"
-	, "Spara som:"
-	, "Hash:"
-	, "Allmänt"
-	, "Transport"
-	, "%d av %d anslutna (%d i svärm)"
-	, "N:%s U:%s - %s"
-	, "Kopiera"
-	, "Återställ"
-	, "Obegränsad"
-	, "Visa datornamn"
-	, "Get File(s)"
-	, "Ladda inte ned"
-	, "Hög prioritet"
-	, "Låg prioritet"
-	, "Normal prioritet"
-	, "Kopiera Magnet URI"
-	, "Ta bort data"
-	, "Ta bort .torrent"
-	, "Ta bort .torrent + data"
-	, "Tvinga återkoll"
-	, "Tvångsstart"
-	, "Etikett"
-	, "Paus"
-	, "Egenskaper"
-	, "Flytta ned i kön"
-	, "Flytta upp i kön"
-	, "Ta bort"
-	, "Ta bort och"
-	, "Starta"
-	, "Stoppa"
-	, "Aktiv"
-	, "Totalt"
-	, "Slutförd"
-	, "Laddar ned"
-	, "Inaktiv"
-	, "Utan etikett"
-	, "||Tillg.||Tillgänglighet"
-	, "Tillagd den"
-	, "Färdig den"
-	, "Klart"
-	, "Nedladdat"
-	, "Nedl-hastighet"
-	, "Tid kvar"
-	, "Etikett"
-	, "Filnamn"
-	, "Nr"
-	, "Klienter"
-	, "Återstår"
-	, "Källor"
-	, "Uppladdare/Klienter"
-	, "Kvot"
-	, "Storlek"
-	, "Käll-URL"
-	, "Status"
-	, "Uppladdat"
-	, "Uppl-hastighet"
-	, "Är du säker på att du vill ta bort %d valda torrent och all tillhörande data?"
-	, "Är du säker på att du vill ta bort vald torrent och all tillhörande data?"
-	, "Är du säker på att du vill ta bort %d valda torrent?"
-	, "Är du säker på att du vill ta bort vald torrent?"
-	, "Vill du verkligen ta bort RSS-filter \"%s\"?"
-	, "Kontrollerat %:.1d%%"
-	, "Laddar ned"
-	, "Fel: %s"
-	, "Färdig"
-	, "Pausad"
-	, "Köad"
-	, "Köad uppladdning"
-	, "Laddar upp"
-	, "Stoppad"
-	, "Ange etikett"
-	, "Ange ny etikett för valda torrentar:"
-	, "Ny etikett..."
-	, "Ta bort etikett"
-	, "Allmänt||Trackers||Källor||Delar||Filer||Hastighet||Logg||"
-	, "Lägg till torrent"
-	, "Lägg till torrent från URL"
-	, "Paus"
-	, "Inställningar"
-	, "Flytta ned i kön"
-	, "Flytta upp i kön"
-	, "Ta bort"
-	, "RSS-hämtare"
-	, "Starta"
-	, "Stoppa"
-	, "Arkiv"
-	, "Lägg till torrent..."
-	, "Lägg till torrent från URL..."
-	, "Inställningar"
-	, "Inställningar"
-	, "Visa kategorilista"
-	, "Visa detaljerad info"
-	, "Visa statusfält"
-	, "Visa verktygsfält"
-	, "Ikoner på flikar"
-	, "Hjälp"
-	, "Gå till µTorrents hemsida"
-	, "Gå till µTorrents forum"
-	, "Send WebUI Feedback"
-	, "About µTorrent WebUI"
-	, "Torrents"
-	, "Pausa alla torrentar"
-	, "Återuppta alla torrentar"
-	, "D: %s%z/s"
-	, " L: %z/s"
-	, " O: %z/s"
-	, " T: %Z"
-	, "U: %s%z/s"
-	, "B"
-	, "EB"
-	, "GB"
-	, "kB"
-	, "MB"
-	, "PB"
-	, "TB"
-	, "Avancerat"
-	, "Bandbredd"
-	, "Anslutning"
-	, "Diskcache"
-	, "Kataloger"
-	, "Allmänt"
-	, "Schemaläggare"
-	, "Köinställningar"
-	, "UI extra"
-	, "UI-inställningar"
-	, "BitTorrent"
-	, "Webbgränsnitt"
-	, "Datamängdstak"
-	, "Kör program"
-	, "Visa inställningar||Starta/Stoppa||Öppna mapp||Visa nedladdningspopup||"
-	, "Avaktiverat||Aktiverat||Tvingad||"
-	, "(ingen)||Socks4||Socks5||HTTPS||HTTP||"
-	, "Uppladdningar||Nedladdningar||Upp- och nedladdat||"
-	, "MB||GB||"
-	, "1||2||5||7||10||14||15||20||21||28||30||31||"
-	, "Filnamn"
-	, "Värde"
-	, "Mån||Tis||Ons||Tor||Fre||Lör||Sön||"
-	, "Måndag||Tisdag||Onsdag||Torsdag||Fredag||Lördag||Söndag||"
-	, "Full hast."
-	, "Full hastighet - Använd normal generell bandbreddbegränsning"
-	, "Begränsad"
-	, "Begränsat - Använder schemaläggarens bandbreddsbegränsning"
-	, "Bara uppladdning"
-	, "Bara uppladdning - Bara uppl. av data (inkl. icke kompletta)"
-	, "Stäng av"
-	, "Stäng av - stoppa alla torrents som inte är tvingade"
-	, "<= %d timmar"
-	, "(Ignorera)"
-	, "<= %d minuter"
-	, "%dd %dh"
-	, "%dh %dm"
-	, "%dm %ds"
-	, "%ds"
-	, "%dw %dd"
-	, "%dy %dw"
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	"BitTorrent Fjärrstyrning",
-	"BitTorrent Fjärrstyrning ger dig ett lätt och mycket säkert sätt att komma åt BitTorrent via webbläsare.",
-	"Starta anslutningen nedan, välj datornamn och lösenord. Glöm inte att lämna datorn på.",
-	"Läs mer",
-	"Aktivera BitTorrent fjärrstyrning",
-	"Autentisiering",
-	"Användarnamn:",
-	"Lösenord:",
-	"Lägg till",
-	"BitTorrent Fjärrstyrning"
-];
+var LANG_STR =
+{
+   "CT_MASK1":"Torrentfiler||*.torrent||Alla filer (*.*)||*.*||",
+   "DLG_BTN_OK":"OK",
+   "DLG_BTN_CANCEL":"Avbryt",
+   "DLG_BTN_APPLY":"Verkställ",
+   "DLG_BTN_YES":"Ja",
+   "DLG_BTN_NO":"Nej",
+   "DLG_BTN_CLOSE":"Stäng",
+   "DLG_SETTINGS_00":"Inställningar",
+   "DLG_SETTINGS_1_GENERAL_01":"Språk",
+   "DLG_SETTINGS_1_GENERAL_02":"Språk:",
+   "DLG_SETTINGS_1_GENERAL_10":"Privat",
+   "DLG_SETTINGS_1_GENERAL_11":"Kolla automatiskt efter uppdateringar",
+   "DLG_SETTINGS_1_GENERAL_12":"Uppdatera även till beta-versioner",
+   "DLG_SETTINGS_1_GENERAL_13":"Skicka anonym information vid koll av uppdateringar",
+   "DLG_SETTINGS_1_GENERAL_17":"Vid nedladdning",
+   "DLG_SETTINGS_1_GENERAL_18":"Lägg till .!ut till ofullständiga filer",
+   "DLG_SETTINGS_1_GENERAL_19":"Förallokera alla filer",
+   "DLG_SETTINGS_1_GENERAL_20":"Förhindra viloläge om det finns aktiva torrents",
+   "DLG_SETTINGS_2_UI_01":"Visa alternativ",
+   "DLG_SETTINGS_2_UI_02":"Bekräfta radering av torrents",
+   "DLG_SETTINGS_2_UI_03":"Bekräfta radering av tracker",
+   "DLG_SETTINGS_2_UI_04":"Visa bekräftelsedialog vid avslut",
+   "DLG_SETTINGS_2_UI_05":"Växlande bakgrundsfärg i lista",
+   "DLG_SETTINGS_2_UI_06":"Visa laddningshastigheter i titelrad",
+   "DLG_SETTINGS_2_UI_07":"Visa hast. gränser i statusraden",
+   "DLG_SETTINGS_2_UI_15":"När torrents läggs till",
+   "DLG_SETTINGS_2_UI_16":"Starta inte nedladdning automatiskt",
+   "DLG_SETTINGS_2_UI_17":"Aktivera programfönster",
+   "DLG_SETTINGS_2_UI_18":"Visa fönster som visar filen i torrenten",
+   "DLG_SETTINGS_2_UI_19":"Händelse vid dubbelklick",
+   "DLG_SETTINGS_2_UI_20":"Uppladdande/klara torrents:",
+   "DLG_SETTINGS_2_UI_22":"Nedladdande torrents:",
+   "DLG_SETTINGS_3_PATHS_01":"Placering av nedladdade filer",
+   "DLG_SETTINGS_3_PATHS_02":"Lägg nya nedladdningar i:",
+   "DLG_SETTINGS_3_PATHS_03":"Visa dialog vid lägga till manuellt",
+   "DLG_SETTINGS_3_PATHS_06":"Flytta färdiga nedladdningar till:",
+   "DLG_SETTINGS_3_PATHS_07":"Lägg till torrentens etikett",
+   "DLG_SETTINGS_3_PATHS_10":"Flytta endast från förutbestämd katalog",
+   "DLG_SETTINGS_3_PATHS_11":"Placering av torrents",
+   "DLG_SETTINGS_3_PATHS_12":"Lagra torrent i:",
+   "DLG_SETTINGS_3_PATHS_15":"Flytta färdiga .torrent-filer till:",
+   "DLG_SETTINGS_3_PATHS_18":"Ladda torrents automatiskt från:",
+   "DLG_SETTINGS_3_PATHS_19":"Radera startade torrents",
+   "DLG_SETTINGS_4_CONN_01":"Lyssningsport",
+   "DLG_SETTINGS_4_CONN_02":"Port för inkommande anslutningar:",
+   "DLG_SETTINGS_4_CONN_04":"Slumpa port",
+   "DLG_SETTINGS_4_CONN_05":"Slumpa port vid varje start",
+   "DLG_SETTINGS_4_CONN_06":"Aktivera UPnP portmappning",
+   "DLG_SETTINGS_4_CONN_07":"Aktivera NAT-PMP portmappning",
+   "DLG_SETTINGS_4_CONN_08":"Proxyserver",
+   "DLG_SETTINGS_4_CONN_09":"Typ:",
+   "DLG_SETTINGS_4_CONN_11":"Proxy:",
+   "DLG_SETTINGS_4_CONN_13":"Port",
+   "DLG_SETTINGS_4_CONN_15":"Autentisiering",
+   "DLG_SETTINGS_4_CONN_16":"Användare:",
+   "DLG_SETTINGS_4_CONN_18":"Lösenord:",
+   "DLG_SETTINGS_4_CONN_19":"Bestäm värddatornamn genom proxy",
+   "DLG_SETTINGS_4_CONN_20":"Använda proxyserver för peer-to-peer anslutningar",
+   "DLG_SETTINGS_4_CONN_21":"Lägg till undantag i Windows brandvägg",
+   "DLG_SETTINGS_4_CONN_22":"Proxy integritet",
+   "DLG_SETTINGS_4_CONN_23":"Inaktivera alla lokala DNS-uppslagningar",
+   "DLG_SETTINGS_4_CONN_24":"Inaktivera funktioner som läcker privat information",
+   "DLG_SETTINGS_4_CONN_25":"Inaktivera anslutningar som inte stödjs av proxy",
+   "DLG_SETTINGS_5_BANDWIDTH_01":"Global uppl. begränsning",
+   "DLG_SETTINGS_5_BANDWIDTH_02":"Max uppladdning (kB/s): [0: obegränsat]",
+   "DLG_SETTINGS_5_BANDWIDTH_03":"Automatisk",
+   "DLG_SETTINGS_5_BANDWIDTH_05":"Annan uppladdningshast. när inga nedladdningar sker (kB/s):",
+   "DLG_SETTINGS_5_BANDWIDTH_07":"Global begränsning av nedladdningshast.",
+   "DLG_SETTINGS_5_BANDWIDTH_08":"Max. nedl.hast. (kB/s): [0: obegränsat]",
+   "DLG_SETTINGS_5_BANDWIDTH_10":"Antal anslutningar",
+   "DLG_SETTINGS_5_BANDWIDTH_11":"Globalt max antal anslutningar:",
+   "DLG_SETTINGS_5_BANDWIDTH_14":"Max. antal anslutna klienter/torrent:",
+   "DLG_SETTINGS_5_BANDWIDTH_15":"Antal uppl.slottar/torrent:",
+   "DLG_SETTINGS_5_BANDWIDTH_17":"Öka antalet uppl.slottar om uppl.hastighet < 90 %",
+   "DLG_SETTINGS_5_BANDWIDTH_18":"Global Rate Limit Options",
+   "DLG_SETTINGS_5_BANDWIDTH_19":"Tillämpa hastighetsbegränsning på overheadtrafik",
+   "DLG_SETTINGS_5_BANDWIDTH_20":"Tillämpa hastighetsbegränsning på uTP-anslutningar",
+   "DLG_SETTINGS_6_BITTORRENT_01":"Grundläggande bittorrent-inställningar",
+   "DLG_SETTINGS_6_BITTORRENT_02":"Aktivera DHT-nätverk",
+   "DLG_SETTINGS_6_BITTORRENT_03":"Fråga trackern efter skrap-info",
+   "DLG_SETTINGS_6_BITTORRENT_04":"Aktivera DHT för ny torrents",
+   "DLG_SETTINGS_6_BITTORRENT_05":"Aktivera klientutbyte",
+   "DLG_SETTINGS_6_BITTORRENT_06":"Aktivera upptäckt av lokala klienter",
+   "DLG_SETTINGS_6_BITTORRENT_07":"Begränsa bandbredd till lokal klient",
+   "DLG_SETTINGS_6_BITTORRENT_08":"IP/värdnamn att rapportera till trackern:",
+   "DLG_SETTINGS_6_BITTORRENT_10":"Protokollskryptering",
+   "DLG_SETTINGS_6_BITTORRENT_11":"Utgående:",
+   "DLG_SETTINGS_6_BITTORRENT_13":"Tillåt äldre inkommande anslutningar",
+   "DLG_SETTINGS_6_BITTORRENT_14":"Aktivera bandbreddshantering [uTP]",
+   "DLG_SETTINGS_6_BITTORRENT_15":"Aktivera stöd för UDP-tracker",
+   "DLG_SETTINGS_7_TRANSFERCAP_01":"Aktiv. datamängdstak",
+   "DLG_SETTINGS_7_TRANSFERCAP_02":"Inställningar för datamängdstak",
+   "DLG_SETTINGS_7_TRANSFERCAP_03":"Begränsningstyp",
+   "DLG_SETTINGS_7_TRANSFERCAP_04":"Bandbreddsbegränsning:",
+   "DLG_SETTINGS_7_TRANSFERCAP_05":"Tidsperiod (dagar):",
+   "DLG_SETTINGS_7_TRANSFERCAP_06":"Datamängdshistorik för vald period",
+   "DLG_SETTINGS_7_TRANSFERCAP_07":"Uppladdat:",
+   "DLG_SETTINGS_7_TRANSFERCAP_08":"Nedladdat:",
+   "DLG_SETTINGS_7_TRANSFERCAP_09":"Upp- och nedladdat:",
+   "DLG_SETTINGS_7_TRANSFERCAP_10":"Tidsperiod:",
+   "DLG_SETTINGS_7_TRANSFERCAP_11":"Senaste %d dagarna",
+   "DLG_SETTINGS_7_TRANSFERCAP_12":"Rensa historik",
+   "DLG_SETTINGS_8_QUEUEING_01":"Köinställningar",
+   "DLG_SETTINGS_8_QUEUEING_02":"Max antal aktiva torrents (upp- eller nedladdning):",
+   "DLG_SETTINGS_8_QUEUEING_04":"Max antal aktiva nedladdningar:",
+   "DLG_SETTINGS_8_QUEUEING_06":"Uppladdning tills [Standardvärde]",
+   "DLG_SETTINGS_8_QUEUEING_07":"Minsta kvot(ratio) i (procent %):",
+   "DLG_SETTINGS_8_QUEUEING_09":"Minsta uppladdningstid (minutes):",
+   "DLG_SETTINGS_8_QUEUEING_11":"Uppladdning större prioritet än nedladdning",
+   "DLG_SETTINGS_8_QUEUEING_12":"När µTorrent når uppladdningsmålet",
+   "DLG_SETTINGS_8_QUEUEING_13":"Begränsa uppladd.hastighet till (kB/s): [0: stop]",
+   "DLG_SETTINGS_9_SCHEDULER_01":"Aktivera schemaläggaren",
+   "DLG_SETTINGS_9_SCHEDULER_02":"Schema",
+   "DLG_SETTINGS_9_SCHEDULER_04":"Schemainställningar",
+   "DLG_SETTINGS_9_SCHEDULER_05":"Begränsad uppl.hastighet kB/s:",
+   "DLG_SETTINGS_9_SCHEDULER_07":"Begränsad nedl.hastighet (kB/s):",
+   "DLG_SETTINGS_9_SCHEDULER_09":"Stäng av DHT vid avslutning",
+   "DLG_SETTINGS_9_WEBUI_01":"Aktivera Webgrännsnitt (Web UI)",
+   "DLG_SETTINGS_9_WEBUI_02":"Autentisiering",
+   "DLG_SETTINGS_9_WEBUI_03":"Användare:",
+   "DLG_SETTINGS_9_WEBUI_05":"Lösenord:",
+   "DLG_SETTINGS_9_WEBUI_07":"Tillåt gästkonto med följande användarnamn:",
+   "DLG_SETTINGS_9_WEBUI_09":"Anslutning",
+   "DLG_SETTINGS_9_WEBUI_10":"Alternativ lyssningsport (standard är anslutningsporten):",
+   "DLG_SETTINGS_9_WEBUI_12":"Begränsa åtkomsten till följande IP-adresser (dela flera IP med komma-tecken):",
+   "DLG_SETTINGS_A_ADVANCED_01":"Avancerade inställningar [VARNING: Ändra inget!]",
+   "DLG_SETTINGS_A_ADVANCED_02":"Värde:",
+   "DLG_SETTINGS_A_ADVANCED_03":"Sant",
+   "DLG_SETTINGS_A_ADVANCED_04":"Falskt",
+   "DLG_SETTINGS_A_ADVANCED_05":"Ställ in",
+   "DLG_SETTINGS_B_ADV_UI_01":"Popup-hastighetslista [dela på flera värden med ett komma]",
+   "DLG_SETTINGS_B_ADV_UI_02":"Åsidosätt automatisk popup-hastighetslista",
+   "DLG_SETTINGS_B_ADV_UI_03":"Ladda upp hastighetslista:",
+   "DLG_SETTINGS_B_ADV_UI_05":"Ladda ned hastighetslista:",
+   "DLG_SETTINGS_B_ADV_UI_07":"Bestående etiketter [Dela flera etiketter med |-tecken]",
+   "DLG_SETTINGS_B_ADV_UI_08":"Sökmotorer [Format: namn|URL]",
+   "DLG_SETTINGS_C_ADV_CACHE_01":"Grundinställningar för cache",
+   "DLG_SETTINGS_C_ADV_CACHE_02":"Cachen används till att lägga ofta använd data till RAM-minnet för att minska läsning och skrivning till hårddisk. µTorrent klarar att hantera detta automatiskt. Vill du dock ändra på något kan du göra det nedan.",
+   "DLG_SETTINGS_C_ADV_CACHE_03":"Åsidosätt automatisk cachestorlek. Ställ storlek manuellt till (MB):",
+   "DLG_SETTINGS_C_ADV_CACHE_05":"Minska minnesåtgång när cachen inte används",
+   "DLG_SETTINGS_C_ADV_CACHE_06":"Avancerade cache-inställningar",
+   "DLG_SETTINGS_C_ADV_CACHE_07":"Starta skriv-cachning till disk",
+   "DLG_SETTINGS_C_ADV_CACHE_08":"Skriv orörda block varje 2 minuter",
+   "DLG_SETTINGS_C_ADV_CACHE_09":"Skriv färdiga delar omedelbart",
+   "DLG_SETTINGS_C_ADV_CACHE_10":"Starta läs-cachning till disk",
+   "DLG_SETTINGS_C_ADV_CACHE_11":"Stäng av läs-cachning om uppladdning är långsam",
+   "DLG_SETTINGS_C_ADV_CACHE_12":"Avlägsna gamla block från cachen",
+   "DLG_SETTINGS_C_ADV_CACHE_13":"Öka cache-storlek automatiskt",
+   "DLG_SETTINGS_C_ADV_CACHE_14":"Inaktivera Windows skriv-cachning till disk",
+   "DLG_SETTINGS_C_ADV_CACHE_15":"Inaktivera Windows läs-cachning till disk",
+   "DLG_SETTINGS_C_ADV_RUN_01":"Kör program",
+   "DLG_SETTINGS_C_ADV_RUN_02":"Kör detta program när en torrent är klar:",
+   "DLG_SETTINGS_C_ADV_RUN_04":"Kör detta program när en torrent ändrar tillstånd:",
+   "DLG_SETTINGS_C_ADV_RUN_06":"Du kan använda dessa kommandon:\r\n%F - Namnet på nedladdad fil (för torrents med en fil)\r\n%D - Katalog där filerna sparas\r\n%N - Titeln på torrenten\r\n%S - Torrentens tillstånd\r\n%L - Etikett\r\n%T - Tracker\r\n%M - Statusmeddelande sträng (samma som statuskolumn)\r\n%I - hexkodad info-hash\r\n\r\nTillståndet är en kombination av:\r\nstartad = 1, kontrollerar = 2, start-efter-kontroll = 4,\r\nkontrollerad = 8, fel = 16, pausad = 32, auto = 64, laddad = 128",
+   "DLG_TORRENTPROP_00":"Torrentegenskaper",
+   "DLG_TORRENTPROP_1_GEN_01":"Trackrar (dela rader med tom rad)",
+   "DLG_TORRENTPROP_1_GEN_03":"Bandbreddsinställningar",
+   "DLG_TORRENTPROP_1_GEN_04":"Max. uppladdning (kB/s): [0: normalt]",
+   "DLG_TORRENTPROP_1_GEN_06":"Max. nedladdning (kB/s): [0: normalt]",
+   "DLG_TORRENTPROP_1_GEN_08":"Antal uppladdnings-slottar: [0: normalt]",
+   "DLG_TORRENTPROP_1_GEN_10":"Ladda upp medan",
+   "DLG_TORRENTPROP_1_GEN_11":"Åsidosätt standardinställningar",
+   "DLG_TORRENTPROP_1_GEN_12":"Minsta kvot (procent %)",
+   "DLG_TORRENTPROP_1_GEN_14":"Minsta uppladdningstid (minuter):",
+   "DLG_TORRENTPROP_1_GEN_16":"Andra inställingar",
+   "DLG_TORRENTPROP_1_GEN_17":"Inledande uppl.",
+   "DLG_TORRENTPROP_1_GEN_18":"Starta DHT",
+   "DLG_TORRENTPROP_1_GEN_19":"Klientutbyte",
+   "DLG_ADDEDITRSSFEED_03":"Flöde",
+   "DLG_ADDEDITRSSFEED_04":"RSS-URL:",
+   "DLG_ADDEDITRSSFEED_05":"Egna alias:",
+   "DLG_ADDEDITRSSFEED_06":"Prenumeration",
+   "DLG_ADDEDITRSSFEED_07":"Ladda inte ned allt automatiskt",
+   "DLG_ADDEDITRSSFEED_08":"Ladda automatiskt ned allt från flöden",
+   "DLG_ADDEDITRSSFEED_09":"Använd smart episodfilter",
+   "DLG_RSSDOWNLOADER_02":"Flöden||Favoriter||Historik||",
+   "DLG_RSSDOWNLOADER_03":"All Feeds",
+   "DLG_RSSDOWNLOADER_04":"Filterinställningar",
+   "DLG_RSSDOWNLOADER_05":"Namn:",
+   "DLG_RSSDOWNLOADER_06":"Filtrera:",
+   "DLG_RSSDOWNLOADER_07":"Icke:",
+   "DLG_RSSDOWNLOADER_08":"Spara till:",
+   "DLG_RSSDOWNLOADER_09":"Flöde:",
+   "DLG_RSSDOWNLOADER_10":"Kvalitet:",
+   "DLG_RSSDOWNLOADER_11":"Episodnummer: [tex. 1x12-14]",
+   "DLG_RSSDOWNLOADER_12":"Filter matchar filnamnet istället för avkodat namn",
+   "DLG_RSSDOWNLOADER_13":"Starta inte nedladdningar automatiskt",
+   "DLG_RSSDOWNLOADER_14":"Smart ep.-filter",
+   "DLG_RSSDOWNLOADER_15":"Ge nedladdningar högsta prioritet",
+   "DLG_RSSDOWNLOADER_16":"Minsta intervall:",
+   "DLG_RSSDOWNLOADER_17":"Etikett för nya torrents:",
+   "DLG_RSSDOWNLOADER_18":"Lägg till RSS-flöde...",
+   "DLG_RSSDOWNLOADER_19":"Redigera flöden...",
+   "DLG_RSSDOWNLOADER_20":"Avsluta flöden",
+   "DLG_RSSDOWNLOADER_21":"Starta flöde",
+   "DLG_RSSDOWNLOADER_22":"Uppdatera flöde",
+   "DLG_RSSDOWNLOADER_23":"Radera flöden",
+   "DLG_RSSDOWNLOADER_24":"Ladda ned",
+   "DLG_RSSDOWNLOADER_25":"Öppna URL i webbläsare",
+   "DLG_RSSDOWNLOADER_26":"Lägg till i favoriter",
+   "DLG_RSSDOWNLOADER_27":"Lägg till",
+   "DLG_RSSDOWNLOADER_28":"Radera",
+   "DLG_RSSDOWNLOADER_29":"ALLA",
+   "DLG_RSSDOWNLOADER_30":"(Alla)",
+   "DLG_RSSDOWNLOADER_31":"(jämför alltid)||(jämför en gång)||12 timmar||1 dag||2 dagar||3 dagar||4 dagar||1 vecka||2 veckor||3 veckor||1 månad||",
+   "DLG_RSSDOWNLOADER_32":"Lägg till RSS-flöde",
+   "DLG_RSSDOWNLOADER_33":"Redigera RSS-flöden",
+   "DLG_RSSDOWNLOADER_34":"Remove RSS Feed(s)",
+   "DLG_RSSDOWNLOADER_35":"Really delete the %d selected RSS Feeds?",
+   "DLG_RSSDOWNLOADER_36":"Vill du verkligen ta bort RSS-flödet \"%s\"?",
+   "FEED_COL_FULLNAME":"Komplett namn",
+   "FEED_COL_NAME":"Filnamn",
+   "FEED_COL_EPISODE":"Episod",
+   "FEED_COL_FORMAT":"Format",
+   "FEED_COL_CODEC":"Codec",
+   "FEED_COL_DATE":"Date",
+   "FEED_COL_FEED":"Flöde",
+   "FEED_COL_URL":"Käll-URL",
+   "PRS_COL_IP":"IP",
+   "PRS_COL_PORT":"Port",
+   "PRS_COL_CLIENT":"Klient",
+   "PRS_COL_FLAGS":"Flaggor",
+   "PRS_COL_PCNT":"%",
+   "PRS_COL_RELEVANCE":"Relevans",
+   "PRS_COL_DOWNSPEED":"Nedl-hastighet",
+   "PRS_COL_UPSPEED":"Uppl-hastighet",
+   "PRS_COL_REQS":"Förfrågan",
+   "PRS_COL_WAITED":"Väntar",
+   "PRS_COL_UPLOADED":"Uppladdat",
+   "PRS_COL_DOWNLOADED":"Nedladdat",
+   "PRS_COL_HASHERR":"Hash-fel",
+   "PRS_COL_PEERDL":"Klient nedl.",
+   "PRS_COL_MAXUP":"Max.upp",
+   "PRS_COL_MAXDOWN":"Max.ned",
+   "PRS_COL_QUEUED":"Köad",
+   "PRS_COL_INACTIVE":"Inaktiv",
+   "FI_COL_DONE":"Klart",
+   "FI_COL_FIRSTPC":"Första delen",
+   "FI_COL_NAME":"Filnamn",
+   "FI_COL_NUMPCS":"Antal delar",
+   "FI_COL_PCNT":"%",
+   "FI_COL_PRIO":"Prioritet",
+   "FI_COL_SIZE":"Storlek",
+   "FI_PRI0":"ladda inte ner",
+   "FI_PRI1":"låg",
+   "FI_PRI2":"normal",
+   "FI_PRI3":"hög",
+   "GN_TP_01":"Nedladdat:",
+   "GN_TP_02":"Uppladdat:",
+   "GN_TP_03":"Källor:",
+   "GN_TP_04":"Återstående:",
+   "GN_TP_05":"Ned.hastighet:",
+   "GN_TP_06":"Upp.hastighet:",
+   "GN_TP_07":"Klienter:",
+   "GN_TP_08":"Utdelad kvot:",
+   "GN_TP_09":"Spara som:",
+   "GN_TP_10":"Hash:",
+   "GN_GENERAL":"Allmänt",
+   "GN_TRANSFER":"Transport",
+   "GN_XCONN":"%d av %d anslutna (%d i svärm)",
+   "MAIN_TITLEBAR_SPEED":"N:%s U:%s - %s",
+   "MENU_COPY":"Kopiera",
+   "MENU_RESET":"Återställ",
+   "MENU_UNLIMITED":"Obegränsad",
+   "MP_RESOLVE_IPS":"Visa datornamn",
+   "MF_GETFILE":"Get File(s)",
+   "MF_DONT":"Ladda inte ned",
+   "MF_HIGH":"Hög prioritet",
+   "MF_LOW":"Låg prioritet",
+   "MF_NORMAL":"Normal prioritet",
+   "ML_COPY_MAGNETURI":"Kopiera Magnet URI",
+   "ML_DELETE_DATA":"Ta bort data",
+   "ML_DELETE_TORRENT":"Ta bort .torrent",
+   "ML_DELETE_DATATORRENT":"Ta bort .torrent + data",
+   "ML_FORCE_RECHECK":"Tvinga återkoll",
+   "ML_FORCE_START":"Tvångsstart",
+   "ML_LABEL":"Etikett",
+   "ML_PAUSE":"Paus",
+   "ML_PROPERTIES":"Egenskaper",
+   "ML_QUEUEDOWN":"Flytta ned i kön",
+   "ML_QUEUEUP":"Flytta upp i kön",
+   "ML_REMOVE":"Ta bort",
+   "ML_REMOVE_AND":"Ta bort och",
+   "ML_START":"Starta",
+   "ML_STOP":"Stoppa",
+   "OV_CAT_ACTIVE":"Aktiv",
+   "OV_CAT_ALL":"Totalt",
+   "OV_CAT_COMPL":"Slutförd",
+   "OV_CAT_DL":"Laddar ned",
+   "OV_CAT_INACTIVE":"Inaktiv",
+   "OV_CAT_NOLABEL":"Utan etikett",
+   "OV_COL_AVAIL":"||Tillg.||Tillgänglighet",
+   "OV_COL_DATE_ADDED":"Tillagd den",
+   "OV_COL_DATE_COMPLETED":"Färdig den",
+   "OV_COL_DONE":"Klart",
+   "OV_COL_DOWNLOADED":"Nedladdat",
+   "OV_COL_DOWNSPD":"Nedl-hastighet",
+   "OV_COL_ETA":"Tid kvar",
+   "OV_COL_LABEL":"Etikett",
+   "OV_COL_NAME":"Filnamn",
+   "OV_COL_ORDER":"Nr",
+   "OV_COL_PEERS":"Klienter",
+   "OV_COL_REMAINING":"Återstår",
+   "OV_COL_SEEDS":"Källor",
+   "OV_COL_SEEDS_PEERS":"Uppladdare/Klienter",
+   "OV_COL_SHARED":"Kvot",
+   "OV_COL_SIZE":"Storlek",
+   "OV_COL_SOURCE_URL":"Käll-URL",
+   "OV_COL_STATUS":"Status",
+   "OV_COL_UPPED":"Uppladdat",
+   "OV_COL_UPSPD":"Uppl-hastighet",
+   "OV_CONFIRM_DELETEDATA_MULTIPLE":"Är du säker på att du vill ta bort %d valda torrent och all tillhörande data?",
+   "OV_CONFIRM_DELETEDATA_ONE":"Är du säker på att du vill ta bort vald torrent och all tillhörande data?",
+   "OV_CONFIRM_DELETE_MULTIPLE":"Är du säker på att du vill ta bort %d valda torrent?",
+   "OV_CONFIRM_DELETE_ONE":"Är du säker på att du vill ta bort vald torrent?",
+   "OV_CONFIRM_DELETE_RSSFILTER":"Vill du verkligen ta bort RSS-filter \"%s\"?",
+   "OV_FL_CHECKED":"Kontrollerat %:.1d%",
+   "OV_FL_DOWNLOADING":"Laddar ned",
+   "OV_FL_ERROR":"Fel: %s",
+   "OV_FL_FINISHED":"Färdig",
+   "OV_FL_PAUSED":"Pausad",
+   "OV_FL_QUEUED":"Köad",
+   "OV_FL_QUEUED_SEED":"Köad uppladdning",
+   "OV_FL_SEEDING":"Laddar upp",
+   "OV_FL_STOPPED":"Stoppad",
+   "OV_NEWLABEL_CAPTION":"Ange etikett",
+   "OV_NEWLABEL_TEXT":"Ange ny etikett för valda torrentar:",
+   "OV_NEW_LABEL":"Ny etikett...",
+   "OV_REMOVE_LABEL":"Ta bort etikett",
+   "OV_TABS":"Allmänt||Trackers||Källor||Delar||Filer||Hastighet||Logg||",
+   "OV_TB_ADDTORR":"Lägg till torrent",
+   "OV_TB_ADDURL":"Lägg till torrent från URL",
+   "OV_TB_PAUSE":"Paus",
+   "OV_TB_PREF":"Inställningar",
+   "OV_TB_QUEUEDOWN":"Flytta ned i kön",
+   "OV_TB_QUEUEUP":"Flytta upp i kön",
+   "OV_TB_REMOVE":"Ta bort",
+   "OV_TB_RSSDOWNLDR":"RSS-hämtare",
+   "OV_TB_START":"Starta",
+   "OV_TB_STOP":"Stoppa",
+   "MM_FILE":"Arkiv",
+   "MM_FILE_ADD_TORRENT":"Lägg till torrent...",
+   "MM_FILE_ADD_URL":"Lägg till torrent från URL...",
+   "MM_OPTIONS":"Inställningar",
+   "MM_OPTIONS_PREFERENCES":"Inställningar",
+   "MM_OPTIONS_SHOW_CATEGORY":"Visa kategorilista",
+   "MM_OPTIONS_SHOW_DETAIL":"Visa detaljerad info",
+   "MM_OPTIONS_SHOW_STATUS":"Visa statusfält",
+   "MM_OPTIONS_SHOW_TOOLBAR":"Visa verktygsfält",
+   "MM_OPTIONS_TAB_ICONS":"Ikoner på flikar",
+   "MM_HELP":"Hjälp",
+   "MM_HELP_UT_WEBPAGE":"Gå till µTorrents hemsida",
+   "MM_HELP_UT_FORUMS":"Gå till µTorrents forum",
+   "MM_HELP_WEBUI_FEEDBACK":"Send WebUI Feedback",
+   "MM_HELP_ABOUT_WEBUI":"About µTorrent WebUI",
+   "STM_TORRENTS":"Torrents",
+   "STM_TORRENTS_PAUSEALL":"Pausa alla torrentar",
+   "STM_TORRENTS_RESUMEALL":"Återuppta alla torrentar",
+   "SB_DOWNLOAD":"D: %s%z/s",
+   "SB_LOCAL":" L: %z/s",
+   "SB_OVERHEAD":" O: %z/s",
+   "SB_TOTAL":" T: %Z",
+   "SB_UPLOAD":"U: %s%z/s",
+   "SIZE_B":"B",
+   "SIZE_EB":"EB",
+   "SIZE_GB":"GB",
+   "SIZE_KB":"kB",
+   "SIZE_MB":"MB",
+   "SIZE_PB":"PB",
+   "SIZE_TB":"TB",
+   "ST_CAPT_ADVANCED":"Avancerat",
+   "ST_CAPT_BANDWIDTH":"Bandbredd",
+   "ST_CAPT_CONNECTION":"Anslutning",
+   "ST_CAPT_DISK_CACHE":"Diskcache",
+   "ST_CAPT_FOLDER":"Kataloger",
+   "ST_CAPT_GENERAL":"Allmänt",
+   "ST_CAPT_SCHEDULER":"Schemaläggare",
+   "ST_CAPT_QUEUEING":"Köinställningar",
+   "ST_CAPT_UI_EXTRAS":"UI extra",
+   "ST_CAPT_UI_SETTINGS":"UI-inställningar",
+   "ST_CAPT_BITTORRENT":"BitTorrent",
+   "ST_CAPT_WEBUI":"Webbgränsnitt",
+   "ST_CAPT_TRANSFER_CAP":"Datamängdstak",
+   "ST_CAPT_RUN_PROGRAM":"Kör program",
+   "ST_CBO_UI_DBLCLK_TOR":"Visa inställningar||Starta/Stoppa||Öppna mapp||Visa nedladdningspopup||",
+   "ST_CBO_ENCRYPTIONS":"Avaktiverat||Aktiverat||Tvingad||",
+   "ST_CBO_PROXY":"(ingen)||Socks4||Socks5||HTTPS||HTTP||",
+   "ST_CBO_TCAP_MODES":"Uppladdningar||Nedladdningar||Upp- och nedladdat||",
+   "ST_CBO_TCAP_UNITS":"MB||GB||",
+   "ST_CBO_TCAP_PERIODS":"1||2||5||7||10||14||15||20||21||28||30||31||",
+   "ST_COL_NAME":"Filnamn",
+   "ST_COL_VALUE":"Värde",
+   "ST_SCH_DAYCODES":"Mån||Tis||Ons||Tor||Fre||Lör||Sön||",
+   "ST_SCH_DAYNAMES":"Måndag||Tisdag||Onsdag||Torsdag||Fredag||Lördag||Söndag||",
+   "ST_SCH_LGND_FULL":"Full hast.",
+   "ST_SCH_LGND_FULLEX":"Full hastighet - Använd normal generell bandbreddbegränsning",
+   "ST_SCH_LGND_LIMITED":"Begränsad",
+   "ST_SCH_LGND_LIMITEDEX":"Begränsat - Använder schemaläggarens bandbreddsbegränsning",
+   "ST_SCH_LGND_SEEDING":"Bara uppladdning",
+   "ST_SCH_LGND_SEEDINGEX":"Bara uppladdning - Bara uppl. av data (inkl. icke kompletta)",
+   "ST_SCH_LGND_OFF":"Stäng av",
+   "ST_SCH_LGND_OFFEX":"Stäng av - stoppa alla torrents som inte är tvingade",
+   "ST_SEEDTIMES_HOURS":"<= %d timmar",
+   "ST_SEEDTIMES_IGNORE":"(Ignorera)",
+   "ST_SEEDTIMES_MINUTES":"<= %d minuter",
+   "TIME_DAYS_HOURS":"%dd %dh",
+   "TIME_HOURS_MINS":"%dh %dm",
+   "TIME_MINS_SECS":"%dm %ds",
+   "TIME_SECS":"%ds",
+   "TIME_WEEKS_DAYS":"%dw %dd",
+   "TIME_YEARS_WEEKS":"%dy %dw",
+   "ML_MORE_ACTIONS":null,
+   "Torrents":null,
+   "Feeds":null,
+   "App":null,
+   "country":null,
+   "ETA":null,
+   "of":null,
+   "/s":null,
+   "Paste a torrent or feed URL":null,
+   "Home":null,
+   "Logout":null,
+   "Seeding":null,
+   "All Feeds":null,
+   "bitrate":null,
+   "resolution":null,
+   "length":null,
+   "streamable":null,
+   "type":null,
+   "remote":null,
+   "about":null,
+   "sessions":null,
+   "share":null,
+   "Share this torrent":null,
+   "Share link":null,
+   "add":null,
+   "logout":null,
+   "log in":null,
+   "anywhere access":null,
+   "stay signed in":null,
+   "download":null,
+   "Your client is currently not available. Verify that it is connected to the internet.":null,
+   "Unable to communicate with your &micro;Torrent client. This message will disappear automatically when a connection is re-established.":null,
+   "Open file":null,
+   "Download to your computer":null,
+   "Open with VLC Media Player":null,
+   "Actions":null,
+   "season":null,
+   "DLG_ABOUT_VERSION_LEGEND":null,
+   "DLG_ABOUT_VERSION_VERSION":null,
+   "DLG_ABOUT_VERSION_REVISION":null,
+   "DLG_ABOUT_VERSION_BUILD_DATE":null,
+   "DLG_ABOUT_VERSION_PEER_ID":null,
+   "DLG_ABOUT_VERSION_USER_AGENT":null,
+   "DLG_ABOUT_UPNP_EXTERNAL_ADDRESS":null,
+   "DLG_ABOUT_UI_REVISION":null,
+   "DLG_SETTINGS_SAVE":null,
+   "DLG_SETTINGS_MENU_TITLE":null,
+   "DLG_SETTINGS_D_REMOTE_01":"BitTorrent Fjärrstyrning",
+   "DLG_SETTINGS_D_REMOTE_02":"BitTorrent Fjärrstyrning ger dig ett lätt och mycket säkert sätt att komma åt BitTorrent via webbläsare.",
+   "DLG_SETTINGS_D_REMOTE_03":"Starta anslutningen nedan, välj datornamn och lösenord. Glöm inte att lämna datorn på.",
+   "DLG_SETTINGS_D_REMOTE_04":"Läs mer",
+   "DLG_SETTINGS_D_REMOTE_05":"Aktivera BitTorrent fjärrstyrning",
+   "DLG_SETTINGS_D_REMOTE_06":"Autentisiering",
+   "DLG_SETTINGS_D_REMOTE_07":"Användarnamn:",
+   "DLG_SETTINGS_D_REMOTE_08":"Lösenord:",
+   "DLG_SETTINGS_D_REMOTE_09":"Lägg till",
+   "ST_CAPT_REMOTE":"BitTorrent Fjärrstyrning"
+}

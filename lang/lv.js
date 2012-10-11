@@ -5,473 +5,474 @@ Use of this source code is governed by a BSD-style that can be
 found in the LICENSE file.
 */
 
-var LANG_STR = [
-	  "Torentu faili||*.torrent||Visi faili (*.*)||*.*||"
-	, "Labi"
-	, "Atcelt"
-	, "Lietot"
-	, "Jā"
-	, "Nē"
-	, "Aizvērt"
-	, "Atribūti"
-	, "Valoda"
-	, "Valoda:"
-	, "Privātums"
-	, "Automātiski pārbaudīt atjauninājumus"
-	, "Atjaunot uz Beta versijām"
-	, "Pārbaudot atjauninājumus, sūtīt anonīmu informāciju"
-	, "Lejupielādējot"
-	, "Piešķirt .!ut nepabeigtiem failiem"
-	, "Pārbaudīt failu atrašanās vietas"
-	, "Nepieļaut miega režīmu, ja ir aktīvi torenti"
-	, "Attēlojuma iestatījumi"
-	, "Veikt apstiprināšanu dzēšot torentus"
-	, "Veikt apstiprināšanu dzēšot trakerus"
-	, "Izejot rādīt apstiprinājuma logu"
-	, "Izmainīt saraksta fona krāsu"
-	, "Rādīt tekošo ātrumu galvenajā joslā"
-	, "Rādīt ātruma limitus statusa joslā"
-	, "Pievienojot torentus"
-	, "Neuzsākt automātisku failu vilkšanu"
-	, "Aktivizēt programmas logu"
-	, "Parādīt logu, kas parāda kādi faili atrodas torentā"
-	, "Dubultklikšķa īpašības"
-	, "Torentiem, kurus dala:"
-	, "Torentiem, kurus ņem:"
-	, "Novilkto failu atrašanās vieta"
-	, "Ievietot velkamos failus šeit:"
-	, "Pie manuālās pievienošanas rādīt logu"
-	, "Pabeigtos failus pārvietot uz:"
-	, "Pievienot torentu grupai"
-	, "Pārvietot tikai tos, kuri atrodas noklusētajā failu mapē"
-	, ".torrent failu atrašanās vieta"
-	, ".torrent failu saglabāšanas vieta:"
-	, "Kad pabeidz vilkt, pārvietot .torrent failu uz:"
-	, "Lejuplādēt .torrent failus no:"
-	, "Dzēst paņemtos .torrent failus"
-	, "Savienojuma porti"
-	, "Ports ienākošajiem savienojumiem:"
-	, "Nejaušs ports"
-	, "Mainīt portu pie katras palaišanas"
-	, "Ieslēgt UPnP portu kartēšanu"
-	, "Ieslēgt NAT-PMP portu kartēšanu"
-	, "Proxy serveris"
-	, "Tips:"
-	, "Proxy:"
-	, "Ports:"
-	, "Autentifikācija"
-	, "Lietotājs:"
-	, "Parole:"
-	, "Aizklāt hostu nosaukumus caur Proxy"
-	, "Izmantot proxy serveri p2p savienojumiem"
-	, "Pievienot Win Firewall izņēmumiem"
-	, "Proxy Privacy"
-	, "Disable all local DNS lookups"
-	, "Disable features that leak identifying information"
-	, "Disable connections unsupported by the proxy"
-	, "Kopējo ātrumu ierobežojumi"
-	, "Max augšupielādes ātrums (KB/s): [0: bezgalīgs]"
-	, "Automātiski"
-	, "Augšupielādes ātrums neko nevelkot (KB/s):"
-	, "Kopējais lejupielādes limits"
-	, "Max lejupielādes ātrums (KB/s): [0: bezgalīgs]"
-	, "Savienojumu skaits"
-	, "Maksimālais savienojumu skaits:"
-	, "Maksimālais lietotāju skaits uz vienu torentu:"
-	, "Augšupielādes slotu skaits uz vienu torentu:"
-	, "Piešķirt papildus slotus, ja augšupielādes ātrums < 90%"
-	, "Global Rate Limit Options"
-	, "Lietot ātruma limitus pārsūtīšanas virstēriņam"
-	, "Lietot ātruma limitus uTP savienojumiem"
-	, "Papildus BitTorrent funkcijas"
-	, "Ieslēgt DHT tīklu"
-	, "Pieprasīt no trakera scrape inform."
-	, "Ieslēgt DHT jaunajiem torentiem"
-	, "Ieslēgt iesaistīto apmaiņu"
-	, "Ieslēgt lokālo peeru reģistrēšanu"
-	, "Ierobežot lokālo peeru tīklu"
-	, "IP/PC, ziņojumu sūtīšanai trakerim:"
-	, "Protokola šifrēšana"
-	, "Izejošie:"
-	, "Atļaut visus ienākošos savienoj."
-	, "Ieslēgt tīkla pārvaldību [uTP]"
-	, "Ieslēgt UDP trakeru atbalstu"
-	, "Ieslēgt pārsūtījumu limitu"
-	, "Limitu iestatījumi"
-	, "Limit Type:"
-	, "Bandwidth Cap:"
-	, "Time Period (days):"
-	, "Izmantojuma vēsture izvēlētajam laika posmam:"
-	, "Augšupielāde:"
-	, "Lejupielāde:"
-	, "Augšupielāde + Lejupielāde:"
-	, "Laika posms:"
-	, "Pēdējās %d dienas"
-	, "Nodzēst vēsturi"
-	, "Rindas iestatījumi"
-	, "Maksimālais aktīvo torentu skaits (pabeigto vai velkamo):"
-	, "Maksimālais velkamo torentu skaits:"
-	, "Dalīt līdz [noklusētās vērtības]"
-	, "Minimum ratio (%):"
-	, "Minimum seeding time (minutes):"
-	, "Pabeigtajiem torentiem ir augstāka prioritāte par velkamajiem"
-	, "Kad ir sasniegta uzstādītā attiecība"
-	, "Ierobežot augšupielādi uz (KB/s): [0: apturēt]"
-	, "Ieslēgt plānotāju"
-	, "Plānotāja tabula"
-	, "Plānotāja iestatījumi"
-	, "Ierobežot augšupielādi (KB/s):"
-	, "Ierobežot lejupielādi (KB/s):"
-	, "Atslēgt DHT, kad izslēgts"
-	, "Ieslēgt Web interfeisu"
-	, "Autentificēšana"
-	, "Lietotājs:"
-	, "Parole:"
-	, "Ieslēgt Viesu kontu ar lietotāja vārdu:"
-	, "Savienojamība"
-	, "Cits savienojuma ports (pēc noklusējuma, bittorrent ports):"
-	, "Liegt piekļuvi sekojošām IP adresēm (vairākus ierakstus atdalīt ar komatu):"
-	, "Papildus iespējas [Nav ieteicams labot!]"
-	, "Vērtība:"
-	, "Patiess"
-	, "Nepatiess"
-	, "Labi"
-	, "Ātruma attēlošanas grafiks [Vērtības atdala ar komatu]"
-	, "Izmainīt esošo ātruma grafiku"
-	, "Augšupielādes ātrums:"
-	, "Lejupielādes ātrums:"
-	, "Patstāvīgās grupas [Vairākas grupas atdala ar | simbolu]"
-	, "Meklēšanas avoti [Formāts: nosaukums|adrese]"
-	, "Galvenie krātuves iestatījumi"
-	, "Krātuve saglabā un apstrādā regulāri izmantotos datus, tādējādi tiek mazāk noslogots cietais disks. Parasti µTorrent pats nosaka nepieciešamo krātuves izmēru (32MB), taču ja jūs vēlaties, tad variet manuāli izmainīt šos iestatījumus."
-	, "Dzēst automātisko krātuves izmēru un izvēlēties savu (MB):"
-	, "Atbrīvot atmiņu, kad tā nav vajadzīga krātuvei"
-	, "Papildus krātuves iestatījumi"
-	, "Saglabāt krātuvē datus, kas tiek ierakstīti diskā"
-	, "Ik pēc 2 minūtēm izņemt neizmantotās daļiņas"
-	, "Automātiski izņemt pabeigtās daļiņas"
-	, "Saglabāt no diska veiktos nolasījumus"
-	, "Izslēgt diska nolasījumu saglabāšanu pie zema lejupielādes ātruma"
-	, "Izņemt no krātuves neizmantotās daļiņas"
-	, "Palielināt krātuves izmēru, kad tā tiek pārkārtota"
-	, "Atslēgt Windows caching, kad disks raksta"
-	, "Atslēgt Windows caching, kad disks lasa"
-	, "Run Program"
-	, "Run this program when a torrent finishes:"
-	, "Run this program when a torrent changes state:"
-	, "You can use these commands:\r\n%F - Name of downloaded file (for single file torrents)\r\n%D - Directory where files are saved\r\n%N - Title of torrent\r\n%S - State of torrent\r\n%L - Label\r\n%T - Tracker\r\n%M - Status message string (same as status column)\r\n%I - hex encoded info-hash\r\n\r\nState is a combination of:\r\nstarted = 1, checking = 2, start-after-check = 4,\r\nchecked = 8, error = 16, paused = 32, auto = 64, loaded = 128"
-	, "Torenta rekvizīti"
-	, "Trakeri (atdalīt ar tukšu rindu)"
-	, "Līnijas iestatījumi"
-	, "Max augšupielādes ātrums (KB/s): [0: neierobežots]"
-	, "Max lejupielādes ātrums (KB/s): [0: neierobežots]"
-	, "Augšupielādes slotu skaits: [0: pēc noklusējuma]"
-	, "Dalīt līdz"
-	, "Ignorēt noklusētos iestatījumus"
-	, "Minimum ratio (%):"
-	, "Minimum seeding time (minutes):"
-	, "Citi iestatījumi"
-	, "Ātrā dalīšana"
-	, "Ieslēgt DHT"
-	, "Iesaistīto apmaiņa"
-	, "Kanāls"
-	, "Kanāla adrese:"
-	, "Nosaukums:"
-	, "Papildus"
-	, "Neuzsākt automātisku failu lejupielādi"
-	, "Automātiski lejupielādēt failus, kas parādās kanālā"
-	, "Izmantot gudro epizožu filtru"
-	, "Kanāli||Izlase||Vēsture||"
-	, "All Feeds"
-	, "Filtra uzstādījumi"
-	, "Nosaukums:"
-	, "Filtrēt:"
-	, "Izņemot:"
-	, "Saglabāt:"
-	, "Kanāls:"
-	, "Kvalitāte:"
-	, "Epizodes Nr.: [piem. 1x12-14]"
-	, "Filtrs sakrīt ar oriģinālo nosaukumu"
-	, "Neuzsākt automātisku lejupielādi"
-	, "Gudrais ep. filtrs"
-	, "Lejupielādei piešķirt augstāko prior."
-	, "Minimālais intervāls:"
-	, "Grupa jaunajiem torentiem"
-	, "Pievienot RSS kanālu..."
-	, "Labot kanālu..."
-	, "Izslēgt kanālu"
-	, "Ieslēgt kanālu"
-	, "Atjaunot kanālu"
-	, "Dzēst kanālu"
-	, "Lejupielādēt"
-	, "Atvērt adresi pārlūkā"
-	, "Pievienot izlasei"
-	, "Pievienot"
-	, "Dzēst"
-	, "Visi"
-	, "(Visi)"
-	, "(vienmēr sakrist)||(sakrist vienreiz)||12 stundas||1 diena||2 dienas||3 dienas||1 nedēļa||2 nedēļas||3 nedēļas||1 mēnesis||"
-	, "Pievienot RSS kanālu"
-	, "Labot RSS kanālu"
-	, "Remove RSS Feed(s)"
-	, "Really delete the %d selected RSS Feeds?"
-	, "Vai tiešām vēlaties dzēst RSS kanālu \"%s\"?"
-	, "Pilns nosaukums"
-	, "Nosaukums"
-	, "Epizode"
-	, "Formāts"
-	, "Kodeks"
-	, "Date"
-	, "Kanāls"
-	, "Adrese"
-	, "IP"
-	, "Ports"
-	, "Klients"
-	, "Karogi"
-	, "%"
-	, "Svarīgums"
-	, "Lejupiel. ātrums"
-	, "Augšupiel. ātrums"
-	, "Pieprasījumi"
-	, "Gaidīts"
-	, "Augšupielādēts"
-	, "Lejupielādēts"
-	, "Hasherr"
-	, "Iesaistīto att."
-	, "Maks. augšupiel."
-	, "Maks. lejupiel."
-	, "Ierindots"
-	, "Neaktīvs"
-	, "Pabeigts"
-	, "Pirmā daļiņa"
-	, "Nosaukums"
-	, "Daļiņu skaits"
-	, "%"
-	, "Prioritāte"
-	, "Izmērs"
-	, "izlaist"
-	, "zema"
-	, "normāla"
-	, "augsta"
-	, "Novilkts:"
-	, "Izdalīts:"
-	, "Devēji:"
-	, "Atlicis:"
-	, "Lejupiel. ātrums:"
-	, "Augšup. ātrums:"
-	, "Iesaistītie:"
-	, "A/L attiecība:"
-	, "Saglabāt kā:"
-	, "Hash:"
-	, "Vispārīgi"
-	, "Pārsūtīti"
-	, "%d no %d ir savienoti (%d gaida)"
-	, "L:%s A:%s - %s"
-	, "Kopēt"
-	, "Nodzēst"
-	, "Neierobežots"
-	, "Aizklāt IP"
-	, "Get File(s)"
-	, "Nevilkt"
-	, "Augsta prioritāte"
-	, "Zema prioritāte"
-	, "Normāla prioritāte"
-	, "Kopēt Magnet-URI"
-	, "Dzēst datus"
-	, "Dzēst .torrent failu"
-	, "Dzēst .torrent un datus"
-	, "Piespiedu pārbaude"
-	, "Piespiedu sākšana"
-	, "Grupa"
-	, "Pauze"
-	, "Rekvizīti"
-	, "Pārvietot lejup"
-	, "Pārvietot augšup"
-	, "Izmest"
-	, "Izmest un"
-	, "Sākt"
-	, "Apturēt"
-	, "Aktīvi"
-	, "Visi"
-	, "Pabeigti"
-	, "Lejupielādē"
-	, "Neaktīvi"
-	, "Bez grupas"
-	, "||Pieej.||Pieejamība"
-	, "Pievienots"
-	, "Pabeigts"
-	, "Izpildīti"
-	, "Izdalīti"
-	, "Lejupiel. ātrums"
-	, "Atl. laiks"
-	, "Grupa"
-	, "Nosaukums"
-	, "#"
-	, "Iesaistītie"
-	, "Atlicis"
-	, "Devēji"
-	, "Devēji/Iesaistītie"
-	, "Attiecība"
-	, "Izmērs"
-	, "Adrese"
-	, "Statuss"
-	, "Atdots"
-	, "Augšupiel. ātrums"
-	, "Vai tiešām vēlaties dzēst atzīmētos torentus un visus ar tiem saistītos datus?"
-	, "Vai tiešām vēlaties dzēst atzīmēto torentu un visus ar to saistītos datus?"
-	, "Vai tiešām vēlaties dzēst %d atzīmētos torentus?"
-	, "Vai tiešām vēlaties dzēst atzīmēto torentu?"
-	, "Vai tiešām vēlaties dzēst RSS filtru \"%s\"?"
-	, "Pārbaudīti %:.1d%%"
-	, "Ņem"
-	, "Kļūda: %s"
-	, "Pabeigts"
-	, "Nopauzēts"
-	, "Sakārtots"
-	, "Gaida rindā"
-	, "Dod"
-	, "Apturēts"
-	, "Izveidot grupu"
-	, "Ievadiet grupas nosaukumu izvēlētajiem torentiem:"
-	, "Jauna grupa..."
-	, "Izdzēst grupu"
-	, "Galvenā||Trakeri||Iesaistītie||Daļiņas||Faili||Ātrums||Žurnāls||"
-	, "Pievienot torentu"
-	, "Pievienot torentu pēc adreses"
-	, "Pauze"
-	, "Atribūti"
-	, "Pārvietot lejup"
-	, "Pārvietot augšup"
-	, "Izmest"
-	, "RSS lejuplādētājs"
-	, "Sākt"
-	, "Apturēt"
-	, "Fails"
-	, "Pievienot torentu..."
-	, "Pievienot torentu pēc adreses..."
-	, "Iestatījumi"
-	, "Konfigurācija"
-	, "Rādīt kategoriju sarakstu"
-	, "Rādīt detalizētu informāciju"
-	, "Rādīt statusa joslu"
-	, "Rādīt rīkjoslu"
-	, "Rīkjoslas ikonas"
-	, "Palīdzība"
-	, "µTorrent mājas lapa"
-	, "µTorrent forums"
-	, "Send WebUI Feedback"
-	, "About µTorrent WebUI"
-	, "Torenti"
-	, "Nopauzēt visus torentus"
-	, "Palaist visus torentus"
-	, "D: %s%z/s"
-	, " L: %z/s"
-	, " O: %z/s"
-	, " T: %Z"
-	, "U: %s%z/s"
-	, "B"
-	, "EB"
-	, "GB"
-	, "KB"
-	, "MB"
-	, "PB"
-	, "TB"
-	, "Papildus"
-	, "Joslas platums"
-	, "Savienojumi"
-	, "Diska krātuve"
-	, "Mapes"
-	, "Galvenā"
-	, "Plānotājs"
-	, "Rinda"
-	, "UI ekstras"
-	, "UI iestatījumi"
-	, "BitTorrent"
-	, "Web UI"
-	, "Pārsūtījumu limits"
-	, "Run Program"
-	, "Rādīt rekvizītus||Sākt/Apturēt||Atvērt mapi||Rādīt lejupielādes lodziņu||"
-	, "Izslēgts||Ieslēgts||Piespiedu||"
-	, "(tukšs)||Socks4||Socks5||HTTPS||HTTP||"
-	, "Augšupielāde||Lejupielāde||Augšupielāde + Lejupielāde||"
-	, "MB||GB||"
-	, "1||2||5||7||10||14||15||20||21||28||30||31||"
-	, "Nosaukums"
-	, "Vienība"
-	, "Pir||Otr||Tre||Cet||Pie||Ses||Svē||"
-	, "Pirmdiena||Otrdiena||Trešdiena||Ceturtdiena||Piektdiena||Sestdiena||Svētdiena||"
-	, "Max ātrums"
-	, "Max ātrums - Izmanto maksimālos  tīkla ātruma limitus"
-	, "Limitēts"
-	, "Limitēts - Izmanto plānotāja norādītos tīkla ātruma limitus"
-	, "Tikai dod"
-	, "Tikai dod - Tikai augšupielādē failus (ieskaitot nepabeigtos)"
-	, "Izslēgts"
-	, "Izslēgts - Aptur visus torentus"
-	, "<= %d stundas"
-	, "(Ignorēt)"
-	, "<= %d minūtes"
-	, "%dd %dh"
-	, "%dh %dm"
-	, "%dm %ds"
-	, "%ds"
-	, "%dw %dd"
-	, "%dy %dw",
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	null,
-	"BitTorrent tālvadība",
-	"BitTorrent tālvadība sniedz vienkāršu un ļoti drošu piekļuves veidu jūsu klientam, izmantojot interneta pārlūku.",
-	"Vienkārši iespējojiet zemāk redzamo savienojumu, izvēlieties datora vārdu, paroli un atcerieties atstāt šo datoru ieslēgtu.",
-	"Uzziniet vairāk",
-	"Ieslēgt BitTorrent tālvadības piekļuvi",
-	"Autentifikācija",
-	"Lietotājvārds:",
-	"Parole:",
-	"Iesūtīt",
-	"BitTorrent tālvadība"
-];
+var LANG_STR =
+{
+   "CT_MASK1":"Torentu faili||*.torrent||Visi faili (*.*)||*.*||",
+   "DLG_BTN_OK":"Labi",
+   "DLG_BTN_CANCEL":"Atcelt",
+   "DLG_BTN_APPLY":"Lietot",
+   "DLG_BTN_YES":"Jā",
+   "DLG_BTN_NO":"Nē",
+   "DLG_BTN_CLOSE":"Aizvērt",
+   "DLG_SETTINGS_00":"Atribūti",
+   "DLG_SETTINGS_1_GENERAL_01":"Valoda",
+   "DLG_SETTINGS_1_GENERAL_02":"Valoda:",
+   "DLG_SETTINGS_1_GENERAL_10":"Privātums",
+   "DLG_SETTINGS_1_GENERAL_11":"Automātiski pārbaudīt atjauninājumus",
+   "DLG_SETTINGS_1_GENERAL_12":"Atjaunot uz Beta versijām",
+   "DLG_SETTINGS_1_GENERAL_13":"Pārbaudot atjauninājumus, sūtīt anonīmu informāciju",
+   "DLG_SETTINGS_1_GENERAL_17":"Lejupielādējot",
+   "DLG_SETTINGS_1_GENERAL_18":"Piešķirt .!ut nepabeigtiem failiem",
+   "DLG_SETTINGS_1_GENERAL_19":"Pārbaudīt failu atrašanās vietas",
+   "DLG_SETTINGS_1_GENERAL_20":"Nepieļaut miega režīmu, ja ir aktīvi torenti",
+   "DLG_SETTINGS_2_UI_01":"Attēlojuma iestatījumi",
+   "DLG_SETTINGS_2_UI_02":"Veikt apstiprināšanu dzēšot torentus",
+   "DLG_SETTINGS_2_UI_03":"Veikt apstiprināšanu dzēšot trakerus",
+   "DLG_SETTINGS_2_UI_04":"Izejot rādīt apstiprinājuma logu",
+   "DLG_SETTINGS_2_UI_05":"Izmainīt saraksta fona krāsu",
+   "DLG_SETTINGS_2_UI_06":"Rādīt tekošo ātrumu galvenajā joslā",
+   "DLG_SETTINGS_2_UI_07":"Rādīt ātruma limitus statusa joslā",
+   "DLG_SETTINGS_2_UI_15":"Pievienojot torentus",
+   "DLG_SETTINGS_2_UI_16":"Neuzsākt automātisku failu vilkšanu",
+   "DLG_SETTINGS_2_UI_17":"Aktivizēt programmas logu",
+   "DLG_SETTINGS_2_UI_18":"Parādīt logu, kas parāda kādi faili atrodas torentā",
+   "DLG_SETTINGS_2_UI_19":"Dubultklikšķa īpašības",
+   "DLG_SETTINGS_2_UI_20":"Torentiem, kurus dala:",
+   "DLG_SETTINGS_2_UI_22":"Torentiem, kurus ņem:",
+   "DLG_SETTINGS_3_PATHS_01":"Novilkto failu atrašanās vieta",
+   "DLG_SETTINGS_3_PATHS_02":"Ievietot velkamos failus šeit:",
+   "DLG_SETTINGS_3_PATHS_03":"Pie manuālās pievienošanas rādīt logu",
+   "DLG_SETTINGS_3_PATHS_06":"Pabeigtos failus pārvietot uz:",
+   "DLG_SETTINGS_3_PATHS_07":"Pievienot torentu grupai",
+   "DLG_SETTINGS_3_PATHS_10":"Pārvietot tikai tos, kuri atrodas noklusētajā failu mapē",
+   "DLG_SETTINGS_3_PATHS_11":".torrent failu atrašanās vieta",
+   "DLG_SETTINGS_3_PATHS_12":".torrent failu saglabāšanas vieta:",
+   "DLG_SETTINGS_3_PATHS_15":"Kad pabeidz vilkt, pārvietot .torrent failu uz:",
+   "DLG_SETTINGS_3_PATHS_18":"Lejuplādēt .torrent failus no:",
+   "DLG_SETTINGS_3_PATHS_19":"Dzēst paņemtos .torrent failus",
+   "DLG_SETTINGS_4_CONN_01":"Savienojuma porti",
+   "DLG_SETTINGS_4_CONN_02":"Ports ienākošajiem savienojumiem:",
+   "DLG_SETTINGS_4_CONN_04":"Nejaušs ports",
+   "DLG_SETTINGS_4_CONN_05":"Mainīt portu pie katras palaišanas",
+   "DLG_SETTINGS_4_CONN_06":"Ieslēgt UPnP portu kartēšanu",
+   "DLG_SETTINGS_4_CONN_07":"Ieslēgt NAT-PMP portu kartēšanu",
+   "DLG_SETTINGS_4_CONN_08":"Proxy serveris",
+   "DLG_SETTINGS_4_CONN_09":"Tips:",
+   "DLG_SETTINGS_4_CONN_11":"Proxy:",
+   "DLG_SETTINGS_4_CONN_13":"Ports:",
+   "DLG_SETTINGS_4_CONN_15":"Autentifikācija",
+   "DLG_SETTINGS_4_CONN_16":"Lietotājs:",
+   "DLG_SETTINGS_4_CONN_18":"Parole:",
+   "DLG_SETTINGS_4_CONN_19":"Aizklāt hostu nosaukumus caur Proxy",
+   "DLG_SETTINGS_4_CONN_20":"Izmantot proxy serveri p2p savienojumiem",
+   "DLG_SETTINGS_4_CONN_21":"Pievienot Win Firewall izņēmumiem",
+   "DLG_SETTINGS_4_CONN_22":"Proxy Privacy",
+   "DLG_SETTINGS_4_CONN_23":"Disable all local DNS lookups",
+   "DLG_SETTINGS_4_CONN_24":"Disable features that leak identifying information",
+   "DLG_SETTINGS_4_CONN_25":"Disable connections unsupported by the proxy",
+   "DLG_SETTINGS_5_BANDWIDTH_01":"Kopējo ātrumu ierobežojumi",
+   "DLG_SETTINGS_5_BANDWIDTH_02":"Max augšupielādes ātrums (KB/s): [0: bezgalīgs]",
+   "DLG_SETTINGS_5_BANDWIDTH_03":"Automātiski",
+   "DLG_SETTINGS_5_BANDWIDTH_05":"Augšupielādes ātrums neko nevelkot (KB/s):",
+   "DLG_SETTINGS_5_BANDWIDTH_07":"Kopējais lejupielādes limits",
+   "DLG_SETTINGS_5_BANDWIDTH_08":"Max lejupielādes ātrums (KB/s): [0: bezgalīgs]",
+   "DLG_SETTINGS_5_BANDWIDTH_10":"Savienojumu skaits",
+   "DLG_SETTINGS_5_BANDWIDTH_11":"Maksimālais savienojumu skaits:",
+   "DLG_SETTINGS_5_BANDWIDTH_14":"Maksimālais lietotāju skaits uz vienu torentu:",
+   "DLG_SETTINGS_5_BANDWIDTH_15":"Augšupielādes slotu skaits uz vienu torentu:",
+   "DLG_SETTINGS_5_BANDWIDTH_17":"Piešķirt papildus slotus, ja augšupielādes ātrums < 90%",
+   "DLG_SETTINGS_5_BANDWIDTH_18":"Global Rate Limit Options",
+   "DLG_SETTINGS_5_BANDWIDTH_19":"Lietot ātruma limitus pārsūtīšanas virstēriņam",
+   "DLG_SETTINGS_5_BANDWIDTH_20":"Lietot ātruma limitus uTP savienojumiem",
+   "DLG_SETTINGS_6_BITTORRENT_01":"Papildus BitTorrent funkcijas",
+   "DLG_SETTINGS_6_BITTORRENT_02":"Ieslēgt DHT tīklu",
+   "DLG_SETTINGS_6_BITTORRENT_03":"Pieprasīt no trakera scrape inform.",
+   "DLG_SETTINGS_6_BITTORRENT_04":"Ieslēgt DHT jaunajiem torentiem",
+   "DLG_SETTINGS_6_BITTORRENT_05":"Ieslēgt iesaistīto apmaiņu",
+   "DLG_SETTINGS_6_BITTORRENT_06":"Ieslēgt lokālo peeru reģistrēšanu",
+   "DLG_SETTINGS_6_BITTORRENT_07":"Ierobežot lokālo peeru tīklu",
+   "DLG_SETTINGS_6_BITTORRENT_08":"IP/PC, ziņojumu sūtīšanai trakerim:",
+   "DLG_SETTINGS_6_BITTORRENT_10":"Protokola šifrēšana",
+   "DLG_SETTINGS_6_BITTORRENT_11":"Izejošie:",
+   "DLG_SETTINGS_6_BITTORRENT_13":"Atļaut visus ienākošos savienoj.",
+   "DLG_SETTINGS_6_BITTORRENT_14":"Ieslēgt tīkla pārvaldību [uTP]",
+   "DLG_SETTINGS_6_BITTORRENT_15":"Ieslēgt UDP trakeru atbalstu",
+   "DLG_SETTINGS_7_TRANSFERCAP_01":"Ieslēgt pārsūtījumu limitu",
+   "DLG_SETTINGS_7_TRANSFERCAP_02":"Limitu iestatījumi",
+   "DLG_SETTINGS_7_TRANSFERCAP_03":"Limit Type:",
+   "DLG_SETTINGS_7_TRANSFERCAP_04":"Bandwidth Cap:",
+   "DLG_SETTINGS_7_TRANSFERCAP_05":"Time Period (days):",
+   "DLG_SETTINGS_7_TRANSFERCAP_06":"Izmantojuma vēsture izvēlētajam laika posmam:",
+   "DLG_SETTINGS_7_TRANSFERCAP_07":"Augšupielāde:",
+   "DLG_SETTINGS_7_TRANSFERCAP_08":"Lejupielāde:",
+   "DLG_SETTINGS_7_TRANSFERCAP_09":"Augšupielāde + Lejupielāde:",
+   "DLG_SETTINGS_7_TRANSFERCAP_10":"Laika posms:",
+   "DLG_SETTINGS_7_TRANSFERCAP_11":"Pēdējās %d dienas",
+   "DLG_SETTINGS_7_TRANSFERCAP_12":"Nodzēst vēsturi",
+   "DLG_SETTINGS_8_QUEUEING_01":"Rindas iestatījumi",
+   "DLG_SETTINGS_8_QUEUEING_02":"Maksimālais aktīvo torentu skaits (pabeigto vai velkamo):",
+   "DLG_SETTINGS_8_QUEUEING_04":"Maksimālais velkamo torentu skaits:",
+   "DLG_SETTINGS_8_QUEUEING_06":"Dalīt līdz [noklusētās vērtības]",
+   "DLG_SETTINGS_8_QUEUEING_07":"Minimum ratio (%):",
+   "DLG_SETTINGS_8_QUEUEING_09":"Minimum seeding time (minutes):",
+   "DLG_SETTINGS_8_QUEUEING_11":"Pabeigtajiem torentiem ir augstāka prioritāte par velkamajiem",
+   "DLG_SETTINGS_8_QUEUEING_12":"Kad ir sasniegta uzstādītā attiecība",
+   "DLG_SETTINGS_8_QUEUEING_13":"Ierobežot augšupielādi uz (KB/s): [0: apturēt]",
+   "DLG_SETTINGS_9_SCHEDULER_01":"Ieslēgt plānotāju",
+   "DLG_SETTINGS_9_SCHEDULER_02":"Plānotāja tabula",
+   "DLG_SETTINGS_9_SCHEDULER_04":"Plānotāja iestatījumi",
+   "DLG_SETTINGS_9_SCHEDULER_05":"Ierobežot augšupielādi (KB/s):",
+   "DLG_SETTINGS_9_SCHEDULER_07":"Ierobežot lejupielādi (KB/s):",
+   "DLG_SETTINGS_9_SCHEDULER_09":"Atslēgt DHT, kad izslēgts",
+   "DLG_SETTINGS_9_WEBUI_01":"Ieslēgt Web interfeisu",
+   "DLG_SETTINGS_9_WEBUI_02":"Autentificēšana",
+   "DLG_SETTINGS_9_WEBUI_03":"Lietotājs:",
+   "DLG_SETTINGS_9_WEBUI_05":"Parole:",
+   "DLG_SETTINGS_9_WEBUI_07":"Ieslēgt Viesu kontu ar lietotāja vārdu:",
+   "DLG_SETTINGS_9_WEBUI_09":"Savienojamība",
+   "DLG_SETTINGS_9_WEBUI_10":"Cits savienojuma ports (pēc noklusējuma, bittorrent ports):",
+   "DLG_SETTINGS_9_WEBUI_12":"Liegt piekļuvi sekojošām IP adresēm (vairākus ierakstus atdalīt ar komatu):",
+   "DLG_SETTINGS_A_ADVANCED_01":"Papildus iespējas [Nav ieteicams labot!]",
+   "DLG_SETTINGS_A_ADVANCED_02":"Vērtība:",
+   "DLG_SETTINGS_A_ADVANCED_03":"Patiess",
+   "DLG_SETTINGS_A_ADVANCED_04":"Nepatiess",
+   "DLG_SETTINGS_A_ADVANCED_05":"Labi",
+   "DLG_SETTINGS_B_ADV_UI_01":"Ātruma attēlošanas grafiks [Vērtības atdala ar komatu]",
+   "DLG_SETTINGS_B_ADV_UI_02":"Izmainīt esošo ātruma grafiku",
+   "DLG_SETTINGS_B_ADV_UI_03":"Augšupielādes ātrums:",
+   "DLG_SETTINGS_B_ADV_UI_05":"Lejupielādes ātrums:",
+   "DLG_SETTINGS_B_ADV_UI_07":"Patstāvīgās grupas [Vairākas grupas atdala ar | simbolu]",
+   "DLG_SETTINGS_B_ADV_UI_08":"Meklēšanas avoti [Formāts: nosaukums|adrese]",
+   "DLG_SETTINGS_C_ADV_CACHE_01":"Galvenie krātuves iestatījumi",
+   "DLG_SETTINGS_C_ADV_CACHE_02":"Krātuve saglabā un apstrādā regulāri izmantotos datus, tādējādi tiek mazāk noslogots cietais disks. Parasti µTorrent pats nosaka nepieciešamo krātuves izmēru (32MB), taču ja jūs vēlaties, tad variet manuāli izmainīt šos iestatījumus.",
+   "DLG_SETTINGS_C_ADV_CACHE_03":"Dzēst automātisko krātuves izmēru un izvēlēties savu (MB):",
+   "DLG_SETTINGS_C_ADV_CACHE_05":"Atbrīvot atmiņu, kad tā nav vajadzīga krātuvei",
+   "DLG_SETTINGS_C_ADV_CACHE_06":"Papildus krātuves iestatījumi",
+   "DLG_SETTINGS_C_ADV_CACHE_07":"Saglabāt krātuvē datus, kas tiek ierakstīti diskā",
+   "DLG_SETTINGS_C_ADV_CACHE_08":"Ik pēc 2 minūtēm izņemt neizmantotās daļiņas",
+   "DLG_SETTINGS_C_ADV_CACHE_09":"Automātiski izņemt pabeigtās daļiņas",
+   "DLG_SETTINGS_C_ADV_CACHE_10":"Saglabāt no diska veiktos nolasījumus",
+   "DLG_SETTINGS_C_ADV_CACHE_11":"Izslēgt diska nolasījumu saglabāšanu pie zema lejupielādes ātruma",
+   "DLG_SETTINGS_C_ADV_CACHE_12":"Izņemt no krātuves neizmantotās daļiņas",
+   "DLG_SETTINGS_C_ADV_CACHE_13":"Palielināt krātuves izmēru, kad tā tiek pārkārtota",
+   "DLG_SETTINGS_C_ADV_CACHE_14":"Atslēgt Windows caching, kad disks raksta",
+   "DLG_SETTINGS_C_ADV_CACHE_15":"Atslēgt Windows caching, kad disks lasa",
+   "DLG_SETTINGS_C_ADV_RUN_01":"Run Program",
+   "DLG_SETTINGS_C_ADV_RUN_02":"Run this program when a torrent finishes:",
+   "DLG_SETTINGS_C_ADV_RUN_04":"Run this program when a torrent changes state:",
+   "DLG_SETTINGS_C_ADV_RUN_06":"You can use these commands:\r\n%F - Name of downloaded file (for single file torrents)\r\n%D - Directory where files are saved\r\n%N - Title of torrent\r\n%S - State of torrent\r\n%L - Label\r\n%T - Tracker\r\n%M - Status message string (same as status column)\r\n%I - hex encoded info-hash\r\n\r\nState is a combination of:\r\nstarted = 1, checking = 2, start-after-check = 4,\r\nchecked = 8, error = 16, paused = 32, auto = 64, loaded = 128",
+   "DLG_TORRENTPROP_00":"Torenta rekvizīti",
+   "DLG_TORRENTPROP_1_GEN_01":"Trakeri (atdalīt ar tukšu rindu)",
+   "DLG_TORRENTPROP_1_GEN_03":"Līnijas iestatījumi",
+   "DLG_TORRENTPROP_1_GEN_04":"Max augšupielādes ātrums (KB/s): [0: neierobežots]",
+   "DLG_TORRENTPROP_1_GEN_06":"Max lejupielādes ātrums (KB/s): [0: neierobežots]",
+   "DLG_TORRENTPROP_1_GEN_08":"Augšupielādes slotu skaits: [0: pēc noklusējuma]",
+   "DLG_TORRENTPROP_1_GEN_10":"Dalīt līdz",
+   "DLG_TORRENTPROP_1_GEN_11":"Ignorēt noklusētos iestatījumus",
+   "DLG_TORRENTPROP_1_GEN_12":"Minimum ratio (%):",
+   "DLG_TORRENTPROP_1_GEN_14":"Minimum seeding time (minutes):",
+   "DLG_TORRENTPROP_1_GEN_16":"Citi iestatījumi",
+   "DLG_TORRENTPROP_1_GEN_17":"Ātrā dalīšana",
+   "DLG_TORRENTPROP_1_GEN_18":"Ieslēgt DHT",
+   "DLG_TORRENTPROP_1_GEN_19":"Iesaistīto apmaiņa",
+   "DLG_ADDEDITRSSFEED_03":"Kanāls",
+   "DLG_ADDEDITRSSFEED_04":"Kanāla adrese:",
+   "DLG_ADDEDITRSSFEED_05":"Nosaukums:",
+   "DLG_ADDEDITRSSFEED_06":"Papildus",
+   "DLG_ADDEDITRSSFEED_07":"Neuzsākt automātisku failu lejupielādi",
+   "DLG_ADDEDITRSSFEED_08":"Automātiski lejupielādēt failus, kas parādās kanālā",
+   "DLG_ADDEDITRSSFEED_09":"Izmantot gudro epizožu filtru",
+   "DLG_RSSDOWNLOADER_02":"Kanāli||Izlase||Vēsture||",
+   "DLG_RSSDOWNLOADER_03":"All Feeds",
+   "DLG_RSSDOWNLOADER_04":"Filtra uzstādījumi",
+   "DLG_RSSDOWNLOADER_05":"Nosaukums:",
+   "DLG_RSSDOWNLOADER_06":"Filtrēt:",
+   "DLG_RSSDOWNLOADER_07":"Izņemot:",
+   "DLG_RSSDOWNLOADER_08":"Saglabāt:",
+   "DLG_RSSDOWNLOADER_09":"Kanāls:",
+   "DLG_RSSDOWNLOADER_10":"Kvalitāte:",
+   "DLG_RSSDOWNLOADER_11":"Epizodes Nr.: [piem. 1x12-14]",
+   "DLG_RSSDOWNLOADER_12":"Filtrs sakrīt ar oriģinālo nosaukumu",
+   "DLG_RSSDOWNLOADER_13":"Neuzsākt automātisku lejupielādi",
+   "DLG_RSSDOWNLOADER_14":"Gudrais ep. filtrs",
+   "DLG_RSSDOWNLOADER_15":"Lejupielādei piešķirt augstāko prior.",
+   "DLG_RSSDOWNLOADER_16":"Minimālais intervāls:",
+   "DLG_RSSDOWNLOADER_17":"Grupa jaunajiem torentiem",
+   "DLG_RSSDOWNLOADER_18":"Pievienot RSS kanālu...",
+   "DLG_RSSDOWNLOADER_19":"Labot kanālu...",
+   "DLG_RSSDOWNLOADER_20":"Izslēgt kanālu",
+   "DLG_RSSDOWNLOADER_21":"Ieslēgt kanālu",
+   "DLG_RSSDOWNLOADER_22":"Atjaunot kanālu",
+   "DLG_RSSDOWNLOADER_23":"Dzēst kanālu",
+   "DLG_RSSDOWNLOADER_24":"Lejupielādēt",
+   "DLG_RSSDOWNLOADER_25":"Atvērt adresi pārlūkā",
+   "DLG_RSSDOWNLOADER_26":"Pievienot izlasei",
+   "DLG_RSSDOWNLOADER_27":"Pievienot",
+   "DLG_RSSDOWNLOADER_28":"Dzēst",
+   "DLG_RSSDOWNLOADER_29":"Visi",
+   "DLG_RSSDOWNLOADER_30":"(Visi)",
+   "DLG_RSSDOWNLOADER_31":"(vienmēr sakrist)||(sakrist vienreiz)||12 stundas||1 diena||2 dienas||3 dienas||1 nedēļa||2 nedēļas||3 nedēļas||1 mēnesis||",
+   "DLG_RSSDOWNLOADER_32":"Pievienot RSS kanālu",
+   "DLG_RSSDOWNLOADER_33":"Labot RSS kanālu",
+   "DLG_RSSDOWNLOADER_34":"Remove RSS Feed(s)",
+   "DLG_RSSDOWNLOADER_35":"Really delete the %d selected RSS Feeds?",
+   "DLG_RSSDOWNLOADER_36":"Vai tiešām vēlaties dzēst RSS kanālu \"%s\"?",
+   "FEED_COL_FULLNAME":"Pilns nosaukums",
+   "FEED_COL_NAME":"Nosaukums",
+   "FEED_COL_EPISODE":"Epizode",
+   "FEED_COL_FORMAT":"Formāts",
+   "FEED_COL_CODEC":"Kodeks",
+   "FEED_COL_DATE":"Date",
+   "FEED_COL_FEED":"Kanāls",
+   "FEED_COL_URL":"Adrese",
+   "PRS_COL_IP":"IP",
+   "PRS_COL_PORT":"Ports",
+   "PRS_COL_CLIENT":"Klients",
+   "PRS_COL_FLAGS":"Karogi",
+   "PRS_COL_PCNT":"%",
+   "PRS_COL_RELEVANCE":"Svarīgums",
+   "PRS_COL_DOWNSPEED":"Lejupiel. ātrums",
+   "PRS_COL_UPSPEED":"Augšupiel. ātrums",
+   "PRS_COL_REQS":"Pieprasījumi",
+   "PRS_COL_WAITED":"Gaidīts",
+   "PRS_COL_UPLOADED":"Augšupielādēts",
+   "PRS_COL_DOWNLOADED":"Lejupielādēts",
+   "PRS_COL_HASHERR":"Hasherr",
+   "PRS_COL_PEERDL":"Iesaistīto att.",
+   "PRS_COL_MAXUP":"Maks. augšupiel.",
+   "PRS_COL_MAXDOWN":"Maks. lejupiel.",
+   "PRS_COL_QUEUED":"Ierindots",
+   "PRS_COL_INACTIVE":"Neaktīvs",
+   "FI_COL_DONE":"Pabeigts",
+   "FI_COL_FIRSTPC":"Pirmā daļiņa",
+   "FI_COL_NAME":"Nosaukums",
+   "FI_COL_NUMPCS":"Daļiņu skaits",
+   "FI_COL_PCNT":"%",
+   "FI_COL_PRIO":"Prioritāte",
+   "FI_COL_SIZE":"Izmērs",
+   "FI_PRI0":"izlaist",
+   "FI_PRI1":"zema",
+   "FI_PRI2":"normāla",
+   "FI_PRI3":"augsta",
+   "GN_TP_01":"Novilkts:",
+   "GN_TP_02":"Izdalīts:",
+   "GN_TP_03":"Devēji:",
+   "GN_TP_04":"Atlicis:",
+   "GN_TP_05":"Lejupiel. ātrums:",
+   "GN_TP_06":"Augšup. ātrums:",
+   "GN_TP_07":"Iesaistītie:",
+   "GN_TP_08":"A/L attiecība:",
+   "GN_TP_09":"Saglabāt kā:",
+   "GN_TP_10":"Hash:",
+   "GN_GENERAL":"Vispārīgi",
+   "GN_TRANSFER":"Pārsūtīti",
+   "GN_XCONN":"%d no %d ir savienoti (%d gaida)",
+   "MAIN_TITLEBAR_SPEED":"L:%s A:%s - %s",
+   "MENU_COPY":"Kopēt",
+   "MENU_RESET":"Nodzēst",
+   "MENU_UNLIMITED":"Neierobežots",
+   "MP_RESOLVE_IPS":"Aizklāt IP",
+   "MF_GETFILE":"Get File(s)",
+   "MF_DONT":"Nevilkt",
+   "MF_HIGH":"Augsta prioritāte",
+   "MF_LOW":"Zema prioritāte",
+   "MF_NORMAL":"Normāla prioritāte",
+   "ML_COPY_MAGNETURI":"Kopēt Magnet-URI",
+   "ML_DELETE_DATA":"Dzēst datus",
+   "ML_DELETE_TORRENT":"Dzēst .torrent failu",
+   "ML_DELETE_DATATORRENT":"Dzēst .torrent un datus",
+   "ML_FORCE_RECHECK":"Piespiedu pārbaude",
+   "ML_FORCE_START":"Piespiedu sākšana",
+   "ML_LABEL":"Grupa",
+   "ML_PAUSE":"Pauze",
+   "ML_PROPERTIES":"Rekvizīti",
+   "ML_QUEUEDOWN":"Pārvietot lejup",
+   "ML_QUEUEUP":"Pārvietot augšup",
+   "ML_REMOVE":"Izmest",
+   "ML_REMOVE_AND":"Izmest un",
+   "ML_START":"Sākt",
+   "ML_STOP":"Apturēt",
+   "OV_CAT_ACTIVE":"Aktīvi",
+   "OV_CAT_ALL":"Visi",
+   "OV_CAT_COMPL":"Pabeigti",
+   "OV_CAT_DL":"Lejupielādē",
+   "OV_CAT_INACTIVE":"Neaktīvi",
+   "OV_CAT_NOLABEL":"Bez grupas",
+   "OV_COL_AVAIL":"||Pieej.||Pieejamība",
+   "OV_COL_DATE_ADDED":"Pievienots",
+   "OV_COL_DATE_COMPLETED":"Pabeigts",
+   "OV_COL_DONE":"Izpildīti",
+   "OV_COL_DOWNLOADED":"Izdalīti",
+   "OV_COL_DOWNSPD":"Lejupiel. ātrums",
+   "OV_COL_ETA":"Atl. laiks",
+   "OV_COL_LABEL":"Grupa",
+   "OV_COL_NAME":"Nosaukums",
+   "OV_COL_ORDER":"#",
+   "OV_COL_PEERS":"Iesaistītie",
+   "OV_COL_REMAINING":"Atlicis",
+   "OV_COL_SEEDS":"Devēji",
+   "OV_COL_SEEDS_PEERS":"Devēji/Iesaistītie",
+   "OV_COL_SHARED":"Attiecība",
+   "OV_COL_SIZE":"Izmērs",
+   "OV_COL_SOURCE_URL":"Adrese",
+   "OV_COL_STATUS":"Statuss",
+   "OV_COL_UPPED":"Atdots",
+   "OV_COL_UPSPD":"Augšupiel. ātrums",
+   "OV_CONFIRM_DELETEDATA_MULTIPLE":"Vai tiešām vēlaties dzēst atzīmētos torentus un visus ar tiem saistītos datus?",
+   "OV_CONFIRM_DELETEDATA_ONE":"Vai tiešām vēlaties dzēst atzīmēto torentu un visus ar to saistītos datus?",
+   "OV_CONFIRM_DELETE_MULTIPLE":"Vai tiešām vēlaties dzēst %d atzīmētos torentus?",
+   "OV_CONFIRM_DELETE_ONE":"Vai tiešām vēlaties dzēst atzīmēto torentu?",
+   "OV_CONFIRM_DELETE_RSSFILTER":"Vai tiešām vēlaties dzēst RSS filtru \"%s\"?",
+   "OV_FL_CHECKED":"Pārbaudīti %:.1d%",
+   "OV_FL_DOWNLOADING":"Ņem",
+   "OV_FL_ERROR":"Kļūda: %s",
+   "OV_FL_FINISHED":"Pabeigts",
+   "OV_FL_PAUSED":"Nopauzēts",
+   "OV_FL_QUEUED":"Sakārtots",
+   "OV_FL_QUEUED_SEED":"Gaida rindā",
+   "OV_FL_SEEDING":"Dod",
+   "OV_FL_STOPPED":"Apturēts",
+   "OV_NEWLABEL_CAPTION":"Izveidot grupu",
+   "OV_NEWLABEL_TEXT":"Ievadiet grupas nosaukumu izvēlētajiem torentiem:",
+   "OV_NEW_LABEL":"Jauna grupa...",
+   "OV_REMOVE_LABEL":"Izdzēst grupu",
+   "OV_TABS":"Galvenā||Trakeri||Iesaistītie||Daļiņas||Faili||Ātrums||Žurnāls||",
+   "OV_TB_ADDTORR":"Pievienot torentu",
+   "OV_TB_ADDURL":"Pievienot torentu pēc adreses",
+   "OV_TB_PAUSE":"Pauze",
+   "OV_TB_PREF":"Atribūti",
+   "OV_TB_QUEUEDOWN":"Pārvietot lejup",
+   "OV_TB_QUEUEUP":"Pārvietot augšup",
+   "OV_TB_REMOVE":"Izmest",
+   "OV_TB_RSSDOWNLDR":"RSS lejuplādētājs",
+   "OV_TB_START":"Sākt",
+   "OV_TB_STOP":"Apturēt",
+   "MM_FILE":"Fails",
+   "MM_FILE_ADD_TORRENT":"Pievienot torentu...",
+   "MM_FILE_ADD_URL":"Pievienot torentu pēc adreses...",
+   "MM_OPTIONS":"Iestatījumi",
+   "MM_OPTIONS_PREFERENCES":"Konfigurācija",
+   "MM_OPTIONS_SHOW_CATEGORY":"Rādīt kategoriju sarakstu",
+   "MM_OPTIONS_SHOW_DETAIL":"Rādīt detalizētu informāciju",
+   "MM_OPTIONS_SHOW_STATUS":"Rādīt statusa joslu",
+   "MM_OPTIONS_SHOW_TOOLBAR":"Rādīt rīkjoslu",
+   "MM_OPTIONS_TAB_ICONS":"Rīkjoslas ikonas",
+   "MM_HELP":"Palīdzība",
+   "MM_HELP_UT_WEBPAGE":"µTorrent mājas lapa",
+   "MM_HELP_UT_FORUMS":"µTorrent forums",
+   "MM_HELP_WEBUI_FEEDBACK":"Send WebUI Feedback",
+   "MM_HELP_ABOUT_WEBUI":"About µTorrent WebUI",
+   "STM_TORRENTS":"Torenti",
+   "STM_TORRENTS_PAUSEALL":"Nopauzēt visus torentus",
+   "STM_TORRENTS_RESUMEALL":"Palaist visus torentus",
+   "SB_DOWNLOAD":"D: %s%z/s",
+   "SB_LOCAL":" L: %z/s",
+   "SB_OVERHEAD":" O: %z/s",
+   "SB_TOTAL":" T: %Z",
+   "SB_UPLOAD":"U: %s%z/s",
+   "SIZE_B":"B",
+   "SIZE_EB":"EB",
+   "SIZE_GB":"GB",
+   "SIZE_KB":"KB",
+   "SIZE_MB":"MB",
+   "SIZE_PB":"PB",
+   "SIZE_TB":"TB",
+   "ST_CAPT_ADVANCED":"Papildus",
+   "ST_CAPT_BANDWIDTH":"Joslas platums",
+   "ST_CAPT_CONNECTION":"Savienojumi",
+   "ST_CAPT_DISK_CACHE":"Diska krātuve",
+   "ST_CAPT_FOLDER":"Mapes",
+   "ST_CAPT_GENERAL":"Galvenā",
+   "ST_CAPT_SCHEDULER":"Plānotājs",
+   "ST_CAPT_QUEUEING":"Rinda",
+   "ST_CAPT_UI_EXTRAS":"UI ekstras",
+   "ST_CAPT_UI_SETTINGS":"UI iestatījumi",
+   "ST_CAPT_BITTORRENT":"BitTorrent",
+   "ST_CAPT_WEBUI":"Web UI",
+   "ST_CAPT_TRANSFER_CAP":"Pārsūtījumu limits",
+   "ST_CAPT_RUN_PROGRAM":"Run Program",
+   "ST_CBO_UI_DBLCLK_TOR":"Rādīt rekvizītus||Sākt/Apturēt||Atvērt mapi||Rādīt lejupielādes lodziņu||",
+   "ST_CBO_ENCRYPTIONS":"Izslēgts||Ieslēgts||Piespiedu||",
+   "ST_CBO_PROXY":"(tukšs)||Socks4||Socks5||HTTPS||HTTP||",
+   "ST_CBO_TCAP_MODES":"Augšupielāde||Lejupielāde||Augšupielāde + Lejupielāde||",
+   "ST_CBO_TCAP_UNITS":"MB||GB||",
+   "ST_CBO_TCAP_PERIODS":"1||2||5||7||10||14||15||20||21||28||30||31||",
+   "ST_COL_NAME":"Nosaukums",
+   "ST_COL_VALUE":"Vienība",
+   "ST_SCH_DAYCODES":"Pir||Otr||Tre||Cet||Pie||Ses||Svē||",
+   "ST_SCH_DAYNAMES":"Pirmdiena||Otrdiena||Trešdiena||Ceturtdiena||Piektdiena||Sestdiena||Svētdiena||",
+   "ST_SCH_LGND_FULL":"Max ātrums",
+   "ST_SCH_LGND_FULLEX":"Max ātrums - Izmanto maksimālos tīkla ātruma limitus",
+   "ST_SCH_LGND_LIMITED":"Limitēts",
+   "ST_SCH_LGND_LIMITEDEX":"Limitēts - Izmanto plānotāja norādītos tīkla ātruma limitus",
+   "ST_SCH_LGND_SEEDING":"Tikai dod",
+   "ST_SCH_LGND_SEEDINGEX":"Tikai dod - Tikai augšupielādē failus (ieskaitot nepabeigtos)",
+   "ST_SCH_LGND_OFF":"Izslēgts",
+   "ST_SCH_LGND_OFFEX":"Izslēgts - Aptur visus torentus",
+   "ST_SEEDTIMES_HOURS":"<= %d stundas",
+   "ST_SEEDTIMES_IGNORE":"(Ignorēt)",
+   "ST_SEEDTIMES_MINUTES":"<= %d minūtes",
+   "TIME_DAYS_HOURS":"%dd %dh",
+   "TIME_HOURS_MINS":"%dh %dm",
+   "TIME_MINS_SECS":"%dm %ds",
+   "TIME_SECS":"%ds",
+   "TIME_WEEKS_DAYS":"%dw %dd",
+   "TIME_YEARS_WEEKS":"%dy %dw",
+   "ML_MORE_ACTIONS":null,
+   "Torrents":null,
+   "Feeds":null,
+   "App":null,
+   "country":null,
+   "ETA":null,
+   "of":null,
+   "/s":null,
+   "Paste a torrent or feed URL":null,
+   "Home":null,
+   "Logout":null,
+   "Seeding":null,
+   "All Feeds":null,
+   "bitrate":null,
+   "resolution":null,
+   "length":null,
+   "streamable":null,
+   "type":null,
+   "remote":null,
+   "about":null,
+   "sessions":null,
+   "share":null,
+   "Share this torrent":null,
+   "Share link":null,
+   "add":null,
+   "logout":null,
+   "log in":null,
+   "anywhere access":null,
+   "stay signed in":null,
+   "download":null,
+   "Your client is currently not available. Verify that it is connected to the internet.":null,
+   "Unable to communicate with your &micro;Torrent client. This message will disappear automatically when a connection is re-established.":null,
+   "Open file":null,
+   "Download to your computer":null,
+   "Open with VLC Media Player":null,
+   "Actions":null,
+   "season":null,
+   "DLG_ABOUT_VERSION_LEGEND":null,
+   "DLG_ABOUT_VERSION_VERSION":null,
+   "DLG_ABOUT_VERSION_REVISION":null,
+   "DLG_ABOUT_VERSION_BUILD_DATE":null,
+   "DLG_ABOUT_VERSION_PEER_ID":null,
+   "DLG_ABOUT_VERSION_USER_AGENT":null,
+   "DLG_ABOUT_UPNP_EXTERNAL_ADDRESS":null,
+   "DLG_ABOUT_UI_REVISION":null,
+   "DLG_SETTINGS_SAVE":null,
+   "DLG_SETTINGS_MENU_TITLE":null,
+   "DLG_SETTINGS_D_REMOTE_01":"BitTorrent tālvadība",
+   "DLG_SETTINGS_D_REMOTE_02":"BitTorrent tālvadība sniedz vienkāršu un ļoti drošu piekļuves veidu jūsu klientam, izmantojot interneta pārlūku.",
+   "DLG_SETTINGS_D_REMOTE_03":"Vienkārši iespējojiet zemāk redzamo savienojumu, izvēlieties datora vārdu, paroli un atcerieties atstāt šo datoru ieslēgtu.",
+   "DLG_SETTINGS_D_REMOTE_04":"Uzziniet vairāk",
+   "DLG_SETTINGS_D_REMOTE_05":"Ieslēgt BitTorrent tālvadības piekļuvi",
+   "DLG_SETTINGS_D_REMOTE_06":"Autentifikācija",
+   "DLG_SETTINGS_D_REMOTE_07":"Lietotājvārds:",
+   "DLG_SETTINGS_D_REMOTE_08":"Parole:",
+   "DLG_SETTINGS_D_REMOTE_09":"Iesūtīt",
+   "ST_CAPT_REMOTE":"BitTorrent tālvadība"
+}
