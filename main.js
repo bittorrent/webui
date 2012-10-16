@@ -1826,9 +1826,9 @@ function loadSettingStrings() {
 		, "dlgSettings-Remote"      : L_("ST_CAPT_REMOTE")
 		, "dlgSettings-Scheduler"   : L_("ST_CAPT_SCHEDULER")
 		, "dlgSettings-Advanced"    : L_("ST_CAPT_ADVANCED")
-		, "dlgSettings-UIExtras"    : "&nbsp;&nbsp;&nbsp;&nbsp;" + L_("ST_CAPT_UI_EXTRAS") // TODO: Use CSS to indent instead of modifying the string directly...
-		, "dlgSettings-DiskCache"   : "&nbsp;&nbsp;&nbsp;&nbsp;" + L_("ST_CAPT_DISK_CACHE") // TODO: Use CSS to indent instead of modifying the string directly...
-		, "dlgSettings-RunProgram"  : "&nbsp;&nbsp;&nbsp;&nbsp;" + L_("ST_CAPT_RUN_PROGRAM") // TODO: Use CSS to indent instead of modifying the string directly...
+		, "dlgSettings-UIExtras"    : L_("ST_CAPT_UI_EXTRAS") 
+		, "dlgSettings-DiskCache"   : L_("ST_CAPT_DISK_CACHE") 
+		, "dlgSettings-RunProgram"  : L_("ST_CAPT_RUN_PROGRAM")
 	});
 
 	_loadStrings("text", [
