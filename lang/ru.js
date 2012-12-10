@@ -463,7 +463,7 @@ var LANG_STR =
    "DLG_ABOUT_VERSION_USER_AGENT":null,
    "DLG_ABOUT_UPNP_EXTERNAL_ADDRESS":null,
    "DLG_ABOUT_UI_REVISION":null,
-   "DLG_SETTINGS_SAVE":null,
+   "DLG_SETTINGS_SAVE":"Сохранить настройки",
    "DLG_SETTINGS_MENU_TITLE":"Настройки",
    "DLG_SETTINGS_D_REMOTE_01":"Удалённый BitTorrent",
    "DLG_SETTINGS_D_REMOTE_02":"Удалённый BitTorrent обеспечивает простой и безопасный способ доступа к клиенту через браузер.",

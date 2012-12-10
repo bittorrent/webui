@@ -463,7 +463,7 @@ var LANG_STR =
    "DLG_ABOUT_VERSION_USER_AGENT":null,
    "DLG_ABOUT_UPNP_EXTERNAL_ADDRESS":null,
    "DLG_ABOUT_UI_REVISION":null,
-   "DLG_SETTINGS_SAVE":null,
+   "DLG_SETTINGS_SAVE":"Zapisz ustawienia",
    "DLG_SETTINGS_MENU_TITLE":"Ustawienia",
    "DLG_SETTINGS_D_REMOTE_01":"Dostęp zdalny",
    "DLG_SETTINGS_D_REMOTE_02":"Usługa dostępu zdalnego zapewnia prosty i bezpieczny dostęp do uruchomionego klienta za pośrednictwem przeglądarki internetowej.",
