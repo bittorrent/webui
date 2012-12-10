@@ -463,7 +463,7 @@ var LANG_STR =
    "DLG_ABOUT_VERSION_USER_AGENT":null,
    "DLG_ABOUT_UPNP_EXTERNAL_ADDRESS":null,
    "DLG_ABOUT_UI_REVISION":null,
-   "DLG_SETTINGS_SAVE":null,
+   "DLG_SETTINGS_SAVE":"保存设置",
    "DLG_SETTINGS_MENU_TITLE":null,
    "DLG_SETTINGS_D_REMOTE_01":"远程控制",
    "DLG_SETTINGS_D_REMOTE_02":"µTorrent 远程控制提供简单和安全的方法用浏览器来访问您的客户端。",

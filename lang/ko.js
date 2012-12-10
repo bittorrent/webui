@@ -463,7 +463,7 @@ var LANG_STR =
    "DLG_ABOUT_VERSION_USER_AGENT":null,
    "DLG_ABOUT_UPNP_EXTERNAL_ADDRESS":null,
    "DLG_ABOUT_UI_REVISION":null,
-   "DLG_SETTINGS_SAVE":null,
+   "DLG_SETTINGS_SAVE":"설정을 저장",
    "DLG_SETTINGS_MENU_TITLE":"설정",
    "DLG_SETTINGS_D_REMOTE_01":"BitTorrent 원격",
    "DLG_SETTINGS_D_REMOTE_02":"BitTorrent 원격을 쓰면 브라우저를 통해 쉽고 안전하게 클라이언트에 접속할 수 있습니다.",

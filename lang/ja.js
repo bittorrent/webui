@@ -463,7 +463,7 @@ var LANG_STR =
    "DLG_ABOUT_VERSION_USER_AGENT":null,
    "DLG_ABOUT_UPNP_EXTERNAL_ADDRESS":null,
    "DLG_ABOUT_UI_REVISION":null,
-   "DLG_SETTINGS_SAVE":null,
+   "DLG_SETTINGS_SAVE":"設定を保存",
    "DLG_SETTINGS_MENU_TITLE":"設定",
    "DLG_SETTINGS_D_REMOTE_01":"BitTorrent Remote",
    "DLG_SETTINGS_D_REMOTE_02":"BitTorrent Remote は、ブラウザーを通してクライアントにアクセスする、安全性の高い簡単な方法を提供します。",

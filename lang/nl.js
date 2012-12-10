@@ -463,7 +463,7 @@ var LANG_STR =
    "DLG_ABOUT_VERSION_USER_AGENT":null,
    "DLG_ABOUT_UPNP_EXTERNAL_ADDRESS":null,
    "DLG_ABOUT_UI_REVISION":null,
-   "DLG_SETTINGS_SAVE":null,
+   "DLG_SETTINGS_SAVE":"instellingen opslaan",
    "DLG_SETTINGS_MENU_TITLE":"Instellingen",
    "DLG_SETTINGS_D_REMOTE_01":"BitTorrent Remote",
    "DLG_SETTINGS_D_REMOTE_02":"BitTorrent Remote zorgt voor een makkelijke en goed beveiligde manier om je client via een browser te benaderen.",
