@@ -1716,8 +1716,9 @@ function loadDialogStrings() {
 	//--------------------------------------------------
 	// ABOUT DIALOG
 	//--------------------------------------------------
-
-	$("dlgAbout-version").set("text", "v" + CONST.VERSION + (CONST.BUILD ? " (" + CONST.BUILD + ")" : ""));
+	
+	// Not displaying webui version for now
+	// $("dlgAbout-version").set("text", "v" + CONST.VERSION + (CONST.BUILD ? " (" + CONST.BUILD + ")" : ""));
 
 	//--------------------------------------------------
 	// PROPERTIES DIALOG
