@@ -471,7 +471,7 @@ var LANG_STR =
    "DLG_SETTINGS_D_REMOTE_04":"Vaata veel",
    "DLG_SETTINGS_D_REMOTE_05":"Luba BitTorrent Remote ligipääs",
    "DLG_SETTINGS_D_REMOTE_06":"Autentimine",
-   "DLG_SETTINGS_D_REMOTE_07":"Kasutajanimi:",
+   "DLG_SETTINGS_D_REMOTE_07":"Arvuti nimi:",
    "DLG_SETTINGS_D_REMOTE_08":"Parool:",
    "DLG_SETTINGS_D_REMOTE_09":"Saada",
    "ST_CAPT_REMOTE":"BitTorrent Remote"

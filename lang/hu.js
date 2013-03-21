@@ -471,7 +471,7 @@ var LANG_STR =
    "DLG_SETTINGS_D_REMOTE_04":"Tudjon meg többet",
    "DLG_SETTINGS_D_REMOTE_05":"Engedélyezze az BitTorrent távoli hozzáférést",
    "DLG_SETTINGS_D_REMOTE_06":"Hitelesítés",
-   "DLG_SETTINGS_D_REMOTE_07":"Név:",
+   "DLG_SETTINGS_D_REMOTE_07":"Számítógépnév:",
    "DLG_SETTINGS_D_REMOTE_08":"Jelszó:",
    "DLG_SETTINGS_D_REMOTE_09":"Elküld",
    "ST_CAPT_REMOTE":"BitTorrent Remote"

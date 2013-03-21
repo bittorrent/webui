@@ -471,7 +471,7 @@ var LANG_STR =
    "DLG_SETTINGS_D_REMOTE_04":"Сазнајте више",
    "DLG_SETTINGS_D_REMOTE_05":"У&даљени приступ Микроторенту",
    "DLG_SETTINGS_D_REMOTE_06":"Потврда &идентитета",
-   "DLG_SETTINGS_D_REMOTE_07":"Корисник:",
+   "DLG_SETTINGS_D_REMOTE_07":"Назив рачунара:",
    "DLG_SETTINGS_D_REMOTE_08":"Лозинка:",
    "DLG_SETTINGS_D_REMOTE_09":"Пошаљи",
    "ST_CAPT_REMOTE":"Удаљени Микроторент"

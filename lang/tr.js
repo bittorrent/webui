@@ -471,7 +471,7 @@ var LANG_STR =
    "DLG_SETTINGS_D_REMOTE_04":"Daha Fazlasını Öğren",
    "DLG_SETTINGS_D_REMOTE_05":"BitTorrent'e Uzaktan Erişimi Etkinleştir",
    "DLG_SETTINGS_D_REMOTE_06":"Kimlik doğrulaması var",
-   "DLG_SETTINGS_D_REMOTE_07":"Kullanıcı:",
+   "DLG_SETTINGS_D_REMOTE_07":"Bilgisayar adı:",
    "DLG_SETTINGS_D_REMOTE_08":"Şifre:",
    "DLG_SETTINGS_D_REMOTE_09":"Gönder",
    "ST_CAPT_REMOTE":"BitTorrent Remote",

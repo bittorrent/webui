@@ -471,7 +471,7 @@ var LANG_STR =
    "DLG_SETTINGS_D_REMOTE_04":"Lue lisää",
    "DLG_SETTINGS_D_REMOTE_05":"Ota käyttöön BitTorrentin etäkäyttö",
    "DLG_SETTINGS_D_REMOTE_06":"Kirjautuminen",
-   "DLG_SETTINGS_D_REMOTE_07":"Käyttäjä:",
+   "DLG_SETTINGS_D_REMOTE_07":"Tietokoneen nimi:",
    "DLG_SETTINGS_D_REMOTE_08":"Salasana:",
    "DLG_SETTINGS_D_REMOTE_09":"Lähetä",
    "ST_CAPT_REMOTE":"BitTorrent Remote"

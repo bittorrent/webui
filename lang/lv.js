@@ -471,7 +471,7 @@ var LANG_STR =
    "DLG_SETTINGS_D_REMOTE_04":"Uzziniet vairāk",
    "DLG_SETTINGS_D_REMOTE_05":"Ieslēgt BitTorrent tālvadības piekļuvi",
    "DLG_SETTINGS_D_REMOTE_06":"Autentifikācija",
-   "DLG_SETTINGS_D_REMOTE_07":"Lietotājvārds:",
+   "DLG_SETTINGS_D_REMOTE_07":"Datora vārds:",
    "DLG_SETTINGS_D_REMOTE_08":"Parole:",
    "DLG_SETTINGS_D_REMOTE_09":"Iesūtīt",
    "ST_CAPT_REMOTE":"BitTorrent tālvadība"

@@ -463,7 +463,7 @@
    "DLG_SETTINGS_D_REMOTE_04":"Saznaj više",
    "DLG_SETTINGS_D_REMOTE_05":"Omogući BitTorrent Remote pristup",
    "DLG_SETTINGS_D_REMOTE_06":"Autorizacija",
-   "DLG_SETTINGS_D_REMOTE_07":"Korisnik:",
+   "DLG_SETTINGS_D_REMOTE_07":"Ime računara::",
    "DLG_SETTINGS_D_REMOTE_08":"Šifra:",
    "DLG_SETTINGS_D_REMOTE_09":"Pošalji",
    "ST_CAPT_REMOTE":"BitTorrent Remote"

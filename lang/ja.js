@@ -471,7 +471,7 @@ var LANG_STR =
    "DLG_SETTINGS_D_REMOTE_04":"もっと詳しく",
    "DLG_SETTINGS_D_REMOTE_05":"BitTorrent Remote Access を使用する",
    "DLG_SETTINGS_D_REMOTE_06":"認証",
-   "DLG_SETTINGS_D_REMOTE_07":"ユーザ名:",
+   "DLG_SETTINGS_D_REMOTE_07":"コンピューター名:",
    "DLG_SETTINGS_D_REMOTE_08":"パスワード:",
    "DLG_SETTINGS_D_REMOTE_09":"送信",
    "ST_CAPT_REMOTE":"BitTorrent Remote",

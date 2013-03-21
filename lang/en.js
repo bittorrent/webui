@@ -471,7 +471,7 @@ var LANG_STR =
    "DLG_SETTINGS_D_REMOTE_04":"Learn More...",
    "DLG_SETTINGS_D_REMOTE_05":"Enable BitTorrent Remote Access",
    "DLG_SETTINGS_D_REMOTE_06":"Set a username and password",
-   "DLG_SETTINGS_D_REMOTE_07":"Username",
+   "DLG_SETTINGS_D_REMOTE_07":"Computer name",
    "DLG_SETTINGS_D_REMOTE_08":"Password",
    "DLG_SETTINGS_D_REMOTE_09":"Sign in",
    "ST_CAPT_REMOTE":"Remote Access",

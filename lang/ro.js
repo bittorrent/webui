@@ -471,7 +471,7 @@ var LANG_STR =
    "DLG_SETTINGS_D_REMOTE_04":"Află Mai Multe",
    "DLG_SETTINGS_D_REMOTE_05":"Activează Telecomanda BitTorrent (accesul softului la distanță)",
    "DLG_SETTINGS_D_REMOTE_06":"Autentificare",
-   "DLG_SETTINGS_D_REMOTE_07":"Utilizator:",
+   "DLG_SETTINGS_D_REMOTE_07":"Nume &Calc.:",
    "DLG_SETTINGS_D_REMOTE_08":"Parolă:",
    "DLG_SETTINGS_D_REMOTE_09":"Trimite",
    "ST_CAPT_REMOTE":"Telecomandă BitTorrent"

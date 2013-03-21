@@ -471,7 +471,7 @@ var LANG_STR =
    "DLG_SETTINGS_D_REMOTE_04":"Lær mere (engelsk)",
    "DLG_SETTINGS_D_REMOTE_05":"Aktiver BitTorrent Remote-adgang",
    "DLG_SETTINGS_D_REMOTE_06":"Identifikation",
-   "DLG_SETTINGS_D_REMOTE_07":"Brugernavn:",
+   "DLG_SETTINGS_D_REMOTE_07":"Computernavn:",
    "DLG_SETTINGS_D_REMOTE_08":"Kodeord:",
    "DLG_SETTINGS_D_REMOTE_09":"Indsend",
    "ST_CAPT_REMOTE":"BitTorrent Remote"

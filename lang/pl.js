@@ -471,7 +471,7 @@ var LANG_STR =
    "DLG_SETTINGS_D_REMOTE_04":"Dowiedz się więcej",
    "DLG_SETTINGS_D_REMOTE_05":"Aktywuj dostęp zdalny do uTorenta",
    "DLG_SETTINGS_D_REMOTE_06":"Uwierzytelnianie",
-   "DLG_SETTINGS_D_REMOTE_07":"Użytkownik:",
+   "DLG_SETTINGS_D_REMOTE_07":"Nazwa komputera:",
    "DLG_SETTINGS_D_REMOTE_08":"Hasło:",
    "DLG_SETTINGS_D_REMOTE_09":"Dodaj",
    "ST_CAPT_REMOTE":"Dostęp zdalny",

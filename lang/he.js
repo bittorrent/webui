@@ -471,7 +471,7 @@ var LANG_STR =
    "DLG_SETTINGS_D_REMOTE_04":"למד עוד",
    "DLG_SETTINGS_D_REMOTE_05":"אפשר שליטה מרחוק על יוטורנט",
    "DLG_SETTINGS_D_REMOTE_06":"אימות",
-   "DLG_SETTINGS_D_REMOTE_07":"שם משתמש:",
+   "DLG_SETTINGS_D_REMOTE_07":"&שם מחשב:",
    "DLG_SETTINGS_D_REMOTE_08":"סיסמה:",
    "DLG_SETTINGS_D_REMOTE_09":"שלח",
    "ST_CAPT_REMOTE":"יוטורנט בשליטה מרחוק"

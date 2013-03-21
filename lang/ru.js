@@ -471,7 +471,7 @@ var LANG_STR =
    "DLG_SETTINGS_D_REMOTE_04":"Подробнее",
    "DLG_SETTINGS_D_REMOTE_05":"Доступ к удалённому BitTorrent",
    "DLG_SETTINGS_D_REMOTE_06":"Аутентификация",
-   "DLG_SETTINGS_D_REMOTE_07":"Имя:",
+   "DLG_SETTINGS_D_REMOTE_07":"Компьютер:",
    "DLG_SETTINGS_D_REMOTE_08":"Пароль:",
    "DLG_SETTINGS_D_REMOTE_09":"Отправить",
    "ST_CAPT_REMOTE":"Удалённый BitTorrent",

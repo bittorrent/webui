@@ -471,7 +471,7 @@ var LANG_STR =
    "DLG_SETTINGS_D_REMOTE_04":"Argibide Gehiago",
    "DLG_SETTINGS_D_REMOTE_05":"Gaitu BitTorrent Hurruneko Sarbidea",
    "DLG_SETTINGS_D_REMOTE_06":"Egiaztapena",
-   "DLG_SETTINGS_D_REMOTE_07":"Erabiltzaile izena:",
+   "DLG_SETTINGS_D_REMOTE_07":"Ordg.Izena:",
    "DLG_SETTINGS_D_REMOTE_08":"Sarhitza:",
    "DLG_SETTINGS_D_REMOTE_09":"Aurkeztu",
    "ST_CAPT_REMOTE":"Hurruneko BitTorrent"

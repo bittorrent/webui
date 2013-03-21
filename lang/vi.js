@@ -471,7 +471,7 @@ var LANG_STR =
    "DLG_SETTINGS_D_REMOTE_04":"Xem thêm",
    "DLG_SETTINGS_D_REMOTE_05":"Enable BitTorrent Remote Access",
    "DLG_SETTINGS_D_REMOTE_06":"Xác thực",
-   "DLG_SETTINGS_D_REMOTE_07":"Tên dùng:",
+   "DLG_SETTINGS_D_REMOTE_07":"tên máy tính:",
    "DLG_SETTINGS_D_REMOTE_08":"Mật khẩu:",
    "DLG_SETTINGS_D_REMOTE_09":"Gửi",
    "ST_CAPT_REMOTE":"BitTorrent Remote"
