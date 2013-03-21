@@ -1,3 +1,13 @@
+/*
+Copyright (c) 2011 BitTorrent, Inc. All rights reserved.
+
+Use of this source code is governed by a BSD-style that can be
+found in the LICENSE file.
+
+Bulgarian
+*/
+
+
 {
    "CT_MASK1":"Торенти||*.torrent||Всички файлове (*.*)||*.*||",
    "DLG_BTN_OK":"ОК",
@@ -463,7 +473,7 @@
    "DLG_SETTINGS_D_REMOTE_04":"Научете повече",
    "DLG_SETTINGS_D_REMOTE_05":"Включи отдалечен достъп до BitTorrent",
    "DLG_SETTINGS_D_REMOTE_06":"Удостоверяване",
-   "DLG_SETTINGS_D_REMOTE_07":"Потр. име:",
+   "DLG_SETTINGS_D_REMOTE_07":"име на компютъра:",
    "DLG_SETTINGS_D_REMOTE_08":"Парола:",
    "DLG_SETTINGS_D_REMOTE_09":"Изпрати",
    "ST_CAPT_REMOTE":"Отдалечен достъп до BitTorrent"

@@ -3,6 +3,8 @@ Copyright (c) 2011 BitTorrent, Inc. All rights reserved.
 
 Use of this source code is governed by a BSD-style that can be
 found in the LICENSE file.
+
+Belarusian
 */
 
 var LANG_STR =
@@ -471,7 +473,7 @@ var LANG_STR =
    "DLG_SETTINGS_D_REMOTE_04":"Падрабязнасці",
    "DLG_SETTINGS_D_REMOTE_05":"Дазволіць падалены доступ да BitTorrent",
    "DLG_SETTINGS_D_REMOTE_06":"Аўтэнтыфікацыя",
-   "DLG_SETTINGS_D_REMOTE_07":"Імя:",
+   "DLG_SETTINGS_D_REMOTE_07":"Імя кампутара:",
    "DLG_SETTINGS_D_REMOTE_08":"Пароль:",
    "DLG_SETTINGS_D_REMOTE_09":"Гатова",
    "ST_CAPT_REMOTE":"Падалены BitTorrent"

@@ -471,7 +471,7 @@ var LANG_STR =
    "DLG_SETTINGS_D_REMOTE_04":"Více informací",
    "DLG_SETTINGS_D_REMOTE_05":"Povolit vzdálený přístup BitTorrent Remote",
    "DLG_SETTINGS_D_REMOTE_06":"Ověření uživatele",
-   "DLG_SETTINGS_D_REMOTE_07":"Jméno:",
+   "DLG_SETTINGS_D_REMOTE_07":"Název &PC:",
    "DLG_SETTINGS_D_REMOTE_08":"Heslo:",
    "DLG_SETTINGS_D_REMOTE_09":"Odeslat",
    "ST_CAPT_REMOTE":"BitTorrent Remote"

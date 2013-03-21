@@ -471,7 +471,7 @@ var LANG_STR =
    "DLG_SETTINGS_D_REMOTE_04":"Naučite se več",
    "DLG_SETTINGS_D_REMOTE_05":"Omogoči dostop do BitTorrent daljinskega upravljalca",
    "DLG_SETTINGS_D_REMOTE_06":"Vpisovanje",
-   "DLG_SETTINGS_D_REMOTE_07":"Uporabniško ime:",
+   "DLG_SETTINGS_D_REMOTE_07":"Ime računalnika:",
    "DLG_SETTINGS_D_REMOTE_08":"Geslo:",
    "DLG_SETTINGS_D_REMOTE_09":"Pošlji",
    "ST_CAPT_REMOTE":"BitTorrent daljinski upravljalec"

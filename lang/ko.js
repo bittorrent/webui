@@ -471,7 +471,7 @@ var LANG_STR =
    "DLG_SETTINGS_D_REMOTE_04":"자세히 알아보기",
    "DLG_SETTINGS_D_REMOTE_05":"BitTorrent 원격 접속 사용",
    "DLG_SETTINGS_D_REMOTE_06":"인증",
-   "DLG_SETTINGS_D_REMOTE_07":"사용자명:",
+   "DLG_SETTINGS_D_REMOTE_07":"아이디:",
    "DLG_SETTINGS_D_REMOTE_08":"암호:",
    "DLG_SETTINGS_D_REMOTE_09":"확인",
    "ST_CAPT_REMOTE":"BitTorrent 원격",

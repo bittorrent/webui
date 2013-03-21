@@ -471,7 +471,7 @@ var LANG_STR =
    "DLG_SETTINGS_D_REMOTE_04":"Läs mer",
    "DLG_SETTINGS_D_REMOTE_05":"Aktivera BitTorrent fjärrstyrning",
    "DLG_SETTINGS_D_REMOTE_06":"Autentisiering",
-   "DLG_SETTINGS_D_REMOTE_07":"Användarnamn:",
+   "DLG_SETTINGS_D_REMOTE_07":"Datornamn:",
    "DLG_SETTINGS_D_REMOTE_08":"Lösenord:",
    "DLG_SETTINGS_D_REMOTE_09":"Lägg till",
    "ST_CAPT_REMOTE":"BitTorrent Fjärrstyrning"

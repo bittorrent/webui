@@ -471,7 +471,7 @@ var LANG_STR =
    "DLG_SETTINGS_D_REMOTE_04":"進一步瞭解",
    "DLG_SETTINGS_D_REMOTE_05":"啟用BitTorrent遠端操作",
    "DLG_SETTINGS_D_REMOTE_06":"認證",
-   "DLG_SETTINGS_D_REMOTE_07":"帳號:",
+   "DLG_SETTINGS_D_REMOTE_07":"電腦名稱:",
    "DLG_SETTINGS_D_REMOTE_08":"密碼:",
    "DLG_SETTINGS_D_REMOTE_09":"提交",
    "ST_CAPT_REMOTE":"BitTorrent遠端操控"

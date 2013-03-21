@@ -471,7 +471,7 @@ var LANG_STR =
    "DLG_SETTINGS_D_REMOTE_04":"Μάθετε περισσότερα",
    "DLG_SETTINGS_D_REMOTE_05":"Ενεργοποίηση της απομακρυσμένης πρόσβασης",
    "DLG_SETTINGS_D_REMOTE_06":"Ταυτοποίηση",
-   "DLG_SETTINGS_D_REMOTE_07":"Όνομα χρήστη:",
+   "DLG_SETTINGS_D_REMOTE_07":"Όνομα υπολογιστή:",
    "DLG_SETTINGS_D_REMOTE_08":"Κωδικός:",
    "DLG_SETTINGS_D_REMOTE_09":"Αποστολή",
    "ST_CAPT_REMOTE":"Απομακρυσμένο BitTorrent"

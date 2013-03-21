@@ -471,7 +471,7 @@ var LANG_STR =
    "DLG_SETTINGS_D_REMOTE_04":"Foghlaim A Thuilleadh",
    "DLG_SETTINGS_D_REMOTE_05":"Enable BitTorrent Remote Access",
    "DLG_SETTINGS_D_REMOTE_06":"Fíordheimhniú",
-   "DLG_SETTINGS_D_REMOTE_07":"Ainm úsáideora:",
+   "DLG_SETTINGS_D_REMOTE_07":"Ainm an ríomhaire:",
    "DLG_SETTINGS_D_REMOTE_08":"Focal Faire:",
    "DLG_SETTINGS_D_REMOTE_09":"Seol",
    "ST_CAPT_REMOTE":"BitTorrent Remote"

@@ -3,6 +3,8 @@ Copyright (c) 2011 BitTorrent, Inc. All rights reserved.
 
 Use of this source code is governed by a BSD-style that can be
 found in the LICENSE file.
+
+Arbic
 */
 
 var LANG_STR =
@@ -471,7 +473,7 @@ var LANG_STR =
    "DLG_SETTINGS_D_REMOTE_04":"تعلم المزيد",
    "DLG_SETTINGS_D_REMOTE_05":"للوصول البعيد BitTorrent تمكين",
    "DLG_SETTINGS_D_REMOTE_06":"المصادقة",
-   "DLG_SETTINGS_D_REMOTE_07":"المستخدم:",
+   "DLG_SETTINGS_D_REMOTE_07":"اسم الكمبيوتر:",
    "DLG_SETTINGS_D_REMOTE_08":"كلمة مرور:",
    "DLG_SETTINGS_D_REMOTE_09":"أرسال",
    "ST_CAPT_REMOTE":"البعيد BitTorrent"

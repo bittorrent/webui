@@ -471,7 +471,7 @@ var LANG_STR =
    "DLG_SETTINGS_D_REMOTE_04":"Meer weten",
    "DLG_SETTINGS_D_REMOTE_05":"Toegang op afstand inschakelen",
    "DLG_SETTINGS_D_REMOTE_06":"Beveiliging",
-   "DLG_SETTINGS_D_REMOTE_07":"Naam:",
+   "DLG_SETTINGS_D_REMOTE_07":"Computernaam:",
    "DLG_SETTINGS_D_REMOTE_08":"Wachtwrd:",
    "DLG_SETTINGS_D_REMOTE_09":"Versturen",
    "ST_CAPT_REMOTE":"BitTorrent Remote",
