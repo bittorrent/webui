@@ -807,6 +807,12 @@ input[id="gui.dlrate_menu"] {
 #dlgSettings label{
 	
 }
+
+#dlgSettings .align-right{
+	text-align: right;
+	min-width: 110px;
+}
+
 #dlgSettings .line-cont{
 	height: 22px;
 	line-height: 19px;
