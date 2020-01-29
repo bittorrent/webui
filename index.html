@@ -54,7 +54,7 @@
          <div id="dlgResetUI-head" class="dlg-head">Reset UI</div>
          <form id="dlgResetUI-form" action="">
             <div class="dlg-body">
-               Select the WebUI settings to reset. 
+               Select the WebUI settings to reset.
                <fieldset>
                   <legend id="">Options</legend>
                   <div class="line-cont"><input type="checkbox" id="dlgResetUI-everything" /> <label id="" for="dlgResetUI-everything">Everything</label></div>
@@ -88,7 +88,37 @@
             <div class="dlg-foot"><input type="submit" id="ADD_FILE_OK" class="btn" /> <input type="button" id="ADD_FILE_CANCEL" class="btn" /></div>
          </form>
       </div>
-      <!-- Torrent Add Dialog */ --><!-- /* Torrent Add URL Dialog -->
+	  <!-- Torrent Add Dialog */ -->
+
+		<!-- /* Torrent Delete Dialog -->
+		<div id="dlgDelete" class="dlg-window">
+			<a href="#" class="dlg-close"></a>
+			<div id="dlgDelete-head" class="dlg-head">Delete Torrents</div>
+			<form id="dlgDelete-form" action="">
+				<div class="dlg-body">
+					<h4 id="dlgDelete-caption">Are you sure you want to remove <span class="count">1</span> torrent<span class="plural">s</span>?</h4>
+					<div class="line-cont">
+						<input type="radio" name="dlgDelete-torrent" id="dlgDelete-no-data" value="torrent" checked="checked" />
+						<label for="dlgDelete-no-data">Just delete torrent</label>
+					</div>
+					<div class="line-cont">
+						<input type="radio" name="dlgDelete-torrent" id="dlgDelete-data" value="delete_data" />
+						<label for="dlgDelete-data">Also delete torrent data</label>
+					</div>
+					<!-- <div class="line-cont">
+						<input type="radio" name="dlgDelete-torrent" id="dlgDelete-data" value="keep_torrent" />
+						<label for="dlgDelete-data">Only delete data</label>
+					</div> -->
+				</div>
+				<div class="dlg-foot">
+					<input type="submit" id="DELETE_TORRENT_OK" class="btn" value="OK" />
+					<input type="button" id="DELETE_TORRENT_CANCEL" class="btn" value="Cancel" />
+				</div>
+			</form>
+		</div>
+		<!-- Torrent Delete Dialog */ -->
+
+	  <!-- /* Torrent Add URL Dialog -->
       <div id="dlgAddURL" class="dlg-window">
          <a href="#" class="dlg-close"></a>
          <div id="dlgAddURL-head" class="dlg-head"></div>
@@ -740,21 +770,26 @@
       </div>
       <!-- Status Bar */ -->
       <div id="mainVDivider"></div>
-      <div id="mainHDivider"></div>
-      <!-- [jscompact] -->
-      <script type="text/javascript" src="./mootools.js"></script> 
-      <script type="text/javascript" src="./flotr.js"></script> 
-      <script type="text/javascript" src="./utils.js"></script> 
+	  <div id="mainHDivider"></div>
 
-      <script type="text/javascript" src="./constants.js"></script> 
-      <script type="text/javascript" src="./lang/_.js"></script> 
-      <script type="text/javascript" src="./logger.js"></script> 
-      <script type="text/javascript" src="./speedgraph.js"></script> 
-      <script type="text/javascript" src="./stable.js"></script> 
-      <script type="text/javascript" src="./tabs.js"></script> 
-      <script type="text/javascript" src="./webui.js"></script> 
-      <script type="text/javascript" src="./contextmenu.js"></script> 
-      <script type="text/javascript" src="./dialogmanager.js"></script> 
+	  <script type="text/javascript">
+	  window.config = window.config || {};
+	  </script>
+
+      <!-- [jscompact] -->
+      <script type="text/javascript" src="./mootools.js"></script>
+      <script type="text/javascript" src="./flotr.js"></script>
+      <script type="text/javascript" src="./utils.js"></script>
+
+      <script type="text/javascript" src="./constants.js"></script>
+      <script type="text/javascript" src="./lang/_.js"></script>
+      <script type="text/javascript" src="./logger.js"></script>
+      <script type="text/javascript" src="./speedgraph.js"></script>
+      <script type="text/javascript" src="./stable.js"></script>
+      <script type="text/javascript" src="./tabs.js"></script>
+      <script type="text/javascript" src="./webui.js"></script>
+      <script type="text/javascript" src="./contextmenu.js"></script>
+      <script type="text/javascript" src="./dialogmanager.js"></script>
       <script type="text/javascript" src="./main.js"></script>
       <!-- [/jscompact] -->
    </body>
