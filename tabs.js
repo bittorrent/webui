@@ -58,7 +58,7 @@ var Tabs = new Class({
 					.store("showId", id)
 					.adopt(ELE_SPAN.clone(false)
 						.appendText(text)
-						.set("id", "tab_title_" + id)
+						.set("id", "tab_" + id)
 					)
 				)
 			);

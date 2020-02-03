@@ -54,7 +54,7 @@ function do_webui_main() {
 }
 if (!window.raptor) {
 	window.addEvent("domready", function() {
-		do_webui_main();	
+		do_webui_main();
 	});
 }
 
@@ -928,15 +928,15 @@ function setupDeleteTorrentDialog() {
 	//--------------------------------------------------
 	// DELETE TORRENT DIALOG
 	//--------------------------------------------------
-	
+
 	// -- OK Button
 	$("DELETE_TORRENT_OK").addEvent("click", function() {
 		DialogManager.hide("Delete");
-		
+
 		var torrent = utweb.tables.torrent;
 		var rows = utweb.tables.torrent.view.selectedRows();
 		var value = $$('input[name=dlgDelete-torrent]:checked').get('value');
-		
+
 		torrent.remove_torrents(rows, { delete_data: value == "delete_data" });
 	});
 
@@ -987,6 +987,31 @@ function setupAddURLDialog() {
 	//--------------------------------------------------
 	// ADD URL DIALOG
 	//--------------------------------------------------
+	// var b = new IFrame({
+    //     id: "uploadfrm",
+    //     src: "about:blank",
+    //     styles: {
+    //         display: "none",
+    //         height: 0,
+    //         width: 0
+    //     },
+    //     onload: function(i) {
+    //         $("dlgAdd-file").set("value", "");
+    //         $("ADD_FILE_OK").disabled = false;
+    //         if (!i) {
+    //             return
+    //         }
+    //         var j = $(i.body).get("text");
+    //         if (j) {
+    //             var h = JSON.decode(j);
+    //             if (has(h, "error")) {
+    //                 alert(h.error);
+    //                 log("[Add Torrent File Error] " + h.error)
+    //             }
+    //         }
+    //     }
+    // }).inject(document.body);
+    // $("dlgAdd-form").set("target", b.get("id"));
 
 	// -- OK Button (URL)
 	$("ADD_URL_OK").addEvent("click", function() {
@@ -1025,41 +1050,24 @@ function setupSettings() {
 	//--------------------------------------------------
 
 	// -- OK Button
-
-	// $("DLG_SETTINGS_03").addEvent("click", function() {
-	// 	//DialogManager.hide("Settings");
-	// 	utWebUI.hideSettings();
-	// 	utWebUI.setSettings();
-	// });
-	
 	// -- Save Button
 	$("DLG_SETTINGS_SAVE").addEvent("click", function() {
 		utWebUI.hideSettings();
 		utWebUI.setSettings();
 	});
-	
+
+	// -- Cancel Button
 	$("DLG_SETTINGS_CLOSE").addEvent("click", function(e) {
 		e.preventDefault();
 		utWebUI.hideSettings();
 	});
 
-	// -- Cancel Button
-
-	// $("DLG_SETTINGS_04").addEvent("click", function(ev) {
-	// 	utWebUI.hideSettings(true);
-	// 	//$("dlgSettings").getElement(".dlg-close").fireEvent("click", ev);
-	// 		// Fire the "Close" button's click handler to make sure
-	// 		// controls are restored if necessary
-	// });
-
 	// -- Apply Button
-
-	// $("DLG_SETTINGS_05").addEvent("click", function(ev) {
-	// 	utWebUI.setSettings();
-	// });
+	$("DLG_SETTINGS_APPLY").addEvent("click", function(ev) {
+		utWebUI.setSettings();
+	});
 
 	// -- Close Button
-
 	/*$("dlgSettings").getElement(".dlg-close").addEvent("click", function(ev) {
 		utWebUI.hideSettings(true);
 		//utWebUI.loadSettings();
@@ -1224,15 +1232,15 @@ function setupSettings() {
 	// -- Remote Access
 
 	// Learn more button
-	$("DLG_SETTINGS_D_REMOTE_04").addEvent("click", function() {
-		openURL("https://remote.bittorrent.com/");
-	});
-	
+	// $("DLG_SETTINGS_D_REMOTE_04").addEvent("click", function() {
+	// 	openURL("https://remote.bittorrent.com/");
+	// });
+
 	// Sign in Button
-	$("DLG_SETTINGS_D_REMOTE_09").addEvent("click", function() {
-		utWebUI.registerRemote();
-	});
-	
+	// $("DLG_SETTINGS_D_REMOTE_09").addEvent("click", function() {
+	// 	utWebUI.registerRemote();
+	// });
+
 	// -- Advanced Options
 
 	utWebUI.advOptTable.create("dlgSettings-advOptList", utWebUI.advOptColDefs, Object.append({
@@ -1412,7 +1420,7 @@ function setupUserInterface() {
 	setupPropertiesDialog();
 	setupDeleteTorrentDialog();
 	setupAddURLDialog();
-	setupAddLabelDialog();
+	// setupAddLabelDialog();
 	setupSettings();
 	setupStatusBar();
 
@@ -1525,8 +1533,8 @@ function loadDetailPaneStrings() {
 
 	// -- Tab Titles
 
-	
-	if (utWebUI.mainTabs) { 
+
+	if (utWebUI.mainTabs) {
 		var maintstr = L_("OV_TABS").split("||");
 		utWebUI.mainTabs.setNames({
 			  "mainInfoPane-generalTab" : maintstr[0]
@@ -1557,8 +1565,8 @@ function loadDetailPaneStrings() {
 
 	// -- Peers Tab
 
-	if (utWebUI.prsTable.tb.body) { 
-utWebUI.prsTable.refreshRows(); 
+	if (utWebUI.prsTable.tb.body) {
+utWebUI.prsTable.refreshRows();
 	utWebUI.prsTable.setConfig({
 		"resetText": L_("MENU_RESET"),
 		"colText": {
@@ -1632,7 +1640,7 @@ function loadAboutStrings() {
 
 function loadMiscStrings() {
 
-	
+
 	//--------------------------------------------------
 	// STATUS
 	//--------------------------------------------------
@@ -1708,15 +1716,15 @@ function loadDialogStrings() {
 		, "rssfilter_edit_apply"    : "DLG_BTN_APPLY"
 
 		// Settings
-		, "DLG_SETTINGS_03" : "DLG_BTN_OK"
-		, "DLG_SETTINGS_04" : "DLG_BTN_CANCEL"
-		, "DLG_SETTINGS_05" : "DLG_BTN_APPLY"
+		, "DLG_SETTINGS_SAVE" : "DLG_BTN_OK"
+		, "DLG_SETTINGS_CLOSE" : "DLG_BTN_CANCEL"
+		, "DLG_SETTINGS_APPLY" : "DLG_BTN_APPLY"
 	});
 
 	//--------------------------------------------------
 	// ABOUT DIALOG
 	//--------------------------------------------------
-	
+
 	// Not displaying webui version for now
 	// $("dlgAbout-version").set("text", "v" + CONST.VERSION + (CONST.BUILD ? " (" + CONST.BUILD + ")" : ""));
 
@@ -1827,8 +1835,8 @@ function loadSettingStrings() {
 		, "dlgSettings-Remote"      : L_("ST_CAPT_REMOTE")
 		, "dlgSettings-Scheduler"   : L_("ST_CAPT_SCHEDULER")
 		, "dlgSettings-Advanced"    : L_("ST_CAPT_ADVANCED")
-		, "dlgSettings-UIExtras"    : L_("ST_CAPT_UI_EXTRAS") 
-		, "dlgSettings-DiskCache"   : L_("ST_CAPT_DISK_CACHE") 
+		, "dlgSettings-UIExtras"    : L_("ST_CAPT_UI_EXTRAS")
+		, "dlgSettings-DiskCache"   : L_("ST_CAPT_DISK_CACHE")
 		, "dlgSettings-RunProgram"  : L_("ST_CAPT_RUN_PROGRAM")
 	});
 
@@ -2045,7 +2053,7 @@ function loadSettingStrings() {
 		, "DLG_SETTINGS_D_REMOTE_09" // "Sign in..."
 
 	]);
-	
+
 	_loadStrings("text", [
 		  "DLG_SETTINGS_MENU_TITLE" // "Settings"
 		  , "STATUS_REMOTE_10"

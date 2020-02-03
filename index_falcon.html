@@ -11,7 +11,7 @@ This page loads the encryption dependencies so that the
 normal/"classic" web ui can be used with the uTorrent remote "falcon"
 secure access feature.
 
-After logging in at https://web.utorrent.com, 
+After logging in at https://web.utorrent.com,
 manually navigate to https://web.utorrent.com/static/webui/webui_falcon.html
 
 Very soon it will be possible to load a custom UI from your uTorrent client via
@@ -391,7 +391,7 @@ http://web.utorrent.com/client/app/{ app id }/index.html
 							<ul id="dlgSettings-menu"></ul>
 						</div>
 					</div>
-					<h1 id="dlgSettings-title"></h1>
+					<h1 id="dlgSettings-head"></h1>
 					<div id="dlgSettings-General" class="settings-pane">
 						<fieldset>
 							<legend id="DLG_SETTINGS_1_GENERAL_01"></legend>
@@ -1109,9 +1109,6 @@ http://web.utorrent.com/client/app/{ app id }/index.html
 					</div>
 				</div>
 				<div class="dlg-foot">
-					<!--<input type="submit" id="DLG_SETTINGS_03" class="btn" />
-					<input type="button" id="DLG_SETTINGS_04" class="btn" />
-					<input type="button" id="DLG_SETTINGS_05" class="btn" /> -->
 					<input type="button" id="DLG_SETTINGS_SAVE" class="btn" value="Save settings" />
 					<a href="#" id="DLG_SETTINGS_CLOSE"></a>
 				</div>
@@ -1290,7 +1287,7 @@ window.raptor = client.raptor;
 // window.utweb = null;
 
   new JSLoad( make_tags(webui_scripts) ).load([ webui_scripts[webui_scripts.length-1] ], function() {
-    if (window.console && window.console.log) { 
+    if (window.console && window.console.log) {
       console.log('webui loaded');
     }
     do_webui_main();
