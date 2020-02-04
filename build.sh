@@ -52,5 +52,6 @@ cd ../
 
 chmod 0644 ./webui.zip
 # cp -fp webui.zip "/Users/$USER/Library/Application Support/BitTorrent/"
+cp -fp webui.zip "/mnt/c/Users/$USER/AppData/Roaming/uTorrent"
 rm -R ./.tmp
 # rm ./webui.zip
