@@ -1232,12 +1232,12 @@ function setupSettings() {
 	// -- Remote Access
 
 	// Learn more button
-	// $("DLG_SETTINGS_D_REMOTE_04").addEvent("click", function() {
+	// $("DLG_SETTINGS_10_REMOTE_04").addEvent("click", function() {
 	// 	openURL("https://remote.bittorrent.com/");
 	// });
 
 	// Sign in Button
-	// $("DLG_SETTINGS_D_REMOTE_09").addEvent("click", function() {
+	// $("DLG_SETTINGS_10_REMOTE_09").addEvent("click", function() {
 	// 	utWebUI.registerRemote();
 	// });
 
@@ -1301,7 +1301,7 @@ function setupSettings() {
 	});
 
 	$("webui.uconnect_enable").addEvent(linkedEvent, function() {
-		_link(this, 0, ["webui.uconnect_username", "proposed_uconnect_password", "DLG_SETTINGS_D_REMOTE_09", "webui.uconnect_cred_status", "DLG_SETTINGS_D_REMOTE_06", "STATUS_REMOTE_10"]);
+		_link(this, 0, ["webui.uconnect_username", "proposed_uconnect_password", "DLG_SETTINGS_10_REMOTE_09", "webui.uconnect_cred_status", "DLG_SETTINGS_10_REMOTE_06", "STATUS_REMOTE_10"]);
 	});
 
 	$("multi_day_transfer_limit_en").addEvent(linkedEvent, function() {
@@ -1985,15 +1985,15 @@ function loadSettingStrings() {
 		, "MM_OPTIONS_SHOW_TOOLBAR"
 
 		// Remote
-		, "DLG_SETTINGS_D_REMOTE_01"
-		, "DLG_SETTINGS_D_REMOTE_02"
-		, "DLG_SETTINGS_D_REMOTE_03"
-		, "DLG_SETTINGS_D_REMOTE_04"
-		, "DLG_SETTINGS_D_REMOTE_05"
-		, "DLG_SETTINGS_D_REMOTE_06"
-		, "DLG_SETTINGS_D_REMOTE_07"
-		, "DLG_SETTINGS_D_REMOTE_08"
-		, "DLG_SETTINGS_D_REMOTE_09"
+		, "DLG_SETTINGS_10_REMOTE_01"
+		, "DLG_SETTINGS_10_REMOTE_02"
+		, "DLG_SETTINGS_10_REMOTE_03"
+		, "DLG_SETTINGS_10_REMOTE_04"
+		, "DLG_SETTINGS_10_REMOTE_05"
+		, "DLG_SETTINGS_10_REMOTE_06"
+		, "DLG_SETTINGS_10_REMOTE_07"
+		, "DLG_SETTINGS_10_REMOTE_08"
+		, "DLG_SETTINGS_10_REMOTE_09"
 
 		// Advanced
 		, "DLG_SETTINGS_A_ADVANCED_01"
@@ -2049,8 +2049,8 @@ function loadSettingStrings() {
 		, "DLG_SETTINGS_4_CONN_04" // "Random"
 		, "DLG_SETTINGS_7_TRANSFERCAP_12" // "Reset History"
 		, "DLG_SETTINGS_A_ADVANCED_05" // "Set"
-		, "DLG_SETTINGS_D_REMOTE_04" // "Learn more"
-		, "DLG_SETTINGS_D_REMOTE_09" // "Sign in..."
+		, "DLG_SETTINGS_10_REMOTE_04" // "Learn more"
+		, "DLG_SETTINGS_10_REMOTE_09" // "Sign in..."
 
 	]);
 

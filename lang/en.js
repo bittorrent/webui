@@ -5,7 +5,7 @@ Use of this source code is governed by a BSD-style that can be
 found in the LICENSE file.
 */
 
-var LANG_STR = 
+var LANG_STR =
 {
    "CT_MASK1":"Torrent files||*.torrent||All files (*.*)||*.*||",
    "DLG_BTN_OK":"OK",
@@ -465,15 +465,15 @@ var LANG_STR =
    "DLG_ABOUT_UI_REVISION":"UI Revision",
    "DLG_SETTINGS_SAVE":"Save settings",
    "DLG_SETTINGS_MENU_TITLE":"Settings",
-   "DLG_SETTINGS_D_REMOTE_01":"BitTorrent Remote",
-   "DLG_SETTINGS_D_REMOTE_02":"BitTorrent Remote is a simple and secure web service that enables access to this BitTorrent client from anywhere on the internet.",
-   "DLG_SETTINGS_D_REMOTE_03":"Enable access here by creating a computer name and password, then access BitTorrent anytime from a PC or mobile web browser at remote.bittorrent.com or on your android phone with the BitTorrent Remote app",
-   "DLG_SETTINGS_D_REMOTE_04":"Learn More...",
-   "DLG_SETTINGS_D_REMOTE_05":"Enable BitTorrent Remote Access",
-   "DLG_SETTINGS_D_REMOTE_06":"Set a username and password",
-   "DLG_SETTINGS_D_REMOTE_07":"Computer name",
-   "DLG_SETTINGS_D_REMOTE_08":"Password",
-   "DLG_SETTINGS_D_REMOTE_09":"Sign in",
+   "DLG_SETTINGS_10_REMOTE_01":"BitTorrent Remote",
+   "DLG_SETTINGS_10_REMOTE_02":"BitTorrent Remote is a simple and secure web service that enables access to this BitTorrent client from anywhere on the internet.",
+   "DLG_SETTINGS_10_REMOTE_03":"Enable access here by creating a computer name and password, then access BitTorrent anytime from a PC or mobile web browser at remote.bittorrent.com or on your android phone with the BitTorrent Remote app",
+   "DLG_SETTINGS_10_REMOTE_04":"Learn More...",
+   "DLG_SETTINGS_10_REMOTE_05":"Enable BitTorrent Remote Access",
+   "DLG_SETTINGS_10_REMOTE_06":"Set a username and password",
+   "DLG_SETTINGS_10_REMOTE_07":"Computer name",
+   "DLG_SETTINGS_10_REMOTE_08":"Password",
+   "DLG_SETTINGS_10_REMOTE_09":"Sign in",
    "ST_CAPT_REMOTE":"Remote Access",
    "STATUS_REMOTE_01":"Accessible",
    "STATUS_REMOTE_02":"Connecting..",
@@ -490,4 +490,3 @@ var LANG_STR =
 var LANG_STR_fallback = LANG_STR;
 
 /* README : If you add any strings *Please consider updating fallback.js */
-

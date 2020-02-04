@@ -2857,7 +2857,7 @@ var utWebUI = {
 		var parent = this;
 		var username_input = $("webui.uconnect_username");
 		var password_input = $("proposed_uconnect_password");
-		var submit_btn = $("DLG_SETTINGS_D_REMOTE_09");
+		var submit_btn = $("DLG_SETTINGS_10_REMOTE_09");
 		var status_input = $("webui.uconnect_cred_status");
 
 		username_input.addEvent('keyup', function() {
@@ -2881,7 +2881,7 @@ var utWebUI = {
 		var parent = this;
 		var username_input = $("webui.uconnect_username");
 		var password_input = $("webui.uconnect_password");
-		var submit_btn = $("DLG_SETTINGS_D_REMOTE_09");
+		var submit_btn = $("DLG_SETTINGS_10_REMOTE_09");
 		var status_input = $("webui.uconnect_cred_status");
 
 		password_input.addEvent('keyup', function() {
@@ -2977,22 +2977,22 @@ var utWebUI = {
 
 		$("webui\\.uconnect_username").attr("disabled", "disabled");
 		$("proposed_uconnect_password").attr("disabled", "disabled");
-		$("DLG_SETTINGS_D_REMOTE_09").attr("disabled", "disabled");
-		$("DLG_SETTINGS_D_REMOTE_09").addClass("disabled");
+		$("DLG_SETTINGS_10_REMOTE_09").attr("disabled", "disabled");
+		$("DLG_SETTINGS_10_REMOTE_09").addClass("disabled");
 		$("webui\\.uconnect_enable").attr("disabled", "disabled");
 	},
 
 	"enableRegistrationOptions": function() {
 		$("webui\\.uconnect_username").removeAttr("disabled");
 		$("proposed_uconnect_password").removeAttr("disabled");
-		$("DLG_SETTINGS_D_REMOTE_09").removeAttr("disabled");
-		$("DLG_SETTINGS_D_REMOTE_09").removeClass("disabled");
+		$("DLG_SETTINGS_10_REMOTE_09").removeAttr("disabled");
+		$("DLG_SETTINGS_10_REMOTE_09").removeClass("disabled");
 		$("webui\\.uconnect_enable").removeAttr("disabled");
 	},
 
 	"showRemoteStatus": function(statusCode) {
 		var status_input = $("webui\\.uconnect_cred_status");
-		var signin_btn = $("DLG_SETTINGS_D_REMOTE_09");
+		var signin_btn = $("DLG_SETTINGS_10_REMOTE_09");
 		switch(statusCode) {
 			case 1: {
 				status_input.css("color", "green");
@@ -3074,9 +3074,9 @@ var utWebUI = {
 		// Work around to switch between uTorrent and BitTorrent brand name according to the product
 		var id_list = [
 						"tab_dlgSettings-Remote",
-						"DLG_SETTINGS_D_REMOTE_02",
-						"DLG_SETTINGS_D_REMOTE_03",
-						"DLG_SETTINGS_D_REMOTE_05",
+						"DLG_SETTINGS_10_REMOTE_02",
+						"DLG_SETTINGS_10_REMOTE_03",
+						"DLG_SETTINGS_10_REMOTE_05",
 						"DLG_SETTINGS_C_ADV_CACHE_02",
 						"DLG_SETTINGS_8_QUEUEING_12"
 						],
@@ -3087,6 +3087,7 @@ var utWebUI = {
 		for (var i = 0; i < id_list.length; i++) {
 			var id = id_list[i];
 			var dom_obj = document.getElementById(id);
+
 			if (document.brand === "ut") {
 				var new_str = self.str_replace(dom_obj.innerHTML, bt_brand, ut_brand);
 				dom_obj.innerHTML = new_str;
