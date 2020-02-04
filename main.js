@@ -700,13 +700,13 @@ function setupDialogManager() {
 
 	DialogManager.init();
 
-	["About", "Add", "AddEditRSSFeed", "AddURL", "AddLabel", "Props", "RSSDownloader", "Delete"].each(function(k) {
+	["About", "Add", "AddEditRSSFeed", "AddURL", "AddLabel", "Props", "RSSDownloader", "Delete", "Settings"].each(function(k) {
 		var isModal = ["AddEditRSSFeed", "Props"].contains(k);
 		DialogManager.add(k, isModal, {
 			  "Add": function() { utWebUI.getDirectoryList(); }
 			, "AddURL": function() { utWebUI.getDirectoryList(); }
 			, "RSSDownloader": function() { utWebUI.rssDownloaderShow(true); }
-			// , "Settings": function() { utWebUI.stpanes.onChange(); }
+			, "Settings": function() { utWebUI.stpanes.onChange(); }
 		}[k]);
 	});
 

@@ -3155,31 +3155,14 @@ var utWebUI = {
 	},
 
 	"showSettings": function() {
-		this.animateToggle(true);
-		//DialogManager.show("Settings");
+		DialogManager.show("Settings");
 	},
 
 	"hideSettings": function(load_settings) {
 		if(load_settings)
 			utWebUI.loadSettings();
 
-		this.animateToggle(false);
-	},
-
-	"animateToggle": function(show) {
-		var _top = show ? '0%' : '-100%';
-
-		if(show)
-			$("settingsHider").addClass('open');
-
-		$('dlgSettings')
-			.addClass('moving')
-			.animate({ top: _top }, 350, 'linear',
-				function(){
-					$(this).removeClass('moving');
-					$("settingsHider").toggleClass('open', show);
-				}
-			);
+		DialogManager.hide("Settings");
 	},
 
 	"searchExecute": function() {
