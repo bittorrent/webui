@@ -1779,7 +1779,7 @@ var utWebUI = {
 					}
 
 					menuItems = menuItems.concat([
-						  [_(feedIsEnabled ? "DLG_RSSDOWNLOADER_20" : "DLG_RSSDOWNLOADER_21"),
+						  [L_(feedIsEnabled ? "DLG_RSSDOWNLOADER_20" : "DLG_RSSDOWNLOADER_21"),
 							this.rssUpdate.bind(this, {id: feedIds, enabled: !feedIsEnabled}, null)
 						]
 						, [L_("DLG_RSSDOWNLOADER_22"), this.rssUpdate.bind(this, {id: feedIds, update: 1}, null)]
