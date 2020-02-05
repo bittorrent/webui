@@ -5136,7 +5136,7 @@ var utWebUI = {
 			this.config.activeSettingsPane = id;
 		}
 
-		$('dlgSettings-head').innerText = (document.getElementById('tab_' + id).innerHTML || L_("ST_CAPT_GENERAL"));
+		$('dlgSettings-head').innerText = (document.getElementById('tab_' + id).innerText || L_("ST_CAPT_GENERAL"));
 	},
 
 	"fdFormatRow": function(values, index) {
@@ -5288,13 +5288,13 @@ var utWebUI = {
 				feedItemIds.each(function(id) {
 					this.addRSSFeedItem(id[0], id[1]);
 				}, this);
-			}).bind(this, feedItemIds)]
+			}).bind(this, [feedItemIds])]
 			, [L_("DLG_RSSDOWNLOADER_25"), (function(feedItemIds) { // RSSTODO: Move this elsewhere
 				feedItemIds.each(function(id) {
 					var item = this.getRSSFeedItem(id[0], id[1]);
 					if (item) openURL(item[CONST.RSSITEM_URL]);
 				}, this);
-			}).bind(this, feedItemIds)]
+			}).bind(this, [feedItemIds])]
 			, [CMENU_SEP]
 			, [L_("DLG_RSSDOWNLOADER_26"), (function(feedItemIds) {
 				feedItemIds.each(function(id) { // RSSTODO: Move this elsewhere
@@ -5308,7 +5308,7 @@ var utWebUI = {
 						});
 					}
 				}, this);
-			}).bind(this, feedItemIds)]
+			}).bind(this, [feedItemIds])]
 		];
 
 		//--------------------------------------------------

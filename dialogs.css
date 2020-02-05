@@ -451,19 +451,19 @@
 	font-family: Helvetica, Arial, sans-serif;
 	font-size: 12px;
 }
-#dlgSettings.moving{
+/* #dlgSettings.moving{
 	-webkit-box-shadow: 0 1px 5px rgba(0,0,0,0.3);
-}
+} */
 
-#dlgSettings .dlg-body{
+/* #dlgSettings .dlg-body{
 	margin: 0;
-}
+} */
 
 /*#dlgSettings-head {
 	background-image: url(./images/settings.png);
 }*/
 
-#dlgSettings-head{
+/* #dlgSettings-head{
 	font-weight: normal;
 	font-size: 24px;
 	padding: 5px 10px 5px;
@@ -480,13 +480,13 @@
 	text-shadow: none;
 	margin-left: 160px;
 	margin-right: 10px;
-}
+} */
 
-#dlgSettings .dlg-body,
-#dlgSettings-form{
+/* #dlgSettings .dlg-body, */
+/* #dlgSettings-form{
 	height: 100%;
 	width: 100%;
-}
+} */
 
 #dlgSettings-menuCont {
 	background-color: #F4F6F9;
@@ -541,9 +541,9 @@
 	display: none!important;
 }
 
-#dlgSettings .dlg-body {
+/* #dlgSettings .dlg-body {
 	padding: 0;
-}
+} */
 
 #dlgSettings .settings-pane {
 	left: 150px;
@@ -728,7 +728,7 @@ input[id="gui.dlrate_menu"] {
 	display: none;
 }
 
-#dlgSettings fieldset{
+/* #dlgSettings fieldset{
 	position: relative;
 	background: #fff;
 	margin: 8px 0;
@@ -747,7 +747,6 @@ input[id="gui.dlrate_menu"] {
 	font-family: Helvetica, Arial, sans-serif;
 	font-weight: normal;
 	font-size: 18px;
-/*	float: left;*/
 }
 #dlgSettings input.btn{
 	cursor: pointer;
@@ -756,8 +755,7 @@ input[id="gui.dlrate_menu"] {
 	min-width: 50px;
 	padding: 0 5px;
 	text-align: center;
-/*	color: #333;
-*/	text-shadow: 0 1px #fff;
+	text-shadow: 0 1px #fff;
 	-webkit-border-radius: 4px !important;
 	-moz-border-radius: 4px !important;
 	-ms-border-radius: 4px !important;
@@ -819,8 +817,8 @@ input[id="gui.dlrate_menu"] {
 }
 #dlgSettings .indent{
 
-}
-#dlgSettings .dlg-foot{
+} */
+/* #dlgSettings .dlg-foot{
 	height: 22px;
 	padding: 0;
 	position: absolute;
@@ -842,10 +840,10 @@ input[id="gui.dlrate_menu"] {
 	float: right;
 	margin: 5px 5px 0 10px;
 	background: url(./images/panel_close.png);
-}
-#DLG_SETTINGS_CLOSE:hover{
+} */
+/* #DLG_SETTINGS_CLOSE:hover{
 	opacity: 1;
-}
+} */
 
 #total_uploaded_history,
 #total_downloaded_history,
