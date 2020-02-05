@@ -447,7 +447,8 @@
  **************************************************/
 
 #dlgSettings {
-	width: 100%;
+	/* width: 100%; */
+	min-width: 750px;
 	font-family: Helvetica, Arial, sans-serif;
 	font-size: 12px;
 }
@@ -482,11 +483,9 @@
 	margin-right: 10px;
 } */
 
-/* #dlgSettings .dlg-body, */
-/* #dlgSettings-form{
-	height: 100%;
-	width: 100%;
-} */
+#dlgSettings .dlg-body {
+	min-height: 400px;
+}
 
 #dlgSettings-menuCont {
 	background-color: #F4F6F9;
