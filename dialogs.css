@@ -276,6 +276,10 @@
 	width: 20em;
 }
 
+#dlgAddEditRSSFeed #aerssfd-cookie {
+    width: 16.5em!important;
+}
+
 
 /**************************************************
  * DIALOG: RSS Downloader
