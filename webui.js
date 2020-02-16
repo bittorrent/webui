@@ -4014,22 +4014,21 @@ var utWebUI = {
 	},
 
 	"setLabel": function(param, fn) {
-		var new_label = encodeURIComponent((param.label || "").trim());
+		var new_label = encodeURIComponent((param || "").trim());
+		var torrents = this.trtTable.selectedRows;
+		var self = this;
 
-		var torrents = param.view.selectedRows();
+		var setTorrentLabel = function(torrentHash) {
+			var after_update = function() {
+				self.request("action=setprops&s=label&v="+new_label + "&hash=" + torrentHash, function() {});
+			}
 
-        var self = this;
-        var client = utweb.current_client();
+			// Clear existing label first
+			self.request("action=setprops&s=label&v=" + "&hash=" + torrentHash, after_update);
+		}
 
-        var i,l = torrents.length;
-        for (i=0; i<l; i++) {
-            (function (t) {
-        		var after_update = function() {
-                    client.raptor.post_raw( "action=setprops&s=label&v="+new_label, { hash: t.hash }, function() {} );
-                }
-
-        	     client.raptor.post_raw( "action=setprops&s=label&v=", { hash: t.hash }, after_update );
-	        })(torrents[i]);
+        for (var i=0; i < torrents.length; i++) {
+            setTorrentLabel(torrents[i]);
         }
 	},
 
