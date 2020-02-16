@@ -3073,7 +3073,6 @@ var utWebUI = {
 	"convertBrandName": function() {
 		// Work around to switch between uTorrent and BitTorrent brand name according to the product
 		var id_list = [
-						"tab_dlgSettings-Remote",
 						"DLG_SETTINGS_10_REMOTE_02",
 						"DLG_SETTINGS_10_REMOTE_03",
 						"DLG_SETTINGS_10_REMOTE_05",
